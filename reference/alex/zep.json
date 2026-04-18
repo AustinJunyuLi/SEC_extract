@@ -41,7 +41,12 @@
       "bidder_04": {
         "resolved_name": "5 parties, 4F and 1S",
         "aliases_observed": [
-          "5 parties, 4F and 1S"
+          "5 parties, 4F and 1S",
+          "Party A",
+          "Party B",
+          "Party C",
+          "Party D",
+          "Party E"
         ],
         "first_appearance_BidderID": 6
       },

@@ -38,19 +38,19 @@
         ],
         "first_appearance_BidderID": 5
       },
-      "bidder_04": {
-        "resolved_name": "Several parties, including Sanofi",
+      "bidder_06": {
+        "resolved_name": "Party A",
         "aliases_observed": [
-          "Several parties, including Sanofi"
+          "Party A"
         ],
-        "first_appearance_BidderID": 6
+        "first_appearance_BidderID": 7
       },
-      "bidder_05": {
-        "resolved_name": "Several parties",
+      "bidder_07": {
+        "resolved_name": "Party B",
         "aliases_observed": [
-          "Several parties"
+          "Party B"
         ],
-        "first_appearance_BidderID": 15
+        "first_appearance_BidderID": 8
       }
     },
     "deal_flags": [
@@ -231,8 +231,54 @@
       "BidderID": 6,
       "process_phase": null,
       "role": "bidder",
-      "bidder_name": "bidder_04",
-      "bidder_alias": "Several parties, including Sanofi",
+      "bidder_name": "bidder_01",
+      "bidder_alias": "Sanofi",
+      "bidder_type": {
+        "base": "s",
+        "non_us": true,
+        "public": true,
+        "note": "Non-US public S"
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "2016-07-05 00:00:00",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "multiplier": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "alex_row_expanded",
+          "severity": "info",
+          "reason": "\u00a7Q5: from xlsx row 6065 ('Several parties, including Sanofi'); atomized per \u00a7E1 \u2014 the xlsx compressed \u22653 NDA signers into one row"
+        },
+        {
+          "code": "bidder_id_renumbered_from_alex",
+          "severity": "info",
+          "reason": "xlsx row 6065 flagged in alex_flagged_rows.json (original BidderID=3); renumbered to 6"
+        }
+      ]
+    },
+    {
+      "BidderID": 7,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_06",
+      "bidder_alias": "Party A",
       "bidder_type": null,
       "bid_note": "NDA",
       "bid_type": null,
@@ -255,10 +301,62 @@
       "process_conditions_note": null,
       "additional_note": null,
       "comments": null,
-      "flags": []
+      "flags": [
+        {
+          "code": "alex_row_expanded",
+          "severity": "info",
+          "reason": "\u00a7Q5: from xlsx row 6065 ('Several parties, including Sanofi'); atomized per \u00a7E1 \u2014 the xlsx compressed \u22653 NDA signers into one row"
+        },
+        {
+          "code": "bidder_id_renumbered_from_alex",
+          "severity": "info",
+          "reason": "xlsx row 6065 flagged in alex_flagged_rows.json (original BidderID=3); renumbered to 7"
+        }
+      ]
     },
     {
-      "BidderID": 7,
+      "BidderID": 8,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_07",
+      "bidder_alias": "Party B",
+      "bidder_type": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "2016-07-05 00:00:00",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "multiplier": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "alex_row_expanded",
+          "severity": "info",
+          "reason": "\u00a7Q5: from xlsx row 6065 ('Several parties, including Sanofi'); atomized per \u00a7E1 \u2014 the xlsx compressed \u22653 NDA signers into one row"
+        },
+        {
+          "code": "bidder_id_renumbered_from_alex",
+          "severity": "info",
+          "reason": "xlsx row 6065 flagged in alex_flagged_rows.json (original BidderID=3); renumbered to 8"
+        }
+      ]
+    },
+    {
+      "BidderID": 9,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_03",
@@ -293,7 +391,7 @@
       "flags": []
     },
     {
-      "BidderID": 8,
+      "BidderID": 10,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": null,
@@ -324,12 +422,12 @@
         {
           "code": "bidder_id_renumbered_from_alex",
           "severity": "info",
-          "reason": "xlsx row 6066 flagged in alex_flagged_rows.json (original BidderID=5); renumbered to 8"
+          "reason": "xlsx row 6066 flagged in alex_flagged_rows.json (original BidderID=5); renumbered to 10"
         }
       ]
     },
     {
-      "BidderID": 9,
+      "BidderID": 11,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": null,
@@ -359,7 +457,7 @@
       "flags": []
     },
     {
-      "BidderID": 10,
+      "BidderID": 12,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": null,
@@ -389,7 +487,7 @@
       "flags": []
     },
     {
-      "BidderID": 11,
+      "BidderID": 13,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": null,
@@ -420,12 +518,12 @@
         {
           "code": "bidder_id_renumbered_from_alex",
           "severity": "info",
-          "reason": "xlsx row 6070 flagged in alex_flagged_rows.json (original BidderID=5); renumbered to 11"
+          "reason": "xlsx row 6070 flagged in alex_flagged_rows.json (original BidderID=5); renumbered to 13"
         }
       ]
     },
     {
-      "BidderID": 12,
+      "BidderID": 14,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_03",
@@ -460,7 +558,7 @@
       "flags": []
     },
     {
-      "BidderID": 13,
+      "BidderID": 15,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_03",
@@ -495,7 +593,7 @@
       "flags": []
     },
     {
-      "BidderID": 14,
+      "BidderID": 16,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_01",
@@ -530,11 +628,11 @@
       "flags": []
     },
     {
-      "BidderID": 15,
+      "BidderID": 17,
       "process_phase": null,
       "role": "bidder",
-      "bidder_name": "bidder_05",
-      "bidder_alias": "Several parties",
+      "bidder_name": "bidder_06",
+      "bidder_alias": "Party A",
       "bidder_type": null,
       "bid_note": "Drop",
       "bid_type": null,
@@ -557,10 +655,62 @@
       "process_conditions_note": null,
       "additional_note": null,
       "comments": null,
-      "flags": []
+      "flags": [
+        {
+          "code": "alex_row_expanded",
+          "severity": "info",
+          "reason": "\u00a7Q5: from xlsx row 6075 ('Several parties'); atomized per \u00a7E1 \u2014 companion to xlsx 6065's unnamed-party NDAs"
+        },
+        {
+          "code": "bidder_id_renumbered_from_alex",
+          "severity": "info",
+          "reason": "xlsx row 6075 flagged in alex_flagged_rows.json (original BidderID=9); renumbered to 17"
+        }
+      ]
     },
     {
-      "BidderID": 16,
+      "BidderID": 18,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_07",
+      "bidder_alias": "Party B",
+      "bidder_type": null,
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2016-08-20",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "multiplier": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "alex_row_expanded",
+          "severity": "info",
+          "reason": "\u00a7Q5: from xlsx row 6075 ('Several parties'); atomized per \u00a7E1 \u2014 companion to xlsx 6065's unnamed-party NDAs"
+        },
+        {
+          "code": "bidder_id_renumbered_from_alex",
+          "severity": "info",
+          "reason": "xlsx row 6075 flagged in alex_flagged_rows.json (original BidderID=9); renumbered to 18"
+        }
+      ]
+    },
+    {
+      "BidderID": 19,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_03",

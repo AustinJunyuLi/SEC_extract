@@ -510,6 +510,64 @@ renumbering fixes all three cleanly.
 
 ---
 
+### §Q5 — Medivation aggregated NDA / Drop rows (🟩 RESOLVED, 2026-04-18)
+
+**Decision.** **Expand** Medivation's two aggregated rows during xlsx →
+JSON conversion, per `rules/bidders.md` §E1 atomization. Analogous to §Q2
+(Zep row 6390); applied deal-specifically to Medivation.
+
+**Rows affected (xlsx labels verbatim).**
+- The 7/5 NDA row with `BidderName = "Several parties, including Sanofi"`.
+- The 8/20 Drop row with `BidderName = "Several parties"`.
+
+**Expansion.** The filing narrates "confidentiality agreements with several
+parties, including Sanofi." "Several" is ≥3 in standard English, so there
+are ≥2 unnamed parties beyond Sanofi. We atomize into:
+
+- NDA row → 3 atomic rows:
+  - `bidder_alias = "Sanofi"`, reusing her existing canonical id (her 4/13
+    Bidder Sale row already defined `bidder_01`).
+  - `bidder_alias = "Party A"`, new canonical id.
+  - `bidder_alias = "Party B"`, new canonical id.
+
+- Drop row → 2 atomic rows (Sanofi's 8/20 Drop is already its own row in
+  the xlsx, so only the unnamed parties need expansion):
+  - `bidder_alias = "Party A"`, same canonical id as the NDA Party A.
+  - `bidder_alias = "Party B"`, same canonical id as the NDA Party B.
+
+**Each expanded row** carries:
+```json
+{"code": "alex_row_expanded", "severity": "info",
+ "reason": "§Q5: from xlsx row <N> ('<verbatim>'); atomized per §E1 because the xlsx compressed ≥3 NDA signers (Sanofi + unnamed) into one row"}
+```
+
+**Sanofi's bidder_type** on the atomized NDA row is copied from her 4/13
+Bidder Sale row (the aggregated xlsx row has `bidder_type=null` because Alex
+didn't populate type columns for mixed aggregations). Party A / Party B
+`bidder_type` stay null — the filing doesn't identify them.
+
+**Why this matters for Stage 3 diffs.** Without expansion, the AI's
+atomized extraction would show 3 `ai_only` NDA rows and 2 `ai_only` Drop
+rows against the aggregated reference — artificial divergences that drown
+out real extraction defects. Post-expansion, the rows join cleanly (modulo
+placeholder-count interpretation, which §Scope-3 treats as legitimate AI
+flexibility).
+
+**Generalization deferred.** If future reference deals surface similar
+aggregated-party rows, extend §Q5 then. Other 2026-04-18 reference builds
+checked: no other deal in the 9-deal reference set has this pattern.
+
+**Provenance.** Original aggregated rows preserved in
+`reference/alex/alex_flagged_rows.json` alongside §Q3/§Q4 entries.
+
+**Cross-references.**
+- `rules/bidders.md` §E1 (atomization).
+- `rules/bidders.md` §E3 (canonical IDs; Sanofi reuses hers).
+- `rules/dates.md` §Q2 (analogous Zep expansion).
+- `scoring/results/medivation_adjudicated.md` — divergence source.
+
+---
+
 ---
 
 ## Open questions

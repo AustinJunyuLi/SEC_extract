@@ -645,6 +645,120 @@ def apply_q2_zep(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return out
 
 
+# §Q5 — Medivation: aggregated NDA row (xlsx 6065) + Drop row (xlsx 6075).
+MEDIVATION_NDA_AGG_XLSX_ROW = 6065
+MEDIVATION_DROP_AGG_XLSX_ROW = 6075
+MEDIVATION_UNNAMED_PLACEHOLDER_ALIASES = ("Party A", "Party B")
+
+
+def apply_q5_medivation(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Expand Medivation's aggregated NDA + Drop rows into atomic rows per §E1.
+
+    Two xlsx rows compress multiple entities:
+      - 6065: `"Several parties, including Sanofi"` NDA on 7/5 (≥3 entities)
+      - 6075: `"Several parties"` Drop on 8/20 (≥2 unnamed entities)
+
+    Expansion:
+      - 6065 → 3 rows: Sanofi (reuses her existing canonical id from her 4/13
+        Bidder Sale row) + Party A + Party B (new canonical ids).
+      - 6075 → 2 rows: Party A + Party B Drops, reusing the Party A/B canonical
+        ids from 6065. Sanofi has her own 8/20 Drop row already.
+
+    "Several" is ≥ 3 in standard English → ≥ 2 unnamed parties beyond Sanofi.
+    We emit exactly 2 placeholders to match that lower bound; if the AI
+    extraction infers a different count, that surfaces in the diff as a
+    legitimate both-defensible judgment call per the adjudication pass.
+    """
+    # Locate the aggregated rows.
+    nda_idx = next(
+        (i for i, ev in enumerate(events) if ev.get("_xlsx_row") == MEDIVATION_NDA_AGG_XLSX_ROW),
+        None,
+    )
+    drop_idx = next(
+        (i for i, ev in enumerate(events) if ev.get("_xlsx_row") == MEDIVATION_DROP_AGG_XLSX_ROW),
+        None,
+    )
+    if nda_idx is None:
+        return events  # nothing to expand; xlsx doesn't match the expected shape
+
+    # Pull Sanofi's canonical id and bidder_type from her earliest non-aggregated row.
+    sanofi_cid = None
+    sanofi_type = None
+    for ev in events:
+        if ev.get("bidder_alias") == "Sanofi" and ev.get("bidder_name"):
+            sanofi_cid = ev["bidder_name"]
+            sanofi_type = ev.get("bidder_type")
+            break
+    if sanofi_cid is None:
+        # Shouldn't happen — Sanofi has a 4/13 Bidder Sale row in the xlsx.
+        # Failing loud beats silently skipping the expansion.
+        raise RuntimeError(
+            "apply_q5_medivation: Sanofi canonical id not found among events; "
+            "xlsx 6065 expansion aborted"
+        )
+
+    # Allocate two fresh canonical ids for Party A / Party B. Must not
+    # collide with anything already in the event set.
+    existing_cids = {ev.get("bidder_name") for ev in events if ev.get("bidder_name")}
+
+    def _next_cid(used: set[str]) -> str:
+        n = 1
+        while f"bidder_{n:02d}" in used:
+            n += 1
+        cid = f"bidder_{n:02d}"
+        used.add(cid)
+        return cid
+
+    party_a_cid = _next_cid(existing_cids)
+    party_b_cid = _next_cid(existing_cids)
+
+    def _clone(template: dict[str, Any], overrides: dict[str, Any], reason: str) -> dict[str, Any]:
+        new_ev = json.loads(json.dumps(template, default=str))
+        for k, v in overrides.items():
+            new_ev[k] = v
+        new_ev["flags"] = list(template.get("flags", [])) + [{
+            "code": "alex_row_expanded",
+            "severity": "info",
+            "reason": reason,
+        }]
+        return new_ev
+
+    out: list[dict[str, Any]] = []
+    for i, ev in enumerate(events):
+        if i == nda_idx:
+            reason = (
+                f"§Q5: from xlsx row {MEDIVATION_NDA_AGG_XLSX_ROW} "
+                f"('Several parties, including Sanofi'); atomized per §E1 — "
+                "the xlsx compressed ≥3 NDA signers into one row"
+            )
+            out.append(_clone(ev, {
+                "bidder_name": sanofi_cid,
+                "bidder_alias": "Sanofi",
+                "bidder_type": sanofi_type,
+            }, reason))
+            for alias, cid in zip(MEDIVATION_UNNAMED_PLACEHOLDER_ALIASES, (party_a_cid, party_b_cid)):
+                out.append(_clone(ev, {
+                    "bidder_name": cid,
+                    "bidder_alias": alias,
+                    "bidder_type": None,
+                }, reason))
+        elif i == drop_idx:
+            reason = (
+                f"§Q5: from xlsx row {MEDIVATION_DROP_AGG_XLSX_ROW} "
+                f"('Several parties'); atomized per §E1 — companion to "
+                f"xlsx {MEDIVATION_NDA_AGG_XLSX_ROW}'s unnamed-party NDAs"
+            )
+            for alias, cid in zip(MEDIVATION_UNNAMED_PLACEHOLDER_ALIASES, (party_a_cid, party_b_cid)):
+                out.append(_clone(ev, {
+                    "bidder_name": cid,
+                    "bidder_alias": alias,
+                    "bidder_type": None,
+                }, reason))
+        else:
+            out.append(ev)
+    return out
+
+
 # ---------------------------------------------------------------------------
 # Pipeline
 # ---------------------------------------------------------------------------
@@ -662,6 +776,8 @@ def build_deal(slug: str) -> dict[str, Any]:
 
     if slug == "zep":
         events = apply_q2_zep(events)
+    if slug == "medivation":
+        events = apply_q5_medivation(events)
 
     flagged_rows = _load_flagged_xlsx_rows().get(slug, set())
     events = renumber_chronologically(events, flagged_rows)
@@ -679,18 +795,32 @@ def build_deal(slug: str) -> dict[str, Any]:
     })
 
     # Rebuild registry in first-appearance-by-new-order for stable output.
+    # For canonical ids that pre-exist in the initial canonicalize pass, lift
+    # the aliases_observed list from there. For canonical ids introduced by
+    # §Q expansions (apply_q5_medivation's Party A / Party B), seed the
+    # registry from the first expanded row's bidder_alias so the entry isn't
+    # aliases-empty.
     new_registry: dict[str, dict[str, Any]] = {}
-    seen: set[str] = set()
     for ev in events:
         cid = ev.get("bidder_name")
-        if cid and cid not in seen:
+        alias = ev.get("bidder_alias")
+        if not cid:
+            continue
+        if cid not in new_registry:
             info = registry.get(cid, {})
+            aliases = list(info.get("aliases_observed") or [])
+            if alias and alias not in aliases:
+                aliases.append(alias)
             new_registry[cid] = {
-                "resolved_name": info.get("resolved_name"),
-                "aliases_observed": info.get("aliases_observed", []),
+                "resolved_name": info.get("resolved_name") or alias,
+                "aliases_observed": aliases,
                 "first_appearance_BidderID": ev["BidderID"],
             }
-            seen.add(cid)
+        else:
+            # Accumulate additional aliases on subsequent rows (e.g., if a
+            # split bidder appears with multiple spellings).
+            if alias and alias not in new_registry[cid]["aliases_observed"]:
+                new_registry[cid]["aliases_observed"].append(alias)
     deal["bidder_registry"] = new_registry
 
     # Strip provenance helpers before writing.

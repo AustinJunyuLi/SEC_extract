@@ -44,6 +44,18 @@
         "reason": "BidderID=5 duplicates row 6066.",
         "alex_verdict": "unflagged_by_alex_but_structurally_invalid",
         "source_question": "rules/dates.md §Q4; rules/invariants.md §P-D2"
+      },
+      {
+        "xlsx_row": 6065,
+        "reason": "Aggregated NDA row: BidderName='Several parties, including Sanofi' (bid_note=NDA, rough=2016-07-05). Compresses 3+ entities (Sanofi + >=2 unnamed parties) into one row; violates E1 atomization.",
+        "alex_verdict": "expand_per_q5",
+        "source_question": "rules/bidders.md §E1; rules/dates.md §Q5"
+      },
+      {
+        "xlsx_row": 6075,
+        "reason": "Aggregated Drop row: BidderName='Several parties' (bid_note=Drop, 2016-08-20). Companion to row 6065; violates E1 atomization.",
+        "alex_verdict": "expand_per_q5",
+        "source_question": "rules/bidders.md §E1; rules/dates.md §Q5"
       }
     ]
   }
