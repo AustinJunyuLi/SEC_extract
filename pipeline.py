@@ -673,7 +673,16 @@ def _invariant_p_s2(deal: dict, events: list[dict]) -> list[dict]:
 
 def _invariant_p_s3(events: list[dict]) -> list[dict]:
     """§P-S3 — each process_phase's chronologically last event is in
-    {Executed, Terminated, Auction Closed}."""
+    {Executed, Terminated, Auction Closed}.
+
+    Events are assumed to already be sorted by (bid_date_precise, §A3 rank,
+    narrative order) per §A2/§A3 — that's the BidderID sequence. Within a
+    phase, the last row in that order IS the chronologically-latest event.
+    Do NOT use `max(... key=bid_date_precise)` — Python's max returns the
+    FIRST element tied on the max date, which misidentifies same-date
+    blocks (e.g., Medivation's 8/20 cluster of Formal Bid → Drops → Executed:
+    max-by-date returns Formal Bid; §A3 says Executed is last).
+    """
     flags: list[dict[str, Any]] = []
     by_phase: dict[int, list[dict]] = {}
     for ev in events:
@@ -682,11 +691,8 @@ def _invariant_p_s3(events: list[dict]) -> list[dict]:
             phase = 1  # §L2 default for deals with no prior/restart
         by_phase.setdefault(phase, []).append(ev)
     for phase, rows in by_phase.items():
-        dated = [r for r in rows if r.get("bid_date_precise")]
-        if dated:
-            last_row = max(dated, key=lambda r: r["bid_date_precise"])
-        else:
-            last_row = rows[-1]  # narrative order per §A
+        # Trust the caller's §A2/§A3 ordering; take the last row in that order.
+        last_row = rows[-1]
         if last_row.get("bid_note") not in PHASE_TERMINATORS:
             flags.append({
                 "code": "phase_termination_missing", "severity": "hard",
