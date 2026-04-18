@@ -1,6 +1,6 @@
 # Stage 2 Kickoff Plan
 
-**Status:** DRAFT · awaiting approval
+**Status:** A + B COMPLETE · C DEFERRED INDEFINITELY · 2026-04-18
 **Date:** 2026-04-18
 **Owner:** Austin
 **Scope:** Unblock Stage 2 — build the xlsx→JSON converter + wire the diff harness end-to-end on one deal.
@@ -13,9 +13,9 @@ Stand up the reference answer-key and diff harness so that, for **Medivation**, 
 
 ## Success criteria (Stage 2 exit)
 
-1. `reference/alex/{slug}.json` exists for all 9 reference deals, conformant to `rules/schema.md` §R1, passing §A4 invariants.
-2. `scoring/diff.py --slug medivation` runs end-to-end against a placeholder/sample extraction and emits a readable markdown + JSON report.
-3. The 25-deal lawyer-language study is kicked off (can run async).
+1. ✅ `reference/alex/{slug}.json` exists for all 9 reference deals, conformant to `rules/schema.md` §R1, passing §A4 invariants. (commit `3241785` + `9dda10a`)
+2. ✅ `scoring/diff.py --slug medivation` runs end-to-end against a placeholder/sample extraction and emits a readable markdown + JSON report. (commit `0b0d4d7`)
+3. ⏸️  ~~The 25-deal lawyer-language study is kicked off (can run async).~~ **Deferred indefinitely.** Austin will revisit only if Stage 3 diff results across the 9 reference deals surface systematic §G1 informal-vs-formal confusion that the current rulebook can't resolve. If that happens, reopen as a standalone investigation rather than a Stage-2 workstream.
 
 ---
 
@@ -81,11 +81,11 @@ These are AI-only structured fields; their absence on the reference side is expe
 
 Workstream B depends on Workstream A (step 1) being done.
 
-## Workstream C — 25-deal lawyer-language study
+## Workstream C — 25-deal lawyer-language study — ⏸️ DEFERRED INDEFINITELY (2026-04-18)
 
 Separate thread; does not block A or B. Purpose: stress-test §G1 (informal-vs-formal) and §L2 (6-month phase-gap heuristic) across a broader sample.
 
-Defer to a separate plan once A+B land.
+**Deferral rationale.** The rulebook's §G1 and §L2 decisions are already ratified. Running a broader language study now is speculative work against a hypothetical rulebook gap. The empirical trigger for reopening this is **Stage 3 diff results across the 9 reference deals surfacing systematic §G1 / §L2 confusion that the manual-verification loop can't resolve row-by-row**. If that happens, reopen as a standalone investigation plan — not a Stage-2 workstream.
 
 ---
 
