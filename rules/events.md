@@ -87,9 +87,29 @@ Required the reader to infer event-type from which columns were populated.
 Brittle when a bid row has a null value (e.g., "indicated willingness to bid
 but declined to name a number"). Explicit `"Bid"` is unambiguous.
 
-**Migration note.** Alex's legacy rows with `bid_note` blank and non-null
-`bid_value*` → mapped to `bid_note = "Bid"` during the xlsx-to-JSON
-conversion in Stage 2. Documented in `reference/alex/README.md`.
+**Migration note.** Two legacy conventions appear in Alex's xlsx; both map
+to `bid_note = "Bid"` during the xlsx-to-JSON conversion:
+
+1. `bid_note` blank with non-null `bid_value*` columns → `bid_note = "Bid"`,
+   `bid_type` set from the xlsx `bid_type` column when present.
+
+2. `bid_note ∈ {"Inf", "Formal Bid", "Revised Bid"}` (Alex's event-type-
+   in-bid_note convention, which §C3 deprecates) → `bid_note = "Bid"` with:
+   - `"Inf"` → `bid_type = "informal"`
+   - `"Formal Bid"` → `bid_type = "formal"`
+   - `"Revised Bid"` → `bid_type = "formal"` and `additional_note` includes
+     `"revised"` provenance so a subsequent formal bid from the same bidder
+     remains traceable without a distinct `bid_note`.
+
+Both cases preserve the original xlsx label in a `legacy_bid_note` field on
+the converted row so the provenance survives. Documented in
+`reference/alex/README.md`.
+
+This resolves the prior internal tension between §C1 (text listed only
+`Bid`) and `rules/dates.md` §A3's rank table (which used the legacy labels
+`Inf`, `Formal Bid`, `Revised Bid` as distinct codes). §A3's rank table now
+ranks bid rows by `bid_type` rather than bid_note — see `rules/dates.md`
+§A3.
 
 ---
 

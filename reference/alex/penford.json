@@ -298,7 +298,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-08-06",
       "bid_date_rough": null,
@@ -333,7 +333,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-08-10",
       "bid_date_rough": null,
@@ -468,7 +468,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-09-17",
       "bid_date_rough": null,
@@ -603,7 +603,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-02",
       "bid_date_rough": null,
@@ -638,7 +638,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-02",
       "bid_date_rough": null,
@@ -673,7 +673,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-03",
       "bid_date_rough": null,
@@ -708,7 +708,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Formal Bid",
+      "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2014-10-08",
       "bid_date_rough": null,
@@ -813,7 +813,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-13",
       "bid_date_rough": null,
@@ -848,7 +848,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-14",
       "bid_date_rough": null,

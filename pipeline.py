@@ -48,14 +48,12 @@ FLAGS_PATH = STATE_DIR / "flags.jsonl"
 # vocabularies. The rulebook markdown is the source of truth; when those
 # files change, update the mirrors here in the same commit.
 
-# Operational mirror of rules/events.md §C1 / §A3 and scripts/build_reference.py.
-# The rulebook has an unresolved internal tension: §C1 text unifies all bids
-# under bid_note="Bid" with bid_type carrying the informal/formal call, while
-# §A3's same-date rank table enumerates "Inf" (rank 6), "Formal Bid" (rank 7),
-# "Revised Bid" (rank 7). scripts/build_reference.py uses §A3's convention,
-# so reference/alex/*.json carry "Inf"/"Formal Bid"/"Revised Bid" — not "Bid".
-# This mirror accepts BOTH conventions so the validator doesn't flag rows the
-# reference itself uses. Rulebook reconciliation pending; flagged for Austin.
+# Mirror of rules/events.md §C1 — the §C3-migrated closed vocabulary.
+# Bid rows all carry bid_note="Bid"; bid_type ("informal"/"formal") is the
+# only distinguisher. The legacy labels "Inf" / "Formal Bid" / "Revised Bid"
+# are deprecated and should never appear on a properly-built reference or a
+# current AI extraction. scripts/build_reference.py migrates xlsx labels on
+# ingestion; the extractor prompt instructs the subagent to emit §C3.
 EVENT_VOCABULARY: frozenset[str] = frozenset({
     # Start-of-process
     "Bidder Interest", "Bidder Sale", "Target Interest", "Target Sale",
@@ -66,11 +64,8 @@ EVENT_VOCABULARY: frozenset[str] = frozenset({
     "IB", "IB Terminated",
     # Counterparty events
     "NDA", "Drop", "DropBelowM", "DropBelowInf", "DropAtInf", "DropTarget",
-    # Bid rows — both §C1 and §A3 conventions accepted
-    "Bid",                  # §C1 unified (bid_type carries formal/informal)
-    "Inf",                  # §A3 rank 6 (informal bid) — used in references
-    "Formal Bid",           # §A3 rank 7 (formal bid) — used in references
-    "Revised Bid",          # §A3 rank 7 (bid revision)
+    # Bid rows — §C3 unified; bid_type disambiguates formal/informal
+    "Bid",
     # Round structure (§K1)
     "Final Round Ann", "Final Round",
     "Final Round Inf Ann", "Final Round Inf",
@@ -94,11 +89,12 @@ PHASE_TERMINATORS: frozenset[str] = frozenset({
 })
 
 # §P-S1 follow-up vocabulary: bid_notes that discharge the NDA→follow-up
-# obligation. Covers bid submissions (both §C1 and §A3 conventions), every
-# dropout code, and Executed. Final-round "Ann" codes (announcements) are
-# NOT follow-ups — they don't record bidder-specific activity.
+# obligation. Covers bid submissions (§C3 unified "Bid"), every dropout code,
+# Executed, and final-round bid-submission codes. Final-round "Ann" codes
+# (announcements) are NOT follow-ups — they don't record bidder-specific
+# activity.
 BID_NOTE_FOLLOWUPS: frozenset[str] = frozenset({
-    "Bid", "Inf", "Formal Bid", "Revised Bid",
+    "Bid",
     "Drop", "DropBelowM", "DropBelowInf", "DropAtInf", "DropTarget",
     "Executed",
     "Final Round", "Final Round Inf",
@@ -138,11 +134,8 @@ EVENT_RANK: dict[str, int] = {
     "Bidder Interest": 4,
     # Rank 5 — NDAs
     "NDA": 5,
-    # Rank 6/7 — informal / formal bids (§C1 "Bid" uses comparator on bid_type)
-    "Bid": 6,               # §C1 unified (formal bumps to 7 via _rank())
-    "Inf": 6,               # §A3 explicit informal
-    "Formal Bid": 7,        # §A3 explicit formal
-    "Revised Bid": 7,       # §A3 explicit formal revision
+    # Rank 6/7 — bids (§C3 unified "Bid"; formal bumps to 7 via _rank())
+    "Bid": 6,
     # Rank 8 — dropouts
     "Drop": 8,
     "DropBelowInf": 8,
@@ -276,17 +269,16 @@ Non-negotiables:
   - Every event row MUST have source_quote (verbatim NFKC-substring of
     pages[source_page-1].content, ≤1000 chars) and source_page (integer
     matching the "number" field in pages.json). No un-cited rows ship.
-  - bid_note ∈ the closed operational vocabulary. **Rulebook note:** §C1 text
-    and §A3 rank table are inconsistent on bid rows — §C1 proposes unified
-    "Bid" with bid_type carrying formal/informal; §A3 enumerates "Inf" and
-    "Formal Bid" / "Revised Bid" as distinct bid_note values. The reference
-    JSONs (and scripts/build_reference.py) use §A3's convention. **Emit
-    §A3's convention**: bid_note="Inf" (with bid_type="informal") for
-    informal bids, bid_note="Formal Bid" (with bid_type="formal") for formal
-    bids, bid_note="Revised Bid" for formal revisions. This keeps diffs
-    against reference/alex/*.json joinable. If an event truly doesn't fit
-    any listed code, emit the closest match and attach flag
-    {{"code": "unknown_bid_note", "severity": "hard", "reason": "..."}}.
+  - bid_note ∈ the §C1 closed vocabulary. **Bid rows use §C3's unified
+    convention**: bid_note="Bid" for every bid row (informal or formal),
+    with bid_type="informal" or "formal" carrying the classification. Do
+    NOT emit legacy labels "Inf" / "Formal Bid" / "Revised Bid" — those are
+    deprecated by §C3 and will fail the validator's §P-R3 vocabulary check.
+    For a bidder's second formal bid, emit a second row with bid_note="Bid"
+    + bid_type="formal"; the BidderID chronology preserves the revision
+    ordering. If an event truly doesn't fit any §C1 code, emit the closest
+    match and attach flag {{"code": "unknown_bid_note", "severity": "hard",
+    "reason": "..."}}.
   - bidder_name is the canonical bidder_NN (§E3). bidder_alias is the
     filing's verbatim label on this row. bidder_registry in the deal object
     maps every bidder_NN → {{resolved_name, aliases_observed,

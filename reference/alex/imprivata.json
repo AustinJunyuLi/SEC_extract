@@ -405,7 +405,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-03-09",
       "bid_date_rough": null,
@@ -605,7 +605,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-06-09",
       "bid_date_rough": null,
@@ -640,7 +640,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-06-09",
       "bid_date_rough": null,
@@ -675,7 +675,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-06-09",
       "bid_date_rough": null,
@@ -840,7 +840,7 @@
       "bidder_name": null,
       "bidder_alias": null,
       "bidder_type": null,
-      "bid_note": "Final Round",
+      "bid_note": "Final Round Ext Ann",
       "bid_type": null,
       "bid_date_precise": "2016-06-24",
       "bid_date_rough": null,
@@ -870,7 +870,7 @@
       "bidder_name": null,
       "bidder_alias": null,
       "bidder_type": null,
-      "bid_note": "Final Round Ext Ann",
+      "bid_note": "Final Round",
       "bid_type": null,
       "bid_date_precise": "2016-06-24",
       "bid_date_rough": null,
@@ -970,7 +970,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Formal Bid",
+      "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2016-07-08",
       "bid_date_rough": null,
@@ -1005,7 +1005,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Formal Bid",
+      "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2016-07-09",
       "bid_date_rough": null,

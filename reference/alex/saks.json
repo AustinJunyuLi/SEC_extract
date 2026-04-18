@@ -78,7 +78,7 @@
         "aliases_observed": [
           "Spnosor A/E"
         ],
-        "first_appearance_BidderID": 22
+        "first_appearance_BidderID": 21
       }
     },
     "deal_flags": [
@@ -177,7 +177,7 @@
         "public": true,
         "note": "Non-US public S"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": null,
       "bid_date_rough": "2013-04-15 00:00:00",
@@ -212,7 +212,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": null,
       "bid_date_rough": "2013-04-15 00:00:00",
@@ -387,7 +387,7 @@
         "public": true,
         "note": "Non-US public S"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": null,
       "bid_date_rough": "2013-06-03 00:00:00",
@@ -422,7 +422,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": null,
       "bid_date_rough": "2013-06-03 00:00:00",
@@ -657,7 +657,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2013-07-11",
       "bid_date_rough": null,
@@ -692,7 +692,7 @@
         "public": true,
         "note": "Non-US public S"
       },
-      "bid_note": "Formal Bid",
+      "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2013-07-11",
       "bid_date_rough": null,
@@ -727,7 +727,7 @@
         "public": true,
         "note": "Non-US public S"
       },
-      "bid_note": "Formal Bid",
+      "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2013-07-24",
       "bid_date_rough": null,
@@ -789,18 +789,18 @@
       "BidderID": 21,
       "process_phase": null,
       "role": "bidder",
-      "bidder_name": "bidder_03",
-      "bidder_alias": "Hudson's Bay",
+      "bidder_name": "bidder_08",
+      "bidder_alias": "Spnosor A/E",
       "bidder_type": {
-        "base": null,
+        "base": "f",
         "non_us": false,
-        "public": true,
-        "note": "Non-US public S"
+        "public": null,
+        "note": "F"
       },
-      "bid_note": "Executed",
+      "bid_note": "DropTarget",
       "bid_type": null,
-      "bid_date_precise": null,
-      "bid_date_rough": "2013-07-28 00:00:00",
+      "bid_date_precise": "2013-07-28",
+      "bid_date_rough": null,
       "bid_value": null,
       "bid_value_pershare": null,
       "bid_value_lower": null,
@@ -824,18 +824,18 @@
       "BidderID": 22,
       "process_phase": null,
       "role": "bidder",
-      "bidder_name": "bidder_08",
-      "bidder_alias": "Spnosor A/E",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Hudson's Bay",
       "bidder_type": {
-        "base": "f",
+        "base": null,
         "non_us": false,
-        "public": null,
-        "note": "F"
+        "public": true,
+        "note": "Non-US public S"
       },
-      "bid_note": "DropTarget",
+      "bid_note": "Executed",
       "bid_type": null,
-      "bid_date_precise": "2013-07-28",
-      "bid_date_rough": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "2013-07-28 00:00:00",
       "bid_value": null,
       "bid_value_pershare": null,
       "bid_value_lower": null,

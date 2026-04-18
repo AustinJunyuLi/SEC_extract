@@ -285,17 +285,29 @@ ordering** first, then filing narrative order as secondary tie-break.
 
 | Rank | Event class | Event codes |
 |---|---|---|
-| 1 | Process announcements | `Bid Press Release`, `Final Round Ann`, `Bidder Sale`, `Activist Sale` |
-| 2 | Process start/restart | `Target Initiated`, `Terminated`, `Restarted` |
+| 1 | Process announcements | `Bid Press Release`, `Sale Press Release`, `Target Sale Public`, `Final Round Ann`, `Final Round Inf Ann`, `Final Round Ext Ann`, `Final Round Inf Ext Ann`, `Bidder Sale`, `Activist Sale` |
+| 2 | Process start/restart | `Target Sale`, `Target Interest`, `Terminated`, `Restarted` |
 | 3 | Advisor/IB changes | `IB`, `IB Terminated` |
 | 4 | Bidder first-contact | `Bidder Interest` |
 | 5 | NDA executions | `NDA` |
-| 6 | Informal bids | `Inf`, range/single-bound informals |
-| 7 | Formal bids | `Formal Bid`, `Revised Bid` |
-| 8 | Dropouts (mid-round) | `DropBelowInf`, `DropAtInf`, `DropBelowFormal`, `DropAtFormal`, implicit drops |
-| 9 | Final-round deadlines | `Final Round Inf`, `Final Round Formal`, `Auction Closed` |
+| 6 | Informal bids | `Bid` **with** `bid_type = "informal"` (per §C3) |
+| 7 | Formal bids | `Bid` **with** `bid_type = "formal"` (per §C3) |
+| 8 | Dropouts (mid-round) | `Drop`, `DropBelowInf`, `DropAtInf`, `DropBelowM`, `DropTarget`, implicit drops |
+| 9 | Final-round deadlines | `Final Round`, `Final Round Inf`, `Final Round Ext`, `Final Round Inf Ext`, `Auction Closed` |
 | 10 | Post-deadline activity | Late bids after `Final Round`, winner confirmation |
 | 11 | Signing | `Executed` |
+
+**Bid row rank disambiguation (§C3 migration).** All bid rows carry
+`bid_note = "Bid"` per `rules/events.md` §C1/§C3. Within a same-date
+cluster, bid rows are ranked 6 or 7 based on `bid_type`:
+
+- `bid_type = "informal"` → rank 6
+- `bid_type = "formal"` → rank 7
+- `bid_type = null` (ambiguous per `rules/bids.md` §G1) → rank 6 (conservative)
+
+The prior convention — ranking bid rows by distinct `bid_note` codes
+(`Inf`, `Formal Bid`, `Revised Bid`) — is deprecated; see `rules/events.md`
+§C3. The validator (`pipeline.py _rank()`) implements the `bid_type` lookup.
 
 **Within-rank tie-break.** Filing narrative order (top-to-bottom as
 events appear in the Background section).

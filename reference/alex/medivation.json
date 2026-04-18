@@ -139,7 +139,7 @@
         "public": true,
         "note": "Non-US public S"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-04-13",
       "bid_date_rough": null,
@@ -367,7 +367,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-08-08",
       "bid_date_rough": null,
@@ -534,7 +534,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Formal Bid",
+      "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2016-08-19",
       "bid_date_rough": null,
@@ -569,7 +569,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Formal Bid",
+      "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2016-08-20",
       "bid_date_rough": null,

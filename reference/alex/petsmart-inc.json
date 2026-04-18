@@ -22,112 +22,112 @@
         "aliases_observed": [
           "J.P. Morgan"
         ],
-        "first_appearance_BidderID": 3
+        "first_appearance_BidderID": 5
       },
       "bidder_02": {
         "resolved_name": "Unnamed party 1",
         "aliases_observed": [
           "Unnamed party 1"
         ],
-        "first_appearance_BidderID": 4
+        "first_appearance_BidderID": 6
       },
       "bidder_03": {
         "resolved_name": "Unnamed party 2",
         "aliases_observed": [
           "Unnamed party 2"
         ],
-        "first_appearance_BidderID": 5
+        "first_appearance_BidderID": 7
       },
       "bidder_04": {
         "resolved_name": "Unnamed party 3",
         "aliases_observed": [
           "Unnamed party 3"
         ],
-        "first_appearance_BidderID": 6
+        "first_appearance_BidderID": 8
       },
       "bidder_05": {
         "resolved_name": "Unnamed party 4",
         "aliases_observed": [
           "Unnamed party 4"
         ],
-        "first_appearance_BidderID": 7
+        "first_appearance_BidderID": 9
       },
       "bidder_06": {
         "resolved_name": "Unnamed party 5",
         "aliases_observed": [
           "Unnamed party 5"
         ],
-        "first_appearance_BidderID": 8
+        "first_appearance_BidderID": 10
       },
       "bidder_07": {
         "resolved_name": "Unnamed party 6",
         "aliases_observed": [
           "Unnamed party 6"
         ],
-        "first_appearance_BidderID": 9
+        "first_appearance_BidderID": 11
       },
       "bidder_08": {
         "resolved_name": "Unnamed party 7",
         "aliases_observed": [
           "Unnamed party 7"
         ],
-        "first_appearance_BidderID": 10
+        "first_appearance_BidderID": 12
       },
       "bidder_09": {
         "resolved_name": "Unnamed party 8",
         "aliases_observed": [
           "Unnamed party 8"
         ],
-        "first_appearance_BidderID": 11
+        "first_appearance_BidderID": 13
       },
       "bidder_10": {
         "resolved_name": "Unnamed party 9",
         "aliases_observed": [
           "Unnamed party 9"
         ],
-        "first_appearance_BidderID": 12
+        "first_appearance_BidderID": 14
       },
       "bidder_11": {
         "resolved_name": "Unnamed party 10",
         "aliases_observed": [
           "Unnamed party 10"
         ],
-        "first_appearance_BidderID": 13
+        "first_appearance_BidderID": 15
       },
       "bidder_12": {
         "resolved_name": "Unnamed party 11",
         "aliases_observed": [
           "Unnamed party 11"
         ],
-        "first_appearance_BidderID": 14
+        "first_appearance_BidderID": 16
       },
       "bidder_13": {
         "resolved_name": "Unnamed party 12",
         "aliases_observed": [
           "Unnamed party 12"
         ],
-        "first_appearance_BidderID": 15
+        "first_appearance_BidderID": 17
       },
       "bidder_14": {
         "resolved_name": "Bidder 1",
         "aliases_observed": [
           "Bidder 1"
         ],
-        "first_appearance_BidderID": 16
+        "first_appearance_BidderID": 18
       },
       "bidder_15": {
         "resolved_name": "Bidder 2",
         "aliases_observed": [
           "Bidder 2"
         ],
-        "first_appearance_BidderID": 17
+        "first_appearance_BidderID": 19
       },
       "bidder_16": {
         "resolved_name": "Buyer Group",
         "aliases_observed": [
           "Buyer Group"
         ],
-        "first_appearance_BidderID": 18
+        "first_appearance_BidderID": 20
       },
       "bidder_17": {
         "resolved_name": "Bidder 3",
@@ -183,6 +183,66 @@
       "bidder_name": null,
       "bidder_alias": null,
       "bidder_type": null,
+      "bid_note": "Target Sale Public",
+      "bid_type": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "2014-08-13 00:00:00",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "multiplier": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 3,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Sale Press Release",
+      "bid_type": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "2014-08-19 00:00:00",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "multiplier": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 4,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
       "bid_note": "Final Round Inf Ann",
       "bid_type": null,
       "bid_date_precise": null,
@@ -207,7 +267,7 @@
       "flags": []
     },
     {
-      "BidderID": 3,
+      "BidderID": 5,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_01",
@@ -237,7 +297,7 @@
       "flags": []
     },
     {
-      "BidderID": 4,
+      "BidderID": 6,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_02",
@@ -272,7 +332,7 @@
       "flags": []
     },
     {
-      "BidderID": 5,
+      "BidderID": 7,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_03",
@@ -307,7 +367,7 @@
       "flags": []
     },
     {
-      "BidderID": 6,
+      "BidderID": 8,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_04",
@@ -342,7 +402,7 @@
       "flags": []
     },
     {
-      "BidderID": 7,
+      "BidderID": 9,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_05",
@@ -377,7 +437,7 @@
       "flags": []
     },
     {
-      "BidderID": 8,
+      "BidderID": 10,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_06",
@@ -412,7 +472,7 @@
       "flags": []
     },
     {
-      "BidderID": 9,
+      "BidderID": 11,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_07",
@@ -447,7 +507,7 @@
       "flags": []
     },
     {
-      "BidderID": 10,
+      "BidderID": 12,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_08",
@@ -482,7 +542,7 @@
       "flags": []
     },
     {
-      "BidderID": 11,
+      "BidderID": 13,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_09",
@@ -517,7 +577,7 @@
       "flags": []
     },
     {
-      "BidderID": 12,
+      "BidderID": 14,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_10",
@@ -552,7 +612,7 @@
       "flags": []
     },
     {
-      "BidderID": 13,
+      "BidderID": 15,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_11",
@@ -587,7 +647,7 @@
       "flags": []
     },
     {
-      "BidderID": 14,
+      "BidderID": 16,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_12",
@@ -622,7 +682,7 @@
       "flags": []
     },
     {
-      "BidderID": 15,
+      "BidderID": 17,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_13",
@@ -657,7 +717,7 @@
       "flags": []
     },
     {
-      "BidderID": 16,
+      "BidderID": 18,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_14",
@@ -692,7 +752,7 @@
       "flags": []
     },
     {
-      "BidderID": 17,
+      "BidderID": 19,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_15",
@@ -727,7 +787,7 @@
       "flags": []
     },
     {
-      "BidderID": 18,
+      "BidderID": 20,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_16",
@@ -742,66 +802,6 @@
       "bid_type": null,
       "bid_date_precise": null,
       "bid_date_rough": "2014-10-07 00:00:00",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "multiplier": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": null,
-      "flags": []
-    },
-    {
-      "BidderID": 19,
-      "process_phase": null,
-      "role": "bidder",
-      "bidder_name": null,
-      "bidder_alias": null,
-      "bidder_type": null,
-      "bid_note": "Target Sale Public",
-      "bid_type": null,
-      "bid_date_precise": null,
-      "bid_date_rough": "2014-08-13 00:00:00",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "multiplier": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": null,
-      "flags": []
-    },
-    {
-      "BidderID": 20,
-      "process_phase": null,
-      "role": "bidder",
-      "bidder_name": null,
-      "bidder_alias": null,
-      "bidder_type": null,
-      "bid_note": "Sale Press Release",
-      "bid_type": null,
-      "bid_date_precise": null,
-      "bid_date_rough": "2014-08-19 00:00:00",
       "bid_value": null,
       "bid_value_pershare": null,
       "bid_value_lower": null,
@@ -863,7 +863,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-30",
       "bid_date_rough": null,
@@ -898,7 +898,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-30",
       "bid_date_rough": null,
@@ -933,7 +933,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-30",
       "bid_date_rough": null,
@@ -968,7 +968,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-30",
       "bid_date_rough": null,
@@ -1003,7 +1003,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-30",
       "bid_date_rough": null,
@@ -1038,7 +1038,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-30",
       "bid_date_rough": null,
@@ -1073,7 +1073,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-30",
       "bid_date_rough": null,
@@ -1380,36 +1380,6 @@
       "BidderID": 37,
       "process_phase": null,
       "role": "bidder",
-      "bidder_name": null,
-      "bidder_alias": null,
-      "bidder_type": null,
-      "bid_note": "Final Round Inf",
-      "bid_type": null,
-      "bid_date_precise": null,
-      "bid_date_rough": "2014-10-30 00:00:00",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "multiplier": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": null,
-      "flags": []
-    },
-    {
-      "BidderID": 38,
-      "process_phase": null,
-      "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Unnamed party 2",
       "bidder_type": {
@@ -1442,7 +1412,7 @@
       "flags": []
     },
     {
-      "BidderID": 39,
+      "BidderID": 38,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_04",
@@ -1477,7 +1447,67 @@
       "flags": []
     },
     {
+      "BidderID": 39,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Final Round Inf",
+      "bid_type": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "2014-10-30 00:00:00",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "multiplier": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
       "BidderID": 40,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Final Round Ext Ann",
+      "bid_type": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "2014-12-10 00:00:00",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "multiplier": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 41,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_02",
@@ -1512,7 +1542,7 @@
       "flags": []
     },
     {
-      "BidderID": 41,
+      "BidderID": 42,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_05",
@@ -1547,43 +1577,13 @@
       "flags": []
     },
     {
-      "BidderID": 42,
-      "process_phase": null,
-      "role": "bidder",
-      "bidder_name": null,
-      "bidder_alias": null,
-      "bidder_type": null,
-      "bid_note": "Final Round",
-      "bid_type": null,
-      "bid_date_precise": null,
-      "bid_date_rough": "2014-12-10 00:00:00",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "multiplier": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": null,
-      "flags": []
-    },
-    {
       "BidderID": 43,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": null,
       "bidder_alias": null,
       "bidder_type": null,
-      "bid_note": "Final Round Ext Ann",
+      "bid_note": "Final Round",
       "bid_type": null,
       "bid_date_precise": null,
       "bid_date_rough": "2014-12-10 00:00:00",
@@ -1618,7 +1618,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-12-10",
       "bid_date_rough": null,
@@ -1653,7 +1653,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Formal Bid",
+      "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2014-12-10",
       "bid_date_rough": null,
@@ -1688,7 +1688,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Formal Bid",
+      "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2014-12-10",
       "bid_date_rough": null,
@@ -1723,7 +1723,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Formal Bid",
+      "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2014-12-12",
       "bid_date_rough": null,
@@ -1758,7 +1758,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Formal Bid",
+      "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2014-12-12",
       "bid_date_rough": null,
@@ -1793,7 +1793,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Formal Bid",
+      "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2014-12-12",
       "bid_date_rough": null,

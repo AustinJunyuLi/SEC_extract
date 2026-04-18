@@ -85,28 +85,28 @@
         "aliases_observed": [
           "Greene Holcomb & Fisher"
         ],
-        "first_appearance_BidderID": 16
+        "first_appearance_BidderID": 17
       },
       "bidder_01": {
         "resolved_name": "Party A",
         "aliases_observed": [
           "Party A"
         ],
-        "first_appearance_BidderID": 17
+        "first_appearance_BidderID": 18
       },
       "bidder_03": {
         "resolved_name": "25 parties, including Parties A, B",
         "aliases_observed": [
           "25 parties, including Parties A, B"
         ],
-        "first_appearance_BidderID": 18
+        "first_appearance_BidderID": 19
       },
       "bidder_13": {
         "resolved_name": "1 party",
         "aliases_observed": [
           "1 party"
         ],
-        "first_appearance_BidderID": 20
+        "first_appearance_BidderID": 21
       },
       "bidder_14": {
         "resolved_name": "Party E/F",
@@ -132,7 +132,7 @@
       "bidder_name": "bidder_05",
       "bidder_alias": "9 parties",
       "bidder_type": null,
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": null,
       "bid_date_rough": "2016-05-19 00:00:00",
@@ -327,7 +327,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-07-12",
       "bid_date_rough": null,
@@ -362,7 +362,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-07-20",
       "bid_date_rough": null,
@@ -397,7 +397,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-07-20",
       "bid_date_rough": null,
@@ -432,7 +432,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-07-20",
       "bid_date_rough": null,
@@ -467,7 +467,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-07-20",
       "bid_date_rough": null,
@@ -502,7 +502,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Formal Bid",
+      "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2016-07-20",
       "bid_date_rough": null,
@@ -602,7 +602,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-07-21",
       "bid_date_rough": null,
@@ -627,6 +627,36 @@
     },
     {
       "BidderID": 16,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Target Sale",
+      "bid_type": null,
+      "bid_date_precise": "2016-07-22",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "multiplier": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": "No concrete offer from Party A and a large time gap, so perhaps this is Target Sale?",
+      "flags": []
+    },
+    {
+      "BidderID": 17,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_02",
@@ -656,7 +686,7 @@
       "flags": []
     },
     {
-      "BidderID": 17,
+      "BidderID": 18,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_01",
@@ -691,7 +721,7 @@
       "flags": []
     },
     {
-      "BidderID": 18,
+      "BidderID": 19,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_03",
@@ -726,7 +756,7 @@
       "flags": []
     },
     {
-      "BidderID": 19,
+      "BidderID": 20,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_01",
@@ -761,7 +791,7 @@
       "flags": []
     },
     {
-      "BidderID": 20,
+      "BidderID": 21,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_13",
@@ -788,36 +818,6 @@
       "process_conditions_note": null,
       "additional_note": null,
       "comments": null,
-      "flags": []
-    },
-    {
-      "BidderID": 21,
-      "process_phase": null,
-      "role": "bidder",
-      "bidder_name": null,
-      "bidder_alias": null,
-      "bidder_type": null,
-      "bid_note": "Target Sale",
-      "bid_type": null,
-      "bid_date_precise": "2016-07-22",
-      "bid_date_rough": null,
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "multiplier": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "No concrete offer from Party A and a large time gap, so perhaps this is Target Sale?",
       "flags": []
     },
     {
@@ -862,7 +862,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Formal Bid",
+      "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2016-07-26",
       "bid_date_rough": null,
@@ -1037,7 +1037,7 @@
         "public": null,
         "note": "F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-08-01",
       "bid_date_rough": null,
@@ -1072,7 +1072,7 @@
         "public": null,
         "note": "S/F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-08-01",
       "bid_date_rough": null,
@@ -1107,7 +1107,7 @@
         "public": null,
         "note": "S/F"
       },
-      "bid_note": "Inf",
+      "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-08-02",
       "bid_date_rough": null,
@@ -1177,7 +1177,7 @@
         "public": null,
         "note": "S"
       },
-      "bid_note": "Formal Bid",
+      "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2016-08-12",
       "bid_date_rough": null,

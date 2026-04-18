@@ -89,11 +89,15 @@ ZEP_ROW_6390_EXPANSION_FLAG = {
 }
 
 # §A3 — same-date tie-break rank by event class.
+# Bid rows (bid_note="Bid") rank 6 or 7 per bid_type — see _a3_rank().
 A3_RANK: dict[str, int] = {
-    # Rank 1 — process announcements
-    "Bid Press Release": 1, "Final Round Ann": 1, "Final Round Inf Ann": 1,
+    # Rank 1 — process announcements / public events
+    "Bid Press Release": 1, "Sale Press Release": 1, "Target Sale Public": 1,
+    "Final Round Ann": 1, "Final Round Inf Ann": 1,
+    "Final Round Ext Ann": 1, "Final Round Inf Ext Ann": 1,
     "Bidder Sale": 1, "Activist Sale": 1,
     # Rank 2 — process start/restart
+    "Target Sale": 2, "Target Interest": 2,
     "Target Initiated": 2, "Terminated": 2, "Restarted": 2,
     # Rank 3 — advisor/IB changes
     "IB": 3, "IB Terminated": 3,
@@ -101,21 +105,29 @@ A3_RANK: dict[str, int] = {
     "Bidder Interest": 4,
     # Rank 5 — NDA
     "NDA": 5,
-    # Rank 6 — informal bids (derived; see _infer_bid_note)
-    "Inf": 6, "Informal Bid": 6,
-    # Rank 7 — formal bids
-    "Formal Bid": 7, "Revised Bid": 7,
+    # Rank 6 — informal bids (default for "Bid"; bumps to 7 for bid_type="formal")
+    "Bid": 6,
     # Rank 8 — mid-round dropouts
-    "DropBelowInf": 8, "DropAtInf": 8, "DropBelowFormal": 8, "DropAtFormal": 8,
-    "Drop": 8,
+    "Drop": 8, "DropBelowInf": 8, "DropAtInf": 8, "DropBelowM": 8, "DropTarget": 8,
+    "DropBelowFormal": 8, "DropAtFormal": 8,
     # Rank 9 — final-round deadlines
-    "Final Round Inf": 9, "Final Round Formal": 9,
-    "Final Round": 9, "Auction Closed": 9,
+    "Final Round": 9, "Final Round Inf": 9,
+    "Final Round Ext": 9, "Final Round Inf Ext": 9,
+    "Final Round Formal": 9, "Auction Closed": 9,
     # Rank 10 — post-deadline
     "Late Bid": 10,
     # Rank 11 — signing
     "Executed": 11,
 }
+
+
+def _a3_rank(ev: dict[str, Any]) -> int:
+    """§A3 same-date rank. Bid rows (§C3) rank by bid_type:
+    informal → 6, formal → 7."""
+    bn = ev.get("bid_note") or ""
+    if bn == "Bid":
+        return 7 if ev.get("bid_type") == "formal" else 6
+    return A3_RANK.get(bn, 99)
 
 
 # ---------------------------------------------------------------------------
@@ -428,17 +440,53 @@ def build_bidder_type(r: RawRow) -> dict[str, Any] | None:
 # Event-row assembly
 # ---------------------------------------------------------------------------
 
-def _infer_bid_note(r: RawRow) -> str | None:
-    """Alex leaves bid_note='NA' on bid rows; recover from bid_type."""
+def _migrate_bid_note(r: RawRow) -> tuple[str | None, str | None, str | None]:
+    """Apply the §C3 bid-row migration.
+
+    Returns `(bid_note, bid_type_inferred, legacy_label)`:
+
+    - `bid_note`: the rulebook-canonical §C1 code. Bid rows always use `"Bid"`.
+    - `bid_type_inferred`: `"informal"` / `"formal"` / `None` — the bid_type
+      inferred from the legacy label (when the xlsx used one); `None` if the
+      xlsx had a non-bid event code or a blank.
+    - `legacy_label`: the original xlsx `bid_note` string when it was one of
+      the deprecated bid-row labels (`"Inf"` / `"Formal Bid"` / `"Revised Bid"`),
+      else `None`. Used for a `legacy_bid_note_migrated` provenance flag.
+
+    Handles three cases:
+
+    1. xlsx `bid_note` is one of the deprecated bid-row labels → migrate to
+       `"Bid"` + inferred `bid_type`, record legacy label for provenance.
+    2. xlsx `bid_note` is blank / "NA" but xlsx `bid_type` is set (Alex's
+       earlier convention) → emit `"Bid"` with the xlsx `bid_type`.
+    3. xlsx `bid_note` is any other §C1 code (NDA, IB, etc.) → pass through.
+    """
     note = r.get("bid_note")
-    if note is not None:
-        return note
-    bt = (r.get("bid_type") or "").lower() if isinstance(r.get("bid_type"), str) else None
-    if bt == "informal":
-        return "Inf"          # aligns with §C1 / A3 rank 6
-    if bt == "formal":
-        return "Formal Bid"   # aligns with §C1 / A3 rank 7
-    return None
+    legacy = None
+
+    # Case 1: deprecated bid-row label.
+    if isinstance(note, str):
+        if note == "Inf":
+            return ("Bid", "informal", note)
+        if note == "Formal Bid":
+            return ("Bid", "formal", note)
+        if note == "Revised Bid":
+            # Keep provenance that this was a revision; the downstream can
+            # reconstruct revision-vs-first via BidderID ordering on same
+            # bidder_name.
+            return ("Bid", "formal", note)
+
+    # Case 2: blank bid_note recovered from bid_type column.
+    if note is None:
+        bt = (r.get("bid_type") or "").lower() if isinstance(r.get("bid_type"), str) else None
+        if bt == "informal":
+            return ("Bid", "informal", None)
+        if bt == "formal":
+            return ("Bid", "formal", None)
+        return (None, None, None)
+
+    # Case 3: non-bid §C1 event (NDA, IB, Drop, Executed, ...).
+    return (note, None, None)
 
 
 def _bid_type_canon(v: Any) -> str | None:
@@ -475,7 +523,9 @@ def _map_bid_value_unit(v: Any) -> str | None:
 
 
 def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
-    note = _infer_bid_note(r)
+    # §C3 migration: normalize bid-row event type to "Bid" + bid_type.
+    note, inferred_bid_type, legacy_label = _migrate_bid_note(r)
+    bid_type = _bid_type_canon(r.get("bid_type")) or inferred_bid_type
 
     # §B2: bid_date_rough is populated IFF the date was inferred. When Alex's
     # xlsx gives an explicit ISO date in bid_date_precise, the legacy "rough"
@@ -502,6 +552,29 @@ def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
     if multiplier == 1 or multiplier == 1.0:
         multiplier = None
 
+    flags: list[dict[str, Any]] = []
+    if legacy_label is not None:
+        flags.append({
+            "code": "legacy_bid_note_migrated",
+            "severity": "info",
+            "reason": (
+                f"xlsx bid_note={legacy_label!r} migrated to bid_note='Bid' + "
+                f"bid_type={bid_type!r} per rules/events.md §C3"
+            ),
+        })
+
+    # Revised Bid provenance: the xlsx distinguished a bidder's subsequent
+    # formal bid with the label 'Revised Bid'. Post-§C3, both bids carry
+    # bid_note='Bid' + bid_type='formal'; we annotate the revision so the
+    # downstream can reconstruct ordering without a distinct bid_note.
+    additional_note = r.get("additional_note")
+    if legacy_label == "Revised Bid":
+        marker = "revised"
+        if additional_note is None:
+            additional_note = marker
+        elif marker not in str(additional_note).lower():
+            additional_note = f"{additional_note} | {marker}"
+
     return {
         # BidderID is assigned later (post-sort).
         "BidderID": None,
@@ -511,7 +584,7 @@ def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
         "bidder_alias": r.get("BidderName"),
         "bidder_type": build_bidder_type(r),
         "bid_note": note,
-        "bid_type": _bid_type_canon(r.get("bid_type")),
+        "bid_type": bid_type,
         "bid_date_precise": precise,
         "bid_date_rough":   rough,
         "bid_value":          _num(r.get("bid_value")),
@@ -529,26 +602,17 @@ def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
         "financing_contingent":   None,
         "highly_confident_letter": False,
         "process_conditions_note": None,
-        "additional_note": r.get("additional_note"),
+        "additional_note": additional_note,
         "comments":        _comments(r),
         "_xlsx_row":       r.xlsx_row,            # provenance only; strip at write
         "_alex_bidder_id": r.get("BidderID"),     # provenance only; strip at write
-        "flags": [],
+        "flags": flags,
     }
 
 
 # ---------------------------------------------------------------------------
 # Chronological renumber (§A2/§A3/§Q3/§Q4 — applied universally)
 # ---------------------------------------------------------------------------
-
-def _sort_key(ev: dict[str, Any]) -> tuple[Any, int, int]:
-    # Undated rows inherit a placeholder so they cluster near their neighbors.
-    # We use _xlsx_row as the tertiary key — preserves narrative order.
-    date = ev.get("bid_date_precise")
-    rank = A3_RANK.get(ev.get("bid_note") or "", 99)
-    xlsx_row = ev["_xlsx_row"]
-    return (date or "", rank, xlsx_row)
-
 
 def renumber_chronologically(
     events: list[dict[str, Any]],
@@ -571,7 +635,7 @@ def renumber_chronologically(
         ev["_date_anchor"] = ev.get("bid_date_precise") or anchor or ""
     ordered = sorted(
         events,
-        key=lambda e: (e["_date_anchor"], A3_RANK.get(e.get("bid_note") or "", 99), e["_xlsx_row"]),
+        key=lambda e: (e["_date_anchor"], _a3_rank(e), e["_xlsx_row"]),
     )
     for new_id, ev in enumerate(ordered, start=1):
         old_id = ev.pop("_alex_bidder_id", None)
