@@ -300,8 +300,19 @@ Non-negotiables:
     verbatim bank name>`, and `bid_date_precise` = the earliest narrated
     date for that advisor's activity. If retention date is not narrated,
     attach `{{"code": "date_inferred_from_context", "severity": "soft",
-    "reason": "filing does not narrate retention date; inferred from first mention"}}`.
-    §J1 is symmetric — emit IB rows for advisors to the acquirer too.
+    "reason": "filing does not narrate retention date; inferred from first mention"}}`
+    AND populate `bid_date_rough` with a short anchor phrase (e.g.,
+    `"first narration: 2016-05-11 contact"`) per §B3. §J1 is symmetric —
+    emit IB rows for advisors to the acquirer too.
+  - **Inferred dates always populate `bid_date_rough`.** Per §B2/§B3/§B4,
+    any row whose `flags[]` carries `date_inferred_from_rough`,
+    `date_inferred_from_context`, or `date_range_collapsed` MUST have a
+    non-null `bid_date_rough` describing the inference source. Leaving
+    `bid_date_rough` empty while an inference flag is present triggers
+    hard validator error §P-D2 (`rough_date_mismatch_inference`). This
+    applies to IB retentions inferred from first narration, implicit
+    drops inferred from process-end date, range-collapse midpoints, and
+    natural-language phrases like *"mid-July 2016"*.
 
 Output contract:
   Your FINAL message (and nothing else outside it) is a single fenced block:

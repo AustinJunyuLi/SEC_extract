@@ -4,6 +4,11 @@
 
 **Status legend:** 🟥 OPEN · 🟨 TENTATIVE · 🟩 RESOLVED
 
+> Stage 1 is complete. Some historical dependency prose below still uses the
+> word "pending" when describing how the rulebook was developed. Treat the
+> section headers and `Decision:` blocks as authoritative; if a section is
+> marked 🟩 RESOLVED, it is closed unless explicitly reopened.
+
 ---
 
 ## Resolved rules
@@ -266,9 +271,13 @@ row per named advisor:
   describes the bank acting in an advisory capacity (typically the first
   time the bank is named in the Background section)
 - If the filing does not explicitly state a retention date, populate
-  `bid_date_precise` with the earliest-mentioned date and attach
+  `bid_date_precise` with the earliest-mentioned date, populate
+  `bid_date_rough` with a short anchor phrase naming the inference source
+  (e.g., `"first narration: 2016-05-11 contact"`), and attach
   `{"code": "date_inferred_from_context", "severity": "soft",
     "reason": "filing does not narrate retention date; inferred from first mention"}`.
+  The rough phrase is required by §B3 and is enforced as a hard validator
+  check (`rules/invariants.md` §P-D2 — `rough_date_mismatch_inference`).
 
 **Trigger phrases** (non-exhaustive; the 25-deal stress-test study may
 expand):

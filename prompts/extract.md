@@ -23,7 +23,7 @@ You are the Extractor in a two-agent M&A auction extraction pipeline. Your job: 
 
 5. **Classify events.** Use the closed vocabulary in `rules/events.md` §C1. If an event doesn't fit any vocabulary item, stop — flag the ambiguity rather than invent a new label.
 
-6. **Handle dates.** Apply `rules/dates.md` §B1 deterministically. If a date phrase isn't covered by the mapping table, emit the literal phrase in a `date_source_phrase` field and flag `date_phrase_unmapped`.
+6. **Handle dates.** Apply `rules/dates.md` §B1 deterministically. If a date phrase isn't covered by the mapping table, emit the literal phrase in a `date_source_phrase` field and flag `date_phrase_unmapped`. **Whenever you attach a date-inference flag** (`date_inferred_from_rough`, `date_inferred_from_context`, or `date_range_collapsed`), you MUST populate `bid_date_rough` with a short anchor phrase identifying the signal you inferred from — not left null. Examples: `"mid-July 2016"` (rough phrase per §B1); `"first narration: 2016-05-11 contact"` (context-inferred IB retention per §B3); `"implicit drop at process end: 2016-08-20"` (context-inferred implicit drop per §I1); `"Between July 15 and 22, 2016"` (collapsed range per §B4). Per `rules/invariants.md` §P-D2, inference-flag-present with `bid_date_rough = null` is a hard validator error.
 
 7. **Handle group/joint/aggregate rows.** Follow `rules/bidders.md` §E1 (aggregate vs atomize) and §E2 (joint bidders).
 
