@@ -1,0 +1,25 @@
+{
+  "slug": "zep",
+  "target_name": "ZEP INC",
+  "acquirer": "NEW MOUNTAIN CAPITAL",
+  "date_announced": "2015-04-08",
+  "is_reference": true,
+  "source": {
+    "index_url": "https://www.sec.gov/Archives/edgar/data/1408287/0001047469-15-004989-index.htm",
+    "cik": "1408287",
+    "accession": "000104746915004989",
+    "primary_document_url": "https://www.sec.gov/Archives/edgar/data/1408287/000104746915004989/a2224840zdefm14a.htm",
+    "primary_document_name": "a2224840zdefm14a.htm",
+    "form_type": "DEFM14A"
+  },
+  "artifacts": {
+    "raw_htm_bytes": 1307117,
+    "raw_md_bytes": 614358,
+    "pages_count": 180
+  },
+  "fetch": {
+    "user_agent": "Austin Li <junyu.li.24@ucl.ac.uk>",
+    "fetched_at": "2026-04-18T13:19:01.115902Z",
+    "sec2md_version": "0.1.22"
+  }
+}

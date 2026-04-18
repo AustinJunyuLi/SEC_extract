@@ -1,0 +1,25 @@
+{
+  "slug": "stec",
+  "target_name": "S T E C INC",
+  "acquirer": "WESTERN DIGITAL CORP",
+  "date_announced": "2013-06-24",
+  "is_reference": true,
+  "source": {
+    "index_url": "https://www.sec.gov/Archives/edgar/data/1102741/0001193125-13-325730-index.htm",
+    "cik": "1102741",
+    "accession": "000119312513325730",
+    "primary_document_url": "https://www.sec.gov/Archives/edgar/data/1102741/000119312513325730/d570653ddefm14a.htm",
+    "primary_document_name": "d570653ddefm14a.htm",
+    "form_type": "DEFM14A"
+  },
+  "artifacts": {
+    "raw_htm_bytes": 1376551,
+    "raw_md_bytes": 597183,
+    "pages_count": 158
+  },
+  "fetch": {
+    "user_agent": "Austin Li <junyu.li.24@ucl.ac.uk>",
+    "fetched_at": "2026-04-18T13:19:09.241535Z",
+    "sec2md_version": "0.1.22"
+  }
+}

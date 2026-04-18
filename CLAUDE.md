@@ -1,114 +1,212 @@
 # CLAUDE.md — M&A Takeover Auction Extraction Project
 
-> Context file for any Claude (or human) picking up this project. Keep this file current as the project evolves.
+> Context file for any Claude (or human) picking up this project. Keep it current as the project evolves.
 
 ## What this project is
 
-We are building an **AI extraction pipeline** that reads the "Background of the Merger" section of SEC merger filings (DEFM14A, PREM14A, SC-TO-T, S-4) and produces a structured row-per-event spreadsheet matching the schema used in Alex Gorbenko's hand-curated M&A auction dataset.
+An **AI extraction pipeline** that reads the "Background of the Merger" section of SEC merger filings (DEFM14A, PREM14A, SC-TO-T, S-4) and produces a structured row-per-event spreadsheet matching the schema Alex Gorbenko uses in his M&A auction research.
 
-**Why.** Alex's underlying research project studies informal bidding in corporate takeover auctions. The existing dataset was collected by Chicago RAs with known inconsistencies. Alex has manually corrected 9 deals to serve as a gold standard. The long-term plan is to use those 9 deals plus Alex's written instructions to train/prompt an AI extractor that can process the remaining ~400 deals automatically.
+**Why.** Alex's research studies informal bidding in corporate takeover auctions. The legacy dataset was collected by Chicago RAs with known inconsistencies. Alex has hand-corrected **9 reference deals**. The goal is to use those 9 deals plus Alex's written rulebook to prompt an AI extractor that processes the remaining ~392 deals at research-grade quality.
 
 **Who's involved.**
-- **Austin** (the user of this repo) — building the pipeline.
-- **Alex Gorbenko** — senior collaborator, produced the instructions and the gold-standard corrections. Not available in this session; Austin relays decisions from him.
+- **Austin** — building the pipeline.
+- **Alex Gorbenko** — senior collaborator, produced the instructions and reference extractions. Async; Austin relays his decisions.
 
-## Project workflow
+## Ground-truth epistemology (IMPORTANT)
 
-The work decomposes into three stages. We're currently in **Stage 1**.
+**The SEC filing is ground truth.** The filing text is the authoritative source of what happened in the deal.
+
+**Alex's workbook is a reference guideline, not ground truth.** Alex is an expert but he is prone to the same human errors as anyone — transcription mistakes, judgment inconsistencies, ambiguous-case calls he might decide differently on another day, and the specific defects he has already flagged in his own work. His extractions are valuable as a calibration point, not as an oracle.
+
+**Austin verifies correctness.** During the development phase, Austin reads each reference deal's filing himself and adjudicates every disagreement between the AI and Alex's workbook. There are four possible verdicts per disagreement:
+
+1. **AI correct, Alex wrong** — record as an AI-identified correction to the reference dataset. Do not update the prompt/rulebook.
+2. **AI wrong, Alex correct** — update the prompt or rulebook to close the gap.
+3. **Both correct, different interpretations** — flag as a legitimate judgment call; document in the rulebook so the AI and Alex converge in future.
+4. **Both wrong** — update the rulebook against the filing text.
+
+**Implication for scoring.** There is no F1-vs-Alex number that gates shipping. The tool that compares AI output against Alex's extractions (`scoring/diff.py`) produces a diff report for human review. The report is a development aid, not a grade.
+
+## Architecture (MVP)
+
+The pipeline is a **per-deal Ralph loop** wrapped around a **two-agent inner pipeline**. Each deal is processed in a fresh context with a stable rulebook loaded from disk.
 
 ```
-┌─────────────────────────────────────────────┐
-│ Stage 1: Resolve open questions             │  ◄── WE ARE HERE
-│   Walk through skill_open_questions.md      │
-│   Record a Decision for each question       │
-│   Output: resolved rulebook                 │
-└─────────────────────────────────────────────┘
-                    │
-                    ▼
-┌─────────────────────────────────────────────┐
-│ Stage 2: Produce two design artifacts       │
-│   (a) Schema — the output contract          │
-│   (b) Extraction rulebook — decision logic  │
-└─────────────────────────────────────────────┘
-                    │
-                    ▼
-┌─────────────────────────────────────────────┐
-│ Stage 3: Orchestrate & build the skill      │
-│   Chunking, multi-pass extraction, QC,      │
-│   filing fetch, bidder canonicalization,    │
-│   benchmarking against the 9 gold deals     │
-└─────────────────────────────────────────────┘
+seeds.csv ──► for each deal ──► fresh Claude session ──────────────┐
+                                                                   │
+                                ┌── rules/ ──────────┐             │
+                                │   schema.md        │             │
+                                │   events.md        │             │
+                                │   bidders.md       │ ──loaded──► │
+                                │   bids.md          │             │
+                                │   dates.md         │             │
+                                │   invariants.md    │             │
+                                └────────────────────┘             │
+                                                                   │
+                                ┌── prompts/ ────────┐             │
+                                │   extract.md  ─────┼──► Extractor agent
+                                │                    │          │
+                                │                    │          ▼
+                                │                    │    candidate rows + source_quote
+                                │                    │          │
+                                │   validate.md ─────┼──► Validator agent
+                                └────────────────────┘          │
+                                                                ▼
+                                          output/extractions/{deal}.json
+                                                  │
+                                                  ▼
+                                  state/progress.json (append deal status)
+                                                  │
+                                                  ▼
+                                  if deal is reference:
+                                    scoring/diff.py vs reference/alex/{deal}.json
+                                    → Austin manually reviews the diff
+                                                  │
+                                                  ▼
+                                                git commit
 ```
 
-**Critical rule:** We do **not** start building the skill until Stage 1 is complete. Every open question in `skill_open_questions.md` must have a Decision.
+**Two agents, not four.** Planner and Canonicalizer are explicitly deferred until the MVP fails. Add them only when the data demands it.
 
-## Where we are right now
+**Every row carries `source_quote` and `source_page`.** Non-negotiable. No un-cited rows ship. This is also what makes manual verification tractable.
 
-- **Stage 1, not yet started on the walkthrough.** The question list is drafted but no decisions have been recorded.
-- The open-questions doc lives at `skill_open_questions.md` and has 19 sections (A–S).
-- Suggested walkthrough order (front-loads decisions that constrain later ones): **S → R → N → C → E → F → D → H → G → I → J → K → L → M → B → A → O → P → Q**.
+## Project workflow — three stages
 
-### Immediate next action
-Start at **S1** (scope: auction-only deals vs. every M&A deal; which filing types the skill accepts) and work down the list with Austin. Record each Decision in the doc as we go.
+```
+┌────────────────────────────────────────────────┐
+│ Stage 1: Resolve open questions          [DONE]│
+│   Walk through open questions in rules/*.md    │
+│   Record Decision on each open question        │
+│   Output: resolved rulebook                    │
+└────────────────────────────────────────────────┘
+                    │
+                    ▼
+┌────────────────────────────────────────────────┐
+│ Stage 2: Build diff harness + Alex JSONs       │  ◄── WE ARE HERE
+│   Convert 9 reference deals from xlsx → schema │
+│   JSON; these go in reference/alex/.           │
+│   Write scoring/diff.py (AI-vs-Alex diff).     │
+│   reference/alex/alex_flagged_rows.json        │
+│   records Alex's own caveats on his own work.  │
+└────────────────────────────────────────────────┘
+                    │
+                    ▼
+┌────────────────────────────────────────────────┐
+│ Stage 3: Build, iterate, manually verify       │
+│   MVP: Extractor + Validator, one archetype    │
+│   at a time (Medivation → Imprivata → …)       │
+│   For each reference deal: run pipeline,       │
+│   diff against Alex, Austin reads the filing   │
+│   and adjudicates each divergence.             │
+│   Only crank 392 target deals once Austin has  │
+│   manually verified all 9 reference deals and  │
+│   the rulebook has stabilized across 3         │
+│   consecutive unchanged-rulebook runs.         │
+└────────────────────────────────────────────────┘
+```
 
-## Files in this repo
+**Critical rule:** Do **not** start Stage 3 until Stage 1 has no 🟥 OPEN questions remaining and Stage 2's diff harness runs end-to-end on at least one reference deal.
+
+## Current status
+
+- **Stage 1 complete (2026-04-18).** All 54 rule decisions ratified with Alex in a power-run session; full decision records in `rules/*.md`. Tracker `skill_open_questions.md` shows 0 🟥 / 54 🟩.
+- **Stage 2 open.** Next actions:
+  1. Convert 9 reference deals from xlsx → `reference/alex/{deal}.json` in Stage 2 (applying §Q1–§Q4 fixes during conversion).
+  2. Wire up `scoring/diff.py` end-to-end on Medivation as the simplest archetype.
+  3. Kick off the **25-deal lawyer-language study** (deferred from Stage 1) to stress-test §G1 (informal-vs-formal) and §L2 (6-month phase-gap heuristic).
+- **Stage 3 gate.** Do not run on target deals until all 9 reference deals are manually verified and the rulebook is stable across 3 consecutive runs.
+
+## Repo layout
 
 | Path | What it is |
 |---|---|
-| `CLAUDE.md` | This file. |
-| `skill_open_questions.md` | Working doc of unresolved design questions. Stage 1 deliverable. |
-| `reference/CollectionInstructions_Alex_2026.pdf` | Alex's full data-collection rulebook. Black = original Chicago RAs, **bold red = Alex's additions** (the red additions are the most important for us). |
-| `reference/deal_details_Alex_2026.xlsx` | The dataset. 9,336 rows × 35 columns. Contains Alex's 9 corrected deals and thousands of older Chicago-collected deals. Red cells = Alex's corrections in the 9 reference deals. |
-| `seeds.csv` | 401 candidate deals with SEC filing URLs. 9 rows flagged `is_reference=true` are Alex's gold-standard deals (Providence & Worcester, Medivation, Imprivata, Zep, Petsmart, Penford, Mac Gray, Saks, STec). The other ~392 are the extraction target. |
-| `.git/` | Git repo (no commits yet on `main`). |
+| `CLAUDE.md` | This file. Project context for any session. |
+| `SKILL.md` | Thin orchestrator prompt — the entry point for the extraction skill. |
+| `skill_open_questions.md` | Slim Stage 1 tracker. Indexes every 🟥 OPEN question across `rules/`. |
+| `rules/schema.md` | Output schema: columns, types, deal-level vs event-level. |
+| `rules/events.md` | Event vocabulary (closed list): start-of-process, NDA, IB, final rounds, dropouts, closing. |
+| `rules/bidders.md` | Bidder identity, type classification (S/F/public/non-US), aggregation, joint bidders. |
+| `rules/bids.md` | Bid value structure (ranges, composite, aggregate), informal-vs-formal classification, skip rules. |
+| `rules/dates.md` | Rough-date mapping ("mid-July" → calendar date), event sequencing, BidderID. |
+| `rules/invariants.md` | Hard checks the validator runs (NDA-before-bid, monotone dates, Executed present, NDA count cross-check). |
+| `prompts/extract.md` | Extractor agent prompt. |
+| `prompts/validate.md` | Validator agent prompt. |
+| `scoring/diff.py` | AI-vs-Alex diff report generator. Produces human-readable reports for manual review. Not a grader. |
+| `state/progress.json` | JSON feature-list: per-deal status (`pending`/`extracted`/`validated`/`verified`/`failed`). |
+| `output/extractions/{deal}.json` | Per-deal extraction output (AI-produced). |
+| `reference/CollectionInstructions_Alex_2026.pdf` | Alex's data-collection rulebook. Black = original Chicago RAs; **bold red = Alex's additions** (most important). |
+| `reference/deal_details_Alex_2026.xlsx` | Legacy dataset. 9,336 rows × 35 columns. Red cells = Alex's corrections. |
+| `reference/alex/{deal}.json` | Alex's extraction of the 9 reference deals, converted to pipeline schema. Built in Stage 2. |
+| `reference/alex/alex_flagged_rows.json` | Rows in Alex's workbook that Alex himself has annotated as wrong/unresolved. See §Q in `rules/dates.md`. |
+| `reference/alex/README.md` | How `reference/alex/` is organized. |
+| `seeds.csv` | 401 candidate deals with SEC filing URLs. 9 flagged `is_reference=true` are Alex's hand-corrected set. |
+| `run.py` | Outer loop. Iterates `seeds.csv`, runs per-deal pipeline, updates `state/progress.json`, commits. |
 
-## The 9 gold-standard deals
+## The 9 reference deals
 
-Alex hand-corrected these. They are the training/benchmark set. Each was chosen to exercise a different archetype. Rows refer to `deal_details_Alex_2026.xlsx`.
+Alex hand-corrected these from the legacy dataset. They are the development / calibration set. Each exercises a different archetype. Rows refer to `reference/deal_details_Alex_2026.xlsx`.
 
-| Deal | Rows | Archetype it tests |
-|---|---|---|
-| Providence & Worcester | 6024–6059 | English-auction; CVR consideration; many rough dates |
-| Medivation | 6060–6075 | Classic `Bidder Sale`; `Bid Press Release` |
-| Imprivata | 6076–6104 | `Bidder Interest` → `Bidder Sale`; `DropBelowInf` / `DropAtInf` |
-| Zep | 6385–6407 | `Terminated` then `Restarted` (two separate auctions) |
-| Petsmart | 6408–6457 | `Activist Sale`; consortium winner; 15 NDAs same day |
-| Penford | 6461–6485 | Two stale prior attempts (2007, 2009); near-single-bidder endgame |
-| Mac Gray | 6927–6960 | IB terminated and re-hired; target drops highest formal bid |
-| Saks | 6996–7020 | Rows Alex wants *deleted*; go-shop |
-| STec | 7144–7171 | Multiple `Bidder Interest` pre-IB; single-bound informals |
+| Deal slug | Target | Rows | Archetype it tests |
+|---|---|---|---|
+| `providence-worcester` | Providence & Worcester | 6024–6059 | English-auction; CVR consideration; many rough dates |
+| `medivation` | Medivation | 6060–6075 | Classic `Bidder Sale`; `Bid Press Release` (simplest) |
+| `imprivata` | Imprivata | 6076–6104 | `Bidder Interest` → `Bidder Sale`; `DropBelowInf` / `DropAtInf` |
+| `zep` | Zep | 6385–6407 | `Terminated` then `Restarted` (two separate auctions) |
+| `petsmart-inc` | Petsmart | 6408–6457 | `Activist Sale`; consortium winner; 15 NDAs same day |
+| `penford` | Penford | 6461–6485 | Two stale prior attempts (2007, 2009); near-single-bidder endgame |
+| `mac-gray` | Mac Gray | 6927–6960 | IB terminated and re-hired; target drops highest formal bid |
+| `saks` | Saks | 6996–7020 | Rows Alex wants *deleted*; go-shop |
+| `stec` | STec | 7144–7171 | Multiple `Bidder Interest` pre-IB; single-bound informals |
 
-## Key conventions in the existing data
+**Rollout order** (simple → complex): Medivation → Imprivata → Zep → Providence → Penford → Mac Gray → Petsmart → STec → Saks.
 
-- **`BidderID` is an event sequence number, not a bidder identifier.** Integers come from the Chicago RAs; decimals (`0.3`, `1.5`, `13.5`) are events Alex inserted between the integers. The name is an inherited misnomer.
-- **A single bidder appears on many rows** — once for the NDA, again for each bid, once for a drop, once for execution.
-- **`bid_note` is the event-type label.** Start-of-process events (`Target Sale`, `Bidder Sale`, `Activist Sale`, `Bidder Interest`), `NDA`, `IB`, final-round markers, dropout codes (`Drop`, `DropBelowM`, `DropBelowInf`, `DropAtInf`, `DropTarget`), `Executed`, `Terminated`, `Restarted`, press-release markers (`Bid Press Release`, `Sale Press Release`).
-- **Legal counsel is currently in `comments_1` as free text**, not a structured field. Alex wants this promoted. Decision pending in §J2.
-- **Composite consideration** (cash + CVR, cash + earnout) is currently in `comments_1` as free text. Decision pending in §H2.
-- **Deal-level fields** (`all_cash`, `cshoc`, `TargetName`, etc.) are repeated on every row today. Decision pending in §N1 on whether to split into a deal-level sheet.
+## Key data conventions (preserved from legacy)
 
-## Known defects in the gold standard (do not train on as-is)
+- **`BidderID` is an event sequence number, not a bidder identifier.** Integers = Chicago event; decimals (`0.3`, `1.5`) = Alex's insertions. Decision pending in `rules/dates.md` on whether the AI keeps this convention.
+- **A single bidder appears on many rows** — once for NDA, again for each bid, once for drop, once for execution.
+- **`bid_note` is the event-type label.** The closed vocabulary lives in `rules/events.md`.
+- **Legal counsel** is currently free text in `comments_1`. Alex wants it promoted. Decision in `rules/events.md` §J.
+- **Composite consideration** (cash + CVR, cash + earnout) currently free text in `comments_1`. Decision in `rules/bids.md` §H.
+- **Deal-level fields** (`TargetName`, `Acquirer`, `all_cash`, `cshoc`, etc.) repeat on every row today. Decision in `rules/schema.md` §N.
 
-Documented in §Q of `skill_open_questions.md`. Short list:
+## Alex's own flags on his own work
 
-- Saks rows 7013 and 7015 should be deleted per Alex's own comments.
-- Zep row 6390 compresses 5 bidders into one row; Alex's own comment flags it for expansion.
-- Mac Gray row 6960 has `BidderID=21` duplicating row 6957.
-- Medivation rows 6066 and 6070 both have `BidderID=5`.
+These are rows in Alex's workbook that Alex himself annotated as wrong or unresolved. They live in `reference/alex/alex_flagged_rows.json`. When the AI's extraction disagrees with one of these rows, the disagreement is expected — the AI may well be more correct than Alex here.
 
-Decision pending: do we fix the reference file before building, or treat these as known exceptions.
+- **Saks rows 7013 and 7015** — Alex's own comments say delete.
+- **Zep row 6390** — compresses 5 bidders into one row; Alex flagged for expansion.
+- **Mac Gray row 6960** — `BidderID=21` duplicates row 6957.
+- **Medivation rows 6066 and 6070** — both have `BidderID=5`.
 
-## Conventions for future Claude sessions working on this project
+Pending decision in `rules/dates.md` §Q: fix these in Alex's JSONs when building them in Stage 2, or keep them untouched and let the diff report surface the disagreements naturally.
 
-- **Don't start coding the skill until Stage 1 is fully closed.** If Austin asks for something that depends on an open question, resolve the question first.
-- **Every design decision lives in `skill_open_questions.md`**, not scattered across chat transcripts. When a decision is made, write it into that file's `Decision:` field.
-- **The 9 gold deals are the only validated reference data.** Earlier rows in the workbook (before row ~6000) are Chicago-collected and known to have errors Alex has not yet reviewed. Do not treat them as ground truth.
-- **Alex's instructions PDF is authoritative** on anything in black-text Chicago original or bold-red Alex addition. When the PDF and the workbook disagree, the workbook reflects Alex's latest thinking and usually wins, but flag the divergence.
-- **Be skeptical, cite rows, check dates.** Austin explicitly asks for accuracy over speed and is happy to be told he's wrong.
-- **Use the user's folder name ("the folder you selected") when referring to file locations**, not internal sandbox paths.
+## Conventions for future Claude sessions
+
+- **Do not start Stage 3 until Stage 1 is fully closed.** If Austin asks for something that depends on an open question, resolve the question first — in the relevant rule file.
+- **Every design decision lives in a `rules/*.md` file**, not scattered across chat transcripts. When a decision is made, write it into that file's `Decision:` field and remove the 🟥.
+- **The SEC filing text is ground truth.** Alex's workbook is a reference, not an oracle. Expect the AI and Alex to disagree — that's useful signal, not failure.
+- **During manual verification, Austin reads the filing.** Any diff between AI and Alex is adjudicated against the filing, not by appeal to Alex.
+- **Alex's PDF is authoritative on the RULES** (black = Chicago; **bold red = Alex's additions**). The rulebook encodes these rules. Where the PDF and Alex's own extractions disagree, treat it as a decision item and log it in `rules/99_pdf_overrides.md` (create on first use).
+- **Be skeptical. Cite rows. Check dates.** Austin explicitly asks for accuracy over speed and is happy to be told he's wrong.
+- **Every extracted row must carry `source_quote` and `source_page`.** Rows without evidence are rejected by the validator. This is also what makes manual verification tractable — Austin can confirm each row by reading the cited passage.
+- **Reset context per deal.** No cross-deal state in the model. Everything persists through `rules/`, `state/progress.json`, and `output/`.
+- **Use the user's folder name ("the folder you selected") when referring to file locations**, not sandbox paths.
+- **Before adding a new agent or rule file, name the assumption it encodes.** If you can't say what the model fails at without it, don't add it.
 
 ## Open coordination items with Alex
 
 - Confirm `cshoc` is the COMPUSTAT shares-outstanding field (Alex's own note says "to be verified").
-- Confirm whether the pipeline should handle non-auction deals (single bidder with NDA) or only auctions (multiple NDAs).
-- Confirm whether Alex wants us to fix the gold-standard defects above before we build, or document and proceed.
+- Confirm whether to fix the self-flagged rows in Alex's JSONs when building them, or let the diff reveal the disagreements.
+- Confirm the composite-consideration schema (cash + CVR, cash + earnout) — structured columns or free text?
+- Confirm whether legal counsel becomes an event type or a deal-level field.
+
+**Resolved (kept here for changelog, do not reopen):**
+- Auction vs all-M&A scope — resolved 2026-04-18 in `rules/schema.md` §Scope-1. Pipeline extracts every deal with a valid filing type; `auction: bool` is deal-level and downstream filters on it.
+
+## Exit criteria for each stage
+
+**Stage 1 done when:** every 🟥 in every `rules/*.md` is resolved to 🟩. `skill_open_questions.md` shows zero open items.
+
+**Stage 2 done when:** `reference/alex/*.json` contains all 9 reference deals in schema-conformant form; `scoring/diff.py` runs end-to-end and emits a human-readable diff on one reference deal.
+
+**Stage 3 done when:** Austin has manually verified the AI output against each of the 9 reference deals' filings. Every AI-vs-Alex disagreement has been adjudicated. Hard invariants pass 100%. The rulebook has remained unchanged across 3 consecutive full-reference-set runs. Only then turn the crank on the 392 target deals.

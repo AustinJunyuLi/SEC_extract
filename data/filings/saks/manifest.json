@@ -1,0 +1,25 @@
+{
+  "slug": "saks",
+  "target_name": "SAKS INC",
+  "acquirer": "HUDSON'S BAY COMPANy",
+  "date_announced": "2013-07-29",
+  "is_reference": true,
+  "source": {
+    "index_url": "https://www.sec.gov/Archives/edgar/data/812900/0001193125-13-390275-index.htm",
+    "cik": "812900",
+    "accession": "000119312513390275",
+    "primary_document_url": "https://www.sec.gov/Archives/edgar/data/812900/000119312513390275/d585064ddefm14a.htm",
+    "primary_document_name": "d585064ddefm14a.htm",
+    "form_type": "DEFM14A"
+  },
+  "artifacts": {
+    "raw_htm_bytes": 1239577,
+    "raw_md_bytes": 625511,
+    "pages_count": 156
+  },
+  "fetch": {
+    "user_agent": "Austin Li <junyu.li.24@ucl.ac.uk>",
+    "fetched_at": "2026-04-18T13:19:08.121289Z",
+    "sec2md_version": "0.1.22"
+  }
+}

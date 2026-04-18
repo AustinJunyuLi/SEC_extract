@@ -1,457 +1,140 @@
-# Extraction Pipeline — Open Questions to Resolve Before Building the Skill
+# Stage 1 Open Questions — Index
 
-**Purpose.** Build an AI extraction skill that reads an SEC filing's "Background of the Merger" section (from DEFM14A / PREM14A / SC-TO-T / S-4) and produces a row-per-event spreadsheet matching Alex Gorbenko's schema in `deal_details_Alex_2026.xlsx`.
+**Purpose.** Slim tracker of every 🟥 OPEN question across `rules/*.md`. Resolve them in the order below. When every item shows 🟩 RESOLVED, Stage 1 is done and Stage 2 can begin.
 
-**How to use this doc.** Each section lists the open questions. For each question: *Context*, *Current practice* (what Alex did in the 9 gold-standard deals), *Options*, and a **Decision** field that is empty until we resolve it. When every question has a Decision, we convert the resolved rulebook into a `SKILL.md`.
+**How to use.** For each open item, open the referenced rule file, read the Context/Options for that section, discuss with Austin (and Alex when needed), and write the answer into the `Decision:` field in that file. When the decision lands, update this file's emoji to 🟩.
 
-**Reference deals** (the 9 that Alex corrected by hand; these are our gold standard and stress-tests):
-
-| Deal                    | Rows         | Archetype it tests                                            |
-|-------------------------|--------------|---------------------------------------------------------------|
-| Providence & Worcester  | 6024–6059    | English-auction; CVR consideration; many rough dates          |
-| Medivation              | 6060–6075    | Classic Bidder Sale; Bid Press Release                        |
-| Imprivata               | 6076–6104    | Bidder Interest → Bidder Sale; DropBelowInf / DropAtInf       |
-| Zep                     | 6385–6407    | Terminated then Restarted (two separate auctions)             |
-| Petsmart                | 6408–6457    | Activist Sale; consortium winner; 15 NDAs same day            |
-| Penford                 | 6461–6485    | Two stale prior attempts (2007, 2009); quasi-single-bidder    |
-| Mac Gray                | 6927–6960    | IB terminated and re-hired; target drops highest formal bid   |
-| Saks                    | 6996–7020    | Chicago RA rows Alex wants deleted; go-shop                   |
-| STec                    | 7144–7171    | Multiple Bidder Interest pre-IB; single-bound informals       |
-
-Status legend: 🟥 OPEN · 🟨 TENTATIVE · 🟩 RESOLVED
+**Status legend:** 🟥 OPEN · 🟨 TENTATIVE · 🟩 RESOLVED
 
 ---
 
-## A. Event Sequencing & Identifiers
+## Walkthrough order
 
-### A1. Do we keep `BidderID` in the AI output at all?
-- **Context.** `BidderID` is Alex's event-sequence number (integers from Chicago RAs, decimals for Alex's insertions). It exists only to preserve back-compatibility with the old Chicago numbering.
-- **Current practice.** Integers = Chicago event, decimals = Alex insertion.
-- **Options.**
-  1. Keep `BidderID` and have the AI replicate Alex's decimal-wedge logic.
-  2. Drop it entirely; emit rows in strict date/narrative order with a fresh 1..N sequence.
-  3. Keep it but redefine as *pure chronological sequence* (integers, monotone in date/narrative).
-- **Decision.** 🟥 —
+Scope decisions first (they constrain everything), schema next (defines the output), then the event/bidder/bid semantics, then dates, then invariants last (they check what everything else produces). Within each file, work top-to-bottom.
 
-### A2. Should `BidderID` be strictly monotone in date?
-- **Context.** In Medivation, row 6066 has `ID=5` on 7/19 but row 6067 has `ID=4` on 8/8. In Mac Gray, `ID=21` appears on both row 6957 (9/21) and row 6960 (10/14). In Medivation, `ID=5` appears on both row 6066 (7/19) and row 6070 (8/14). These are ordering/uniqueness violations.
-- **Options.**
-  1. Yes — strictly monotone; error if dates disagree with order.
-  2. No — ordering follows narrative order in the filing (which usually but not always equals date order).
-- **Decision.** 🟥 —
-
-### A3. Tie-breaking for events on the same date
-- **Context.** Many events share a date (e.g., Petsmart has 12 NDAs on 10/07/2014; Providence has 4 informal bids and a Final Round Inf on 7/20/2016).
-- **Options.**
-  1. Preserve filing narrative order.
-  2. Logical order (Final Round Ann before bids before Final Round deadline before Drop, etc.).
-- **Decision.** 🟥 —
-
----
-
-## B. Date Handling
-
-### B1. Natural-language dates — what numeric date do we assign?
-- **Context.** Filings commonly say "mid-June 2016", "early July", "late July", "over the next few weeks", "in the second half of July". Alex's `bid_date_rough` takes a specific date but his rule isn't spelled out; his own comments ask "what should be the appropriate date? July 1?" (Providence row 6033) and "Early July 2016".
-- **Options.**
-  1. Deterministic mapping: early = day 5, mid = day 15, late = day 25; "over the next few weeks" = end of window; "second half" = day 22.
-  2. Conservative: always use the first day of the stated window.
-  3. Midpoint of the implied window.
-  4. Return the literal phrase in `bid_date_rough` and let a post-processor resolve.
-- **Decision.** 🟥 —
-
-### B2. `bid_date_precise` vs `bid_date_rough`
-- **Context.** Alex skipped the distinction in the 9 gold-standard deals and just filled `bid_date_rough`. The original intent was precise = explicit calendar date; rough = inferred.
-- **Options.**
-  1. Keep both; precise only when the filing gives an explicit date, else leave blank.
-  2. Drop the distinction and use a single `date` column plus a `date_is_approximate` boolean.
-- **Decision.** 🟥 —
-
-### B3. Undated events
-- **Context.** Saks row 7012 (Sponsor G drop) and row 7014 (Company H drop) have no date — the filing doesn't give one.
-- **Options.**
-  1. Leave the date blank and flag the event.
-  2. Infer from context (the nearest bracketing event).
-  3. Skip the event.
-- **Decision.** 🟥 —
+1. `rules/schema.md` §Scope-1, §Scope-2, §Scope-3 — what deals, what filings, what's out of scope.
+2. `rules/schema.md` §R1, §R2, §R3 — output columns.
+3. `rules/schema.md` §N1, §N2, §N3 — deal-level vs event-level split.
+4. `rules/events.md` §C1, §C2, §C3 — closed event vocabulary.
+5. `rules/events.md` §D1 — start-of-process decision tree.
+6. `rules/events.md` §I1, §I2 — dropout codes.
+7. `rules/events.md` §J1, §J2 — investment bank + legal counsel.
+8. `rules/events.md` §K1, §K2, §K3 — final-round vocabulary and edge cases.
+9. `rules/events.md` §L1, §L2 — prior-process inclusion.
+10. `rules/bidders.md` §E1, §E2, §E3, §E4 — identity, aggregation, joint bidders, winner retrofit.
+11. `rules/bidders.md` §F1, §F2, §F3 — bidder type canonical format.
+12. `rules/bids.md` §G1, §G2 — informal-vs-formal call. **Highest-risk classification.**
+13. `rules/bids.md` §H1, §H2, §H3, §H4, §H5 — bid value structure.
+14. `rules/bids.md` §M1, §M2, §M3, §M4 — skip rules.
+15. `rules/bids.md` §O1 — process conditions.
+16. `rules/dates.md` §B1, §B2, §B3, §B4 — natural-language date mapping.
+17. `rules/dates.md` §A1, §A2, §A3, §A4 — `BidderID` event sequencing.
+18. `rules/dates.md` §Q1–§Q4 — Alex-flagged rows in the reference workbook (what to do during xlsx → JSON conversion).
+19. `rules/invariants.md` §P-R*, §P-D*, §P-S* — validator invariants. Write only after 1–18.
 
 ---
 
-## C. Event Vocabulary (complete taxonomy)
+## Status matrix
 
-### C1. Final authoritative list of `bid_note` values
-- **Context.** The instructions define a set; Alex's 9 deals use a superset in practice. We need the closed list the AI is allowed to emit.
-- **Draft list seen in the data:**
-  - Start of process: `Bidder Interest`, `Bidder Sale`, `Target Sale`, `Target Sale Public`, `Activist Sale`, `Target Interest`
-  - Publicity: `Bid Press Release`, `Sale Press Release`
-  - Advisors: `IB`, `IB Terminated` *(Mac Gray only; not in Alex's instructions)*
-  - Counterparty events: `NDA`, `Drop`, `DropBelowM`, `DropBelowInf`, `DropAtInf`, `DropTarget`
-  - Bids: *(no note — bid details live in the value/type columns)*, `NA` also appears
-  - Round structure: `Final Round Inf Ann`, `Final Round Inf`, `Final Round Ann`, `Final Round`, `Final Round Ext Ann`, `Final Round Ext`, `Final Round Inf Ext Ann`, `Final Round Inf Ext` *(Mac Gray)*, `Exclusivity 30 days` *(Zep)*
-  - Closing: `Executed`
-  - Prior process: `Terminated`, `Restarted`
-- **Questions.**
-  - Is `IB Terminated` kept, renamed, or dropped?
-  - Is `Target Interest` (Mac Gray row 6928) a legitimate type, or should it be `Bidder Interest`?
-  - Is `Exclusivity 30 days` (Zep row 6405) a legitimate event row, or should it sit in a column/field attached to the bid?
-- **Decision.** 🟥 —
+| # | File | Section | Question | Status |
+|---|---|---|---|---|
+| 1 | `rules/schema.md` | §Scope-1 | Auction-only or every M&A? | 🟩 |
+| 2 | `rules/schema.md` | §Scope-2 | Which filing types? | 🟩 |
+| 3 | `rules/schema.md` | §Scope-3 | What does the skill not produce? | 🟩 |
+| 4 | `rules/schema.md` | §R1 | Final column set | 🟩 |
+| 5 | `rules/schema.md` | §R2 | Flags column format | 🟩 |
+| 6 | `rules/schema.md` | §R3 | Evidence quote column | 🟩 |
+| 7 | `rules/schema.md` | §N1 | Deal-level split | 🟩 |
+| 8 | `rules/schema.md` | §N2 | `all_cash` derivation | 🟩 |
+| 9 | `rules/schema.md` | §N3 | `cshoc` source | 🟩 |
+| 10 | `rules/events.md` | §C1 | Final `bid_note` list | 🟩 |
+| 11 | `rules/events.md` | §C2 | Capitalization canonicalization | 🟩 |
+| 12 | `rules/events.md` | §C3 | `bid_note` on bid rows | 🟩 |
+| 13 | `rules/events.md` | §D1 | Start-of-process classification | 🟩 |
+| 14 | `rules/events.md` | §I1 | Dropout code set | 🟩 |
+| 15 | `rules/events.md` | §I2 | Re-engagement code | 🟩 |
+| 16 | `rules/events.md` | §J1 | `IB Terminated` handling | 🟩 |
+| 17 | `rules/events.md` | §J2 | Legal counsel structural home | 🟩 |
+| 18 | `rules/events.md` | §K1 | Final-round vocabulary | 🟩 |
+| 19 | `rules/events.md` | §K2 | Implicit final rounds | 🟩 |
+| 20 | `rules/events.md` | §K3 | Providence row 6058 edge case | 🟩 |
+| 21 | `rules/events.md` | §L1 | Prior-process inclusion | 🟩 |
+| 22 | `rules/events.md` | §L2 | `process_phase` column | 🟩 |
+| 23 | `rules/bidders.md` | §E1 | Aggregate vs atomize | 🟩 |
+| 24 | `rules/bidders.md` | §E2 | Joint-bidder rows | 🟩 |
+| 25 | `rules/bidders.md` | §E3 | Anonymous naming | 🟩 |
+| 26 | `rules/bidders.md` | §E4 | Winner retrofit | 🟩 |
+| 27 | `rules/bidders.md` | §F1 | Bidder type format | 🟩 |
+| 28 | `rules/bidders.md` | §F2 | Type classification rules | 🟩 |
+| 29 | `rules/bidders.md` | §F3 | Consortium type | 🟩 |
+| 30 | `rules/bids.md` | §G1 | Informal-vs-formal rule | 🟩 |
+| 31 | `rules/bids.md` | §G2 | Classification evidence | 🟩 |
+| 32 | `rules/bids.md` | §H1 | Ranges + single-bound | 🟩 |
+| 33 | `rules/bids.md` | §H2 | Composite consideration | 🟩 |
+| 34 | `rules/bids.md` | §H3 | Partial-company bids | 🟩 |
+| 35 | `rules/bids.md` | §H4 | Aggregate-dollar bids | 🟩 |
+| 36 | `rules/bids.md` | §H5 | Bid revisions | 🟩 |
+| 37 | `rules/bids.md` | §M1 | Unsolicited-no-NDA skip | 🟩 |
+| 38 | `rules/bids.md` | §M2 | No-bid-intent skip | 🟩 |
+| 39 | `rules/bids.md` | §M3 | Advisor NDA disambiguation | 🟩 |
+| 40 | `rules/bids.md` | §M4 | Stale-process NDA | 🟩 |
+| 41 | `rules/bids.md` | §O1 | Process-condition columns | 🟩 |
+| 42 | `rules/dates.md` | §B1 | Natural-language date mapping | 🟩 |
+| 43 | `rules/dates.md` | §B2 | Precise vs rough | 🟩 |
+| 44 | `rules/dates.md` | §B3 | Undated events | 🟩 |
+| 45 | `rules/dates.md` | §B4 | Date ranges | 🟩 |
+| 46 | `rules/dates.md` | §A1 | Keep `BidderID`? | 🟩 |
+| 47 | `rules/dates.md` | §A2 | Strict monotonicity | 🟩 |
+| 48 | `rules/dates.md` | §A3 | Same-date tie-break | 🟩 |
+| 49 | `rules/dates.md` | §A4 | `BidderID` invariants | 🟩 |
+| 50 | `rules/dates.md` | §Q1 | Saks deletion rows | 🟩 |
+| 51 | `rules/dates.md` | §Q2 | Zep row 6390 | 🟩 |
+| 52 | `rules/dates.md` | §Q3 | Mac Gray `BidderID=21` dup | 🟩 |
+| 53 | `rules/dates.md` | §Q4 | Medivation `BidderID=5` dup | 🟩 |
+| 54 | `rules/invariants.md` | §P-R1…§P-S4 | All validator invariants | 🟩 |
 
-### C2. Standardize the capitalization / spelling
-- **Context.** "NA" appears in many columns with many meanings (truly unknown vs not-applicable vs blank). Some event notes appear with slight variations.
-- **Decision.** 🟥 — agree a canonical form for each label.
+**Total open:** 0 🟥 · 0 🟨 · 54 🟩
 
-### C3. What goes in `bid_note` for an actual bid row?
-- **Context.** When a bidder submits a bid, `bid_note` is typically `NA` (the event type is implied by the non-NA `bid_value_pershare` and `bid_type`). But Chicago sometimes used `NA` to mean "no value" rather than "this is a bid row."
-- **Options.**
-  1. Use a dedicated `Bid` tag in `bid_note` for bid rows; reserve `NA`/blank for "no event annotation."
-  2. Keep Alex's convention (bid rows carry `NA` in `bid_note`).
-- **Decision.** 🟥 —
+> 🎉 **Stage 1 complete — 2026-04-18.** All 54 rule decisions have been ratified and written into `rules/*.md`. Proceed to Stage 2.
 
----
-
-## D. Start-of-Process Classification
-
-### D1. Distinguishing the five start-types
-- **Context.** Instructions list `Target Sale`, `Target Sale Public`, `Bidder Sale`, `Bidder Interest`, `Activist Sale`. The distinctions rest on subtle language in the filing.
-- **Draft decision tree.**
-  - Board meeting agreeing to sell → `Target Sale` (add `Target Sale Public` and `Sale Press Release` if publicly announced).
-  - Unsolicited bid that triggers the process → `Bidder Sale` (add `Bid Press Release` if publicly announced).
-  - Bidder approaches with discussions but no bid → `Bidder Interest`.
-  - Activist pressure → `Activist Sale` (record separately *before* `Target Sale`).
-  - Target initiates a sale but a bidder approaches first → both `Target Sale` and `Bidder Sale` as separate rows.
-- **Questions.**
-  - What is the evidentiary standard for `Bidder Interest` vs `Bidder Sale`? (Imprivata has both for Thoma Bravo within 5 weeks — row 6076 interest on 1/31, row 6077 sale on 3/09.)
-  - How do we handle "target was already contemplating a sale but a bidder appeared first"? (Providence row 6024: Party A interest 12/31; IB not retained until 1/27; Target Sale meeting 3/14.)
-- **Decision.** 🟥 —
-
----
-
-## E. Bidder Identity & Aggregation
-
-### E1. Group rows (e.g., "25 parties, including Parties A, B")
-- **Context.** Providence row 6027 encodes 25 NDAs in one row with type "11S, 14F". Zep row 6390 has "5 parties, 4F and 1S" with a bid range `[20, 22]`. Petsmart has the *opposite* — 15 separate rows for "Unnamed party 1" through "Unnamed party 12" plus three named.
-- **Options.**
-  1. **Atomize**: every bidder gets its own row even if the filing aggregates (emit 25 NDA rows for Providence). Requires inventing placeholder names (`Party-a1`, `Party-a2`, …).
-  2. **Aggregate**: preserve the filing's grouping as a single row with a count field.
-  3. **Hybrid**: atomize named parties, aggregate unnamed ones.
-- **Zep row 6390 specifically.** Alex's comment explicitly says "This field needs to be expanded to 5 bidders; one of them bid 20, another 22, another three [20,22]?" — a known defect. How do we want the AI to handle this shape of text?
-- **Decision.** 🟥 —
-
-### E2. Joint-bidder rows (Party E/F, Sponsor A/E, CSC/Pamplona)
-- **Context.** A single bid is submitted by two parties together.
-- **Options.**
-  1. Single row, bidder = "Party E/F", type = "S/F".
-  2. Single row, bidder = "Party E + Party F" (structured), type-primary + type-secondary.
-  3. Two rows with the same `BidderID`, one per participant.
-- **Decision.** 🟥 —
-
-### E3. Anonymous bidder naming convention
-- **Context.** Filings use "Party A", "Bidder B", "Sponsor C", "Company D", "Strategic 1", "Sponsor A" interchangeably. Alex's instructions say use `a1, a2, …` if unnamed, but the data actually uses whatever the filing says.
-- **Options.**
-  1. Use whatever the filing says (`Party A`, `Sponsor A`, `Strategic 1`) verbatim.
-  2. Canonicalize to `bidder_01`, `bidder_02` in deal-local order and record the filing's label in a separate `bidder_alias` column.
-- **Decision.** 🟥 —
-
-### E4. Winning bidder name
-- **Context.** The winner is named in the filing; losers are usually anonymized. The winner's name should appear on every row where the winner is the actor.
-- **Question.** Do we retroactively update earlier rows once the winner is named? (E.g., if `Strategic 2` turns out to be `Pfizer`, do we rewrite earlier `Strategic 2` rows to `Pfizer`?)
-- **Current practice.** Alex keeps the filing's label throughout — the winner row is the first time the real name appears.
-- **Decision.** 🟥 —
+Some questions are tightly coupled and will likely be resolved together (e.g., §E1 + §E2 + §Q2 all concern the aggregate-vs-atomize decision). Handle them as bundles where natural.
 
 ---
 
-## F. Bidder Type Classification
+## What needs Alex vs what Austin can decide
 
-### F1. Canonical format
-- **Instructions say.** `S`, `F`, `non-US S`, `non-US F`, `public S`, `public F`, `non-US public S`, etc.
-- **Data shows.** Alex's usage is looser — "Non-US public S" (capital N), "11S, 14F" for group rows, "S and F", "S/F", "NA".
-- **Options.**
-  1. Strict: lowercase prefixes, single-token types.
-  2. Permissive: allow free-form annotations in `bidder_type_note`, plus booleans in `bidder_type_financial`, `bidder_type_strategic`, `bidder_type_nonUS`, `bidder_type_mixed`.
-  3. Use only the boolean columns (existing in the schema) and drop the note.
-- **Decision.** 🟥 —
+**Alex required:**
+- §R1 column set (final schema is a research-design call).
+- §R3 evidence quote (impacts his post-extraction review workflow).
+- §G1 informal-vs-formal (core to his research question).
+- §H2 composite consideration (impacts downstream analysis).
+- §J2 legal counsel placement.
+- §L1 prior-process rule (conflicts between PDF and xlsx).
+- §Q1–Q4 how to handle his own flagged rows in the reference conversion (is his own data; he picks).
+- §N3 `cshoc` source.
 
-### F2. Classification rule for "Chief Executive engaged in talks"
-- **Instructions say.** CEO-led talks imply strategic bidder. Financial bidders *also* engage in strategic talks, so the test is really "who signed the letters."
-- **Question.** Do we need a more explicit rule list the AI can follow? (e.g., "if the filing names a CEO as the point of contact → S; if it names a partner/fund manager → F; if it names both → flag mixed.")
-- **Decision.** 🟥 —
+**Austin can decide (with Claude proposing):**
+- §C1 event vocabulary (Claude proposes from data; Austin ratifies).
+- §C2 canonical capitalization.
+- §E3 anonymous naming convention.
+- §F1 bidder type format.
+- §B1 natural-language date table.
+- §A1–A4 `BidderID` semantics.
 
----
+**Deterministic already (Claude can commit):**
+- ~~§R3 evidence quote column~~ — 🟩 resolved 2026-04-18. `source_page` = sec2md page number from `pages.json`; `source_quote` = verbatim substring of that page's content (NFKC-normalized), ≤ 1000 chars, single or list form. See `rules/schema.md` §R3.
+- ~~§Scope-1 auction-only vs all-M&A~~ — 🟩 resolved 2026-04-18. Pipeline extracts every valid-filing-type deal and emits a deal-level `auction: bool`. An auction = ≥2 non-advisor bidder NDAs in the current (non-stale) process. Downstream filter on `auction == true`. See `rules/schema.md` §Scope-1.
+- ~~§Scope-2 accepted filing types~~ — 🟩 resolved 2026-04-18. Accepted: DEFM14A, PREM14A, SC TO-T, S-4 (primary). `/A` amendments accepted when they supersede. `SC 14D9` accepted as secondary. `DEFA14A`/`425`/`8-K`/`13D`/`13G` excluded. `fetch_filings.py` already implements this. See `rules/schema.md` §Scope-2.
+- ~~§Scope-3 out-of-scope fields~~ — 🟩 resolved 2026-04-18. AI excludes COMPUSTAT fields (`cshoc`, `gvkey*`), EDGAR metadata (`DateFiled`, `FormType`, `URL`, `CIK`, `accession`), and orchestration metadata (`DealNumber`, `rulebook_version`). AI produces event array + `auction` + confirmed deal-identity fields with mismatch flags. See `rules/schema.md` §Scope-3.
+- §G2 classification evidence — SKILL.md already mandates it; still needs formalization.
 
-## G. Bid Classification: Informal vs Formal
-
-### G1. The call rule
-- **Instructions say.** A bid is **formal** if either (a) it's in response to a final-round letter, or (b) it's accompanied by a marked-up merger agreement. "Any range = informal."
-- **Question.** Are those the only rules? What about:
-  - Bids after `Final Round Ann` but before `Final Round` deadline — formal?
-  - Bids with "committed debt and equity financing" (Saks row 7009) but no mark-up — formal?
-  - Topping bids after an executed agreement (Providence row 6055 G&W's $25) — formal?
-- **Decision.** 🟥 —
-
-### G2. How the AI should reason about this
-- **Context.** This is the most subjective judgement in the whole pipeline. We probably need the AI to cite the specific filing language that supports the classification.
-- **Decision.** 🟥 — do we require a `formal_evidence` quote column?
+When a decision requires Alex and he isn't available, leave 🟥 and note the dependency. Don't block Austin's decisions on Alex's.
 
 ---
 
-## H. Bid Value Structure
+## Exit criteria
 
-### H1. Ranges and single-bound bids
-- **Context.** Several bids are quoted as a range (`[20.00, 22.00]`). Some only give one bound: Sanofi's first bid was "at least $15.00" (Saks row 6998, only `bid_value_lower`), Company D's 5.60 was the range floor only (STec row 7153).
-- **Current practice.** `bid_value_lower` and `bid_value_upper` both populated for ranges; `bid_value_pershare` = NA or set to the lower bound.
-- **Question.** When only one bound is given:
-  - Populate only `bid_value_lower`, leave `bid_value_upper` NA?
-  - Or set both to the given bound (loses the "open-ended" signal)?
-- **Decision.** 🟥 —
-
-### H2. Composite consideration (cash + CVR, cash + stock, cash + earnout)
-- **Context.** Providence row 6041 G&W bid = "20.02 cash + 1.13 CVR" (total 21.15). Mac Gray row 6954 Party B's $21.50 = "19 in cash, rest in options/earnouts". These sit only in `comments_1` today.
-- **Options.**
-  1. Extend schema with `cash_per_share`, `stock_per_share`, `contingent_per_share` (CVR/earnout).
-  2. Single `bid_value_pershare` = headline number, with a free-text `consideration_note`.
-  3. Reject non-cash bids from the dataset.
-- **Decision.** 🟥 —
-
-### H3. Entire-company vs partial bids
-- **Instructions say.** Only record bids for the entire company. Segment/partial bids are ignored.
-- **Question.** How should the AI recognize a partial bid? (Example excerpt in instructions: "$55 million for the Company's business in the United Kingdom and Europe" — clearly partial.) Do we want an explicit skip-rule list?
-- **Decision.** 🟥 —
-
-### H4. Aggregate-dollar bids
-- **Context.** Sometimes bids are stated in aggregate ("$10 billion"), not per-share. Alex says divide by `cshoc`. But `cshoc` is populated for only 1 of the 9 deals.
-- **Question.** Does the AI compute per-share? Or emit aggregate and leave per-share to downstream? Where does it get `cshoc`?
-- **Decision.** 🟥 —
-
----
-
-## I. Dropouts
-
-### I1. The full set of dropout codes
-- `Drop` — simply dropped out.
-- `DropBelowM` — bidder said its valuation is below market.
-- `DropBelowInf` — bidder said its valuation is below its earlier informal bid.
-- `DropAtInf` — bidder said its valuation is at its earlier informal bid.
-- `DropTarget` — target didn't invite to final round.
-- **Question.** Are there other reasons we've seen and haven't encoded? Examples from the data:
-  - "Not a strategic fit" (Imprivata row 6089, `Drop`).
-  - "Other internal corporate priorities" (Imprivata row 6094, `Drop`).
-  - "No firm financing" (Mac Gray Party B, eventually `DropTarget`).
-  - "Only interested in select assets" (STec row 7154, `DropTarget`).
-- **Option.** Keep the code set tight; capture the narrative reason in `drop_reason_note`.
-- **Decision.** 🟥 —
-
-### I2. Re-entering after a drop
-- **Context.** Instructions: "still record the earlier dropout notice." Providence Party D drops at row 6053 then re-engages (comment: "Reengaged") but there's no separate `Reengaged` event code.
-- **Option.** Add a `Reengaged` event code? Or just let the next NDA/bid row for that bidder signal re-entry?
-- **Decision.** 🟥 —
-
----
-
-## J. Advisors (IB and Legal)
-
-### J1. Investment bank
-- **Context.** `IB` is already in the vocabulary. Multiple IBs in large deals are both recorded per the instructions.
-- **Open item.** Mac Gray has `IB Terminated` followed by a second `IB` (same bank, BofA). This shape isn't in Alex's instructions.
-- **Decision.** 🟥 — keep `IB Terminated`, rename, or drop?
-
-### J2. Legal counsel — needs its own structure
-- **Context.** Alex says legal counsel "definitely should be used." Today it appears only as free text in `comments_1` ("Legal advisor: Hinckley Allen"). Counsel is retained pre-process and the date isn't always collected.
-- **Options.**
-  1. New event type `Legal` (like `IB`) with the counsel in the bidder column.
-  2. Deal-level field `target_legal_counsel` (and `acquirer_legal_counsel`) since there's typically one.
-  3. Both — a dedicated event row and a deal-level summary.
-- **Decision.** 🟥 —
-
----
-
-## K. Final Rounds
-
-### K1. Vocabulary
-- `Final Round Ann`, `Final Round`, `Final Round Inf Ann`, `Final Round Inf`, `Final Round Ext Ann`, `Final Round Ext`, `Final Round Inf Ext Ann`, `Final Round Inf Ext` — is this the complete list?
-- **Decision.** 🟥 —
-
-### K2. Implicit final rounds
-- **Context.** Sometimes the filing doesn't announce a final round explicitly; the target just invites a subset to bid. Does the AI infer `Final Round Ann` from language like "the Board authorized [IB] to advance [subset] to the second phase"?
-- **Decision.** 🟥 —
-
-### K3. Providence row 6058 edge case
-- **Context.** Alex's comment: "The deadline apparently was not announced to the bidders, this was the time when the English auction was stopped by the target." The row is labeled `Final Round` but the event is really "bidding terminated by target," not "deadline reached."
-- **Options.**
-  1. Accept `Final Round` for this usage.
-  2. Add a new code `Auction Closed`.
-- **Decision.** 🟥 —
-
----
-
-## L. Terminated / Restarted Prior Processes
-
-### L1. When to include prior attempts
-- **Context.** Penford records prior attempts from 2007 and 2009 (rows 6461–6464). Zep has a clean Terminated/Restarted pair (row 6401/6402). The instructions say stale confidentiality agreements from stale processes should be *ignored* for the classification purpose, but Alex's Penford entry includes them anyway.
-- **Question.** Include prior attempts only if they have material NDAs/bids? Include always? Skip?
-- **Decision.** 🟥 —
-
-### L2. Same-target, different-process boundary
-- **Context.** Zep's first auction terminated 6/26/2014, restarted 2/19/2015. Events across the boundary go in the same deal file but conceptually are different processes.
-- **Option.** New column `process_phase` (1, 2, …) to separate phases within a deal.
-- **Decision.** 🟥 —
-
----
-
-## M. Entries to Skip (Negative Rules)
-
-### M1. Unsolicited letters with no NDA
-- **Context.** Saks row 7013 (Company H) — Alex's comment: "Should be deleted: unsolicited letter, no NDA, no further contact, no price per share."
-- **Rule candidate.** If a party is mentioned but never signs an NDA *and* never submits a comparable bid, skip.
-- **Decision.** 🟥 —
-
-### M2. Non-bid activity mistakenly recorded
-- **Context.** Saks row 7015 (Sponsor A/E) — Alex: "Not a separate bid, should be deleted."
-- **Rule candidate.** Require a stated price or clear bid-intent language.
-- **Decision.** 🟥 —
-
-### M3. Advisor NDAs
-- **Instructions say.** Financial advisor NDAs are collected *in Alex's version* but legal advisor NDAs are skipped (legal counsel recorded separately without a date). Financial advisors' NDA dates: recorded.
-- **Question.** Does the AI need to distinguish "financial advisor NDA" from "bidder NDA" when reading filings, or is the name lookup enough?
-- **Decision.** 🟥 —
-
-### M4. Confidentiality agreements for prior stale processes
-- **Instructions say.** Ignore stale-process NDAs — but Alex included Penford's 2007 and 2009 attempts. Clarify the rule.
-- **Decision.** 🟥 —
-
----
-
-## N. Deal-Level Attributes
-
-### N1. Fields that should sit once per deal, not per event
-- `TargetName`, `Acquirer`, `DateAnnounced`, `DateEffective`, `DateFiled`, `FormType`, `URL`, `Auction`, `all_cash`, `cshoc`, `gvkeyT`, `gvkeyA`, `DealNumber`.
-- **Context.** Today these repeat on every row. All `NA` in 8/9 gold-standard deals for `all_cash` and `cshoc`.
-- **Options.**
-  1. Keep repeating (matches current schema, simpler for flat analysis).
-  2. Move to a separate `deals` sheet keyed by `DealNumber`.
-- **Decision.** 🟥 —
-
-### N2. `all_cash` — derive or carry?
-- **Context.** In principle derivable from the composite-consideration decision (H2). In practice it's a field in the dataset today.
-- **Decision.** 🟥 —
-
-### N3. `cshoc` — source and whose responsibility
-- **Alex's note.** "This is a COMPUSTAT field with the number of shares outstanding, I think (to be verified)."
-- **Action.** Verify. The AI probably can't produce this from the filing alone (though many filings do state shares outstanding in the proxy — an alternative source).
-- **Decision.** 🟥 —
-
----
-
-## O. Process Conditions (currently all in `comments_2`)
-
-### O1. Which of these become structured fields?
-Seen in the 9 deals:
-- Exclusivity period (e.g., "Exclusivity 30 days", "60 day exclusive DD + negotiation").
-- Go-shop (e.g., "Go-shop 30 days", "Go-shop until Sep 6").
-- Financing condition (e.g., "No financing condition", "No firm financing commitment").
-- Termination fees / reverse termination fees.
-- Regulatory approval required.
-- No-solicitation covenants.
-- Due-diligence duration.
-- Highly-confident letter from a financing bank.
-- **Options.**
-  1. Make each a structured column on the relevant bid row.
-  2. Keep them in comments; let downstream parse on demand.
-  3. Structure the top 3–4 (exclusivity, go-shop, financing, DD duration); leave the rest free text.
-- **Decision.** 🟥 —
-
----
-
-## P. Quality Control & Validation
-
-### P1. Cross-validation with board-meeting summaries
-- **Instructions say.** Management reports to the board often summarize "how many NDAs have been signed" — use this to double-check.
-- **Rule candidate.** The AI should emit a count check: "Filing states X NDAs signed by [date]; extraction produced Y. Δ = X−Y, flag if nonzero."
-- **Decision.** 🟥 —
-
-### P2. Duplicate-ID detection
-- **Rule candidate.** Post-processing flags any `BidderID` that appears more than once within a deal.
-- **Decision.** 🟥 —
-
-### P3. Date monotonicity check
-- **Rule candidate.** Flag any row where `BidderID` ordering disagrees with date ordering.
-- **Decision.** 🟥 —
-
-### P4. Mandatory fields
-- Every deal should end with an `Executed` row.
-- Every bidder who has a bid or drops out should have a prior NDA row (except those classified as `Bidder Interest` which precede the NDA).
-- **Decision.** 🟥 — enumerate the invariants the AI should check.
-
----
-
-## Q. Gold Standard Hygiene (before we train on it)
-
-### Q1. Remove rows Alex said should be deleted
-- Saks row 7013 (Company H, unsolicited).
-- Saks row 7015 (Sponsor A/E, not a separate bid).
-- **Decision.** 🟥 — do we fix the Alex spreadsheet first, or keep it as-is and document deletions separately?
-
-### Q2. Resolve Zep row 6390 (collapsed 5-bidder row)
-- Alex's own comment says the row needs expansion.
-- **Decision.** 🟥 — expand now or leave pending?
-
-### Q3. Resolve Mac Gray `BidderID=21` duplicate
-- Row 6960 should probably be `BidderID=24` or similar.
-- **Decision.** 🟥 —
-
-### Q4. Resolve Medivation `BidderID=5` duplicate
-- Row 6066 or 6070 needs a different ID.
-- **Decision.** 🟥 —
-
----
-
-## R. Output Format / Schema
-
-### R1. Column set the AI must emit
-- Start with Alex's 35 columns; decide which become deal-level, which get added (legal counsel, composite consideration), which get dropped.
-- **Decision.** 🟥 —
-
-### R2. Error/flag column
-- **Rule candidate.** Add a `flags` column for the AI to record ambiguities ("date inferred from 'mid-June'", "bid range with only lower bound", "aggregate row, not atomized", "possible duplicate of row N").
-- **Decision.** 🟥 —
-
-### R3. Evidence column
-- **Rule candidate.** Add a `source_quote` column with the exact sentence(s) from the filing supporting the row. Useful for audit and for Alex to verify.
-- **Decision.** 🟥 —
-
----
-
-## S. Scope & Out-of-Scope
-
-### S1. What kinds of deals does the skill handle?
-- Only auction deals (multiple NDAs)? Or every M&A deal in the database?
-- **Decision.** 🟥 —
-
-### S2. What filings does the skill accept as input?
-- DEFM14A, PREM14A, SC-TO-T, S-4. Any others?
-- **Decision.** 🟥 —
-
-### S3. What the skill does *not* do
-- Compute `cshoc`? Compute `gvkey`s? Fill prior Chicago-collected rows? Write directly into Alex's workbook or emit a fresh one?
-- **Decision.** 🟥 —
-
----
-
-## Working Order
-
-Suggested sequence for our walkthrough (so earlier decisions constrain later ones):
-
-1. S (scope) — what are we building, for what filings, for which deals.
-2. R (output schema) — what columns we emit.
-3. N (deal-level fields) — where they live.
-4. C (event vocabulary) — the closed label set.
-5. E (bidder identity & aggregation) — naming and group rules.
-6. F (bidder type), D (start-of-process) — classification logic.
-7. H (bid value), G (informal vs formal) — bid rows.
-8. I (dropouts), J (advisors), K (final rounds), L (terminated/restarted).
-9. M (skip rules).
-10. B (dates).
-11. A (BidderID).
-12. O (process conditions).
-13. P (QC), Q (gold-standard cleanup).
-
-We can adjust. Ready to start at S1 whenever you are.
+This file is done when every row shows 🟩 RESOLVED. At that point:
+- `rules/*.md` contain a complete rulebook.
+- `CLAUDE.md` updates its "current status" to reflect Stage 2 start.
+- Next step: convert the 9 Alex-reference deals to JSON (`scripts/build_reference.py`) and wire up `scoring/diff.py`. The diff is a human-review aid, not a grade — Austin re-reads the SEC filing for every AI-vs-Alex divergence and assigns a verdict (see `reference/alex/README.md`).

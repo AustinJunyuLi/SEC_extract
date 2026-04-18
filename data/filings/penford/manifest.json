@@ -1,0 +1,25 @@
+{
+  "slug": "penford",
+  "target_name": "PENFORD CORP",
+  "acquirer": "INGREDION INC",
+  "date_announced": "2014-10-15",
+  "is_reference": true,
+  "source": {
+    "index_url": "https://www.sec.gov/Archives/edgar/data/739608/0001193125-14-455030-index.htm",
+    "cik": "739608",
+    "accession": "000119312514455030",
+    "primary_document_url": "https://www.sec.gov/Archives/edgar/data/739608/000119312514455030/d834783ddefm14a.htm",
+    "primary_document_name": "d834783ddefm14a.htm",
+    "form_type": "DEFM14A"
+  },
+  "artifacts": {
+    "raw_htm_bytes": 1301510,
+    "raw_md_bytes": 692366,
+    "pages_count": 177
+  },
+  "fetch": {
+    "user_agent": "Austin Li <junyu.li.24@ucl.ac.uk>",
+    "fetched_at": "2026-04-18T13:19:03.328129Z",
+    "sec2md_version": "0.1.22"
+  }
+}

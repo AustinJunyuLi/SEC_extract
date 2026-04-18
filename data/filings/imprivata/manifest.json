@@ -1,0 +1,25 @@
+{
+  "slug": "imprivata",
+  "target_name": "IMPRIVATA INC",
+  "acquirer": "THOMA BRAVO, LLC",
+  "date_announced": "2016-07-13",
+  "is_reference": true,
+  "source": {
+    "index_url": "https://www.sec.gov/Archives/edgar/data/1328015/0001193125-16-677939-index.htm",
+    "cik": "1328015",
+    "accession": "000119312516677939",
+    "primary_document_url": "https://www.sec.gov/Archives/edgar/data/1328015/000119312516677939/d226798ddefm14a.htm",
+    "primary_document_name": "d226798ddefm14a.htm",
+    "form_type": "DEFM14A"
+  },
+  "artifacts": {
+    "raw_htm_bytes": 1235202,
+    "raw_md_bytes": 675138,
+    "pages_count": 170
+  },
+  "fetch": {
+    "user_agent": "Austin Li <junyu.li.24@ucl.ac.uk>",
+    "fetched_at": "2026-04-18T13:18:56.864301Z",
+    "sec2md_version": "0.1.22"
+  }
+}

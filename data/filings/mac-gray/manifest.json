@@ -1,0 +1,25 @@
+{
+  "slug": "mac-gray",
+  "target_name": "MAC GRAY CORP",
+  "acquirer": "CSC SERVICEWORKS, INC.",
+  "date_announced": "2013-10-15",
+  "is_reference": true,
+  "source": {
+    "index_url": "https://www.sec.gov/Archives/edgar/data/1038280/0001047469-13-010973-index.htm",
+    "cik": "1038280",
+    "accession": "000104746913010973",
+    "primary_document_url": "https://www.sec.gov/Archives/edgar/data/1038280/000104746913010973/a2217482zdefm14a.htm",
+    "primary_document_name": "a2217482zdefm14a.htm",
+    "form_type": "DEFM14A"
+  },
+  "artifacts": {
+    "raw_htm_bytes": 1279957,
+    "raw_md_bytes": 610560,
+    "pages_count": 175
+  },
+  "fetch": {
+    "user_agent": "Austin Li <junyu.li.24@ucl.ac.uk>",
+    "fetched_at": "2026-04-18T13:19:06.997104Z",
+    "sec2md_version": "0.1.22"
+  }
+}

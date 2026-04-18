@@ -1,0 +1,25 @@
+{
+  "slug": "medivation",
+  "target_name": "MEDIVATION INC",
+  "acquirer": "PFIZER INC",
+  "date_announced": "2016-08-22",
+  "is_reference": true,
+  "source": {
+    "index_url": "https://www.sec.gov/Archives/edgar/data/1011835/0001193125-16-696889-index.htm",
+    "cik": "1011835",
+    "accession": "000119312516696889",
+    "primary_document_url": "https://www.sec.gov/Archives/edgar/data/78003/000119312516696889/d249052dex99a1a.htm",
+    "primary_document_name": "d249052dex99a1a.htm",
+    "form_type": "EX-99.(A)(1)(A)"
+  },
+  "artifacts": {
+    "raw_htm_bytes": 405762,
+    "raw_md_bytes": 235706,
+    "pages_count": 57
+  },
+  "fetch": {
+    "user_agent": "Austin Li <junyu.li.24@ucl.ac.uk>",
+    "fetched_at": "2026-04-18T13:18:55.648809Z",
+    "sec2md_version": "0.1.22"
+  }
+}

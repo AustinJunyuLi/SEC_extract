@@ -1,0 +1,25 @@
+{
+  "slug": "petsmart-inc",
+  "target_name": "PETSMART INC",
+  "acquirer": "BC Partners, Inc., La Caisse de d\u00c3\u00a9p\u00c3\u00b4t et placement du Qu\u00c3\u00a9bec, affiliates of GIC Special Investments Pte Ltd, affiliates of StepStone Group LP and Longview Asset Management, LLC",
+  "date_announced": "2014-12-14",
+  "is_reference": true,
+  "source": {
+    "index_url": "https://www.sec.gov/Archives/edgar/data/863157/0001571049-15-000695-index.htm",
+    "cik": "863157",
+    "accession": "000157104915000695",
+    "primary_document_url": "https://www.sec.gov/Archives/edgar/data/863157/000157104915000695/t1500073-defm14a.htm",
+    "primary_document_name": "t1500073-defm14a.htm",
+    "form_type": "DEFM14A"
+  },
+  "artifacts": {
+    "raw_htm_bytes": 1641964,
+    "raw_md_bytes": 701000,
+    "pages_count": 164
+  },
+  "fetch": {
+    "user_agent": "Austin Li <junyu.li.24@ucl.ac.uk>",
+    "fetched_at": "2026-04-18T13:19:02.209107Z",
+    "sec2md_version": "0.1.22"
+  }
+}
