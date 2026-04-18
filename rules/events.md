@@ -249,31 +249,74 @@ re-engagement's new NDA.
 
 ---
 
-### §J1 — `IB Terminated` handling (🟩 RESOLVED, 2026-04-18)
+### §J1 — `IB` and `IB Terminated` emission (🟩 RESOLVED, 2026-04-18)
 
-**Decision.** `IB Terminated` is kept as a distinct event code in §C1.
+**Decision.** Both `IB` and `IB Terminated` are event-row codes in §C1.
 
-**Behavior.**
+**Initial-retention emission (mandatory).** When the filing names a
+financial advisor to either side — target or acquirer — emit one `IB`
+row per named advisor:
+
+- `bid_note = "IB"`
+- `role = "advisor_financial"` (per `rules/bids.md` §M3)
+- `bidder_name` = canonical id assigned to the bank (per `rules/bidders.md`
+  §E3)
+- `bidder_alias` = filing's verbatim label for the bank
+- `bid_date_precise` = the **earliest narrated date** on which the filing
+  describes the bank acting in an advisory capacity (typically the first
+  time the bank is named in the Background section)
+- If the filing does not explicitly state a retention date, populate
+  `bid_date_precise` with the earliest-mentioned date and attach
+  `{"code": "date_inferred_from_context", "severity": "soft",
+    "reason": "filing does not narrate retention date; inferred from first mention"}`.
+
+**Trigger phrases** (non-exhaustive; the 25-deal stress-test study may
+expand):
+- *"\[Target\] retained \[Firm\] as its financial advisor"*
+- *"\[Firm\], financial advisor to \[Target\]"* / *"\[Target\]'s financial advisor"*
+- *"representatives of \[Firm\], financial advisor to \[Target\], contacted…"*
+- *"\[Firm\] sent a process letter…"* (the IB is acting on retention)
+
+Do NOT require an explicit "retained" verb. If the filing describes
+\[Firm\] taking advisor actions on behalf of \[Side\], the bank is retained
+for that process; emit an `IB` row. If `\[Firm\]` acts for the same
+\[Side\] on multiple events (sent process letters, contacted bidders, ran
+the auction), emit **one** `IB` row for the earliest action.
+
+**Termination and re-hire.**
 - When a filing describes an investment bank relationship ending, emit an
-  `IB Terminated` row with `bidder_name = <bank name>` and the termination
-  date (precise or rough per §B).
+  `IB Terminated` row with `bidder_name = <bank canonical id>` and the
+  termination date (precise or rough per §B).
 - When a subsequent IB is retained — even the *same* bank (Mac Gray: BofA
-  terminated, then BofA re-hired) — emit a new `IB` row.
-- IB events are deal-side, not bidder-side. `BidderID` follows the event
-  sequence per `rules/dates.md` §A (pending).
+  terminated, then BofA re-hired) — emit a new `IB` row following the
+  initial-retention rules above.
+
+**Advisors to acquirers are also emitted.** (Example: Medivation's
+Centerview row as Pfizer's advisor.) This keeps the `IB` event count
+complete for downstream research on advisor effects.
+
+**BidderID.** IB events are deal-side, not bidder-side; they follow the
+event sequence per `rules/dates.md` §A.
+
+**Validator.** No special invariant — an IB row follows the same §P-R
+rules as any other event. The auction-threshold classifier in
+§Scope-1 excludes `role = "advisor_financial"` rows from its NDA count.
 
 **Rejected alternatives.**
-- **Rename to `IB Change`** — loses the explicit "relationship ended" signal
-  when a second `IB` row doesn't immediately follow (target might go without
-  an IB for a stretch).
-- **Encode as a field on the original `IB` row** — makes the `IB` row mutable
-  and breaks the "one event per row" invariant; also can't represent
-  re-hire cleanly.
+- **Skip advisors entirely.** Loses retention data Alex records in his
+  workbook; the initial-retention event is analytically meaningful
+  (advisor choice shapes process design).
+- **Fold advisor retention into a deal-level field.** Can't represent
+  multiple advisors, re-hires, or termination cleanly; also breaks
+  uniformity of event-row structure.
+- **Rename `IB Terminated` to `IB Change`.** Loses the explicit
+  "relationship ended" signal when a second `IB` row doesn't immediately
+  follow (target might go without an IB for a stretch).
 
 **Cross-references.**
-- `rules/events.md` §C1 (vocabulary includes `IB Terminated`).
-- `rules/invariants.md` — no special invariant needed; `IB Terminated`
-  follows the same rules as any other event.
+- `rules/events.md` §C1 (vocabulary includes `IB` and `IB Terminated`).
+- `rules/bids.md` §M3 (`role = "advisor_financial"`).
+- `rules/schema.md` §Scope-1 (auction classifier filters `role == "bidder"`).
 
 ---
 

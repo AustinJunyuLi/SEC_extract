@@ -292,6 +292,16 @@ Non-negotiables:
   - Apply the skip rules in §M1–§M4. Unsolicited letters with no NDA, no
     price, no bid intent are dropped. Legal-advisor NDAs get role =
     "advisor_legal" (not skipped, but not counted toward auction threshold).
+  - **Emit IB rows for every named financial advisor on either side** per
+    §J1. If the filing names a bank as *"financial advisor to [Target]"* OR
+    describes a bank sending process letters / contacting bidders on behalf
+    of a side, that bank is retained — emit one `IB` row with
+    `bid_note="IB"`, `role="advisor_financial"`, `bidder_alias=<filing's
+    verbatim bank name>`, and `bid_date_precise` = the earliest narrated
+    date for that advisor's activity. If retention date is not narrated,
+    attach `{{"code": "date_inferred_from_context", "severity": "soft",
+    "reason": "filing does not narrate retention date; inferred from first mention"}}`.
+    §J1 is symmetric — emit IB rows for advisors to the acquirer too.
 
 Output contract:
   Your FINAL message (and nothing else outside it) is a single fenced block:
