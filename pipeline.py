@@ -283,15 +283,25 @@ Non-negotiables:
     filing's verbatim label on this row. bidder_registry in the deal object
     maps every bidder_NN → {{resolved_name, aliases_observed,
     first_appearance_row_index}}.
-  - BidderID is a strict 1..N sequence in the §A2/§A3 ordering (chronological
-    primary; logical rank for same-date ties). No decimals, no gaps.
+  - BidderID follows the §A2/§A3 event ordering (chronological primary;
+    logical rank for same-date ties). No decimals, no gaps.
+  - Deal identity fields come from the filing verbatim. Preserve the filing's
+    casing and punctuation for TargetName / Acquirer. Leave DateEffective =
+    null unless the same filing explicitly states the effective / closing
+    date.
   - Informal-vs-formal (bid_type) follows §G1 triggers/fallbacks. Every
     non-null bid_type needs either a formal/informal trigger phrase in the
     source_quote OR a bid_type_inference_note per §G2. Ambiguous →
     bid_type: null + hard flag informal_vs_formal_ambiguous.
+  - When an unsolicited bid is itself the first contact, emit the Bid row
+    only and note that it initiated the process. Do NOT emit a duplicate
+    standalone Bidder Sale row for the same act.
   - Apply the skip rules in §M1–§M4. Unsolicited letters with no NDA, no
     price, no bid intent are dropped. Legal-advisor NDAs get role =
     "advisor_legal" (not skipped, but not counted toward auction threshold).
+  - If a filing gives both authored/sent and receipt dates for the same
+    communication, apply §B5: incoming communications anchor on receipt;
+    outgoing process letters / requests anchor on sent date.
   - **Emit IB rows for every named financial advisor on either side** per
     §J1. If the filing names a bank as *"financial advisor to [Target]"* OR
     describes a bank sending process letters / contacting bidders on behalf
@@ -313,6 +323,35 @@ Non-negotiables:
     applies to IB retentions inferred from first narration, implicit
     drops inferred from process-end date, range-collapse midpoints, and
     natural-language phrases like *"mid-July 2016"*.
+  - For unnamed bidders, apply §E3 exactly: exact counts stay exact;
+    "several" means minimum 3 total parties; vaguer plurals like "multiple"
+    or "other parties" emit one placeholder plus an ambiguity flag.
+  - When invitation-to-next-round language and a later process letter are on
+    different dates, anchor the Final Round ... Ann row on the earlier
+    invitation / advancement date (§K2).
+  - Do NOT emit a separate post-execution Sale Press Release row; fold that
+    publicity evidence into the Executed row's multi-quote evidence instead.
+  - **Numeric counts are row-count commitments.** When the filing states a
+    numeric count of parties, NDAs, indications of interest, or bids —
+    *"eleven potential strategic buyers executed confidentiality agreements"*,
+    *"nine written indications of interest"*, *"three bidders submitted final
+    proposals"* — the extraction MUST contain exactly that many atomized
+    rows of the corresponding type. Name the bidders you can identify; for
+    any unnamed balance, emit §E3 placeholder rows each citing the
+    enumerating passage as `source_quote`. Under-emitting violates §E1 +
+    §E3 + §P-D6. If a later event names a bidder (e.g., Party E submits a
+    Bid) the bidder's NDA row must also exist in the same phase — §P-D6's
+    NDA-before-bid precondition is mandatory. Run a count-audit pass before
+    emitting: for every "N parties" / "N bids" / "N IOIs" phrase in the
+    filing, confirm you have N atomized rows of the right type.
+  - **Same-date multi-communication atomization.** When the filing narrates
+    two or more distinct bid communications from the same bidder on the
+    same date (verbal call + later letter; two successive letters; revised
+    offer later the same day), emit a SEPARATE `Bid` row per §C3 for each,
+    using `additional_note` to distinguish ("verbal call" vs "letter
+    received") and preserving chronological order via BidderID sequencing.
+    Do NOT merge into a single row even if the later communication
+    supersedes the earlier one.
 
 Output contract:
   Your FINAL message (and nothing else outside it) is a single fenced block:
