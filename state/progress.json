@@ -2,7 +2,7 @@
   "schema_version": "v1",
   "rulebook_version": null,
   "created": "2026-04-18T12:29:42.084187Z",
-  "updated": "2026-04-18T20:16:31.309143Z",
+  "updated": "2026-04-18T20:44:27.529711Z",
   "deal_count_total": 401,
   "deal_count_reference": 9,
   "deals": {
@@ -3842,17 +3842,17 @@
       "notes": ""
     },
     "zep": {
-      "status": "pending",
+      "status": "passed_clean",
       "is_reference": true,
       "target_name": "ZEP INC",
       "acquirer": "NEW MOUNTAIN CAPITAL",
       "date_announced": "2015-04-08",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1408287/0001047469-15-004989-index.htm",
       "flag_count": 0,
-      "last_run": null,
+      "last_run": "2026-04-18T20:44:27.529711Z",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": ""
+      "notes": "hard=0 soft=0 info=0"
     },
     "petsmart-inc": {
       "status": "pending",
