@@ -2,18 +2,22 @@
 
 **Purpose.** Given one SEC merger filing (DEFM14A / PREM14A / SC-TO-T / S-4), extract the "Background of the Merger" section into a structured row-per-event JSON matching Alex Gorbenko's auction schema.
 
-**You are one iteration of a Ralph loop.** The outer loop (`run.py`) hands you one deal. You process it end-to-end in a fresh context, write `output/extractions/{deal}.json`, update `state/progress.json`, and exit. Do not read other deals. Do not carry state across invocations.
+**You are one iteration of the per-deal extraction loop.** The outer
+orchestration conversation (or Ralph wrapper) hands you one deal, usually in
+a fresh context. `run.py` is only the CLI shim that finalizes a saved raw
+extraction; it is **not** the live orchestrator. Do not read other deals.
+Do not carry state across invocations.
 
 ---
 
 ## Invocation contract
 
-**Input** (from `run.py`):
+**Input** (from the orchestrator):
 - `deal.slug` — short identifier, e.g. `medivation`.
 - `deal.filing_url` — SEC URL.
 - `deal.is_reference` — bool. If true, `scoring/diff.py` will compare against `reference/alex/{slug}.json` after extraction so Austin can manually review divergences. The diff is a development aid, not a grade — Alex's workbook is a reference, not ground truth.
 
-**Output** (to disk, before exit):
+**Output** (written by `pipeline.finalize()` / `run.py` after validation):
 - `output/extractions/{deal.slug}.json` — the extracted rows + deal-level fields.
 - Append to `state/flags.jsonl` — any ambiguities flagged during validation.
 - Update `state/progress.json` — set the deal's status.
@@ -23,9 +27,8 @@
 ## Pipeline (Extractor LLM + Python Validator + scoped Adjudicator)
 
 **Architecture (Stage 3, 2026-04-18):** the Extractor and Adjudicator run as
-**Claude Code subagents** administered by the outer conversation, spawned
-with clean-slate contexts per deal. The Validator is **pure Python** in
-`pipeline.py`. No Anthropic SDK calls from Python.
+clean-slate subagents administered by the outer conversation. The Validator
+is **pure Python** in `pipeline.py`. No model SDK calls from Python.
 
 **Why this shape, not "two LLM agents in series" as originally drafted.**
 Every invariant in `rules/invariants.md` (§P-R, §P-D, §P-S) is mechanically
@@ -37,7 +40,7 @@ Python cannot make: "this soft flag says the filing seems to stop
 mentioning this bidder mid-process — is that a real extraction miss or is
 the filing genuinely silent?"
 
-### 1. Extractor — Claude Code subagent (LLM)
+### 1. Extractor — subagent (LLM)
 - **Spawned by:** the outer conversation, one subagent per deal, fresh
   context, no cross-deal knowledge.
 - **Reads (from disk, via the subagent's Read tool):**
@@ -59,7 +62,7 @@ the filing genuinely silent?"
 - **Never rewrites the extraction.** Flag-only discipline preserves the
   Extractor's output as the single source of what was extracted.
 
-### 3. Adjudicator — Claude Code subagent (LLM), scoped
+### 3. Adjudicator — subagent (LLM), scoped
 - **Fires when:** the Python Validator raises a soft flag (MVP: §P-S1
   `nda_without_bid_or_drop`). No-op when zero soft flags.
 - **Reads:** the flagged row + same-bidder context rows + a small window
@@ -71,7 +74,7 @@ the filing genuinely silent?"
 ### Orchestration (this conversation drives, not Python)
 
 ```
-  orchestrator (Claude Code):
+  orchestrator:
     1. spawn Extractor subagent → raw_extraction JSON (written to disk)
     2. filing = pipeline.load_filing(slug)
     3. result = pipeline.validate(raw_extraction, filing)
@@ -121,7 +124,7 @@ If any scope rule is 🟥 OPEN, stop and report — do not extract.
   "rulebook_version": "<git commit sha of rules/ at time of run>",
   "deals": {
     "<slug>": {
-      "status": "pending | extracted | validated | verified | failed",
+      "status": "pending | validated | passed | passed_clean | verified | failed",
       "flag_count": 0,
       "last_run": "ISO8601",
       "last_verified_by": null,
@@ -141,16 +144,21 @@ If any scope rule is 🟥 OPEN, stop and report — do not extract.
 
 **Status semantics:**
 - `pending` — not yet run.
-- `extracted` — Extractor emitted rows; Validator has not yet run.
 - `validated` — Validator ran; may have hard-error flags.
-- `verified` — Austin manually read the filing and adjudicated any AI-vs-Alex diff. Only set on reference deals, and only by the manual review workflow (not by the pipeline). On target deals this status is never used — they pass through `extracted` → `validated` and stop.
+- `passed` — Validator ran; only soft/info flags remain.
+- `passed_clean` — Validator ran; zero flags.
+- `verified` — Austin manually read the filing and adjudicated any AI-vs-Alex diff. Only set on reference deals, and only by the manual review workflow (not by the pipeline). On target deals this status is never used; they typically stop at `validated`, `passed`, or `passed_clean`.
 - `failed` — pipeline error (fetch, section-location, etc.).
+
+`extracted` remains a useful conceptual stage in the orchestration flow, but
+the current repo does not persist it into `state/progress.json`.
 
 ---
 
 ## Fail-loud rules
 
-- If the filing URL can't be fetched → `status: failed`, `notes: "fetch_error: <detail>"`, exit.
+- If the filing artifacts are missing from `data/filings/{slug}/` →
+  `status: failed`, `notes: "missing_filing_artifacts: <detail>"`, exit.
 - If the "Background of the Merger" section can't be located → `status: failed`, `notes: "no_background_section"`, exit.
 - If any invariant in `rules/invariants.md` fails → `status: validated`, `flag_count: N` (the row is still emitted, but flagged).
 - If any 🟥 OPEN rule is encountered in `rules/*.md` → stop immediately and report. Never guess around an open question.
@@ -169,7 +177,8 @@ Full list in `rules/schema.md` §Scope-3. In summary:
 - Cross-deal bidder canonicalization (is this deal's "Sponsor A" the same as that deal's "Sponsor A"?). Explicit non-goal.
 - Re-classify the form type. The fetcher already classified it from the EDGAR index; AI copies it through unchanged.
 
-Final Excel assembly is a separate mechanical step (`run.py --rebuild-excel`), not this skill.
+Final Excel assembly is out of scope for the current repo. This skill stops
+at JSON extraction + validator flags.
 
 ---
 

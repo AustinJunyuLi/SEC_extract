@@ -1,4 +1,31 @@
-# Stage 3 Handoff — Read This First
+# Stage 3 Handoff — Historical Snapshot
+
+> Historical note: this file captured the handoff **before** Stage 3
+> implementation landed. The current source of truth is `AGENTS.md` /
+> `CLAUDE.md` / `SKILL.md` plus live artifacts in `state/`,
+> `output/extractions/`, and `scoring/results/`.
+
+## Update as of 2026-04-18 end-of-day
+
+- `run.py:run_pipeline()` is no longer the work item. Commit `031c371`
+  implemented Stage 3 with `pipeline.py` as the live filing loader, prompt
+  builder, deterministic validator, and finalization layer; `run.py` is now
+  a CLI shim.
+- The current rollout is no longer "about to run Medivation" — Medivation
+  has already been extracted and rerun after several patches. Latest state:
+  `output/extractions/medivation.json` has 22 events and
+  `state/progress.json` marks it `validated`.
+- The remaining hard-validator failures are narrow: 7 copies of
+  `rough_date_mismatch_inference` caused by `date_inferred_from_context`
+  appearing without a corresponding `bid_date_rough` value.
+- Latest Medivation diff:
+  `scoring/results/medivation_20260418T174500Z.md`
+  (`16 matched`, `6 AI-only`, `3 Alex-only`, `8 field disagreements`, all
+  `bidder_type`, plus `3 deal-level disagreements`).
+- Immediate next action: fix the inferred-date rows, rerun Medivation,
+  refresh the adjudication memo, then move to `imprivata`.
+
+## Original handoff snapshot
 
 **Intended reader.** A fresh Claude session opened to build Stage 3 of the M&A extraction pipeline. Read this file, then `CLAUDE.md`, then stop and confirm the plan with Austin before writing code.
 

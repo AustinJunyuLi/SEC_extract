@@ -1,5 +1,10 @@
 # Session Log — 2026-04-18 · Codebase Orientation
 
+> Historical note: this is a start-of-day orientation snapshot from before
+> Stage 2 and Stage 3 implementation landed. For current status, prefer
+> `AGENTS.md` / `CLAUDE.md` / `SKILL.md` plus live artifacts in `state/`,
+> `output/extractions/`, and `scoring/results/`.
+
 **Status:** ACTIVE
 **Session type:** Orientation / read-through (no code changes yet)
 

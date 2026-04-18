@@ -1,5 +1,10 @@
 # Stage 2 Kickoff Plan
 
+> Historical note: this file records the Stage 2 kickoff plan and remains
+> useful as provenance, but Stage 2 is complete and Stage 3 is now live.
+> For current status, prefer `AGENTS.md` / `CLAUDE.md` / `SKILL.md` plus
+> `state/progress.json`.
+
 **Status:** A + B COMPLETE · C DEFERRED INDEFINITELY · 2026-04-18
 **Date:** 2026-04-18
 **Owner:** Austin

@@ -1,6 +1,6 @@
-# CLAUDE.md — M&A Takeover Auction Extraction Project
+# AGENTS.md — M&A Takeover Auction Extraction Project
 
-> Context file for any Claude (or human) picking up this project. Keep it current as the project evolves.
+> Context file for any Codex (or human) picking up this project. Keep it current as the project evolves.
 
 ## What this project is
 
@@ -29,13 +29,13 @@ An **AI extraction pipeline** that reads the "Background of the Merger" section 
 
 ## Architecture (current MVP)
 
-The live repo now uses a **per-deal Ralph/Claude loop** with **one LLM
+The live repo now uses a **per-deal Ralph/Codex loop** with **one LLM
 Extractor, a deterministic Python Validator, and an optional scoped
 Adjudicator for soft flags**. This replaced the earlier draft that used an
 Extractor agent plus a separate Validator agent.
 
 ```
-seeds.csv ──► for each deal ──► fresh Claude session ─────────────┐
+seeds.csv ──► for each deal ──► fresh Codex session ──────────────┐
                                                                    │
                                 ┌── rules/ + prompts/ ─────────┐   │
                                 │   rules/*.md                 │   │
@@ -158,7 +158,7 @@ repo.
 
 | Path | What it is |
 |---|---|
-| `CLAUDE.md` | This file. Project context for any session. |
+| `AGENTS.md` | This file. Project context for any session. |
 | `SKILL.md` | Live architecture contract for the extraction skill. |
 | `skill_open_questions.md` | Slim Stage 1 tracker. Indexes every 🟥 OPEN question across `rules/`. |
 | `rules/schema.md` | Output schema: columns, types, deal-level vs event-level. |
@@ -235,7 +235,7 @@ Current handling:
   parties" rows (§Q5), so the reference side matches the rulebook's
   atomization stance better than the raw workbook did.
 
-## Conventions for future Claude sessions
+## Conventions for future Codex sessions
 
 - **Do not start target-deal extraction until the reference-set gate is met.**
   All 9 reference deals must be manually verified against their filings, and

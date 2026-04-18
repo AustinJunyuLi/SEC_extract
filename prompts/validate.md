@@ -1,6 +1,13 @@
-# prompts/validate.md — Validator Agent Prompt
+# prompts/validate.md — Archived LLM Validator Prompt
 
-You are the Validator in a two-agent M&A extraction pipeline. You receive the Extractor's candidate rows. Your job: run every invariant in `rules/invariants.md` and flag violations. **You do not rewrite rows.** Annotate only.
+> Status: retained as a fallback/reference artifact. The current Stage 3 MVP
+> uses the deterministic Python validator in `pipeline.py`; this prompt is
+> not invoked by the normal extraction flow.
+
+If an LLM validator is ever reintroduced, this prompt is the starting point.
+You receive the Extractor's candidate rows. Your job: run every invariant in
+`rules/invariants.md` and flag violations. **You do not rewrite rows.**
+Annotate only.
 
 ## Context you will be given at invocation time
 

@@ -23,19 +23,37 @@ Deal slugs (match `seeds.csv`):
 
 ## How the JSON files are produced
 
-A one-time conversion script (to be written in Stage 2) reads the relevant row ranges from `../deal_details_Alex_2026.xlsx`, maps legacy columns to the resolved pipeline schema, and writes JSON here. The conversion is **faithful to Alex's rows as-is** by default — we don't silently "fix" rows in the conversion. Decisions about which flagged rows to rewrite (vs. copy as-is and let the diff surface the issue) live in `rules/dates.md` §Q.
+`scripts/build_reference.py` reads the relevant row ranges from
+`../deal_details_Alex_2026.xlsx`, maps legacy columns to the resolved
+pipeline schema, and writes JSON here.
 
-## Blocking dependencies
+Current behavior:
+- applies the resolved `rules/dates.md` §Q overrides (`§Q1`–`§Q5`),
+  including Saks deletions, Zep expansion, Mac-Gray / Medivation
+  renumbering, and Medivation atomization of aggregated "Several parties"
+  rows;
+- migrates bid rows to the §C3 form (`bid_note="Bid"` + `bid_type`);
+- reassigns `BidderID` per the resolved `§A1`–`§A3` sequencing rules;
+- preserves provenance by attaching info flags where Alex's workbook had a
+  self-flagged or structurally repaired row.
 
-The conversion script cannot be written until:
+The conversion is therefore **Alex's structured reference intent after the
+resolved normalizations**, not a literal dump of the workbook cells.
 
-- `rules/schema.md` §R1 is resolved (final column set).
-- `rules/schema.md` §N1 is resolved (deal-level vs event-level split).
-- `rules/bidders.md` §E3 is resolved (bidder-name canonicalization).
-- `rules/dates.md` §A is resolved (BidderID convention).
-- `rules/dates.md` §Q is resolved (how to handle Alex-flagged rows in the conversion).
+## When to regenerate
 
-When all five are 🟩, write `scripts/build_reference.py`, run it once, and commit the resulting JSONs.
+Re-run the converter whenever:
+- `scripts/build_reference.py` changes;
+- a rules change affects reference-side serialization;
+- a newly adjudicated Alex error should be reflected in the generated
+  reference JSONs rather than left as workbook noise.
+
+Typical commands:
+
+```bash
+python scripts/build_reference.py --all
+python scripts/build_reference.py --slug medivation --dump
+```
 
 ## Diff contract — NOT a scoring contract
 
