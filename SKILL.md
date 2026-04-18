@@ -20,19 +20,73 @@
 
 ---
 
-## Pipeline (two agents)
+## Pipeline (Extractor LLM + Python Validator + scoped Adjudicator)
 
-### 1. Extractor
-- **Load:** `rules/schema.md`, `rules/events.md`, `rules/bidders.md`, `rules/bids.md`, `rules/dates.md`, `prompts/extract.md`, the filing text at `deal.filing_url`.
-- **Do:** locate the "Background of the Merger" section; emit candidate rows conforming to `rules/schema.md`. Every row must include `source_quote` (verbatim filing text) and `source_page`.
-- **Emit:** candidate rows as JSON array.
+**Architecture (Stage 3, 2026-04-18):** the Extractor and Adjudicator run as
+**Claude Code subagents** administered by the outer conversation, spawned
+with clean-slate contexts per deal. The Validator is **pure Python** in
+`pipeline.py`. No Anthropic SDK calls from Python.
 
-### 2. Validator
-- **Load:** `rules/invariants.md`, `prompts/validate.md`, the Extractor's candidate rows, the original filing text (for count cross-checks).
-- **Do:** run every invariant in `rules/invariants.md`. Flag ambiguities. **Do not rewrite rows** — only annotate.
-- **Emit:** final rows + `flags[]`.
+**Why this shape, not "two LLM agents in series" as originally drafted.**
+Every invariant in `rules/invariants.md` (§P-R, §P-D, §P-S) is mechanically
+checkable — substring, regex, set membership, graph traversal. An LLM
+Validator would just re-derive the same checks non-deterministically and
+cost money. The Python Validator is deterministic, free, and instant. The
+Adjudicator is still an LLM call, but scoped to the one judgment call
+Python cannot make: "this soft flag says the filing seems to stop
+mentioning this bidder mid-process — is that a real extraction miss or is
+the filing genuinely silent?"
 
-Both agents run in series inside this one session. No other agents at MVP.
+### 1. Extractor — Claude Code subagent (LLM)
+- **Spawned by:** the outer conversation, one subagent per deal, fresh
+  context, no cross-deal knowledge.
+- **Reads (from disk, via the subagent's Read tool):**
+  `prompts/extract.md`, every `rules/*.md`, `data/filings/{slug}/pages.json`,
+  `data/filings/{slug}/manifest.json`.
+- **Emits:** a single JSON payload `{deal: {...}, events: [...]}` conforming
+  to `rules/schema.md` §R1. Every event row carries `source_quote` (NFKC
+  substring of the cited page) and `source_page` (integer matching
+  `pages.json[i].number`).
+- **Prompt builder:** `pipeline.build_extractor_prompt(slug)`.
+
+### 2. Validator — Python (`pipeline.py`)
+- **Entry:** `pipeline.validate(raw_extraction, filing) -> ValidatorResult`.
+- **Runs:** every invariant in `rules/invariants.md` — §P-R1..5 (structural
+  row checks), §P-D1..3 (date/BidderID integrity), §P-S1..4 (semantic
+  process checks).
+- **Returns:** `row_flags` and `deal_flags` lists of
+  `{code, severity, reason, [row_index|deal_level]}` dicts.
+- **Never rewrites the extraction.** Flag-only discipline preserves the
+  Extractor's output as the single source of what was extracted.
+
+### 3. Adjudicator — Claude Code subagent (LLM), scoped
+- **Fires when:** the Python Validator raises a soft flag (MVP: §P-S1
+  `nda_without_bid_or_drop`). No-op when zero soft flags.
+- **Reads:** the flagged row + same-bidder context rows + a small window
+  of filing pages.
+- **Emits:** `{verdict: "upheld" | "dismissed", reason: str}` appended to
+  the flag's `reason` field. Severity is NOT flipped in MVP — human review
+  stays explicit.
+
+### Orchestration (this conversation drives, not Python)
+
+```
+  orchestrator (Claude Code):
+    1. spawn Extractor subagent → raw_extraction JSON (written to disk)
+    2. filing = pipeline.load_filing(slug)
+    3. result = pipeline.validate(raw_extraction, filing)
+    4. for f in result.soft_flags():
+         spawn Adjudicator subagent, annotate f
+    5. pipeline.finalize(slug, raw_extraction)
+         → output/extractions/{slug}.json
+         → state/flags.jsonl (append)
+         → state/progress.json (update)
+    6. scoring/diff.py --slug {slug}   (on reference deals)
+    7. git commit
+```
+
+`run.py` is a thin CLI shim for step 5 when driving from a saved
+raw-extraction file (`python run.py --slug X --raw-extraction path.json`).
 
 ---
 

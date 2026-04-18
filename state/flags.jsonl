@@ -1,0 +1,1 @@
+{"deal": "medivation", "logged_at": "2026-04-18T16:46:16.482466Z", "code": "phase_termination_missing", "severity": "hard", "reason": "process_phase=1: last event bid_note='Sale Press Release' not in {Executed, Terminated, Auction Closed}", "deal_level": true}

@@ -1,40 +1,36 @@
-"""run.py — Outer Ralph loop over deals.
+"""run.py — CLI shim for the Python pieces of the extraction pipeline.
 
-Reads state/progress.json, iterates pending deals, invokes the per-deal
-Extractor + Validator pipeline in a fresh context per deal, writes
-output/extractions/{slug}.json, updates progress, and commits.
+The LLM extraction and soft-flag adjudication run as **Claude Code subagents**
+administered by the orchestrating conversation, not as API calls from Python.
+This module handles the deterministic, non-LLM finalization:
+
+  1. Read a subagent-produced raw extraction JSON from disk.
+  2. Run pipeline.validate() on it.
+  3. Merge flags, write output/extractions/{slug}.json, append
+     state/flags.jsonl, update state/progress.json.
+  4. Optionally commit.
 
 USAGE
 -----
-    python run.py --slug medivation          # single deal
-    python run.py --reference-only           # all 9 reference deals
-    python run.py --pending                  # every non-complete deal
-    python run.py --slug medivation --dry-run
+    # Finalize a single deal from a subagent-produced JSON file:
+    python run.py --slug medivation --raw-extraction /tmp/medivation.raw.json
 
-STATUS
-------
-Stub. The `run_pipeline(deal)` body is intentionally unimplemented until the
-Stage 1 rulebook decisions and the Claude Agent SDK invocation pattern are
-settled. The outer loop, state management, and commit logic are real and
-runnable; they just don't do extraction yet.
+    # Dry-run (validate only, do not write files):
+    python run.py --slug medivation --raw-extraction /tmp/medivation.raw.json --dry-run
 
-ARCHITECTURE NOTE
------------------
-Per CLAUDE.md, each deal runs in a fresh Claude session. This file does not
-maintain any cross-deal state beyond what is serialized to state/progress.json.
-If you find yourself adding in-memory state that spans deals, stop — that
-violates the Ralph discipline.
+    # Print the Extractor subagent prompt (for piping into a subagent session):
+    python run.py --slug medivation --print-extractor-prompt
 
-STATUS SEMANTICS
-----------------
+STATUS SEMANTICS (mirrors SKILL.md)
+-----------------------------------
   pending    — not yet run.
-  extracted  — Extractor emitted rows; Validator has not yet run.
-  validated  — Validator ran; may have hard-error flags. Pipeline's terminal
-               status for non-reference deals.
-  verified   — Austin manually read the filing and adjudicated any AI-vs-Alex
-               diff. Only set on reference deals, and only by the manual review
-               workflow — the pipeline itself never writes this status.
-  failed     — pipeline error (fetch, section-location, etc.).
+  validated  — Validator ran; has hard flags. Pipeline's terminal status for
+               a deal requiring human review.
+  passed     — Validator ran; soft/info flags only.
+  passed_clean — Zero flags.
+  failed     — Pipeline error (filing missing, malformed JSON, etc.).
+  verified   — Austin manually read the filing and adjudicated every diff.
+               Only set by the manual review workflow, never by this script.
 """
 
 from __future__ import annotations
@@ -46,14 +42,11 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+
+import pipeline
 
 REPO_ROOT = Path(__file__).resolve().parent
 PROGRESS_PATH = REPO_ROOT / "state" / "progress.json"
-FLAGS_PATH = REPO_ROOT / "state" / "flags.jsonl"
-EXTRACTIONS_DIR = REPO_ROOT / "output" / "extractions"
-RULES_DIR = REPO_ROOT / "rules"
-PROMPTS_DIR = REPO_ROOT / "prompts"
 
 
 @dataclass
@@ -66,28 +59,8 @@ class Deal:
     filing_url: str
 
 
-@dataclass
-class PipelineResult:
-    status: str  # pending | extracted | validated | verified | failed
-    flag_count: int
-    notes: str
-    rows: list[dict[str, Any]]
-    flags: list[dict[str, Any]]
-
-
-def load_progress() -> dict[str, Any]:
-    with PROGRESS_PATH.open() as f:
-        return json.load(f)
-
-
-def save_progress(state: dict[str, Any]) -> None:
-    state["updated"] = datetime.datetime.utcnow().isoformat() + "Z"
-    with PROGRESS_PATH.open("w") as f:
-        json.dump(state, f, indent=2, sort_keys=False)
-
-
 def current_rulebook_sha() -> str | None:
-    """git SHA of rules/ at current HEAD, or None if not a git repo."""
+    """git SHA of rules/ at HEAD, or None if not a git repo."""
     try:
         result = subprocess.run(
             ["git", "rev-parse", "HEAD:rules"],
@@ -101,132 +74,112 @@ def current_rulebook_sha() -> str | None:
         return None
 
 
-def run_pipeline(deal: Deal) -> PipelineResult:
-    """Invoke the Extractor + Validator pipeline on one deal.
-
-    STUB. Intended integration surface:
-      1. Fetch filing text from deal.filing_url.
-      2. Invoke Extractor (Claude SDK) with prompts/extract.md + rules/*.md
-         + filing text. Receive candidate rows JSON.
-      3. Invoke Validator (Claude SDK) with prompts/validate.md +
-         rules/invariants.md + candidate rows + filing text. Receive
-         final rows + flags.
-      4. Return PipelineResult. Pipeline's terminal status is `validated`
-         (or `failed`); `verified` is set only by the manual review workflow.
-    """
-    raise NotImplementedError(
-        "Pipeline not yet implemented. Stage 1 (rulebook) and Stage 2 "
-        "(reference JSON + diff) must complete first. See CLAUDE.md."
-    )
-
-
-def process_deal(deal: Deal, state: dict[str, Any], dry_run: bool = False) -> None:
-    print(f"[{deal.slug}] starting (reference={deal.is_reference})")
+def finalize_deal(
+    deal: Deal,
+    raw_extraction: dict,
+    dry_run: bool = False,
+    commit: bool = True,
+) -> pipeline.PipelineResult | None:
+    """Run validator, merge flags, write output + state. Optionally commit."""
+    filing = pipeline.load_filing(deal.slug)
 
     if dry_run:
-        print(f"[{deal.slug}] dry-run: skipping pipeline invocation")
-        return
+        result = pipeline.validate(raw_extraction, filing)
+        status, flag_count, notes = pipeline.summarize(result)
+        print(f"[{deal.slug}] dry-run: status={status} flag_count={flag_count} notes={notes}")
+        if result.row_flags:
+            print(f"  row flags ({len(result.row_flags)}):")
+            for f in result.row_flags[:10]:
+                print(f"    row {f.get('row_index')}: [{f['severity']}] {f['code']} — {f['reason']}")
+            if len(result.row_flags) > 10:
+                print(f"    ... and {len(result.row_flags) - 10} more")
+        if result.deal_flags:
+            print(f"  deal flags ({len(result.deal_flags)}):")
+            for f in result.deal_flags:
+                print(f"    [{f['severity']}] {f['code']} — {f['reason']}")
+        return None
 
-    try:
-        result = run_pipeline(deal)
-    except NotImplementedError as e:
-        print(f"[{deal.slug}] pipeline stub: {e}")
-        return
-    except Exception as e:
-        print(f"[{deal.slug}] failed: {e}", file=sys.stderr)
-        state["deals"][deal.slug].update({
-            "status": "failed",
-            "notes": f"pipeline_error: {e}",
-            "last_run": datetime.datetime.utcnow().isoformat() + "Z",
-        })
-        save_progress(state)
-        return
+    result = pipeline.finalize(deal.slug, raw_extraction, filing=filing)
+    print(
+        f"[{deal.slug}] status={result.status} flag_count={result.flag_count} "
+        f"notes={result.notes} -> {result.output_path.relative_to(REPO_ROOT)}"
+    )
 
-    # Write extraction output.
-    EXTRACTIONS_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = EXTRACTIONS_DIR / f"{deal.slug}.json"
-    with out_path.open("w") as f:
-        json.dump({"deal": deal.__dict__, "events": result.rows}, f, indent=2)
-
-    # Append flags.
-    with FLAGS_PATH.open("a") as f:
-        for flag in result.flags:
-            f.write(json.dumps({"deal": deal.slug, **flag}) + "\n")
-
-    # Update progress. Pipeline never writes `verified` — only manual review does.
-    if result.status == "verified":
-        raise RuntimeError(
-            f"[{deal.slug}] pipeline attempted to set status=verified; "
-            "that status is reserved for the manual adjudication workflow."
+    if commit:
+        commit_message = (
+            f"deal={deal.slug} status={result.status} flag_count={result.flag_count}"
         )
-    state["deals"][deal.slug].update({
-        "status": result.status,
-        "flag_count": result.flag_count,
-        "last_run": datetime.datetime.utcnow().isoformat() + "Z",
-        "notes": result.notes,
-    })
-    save_progress(state)
+        try:
+            subprocess.run(["git", "add", "-A"], cwd=REPO_ROOT, check=True)
+            subprocess.run(
+                ["git", "commit", "-m", commit_message],
+                cwd=REPO_ROOT, check=True,
+            )
+        except subprocess.CalledProcessError as e:
+            print(f"[{deal.slug}] git commit failed: {e}", file=sys.stderr)
 
-    # Commit.
-    commit_message = (
-        f"deal={deal.slug} status={result.status} flags={result.flag_count}"
+    return result
+
+
+def load_deal(slug: str) -> Deal:
+    if not PROGRESS_PATH.exists():
+        raise FileNotFoundError(f"{PROGRESS_PATH} does not exist")
+    state = json.loads(PROGRESS_PATH.read_text())
+    info = state["deals"].get(slug)
+    if info is None:
+        raise KeyError(f"slug={slug!r} not in state/progress.json")
+    return Deal(
+        slug=slug,
+        is_reference=info.get("is_reference", False),
+        target_name=info["target_name"],
+        acquirer=info["acquirer"],
+        date_announced=info["date_announced"],
+        filing_url=info["filing_url"],
     )
-    try:
-        subprocess.run(["git", "add", "-A"], cwd=REPO_ROOT, check=True)
-        subprocess.run(["git", "commit", "-m", commit_message], cwd=REPO_ROOT, check=True)
-    except subprocess.CalledProcessError as e:
-        print(f"[{deal.slug}] git commit failed: {e}", file=sys.stderr)
-
-    print(f"[{deal.slug}] done: status={result.status} flags={result.flag_count}")
 
 
-def deals_to_process(state: dict[str, Any], args: argparse.Namespace) -> list[Deal]:
-    selected = []
-    for slug, info in state["deals"].items():
-        if args.slug and slug != args.slug:
-            continue
-        if args.reference_only and not info.get("is_reference", False):
-            continue
-        if args.pending and info["status"] not in ("pending", "failed"):
-            continue
-        selected.append(Deal(
-            slug=slug,
-            is_reference=info.get("is_reference", False),
-            target_name=info["target_name"],
-            acquirer=info["acquirer"],
-            date_announced=info["date_announced"],
-            filing_url=info["filing_url"],
-        ))
-    return selected
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser(description="Outer loop over deals.")
-    parser.add_argument("--slug", help="Process one deal by slug.")
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--slug", required=True, help="Deal slug (must exist in state/progress.json).")
     parser.add_argument(
-        "--reference-only",
-        action="store_true",
-        help="Process only the 9 Alex-reference deals (development regression).",
+        "--raw-extraction",
+        type=Path,
+        help=(
+            "Path to a JSON file holding the subagent-produced raw extraction "
+            "({deal, events}). Required unless --print-extractor-prompt."
+        ),
     )
-    parser.add_argument("--pending", action="store_true", help="Process only pending/failed deals.")
-    parser.add_argument("--dry-run", action="store_true", help="Skip pipeline invocation.")
+    parser.add_argument(
+        "--print-extractor-prompt",
+        action="store_true",
+        help="Print the Extractor subagent prompt for the given slug and exit.",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Run the validator and print flags, but do not write files or commit.",
+    )
+    parser.add_argument(
+        "--no-commit",
+        action="store_true",
+        help="Write output and state, but skip the git commit.",
+    )
     args = parser.parse_args()
 
-    if not any([args.slug, args.reference_only, args.pending]):
-        parser.error("specify --slug, --reference-only, or --pending")
+    if args.print_extractor_prompt:
+        print(pipeline.build_extractor_prompt(args.slug))
+        return 0
 
-    state = load_progress()
-    state["rulebook_version"] = current_rulebook_sha()
+    if args.raw_extraction is None:
+        parser.error("--raw-extraction is required (unless --print-extractor-prompt)")
+    if not args.raw_extraction.exists():
+        parser.error(f"--raw-extraction path does not exist: {args.raw_extraction}")
 
-    deals = deals_to_process(state, args)
-    if not deals:
-        print("no matching deals")
-        return
-
-    print(f"processing {len(deals)} deal(s)")
-    for deal in deals:
-        process_deal(deal, state, dry_run=args.dry_run)
+    deal = load_deal(args.slug)
+    raw = json.loads(args.raw_extraction.read_text())
+    finalize_deal(deal, raw, dry_run=args.dry_run, commit=not args.no_commit)
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
