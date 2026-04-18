@@ -2,7 +2,7 @@
   "schema_version": "v1",
   "rulebook_version": null,
   "created": "2026-04-18T12:29:42.084187Z",
-  "updated": "2026-04-18T20:44:27.529711Z",
+  "updated": "2026-04-18T21:08:31.951673Z",
   "deal_count_total": 401,
   "deal_count_reference": 9,
   "deals": {
@@ -3595,17 +3595,17 @@
       "notes": ""
     },
     "providence-worcester": {
-      "status": "pending",
+      "status": "passed_clean",
       "is_reference": true,
       "target_name": "PROVIDENCE & WORCESTER RR CO",
       "acquirer": "GENESEE & WYOMING INC",
       "date_announced": "2016-08-15",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/831968/0001193125-16-713780-index.htm",
       "flag_count": 0,
-      "last_run": null,
+      "last_run": "2026-04-18T21:08:31.951673Z",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": ""
+      "notes": "hard=0 soft=0 info=0"
     },
     "medivation": {
       "status": "passed_clean",
@@ -3868,17 +3868,17 @@
       "notes": ""
     },
     "penford": {
-      "status": "pending",
+      "status": "passed_clean",
       "is_reference": true,
       "target_name": "PENFORD CORP",
       "acquirer": "INGREDION INC",
       "date_announced": "2014-10-15",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/739608/0001193125-14-455030-index.htm",
       "flag_count": 0,
-      "last_run": null,
+      "last_run": "2026-04-18T21:03:55.777511Z",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": ""
+      "notes": "hard=0 soft=0 info=0"
     },
     "pike-corp": {
       "status": "pending",
