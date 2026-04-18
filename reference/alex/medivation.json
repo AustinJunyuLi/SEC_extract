@@ -299,6 +299,42 @@
       "bidder_name": null,
       "bidder_alias": null,
       "bidder_type": null,
+      "bid_note": "Final Round Inf Ann",
+      "bid_type": null,
+      "bid_date_precise": "2016-08-14",
+      "bid_date_rough": "2016-07-19 00:00:00",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "multiplier": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "bidder_id_renumbered_from_alex",
+          "severity": "info",
+          "reason": "xlsx row 6066 flagged in alex_flagged_rows.json (original BidderID=5); renumbered to 8"
+        }
+      ]
+    },
+    {
+      "BidderID": 9,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
       "bid_note": "Final Round Ann",
       "bid_type": null,
       "bid_date_precise": "2016-08-14",
@@ -323,7 +359,7 @@
       "flags": []
     },
     {
-      "BidderID": 9,
+      "BidderID": 10,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": null,
@@ -353,7 +389,7 @@
       "flags": []
     },
     {
-      "BidderID": 10,
+      "BidderID": 11,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": null,
@@ -384,43 +420,7 @@
         {
           "code": "bidder_id_renumbered_from_alex",
           "severity": "info",
-          "reason": "xlsx row 6070 flagged in alex_flagged_rows.json (original BidderID=5); renumbered to 10"
-        }
-      ]
-    },
-    {
-      "BidderID": 11,
-      "process_phase": null,
-      "role": "bidder",
-      "bidder_name": null,
-      "bidder_alias": null,
-      "bidder_type": null,
-      "bid_note": "Final Round Inf Ann",
-      "bid_type": null,
-      "bid_date_precise": "2016-08-14",
-      "bid_date_rough": "2016-07-19 00:00:00",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "multiplier": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": null,
-      "flags": [
-        {
-          "code": "bidder_id_renumbered_from_alex",
-          "severity": "info",
-          "reason": "xlsx row 6066 flagged in alex_flagged_rows.json (original BidderID=5); renumbered to 11"
+          "reason": "xlsx row 6070 flagged in alex_flagged_rows.json (original BidderID=5); renumbered to 11"
         }
       ]
     },

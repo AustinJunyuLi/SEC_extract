@@ -36,7 +36,7 @@
         "aliases_observed": [
           "New Mountain Capital"
         ],
-        "first_appearance_BidderID": 4
+        "first_appearance_BidderID": 5
       },
       "bidder_04": {
         "resolved_name": "5 parties, 4F and 1S",
@@ -182,18 +182,13 @@
       "BidderID": 4,
       "process_phase": null,
       "role": "bidder",
-      "bidder_name": "bidder_03",
-      "bidder_alias": "New Mountain Capital",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null,
-        "note": "F"
-      },
-      "bid_note": "NDA",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Final Round Inf Ann",
       "bid_type": null,
-      "bid_date_precise": "2014-03-19",
-      "bid_date_rough": "2014-03-19 00:00:00",
+      "bid_date_precise": null,
+      "bid_date_rough": "2014-03-27 00:00:00",
       "bid_value": null,
       "bid_value_pershare": null,
       "bid_value_lower": null,
@@ -217,13 +212,18 @@
       "BidderID": 5,
       "process_phase": null,
       "role": "bidder",
-      "bidder_name": null,
-      "bidder_alias": null,
-      "bidder_type": null,
-      "bid_note": "Final Round Inf Ann",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "New Mountain Capital",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": null,
+        "note": "F"
+      },
+      "bid_note": "NDA",
       "bid_type": null,
-      "bid_date_precise": null,
-      "bid_date_rough": "2014-03-27 00:00:00",
+      "bid_date_precise": "2014-03-19",
+      "bid_date_rough": "2014-03-19 00:00:00",
       "bid_value": null,
       "bid_value_pershare": null,
       "bid_value_lower": null,

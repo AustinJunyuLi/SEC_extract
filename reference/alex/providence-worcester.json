@@ -36,21 +36,21 @@
         "aliases_observed": [
           "Party C"
         ],
-        "first_appearance_BidderID": 3
+        "first_appearance_BidderID": 4
       },
       "bidder_06": {
         "resolved_name": "16 parties",
         "aliases_observed": [
           "16 parties"
         ],
-        "first_appearance_BidderID": 4
+        "first_appearance_BidderID": 5
       },
       "bidder_07": {
         "resolved_name": "2 parties",
         "aliases_observed": [
           "2 parties"
         ],
-        "first_appearance_BidderID": 5
+        "first_appearance_BidderID": 6
       },
       "bidder_10": {
         "resolved_name": "Party E",
@@ -194,6 +194,36 @@
       "BidderID": 3,
       "process_phase": null,
       "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Final Round Inf Ann",
+      "bid_type": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "2016-06-15 00:00:00",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "multiplier": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": "Mid-june 2016 | This is probably something we will not collect, but for now\u2026",
+      "flags": []
+    },
+    {
+      "BidderID": 4,
+      "process_phase": null,
+      "role": "bidder",
       "bidder_name": "bidder_08",
       "bidder_alias": "Party C",
       "bidder_type": {
@@ -226,7 +256,7 @@
       "flags": []
     },
     {
-      "BidderID": 4,
+      "BidderID": 5,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_06",
@@ -256,7 +286,7 @@
       "flags": []
     },
     {
-      "BidderID": 5,
+      "BidderID": 6,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_07",
@@ -283,36 +313,6 @@
       "process_conditions_note": null,
       "additional_note": null,
       "comments": "In view of the substantial amount of management time that would be required for management presentations, the Transaction Committee concluded that the two low bidders should be excluded from that process. The Transaction Committee authorized representatives of GHF to schedule in-person management presentations with the remaining seven potential buyers and allow these parties to conduct additional due diligence. These potential buyers were given access to an internet data site to conduct legal and financial due diligence.",
-      "flags": []
-    },
-    {
-      "BidderID": 6,
-      "process_phase": null,
-      "role": "bidder",
-      "bidder_name": null,
-      "bidder_alias": null,
-      "bidder_type": null,
-      "bid_note": "Final Round Inf Ann",
-      "bid_type": null,
-      "bid_date_precise": null,
-      "bid_date_rough": "2016-06-15 00:00:00",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "multiplier": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "Mid-june 2016 | This is probably something we will not collect, but for now\u2026",
       "flags": []
     },
     {

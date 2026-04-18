@@ -91,7 +91,7 @@ ZEP_ROW_6390_EXPANSION_FLAG = {
 # §A3 — same-date tie-break rank by event class.
 A3_RANK: dict[str, int] = {
     # Rank 1 — process announcements
-    "Bid Press Release": 1, "Final Round Ann": 1,
+    "Bid Press Release": 1, "Final Round Ann": 1, "Final Round Inf Ann": 1,
     "Bidder Sale": 1, "Activist Sale": 1,
     # Rank 2 — process start/restart
     "Target Initiated": 2, "Terminated": 2, "Restarted": 2,
@@ -165,12 +165,36 @@ COL = {
 # Normalization helpers
 # ---------------------------------------------------------------------------
 
+_MOJIBAKE_MARKERS = ("Ã", "Â", "â€", "Ä")
+
+
+def _unmojibake(s: str) -> str:
+    """Salvage UTF-8 bytes that were decoded as Latin-1.
+
+    Common when an xlsx string is `dÃ©pÃ´t` (= UTF-8 for 'dépôt' but each
+    byte was interpreted as Latin-1). Round-trip `encode('latin-1') →
+    decode('utf-8')` recovers the original. Only applied when the string
+    contains mojibake markers AND the round-trip succeeds — keeps clean
+    strings untouched.
+    """
+    if not any(m in s for m in _MOJIBAKE_MARKERS):
+        return s
+    try:
+        fixed = s.encode("latin-1").decode("utf-8")
+    except (UnicodeDecodeError, UnicodeEncodeError):
+        return s
+    # Guard: salvage must not re-introduce other replacement chars.
+    if "\ufffd" in fixed:
+        return s
+    return fixed
+
+
 def _clean(v: Any) -> Any:
-    """Normalize xlsx missing-value encodings to None."""
+    """Normalize xlsx missing-value encodings to None, salvage mojibake."""
     if v is None:
         return None
     if isinstance(v, str):
-        s = v.strip()
+        s = _unmojibake(v.strip())
         if s.upper() in ("NA", "N/A", ""):
             return None
         return s
