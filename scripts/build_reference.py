@@ -409,10 +409,17 @@ def build_bidder_type(r: RawRow) -> dict[str, Any] | None:
         base = "s"
     else:
         base = None
+    # §F1: parse legacy note substring to populate `public: bool`. Alex's
+    # workbook uses strings like "S" (no signal), "public S", "Non-US public S",
+    # "public financial". The word "public" in the note means public=true.
+    # Absent that token we leave public=null (ambiguous; AI can disambiguate).
+    public = None
+    if note and isinstance(note, str) and "public" in note.lower():
+        public = True
     return {
         "base": base,
         "non_us": bool(nonus) if nonus is not None else False,
-        "public": None,  # Alex doesn't carry explicit public/private; AI will.
+        "public": public,
         "note": note,
     }
 
@@ -452,8 +459,49 @@ def _comments(r: RawRow) -> str | None:
     return " | ".join(str(p) for p in parts) if parts else None
 
 
+def _map_bid_value_unit(v: Any) -> str | None:
+    """§R1: canonical per-share unit is `"USD_per_share"`, aggregate is `"USD"`,
+    other currencies use codes. Alex's legacy workbook uses `"dollar"` (a
+    per-share stand-in). Map that to `"USD_per_share"`; pass through other
+    values unchanged.
+    """
+    v = _clean(v)
+    if v is None:
+        return None
+    s = str(v).strip()
+    if s.lower() == "dollar":
+        return "USD_per_share"
+    return s
+
+
 def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
     note = _infer_bid_note(r)
+
+    # §B2: bid_date_rough is populated IFF the date was inferred. When Alex's
+    # xlsx gives an explicit ISO date in bid_date_precise, the legacy "rough"
+    # mirror in the xlsx is a serialization artifact, not a semantic signal —
+    # null it out.
+    precise = _iso_date(r.get("bid_date_precise"))
+    rough_raw = r.get("bid_date_rough")
+    rough = rough_raw if precise is None else None
+
+    # §H1: point bids have null `bid_value_lower` / `bid_value_upper`. Alex's
+    # xlsx stores `lower == upper == pershare` on point bids as a workbook
+    # convention; strip that so the reference JSON matches the rulebook.
+    pershare = _num(r.get("bid_value_pershare"))
+    lower = _num(r.get("bid_value_lower"))
+    upper = _num(r.get("bid_value_upper"))
+    if pershare is not None and lower == pershare and upper == pershare:
+        lower = None
+        upper = None
+
+    # §R1: `multiplier` is only meaningful for non-dollar units (e.g.,
+    # `"EBITDA 12x"`). Alex's xlsx stores `1` as a no-op default on
+    # plain-dollar bids; strip that to null so the semantics are clear.
+    multiplier = r.get("multiplier")
+    if multiplier == 1 or multiplier == 1.0:
+        multiplier = None
+
     return {
         # BidderID is assigned later (post-sort).
         "BidderID": None,
@@ -464,14 +512,14 @@ def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
         "bidder_type": build_bidder_type(r),
         "bid_note": note,
         "bid_type": _bid_type_canon(r.get("bid_type")),
-        "bid_date_precise": _iso_date(r.get("bid_date_precise")),
-        "bid_date_rough":   r.get("bid_date_rough"),
+        "bid_date_precise": precise,
+        "bid_date_rough":   rough,
         "bid_value":          _num(r.get("bid_value")),
-        "bid_value_pershare": _num(r.get("bid_value_pershare")),
-        "bid_value_lower":    _num(r.get("bid_value_lower")),
-        "bid_value_upper":    _num(r.get("bid_value_upper")),
-        "bid_value_unit":     r.get("bid_value_unit"),
-        "multiplier":         r.get("multiplier"),
+        "bid_value_pershare": pershare,
+        "bid_value_lower":    lower,
+        "bid_value_upper":    upper,
+        "bid_value_unit":     _map_bid_value_unit(r.get("bid_value_unit")),
+        "multiplier":         multiplier,
         "cash_per_share":         None,
         "stock_per_share":        None,
         "contingent_per_share":   None,
