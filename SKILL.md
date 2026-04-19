@@ -26,19 +26,19 @@ Do not carry state across invocations.
 
 ## Pipeline (Extractor LLM + Python Validator + scoped Adjudicator)
 
-**Architecture (Stage 3, 2026-04-18):** the Extractor and Adjudicator run as
+**Architecture (current Stage 3 MVP):** the Extractor and Adjudicator run as
 clean-slate subagents administered by the outer conversation. The Validator
 is **pure Python** in `pipeline.py`. No model SDK calls from Python.
 
 **Why this shape, not "two LLM agents in series" as originally drafted.**
-Every invariant in `rules/invariants.md` (§P-R, §P-D, §P-S) is mechanically
-checkable — substring, regex, set membership, graph traversal. An LLM
-Validator would just re-derive the same checks non-deterministically and
-cost money. The Python Validator is deterministic, free, and instant. The
-Adjudicator is still an LLM call, but scoped to the one judgment call
-Python cannot make: "this soft flag says the filing seems to stop
-mentioning this bidder mid-process — is that a real extraction miss or is
-the filing genuinely silent?"
+Every invariant in `rules/invariants.md` (§P-R, §P-D, §P-G, §P-S) is
+mechanically checkable — substring, regex, set membership, graph
+traversal. An LLM Validator would just re-derive the same checks
+non-deterministically and cost money. The Python Validator is
+deterministic, free, and instant. The Adjudicator is still an LLM call,
+but scoped to the one judgment call Python cannot make: "this soft flag
+says the filing seems to stop mentioning this bidder mid-process — is
+that a real extraction miss or is the filing genuinely silent?"
 
 ### 1. Extractor — subagent (LLM)
 - **Spawned by:** the outer conversation, one subagent per deal, fresh
@@ -55,8 +55,8 @@ the filing genuinely silent?"
 ### 2. Validator — Python (`pipeline.py`)
 - **Entry:** `pipeline.validate(raw_extraction, filing) -> ValidatorResult`.
 - **Runs:** every invariant in `rules/invariants.md` — §P-R1..5 (structural
-  row checks), §P-D1..3 (date/BidderID integrity), §P-S1..4 (semantic
-  process checks).
+  row checks), §P-D1..3 (date/BidderID integrity), §P-G2 (bid-type
+  evidence), §P-S1..4 (semantic process checks).
 - **Returns:** `row_flags` and `deal_flags` lists of
   `{code, severity, reason, [row_index|deal_level]}` dicts.
 - **Never rewrites the extraction.** Flag-only discipline preserves the

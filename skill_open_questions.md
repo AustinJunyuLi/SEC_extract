@@ -95,7 +95,7 @@ Scope decisions first (they constrain everything), schema next (defines the outp
 
 **Total open:** 0 🟥 · 0 🟨 · 54 🟩
 
-> 🎉 **Stage 1 complete — 2026-04-18.** All 54 rule decisions have been ratified and written into `rules/*.md`. Proceed to Stage 2. (Row 20 / §K3 was retired post-facto; §Q5 added later bringing the final rulebook count back to 54.)
+> 🎉 **Stage 1 complete — 2026-04-18.** All 54 rule decisions have been ratified and written into `rules/*.md`. Proceed to Stage 2. (Row 20 is an intentional gap: the original §K3 question was retired post-facto, and the rule itself was fully deleted in Stage 3 iter-6. §Q5 was added later, bringing the final rulebook count back to 54.)
 
 Some questions are tightly coupled and will likely be resolved together (e.g., §E1 + §E2 + §Q2 all concern the aggregate-vs-atomize decision). Handle them as bundles where natural.
 
