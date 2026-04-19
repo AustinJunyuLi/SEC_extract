@@ -585,24 +585,6 @@ checked: no other deal in the 9-deal reference set has this pattern.
 
 ---
 
----
-
-## Open questions
-
-### §B1 — Natural-language date mapping
-- 🟩 **RESOLVED** — see top of this file. Deterministic mapping table + anchored/relative table. `date_inferred_from_rough` info flag.
-
-### §B2 — `bid_date_precise` vs `bid_date_rough`
-- 🟩 **RESOLVED** — see top of this file. Mutually exclusive: rough populated iff inferred.
-
-### §B3 — Undated events
-- 🟩 **RESOLVED** — see top of this file. Process-relative language → infer + soft flag. No anchor → null + soft `date_unknown` flag (not hard; `BidderID` preserves order).
-
-### §B4 — Date-range events
-- 🟩 **RESOLVED** — see top of this file. Single event at midpoint + verbatim phrase in `bid_date_rough` + `date_range_collapsed` info flag.
-
----
-
 ## Event sequencing (§A — `BidderID`)
 
 ### §A1 — Keep `BidderID` at all?

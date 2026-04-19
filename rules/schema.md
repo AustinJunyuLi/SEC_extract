@@ -452,37 +452,6 @@ requires re-fetching or accepting page-drift on old extractions.
 
 ---
 
-## Open questions
-
-### §Scope-1 — Which deals does the skill handle?
-- 🟩 **RESOLVED** — see top of this file. Research scope: corporate takeover auctions. Pipeline extracts every valid-filing-type deal and emits a deal-level `auction: bool`; downstream filters on `auction == true`.
-
-### §Scope-2 — Which filing types are accepted as input?
-- 🟩 **RESOLVED** — see top of this file. Accepted: DEFM14A, PREM14A, SC TO-T, S-4 (primary substantive). `/A` amendments accepted when they supersede. `SC 14D9` accepted as secondary companion to `SC TO-T`. `DEFA14A` / `425` / `8-K` / `13D` / `13G` excluded.
-
-### §Scope-3 — What does the skill deliberately NOT produce?
-- 🟩 **RESOLVED** — see top of this file. AI excludes: COMPUSTAT fields (`cshoc`, `gvkey*`), EDGAR metadata (`DateFiled`, `FormType`, `URL`, `CIK`, `accession`), and orchestration metadata (`DealNumber`, `rulebook_version`). AI produces: event array, `auction`, confirmed deal-identity fields (flags mismatches with seeds).
-
-### §R1 — Final column set the AI emits
-- 🟩 **RESOLVED** — see top of this file. Structure `{deal: {...}, events: [...]}`. Alex's 4 bidder_type booleans → single `bidder_type` string. 3 comments cols → single `comments`. 3 new cols: `source_quote`, `source_page`, `flags`. 7 cols dropped per §Scope-3.
-
-### §R2 — Flags column format
-- 🟩 **RESOLVED** — see top of this file. Structured array of `{code, severity, reason}` objects. Deal-level flags in parallel `deal.deal_flags[]`. Every flag also appended to `state/flags.jsonl`.
-
-### §R3 — Evidence column
-- 🟩 **RESOLVED** — see top of this file.
-
-### §N1 — Deal-level vs event-level split
-- 🟩 **RESOLVED** — see top of this file. `{deal: {...}, events: [...]}`. Deal fields appear once, not repeated per row.
-
-### §N2 — `all_cash` derivation
-- 🟩 **RESOLVED** — see top of this file. AI derives `all_cash` from consideration structure. `true` iff pure cash; `false` for any composite. Composite representation pending §H2.
-
-### §N3 — `cshoc` source
-- 🟩 **RESOLVED** — see top of this file. Out of scope for AI; downstream COMPUSTAT merge on `gvkey`.
-
----
-
 ## Canonical output schema (resolved)
 
 Reflects resolved decisions §Scope-1/2/3, §R1, §R2, §R3, §N1, §N2, §N3.

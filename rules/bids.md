@@ -666,33 +666,6 @@ relabel per the table above and flag any divergent legacy rows as
 
 ---
 
----
-
-## Open questions
-
-### §G1 — The informal-vs-formal call
-- 🟩 **RESOLVED** — see top of this file. Trigger tables + process-position fallback + range-implies-informal heuristic. To be stress-tested against 25-deal lawyer-language study.
-
-### §G2 — Evidence requirement for classification
-- 🟩 **RESOLVED** — see top of this file. Hard invariant: every non-null `bid_type` requires a trigger phrase in `source_quote` OR a `bid_type_inference_note`.
-
-### §H1 — Ranges and single-bound bids
-- 🟩 **RESOLVED** — see top of this file. Ranges populate both bounds; single-bounds populate one side; unspecified-price still emits a row with flag.
-
-### §H2 — Composite consideration
-- 🟩 **RESOLVED** — see top of this file. Component fields (`cash_per_share`, `stock_per_share`, `contingent_per_share`, `consideration_components`). Headline = sum.
-
-### §H3 — Entire-company vs partial bids
-- 🟩 **RESOLVED** — see top of this file. Silent skip + info flag on clean segments; soft flag for manual review on ambiguous (all-assets, majority-stake, two-step).
-
-### §H4 — Aggregate-dollar bids
-- 🟩 **RESOLVED** — see top of this file. Emit aggregate in `bid_value` + `bid_value_unit = "USD"`. Populate `bid_value_pershare` only if filing states it. New `aggregate_basis` field.
-
-### §H5 — Bid revisions
-- 🟩 **RESOLVED** — see top of this file. Each revision = separate event row. Chain via `bidder_name` + chronology.
-
----
-
 ## Skip rules (§M — what NOT to record)
 
 ### §M1 — Unsolicited letters with no NDA
