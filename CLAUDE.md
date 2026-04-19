@@ -120,57 +120,63 @@ repo.
 
 ## Current status
 
-- **Stage 1 complete (2026-04-18).** All 54 rule decisions ratified with Alex in a power-run session; full decision records in `rules/*.md`. Tracker `skill_open_questions.md` shows 0 🟥 / 54 🟩. Commit `f57a2aa`.
-- **Stage 2 complete (2026-04-18).**
-  - `scripts/build_reference.py` converts the xlsx → `reference/alex/{slug}.json` for all 9 reference deals, applying §Q1 (Saks delete), §Q2 (Zep expand), §Q3/§Q4 (Mac-Gray / Medivation renumber), §E3 canonical bidder IDs, §F1 bidder-type collapse, §A1–§A3 chronological BidderID reassignment, and Scope-3 drops. Commits `3241785` + `9dda10a`.
-  - `scoring/diff.py` runs end-to-end against AI extractions and emits a human-review markdown + JSON report with verdict checkboxes per divergence. Commit `0b0d4d7`.
-  - **Workstream C** — 25-deal lawyer-language study — **deferred indefinitely.** Reopen only if Stage 3 diffs surface systematic §G1/§L2 confusion the per-row manual-verification loop can't resolve.
-- **Stage 3 implementation landed (2026-04-18).** Commit `031c371` added
-  `pipeline.py` (filing loader, prompt builder, Python validator,
-  finalization helpers) and rewrote `run.py` into a CLI shim that validates
-  and finalizes a saved raw extraction instead of orchestrating the whole
-  loop itself.
-- **Iter-6 full reference-set rerun completed 2026-04-19** under the
-  post-TIER-2 rulebook. `state/progress.json` now shows `392 pending`,
-  `6 passed_clean`, `3 validated`.
-  - **Passed clean (6):** medivation, imprivata, zep, mac-gray,
-    petsmart-inc, saks.
-  - **Validated with hard flags (3):** providence-worcester (13),
-    penford (5), stec (2).
-  - **20 hard flags total**, all extractor-side evidence gaps:
-    20× `bid_type_unsupported` (§P-G2: extractor missed `bid_type_trigger`
-    phrase or inference note).
-  - **Zero rule-change triggers.** All three non-clean deals need
-    extractor-side fixes, not rulebook changes.
+- **Stages 1 & 2 complete.** 54 rule decisions ratified with Alex
+  (`skill_open_questions.md` shows 0 🟥 / 54 🟩); all 9 reference
+  `reference/alex/*.json` files built; `scoring/diff.py` runs
+  end-to-end.
+  - **Workstream C** — 25-deal lawyer-language study — **deferred
+    indefinitely.** Reopen only if Stage 3 diffs surface systematic
+    §G1/§L2 confusion the per-row verification loop can't resolve.
+- **Stage 3 live.** `pipeline.py` (filing loader, extractor prompt
+  builder, deterministic Python validator, finalization helpers) +
+  `run.py` CLI shim.
+- **Latest reference-set state (post-iter-7 rerun):** `state/progress.json`
+  shows `392 pending`, **8 `passed_clean`, 1 `passed`, 0 `validated`,
+  0 hard flags across all 9 deals**:
+  - **Passed clean (8):** medivation, imprivata, zep, penford, mac-gray,
+    petsmart-inc, stec, saks.
+  - **Passed with soft flags (1):** providence-worcester — **20 ×
+    `nda_without_bid_or_drop`** (§P-S1 soft; 20 of 27 NDA bidders have
+    no per-bidder follow-up Bid/Drop/Executed row; extractor declined
+    to emit catch-all Drops with generic shared `source_quote`, per
+    §R2 specificity).
   - Aggregate report:
-    `quality_reports/plans/2026-04-19_stage3-iter6-rerun-results.md`.
-  - Latest per-deal diff reports live in `scoring/results/` with the
-    `20260419T15…` / `20260419T16…` timestamps (e.g.
-    `medivation_20260419T153940Z.md`).
-- **Iter-6 work summary.** TIER 0 reverted the §D1.a overfit from iter-5;
-  TIER 1a–e added safety gates including the `_invariant_p_g2` check;
-  TIER 2a–g ran a −601-line rulebook deletion pass (and moved §Q1–§Q5
-  rationale from `rules/dates.md` into `scripts/build_reference.py`'s
-  module docstring, deleted the old §K3 event label, etc.). Plans:
-  `quality_reports/plans/2026-04-19_stage3-iter6-*-handoff.md`.
-  Post-rerun commit `b355286` closed the §P-D5/§P-D6 rulebook gap:
-  §P-D6 now explicitly documented in `rules/invariants.md`; §P-D5
-  implemented in `pipeline.py` as the structural twin of §P-D6; §G2
-  restructured to 3-condition form matching §P-G2; §D1.a exempts both
-  §P-D5 and §P-D6.
-- **Exit clock: 0/3 unchanged-rulebook clean runs.** Three deals are still
-  non-clean, so the clock has not started. Conservative interpretation:
-  stays at 0/3 until all 9 pass clean simultaneously.
-- **Immediate next step (Austin's call):** re-run providence /
-  penford / stec with the §P-G2 prompt reminder that batch-3 used in
-  iter-6 (likely brings their hard flags to 0), then adjudicate the
-  NDA atomization-vs-aggregation pattern across zep / mac-gray /
-  providence / petsmart, and resolve the `bidder_type.public`
-  inference policy in `scripts/build_reference.py`.
+    `quality_reports/plans/2026-04-19_stage3-iter7-results.md`.
+- **Rulebook coherence closed.**
+  - §P-D5 implemented in `pipeline.py` as the structural twin of §P-D6
+    (both have §D1.a `unsolicited_first_contact` exemption). §G2 in
+    `rules/bids.md` restructured to match the 3-condition shape of
+    §P-G2 exactly (trigger / range-bid / ≤200-char inference note).
+  - §B5 (communication-date directionality) formalized in
+    `rules/dates.md` — previously cited by `prompts/extract.md` but
+    unwritten.
+  - Orphan §P-D9 tombstone removed from `rules/schema.md`.
+- **Dead code + doc purge (2026-04-20).** Deleted `api_extractor.py`
+  (archived linkflow option), `prompts/validate.md` (archived LLM
+  validator), `scripts/synth_extraction.py` (Stage 2 test fixture),
+  plus pre-iter-6-closeout handoff plans and unused dataclass fields
+  / CLI flags / helpers across `pipeline.py` / `run.py` /
+  `scripts/*.py` / `scoring/diff.py`. Net ~−800 tracked lines. No
+  backward-compat shims retained.
+- **Exit clock: 0/3 unchanged-rulebook clean runs** (strict
+  interpretation; providence's 20 soft `nda_without_bid_or_drop`
+  flags prevent all-9 `passed_clean`) OR **1/3** (pragmatic
+  interpretation; zero rule drift, advisory-only soft flags on a
+  policy-ambiguous NDA-followup question). Austin's call.
+- **Immediate open questions (Austin's call):**
+  1. Accept iter-7 providence NDA-only-with-soft-flags pattern as
+     correct per §R2, or tighten §P-S1 (→ info flag, or require
+     catch-all Drops in rulebook → reset clock).
+  2. Adjudicate NDA atomization-vs-aggregation on zep / mac-gray /
+     providence / petsmart (AI atomizes 15–27 NDAs; Alex aggregates
+     to 2–3). Either tighten §E2.b or regenerate Alex's reference.
+  3. Resolve `bidder_type.public` inference policy in
+     `scripts/build_reference.py` — 43+ diffs across providence /
+     penford / stec from converter-side `public=null`.
 - **Target-deal gate remains closed.** Do **not** run on the 392 target
   deals until all 9 reference deals are manually verified against their
-  filings and the rulebook is stable across 3 consecutive unchanged full
-  reference-set runs.
+  filings and the rulebook is stable across 3 consecutive unchanged
+  full reference-set runs.
 
 ## Repo layout
 
@@ -281,30 +287,30 @@ Current handling:
 
 ## Current Stage 3 follow-ups
 
-- **Close out the 20 extractor-side hard flags on providence / penford /
-  stec.** All 20 are `bid_type_unsupported` — extractor evidence gaps,
-  not rule failures. Re-running those three deals with the §P-G2 prompt
-  reminder that batch-3 used in iter-6 should bring the count to 0 and
-  let all 9 deals pass clean simultaneously (starting the exit clock).
-- **Adjudicate the NDA atomization-vs-aggregation pattern.** AI extracted
-  many more NDA/Drop rows than Alex on zep / mac-gray /
-  providence-worcester / petsmart-inc. Current §E2.b says atomize unless
-  the filing narrates joint/consortium activity; Alex's workbook
-  aggregates. This is a legitimate "both correct, different
-  interpretation" — Austin's call per deal whether to tighten §E2.b or
-  accept AI's atomization and regenerate Alex's reference.
+- **Resolve the iter-7 soft-flag question on providence-worcester.**
+  20 `nda_without_bid_or_drop` soft flags remain because the extractor
+  did not emit catch-all Drop rows (with shared generic `source_quote`)
+  for NDA bidders whose post-NDA activity isn't specifically narrated
+  in the filing. Either accept per §R2 specificity (keep soft flags as
+  advisory) or change policy (rulebook tweak → resets exit clock).
+- **Adjudicate the NDA atomization-vs-aggregation pattern.** AI
+  atomizes NDAs (15–27 rows per deal); Alex aggregates (2–3 rows).
+  Current §E2.b says atomize unless filing narrates consortium
+  activity. Austin's call per deal whether to tighten §E2.b or
+  regenerate Alex's reference.
 - **Resolve the `bidder_type.public` inference policy** in
-  `scripts/build_reference.py`. `bidder_type` dominates the field diffs
-  across every deal (e.g. mac-gray=17, stec=17, imprivata=13,
-  penford=13). A more aggressive public-strategic inference in the
-  converter would collapse ~65 field diffs in one sweep. This is a
-  converter-policy question, not a rulebook question.
-- **Refresh the per-deal adjudication memos** in `scoring/results/` so
-  they track the post-iter-6 diff reports (`*_20260419T15…Z.md` /
-  `*_20260419T16…Z.md`), not the older pre-rerun timestamps.
+  `scripts/build_reference.py`. `bidder_type` dominates field diffs
+  across every deal (e.g. stec=17, mac-gray=17, providence=13,
+  penford=13). More aggressive public-strategic inference in the
+  converter would collapse ~65 field diffs in one sweep. Converter-
+  policy question, not rulebook.
+- **Refresh per-deal adjudication memos** in `scoring/results/` so they
+  track the latest diff reports (`*_20260419T204646Z.md` for iter-7
+  rerun deals; still `*_20260419T15…/16…Z.md` for the 6 unchanged
+  deals), not the older pre-rerun timestamps.
 - **Deal-level diffs remain `TargetName` / `Acquirer` casing plus
-  `DateEffective`.** Same residual as iter-5 post-pin state; no new
-  action beyond confirming the filing-verbatim policy continues to hold.
+  `DateEffective`.** Same residual across iters. No new action —
+  filing-verbatim policy continues to hold.
 
 ## Exit criteria for each stage
 

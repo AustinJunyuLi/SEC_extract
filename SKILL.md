@@ -12,13 +12,14 @@ Do not carry state across invocations.
 
 ## Invocation contract
 
-**Input** (from the orchestrator):
-- `deal.slug` — short identifier, e.g. `medivation`.
-- `deal.filing_url` — SEC URL.
-- `deal.is_reference` — bool. If true, `scoring/diff.py` will compare against `reference/alex/{slug}.json` after extraction so Austin can manually review divergences. The diff is a development aid, not a grade — Alex's workbook is a reference, not ground truth.
+**Input** (from the orchestrator): a single `slug` (short identifier, e.g.
+`medivation`). Full filing text + deal metadata live on disk under
+`data/filings/{slug}/` (`pages.json`, `manifest.json`); the extractor
+subagent reads them directly. `state/progress.json` carries the `is_reference`
+flag used downstream by `scoring/diff.py`.
 
 **Output** (written by `pipeline.finalize()` / `run.py` after validation):
-- `output/extractions/{deal.slug}.json` — the extracted rows + deal-level fields.
+- `output/extractions/{slug}.json` — the extracted rows + deal-level fields.
 - Append to `state/flags.jsonl` — any ambiguities flagged during validation.
 - Update `state/progress.json` — set the deal's status.
 
@@ -78,8 +79,10 @@ that a real extraction miss or is the filing genuinely silent?"
     1. spawn Extractor subagent → raw_extraction JSON (written to disk)
     2. filing = pipeline.load_filing(slug)
     3. result = pipeline.validate(raw_extraction, filing)
-    4. for f in result.soft_flags():
-         spawn Adjudicator subagent, annotate f
+    4. if result.soft_count > 0:
+         for each soft flag, spawn Adjudicator subagent, annotate it
+         on raw_extraction before finalize (orchestrator-only — no
+         Python entrypoint in MVP)
     5. pipeline.finalize(slug, raw_extraction)
          → output/extractions/{slug}.json
          → state/flags.jsonl (append)

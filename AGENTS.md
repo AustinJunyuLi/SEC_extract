@@ -137,15 +137,27 @@ repo.
   builder, Python validator, finalization helpers) is live, and `run.py`
   is a CLI shim that validates and finalizes a saved raw extraction
   instead of orchestrating the whole loop itself.
-- **Full reference-set rerun complete (post-iter-6 rulebook).**
-  `state/progress.json` shows 6 `passed_clean` (medivation, imprivata,
-  zep, mac-gray, petsmart-inc, saks) and 3 `validated` with hard flags
-  (providence-worcester, penford, stec). Rulebook unchanged across the
-  run; all remaining hard flags are extractor-side evidence gaps
-  (primarily §P-G2 `bid_type_unsupported`), not rulebook triggers.
-- **Exit clock: 0/3 unchanged-rulebook clean runs.** Three deals are still
-  non-clean, so the clock has not started. It stays at 0/3 until all 9
-  pass clean simultaneously.
+- **Latest reference-set state (post-iter-7 rerun, 2026-04-19/20).**
+  `state/progress.json` shows **8 `passed_clean`, 1 `passed`, 0
+  `validated`, 0 hard flags across all 9 deals**:
+  - **Passed clean (8):** medivation, imprivata, zep, penford,
+    mac-gray, petsmart-inc, stec, saks.
+  - **Passed with soft flags (1):** providence-worcester — 20 ×
+    `nda_without_bid_or_drop` (§P-S1 soft; 20 of 27 NDA bidders have
+    no per-bidder follow-up Bid/Drop/Executed; extractor declined to
+    emit catch-all Drops sharing a generic `source_quote`, per §R2
+    specificity). Aggregate report in
+    `quality_reports/plans/2026-04-19_stage3-iter7-results.md`.
+- **Dead code + doc purge (2026-04-20).** Removed `api_extractor.py`
+  (archived linkflow), `prompts/validate.md` (archived LLM validator),
+  `scripts/synth_extraction.py` (Stage 2 test fixture) plus 13
+  pre-iter-6-closeout handoffs + unused fields / CLI flags across
+  `pipeline.py` / `run.py` / `scripts/*.py` / `scoring/diff.py`. Net
+  ~−800 tracked lines.
+- **Exit clock: 0/3 (strict) or 1/3 (pragmatic).** Providence's 20
+  soft flags prevent strict all-9-`passed_clean`; pragmatic reading
+  accepts iter-7 as run #1 since zero rule drift and soft flags are
+  advisory. Austin's call.
 - **Target-deal gate remains closed.** Do **not** run on the 392 target
   deals until all 9 reference deals are manually verified against their
   filings and the rulebook is stable across 3 consecutive unchanged full
@@ -268,20 +280,19 @@ Current handling:
 
 ## Current Stage 3 follow-ups
 
-- Re-run providence-worcester / penford / stec with the §P-G2 prompt
-  reminder so the extractor populates `bid_type_trigger` or
-  `bid_type_inference_note` on every informal/formal classification.
-  Those 21 residual hard flags are extractor-side evidence gaps, not
-  rulebook triggers.
+- Resolve the providence-worcester NDA-only question (iter-7): accept
+  §P-S1 soft flags as advisory (§R2 specificity intact) or tighten
+  policy (rulebook change → resets exit clock).
 - Adjudicate the NDA atomization-vs-aggregation pattern across
-  zep / mac-gray / providence / petsmart now that the full reference
-  set has been run under the post-iter-6 rulebook.
+  zep / mac-gray / providence / petsmart (AI atomizes 15–27 NDAs; Alex
+  aggregates 2–3). Either tighten §E2.b or regenerate Alex's reference.
 - Resolve the `bidder_type.public` inference policy in
-  `scripts/build_reference.py` — decide how aggressively the converter
-  should infer `public=true` for strategics before the remaining
-  Medivation field diffs are banked or closed.
-- Once all 9 deals pass clean simultaneously, start the 3-run
-  unchanged-rulebook exit clock.
+  `scripts/build_reference.py` — 43+ field diffs across providence /
+  penford / stec alone trace to converter-side `public=null`.
+- Refresh per-deal adjudication memos under `scoring/results/` against
+  the latest `*_20260419T204646Z.md` (iter-7) / earlier timestamps
+  (unchanged deals).
+- Decide exit-clock semantics (strict 0/3 vs pragmatic 1/3 after iter-7).
 
 ## Exit criteria for each stage
 
