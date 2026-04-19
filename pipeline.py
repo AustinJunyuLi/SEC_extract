@@ -338,6 +338,7 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
     row_flags.extend(_invariant_p_r5(events, deal))
     row_flags.extend(_invariant_p_d1(events))
     row_flags.extend(_invariant_p_d2(events))
+    row_flags.extend(_invariant_p_d5(events))
     row_flags.extend(_invariant_p_d6(events))
     row_flags.extend(_invariant_p_g2(events))
 
@@ -492,6 +493,85 @@ def _invariant_p_d1(events: list[dict]) -> list[dict]:
             flags.append({
                 "row_index": i, "code": "invalid_date_format", "severity": "hard",
                 "reason": f"bid_date_precise={d!r} not ISO YYYY-MM-DD",
+            })
+    return flags
+
+
+def _invariant_p_d5(events: list[dict]) -> list[dict]:
+    """§P-D5 — every Drop-family row's bidder has a prior engagement row
+    (NDA, Bidder Interest, IB, or prior Drop) in the same process_phase.
+
+    Closes the dangling-drop gap where an AI emits a Drop row for a bidder
+    that was never shown engaging with the process (no NDA, no expression
+    of interest, no IB kickoff). Matches the full Drop family via string
+    prefix: `{Drop, DropTarget, DropBelowInf, DropAtInf, DropBelowFormal,
+    DropAtFormal, Dropped}`. Existence-only check via set membership over
+    per-(phase, bidder) engagement rows: canonicalization (§A2/§A3) has
+    already ordered events, so "earlier row" reduces to "any engagement
+    row for this (name, phase)" in practice. The prior-Drop carve-out
+    covers §I2 re-engagement edge cases where an extractor emits Drop→Drop
+    without an intervening NDA.
+
+    Skips:
+      - Unnamed (bidder_name=null) Drop rows — §E3 placeholders are not
+        bidder-bound.
+      - §M4 stale-prior phase 0 — Drop rows in aborted prior processes do
+        not require a prior engagement row in this deal.
+      - Any row for the same (bidder_name, phase) carries
+        `unsolicited_first_contact` (§D1.a) — the bidder approached
+        unsolicited, made a concrete bid, and withdrew without ever
+        signing an NDA; the Drop row IS the withdrawal. Mirrors §P-D6's
+        §D1.a exemption on the tail-end of the lifecycle.
+    """
+    flags: list[dict[str, Any]] = []
+    # Build engagement index by (bidder_name, phase). Engagement = NDA,
+    # Bidder Interest, IB, or any Drop (to cover §I2 re-engagement chains
+    # where a second NDA is missing between two Drops). Track row index
+    # so a Drop row cannot satisfy itself as the "engagement" witness.
+    engagement_notes = {"NDA", "Bidder Interest", "IB"}
+    # Map (name, phase) -> set of row indices contributing engagement.
+    engagement_rows: dict[tuple[str, int], set[int]] = {}
+    # Map (name, phase) -> True if any row carries unsolicited_first_contact,
+    # so the §D1.a exemption propagates from the Bid row to the Drop row.
+    unsolicited_keys: set[tuple[str, int]] = set()
+    for j, ev in enumerate(events):
+        name = ev.get("bidder_name")
+        if not name:
+            continue
+        phase = ev.get("process_phase")
+        if phase is None:
+            phase = 1
+        if "unsolicited_first_contact" in _row_flag_codes(ev):
+            unsolicited_keys.add((name, phase))
+        note = ev.get("bid_note", "") or ""
+        if note not in engagement_notes and not note.startswith("Drop"):
+            continue
+        engagement_rows.setdefault((name, phase), set()).add(j)
+
+    for i, ev in enumerate(events):
+        note = ev.get("bid_note", "") or ""
+        if not note.startswith("Drop"):
+            continue
+        name = ev.get("bidder_name")
+        if not name:
+            continue  # unnamed placeholder — skip
+        phase = ev.get("process_phase")
+        if phase is None:
+            phase = 1
+        if phase < 1:
+            continue  # §M4 stale-prior phase 0 — skip
+        if (name, phase) in unsolicited_keys:
+            continue  # §D1.a — bidder approached unsolicited and withdrew
+        witnesses = engagement_rows.get((name, phase), set()) - {i}
+        if not witnesses:
+            flags.append({
+                "row_index": i, "code": "drop_without_prior_engagement", "severity": "hard",
+                "reason": (
+                    f"§P-D5: Drop row for bidder_name={name!r} in phase={phase} "
+                    f"has no prior NDA/Bidder Interest/IB row. If this is an "
+                    f"extractor error, rerun. If the filing genuinely shows a "
+                    f"drop without prior engagement, investigate."
+                ),
             })
     return flags
 

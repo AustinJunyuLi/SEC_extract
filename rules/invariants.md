@@ -105,6 +105,69 @@ comparable across deals.
 - **Escape hatch.** Rows with `bid_date_precise = null` skip rule 5 and
   must carry the `event_sequence_by_narrative` info flag.
 
+### §P-D5 — Drop rows require prior engagement in the same phase
+- **Check.** For every row with `bid_note` starting with `"Drop"` (the
+  `{Drop, DropTarget, DropBelowInf, DropAtInf, DropBelowFormal,
+  DropAtFormal, Dropped}` family — see `rules/events.md` §I1 and §K1),
+  with non-null `bidder_name` and `process_phase >= 1`, there exists at
+  least one earlier row in the same `process_phase` with the same
+  `bidder_name` and `bid_note ∈ {NDA, Bidder Interest, IB,
+  <any prior Drop>}`. The prior-Drop branch covers §I2 re-engagement
+  cases where a bidder re-enters after an earlier drop.
+- **Fail action.** Flag `drop_without_prior_engagement`. Hard.
+- **Why hard.** A drop row without prior engagement means the extractor
+  invented a dropout or missed the engagement row that named the
+  bidder. §P-D5 is the structural twin of §P-D6 on the tail-end of the
+  NDA lifecycle: §P-D6 asserts "every Bid has a prior NDA", §P-D5
+  asserts "every Drop has a prior engagement".
+- **Exemptions (row is skipped, no flag emitted).**
+  1. `bidder_name` is null — unnamed placeholders are count-bound.
+  2. `process_phase < 1` — §M4 stale-prior phase 0 rows do not require
+     an in-phase prior engagement.
+  3. Any row for the same `(bidder_name, process_phase)` carries the
+     `unsolicited_first_contact` info flag (§D1.a). An unsolicited
+     first-contact bidder approaches, submits a concrete price
+     indication, and withdraws without ever signing an NDA — the
+     drop row is the withdrawal itself, so requiring a prior
+     engagement would defeat the §D1.a exemption. Mirrors §P-D6
+     exemption #3.
+- **References.** `rules/events.md` §I1 (drop vocabulary), §I2
+  (re-engagement), §D1 (engagement vocabulary), §D1.a
+  (unsolicited-first-contact exemption).
+
+### §P-D6 — Named-Bid rows require an in-phase NDA for the same bidder
+- **Check.** For every row with `bid_note = "Bid"`, non-null
+  `bidder_name`, and `process_phase >= 1`, there exists at least one
+  row with `bid_note = "NDA"`, the same `bidder_name`, and the same
+  `process_phase`. Existence-only — not ordering.
+- **Fail action.** Flag `bid_without_preceding_nda`. Hard.
+- **Why hard.** Closes the retroactive-naming gap where an AI emits
+  unnamed §E3 NDA placeholders (e.g., Providence Party D/E/F) that
+  are never linked to named Bid rows. Silent NDA-registry breakage
+  would corrupt §Scope-1 auction classification and the §P-S NDA→drop
+  story downstream.
+- **Exemptions (row is skipped, no flag emitted).**
+  1. `bidder_name` is null — unnamed §E3 placeholders are count-bound,
+     not NDA-bound.
+  2. `process_phase < 1` — §M4 stale-prior phase 0 rows do not require
+     an in-phase NDA.
+  3. Row carries the `unsolicited_first_contact` info flag (§D1.a).
+     This is the ONLY judgment-call exemption and is reserved for
+     bidders who approach unsolicited and never sign an NDA (target
+     declines or bidder withdraws). The flag's `reason` must contain a
+     ≤120-char verbatim snippet showing that language.
+  4. `pre_nda_informal_bid` (§C4) does **NOT** exempt. §C4 requires the
+     bidder to sign an NDA later in the same phase, so §P-D6's
+     existence check is satisfied naturally by that later NDA row.
+- **Remediation path for unnamed-NDA cases.** When the filing later
+  names a bidder whose NDA was emitted as an unnamed §E3 placeholder,
+  the extractor attaches an `unnamed_nda_promotion` hint on the named
+  Bid row. `pipeline._apply_unnamed_nda_promotions` applies the hint
+  before §P-D6 runs, rewriting the placeholder NDA's `bidder_name` to
+  the promoted value. Successful promotions satisfy §P-D6
+  automatically; failed promotions leave the hint in place and §P-D6
+  fires hard.
+
 ---
 
 ## §P-S — Semantic process invariants (🟩 RESOLVED, 2026-04-18)
@@ -156,10 +219,10 @@ graph tells a coherent M&A-process story.
 ### §P-G2 — `bid_type` evidence requirement
 - **Check.** Every row with non-null `bid_type` satisfies one of:
   (1) `source_quote` contains a §G1 trigger phrase (case-insensitive
-  substring, formal OR informal table), (2) the row is a range bid
-  (both `bid_value_lower` and `bid_value_upper` populated — structural
-  signal per §G1), or (3) the row carries
-  `bid_type_inference_note: str`.
+  substring, formal OR informal table), (2) the row is a true range bid
+  (both `bid_value_lower` and `bid_value_upper` populated AND
+  `bid_value_lower < bid_value_upper` — structural signal per §G1), or
+  (3) the row carries `bid_type_inference_note: str`.
 - **Fail action.** Flag `bid_type_unsupported`. Hard.
 - **Why hard.** Informal-vs-formal is the core research variable per
   `rules/bids.md` §G2. Silent classification drift across 401 deals
@@ -179,6 +242,8 @@ graph tells a coherent M&A-process story.
 | §P-D1 | `rules/dates.md` §B1/§B2 |
 | §P-D2 | `rules/dates.md` §B2/§B3/§B4 |
 | §P-D3 | `rules/dates.md` §A4 |
+| §P-D5 | `rules/events.md` §I1 + §I2 + §D1 |
+| §P-D6 | `rules/events.md` §D1.a + `rules/bids.md` §C4 + `rules/bidders.md` §E3 |
 | §P-G2 | `rules/bids.md` §G1/§G2 |
 | §P-S1 | `rules/events.md` §I1 + `rules/bids.md` §M3 |
 | §P-S2 | `rules/schema.md` §Scope-1 |

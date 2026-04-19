@@ -437,7 +437,7 @@ requires re-fetching or accepting page-drift on old extractions.
   hallucinated and paraphrased quotes.
 
 **Cross-references.**
-- `SKILL.md` §Non-negotiable rules (mandatory for every row).
+- `SKILL.md` §Non-negotiable rules (evidence citation: every row carries `source_quote` and `source_page`).
 - `rules/invariants.md` §P-R1 (hard validator check).
 - `scripts/fetch_filings.py` (produces `pages.json` the quotes must live in).
 

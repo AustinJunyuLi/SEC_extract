@@ -166,12 +166,14 @@ formal/informal scoring function rather than first-match.
 satisfy at least one of:
 
 1. `source_quote` contains at least one trigger phrase from §G1's formal
-   or informal trigger tables. (Structural signal — range bid — qualifies
-   without a textual phrase.)
-2. The row carries `bid_type_inference_note: str` (≤ 200 chars) explaining
-   the process-position inference (e.g., *"submitted in response to
-   Final Round Ann row #12; classified formal per §G1 process-position
-   fallback"*).
+   or informal trigger tables (case-insensitive substring match).
+2. The row is a true range bid — both `bid_value_lower` and
+   `bid_value_upper` are populated and `bid_value_lower <
+   bid_value_upper` (structural signal per §G1).
+3. The row carries `bid_type_inference_note: str` (≤ 200 chars)
+   explaining the process-position inference (e.g., *"submitted in
+   response to Final Round Ann row #12; classified formal per §G1
+   process-position fallback"*).
 
 **Validator.** Implemented as §P-G2 (`rules/invariants.md`):
 `pipeline._invariant_p_g2` verifies one of the above holds for every
@@ -180,13 +182,14 @@ row with non-null `bid_type`. Violations → hard flag
 
 **Why hard.** Informal-vs-formal is the core research variable. Manual
 verification of 401 deals × ~5 bids each = ~2000 classifications is
-intractable without per-row evidence. Soft flagging would let silent drift
-accumulate.
+intractable without per-row evidence. Soft flagging would let silent
+drift accumulate.
 
 **Cross-references.**
 - `rules/bids.md` §G1 (classification rule).
 - `rules/invariants.md` §P-G2.
-- `SKILL.md` non-negotiable rule #5 (already mandates evidence citation).
+- `SKILL.md` §Non-negotiable rules (evidence citation: every row carries
+  `source_quote` and `source_page`).
 
 ---
 

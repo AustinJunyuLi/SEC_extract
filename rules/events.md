@@ -151,7 +151,7 @@ When in doubt → `Bidder Interest`. The transition to `Bidder Sale` is
 recorded on a later date when the concrete proposal is made. Do NOT retcon
 the earlier row.
 
-### §D1.a — Unsolicited first-contact Bid exemption from §P-D6 (🟩 RESOLVED, 2026-04-19)
+### §D1.a — Unsolicited first-contact Bid exemption from §P-D5 / §P-D6 (🟩 RESOLVED, 2026-04-19)
 
 **Non-negotiable.** When an unsolicited bid is itself the first contact
 from a bidder, emit the `Bid` row only; do NOT emit a duplicate
@@ -165,8 +165,12 @@ accompanying NDA in the same `process_phase`, attach:
  "reason": "<summary + ≤120-char single-quoted verbatim snippet from the filing showing the decline/withdrawal language>"}
 ```
 
-`_invariant_p_d6()` skips rows carrying this flag. This is the ONLY
-§P-D6 exemption flag; §C4's `pre_nda_informal_bid` is documentation-only.
+The flag exempts the matching `(bidder_name, process_phase)` from both
+`_invariant_p_d6()` (no NDA precedes the Bid) and `_invariant_p_d5()`
+(no engagement precedes the subsequent Drop/withdrawal). This is the
+ONLY exemption flag for those two invariants; §C4's
+`pre_nda_informal_bid` is documentation-only. Attach to the Bid row
+only — §P-D5's witness check scans the full (bidder, phase) slice.
 
 **Attachment conditions (all three must hold).**
 
