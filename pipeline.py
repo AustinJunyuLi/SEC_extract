@@ -296,25 +296,23 @@ Non-negotiables:
   - When an unsolicited bid is itself the first contact, emit the Bid row
     only and note that it initiated the process. Do NOT emit a duplicate
     standalone Bidder Sale row for the same act.
-  - **§D1.a unsolicited-first-contact NDA-less exemption (iter-4;
-    tightened iter-5).** When the unsolicited-first-contact bidder
-    NEVER signs an NDA (target declines to engage, OR bidder withdraws
-    before executing an NDA), attach `{{"code":
-    "unsolicited_first_contact", "severity": "info", "reason":
-    "<summary including a verbatim verb phrase + short quoted snippet
-    from the filing>"}}` to the Bid row. Pipeline's
+  - **§D1.a unsolicited-first-contact NDA-less exemption.** When the
+    unsolicited-first-contact bidder NEVER signs an NDA (filing
+    narrates the target declining to engage OR the bidder withdrawing
+    before any NDA), attach `{{"code": "unsolicited_first_contact",
+    "severity": "info", "reason": "<summary including a ≤120-char
+    single-quoted verbatim snippet from the filing showing the
+    decline/withdrawal language>"}}` to the Bid row. Pipeline's
     `_invariant_p_d6()` skips rows carrying this flag so §P-D6
-    (NDA-before-Bid) does not fire. Attach conditions (iter-5
-    tightened; all four MUST hold): (1) row is §D1 unsolicited
-    first-contact, (2) no NDA row exists for this bidder in the same
-    phase, (3) the filing contains one of these closed-list verb
-    phrases verbatim: `declined`, `did not respond`, `did not engage`,
-    `withdrew`, `rejected`, `terminated`, `ceased`, `declined to
-    engage`, `took no further action`, `no further contact`, and
-    (4) the flag's `reason` field includes a short single-quoted
-    verbatim snippet (≤ 120 chars) from the filing containing one of
-    those phrases. If condition 3 or 4 fails, do NOT attach the flag
-    — let §P-D6 fire so Austin can adjudicate the ambiguity.
+    (NDA-before-Bid) does not fire. Attach conditions (all three MUST
+    hold): (1) row is §D1 unsolicited first-contact, (2) no NDA row
+    exists for this bidder in the same phase, (3) the flag's `reason`
+    field includes a short single-quoted verbatim snippet (≤ 120
+    chars) from the filing showing the decline/withdrawal language.
+    If the filing language is ambiguous, do NOT attach the flag — let
+    §P-D6 fire so Austin can adjudicate. The verbatim-quote
+    requirement is the generalizable safety check; no closed verb
+    list is imposed, because filings phrase these outcomes many ways.
   - **§C4 pre-NDA informal Bid (iter-4, Class D; amended iter-5).** When
     a bidder gives a concrete price indication BEFORE signing an NDA
     (pre-NDA price talk; bidder later DOES sign an NDA), emit a `Bid`
