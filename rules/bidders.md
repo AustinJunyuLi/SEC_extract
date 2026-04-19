@@ -6,17 +6,16 @@
 
 ## Resolved rules
 
-### §E2 — Joint-bidder rows (🟩 RESOLVED, 2026-04-18; amended 2026-04-19 iter-4)
+### §E2 — Joint-bidder rows (🟩 RESOLVED, 2026-04-18; amended 2026-04-19)
 
 **Decision.** A joint bid by a consortium or pair of parties is represented
 as **one row per constituent** for *Bids* and *Drops*, all sharing the
 same `BidderID` and the same `bid_value*` fields. The joint-ness is
-signaled by a flag. **Two exceptions** (iter-4 amendments):
+signaled by a flag. **Two exceptions:**
 
-1. **Executed rows are always exactly 1 per deal** (see §E2.a below;
-   Class A fix).
+1. **Executed rows are always exactly 1 per deal** (see §E2.a below).
 2. **Group-narrated NDAs collapse to 1 row** when the filing does not
-   give per-constituent detail (see §E2.b below; Class E fix).
+   give per-constituent detail (see §E2.b below).
 
 **Rule (Bids and Drops — per-constituent).**
 - For a single bid event submitted jointly by N parties, emit **N rows**.

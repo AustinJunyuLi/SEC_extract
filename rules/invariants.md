@@ -151,7 +151,7 @@ graph tells a coherent M&A-process story.
 
 ---
 
-## §P-G — Bid classification invariants (🟩 RESOLVED, 2026-04-19, iter-6)
+## §P-G — Bid classification invariants (🟩 RESOLVED, 2026-04-19)
 
 ### §P-G2 — `bid_type` evidence requirement
 - **Check.** Every row with non-null `bid_type` satisfies one of:

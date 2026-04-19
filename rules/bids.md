@@ -8,7 +8,7 @@
 
 ## Resolved rules
 
-### §C4 — Pre-NDA informal bid classification (🟩 RESOLVED, 2026-04-19 iter-4, clarified iter-5)
+### §C4 — Pre-NDA informal bid classification (🟩 RESOLVED, 2026-04-19)
 
 **Decision.** When a prospective bidder communicates a **concrete price
 indication** (point, range, or "at least $X") to the target BEFORE
@@ -33,15 +33,13 @@ adjudication, but it does NOT trigger a validator carve-out.
   no NDA was yet in place, OR the NDA row appears later in the filing
   timeline).
 
-**§P-D6 interaction — iter-5 clarification.** §P-D6 is an EXISTENCE
-check ("the bidder has an NDA row somewhere in the same phase"), not an
-ORDERING check. Under §C4, the bidder signs an NDA LATER in the same
-phase. §P-D6 is therefore satisfied naturally by the later NDA row; no
-validator exemption is needed. This is a deliberate simplification from
-iter-4, which had a (redundant) `_invariant_p_d6()` skip for
-`pre_nda_informal_bid` rows. If the bidder **never** signs an NDA, use
-§D1.a's `unsolicited_first_contact` flag instead — that one DOES
-exempt from §P-D6 because the NDA legitimately doesn't exist.
+**§P-D6 interaction.** §P-D6 is an EXISTENCE check ("the bidder has an
+NDA row somewhere in the same phase"), not an ORDERING check. Under
+§C4, the bidder signs an NDA LATER in the same phase. §P-D6 is
+therefore satisfied naturally by the later NDA row; no validator
+exemption is needed. If the bidder **never** signs an NDA, use §D1.a's
+`unsolicited_first_contact` flag instead — that one DOES exempt from
+§P-D6 because the NDA legitimately doesn't exist.
 
 **Distinguishing from §D1 unsolicited-first-contact (§D1.a in events.md).**
 - §D1.a covers the case where a bidder sends an unsolicited bid and
@@ -63,10 +61,10 @@ that signed no NDA AND gave no concrete price AND had no bid intent.
 §C4 covers the opposite pattern: concrete price given, NDA signed
 later.
 
-**Migration note.** Saks iter-3b extractor used `Bidder Sale` + a
+**Migration note.** An earlier Saks extractor used `Bidder Sale` + a
 `pre_nda_bidder_sale` soft flag for this pattern (Hudson's Bay + Sponsor
 A, April 2013 concrete price indications). That ad-hoc convention is
-deprecated by §C4; iter-4 re-encodes those rows as `Bid` +
+deprecated by §C4; current extraction re-encodes those rows as `Bid` +
 `bid_type="informal"` + `pre_nda_informal_bid`. The old
 `pre_nda_bidder_sale` flag is not recognized by the validator.
 

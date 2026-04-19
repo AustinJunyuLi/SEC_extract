@@ -231,9 +231,9 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
   `base ∈ {"s", "f", "mixed"}`, `non_us: bool`, `public: bool`.
   REPLACES Alex's 4 booleans (`bidder_type_financial` / `_strategic` /
   `_mixed` / `_nonUS`) + `bidder_type_note`. Per `rules/bidders.md` §F1.
-- `joint_bidder_members` — `list[str]` OR null (iter-4 addition;
-  documented iter-5). Canonical `bidder_NN` ids of consortium
-  constituents, for rows that represent a joint-bidder group event.
+- `joint_bidder_members` — `list[str]` OR null. Canonical `bidder_NN`
+  ids of consortium constituents, for rows that represent a joint-bidder
+  group event.
   Populated ONLY when the row represents a consortium / joint bidder:
   (a) the single `Executed` row when the merger-agreement counterparty
       is a consortium (per `rules/bidders.md` §E2.a; e.g.,

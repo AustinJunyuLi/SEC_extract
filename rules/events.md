@@ -110,7 +110,7 @@ ranks bid rows by `bid_type` rather than bid_note — see `rules/dates.md`
 
 ---
 
-### §D1 — Start-of-process classification (🟩 RESOLVED, 2026-04-18; amended 2026-04-19 iter-4)
+### §D1 — Start-of-process classification (🟩 RESOLVED, 2026-04-18; amended 2026-04-19)
 
 **Decision tree.** In chronological order, the extractor emits start-of-process
 rows as follows:
@@ -123,10 +123,10 @@ rows as follows:
   approach is leaked/announced publicly.
 - **Bidder approaches with no concrete sale proposal** → `Bidder Interest`.
 - **Activist pressure precedes the process** → `Activist Sale` as a
-  separate row BEFORE `Target Sale` (Petsmart pattern). Per §D1.b
-  (iter-4 amendment), multiple separately-narrated activists emit
-  **one row per activist**; collapse to a single row only when the
-  filing treats them as a coordinated group.
+  separate row BEFORE `Target Sale` (Petsmart pattern). Per §D1.b,
+  multiple separately-narrated activists emit **one row per activist**;
+  collapse to a single row only when the filing treats them as a
+  coordinated group.
 - **Target initiates private discussions with a specific party without a
   board-level sale resolution** → `Target Interest` (Mac Gray pattern).
 
@@ -185,7 +185,7 @@ If the filing language is ambiguous, do NOT attach the flag — let
 is the generalizable safety check; no closed verb list, because
 filings phrase these outcomes many ways.
 
-### §D1.b — Multi-activist atomization (🟩 RESOLVED, 2026-04-19, Class F)
+### §D1.b — Multi-activist atomization (🟩 RESOLVED, 2026-04-19)
 
 **Rule.** When the filing narrates **multiple activists** separately
 pressuring the target in parallel, emit **one `Activist Sale` row per
@@ -215,8 +215,9 @@ Schedule 13D…"*).
   label.
 
 **Migration note.** Alex's Petsmart workbook collapsed JANA + Longview
-into 1 Activist Sale row; iter-4 AI emits 2. This is a legitimate
-AI-identified correction per the ground-truth epistemology (§CLAUDE.md).
+into 1 Activist Sale row; under this rule the AI emits 2. This is a
+legitimate AI-identified correction per the ground-truth epistemology
+(§CLAUDE.md).
 
 **Cross-references.**
 - `rules/events.md` §I1 (how drops interact with initiation).
