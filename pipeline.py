@@ -771,10 +771,13 @@ def _invariant_p_d2(events: list[dict]) -> list[dict]:
 def _invariant_p_g2(events: list[dict]) -> list[dict]:
     """§P-G2 — every row with non-null bid_type satisfies one of:
     (1) source_quote contains a §G1 trigger phrase (case-insensitive
-    substring), (2) the row is a range bid (bid_value_lower AND
-    bid_value_upper both populated — structural signal per §G1), or
-    (3) the row carries `bid_type_inference_note: str`. Violations
-    emit the hard flag `bid_type_unsupported` per rules/bids.md §G2."""
+    substring, formal OR informal tables), (2) the row is a true range
+    bid (bid_value_lower < bid_value_upper, both populated), or
+    (3) the row carries a ≤200-char `bid_type_inference_note: str`.
+    Violations emit the hard flag `bid_type_unsupported`. §G2 is
+    existence-only: it verifies evidence for *some* classification,
+    not that the trigger matches the declared bid_type — §G1's own
+    classification rule governs that."""
     flags: list[dict[str, Any]] = []
     for i, ev in enumerate(events):
         bid_type = ev.get("bid_type")
@@ -782,13 +785,17 @@ def _invariant_p_g2(events: list[dict]) -> list[dict]:
             continue
 
         note = ev.get("bid_type_inference_note")
-        if isinstance(note, str) and note.strip():
+        if isinstance(note, str) and 0 < len(note.strip()) <= 200:
             continue
 
         lower = ev.get("bid_value_lower")
         upper = ev.get("bid_value_upper")
-        if lower not in (None, "", []) and upper not in (None, "", []):
-            continue  # structural range-bid signal
+        if (
+            lower not in (None, "", [])
+            and upper not in (None, "", [])
+            and lower != upper
+        ):
+            continue  # true range-bid signal per §G1 (lower < upper)
 
         raw_quote = ev.get("source_quote")
         if isinstance(raw_quote, list):
@@ -1204,51 +1211,46 @@ def _apply_unnamed_nda_promotions(
 
     log: list[dict[str, Any]] = []
     for i, ev in enumerate(events):
-        promo = ev.pop("unnamed_nda_promotion", None)
+        promo = ev.get("unnamed_nda_promotion")
         if not promo:
             continue
+
+        def fail(reason: str) -> None:
+            # Hint remains on the row as audit trail; finalize() emits the
+            # corresponding hard flag post-canonicalize so row indices are
+            # stable for downstream consumers.
+            log.append({
+                "row_index": i, "status": "failed",
+                "reason": reason, "hint": promo,
+            })
+
         target_id = promo.get("target_bidder_id")
         target = by_bidder_id.get(target_id)
         if target is None:
-            log.append({
-                "row_index": i, "status": "failed",
-                "reason": f"target_bidder_id={target_id} not found in events",
-                "hint": promo,
-            })
+            fail(f"target_bidder_id={target_id} not found in events")
             continue
         if target.get("bid_note") != "NDA":
-            log.append({
-                "row_index": i, "status": "failed",
-                "reason": f"target row {target_id} has bid_note={target.get('bid_note')!r}, expected 'NDA'",
-                "hint": promo,
-            })
+            fail(f"target row {target_id} has bid_note={target.get('bid_note')!r}, expected 'NDA'")
             continue
         old_alias = target.get("bidder_alias")
         old_name = target.get("bidder_name")
         new_alias = promo.get("promote_to_bidder_alias")
         new_name = promo.get("promote_to_bidder_name")
         if new_name and new_name not in bidder_registry:
-            log.append({
-                "row_index": i, "status": "failed",
-                "reason": (
-                    f"promote_to_bidder_name={new_name!r} not present in "
-                    f"bidder_registry — promotion would leave a dangling "
-                    f"bidder_name on target row {target_id}"
-                ),
-                "hint": promo,
-            })
+            fail(
+                f"promote_to_bidder_name={new_name!r} not present in "
+                f"bidder_registry — promotion would leave a dangling "
+                f"bidder_name on target row {target_id}"
+            )
             continue
         if old_name is not None and new_name and old_name != new_name:
-            log.append({
-                "row_index": i, "status": "failed",
-                "reason": (
-                    f"target row {target_id} already has bidder_name={old_name!r}; "
-                    f"promotion would overwrite a named bidder (only unnamed §E3 "
-                    f"placeholders are promotable)"
-                ),
-                "hint": promo,
-            })
+            fail(
+                f"target row {target_id} already has bidder_name={old_name!r}; "
+                f"promotion would overwrite a named bidder (only unnamed §E3 "
+                f"placeholders are promotable)"
+            )
             continue
+        # Success — apply mutations and pop the hint so it doesn't ship.
         if new_alias:
             target["bidder_alias"] = new_alias
         if new_name:
@@ -1256,6 +1258,7 @@ def _apply_unnamed_nda_promotions(
             aliases = bidder_registry[new_name].setdefault("aliases_observed", [])
             if old_alias and old_alias not in aliases:
                 aliases.append(old_alias)
+        ev.pop("unnamed_nda_promotion", None)
         log.append({
             "row_index": i,
             "target_bidder_id": target_id,
@@ -1334,21 +1337,26 @@ def finalize(
     if filing is None:
         filing = load_filing(slug)
     # Fix 2C: promote unnamed NDA placeholders to named bidders.
+    # Failed promotions leave their hint on the source row; we flag them
+    # after canonicalization so row indices are stable.
     promotion_log = _apply_unnamed_nda_promotions(raw_extraction)
-    # Registry-integrity hard flags for any promotion that failed.
-    for entry in promotion_log:
-        if entry.get("status") != "failed":
-            continue
-        result_flag = {
-            "row_index": entry["row_index"],
-            "code": "nda_promotion_failed", "severity": "hard",
-            "reason": f"unnamed_nda_promotion: {entry['reason']}",
-        }
-        raw_extraction.setdefault("events", [])[entry["row_index"]].setdefault(
-            "flags", []
-        ).append({k: v for k, v in result_flag.items() if k != "row_index"})
     # Fix 1: deterministic canonical ordering + BidderID reassignment.
     _canonicalize_order(raw_extraction)
+    # Registry-integrity hard flags for any promotion that failed. We locate
+    # the source row post-canonicalize via the residual hint (success path
+    # pops it; failure path leaves it) — this avoids index drift.
+    failed_reasons_by_hint_id = {
+        id(entry["hint"]): entry["reason"]
+        for entry in promotion_log if entry.get("status") == "failed"
+    }
+    for ev in raw_extraction.get("events", []):
+        promo = ev.get("unnamed_nda_promotion")
+        if not promo or id(promo) not in failed_reasons_by_hint_id:
+            continue
+        ev.setdefault("flags", []).append({
+            "code": "nda_promotion_failed", "severity": "hard",
+            "reason": f"unnamed_nda_promotion: {failed_reasons_by_hint_id[id(promo)]}",
+        })
     result = validate(raw_extraction, filing)
     final = merge_flags(raw_extraction, result.row_flags, result.deal_flags)
     # Attach promotion log to deal object for audit (pipeline-internal field).

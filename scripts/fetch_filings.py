@@ -239,9 +239,10 @@ def parse_accession(seed_url: str) -> tuple[str, str]:
       2. Nested index:   /data/{cik}/{accession_no_dashes}/{accession-dashed}-index.htm
       3. Direct document: /data/{cik}/{accession_no_dashes}/{filename}.htm
 
-    URL fragments (#toc…) are stripped before matching.
+    URL fragments (#toc…) and query strings (?highlight=…) are stripped
+    before matching.
     """
-    clean = seed_url.split("#", 1)[0]
+    clean = seed_url.split("#", 1)[0].split("?", 1)[0]
     # Forms 1 and 2: anchor on "...-index.htm" so we pick up the dashed accession.
     m = re.search(r"/data/(\d+)/(?:\d{18}/)?([0-9\-]+)-index\.htm", clean)
     if m:
