@@ -76,105 +76,32 @@ One row per deal; no same-date collision with itself.
 N Executed rows (2 and 5 respectively). These fire hard on
 `multiple_executed_rows`. Iter-4 extractions collapse to 1.
 
-### §E2.b — Group-narrated NDA aggregation (🟩 RESOLVED, 2026-04-19 iter-4, simplified iter-5)
+### §E2.b — Group-narrated NDA aggregation (🟩 RESOLVED, 2026-04-19 iter-4, simplified iter-5, further simplified iter-6)
 
-**Decision (iter-5 simplification).** Filing granularity determines the
-emission shape via a **single principled rule**, not a 3-rule tree:
+**Principle.** Emit one NDA row per *identifiable signer the filing
+narrates*. Filing granularity decides the shape; the rulebook does not
+re-split or re-aggregate against the filing.
 
-> **Emit one row per *identifiable signer* that the filing narrates.**
-> If the filing treats the consortium as one signer (no per-constituent
-> narration AND no count), emit ONE aggregated row. If the filing names
-> or counts individual signers, emit one row per named/counted signer
-> per §E3.
+**Rule.**
 
-**The rule in concrete terms.**
+| Filing narrates the NDA as… | Emit | Key fields |
+|---|---|---|
+| Single consortium event, no per-constituent detail, no count (e.g., *"CSC/Pamplona executed a CA on 7/11/2013"*) | **1 row**, consortium-as-signer | `bidder_alias` = consortium label; `bidder_name` = canonical id for consortium; `joint_bidder_members` = constituent ids if named elsewhere, else null; flag `{"code": "joint_nda_aggregated", "severity": "info", "reason": "...bidder_alias=<label>"}` |
+| Numeric count OR named individual signers (e.g., *"15 financial sponsors executed CAs"* or *"BC Partners, Caisse, GIC, … each executed CAs"*) | **N rows**, one per signer per §E3 | Named → filing label; unnamed → `"Strategic k"` / `"Financial k"` placeholders; each row's `bidder_name` = own canonical id; `joint_bidder_members` = null |
 
-- **Filing narrates the NDA as a single consortium event with no
-  per-constituent detail and no numeric count** (e.g., *"CSC/Pamplona
-  executed a confidentiality agreement on 7/11/2013"*): emit **ONE**
-  `NDA` row with the consortium treated as the signer.
-  - `bidder_alias` = the consortium label the filing uses.
-  - `bidder_name` = canonical id for the consortium (new if needed).
-  - `joint_bidder_members: list[str]` — canonical ids of constituents
-    IF individually named elsewhere in the filing. Null otherwise.
-  - Flag `{"code": "joint_nda_aggregated", "severity": "info", "reason":
-    "filing narrates consortium NDA as single group event; bidder_alias=<label>"}`.
-  - Mac-gray 7/11 CSC/Pamplona fits this shape.
-
-- **Filing gives a numeric count OR names individual signers** (e.g.,
-  *"11 strategic buyers executed confidentiality agreements"*, or
-  *"BC Partners, Caisse, GIC, StepStone, and Longview each executed
-  confidentiality agreements"*): emit **one row per signer** per §E3.
-  Use placeholder aliases (`"Strategic 1"`, `"Financial 1"`, …) for
-  unnamed signers; use the filing's verbatim labels for named ones.
-  Each row's `bidder_name` is its own canonical id; `bidder_alias`
-  is the filing's label; `joint_bidder_members` is null. A
-  `joint_bid` flag still references the consortium link.
-  - Petsmart 10/05 Buyer Group 15 NDAs fits this shape (count,
-    no per-constituent names → 15 §E3 placeholder rows).
-
-**Worked example — the discriminator.**
-
-Filing passage A: *"On July 11, 2013, CSC/Pamplona entered into a
-confidentiality and standstill agreement with Mac-Gray."*
-→ ONE aggregated row. The filing treats "CSC/Pamplona" as a single
-signer. `joint_bidder_members = ["bidder_06", "bidder_07"]` (from CSC
-and Pamplona being named as constituents earlier in the filing).
-
-Filing passage B: *"Over the next two months a total of 20 potential
-bidders, including two strategic bidders (Party A and CSC/Pamplona)
-and 18 financial bidders (including Party B and Party C), entered into
-confidentiality agreements."*
-→ Per §E3 exact-count: 20 atomic rows. Named: Party A, CSC/Pamplona,
-Party B, Party C. Unnamed: 16 placeholder financials. CSC/Pamplona is
-ONE row among the 20 (joint signer; see passage A shape); the other
-19 are individuals. `joint_bidder_members = null` on the 19
-individual rows; `joint_bidder_members = ["bidder_06", "bidder_07"]`
-on the CSC/Pamplona row.
-
-Filing passage C: *"On October 5, 2014, fifteen financial sponsors
-executed confidentiality agreements with Petsmart."*
-→ Per §E3 exact-count: 15 atomic rows with placeholder aliases
-`"Financial 1"` ... `"Financial 15"`. `joint_bidder_members = null`.
-(If later narration names some as the Buyer Group consortium,
-`unnamed_nda_promotion` hints reshape the relevant rows.)
-
-**Downstream impact on §P-D6.** `§P-D6` (NDA-before-Bid existence check)
-operates on `bidder_name` within the same `process_phase`. Two cases:
-- If the consortium's Bid rows ALSO use the consortium `bidder_name`
-  (typical when the filing aggregates both NDA and Bid): the aggregated
-  NDA row satisfies §P-D6 for those Bid rows directly.
-- If the consortium's Bid rows use per-constituent `bidder_name`s (rare;
-  arises when the filing later breaks down the bids per constituent
-  while having aggregated the NDA): promote the aggregated NDA row via
-  `unnamed_nda_promotion` hint, or emit per-constituent NDA rows up
-  front.
-
-In practice, filings that aggregate NDAs also aggregate the associated
-Bids/Drops — mac-gray CSC/Pamplona is the canonical example.
-
-**Migration note.** Iter-3b AI extractions on Mac-Gray and Petsmart
-over-split consortium NDAs. Iter-4 extractions apply this rule; iter-5
-tightens the decision by removing the 3-rule tree in favor of the
-single principle above.
-
-**Rejected alternatives.**
-- **Single row with `bidder_name = "Party E / Party F"`** — loses
-  structure; can't express bidder_type cleanly; breaks with 3+ parties.
-- **Structured primary/secondary columns** — hard-caps at 2 parties.
-- **Synthetic consortium as first-class bidder** — inserts a
-  `bidder_name` the filing never uses; violates source-quote integrity.
-  (§E2.b's `bidder_alias` IS the filing's consortium label verbatim, so
-  this objection does not apply.)
+**Example.** *"On July 11, 2013, CSC/Pamplona entered into a
+confidentiality agreement with Mac-Gray."* → 1 aggregated row with
+`joint_bidder_members = ["bidder_06", "bidder_07"]` (CSC + Pamplona
+named as constituents earlier in the filing).
 
 **Cross-references.**
-- `rules/bidders.md` §E1 (atomization).
-- `rules/bidders.md` §E3 (canonical IDs; consortium label registered).
-- `rules/events.md` §I1 (consortium-drop splitting rule).
-- `rules/invariants.md` §P-S4 (exactly-one Executed; §E2.a keeps this
-  hard).
-- `rules/invariants.md` §P-D6 (NDA-before-Bid; §E2.b reinforces the
-  bidder-name-matching precondition).
+- §E1 (atomization), §E3 (canonical IDs / placeholders).
+- `rules/events.md` §I1 (consortium-drop splitting).
+- `rules/invariants.md` §P-S4 (exactly-one Executed — §E2.a).
+- `rules/invariants.md` §P-D6 (NDA-before-Bid existence check matches
+  on `bidder_name`; if Bid rows use per-constituent ids while NDA is
+  aggregated, promote via `unnamed_nda_promotion` hint or emit
+  per-constituent NDAs up front).
 
 ---
 
