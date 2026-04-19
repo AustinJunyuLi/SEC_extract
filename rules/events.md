@@ -179,25 +179,47 @@ beyond the initial letter), attach the following row-level flag:
 
 ```json
 {"code": "unsolicited_first_contact", "severity": "info",
- "reason": "<short summary — e.g., 'Company H sent unsolicited $2.6B letter on 7/21; target declined to sign NDA'>"}
+ "reason": "<summary including a verbatim verb phrase from the filing; format: 'Company H sent unsolicited $2.6B letter on 7/21; target \"declined to engage\" per filing p.34'>"}
 ```
 
 Pipeline's `_invariant_p_d6()` skips Bid rows carrying this flag (Class B
-fix, iter-4).
+fix, iter-4). This is the ONLY §P-D6 exemption flag; contrast §C4's
+`pre_nda_informal_bid` which is documentation-only and does NOT exempt.
 
-**Attachment conditions (all must hold).**
+**Attachment conditions (all four must hold; iter-5 tightened).**
+
 1. The Bid row is classified as §D1 unsolicited first-contact (filing
    describes the approach as unsolicited AND this is the first narrated
    contact from this bidder).
 2. No `NDA` row with the same `bidder_name` exists in the same
-   `process_phase`.
-3. The filing either narrates the target declining the NDA, or narrates
-   the bidder withdrawing without engaging further.
+   `process_phase`. (Existence check, not ordering — if the bidder signs
+   an NDA later in the same phase, use §C4 instead.)
+3. The filing narrates the target declining, OR the bidder withdrawing,
+   using one of the closed-list verb phrases: `"declined"`,
+   `"did not respond"`, `"did not engage"`, `"withdrew"`, `"rejected"`,
+   `"terminated"`, `"ceased"`, `"declined to engage"`, `"took no
+   further action"`, `"no further contact"`. Synonyms at the
+   extractor's judgment are NOT acceptable; the filing text must
+   contain one of these phrases (or a close inflection) verbatim.
+4. The flag's `reason` field MUST include a short verbatim quote from
+   the filing (≤ 120 chars, single-quoted inside the reason string)
+   showing the language that authorized attachment — this is the
+   audit trail. A reason that only paraphrases the narrative without
+   the verbatim snippet is a validator warning.
 
-If all three hold → attach the flag. If the filing is silent on why no
-NDA was executed (condition 3 ambiguous) → still attach the flag but
-elevate severity to `"soft"` and add a `needs_manual_review: true`
-subfield so Austin catches it in diffing.
+If condition 3 or 4 fails → do NOT attach the flag. The Bid row will
+fire §P-D6 in validation; surface the ambiguity to Austin via the
+validator flag rather than hiding it with a lax exemption.
+
+**Rationale for tightening.** Iter-4 allowed the extractor loose
+judgment ("filing narrates either target declining or bidder
+withdrawing"). On 9 reference deals this didn't misfire — saks
+Company H (7/21/2013) and zep Party X (5/9/2014) were the only two
+genuine applications. But on 392 target deals, a loose condition
+risks the flag becoming a validator-bypass escape hatch for any
+NDA-less Bid the extractor doesn't know how to handle. The closed
+verb list + verbatim-quote requirement keeps the exemption narrowly
+scoped.
 
 ### §D1.b — Multi-activist atomization (🟩 RESOLVED, 2026-04-19, Class F)
 

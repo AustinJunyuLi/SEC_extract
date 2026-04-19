@@ -15,13 +15,14 @@
 
 ## Resolved rules
 
-### §C4 — Pre-NDA informal bid classification (🟩 RESOLVED, 2026-04-19, Class D)
+### §C4 — Pre-NDA informal bid classification (🟩 RESOLVED, 2026-04-19 iter-4, clarified iter-5)
 
 **Decision.** When a prospective bidder communicates a **concrete price
 indication** (point, range, or "at least $X") to the target BEFORE
 signing an NDA, emit a `Bid` row (per §C3) with `bid_type = "informal"`
-and attach the `pre_nda_informal_bid` flag. The bid row is exempt from
-§P-D6's NDA-before-Bid existence check.
+and attach the `pre_nda_informal_bid` flag. The flag is
+**documentation-only**: it records the pre-NDA timing for research and
+adjudication, but it does NOT trigger a validator carve-out.
 
 **Rule.**
 - `bid_note = "Bid"` (per §C3; unified bid vocabulary).
@@ -39,25 +40,30 @@ and attach the `pre_nda_informal_bid` flag. The bid row is exempt from
   no NDA was yet in place, OR the NDA row appears later in the filing
   timeline).
 
-**Exempt from §P-D6 (NDA-before-Bid existence check).** Pipeline's
-`_invariant_p_d6()` skips Bid rows carrying the `pre_nda_informal_bid`
-flag. Rationale: the filing itself narrates the pre-NDA timing; the
-check's presumption (NDA precedes any Bid) is falsified by the filing.
+**§P-D6 interaction — iter-5 clarification.** §P-D6 is an EXISTENCE
+check ("the bidder has an NDA row somewhere in the same phase"), not an
+ORDERING check. Under §C4, the bidder signs an NDA LATER in the same
+phase. §P-D6 is therefore satisfied naturally by the later NDA row; no
+validator exemption is needed. This is a deliberate simplification from
+iter-4, which had a (redundant) `_invariant_p_d6()` skip for
+`pre_nda_informal_bid` rows. If the bidder **never** signs an NDA, use
+§D1.a's `unsolicited_first_contact` flag instead — that one DOES
+exempt from §P-D6 because the NDA legitimately doesn't exist.
 
 **Distinguishing from §D1 unsolicited-first-contact (§D1.a in events.md).**
 - §D1.a covers the case where a bidder sends an unsolicited bid and
   **never signs an NDA at all** (target declines, bidder withdraws).
-  Flag: `unsolicited_first_contact`.
+  Flag: `unsolicited_first_contact`. Exempts from §P-D6.
 - §C4 covers the case where a bidder gives a concrete price BEFORE
   signing an NDA, but **later does sign an NDA** and continues in the
   process.
-  Flag: `pre_nda_informal_bid`.
+  Flag: `pre_nda_informal_bid`. Does NOT exempt from §P-D6 (the later
+  NDA row satisfies the existence check).
 
-Both exempt the Bid row from §P-D6. A single Bid row MAY carry both
-flags if the filing warrants it (filing narrates a concrete price in
-the unsolicited letter AND the bidder never signs an NDA) — in that
-case use `unsolicited_first_contact` as the primary; the
-`pre_nda_informal_bid` is redundant and should be omitted.
+Decision tree: does an NDA eventually exist for this bidder in this
+phase? YES → §C4 (documentation flag only). NO → §D1.a (exemption
+flag). A single Bid row never carries both flags — one excludes the
+other.
 
 **Distinguishing from §M1 unsolicited-no-NDA skip.** §M1 skips parties
 that signed no NDA AND gave no concrete price AND had no bid intent.
@@ -89,8 +95,9 @@ deprecated by §C4; iter-4 re-encodes those rows as `Bid` +
 - `rules/events.md` §D1 / §D1.a (unsolicited first-contact cousin).
 - `rules/bids.md` §M1 (unsolicited-no-NDA skip; §C4 is the positive
   case where the pattern is NOT skipped).
-- `rules/invariants.md` §P-D6 (NDA-before-Bid; §C4 flag exempts rows
-  from this check).
+- `rules/invariants.md` §P-D6 (NDA-before-Bid existence check; §C4
+  does NOT need an exemption because the bidder's later NDA satisfies
+  the check — contrast §D1.a which DOES exempt).
 
 ---
 

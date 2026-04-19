@@ -239,6 +239,22 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
   `base ∈ {"s", "f", "mixed"}`, `non_us: bool`, `public: bool`.
   REPLACES Alex's 4 booleans (`bidder_type_financial` / `_strategic` /
   `_mixed` / `_nonUS`) + `bidder_type_note`. Per `rules/bidders.md` §F1.
+- `joint_bidder_members` — `list[str]` OR null (iter-4 addition;
+  documented iter-5). Canonical `bidder_NN` ids of consortium
+  constituents, for rows that represent a joint-bidder group event.
+  Populated ONLY when the row represents a consortium / joint bidder:
+  (a) the single `Executed` row when the merger-agreement counterparty
+      is a consortium (per `rules/bidders.md` §E2.a; e.g.,
+      `["bidder_06", "bidder_07"]` for CSC/Pamplona on mac-gray);
+  (b) an aggregated `NDA` row when the filing narrates the consortium's
+      NDA as a single group event (per `rules/bidders.md` §E2.b);
+  (c) aggregated `Bid` or `Drop` rows when the filing narrates them
+      jointly for a consortium (per §E2).
+  Null / absent on all non-consortium rows and on per-constituent rows
+  in cases where the filing narrates each constituent separately. The
+  field order is: the canonical id of the merger-agreement counterparty
+  first (where applicable), then the other constituents in filing
+  narrative order. Ids must exist in `deal.bidder_registry`.
 - `bid_note` — string from closed vocabulary (§C1, pending).
 - `bid_type` — `"formal" | "informal" | null` (per §G1).
 - `bid_date_precise` — ISO date OR null.

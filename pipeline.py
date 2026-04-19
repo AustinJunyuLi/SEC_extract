@@ -296,26 +296,37 @@ Non-negotiables:
   - When an unsolicited bid is itself the first contact, emit the Bid row
     only and note that it initiated the process. Do NOT emit a duplicate
     standalone Bidder Sale row for the same act.
-  - **§D1.a unsolicited-first-contact NDA-less exemption (iter-4).** When
-    the unsolicited-first-contact bidder NEVER signs an NDA (target
-    declines to engage, OR bidder withdraws before executing an NDA),
-    attach `{{"code": "unsolicited_first_contact", "severity": "info",
-    "reason": "<short summary>"}}` to the Bid row. Pipeline's
+  - **§D1.a unsolicited-first-contact NDA-less exemption (iter-4;
+    tightened iter-5).** When the unsolicited-first-contact bidder
+    NEVER signs an NDA (target declines to engage, OR bidder withdraws
+    before executing an NDA), attach `{{"code":
+    "unsolicited_first_contact", "severity": "info", "reason":
+    "<summary including a verbatim verb phrase + short quoted snippet
+    from the filing>"}}` to the Bid row. Pipeline's
     `_invariant_p_d6()` skips rows carrying this flag so §P-D6
-    (NDA-before-Bid) does not fire. Attach conditions: (1) row is §D1
-    unsolicited first-contact, (2) no NDA row exists for this bidder in
-    the same phase, (3) filing narrates either target declining or
-    bidder withdrawing.
-  - **§C4 pre-NDA informal Bid (iter-4, Class D).** When a bidder gives
-    a concrete price indication BEFORE signing an NDA (pre-NDA price
-    talk; bidder later DOES sign an NDA), emit a `Bid` row with
-    `bid_type="informal"` and attach `{{"code": "pre_nda_informal_bid",
-    "severity": "info", "reason": "<short summary>"}}`. This also
-    exempts the row from §P-D6. Do NOT use `Bidder Sale` or a
-    `pre_nda_bidder_sale` flag — the saks-extractor ad-hoc convention
-    from iter-3b is deprecated. Distinguish from §D1.a by whether an
-    NDA eventually exists: §D1.a = never signs NDA; §C4 = signs NDA
-    later.
+    (NDA-before-Bid) does not fire. Attach conditions (iter-5
+    tightened; all four MUST hold): (1) row is §D1 unsolicited
+    first-contact, (2) no NDA row exists for this bidder in the same
+    phase, (3) the filing contains one of these closed-list verb
+    phrases verbatim: `declined`, `did not respond`, `did not engage`,
+    `withdrew`, `rejected`, `terminated`, `ceased`, `declined to
+    engage`, `took no further action`, `no further contact`, and
+    (4) the flag's `reason` field includes a short single-quoted
+    verbatim snippet (≤ 120 chars) from the filing containing one of
+    those phrases. If condition 3 or 4 fails, do NOT attach the flag
+    — let §P-D6 fire so Austin can adjudicate the ambiguity.
+  - **§C4 pre-NDA informal Bid (iter-4, Class D; amended iter-5).** When
+    a bidder gives a concrete price indication BEFORE signing an NDA
+    (pre-NDA price talk; bidder later DOES sign an NDA), emit a `Bid`
+    row with `bid_type="informal"` and attach `{{"code":
+    "pre_nda_informal_bid", "severity": "info", "reason": "<short
+    summary>"}}` to DOCUMENT the pre-NDA timing. Do NOT use `Bidder Sale`
+    or a `pre_nda_bidder_sale` flag — the saks-extractor ad-hoc
+    convention from iter-3b is deprecated. No §P-D6 exemption needed:
+    §P-D6 is existence-only, so the bidder's later NDA satisfies it
+    naturally. Distinguish from §D1.a by whether an NDA eventually
+    exists: §D1.a = never signs NDA (needs validator exemption); §C4 =
+    signs NDA later (no exemption needed; flag is documentation only).
   - **§E2.a Executed-row joint-bidder exception (iter-4, Class A).** An
     `Executed` row is ALWAYS exactly one per deal, even for consortium
     winners. Emit ONE `Executed` row with `bidder_alias` = the filing's
@@ -663,9 +674,12 @@ def _invariant_p_d6(events: list[dict]) -> list[dict]:
       - Rows carrying `unsolicited_first_contact` flag (§D1.a, Class B,
         iter-4) — the bidder never signs an NDA in this deal; §D1 itself
         authorizes the NDA-less Bid row.
-      - Rows carrying `pre_nda_informal_bid` flag (§C4, Class D, iter-4)
-        — the concrete price indication preceded the NDA; the filing
-        itself narrates the pre-NDA timing.
+
+    Iter-5 removed the `pre_nda_informal_bid` exemption (Class D). §P-D6
+    is existence-only, not ordering — §C4's pre-NDA informal-bid pattern
+    has the bidder signing an NDA LATER in the same phase, so the NDA
+    does exist. The §C4 flag remains (documents the pre-NDA timing), but
+    no validator carve-out is needed.
     """
     flags: list[dict[str, Any]] = []
     # Build NDA index by (bidder_name, phase).
@@ -692,14 +706,12 @@ def _invariant_p_d6(events: list[dict]) -> list[dict]:
             phase = 1
         if phase < 1:
             continue  # §M4 stale-prior phase 0 — skip
-        # iter-4 exemptions: §D1.a (Class B) and §C4 (Class D).
+        # iter-5: only §D1.a exemption; §C4 doesn't need a validator carve-out.
         row_flag_codes = {
             f.get("code") for f in (ev.get("flags") or [])
             if isinstance(f, dict)
         }
         if "unsolicited_first_contact" in row_flag_codes:
-            continue
-        if "pre_nda_informal_bid" in row_flag_codes:
             continue
         if (name, phase) not in nda_keys:
             flags.append({
@@ -710,10 +722,9 @@ def _invariant_p_d6(events: list[dict]) -> list[dict]:
                     f"If this bidder's NDA was emitted as an unnamed §E3 placeholder, "
                     f"the extractor should have attached `unnamed_nda_promotion` on this "
                     f"Bid row to promote the placeholder at pipeline-finalize time. "
-                    f"If this is a §D1 unsolicited first-contact with no NDA, attach "
-                    f"the `unsolicited_first_contact` flag (§D1.a). If this is a pre-NDA "
-                    f"concrete price indication, attach the `pre_nda_informal_bid` flag "
-                    f"(§C4). Both flags exempt the row from this check."
+                    f"If this is a §D1 unsolicited first-contact where the bidder never "
+                    f"signs an NDA, attach the `unsolicited_first_contact` flag (§D1.a) "
+                    f"to exempt this row."
                 ),
             })
     return flags
@@ -885,31 +896,44 @@ def _invariant_p_s2(deal: dict, events: list[dict]) -> list[dict]:
 
 
 def _invariant_p_s3(deal: dict, events: list[dict]) -> list[dict]:
-    """§P-S3 — each process_phase's chronologically last event is in
+    """§P-S3 — each process_phase contains a terminator event in
     {Executed, Terminated, Auction Closed}.
 
-    Events are assumed to already be sorted by (bid_date_precise, §A3 rank,
-    narrative order) per §A2/§A3 — that's the BidderID sequence. Within a
-    phase, the last row in that order IS the chronologically-latest event.
-    Do NOT use `max(... key=bid_date_precise)` — Python's max returns the
-    FIRST element tied on the max date, which misidentifies same-date
-    blocks (e.g., Medivation's 8/20 cluster of Formal Bid → Drops → Executed:
-    max-by-date returns Formal Bid; §A3 says Executed is last).
+    Iter-5 simplification. The previous iter-4 form checked the LITERAL
+    LAST ROW after §A2/§A3 canonical sort. That interpretation was too
+    strict in three distinct cases:
 
-    Go-shop carve-out (iter-4, Class C). When `deal.go_shop_days` is a
-    positive integer, phase 1 is allowed to end in non-terminator rows
-    SO LONG AS a terminator (Executed / Terminated / Auction Closed) is
-    present somewhere in phase 1. Rationale: go-shop windows continue
-    auction-adjacent activity (additional NDAs, IOIs, Drops) AFTER the
-    Executed row; the execution itself terminates the main auction phase
-    but subsequent go-shop rows push the "last row" past the terminator.
-    Saks pattern: 40-day go-shop with Company I NDA on 8/11 + Drop on
-    9/06 after Executed 7/28.
+    1. **Go-shop trailing activity.** Post-Executed go-shop rows (new
+       NDAs, IOIs, Drops during the go-shop window) trail the Executed
+       row and pushed "last row" past the terminator. Iter-4 added a
+       narrow `deal.go_shop_days > 0` carve-out.
+
+    2. **§A3 rank inversions on stale priors.** §A3 places Terminated
+       at rank 2 (Process start/restart) and Drop at rank 8 (Dropouts).
+       In a same-date cluster with both a Drop and a Terminated, the
+       Drop sorts last. Penford's 2007/2009 stale-prior phases hit this.
+
+    3. **Null-dated §E3 placeholder rows.** Count-audit placeholders
+       (e.g., mac-gray's 16 unnamed financial NDAs + 16 implicit Drops
+       emitted from "over the next two months, 20 bidders signed NDAs")
+       sort AFTER all dated rows, trailing the Executed row. Even with
+       dated placeholders via §B4 range-collapse, they often still
+       land after Executed in narrative order.
+
+    All three are cases where the phase DOES contain a terminator; the
+    "literal last row" interpretation was conflating "last row" with
+    "phase terminator" unnecessarily. The relaxed rule ("any terminator
+    in phase") captures the actual invariant: every phase's process
+    must close, but rows representing activity tangential to that
+    close (go-shop, undated placeholders, §A3 same-date clusters) are
+    allowed to trail the terminator in the canonical sequence.
+
+    Hard-invariant coverage is preserved: a phase with NO terminator
+    still fires the flag. §P-S4 (exactly one Executed row, in the max
+    phase) continues to enforce the deal-level close invariant
+    independently.
     """
     flags: list[dict[str, Any]] = []
-    go_shop_days = (deal or {}).get("go_shop_days")
-    has_go_shop = isinstance(go_shop_days, int) and go_shop_days > 0
-
     by_phase: dict[int, list[dict]] = {}
     for ev in events:
         phase = ev.get("process_phase")
@@ -917,20 +941,19 @@ def _invariant_p_s3(deal: dict, events: list[dict]) -> list[dict]:
             phase = 1  # §L2 default for deals with no prior/restart
         by_phase.setdefault(phase, []).append(ev)
     for phase, rows in by_phase.items():
-        # Trust the caller's §A2/§A3 ordering; take the last row in that order.
-        last_row = rows[-1]
-        if last_row.get("bid_note") in PHASE_TERMINATORS:
+        has_terminator = any(
+            r.get("bid_note") in PHASE_TERMINATORS for r in rows
+        )
+        if has_terminator:
             continue
-        # Go-shop carve-out applies only to phase 1.
-        if phase == 1 and has_go_shop:
-            has_terminator = any(
-                r.get("bid_note") in PHASE_TERMINATORS for r in rows
-            )
-            if has_terminator:
-                continue  # Executed sits inside the phase; go-shop rows trail
+        last_row = rows[-1]
         flags.append({
             "code": "phase_termination_missing", "severity": "hard",
-            "reason": f"process_phase={phase}: last event bid_note={last_row.get('bid_note')!r} not in {{Executed, Terminated, Auction Closed}}",
+            "reason": (
+                f"process_phase={phase}: phase contains no terminator event "
+                f"(no row with bid_note in {{Executed, Terminated, Auction Closed}}); "
+                f"last row is bid_note={last_row.get('bid_note')!r}"
+            ),
             "deal_level": True,
         })
     return flags
