@@ -1227,14 +1227,35 @@ def _apply_unnamed_nda_promotions(
         old_name = target.get("bidder_name")
         new_alias = promo.get("promote_to_bidder_alias")
         new_name = promo.get("promote_to_bidder_name")
+        if new_name and new_name not in bidder_registry:
+            log.append({
+                "row_index": i, "status": "failed",
+                "reason": (
+                    f"promote_to_bidder_name={new_name!r} not present in "
+                    f"bidder_registry — promotion would leave a dangling "
+                    f"bidder_name on target row {target_id}"
+                ),
+                "hint": promo,
+            })
+            continue
+        if old_name is not None and new_name and old_name != new_name:
+            log.append({
+                "row_index": i, "status": "failed",
+                "reason": (
+                    f"target row {target_id} already has bidder_name={old_name!r}; "
+                    f"promotion would overwrite a named bidder (only unnamed §E3 "
+                    f"placeholders are promotable)"
+                ),
+                "hint": promo,
+            })
+            continue
         if new_alias:
             target["bidder_alias"] = new_alias
         if new_name:
             target["bidder_name"] = new_name
-            if new_name in bidder_registry:
-                aliases = bidder_registry[new_name].setdefault("aliases_observed", [])
-                if old_alias and old_alias not in aliases:
-                    aliases.append(old_alias)
+            aliases = bidder_registry[new_name].setdefault("aliases_observed", [])
+            if old_alias and old_alias not in aliases:
+                aliases.append(old_alias)
         log.append({
             "row_index": i,
             "target_bidder_id": target_id,
@@ -1314,6 +1335,18 @@ def finalize(
         filing = load_filing(slug)
     # Fix 2C: promote unnamed NDA placeholders to named bidders.
     promotion_log = _apply_unnamed_nda_promotions(raw_extraction)
+    # Registry-integrity hard flags for any promotion that failed.
+    for entry in promotion_log:
+        if entry.get("status") != "failed":
+            continue
+        result_flag = {
+            "row_index": entry["row_index"],
+            "code": "nda_promotion_failed", "severity": "hard",
+            "reason": f"unnamed_nda_promotion: {entry['reason']}",
+        }
+        raw_extraction.setdefault("events", [])[entry["row_index"]].setdefault(
+            "flags", []
+        ).append({k: v for k, v in result_flag.items() if k != "row_index"})
     # Fix 1: deterministic canonical ordering + BidderID reassignment.
     _canonicalize_order(raw_extraction)
     result = validate(raw_extraction, filing)
