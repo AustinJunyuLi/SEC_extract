@@ -306,7 +306,7 @@ Each row carries `flags: list[FlagObj]`. `FlagObj` is:
   name the check that failed (`"source_quote_not_in_page: cited page 34"`).
 
 **Deal-level flags** live in a parallel `deal.deal_flags[]` array of the same
-shape (see `prompts/validate.md`).
+shape.
 
 **State log.** Every flag is ALSO appended to `state/flags.jsonl` by the
 pipeline, with deal slug + row index, for cross-deal analysis. Row-level

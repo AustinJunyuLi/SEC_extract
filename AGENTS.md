@@ -69,8 +69,8 @@ seeds.csv ──► for each deal ──► fresh Codex session ─────�
                                                                  git commit
 ```
 
-`prompts/validate.md` is still in the repo, but the current MVP does **not**
-invoke an LLM validator. The deterministic validator lives in `pipeline.py`.
+The deterministic validator lives in `pipeline.py`. There is no LLM validator
+in the current pipeline.
 
 **Still deferred.** Planner and Canonicalizer are not part of the current
 pipeline. Add them only if the data shows the Extractor + Python Validator +
@@ -165,7 +165,6 @@ repo.
 | `rules/dates.md` | Rough-date mapping ("mid-July" → calendar date), event sequencing, BidderID. |
 | `rules/invariants.md` | Hard/soft/info checks the Python validator runs. |
 | `prompts/extract.md` | Extractor agent prompt. |
-| `prompts/validate.md` | Archived LLM-validator prompt retained for fallback/reference; current MVP uses `pipeline.py` instead. |
 | `pipeline.py` | Live Python plumbing: filing loader, extractor prompt builder, validator, output writers, state updaters. |
 | `scoring/diff.py` | AI-vs-Alex diff report generator. Produces human-readable reports for manual review. Not a grader. |
 | `state/progress.json` | Per-deal status ledger (`pending`/`validated`/`passed`/`passed_clean`/`verified`/`failed`). |
