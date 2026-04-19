@@ -182,9 +182,10 @@ satisfy at least one of:
    Final Round Ann row #12; classified formal per §G1 process-position
    fallback"*).
 
-**Validator.** `rules/invariants.md` adds check §P-R* (pending numbering):
-for every row with non-null `bid_type`, verify one of the above holds.
-Violations → hard flag `bid_type_unsupported`.
+**Validator.** Implemented as §P-G2 (`rules/invariants.md`):
+`pipeline._invariant_p_g2` verifies one of the above holds for every
+row with non-null `bid_type`. Violations → hard flag
+`bid_type_unsupported`.
 
 **Why hard.** Informal-vs-formal is the core research variable. Manual
 verification of 401 deals × ~5 bids each = ~2000 classifications is
@@ -193,7 +194,7 @@ accumulate.
 
 **Cross-references.**
 - `rules/bids.md` §G1 (classification rule).
-- `rules/invariants.md` — new §P-R check pending.
+- `rules/invariants.md` §P-G2.
 - `SKILL.md` non-negotiable rule #5 (already mandates evidence citation).
 
 ---

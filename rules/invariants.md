@@ -158,6 +158,22 @@ graph tells a coherent M&A-process story.
 
 ---
 
+## §P-G — Bid classification invariants (🟩 RESOLVED, 2026-04-19, iter-6)
+
+### §P-G2 — `bid_type` evidence requirement
+- **Check.** Every row with non-null `bid_type` satisfies one of:
+  (1) `source_quote` contains a §G1 trigger phrase (case-insensitive
+  substring, formal OR informal table), (2) the row is a range bid
+  (both `bid_value_lower` and `bid_value_upper` populated — structural
+  signal per §G1), or (3) the row carries
+  `bid_type_inference_note: str`.
+- **Fail action.** Flag `bid_type_unsupported`. Hard.
+- **Why hard.** Informal-vs-formal is the core research variable per
+  `rules/bids.md` §G2. Silent classification drift across 401 deals
+  would be intractable to audit retrospectively.
+
+---
+
 ## Invariants that tie to specific rule files
 
 | Invariant | Rule file origin |
@@ -170,6 +186,7 @@ graph tells a coherent M&A-process story.
 | §P-D1 | `rules/dates.md` §B1/§B2 |
 | §P-D2 | `rules/dates.md` §B2/§B3/§B4 |
 | §P-D3 | `rules/dates.md` §A4 |
+| §P-G2 | `rules/bids.md` §G1/§G2 |
 | §P-S1 | `rules/events.md` §I1 + `rules/bids.md` §M3 |
 | §P-S2 | `rules/schema.md` §Scope-1 |
 | §P-S3 | `rules/events.md` §K1/§L2 |
@@ -199,11 +216,6 @@ after Stage 3 has run across the 9 reference deals.
 - **Dates within filing window.** Every date ≤ filing date + small
   window (for go-shop coverage). Soft. Deferred because the go-shop
   window isn't always explicitly bounded in the extractor's context.
-- **Formal-classification evidence.** Every `bid_type = "formal"`
-  carries a `formal_classification_quote` OR a `bid_type_inference_note`.
-  Per `rules/bids.md` §G2. **This one should probably move into MVP** —
-  flagging here for explicit Stage-2 ratification.
-
 ---
 
 ## What the validator does NOT do

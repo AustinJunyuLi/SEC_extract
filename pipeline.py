@@ -108,6 +108,27 @@ DATE_INFERENCE_FLAG_CODES: frozenset[str] = frozenset({
     "date_range_collapsed",
 })
 
+# §G1 trigger phrases. Substring match, case-insensitive, on source_quote.
+# A row with non-null bid_type passes §G2 if source_quote contains any
+# trigger, OR the row is a range bid (structural signal), OR the row
+# carries a bid_type_inference_note.
+FORMAL_TRIGGERS: tuple[str, ...] = (
+    "binding offer", "binding proposal", "binding bid",
+    "executed commitment letter", "financing commitment",
+    "fully financed", "no financing contingency",
+    "definitive agreement submitted", "draft merger agreement",
+    "final bid", "best and final",
+    "markup of the merger agreement",
+    "process letter",
+)
+INFORMAL_TRIGGERS: tuple[str, ...] = (
+    "non-binding indication", "preliminary indication",
+    "expression of interest",
+    "indicative offer", "indicative proposal",
+    "subject to due diligence",
+    "preliminary proposal",
+)
+
 # §A3 logical ordering rank table (lower rank = earlier within same date).
 # Keys are bid_note values; for Bid rows specifically, informal bids rank 6
 # and formal bids rank 7 — the comparator consults bid_type.
@@ -491,6 +512,7 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
     row_flags.extend(_invariant_p_d1(events))
     row_flags.extend(_invariant_p_d2(events))
     row_flags.extend(_invariant_p_d6(events))
+    row_flags.extend(_invariant_p_g2(events))
 
     # §P-D3 returns a mix (structural are deal-level; ordering violations are
     # row-level). Route by presence of row_index.
@@ -743,6 +765,55 @@ def _invariant_p_d2(events: list[dict]) -> list[dict]:
                 "row_index": i, "code": "rough_date_mismatch_inference", "severity": "hard",
                 "reason": f"date-inference flag(s) {found} present but bid_date_rough is null",
             })
+    return flags
+
+
+def _invariant_p_g2(events: list[dict]) -> list[dict]:
+    """§P-G2 — every row with non-null bid_type satisfies one of:
+    (1) source_quote contains a §G1 trigger phrase (case-insensitive
+    substring), (2) the row is a range bid (bid_value_lower AND
+    bid_value_upper both populated — structural signal per §G1), or
+    (3) the row carries `bid_type_inference_note: str`. Violations
+    emit the hard flag `bid_type_unsupported` per rules/bids.md §G2."""
+    flags: list[dict[str, Any]] = []
+    for i, ev in enumerate(events):
+        bid_type = ev.get("bid_type")
+        if bid_type in (None, "", []):
+            continue
+
+        note = ev.get("bid_type_inference_note")
+        if isinstance(note, str) and note.strip():
+            continue
+
+        lower = ev.get("bid_value_lower")
+        upper = ev.get("bid_value_upper")
+        if lower not in (None, "", []) and upper not in (None, "", []):
+            continue  # structural range-bid signal
+
+        raw_quote = ev.get("source_quote")
+        if isinstance(raw_quote, list):
+            quote_text = " ".join(q for q in raw_quote if isinstance(q, str))
+        elif isinstance(raw_quote, str):
+            quote_text = raw_quote
+        else:
+            quote_text = ""
+        lowered = quote_text.lower()
+        # §G2 requires ANY §G1 trigger (formal OR informal tables). The
+        # classification call itself is §G1's job; §G2 only checks that
+        # evidence for *some* classification exists in the quote.
+        if any(t in lowered for t in FORMAL_TRIGGERS + INFORMAL_TRIGGERS):
+            continue
+
+        flags.append({
+            "row_index": i, "code": "bid_type_unsupported", "severity": "hard",
+            "reason": (
+                f"§P-G2: bid_type={bid_type!r} has no supporting evidence — "
+                f"source_quote contains no §G1 trigger phrase, row is not a "
+                f"range bid, and no bid_type_inference_note is present. "
+                f"Attach a trigger-phrase-bearing source_quote or a ≤200-char "
+                f"bid_type_inference_note explaining the inference."
+            ),
+        })
     return flags
 
 
