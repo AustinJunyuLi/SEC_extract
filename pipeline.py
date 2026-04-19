@@ -352,6 +352,37 @@ Non-negotiables:
     received") and preserving chronological order via BidderID sequencing.
     Do NOT merge into a single row even if the later communication
     supersedes the earlier one.
+  - **Canonical ordering is Python-enforced.** `pipeline.finalize()` sorts
+    all events by `(bid_date_precise, §A3 rank, narrative order)` and
+    reassigns `BidderID = 1..N` deterministically before validation. You
+    MAY emit rows in narrative order as you encounter them in the filing;
+    Python will fix §A2 date-monotone and §A3 same-date rank violations
+    automatically. The BidderIDs YOU emit are transient narrative-order IDs
+    — use them as stable handles for `unnamed_nda_promotion` hints (below).
+  - **Bidder-identity reconciliation via `unnamed_nda_promotion` hint.**
+    The filing often states a numeric NDA count ("11 strategic buyers
+    executed confidentiality agreements") BEFORE naming the individual
+    bidders. Emit the NDA rows as unnamed §E3 placeholders (`bidder_alias =
+    "Strategic 1"`, `"Strategic 2"`, ..., `bidder_name = null`) in
+    narrative order. Later, when a named Bid row appears for a bidder whose
+    NDA was emitted as a placeholder, attach an `unnamed_nda_promotion`
+    field on the Bid row:
+
+        "unnamed_nda_promotion": {{
+          "target_bidder_id": 12,            // your transient narrative BidderID of the NDA row
+          "promote_to_bidder_alias": "Party E",
+          "promote_to_bidder_name": "bidder_07",
+          "reason": "Filing p.36 identifies Party E as one of the 11 strategic buyers that executed NDAs on 3/28 (p.35)."
+        }}
+
+    `pipeline.finalize()` applies the promotion deterministically: the
+    target NDA row's `bidder_alias` / `bidder_name` are rewritten to the
+    promoted values, and the hint is stripped from the Bid row before the
+    canonical JSON is written. `promote_to_bidder_name` must already exist
+    as a key in `bidder_registry` (so register it there at first bid-time
+    naming). Use this whenever a named Bid row's bidder has no earlier
+    NDA row under the same `bidder_name` in the same `process_phase` —
+    `§P-D6` (NDA-before-bid precondition) is a Python validator hard flag.
 
 Output contract:
   Your FINAL message (and nothing else outside it) is a single fenced block:
@@ -402,6 +433,7 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
     row_flags.extend(_invariant_p_r5(events, deal))
     row_flags.extend(_invariant_p_d1(events))
     row_flags.extend(_invariant_p_d2(events))
+    row_flags.extend(_invariant_p_d6(events))
 
     # §P-D3 returns a mix (structural are deal-level; ordering violations are
     # row-level). Route by presence of row_index.
@@ -554,6 +586,61 @@ def _invariant_p_d1(events: list[dict]) -> list[dict]:
             flags.append({
                 "row_index": i, "code": "invalid_date_format", "severity": "hard",
                 "reason": f"bid_date_precise={d!r} not ISO YYYY-MM-DD",
+            })
+    return flags
+
+
+def _invariant_p_d6(events: list[dict]) -> list[dict]:
+    """§P-D6 — every named-Bid row's bidder has an NDA row somewhere in the
+    same process_phase.
+
+    Closes the retroactive-naming gap where an AI emits unnamed NDA
+    placeholders that are later not linked to named Bid rows (Providence
+    Party D/E/F case). Existence-only check, not ordering: canonicalization
+    (§A2/§A3) already enforces chronological order, and §D1 permits an
+    unsolicited first-contact Bid to precede the same bidder's later NDA.
+
+    Skips:
+      - Unnamed (bidder_name=null) Bid rows — §E3 placeholders are
+        count-bound, not NDA-bound.
+      - §M4 stale-prior phase 0 — Bid rows emitted against aborted prior
+        processes do not require an NDA.
+    """
+    flags: list[dict[str, Any]] = []
+    # Build NDA index by (bidder_name, phase).
+    nda_keys: set[tuple[str, int]] = set()
+    for ev in events:
+        if ev.get("bid_note") != "NDA":
+            continue
+        name = ev.get("bidder_name")
+        if not name:
+            continue
+        phase = ev.get("process_phase")
+        if phase is None:
+            phase = 1
+        nda_keys.add((name, phase))
+
+    for i, ev in enumerate(events):
+        if ev.get("bid_note") != "Bid":
+            continue
+        name = ev.get("bidder_name")
+        if not name:
+            continue  # unnamed §E3 placeholder — skip
+        phase = ev.get("process_phase")
+        if phase is None:
+            phase = 1
+        if phase < 1:
+            continue  # §M4 stale-prior phase 0 — skip
+        if (name, phase) not in nda_keys:
+            flags.append({
+                "row_index": i, "code": "bid_without_preceding_nda", "severity": "hard",
+                "reason": (
+                    f"§P-D6: Bid row for bidder_name={name!r} in phase={phase} "
+                    f"has no NDA row under the same bidder_name in that phase. "
+                    f"If this bidder's NDA was emitted as an unnamed §E3 placeholder, "
+                    f"the extractor should have attached `unnamed_nda_promotion` on this "
+                    f"Bid row to promote the placeholder at pipeline-finalize time."
+                ),
             })
     return flags
 
@@ -910,12 +997,139 @@ class PipelineResult:
     validator: ValidatorResult
 
 
+def _apply_unnamed_nda_promotions(
+    raw_extraction: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Consume `unnamed_nda_promotion` hints on Bid rows.
+
+    The extractor emits NDA rows in narrative order. When the filing later
+    names a bidder whose NDA was emitted as an unnamed §E3 placeholder
+    ("Strategic 5"), the AI attaches an `unnamed_nda_promotion` hint on the
+    named Bid row pointing to the placeholder's BidderID. Python applies the
+    hint deterministically: the target NDA row's bidder_alias / bidder_name
+    are rewritten to the promoted values, and the hint field is stripped.
+
+    Hint schema:
+      {
+        "unnamed_nda_promotion": {
+          "target_bidder_id": 12,            // narrative-order BidderID of placeholder NDA row
+          "promote_to_bidder_alias": "Party E",
+          "promote_to_bidder_name": "bidder_07",  // must exist in bidder_registry
+          "reason": "<filing citation>"
+        }
+      }
+
+    Returns a log of {row_index, status, from, to, reason} entries for audit.
+    Mutates raw_extraction in place.
+    """
+    events = raw_extraction.get("events") or []
+    deal = raw_extraction.setdefault("deal", {})
+    bidder_registry = deal.setdefault("bidder_registry", {})
+    by_bidder_id: dict[int, dict] = {
+        ev["BidderID"]: ev for ev in events if isinstance(ev.get("BidderID"), int)
+    }
+
+    log: list[dict[str, Any]] = []
+    for i, ev in enumerate(events):
+        promo = ev.pop("unnamed_nda_promotion", None)
+        if not promo:
+            continue
+        target_id = promo.get("target_bidder_id")
+        target = by_bidder_id.get(target_id)
+        if target is None:
+            log.append({
+                "row_index": i, "status": "failed",
+                "reason": f"target_bidder_id={target_id} not found in events",
+                "hint": promo,
+            })
+            continue
+        if target.get("bid_note") != "NDA":
+            log.append({
+                "row_index": i, "status": "failed",
+                "reason": f"target row {target_id} has bid_note={target.get('bid_note')!r}, expected 'NDA'",
+                "hint": promo,
+            })
+            continue
+        old_alias = target.get("bidder_alias")
+        old_name = target.get("bidder_name")
+        new_alias = promo.get("promote_to_bidder_alias")
+        new_name = promo.get("promote_to_bidder_name")
+        if new_alias:
+            target["bidder_alias"] = new_alias
+        if new_name:
+            target["bidder_name"] = new_name
+            if new_name in bidder_registry:
+                aliases = bidder_registry[new_name].setdefault("aliases_observed", [])
+                if old_alias and old_alias not in aliases:
+                    aliases.append(old_alias)
+        log.append({
+            "row_index": i,
+            "target_bidder_id": target_id,
+            "status": "applied",
+            "from": {"bidder_alias": old_alias, "bidder_name": old_name},
+            "to": {"bidder_alias": new_alias, "bidder_name": new_name},
+            "reason": promo.get("reason"),
+        })
+    return log
+
+
+def _canonicalize_order(raw_extraction: dict[str, Any]) -> None:
+    """Python-enforced §A2/§A3 ordering (Fix 1).
+
+    Sort events by (bid_date_precise, §A3 rank, narrative index). Reassign
+    BidderID = 1..N strictly monotone. Null-dated rows sort to the end
+    preserving narrative order among themselves.
+
+    This removes mechanical ordering from the LLM's responsibility. The AI
+    may emit rows in narrative order; Python fixes §A2 date-monotone and
+    §A3 same-date rank violations deterministically.
+
+    Also updates `bidder_registry[*].first_appearance_row_index` to the new
+    BidderID of each bidder's first appearance.
+
+    Mutates raw_extraction in place.
+    """
+    events = raw_extraction.get("events") or []
+    if not events:
+        return
+    for idx, ev in enumerate(events):
+        ev["_narrative_index"] = idx
+
+    def sort_key(ev: dict) -> tuple:
+        date = ev.get("bid_date_precise") or "9999-12-31"
+        rank = _rank(ev.get("bid_note"), ev.get("bid_type"))
+        return (date, rank, ev["_narrative_index"])
+
+    events.sort(key=sort_key)
+    for new_id, ev in enumerate(events, start=1):
+        ev["BidderID"] = new_id
+        ev.pop("_narrative_index", None)
+    raw_extraction["events"] = events
+
+    # Recompute first_appearance_row_index for each bidder_name.
+    registry = raw_extraction.get("deal", {}).get("bidder_registry") or {}
+    first_seen: dict[str, int] = {}
+    for ev in events:
+        name = ev.get("bidder_name")
+        if name and name not in first_seen:
+            first_seen[name] = ev["BidderID"]
+    for name, reg_entry in registry.items():
+        if not isinstance(reg_entry, dict):
+            continue
+        if name in first_seen:
+            reg_entry["first_appearance_row_index"] = first_seen[name]
+
+
 def finalize(
     slug: str,
     raw_extraction: dict[str, Any],
     filing: Filing | None = None,
 ) -> PipelineResult:
     """Run Python validator + merge flags + write output + update state.
+
+    Pre-validate transforms:
+      1. Apply `unnamed_nda_promotion` hints (Fix 2C)
+      2. Canonicalize row order and BidderIDs (Fix 1 — §A2/§A3 sort)
 
     Does NOT spawn adjudicator subagents — that's the orchestrator's job,
     performed BEFORE calling this function. If the caller has adjudicated
@@ -925,8 +1139,15 @@ def finalize(
     """
     if filing is None:
         filing = load_filing(slug)
+    # Fix 2C: promote unnamed NDA placeholders to named bidders.
+    promotion_log = _apply_unnamed_nda_promotions(raw_extraction)
+    # Fix 1: deterministic canonical ordering + BidderID reassignment.
+    _canonicalize_order(raw_extraction)
     result = validate(raw_extraction, filing)
     final = merge_flags(raw_extraction, result.row_flags, result.deal_flags)
+    # Attach promotion log to deal object for audit (pipeline-internal field).
+    if promotion_log:
+        final.setdefault("deal", {})["_unnamed_nda_promotions"] = promotion_log
     out_path = write_output(slug, final)
     append_flags_log(slug, result.row_flags, result.deal_flags)
     status, flag_count, notes = summarize(result)
