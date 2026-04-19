@@ -55,7 +55,7 @@ expansion.
 - `Final Round Ext`
 - `Final Round Inf Ext Ann`
 - `Final Round Inf Ext`
-- `Auction Closed` — target unilaterally stops the auction without an announced deadline (Providence 6058 distinction; see §K3).
+- `Auction Closed` — target unilaterally stops the auction without an announced deadline (distinct from `Final Round`, which has a formal cutoff).
 
 **Closing:**
 - `Executed` — merger agreement signed (exactly one per deal per §P-D1).
@@ -72,7 +72,6 @@ expansion.
 **Cross-references.**
 - `rules/events.md` §C2 (capitalization).
 - `rules/events.md` §C3 (`Bid` convention).
-- `rules/events.md` §K3 (`Auction Closed`).
 - `rules/invariants.md` §P-R2 (vocabulary validator check).
 
 ---
@@ -480,7 +479,6 @@ soft) with the verbatim quote. Do not force-fit.
 **Cross-references.**
 - `rules/events.md` §C1 (vocabulary).
 - `rules/events.md` §K2 (implicit final rounds).
-- `rules/events.md` §K3 (Providence `Auction Closed` case).
 
 ---
 
@@ -524,28 +522,6 @@ list):
 - `rules/events.md` §C1 (vocabulary).
 - `rules/events.md` §K1 (final-round matrix).
 - `rules/bids.md` §G1 (informal vs formal — determines which `Inf` suffix).
-
----
-
-### §K3 — Providence row 6058 edge case (🟩 RESOLVED, 2026-04-18)
-
-**Decision.** Providence row 6058 is emitted as **`Auction Closed`**, not
-`Final Round`. Alex's original `Final Round` label is corrected during the
-xlsx → JSON conversion in Stage 2.
-
-**Rationale.** The filing language describes the target unilaterally halting
-the English auction without announcing a final-round deadline to the
-bidders. This is exactly the semantic `Auction Closed` was added for (see
-§C1). Overloading `Final Round` here would conflate "target runs a final
-round" with "target ends the process on its own terms."
-
-**Migration note.** `reference/alex/providence-worcester.json` builder
-relabels row 6058 → `Auction Closed` with flag
-`alex_workbook_relabel` (severity: info, reason: `"Alex labeled Final Round; reclassified per §K3"`).
-
-**Cross-references.**
-- `rules/events.md` §C1 (`Auction Closed` in vocabulary).
-- `rules/events.md` §K1 (final-round matrix).
 
 ---
 
