@@ -181,14 +181,21 @@ def _row_to_doc(row: tuple[str, str, str, str]) -> FilingDocument:
     )
 
 
-def resolve_substantive_document(index_url: str) -> FilingDocument:
-    """Return the document containing the 'Background of the …' narrative.
+def resolve_substantive_document(seed_url: str) -> tuple[FilingDocument, str]:
+    """Return (doc, canonical_index_url) for the Background-bearing document.
 
-    For most merger filings (DEFM14A, PREM14A, S-4), this is the primary
-    document. For tender offers (SC TO-T), the cover form is a ~50 KB shell
-    that incorporates the background section by reference from the Offer to
-    Purchase exhibit (EX-99.(A)(1)(A)) — in that case we return the exhibit.
+    Accepts any EDGAR URL form (compact index, nested index, or direct
+    document link with optional fragment). Normalizes to the canonical
+    nested-index URL before parsing the document table.
+
+    For most merger filings (DEFM14A, PREM14A, S-4) this is the primary
+    document. For tender offers (SC TO-T), the cover form is a ~50 KB
+    shell that incorporates the background by reference from the Offer
+    to Purchase exhibit (EX-99.(A)(1)(A)) — in that case we return the
+    exhibit.
     """
+    cik, acc = parse_accession(seed_url)
+    index_url = canonical_index_url(cik, acc)
     rows = _parse_index_table(index_url)
 
     # 1. Find the primary (first matching merger form).
@@ -214,28 +221,49 @@ def resolve_substantive_document(index_url: str) -> FilingDocument:
         for row in rows:
             doc = _row_to_doc(row)
             if OFFER_TO_PURCHASE_EXHIBIT_PATTERN.match(doc.form_type):
-                return doc
+                return doc, index_url
         # If no OtP exhibit found, fall through to the cover form — warn on stderr.
         print(
             f"  WARNING: {primary.form_type} filing but no Offer to Purchase "
             f"exhibit found; using cover form (likely missing Background narrative)",
             file=sys.stderr,
         )
-    return primary
+    return primary, index_url
 
 
-def parse_accession(index_url: str) -> tuple[str, str]:
-    """Extract (cik, accession_no_dashes) from the seeds.csv index URL.
+def parse_accession(seed_url: str) -> tuple[str, str]:
+    """Extract (cik, accession_no_dashes) from an EDGAR URL.
 
-    Input:  https://www.sec.gov/Archives/edgar/data/{cik}/{accession}-index.htm
-    Output: (cik, accession_no_dashes)
+    Accepts all observed EDGAR URL forms in seeds.csv:
+      1. Compact index:  /data/{cik}/{accession-dashed}-index.htm
+      2. Nested index:   /data/{cik}/{accession_no_dashes}/{accession-dashed}-index.htm
+      3. Direct document: /data/{cik}/{accession_no_dashes}/{filename}.htm
+
+    URL fragments (#toc…) are stripped before matching.
     """
-    m = re.search(r"/data/(\d+)/([0-9\-]+)-index\.htm", index_url)
-    if not m:
-        raise ValueError(f"cannot parse CIK/accession from {index_url}")
-    cik, accession_with_dashes = m.group(1), m.group(2)
-    accession_no_dashes = accession_with_dashes.replace("-", "")
-    return cik, accession_no_dashes
+    clean = seed_url.split("#", 1)[0]
+    # Forms 1 and 2: anchor on "...-index.htm" so we pick up the dashed accession.
+    m = re.search(r"/data/(\d+)/(?:\d{18}/)?([0-9\-]+)-index\.htm", clean)
+    if m:
+        return m.group(1), m.group(2).replace("-", "")
+    # Form 3: direct-document URL — accession_no_dashes sits as a path segment.
+    m = re.search(r"/data/(\d+)/(\d{18})(?:[/?]|$)", clean)
+    if m:
+        return m.group(1), m.group(2)
+    raise ValueError(f"cannot parse CIK/accession from {seed_url}")
+
+
+def canonical_index_url(cik: str, accession_no_dashes: str) -> str:
+    """Build the nested-form index URL from (CIK, accession_no_dashes)."""
+    dashed = (
+        f"{accession_no_dashes[:10]}-"
+        f"{accession_no_dashes[10:12]}-"
+        f"{accession_no_dashes[12:]}"
+    )
+    return (
+        f"https://www.sec.gov/Archives/edgar/data/{cik}/"
+        f"{accession_no_dashes}/{dashed}-index.htm"
+    )
 
 
 # ---------- Per-deal orchestration ----------
@@ -255,7 +283,7 @@ def process_deal(seed: Seed, force: bool = False) -> dict[str, Any]:
 
     # 2. Resolve substantive document (primary, or Offer to Purchase for tender offers).
     print(f"[{seed.slug}] resolving substantive document …")
-    doc = resolve_substantive_document(seed.primary_url)
+    doc, resolved_index_url = resolve_substantive_document(seed.primary_url)
     print(f"[{seed.slug}]   picked: {doc.form_type}  {doc.name}  ({doc.size_bytes} B)")
 
     # 3. Download the primary document.
@@ -299,7 +327,8 @@ def process_deal(seed: Seed, force: bool = False) -> dict[str, Any]:
         "date_announced": seed.date_announced,
         "is_reference": seed.is_reference,
         "source": {
-            "index_url": seed.primary_url,
+            "seed_url": seed.primary_url,
+            "index_url": resolved_index_url,
             "cik": cik,
             "accession": accession,
             "primary_document_url": doc.url,
