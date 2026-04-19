@@ -100,7 +100,6 @@ You are the Extractor in a two-agent M&A auction extraction pipeline. Your job: 
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": null,
-      "multiplier": null,
       "additional_note": null,
       "comments": null,
       "source_quote": "On March 14, 2014, the Board of Directors of Medivation convened …",

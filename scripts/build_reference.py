@@ -159,7 +159,6 @@ COL = {
     "bid_value_lower":  22,
     "bid_value_upper":  23,
     "bid_value_unit":   24,
-    "multiplier":       25,
     "bid_type":         26,
     "bid_date_precise": 27,
     "bid_date_rough":   28,
@@ -545,13 +544,6 @@ def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
         lower = None
         upper = None
 
-    # §R1: `multiplier` is only meaningful for non-dollar units (e.g.,
-    # `"EBITDA 12x"`). Alex's xlsx stores `1` as a no-op default on
-    # plain-dollar bids; strip that to null so the semantics are clear.
-    multiplier = r.get("multiplier")
-    if multiplier == 1 or multiplier == 1.0:
-        multiplier = None
-
     flags: list[dict[str, Any]] = []
     if legacy_label is not None:
         flags.append({
@@ -592,7 +584,6 @@ def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
         "bid_value_lower":    lower,
         "bid_value_upper":    upper,
         "bid_value_unit":     _map_bid_value_unit(r.get("bid_value_unit")),
-        "multiplier":         multiplier,
         "cash_per_share":         None,
         "stock_per_share":        None,
         "contingent_per_share":   None,

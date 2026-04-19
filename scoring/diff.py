@@ -38,7 +38,6 @@ COMPARE_EVENT_FIELDS = [
     "bid_value_lower",
     "bid_value_upper",
     "bid_value_unit",
-    "multiplier",
     "bid_date_rough",
 ]
 

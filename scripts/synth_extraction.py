@@ -67,7 +67,7 @@ def perturb_medivation(payload: dict) -> dict:
         "bid_date_rough": None,
         "bid_value": None, "bid_value_pershare": None,
         "bid_value_lower": None, "bid_value_upper": None,
-        "bid_value_unit": None, "multiplier": None,
+        "bid_value_unit": None,
         "source_quote": (
             "On July 1, 2016, the Company and a financial sponsor executed "
             "a confidentiality agreement."

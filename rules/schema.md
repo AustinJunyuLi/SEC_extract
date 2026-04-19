@@ -269,7 +269,6 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - `contingent_per_share` — numeric OR null. CVR / earnout component. Per `rules/bids.md` §H2.
 - `consideration_components` — list[str]. Ordered components present (e.g., `["cash", "cvr"]`). Per `rules/bids.md` §H2.
 - `aggregate_basis` — string OR null. `"enterprise_value"` / `"equity_value"` / `"purchase_price"` / `null`. Only populated when `bid_value` is aggregate. Per `rules/bids.md` §H4.
-- `multiplier` — string/numeric (e.g., `"EBITDA 12x"`). Kept from legacy.
 - `additional_note` — string OR null.
 - `comments` — string OR null. **Collapses** Alex's legacy `comments_1` /
   `comments_2` / `comments_3` into one free-text field.
@@ -524,7 +523,6 @@ Fields depending on still-open decisions are marked in comments.
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": null,
-      "multiplier": null,
       "additional_note": null,
       "comments": null,
       "source_quote": "On March 14, 2014, the Board of Directors convened …",

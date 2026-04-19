@@ -32,7 +32,7 @@ signaled by a flag. **Two exceptions** (iter-4 amendments):
 - All N rows share the same `BidderID` (event-sequence number per
   `rules/dates.md` §A).
 - All N rows carry **identical** `bid_value`, `bid_value_pershare`,
-  `bid_value_lower`, `bid_value_upper`, `bid_value_unit`, `multiplier`,
+  `bid_value_lower`, `bid_value_upper`, `bid_value_unit`,
   `bid_date_precise`, `bid_date_rough`, `bid_type`, `source_quote`,
   `source_page`.
 - Each row carries flag `{"code": "joint_bid", "severity": "info",
