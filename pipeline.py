@@ -14,7 +14,8 @@ Orchestration flow (Claude Code drives, not Python):
   2. raw_extraction = parse the subagent's JSON
   3. filing = load_filing(slug)
   4. result = validate(raw_extraction, filing)
-  5. for soft flag in result.soft_flags: spawn Adjudicator subagent, annotate
+  5. for soft flag in result.row_flags + result.deal_flags (severity=="soft"):
+         spawn Adjudicator subagent, annotate
   6. final = merge_flags(raw_extraction, result.row_flags, result.deal_flags)
   7. write_output(slug, final); append_flags_log(...); update_progress(...)
 
@@ -190,10 +191,6 @@ class Filing:
     pages: list[dict[str, Any]]
     manifest: dict[str, Any]
 
-    @property
-    def num_pages(self) -> int:
-        return len(self.pages)
-
     def page_content(self, number: int) -> str | None:
         for p in self.pages:
             if p.get("number") == number:
@@ -232,9 +229,6 @@ class ValidatorResult:
     @property
     def total_count(self) -> int:
         return len(self.row_flags) + len(self.deal_flags)
-
-    def soft_flags(self) -> list[dict[str, Any]]:
-        return [f for f in self.row_flags + self.deal_flags if f.get("severity") == "soft"]
 
 
 # ---------------------------------------------------------------------------
@@ -996,7 +990,6 @@ class PipelineResult:
     flag_count: int
     notes: str
     output_path: Path
-    validator: ValidatorResult
 
 
 def _apply_unnamed_nda_promotions(
@@ -1192,5 +1185,4 @@ def finalize(
         flag_count=flag_count,
         notes=notes,
         output_path=out_path,
-        validator=result,
     )
