@@ -118,7 +118,7 @@ ranks bid rows by `bid_type` rather than bid_note — see `rules/dates.md`
 
 ---
 
-### §D1 — Start-of-process classification (🟩 RESOLVED, 2026-04-18)
+### §D1 — Start-of-process classification (🟩 RESOLVED, 2026-04-18; amended 2026-04-19 iter-4)
 
 **Decision tree.** In chronological order, the extractor emits start-of-process
 rows as follows:
@@ -131,7 +131,10 @@ rows as follows:
   approach is leaked/announced publicly.
 - **Bidder approaches with no concrete sale proposal** → `Bidder Interest`.
 - **Activist pressure precedes the process** → `Activist Sale` as a
-  separate row BEFORE `Target Sale` (Petsmart pattern).
+  separate row BEFORE `Target Sale` (Petsmart pattern). Per §D1.b
+  (iter-4 amendment), multiple separately-narrated activists emit
+  **one row per activist**; collapse to a single row only when the
+  filing treats them as a coordinated group.
 - **Target initiates private discussions with a specific party without a
   board-level sale resolution** → `Target Interest` (Mac Gray pattern).
 
@@ -156,9 +159,85 @@ When in doubt → `Bidder Interest`. The transition to `Bidder Sale` is
 recorded on a later date when the concrete proposal is made. Do NOT retcon
 the earlier row.
 
+### §D1.a — Unsolicited first-contact Bid exemption from §P-D6 (🟩 RESOLVED, 2026-04-19)
+
+**Non-negotiable (reiterated).** When an unsolicited bid is itself the
+first contact from a bidder, emit the `Bid` row only. Do NOT emit a
+duplicate standalone `Bidder Sale` row — the `Bid` row's existence
+itself signals the initiation (the `Bidder Sale` role is folded into
+it).
+
+**Class B amendment (iter-4).** When the bidder **never signs an NDA**
+in this deal (target declines to proceed, bidder withdraws before NDA,
+etc.), the default `§P-D6` (NDA-before-Bid existence check) fires hard
+because the Bid row has no preceding NDA row. This is a false positive:
+§D1 itself authorizes the NDA-less Bid row in this pattern.
+
+**Rule.** When emitting a §D1 unsolicited-first-contact Bid row with no
+accompanying NDA (bidder declined by target OR bidder never progressed
+beyond the initial letter), attach the following row-level flag:
+
+```json
+{"code": "unsolicited_first_contact", "severity": "info",
+ "reason": "<short summary — e.g., 'Company H sent unsolicited $2.6B letter on 7/21; target declined to sign NDA'>"}
+```
+
+Pipeline's `_invariant_p_d6()` skips Bid rows carrying this flag (Class B
+fix, iter-4).
+
+**Attachment conditions (all must hold).**
+1. The Bid row is classified as §D1 unsolicited first-contact (filing
+   describes the approach as unsolicited AND this is the first narrated
+   contact from this bidder).
+2. No `NDA` row with the same `bidder_name` exists in the same
+   `process_phase`.
+3. The filing either narrates the target declining the NDA, or narrates
+   the bidder withdrawing without engaging further.
+
+If all three hold → attach the flag. If the filing is silent on why no
+NDA was executed (condition 3 ambiguous) → still attach the flag but
+elevate severity to `"soft"` and add a `needs_manual_review: true`
+subfield so Austin catches it in diffing.
+
+### §D1.b — Multi-activist atomization (🟩 RESOLVED, 2026-04-19, Class F)
+
+**Rule.** When the filing narrates **multiple activists** separately
+pressuring the target in parallel, emit **one `Activist Sale` row per
+activist**. Collapse to a single `Activist Sale` row ONLY when the
+filing treats the activists as a coordinated group (e.g., *"a group of
+activist investors led by X, including Y and Z, jointly filed a
+Schedule 13D…"*).
+
+**Decision tree:**
+1. Filing narrates each activist separately (separate 13D filings,
+   separate letters, separate press releases) → **N rows**, one per
+   activist. Each row's `bidder_alias` = that activist's filing label.
+2. Filing narrates activists as a coordinated group → **1 row** with
+   `bidder_alias` = the group label and `joint_bidder_members` listing
+   the constituent canonical ids.
+3. Ambiguous (filing narrates activists on different dates but mentions
+   coordination at some point) → default to per-activist rows; flag
+   `multi_activist_coordination_ambiguous` (soft).
+
+**Examples.**
+- Petsmart (2013–2014): JANA and Longview filed separate 13Ds and
+  pressured the target on different dates → **2 `Activist Sale` rows**,
+  not 1.
+- Coordinated-group example (hypothetical): *"An investor consortium
+  led by X, including Y and Z, filed a joint 13D and issued a press
+  release calling for a sale"* → **1 row** with the coordinated-group
+  label.
+
+**Migration note.** Alex's Petsmart workbook collapsed JANA + Longview
+into 1 Activist Sale row; iter-4 AI emits 2. This is a legitimate
+AI-identified correction per the ground-truth epistemology (§CLAUDE.md).
+
 **Cross-references.**
 - `rules/events.md` §I1 (how drops interact with initiation).
-- `rules/bidders.md` §E2 (joint-bidder initiation — pending).
+- `rules/events.md` §C1 (`Activist Sale` vocabulary).
+- `rules/bidders.md` §E2 / §E2.a / §E2.b (joint-bidder handling).
+- `rules/invariants.md` §P-D6 (§D1.a's `unsolicited_first_contact`
+  flag exempts rows from §P-D6).
 
 ---
 

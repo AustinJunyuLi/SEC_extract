@@ -15,6 +15,85 @@
 
 ## Resolved rules
 
+### §C4 — Pre-NDA informal bid classification (🟩 RESOLVED, 2026-04-19, Class D)
+
+**Decision.** When a prospective bidder communicates a **concrete price
+indication** (point, range, or "at least $X") to the target BEFORE
+signing an NDA, emit a `Bid` row (per §C3) with `bid_type = "informal"`
+and attach the `pre_nda_informal_bid` flag. The bid row is exempt from
+§P-D6's NDA-before-Bid existence check.
+
+**Rule.**
+- `bid_note = "Bid"` (per §C3; unified bid vocabulary).
+- `bid_type = "informal"` (filing-pre-NDA concrete-price signals are
+  non-binding by construction; they can never carry the formal triggers
+  from §G1's formal table — no commitment letters, no process-letter
+  context, no markup of a merger agreement).
+- Flag:
+  ```json
+  {"code": "pre_nda_informal_bid", "severity": "info",
+   "reason": "<short summary — e.g., 'Hudson's Bay communicated $15.50-17.00/share indication on 4/15/2013; NDA executed 5/03/2013'>"}
+  ```
+- Evidence requirement: `source_quote` must contain BOTH the concrete
+  price AND the pre-NDA context (either an explicit statement that
+  no NDA was yet in place, OR the NDA row appears later in the filing
+  timeline).
+
+**Exempt from §P-D6 (NDA-before-Bid existence check).** Pipeline's
+`_invariant_p_d6()` skips Bid rows carrying the `pre_nda_informal_bid`
+flag. Rationale: the filing itself narrates the pre-NDA timing; the
+check's presumption (NDA precedes any Bid) is falsified by the filing.
+
+**Distinguishing from §D1 unsolicited-first-contact (§D1.a in events.md).**
+- §D1.a covers the case where a bidder sends an unsolicited bid and
+  **never signs an NDA at all** (target declines, bidder withdraws).
+  Flag: `unsolicited_first_contact`.
+- §C4 covers the case where a bidder gives a concrete price BEFORE
+  signing an NDA, but **later does sign an NDA** and continues in the
+  process.
+  Flag: `pre_nda_informal_bid`.
+
+Both exempt the Bid row from §P-D6. A single Bid row MAY carry both
+flags if the filing warrants it (filing narrates a concrete price in
+the unsolicited letter AND the bidder never signs an NDA) — in that
+case use `unsolicited_first_contact` as the primary; the
+`pre_nda_informal_bid` is redundant and should be omitted.
+
+**Distinguishing from §M1 unsolicited-no-NDA skip.** §M1 skips parties
+that signed no NDA AND gave no concrete price AND had no bid intent.
+§C4 covers the opposite pattern: concrete price given, NDA signed
+later.
+
+**Migration note.** Saks iter-3b extractor used `Bidder Sale` + a
+`pre_nda_bidder_sale` soft flag for this pattern (Hudson's Bay + Sponsor
+A, April 2013 concrete price indications). That ad-hoc convention is
+deprecated by §C4; iter-4 re-encodes those rows as `Bid` +
+`bid_type="informal"` + `pre_nda_informal_bid`. The old
+`pre_nda_bidder_sale` flag is not recognized by the validator.
+
+**Rejected alternatives.**
+- **Use `Bidder Sale`** (saks-extractor ad-hoc convention) — §C1's
+  `Bidder Sale` is for first-contact initiation, not for concrete price
+  signals. Semantically conflates "bidder expressed intent to propose
+  sale" with "bidder gave price before NDA."
+- **Skip per §M1 spirit** — loses research-relevant signal about how
+  the negotiation evolved before the NDA.
+- **New event code `Pre-NDA Bid`** — balloons vocabulary; the flag +
+  `bid_type="informal"` handles this cleanly within §C3.
+
+**Cross-references.**
+- `rules/bids.md` §C3 (unified `Bid` vocabulary; not rules/events.md —
+  §C3 on `bid_note` on bid rows lives in `rules/events.md`).
+- `rules/bids.md` §G1 (informal-vs-formal triggers; pre-NDA price
+  indications default to informal by construction).
+- `rules/events.md` §D1 / §D1.a (unsolicited first-contact cousin).
+- `rules/bids.md` §M1 (unsolicited-no-NDA skip; §C4 is the positive
+  case where the pattern is NOT skipped).
+- `rules/invariants.md` §P-D6 (NDA-before-Bid; §C4 flag exempts rows
+  from this check).
+
+---
+
 ### §G1 — Informal-vs-formal bid classification (🟩 RESOLVED, 2026-04-18)
 
 **This is the highest-risk classification in the pipeline.** It is also
