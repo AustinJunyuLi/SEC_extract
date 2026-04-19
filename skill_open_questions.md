@@ -29,7 +29,7 @@ Scope decisions first (they constrain everything), schema next (defines the outp
 15. `rules/bids.md` §O1 — process conditions.
 16. `rules/dates.md` §B1, §B2, §B3, §B4 — natural-language date mapping.
 17. `rules/dates.md` §A1, §A2, §A3, §A4 — `BidderID` event sequencing.
-18. `rules/dates.md` §Q1–§Q4 — Alex-flagged rows in the reference workbook (what to do during xlsx → JSON conversion).
+18. §Q1–§Q4 — Alex-flagged rows in the reference workbook (what to do during xlsx → JSON conversion; now documented in `scripts/build_reference.py` module docstring).
 19. `rules/invariants.md` §P-R*, §P-D*, §P-S* — validator invariants. Write only after 1–18.
 
 ---
@@ -87,10 +87,10 @@ Scope decisions first (they constrain everything), schema next (defines the outp
 | 47 | `rules/dates.md` | §A2 | Strict monotonicity | 🟩 |
 | 48 | `rules/dates.md` | §A3 | Same-date tie-break | 🟩 |
 | 49 | `rules/dates.md` | §A4 | `BidderID` invariants | 🟩 |
-| 50 | `rules/dates.md` | §Q1 | Saks deletion rows | 🟩 |
-| 51 | `rules/dates.md` | §Q2 | Zep row 6390 | 🟩 |
-| 52 | `rules/dates.md` | §Q3 | Mac Gray `BidderID=21` dup | 🟩 |
-| 53 | `rules/dates.md` | §Q4 | Medivation `BidderID=5` dup | 🟩 |
+| 50 | `scripts/build_reference.py` | §Q1 | Saks deletion rows | 🟩 |
+| 51 | `scripts/build_reference.py` | §Q2 | Zep row 6390 | 🟩 |
+| 52 | `scripts/build_reference.py` | §Q3 | Mac Gray `BidderID=21` dup | 🟩 |
+| 53 | `scripts/build_reference.py` | §Q4 | Medivation `BidderID=5` dup | 🟩 |
 | 54 | `rules/invariants.md` | §P-R1…§P-S4 | All validator invariants | 🟩 |
 
 **Total open:** 0 🟥 · 0 🟨 · 54 🟩

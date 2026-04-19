@@ -2,7 +2,7 @@
 
 One-time conversion. Reads deal row ranges from
 `reference/deal_details_Alex_2026.xlsx` (sheet `deal_details`), applies the
-resolved §Q1–§Q4 fixes, maps to the §R1 schema, emits one JSON per deal
+resolved §Q1–§Q5 overrides, maps to the §R1 schema, emits one JSON per deal
 conformant to `rules/schema.md`.
 
 USAGE
@@ -11,21 +11,73 @@ USAGE
     python scripts/build_reference.py --all                      # all 9
     python scripts/build_reference.py --slug medivation --dump   # print, don't write
 
-STATUS
-------
-First pass — Medivation-focused. Renumbering + deal-lift logic applies uniformly
-to all 9 deals; §Q1 (Saks delete), §Q2 (Zep expand) are implemented as
-deal-specific hooks. Audit the output of each deal by hand against the xlsx
-before trusting it for diffing.
-
 WHY THIS EXISTS
 ---------------
 `reference/alex/{slug}.json` is the answer key that `scoring/diff.py` joins
 against. It is **Alex's intent** as structured data, not the xlsx's literal
-cells — see `rules/dates.md` §Q and `reference/alex/README.md`. Structural
-defects Alex flagged (duplicate BidderIDs, 5-bidders-in-one-row) are fixed
-here; all fixes are preserved as flags on the resulting rows so reviewers can
-trace provenance.
+cells — so structural defects Alex flagged (duplicate BidderIDs,
+bidders-in-one-row aggregations, rows he marked for deletion) are fixed
+here rather than copied through. Every fix is preserved as a flag on the
+resulting row (or as a `deal_flag`) so reviewers can trace provenance back
+to the xlsx; the original rows are also kept verbatim in
+`reference/alex/alex_flagged_rows.json`.
+
+The AI extractor never sees these overrides — it reads filings directly.
+The overrides only exist to make Alex's reference JSONs diffable.
+
+§Q OVERRIDES APPLIED DURING CONVERSION
+--------------------------------------
+
+§Q1 — Saks rows 7013 and 7015 → deleted
+    Alex's own comments on these two rows say "should be deleted": row
+    7013 is an unsolicited letter with no NDA/price/follow-up, and row
+    7015 is a sponsor row he flagged as "not a separate bid." We drop
+    both when building `reference/alex/saks.json` so Alex's reference
+    reflects his stated intent rather than his literal xlsx cells.
+    The `applied_alex_deletion` deal_flag records the dropped rows.
+    Both rows remain in `alex_flagged_rows.json` with verdict `delete`.
+
+§Q2 — Zep row 6390 → expand into 5 atomized rows
+    Row 6390 compresses 5 bidders into a single row; Alex's own note
+    asks for expansion ("one bid 20, another 22, another three
+    [20,22]?"). We atomize per `rules/bidders.md` §E1 into 5 rows
+    (Party A..Party E) with bid values populated conservatively from
+    Alex's ambiguous ranges. Each expanded row carries the
+    `alex_row_expanded` flag plus `bid_value_ambiguous_per_alex` so the
+    value interpretations are auditable.
+
+§Q3 — Mac Gray `BidderID=21` duplicate → renumbered
+    Xlsx row 6960 has `BidderID=21`, duplicating row 6957. The duplicate
+    violates §A4 rule 3 (uniqueness), so the resulting JSON would fail
+    validation. We reassign `BidderID = 1..N` chronologically per
+    §A2/§A3, which dedupes by construction. The renumbered row carries
+    a `bidder_id_renumbered_from_alex` info flag citing the original
+    xlsx BidderID.
+
+§Q4 — Medivation `BidderID=5` duplicate → renumbered
+    Same failure mode as §Q3 on a different deal: rows 6066 and 6070
+    both have `BidderID=5` (uniqueness violation); row 6067 has `ID=4`
+    on 8/8 against row 6066's `ID=5` on 7/19 (date-order violation,
+    §A4 rule 5). A single chronological renumber pass (shared with
+    §Q3) fixes all three. Each affected row carries the
+    `bidder_id_renumbered_from_alex` flag.
+
+§Q5 — Medivation "Several parties" rows → atomized
+    Two xlsx rows compress multiple entities: row 6065 is a 7/5 NDA
+    labelled "Several parties, including Sanofi" (Sanofi + ≥2 unnamed);
+    row 6075 is an 8/20 Drop labelled "Several parties" (the same ≥2
+    unnamed parties). "Several" is ≥3 in standard English, so we
+    atomize per §E1 into: row 6065 → 3 rows (Sanofi reusing her
+    canonical id from her 4/13 Bidder Sale, plus Party A and Party B
+    with fresh canonical ids), row 6075 → 2 Drop rows (Party A + Party
+    B reusing the ids from 6065; Sanofi already has her own 8/20 Drop).
+    Placeholder count matches the `≥3 → Sanofi + 2 unnamed` lower
+    bound; differing AI counts surface as legitimate diff signal, not
+    noise. Each expanded row carries `alex_row_expanded`.
+
+Without §Q5 atomization the AI's correctly-atomized output would diff as
+several `ai_only` rows against the aggregated reference, drowning out
+real extraction defects.
 """
 
 from __future__ import annotations

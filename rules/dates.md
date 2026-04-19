@@ -380,7 +380,8 @@ Soft-flagging would let sloppy extraction slide through.
 **Note on Alex's workbook violations.** Mac Gray row 6960 and
 Medivation row 6070 violate rule 3; Medivation row 6067 violates rule 5.
 These are documented in `reference/alex/alex_flagged_rows.json` and
-**fixed** when building `reference/alex/*.json` (per §Q3/§Q4 below).
+**fixed** when building `reference/alex/*.json` (see
+`scripts/build_reference.py` module docstring).
 
 **Rejected alternatives.**
 - **All structural hard, date monotonicity soft** — lenient on the
@@ -397,188 +398,13 @@ These are documented in `reference/alex/alex_flagged_rows.json` and
 
 ---
 
-## Alex-flagged rows in the reference workbook (§Q) — Resolved rules
+## Alex-flagged rows in the reference workbook (§Q)
 
-**Frame.** When Stage 2 converts the 9 reference deals from the xlsx
-workbook to `reference/alex/{deal}.json`, these rules govern how to
-handle rows that Alex himself flagged as wrong. The xlsx remains the
-literal source of what Alex wrote; `reference/alex/*.json` reflects
-**Alex's intent** — what he'd have produced if he could edit. The
-flagged xlsx rows are preserved in `reference/alex/alex_flagged_rows.json`
-for provenance.
-
-**Global principle.** `reference/alex/*.json` must pass the §A4
-invariants, so structural defects (duplicate `BidderID`, gaps) are
-fixed during conversion. Semantic defects that Alex explicitly
-flagged are also fixed. Both kinds of fix are recorded in the source
-quote / flag field so Stage 3 reviewers see the edit history.
-
-### §Q1 — Saks rows 7013 and 7015 (🟩 RESOLVED, 2026-04-18)
-
-**Decision.** **Apply Alex's deletion** when building
-`reference/alex/saks.json`. Rows 7013 (unsolicited) and 7015 (not a
-separate bid) are excluded.
-
-**Provenance.** Both rows remain in `reference/alex/alex_flagged_rows.json`
-with Alex's verbatim comments. Stage-2 conversion script logs
-`applied_alex_deletion: [7013, 7015]` in the per-deal conversion log.
-
-**Why apply.** Austin's call: `reference/alex/saks.json` should reflect
-Alex's stated intent, not his literal xlsx cells. The AI's correct
-exclusion of these events will not appear as a "false negative" diff,
-reducing adjudication noise.
-
-**Consequence for diff reports.** The AI will not diff against these
-deleted rows. If Austin later disagrees with Alex's deletion after
-reading the filing, he can add them back in Stage 3.
-
-**Cross-references.**
-- `reference/alex/alex_flagged_rows.json` (preserved Alex comments).
-- `rules/dates.md` §A4 (invariants that the resulting JSON must pass).
-
----
-
-### §Q2 — Zep row 6390, 5-bidder compressed row (🟩 RESOLVED, 2026-04-18)
-
-**Decision.** **Expand row 6390 into 5 atomized rows** when building
-`reference/alex/zep.json`, consistent with `rules/bidders.md` §E1.
-
-**Expansion algorithm.**
-1. Read row 6390 and Alex's comment.
-2. Identify the 5 bidders and their bid values as best as the xlsx
-   content allows.
-3. Emit 5 separate rows, each with its own `BidderID`, bidder identity,
-   and bid value.
-4. Each expanded row carries a flag
-   `{"code": "alex_row_expanded", "severity": "info",
-     "reason": "from xlsx row 6390; original Alex comment: <verbatim>"}`.
-
-**Ambiguity handling.** Alex's own note acknowledges ambiguity ("one
-bid 20, another 22, another three [20,22]?"). For rows where Alex's
-intent isn't fully specified, populate conservatively — use the range
-[20, 22] as the bid value for ambiguous bidders and flag
-`bid_value_ambiguous_per_alex` (info). Austin reviews during Stage 3.
-
-**Why expand.** Same intent principle as §Q1 — Alex wanted 5 rows but
-couldn't easily edit the xlsx. The atomized schema is the right target.
-
-**Provenance.** Original row 6390 preserved in
-`reference/alex/alex_flagged_rows.json`.
-
-**Cross-references.**
-- `rules/bidders.md` §E1 (atomization).
-- `rules/dates.md` §A4 (BidderID invariants).
-
----
-
-### §Q3 — Mac Gray `BidderID=21` duplicate (🟩 RESOLVED, 2026-04-18)
-
-**Decision.** **Renumber** the duplicate `BidderID=21` (row 6960) during
-conversion to satisfy §A4 rule 3 (uniqueness). Use the next available
-integer consistent with §A2/§A3 ordering.
-
-**Algorithm.**
-1. Sort Mac Gray rows by `(bid_date_precise, §A3 rank)`.
-2. Reassign `BidderID = 1..N` in that order.
-3. Row that was `ID=21` (row 6960) gets its new unique integer.
-4. Add flag on the renumbered row:
-   `{"code": "bidder_id_renumbered_from_alex", "severity": "info",
-     "reason": "original xlsx BidderID=21 duplicated row 6957; renumbered to <N>"}`.
-
-**Why renumber.** If we copy the duplicate as-is, `reference/alex/mac-gray.json`
-fails the §A4 uniqueness invariant and can't be loaded for diffing.
-Renumbering with a provenance flag preserves the "this was a duplicate"
-signal while keeping the file usable.
-
-**Provenance.** Original row 6960 preserved in
-`reference/alex/alex_flagged_rows.json` with its original `BidderID=21`.
-
-**Cross-references.**
-- `rules/dates.md` §A4 (uniqueness invariant).
-- `reference/alex/alex_flagged_rows.json`.
-
----
-
-### §Q4 — Medivation `BidderID=5` duplicate (🟩 RESOLVED, 2026-04-18)
-
-**Decision.** Same algorithm as §Q3 — **renumber** the duplicate
-`BidderID=5` (rows 6066 and 6070). Also renumber row 6067
-(`ID=4` on 8/8 violates §A4 rule 5 / date-monotonicity against row 6066's
-`ID=5` on 7/19).
-
-**Algorithm.**
-1. Sort Medivation rows by `(bid_date_precise, §A3 rank)`.
-2. Reassign `BidderID = 1..N` in that order.
-3. Rows 6066, 6067, 6070 all get new unique integers.
-4. Add flag on each renumbered row:
-   `{"code": "bidder_id_renumbered_from_alex", "severity": "info",
-     "reason": "original xlsx row <N> violated §A4 rule <3|5>; renumbered"}`.
-
-**Why renumber.** Row 6067's date-order violation and rows 6066/6070's
-uniqueness violation both fail §A4. A single pass of chronological
-renumbering fixes all three cleanly.
-
-**Provenance.** Original rows preserved in
-`reference/alex/alex_flagged_rows.json`.
-
-**Cross-references.**
-- `rules/dates.md` §A4.
-- `reference/alex/alex_flagged_rows.json`.
-
----
-
-### §Q5 — Medivation aggregated NDA / Drop rows (🟩 RESOLVED, 2026-04-18)
-
-**Decision.** **Expand** Medivation's two aggregated rows during xlsx →
-JSON conversion, per `rules/bidders.md` §E1 atomization. Analogous to §Q2
-(Zep row 6390); applied deal-specifically to Medivation.
-
-**Rows affected (xlsx labels verbatim).**
-- The 7/5 NDA row with `BidderName = "Several parties, including Sanofi"`.
-- The 8/20 Drop row with `BidderName = "Several parties"`.
-
-**Expansion.** The filing narrates "confidentiality agreements with several
-parties, including Sanofi." "Several" is ≥3 in standard English, so there
-are ≥2 unnamed parties beyond Sanofi. We atomize into:
-
-- NDA row → 3 atomic rows:
-  - `bidder_alias = "Sanofi"`, reusing her existing canonical id (her 4/13
-    Bidder Sale row already defined `bidder_01`).
-  - `bidder_alias = "Party A"`, new canonical id.
-  - `bidder_alias = "Party B"`, new canonical id.
-
-- Drop row → 2 atomic rows (Sanofi's 8/20 Drop is already its own row in
-  the xlsx, so only the unnamed parties need expansion):
-  - `bidder_alias = "Party A"`, same canonical id as the NDA Party A.
-  - `bidder_alias = "Party B"`, same canonical id as the NDA Party B.
-
-**Each expanded row** carries:
-```json
-{"code": "alex_row_expanded", "severity": "info",
- "reason": "§Q5: from xlsx row <N> ('<verbatim>'); atomized per §E1 because the xlsx compressed ≥3 NDA signers (Sanofi + unnamed) into one row"}
-```
-
-**Sanofi's bidder_type** on the atomized NDA row is copied from her 4/13
-Bidder Sale row (the aggregated xlsx row has `bidder_type=null` because Alex
-didn't populate type columns for mixed aggregations). Party A / Party B
-`bidder_type` stay null — the filing doesn't identify them.
-
-**Why this matters for Stage 3 diffs.** Without expansion, the AI's
-atomized extraction would show 3 `ai_only` NDA rows and 2 `ai_only` Drop
-rows against the aggregated reference — artificial divergences that drown
-out real extraction defects. Post-expansion, the rows join cleanly (modulo
-placeholder-count interpretation, which §Scope-3 treats as legitimate AI
-flexibility).
-
-**Generalization deferred.** If future reference deals surface similar
-aggregated-party rows, extend §Q5 then. Other 2026-04-18 reference builds
-checked: no other deal in the 9-deal reference set has this pattern.
-
-**Provenance.** Original aggregated rows preserved in
-`reference/alex/alex_flagged_rows.json` alongside §Q3/§Q4 entries.
-
-**Cross-references.**
-- `rules/bidders.md` §E1 (atomization).
-- `rules/bidders.md` §E3 (canonical IDs; Sanofi reuses hers).
-- `rules/dates.md` §Q2 (analogous Zep expansion).
-- `scoring/results/medivation_adjudicated.md` — divergence source.
+The per-override rationale for xlsx → `reference/alex/*.json` conversion
+(§Q1 Saks deletions, §Q2 Zep row 6390 expansion, §Q3 Mac Gray duplicate
+renumber, §Q4 Medivation duplicate renumber, §Q5 Medivation "Several
+parties" atomization) now lives in the `scripts/build_reference.py`
+module docstring, co-located with the code that implements it. The
+original flagged xlsx rows remain in
+`reference/alex/alex_flagged_rows.json`. The AI extractor never consults
+Alex's workbook, so these rules no longer belong in the rulebook.

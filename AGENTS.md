@@ -177,7 +177,7 @@ repo.
 | `reference/CollectionInstructions_Alex_2026.pdf` | Alex's data-collection rulebook. Black = original Chicago RAs; **bold red = Alex's additions** (most important). |
 | `reference/deal_details_Alex_2026.xlsx` | Legacy dataset. 9,336 rows × 35 columns. Red cells = Alex's corrections. |
 | `reference/alex/{deal}.json` | Alex's extraction of the 9 reference deals, converted to pipeline schema. Built in Stage 2. |
-| `reference/alex/alex_flagged_rows.json` | Rows in Alex's workbook that Alex himself has annotated as wrong/unresolved. See §Q in `rules/dates.md`. |
+| `reference/alex/alex_flagged_rows.json` | Rows in Alex's workbook that Alex himself has annotated as wrong/unresolved. See §Q1–§Q5 in the `scripts/build_reference.py` module docstring. |
 | `reference/alex/README.md` | How `reference/alex/` is organized. |
 | `seeds.csv` | 401 candidate deals with SEC filing URLs. 9 flagged `is_reference=true` are Alex's hand-corrected set. |
 | `run.py` | CLI shim: validate/finalize a saved raw extraction, write output/state, optionally commit. |
@@ -229,8 +229,8 @@ These are rows in Alex's workbook that Alex himself annotated as wrong or unreso
 
 Current handling:
 - `scripts/build_reference.py` fixes the structurally invalid rows in the
-  generated reference JSONs per `rules/dates.md` §Q1–§Q5, while preserving
-  provenance in `alex_flagged_rows.json`.
+  generated reference JSONs per its own §Q1–§Q5 module docstring, while
+  preserving provenance in `alex_flagged_rows.json`.
 - The Medivation converter also now atomizes the aggregated "Several
   parties" rows (§Q5), so the reference side matches the rulebook's
   atomization stance better than the raw workbook did.
