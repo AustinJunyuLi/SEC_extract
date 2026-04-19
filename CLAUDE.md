@@ -124,7 +124,7 @@ repo.
 - **Stage 2 complete (2026-04-18).**
   - `scripts/build_reference.py` converts the xlsx → `reference/alex/{slug}.json` for all 9 reference deals, applying §Q1 (Saks delete), §Q2 (Zep expand), §Q3/§Q4 (Mac-Gray / Medivation renumber), §E3 canonical bidder IDs, §F1 bidder-type collapse, §A1–§A3 chronological BidderID reassignment, and Scope-3 drops. Commits `3241785` + `9dda10a`.
   - `scoring/diff.py` runs end-to-end against AI extractions and emits a human-review markdown + JSON report with verdict checkboxes per divergence. Commit `0b0d4d7`.
-  - **Workstream C** — 25-deal lawyer-language study — **deferred indefinitely.** Reopen only if Stage 3 diffs surface systematic §G1/§L2 confusion the per-row manual-verification loop can't resolve. See `quality_reports/plans/2026-04-18_stage2-kickoff.md`.
+  - **Workstream C** — 25-deal lawyer-language study — **deferred indefinitely.** Reopen only if Stage 3 diffs surface systematic §G1/§L2 confusion the per-row manual-verification loop can't resolve.
 - **Stage 3 implementation landed (2026-04-18).** Commit `031c371` added
   `pipeline.py` (filing loader, prompt builder, Python validator,
   finalization helpers) and rewrote `run.py` into a CLI shim that validates

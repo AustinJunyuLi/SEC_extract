@@ -188,6 +188,35 @@ closed list of "duration-bearing" event types that emit start/end rows.
 
 ---
 
+### §B5 — Communication-date directionality (🟩 RESOLVED, 2026-04-18)
+
+**Rule.** When a filing narrates a communication with both an authored
+date ("letter dated May 10, 2016") and a receipt date ("received on
+May 12, 2016"), the row's `bid_date_precise` anchors on:
+
+- The **receipt** date for **incoming** communications to the target
+  (bidder's letter to the target's board, IOIs, LOIs, non-binding
+  indications, etc.).
+- The **sent** date for **outgoing** communications from the target
+  (process letters, requests for revised bids, formal invitations).
+
+**Rationale.** The event being recorded is what the target learned
+(for incoming) or did (for outgoing), not the bidder's internal
+drafting timeline. Incoming-receipt anchoring reflects the target's
+informational state; outgoing-sent anchoring reflects the target's
+action.
+
+**Implementation.** Enforced by the extractor per `prompts/extract.md`
+step 6. No deterministic `_invariant_p_b5` in `pipeline.py` —
+directionality is a per-row semantic judgment the validator cannot
+re-derive from the JSON alone.
+
+**Cross-references.**
+- `rules/dates.md` §B2 (precise vs rough population).
+- `prompts/extract.md` step 6 (extractor-side enforcement).
+
+---
+
 ## Event sequencing (§A — `BidderID`) — Resolved rules
 
 ### §A1 — Keep `BidderID` (🟩 RESOLVED, 2026-04-18)
