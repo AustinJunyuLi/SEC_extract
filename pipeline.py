@@ -724,22 +724,15 @@ def _invariant_p_d6(events: list[dict]) -> list[dict]:
 def _invariant_p_d2(events: list[dict]) -> list[dict]:
     """§P-D2 — bid_date_rough ≠ null IFF the row carries a date-inference
     flag (date_inferred_from_rough / date_inferred_from_context /
-    date_range_collapsed). Tolerates the legacy-fixture case where
-    bid_date_rough redundantly mirrors bid_date_precise (e.g.,
-    "2016-04-13 00:00:00") because that's what build_reference.py emits
-    for Alex's workbook parity — not an AI defect."""
+    date_range_collapsed). Strict XOR; no legacy-fixture carve-out."""
     flags: list[dict[str, Any]] = []
     for i, ev in enumerate(events):
         rough = ev.get("bid_date_rough")
-        precise = ev.get("bid_date_precise")
         row_flag_codes = {f.get("code") for f in (ev.get("flags") or []) if isinstance(f, dict)}
         has_inference = bool(row_flag_codes & DATE_INFERENCE_FLAG_CODES)
         rough_present = rough not in (None, "", [])
 
         if rough_present and not has_inference:
-            # Legacy-fixture tolerance: rough is a direct mirror of precise.
-            if isinstance(rough, str) and isinstance(precise, str) and rough.startswith(precise):
-                continue
             flags.append({
                 "row_index": i, "code": "rough_date_mismatch_inference", "severity": "hard",
                 "reason": f"bid_date_rough={rough!r} populated without a date-inference flag",
