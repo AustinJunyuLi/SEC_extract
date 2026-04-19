@@ -86,7 +86,7 @@ import argparse
 import datetime
 import json
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -395,25 +395,11 @@ def build_deal_object(slug: str, rows: list[RawRow]) -> dict[str, Any]:
 # Bidder canonicalization (§E3)
 # ---------------------------------------------------------------------------
 
-_EVENT_MARKER_NOTES = {
-    "Bid Press Release", "Final Round Ann", "Final Round", "Final Round Inf",
-    "Final Round Formal", "Final Round Inf Ann", "Target Initiated",
-    "Terminated", "Restarted", "Auction Closed", "Bidder Sale", "Activist Sale",
-}
-
-
-def _is_event_marker_row(alias: str | None, note: str | None) -> bool:
-    """Rows that describe the process itself (no bidder on the left-hand side)."""
-    if alias is None and note in _EVENT_MARKER_NOTES:
-        return True
-    return False
-
-
 def canonicalize_bidders(rows: list[RawRow]) -> tuple[dict[int, str], dict[str, Any]]:
     """Assign bidder_01, bidder_02, ... deterministically in first-appearance order.
 
     Returns:
-      xlsx_row → canonical id ("" for event-marker rows with no bidder).
+      xlsx_row → canonical id ("" for rows with no bidder alias).
       registry: canonical id → {resolved_name, aliases_observed, first_appearance_row}
     """
     canonical: dict[int, str] = {}
@@ -423,12 +409,8 @@ def canonicalize_bidders(rows: list[RawRow]) -> tuple[dict[int, str], dict[str, 
 
     for r in rows:
         alias_raw = r.get("BidderName")
-        note = r.get("bid_note")
         if alias_raw is None:
-            if _is_event_marker_row(alias_raw, note):
-                canonical[r.xlsx_row] = ""
-            else:
-                canonical[r.xlsx_row] = ""
+            canonical[r.xlsx_row] = ""
             continue
         # Key on the alias string exactly as Alex wrote it (§E3 defers
         # cross-row canonicalization to the AI extractor; for the reference

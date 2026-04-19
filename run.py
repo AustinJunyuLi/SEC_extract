@@ -36,11 +36,9 @@ STATUS SEMANTICS (mirrors SKILL.md)
 from __future__ import annotations
 
 import argparse
-import datetime
 import json
 import subprocess
 import sys
-from dataclasses import dataclass
 from pathlib import Path
 
 import pipeline
@@ -49,44 +47,19 @@ REPO_ROOT = Path(__file__).resolve().parent
 PROGRESS_PATH = REPO_ROOT / "state" / "progress.json"
 
 
-@dataclass
-class Deal:
-    slug: str
-    is_reference: bool
-    target_name: str
-    acquirer: str
-    date_announced: str
-    filing_url: str
-
-
-def current_rulebook_sha() -> str | None:
-    """git SHA of rules/ at HEAD, or None if not a git repo."""
-    try:
-        result = subprocess.run(
-            ["git", "rev-parse", "HEAD:rules"],
-            cwd=REPO_ROOT,
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        return result.stdout.strip()
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        return None
-
-
 def finalize_deal(
-    deal: Deal,
+    slug: str,
     raw_extraction: dict,
     dry_run: bool = False,
     commit: bool = True,
 ) -> pipeline.PipelineResult | None:
     """Run validator, merge flags, write output + state. Optionally commit."""
-    filing = pipeline.load_filing(deal.slug)
+    filing = pipeline.load_filing(slug)
 
     if dry_run:
         result = pipeline.validate(raw_extraction, filing)
         status, flag_count, notes = pipeline.summarize(result)
-        print(f"[{deal.slug}] dry-run: status={status} flag_count={flag_count} notes={notes}")
+        print(f"[{slug}] dry-run: status={status} flag_count={flag_count} notes={notes}")
         if result.row_flags:
             print(f"  row flags ({len(result.row_flags)}):")
             for f in result.row_flags[:10]:
@@ -99,15 +72,15 @@ def finalize_deal(
                 print(f"    [{f['severity']}] {f['code']} — {f['reason']}")
         return None
 
-    result = pipeline.finalize(deal.slug, raw_extraction, filing=filing)
+    result = pipeline.finalize(slug, raw_extraction, filing=filing)
     print(
-        f"[{deal.slug}] status={result.status} flag_count={result.flag_count} "
+        f"[{slug}] status={result.status} flag_count={result.flag_count} "
         f"notes={result.notes} -> {result.output_path.relative_to(REPO_ROOT)}"
     )
 
     if commit:
         commit_message = (
-            f"deal={deal.slug} status={result.status} flag_count={result.flag_count}"
+            f"deal={slug} status={result.status} flag_count={result.flag_count}"
         )
         try:
             subprocess.run(["git", "add", "-A"], cwd=REPO_ROOT, check=True)
@@ -116,26 +89,17 @@ def finalize_deal(
                 cwd=REPO_ROOT, check=True,
             )
         except subprocess.CalledProcessError as e:
-            print(f"[{deal.slug}] git commit failed: {e}", file=sys.stderr)
+            print(f"[{slug}] git commit failed: {e}", file=sys.stderr)
 
     return result
 
 
-def load_deal(slug: str) -> Deal:
+def validate_slug(slug: str) -> None:
     if not PROGRESS_PATH.exists():
         raise FileNotFoundError(f"{PROGRESS_PATH} does not exist")
     state = json.loads(PROGRESS_PATH.read_text())
-    info = state["deals"].get(slug)
-    if info is None:
+    if slug not in state["deals"]:
         raise KeyError(f"slug={slug!r} not in state/progress.json")
-    return Deal(
-        slug=slug,
-        is_reference=info.get("is_reference", False),
-        target_name=info["target_name"],
-        acquirer=info["acquirer"],
-        date_announced=info["date_announced"],
-        filing_url=info["filing_url"],
-    )
 
 
 def main() -> int:
@@ -175,9 +139,9 @@ def main() -> int:
     if not args.raw_extraction.exists():
         parser.error(f"--raw-extraction path does not exist: {args.raw_extraction}")
 
-    deal = load_deal(args.slug)
+    validate_slug(args.slug)
     raw = json.loads(args.raw_extraction.read_text())
-    finalize_deal(deal, raw, dry_run=args.dry_run, commit=not args.no_commit)
+    finalize_deal(args.slug, raw, dry_run=args.dry_run, commit=not args.no_commit)
     return 0
 
 

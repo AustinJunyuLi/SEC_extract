@@ -189,7 +189,6 @@ EVENT_RANK: dict[str, int] = {
 class Filing:
     slug: str
     pages: list[dict[str, Any]]
-    manifest: dict[str, Any]
 
     def page_content(self, number: int) -> str | None:
         for p in self.pages:
@@ -246,8 +245,7 @@ def load_filing(slug: str) -> Filing:
         if not p.exists():
             raise FileNotFoundError(f"missing artifact: {p}")
     pages = json.loads(pages_path.read_text())
-    manifest = json.loads(manifest_path.read_text())
-    return Filing(slug=slug, pages=pages, manifest=manifest)
+    return Filing(slug=slug, pages=pages)
 
 
 # ---------------------------------------------------------------------------

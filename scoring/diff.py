@@ -11,7 +11,6 @@ USAGE
 -----
     python scoring/diff.py --slug medivation
     python scoring/diff.py --all-reference
-    python scoring/diff.py --slug medivation --verbose
 """
 
 from __future__ import annotations
@@ -66,7 +65,6 @@ class DiffReport:
     deal_disagreements: list[dict[str, Any]] = field(default_factory=list)
     divergences: list[dict[str, Any]] = field(default_factory=list)
     alex_flagged_hits: list[dict[str, Any]] = field(default_factory=list)
-    hard_invariant_violations: list[dict[str, Any]] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
 
 
@@ -264,7 +262,7 @@ def diff_deal_fields(ai_deal: dict[str, Any], alex_deal: dict[str, Any]) -> list
     return out
 
 
-def diff_deal(slug: str, verbose: bool = False) -> DiffReport:
+def diff_deal(slug: str) -> DiffReport:
     reference_path = REFERENCE_DIR / f"{slug}.json"
     extraction_path = EXTRACTION_DIR / f"{slug}.json"
 
@@ -398,7 +396,6 @@ def write_results(r: DiffReport) -> tuple[Path, Path]:
         "deal_disagreements": r.deal_disagreements,
         "divergences": r.divergences,
         "alex_flagged_hits": r.alex_flagged_hits,
-        "hard_invariant_violations": r.hard_invariant_violations,
         "notes": r.notes,
     }, indent=2, default=str))
     return md, js
@@ -418,7 +415,6 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--slug", help="Single deal slug (e.g. medivation).")
     parser.add_argument("--all-reference", action="store_true")
-    parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--no-write", action="store_true",
                         help="Skip writing scoring/results/*; print to stdout only.")
     args = parser.parse_args()
@@ -435,7 +431,7 @@ def main() -> None:
                 print(f"  -> {md.relative_to(REPO_ROOT)}")
             print()
     elif args.slug:
-        r = diff_deal(args.slug, verbose=args.verbose)
+        r = diff_deal(args.slug)
         print(format_report_txt(r))
         if not args.no_write and r.matched_rows + len(r.ai_only_rows) + len(r.alex_only_rows) > 0:
             md, js = write_results(r)
