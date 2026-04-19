@@ -8,13 +8,6 @@ is **not rewritten** by the validator — only annotated.
 check, which depends on every other `rules/*.md` file. All invariants
 below are traced to the rule-file decisions that produced them.
 
-**Status legend:** 🟥 OPEN · 🟨 TENTATIVE · 🟩 RESOLVED
-
-> Stage 1 is complete. Some historical dependency prose below still uses the
-> word "pending" when describing how the rulebook was developed. Treat the
-> section headers and `Decision:` blocks as authoritative; if a section is
-> marked 🟩 RESOLVED, it is closed unless explicitly reopened.
-
 ---
 
 ## Severity taxonomy

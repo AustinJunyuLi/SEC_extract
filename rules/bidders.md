@@ -2,13 +2,6 @@
 
 **Purpose.** Rules for identifying, naming, classifying, and aggregating bidders across rows of a single deal.
 
-**Status legend:** 🟥 OPEN · 🟨 TENTATIVE · 🟩 RESOLVED
-
-> Stage 1 is complete. Some historical dependency prose below still uses the
-> word "pending" when describing how the rulebook was developed. Treat the
-> section headers and `Decision:` blocks as authoritative; if a section is
-> marked 🟩 RESOLVED, it is closed unless explicitly reopened.
-
 ---
 
 ## Resolved rules
@@ -72,11 +65,7 @@ structure for downstream queries.
 **Interaction with §A3 ranking.** Executed remains rank 11 (closing).
 One row per deal; no same-date collision with itself.
 
-**Migration note.** The Mac-Gray and Petsmart iter-3b extractions emitted
-N Executed rows (2 and 5 respectively). These fire hard on
-`multiple_executed_rows`. Iter-4 extractions collapse to 1.
-
-### §E2.b — Group-narrated NDA aggregation (🟩 RESOLVED, 2026-04-19 iter-4, simplified iter-5, further simplified iter-6)
+### §E2.b — Group-narrated NDA aggregation (🟩 RESOLVED, 2026-04-19)
 
 **Principle.** Emit one NDA row per *identifiable signer the filing
 narrates*. Filing granularity decides the shape; the rulebook does not
@@ -86,13 +75,13 @@ re-split or re-aggregate against the filing.
 
 | Filing narrates the NDA as… | Emit | Key fields |
 |---|---|---|
-| Single consortium event, no per-constituent detail, no count (e.g., *"CSC/Pamplona executed a CA on 7/11/2013"*) | **1 row**, consortium-as-signer | `bidder_alias` = consortium label; `bidder_name` = canonical id for consortium; `joint_bidder_members` = constituent ids if named elsewhere, else null; flag `{"code": "joint_nda_aggregated", "severity": "info", "reason": "...bidder_alias=<label>"}` |
+| Single consortium event, no per-constituent detail, no count (e.g., *"Buyer Group executed a CA on 7/11/2013"*) | **1 row**, consortium-as-signer | `bidder_alias` = consortium label; `bidder_name` = canonical id for consortium; `joint_bidder_members` = constituent ids if named elsewhere, else null; flag `{"code": "joint_nda_aggregated", "severity": "info", "reason": "...bidder_alias=<label>"}` |
 | Numeric count OR named individual signers (e.g., *"15 financial sponsors executed CAs"* or *"BC Partners, Caisse, GIC, … each executed CAs"*) | **N rows**, one per signer per §E3 | Named → filing label; unnamed → `"Strategic k"` / `"Financial k"` placeholders; each row's `bidder_name` = own canonical id; `joint_bidder_members` = null |
 
-**Example.** *"On July 11, 2013, CSC/Pamplona entered into a
-confidentiality agreement with Mac-Gray."* → 1 aggregated row with
-`joint_bidder_members = ["bidder_06", "bidder_07"]` (CSC + Pamplona
-named as constituents earlier in the filing).
+**Example.** *"On July 11, 2013, Buyer Group entered into a
+confidentiality agreement with the Company."* → 1 aggregated row with
+`joint_bidder_members = ["bidder_06", "bidder_07"]` (the two constituents
+named earlier in the filing).
 
 **Cross-references.**
 - §E1 (atomization), §E3 (canonical IDs / placeholders).
@@ -202,7 +191,6 @@ canonical ID `bidder_03` stays the same across all rows.
 
 **Cross-references.**
 - `rules/bidders.md` §E3 (canonical ID + alias structure).
-- `rules/invariants.md` — new `bidder_alias_not_in_registry` check pending.
 
 ---
 
@@ -276,7 +264,7 @@ three fields.
 - `public: bool` — true iff the bidder is publicly traded at the time of
   the bid.
 
-**Classification rules** — §F2 (pending ratification).
+**Classification rules** — §F2.
 
 **Consortium type** — `base: "mixed"` fully covers §F3. Constituent types
 are still on their individual rows per atomization (§E1).
@@ -304,7 +292,7 @@ non-mixed `base`.
 - **Permissive free-form** — drift-prone; what Alex's workbook did.
 
 **Cross-references.**
-- `rules/bidders.md` §F2 (classification rules for base — pending).
+- `rules/bidders.md` §F2 (classification rules for base).
 - `rules/bidders.md` §F3 (consortium type — covered by `base: "mixed"`).
 - `rules/schema.md` §R1 (event-level `bidder_type` object schema).
 
@@ -332,8 +320,8 @@ execution if winner). This matches Alex's legacy format.
   Providence's "25 NDAs in one row" and Zep row 6390's "5 parties, 4F and
   1S" are both **expanded** during the xlsx → JSON conversion in Stage 2.
 - Each atomized row carries its own `source_quote` for the specific event.
-- Anonymous bidders get placeholder names per §E3 (pending).
-- Joint bidders are handled per §E2 (pending).
+- Anonymous bidders get placeholder names per §E3.
+- Joint bidders are handled per §E2.
 
 **Why atomized.**
 1. Matches the research question (event-level auction dynamics, hazard
@@ -341,13 +329,13 @@ execution if winner). This matches Alex's legacy format.
 2. Keeps `source_quote` tractable — one quote per event, not one bidder
    record referencing many passages.
 3. Compatible with `BidderID` as an event-sequence number (see
-   `rules/dates.md` §A, pending).
+   `rules/dates.md` §A).
 4. Allows the validator to check per-event invariants (`NDA before bid`,
    monotone dates, etc.) without disaggregating on the fly.
 
 **Migration note.** Providence row 6027 (25 NDAs aggregated) and Zep row
 6390 (5 parties aggregated) are expanded during Stage 2 conversion.
-Placeholder names follow §E3 (pending); see `reference/alex/README.md` for
+Placeholder names follow §E3; see `reference/alex/README.md` for
 the expansion procedure.
 
 **Rejected alternatives.**
@@ -357,7 +345,7 @@ the expansion procedure.
   bidder identity, creating two code paths for every downstream analysis.
 
 **Cross-references.**
-- `rules/bidders.md` §E2 (joint bidders — pending).
-- `rules/bidders.md` §E3 (anonymous naming — pending).
+- `rules/bidders.md` §E2 (joint bidders).
+- `rules/bidders.md` §E3 (anonymous naming).
 - `rules/events.md` §I1 (consortium-drop splitting follows the atomized rule).
-- `rules/dates.md` §A (`BidderID` as event sequence — pending).
+- `rules/dates.md` §A (`BidderID` as event sequence).

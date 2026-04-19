@@ -2,13 +2,6 @@
 
 **Purpose.** Defines the closed set of `bid_note` values the extractor may emit, plus the decision tree for classifying each event.
 
-**Status legend:** 🟥 OPEN · 🟨 TENTATIVE · 🟩 RESOLVED
-
-> Stage 1 is complete. Some historical dependency prose below still uses the
-> word "pending" when describing how the rulebook was developed. Treat the
-> section headers and `Decision:` blocks as authoritative; if a section is
-> marked 🟩 RESOLVED, it is closed unless explicitly reopened.
-
 ---
 
 ## Resolved rules
@@ -289,7 +282,7 @@ individual NDAs, form a consortium to bid), and that consortium drops:
 - Each row flags `{"code": "consortium_drop_split", "severity": "info",
   "reason": "consortium <name> dropped; row split per constituent NDA"}`.
 - The consortium's bidding events (bids, final-round participation) follow
-  the joint-bidder rule in `rules/bidders.md` §E2 — **pending**.
+  the joint-bidder rule in `rules/bidders.md` §E2.
 
 If the bidders never signed individual NDAs (consortium formed before any
 NDA) → single consortium row per §E2. No split.
@@ -301,7 +294,7 @@ drop row, so the bidder funnel stays clean: every NDA-signer has a fate.
 - `rules/events.md` §D1 (initiation; `Drop*` rows are always preceded by
   an `NDA` or `Bidder Interest` row per §P-D5).
 - `rules/events.md` §I2 (re-engagement after drop).
-- `rules/bidders.md` §E2 (joint-bidder representation — pending).
+- `rules/bidders.md` §E2 (joint-bidder representation).
 - `rules/invariants.md` §P-D5 (drop-without-prior-engagement check).
 
 ---
@@ -459,7 +452,7 @@ MVP**. Nine codes:
 | `Final Round Ext` | No | Yes | No |
 | `Final Round Inf Ext Ann` | Yes | Yes | Yes |
 | `Final Round Inf Ext` | Yes | Yes | No |
-| `Auction Closed` | — | — | — (target halts without announced deadline; Providence 6058) |
+| `Auction Closed` | — | — | — (target halts without announced deadline; distinct from `Final Round`, which has a formal cutoff) |
 
 Suffix grammar: `Inf` = informal round · `Ext` = deadline extension ·
 `Ann` = target's announcement of the round (vs. the bids submitted in it).
@@ -615,8 +608,6 @@ is taken over `{row ∈ events : row.bid_note == "NDA" and row.process_phase ≥
 - `rules/events.md` §L1 (prior-process inclusion).
 - `rules/schema.md` §Scope-1 (auction classifier).
 - `rules/schema.md` §R1 (event-level field list — add `process_phase`).
-- `rules/invariants.md` — new §P-D* checks pending (terminated-restarted
-  pairing, Executed in highest phase, no gaps ≥ 6 months within a phase).
 
 ---
 
@@ -640,54 +631,3 @@ set; non-canonical variants flag `invalid_event_type` (hard).
 slip through and make downstream grouping unreliable.
 
 ---
-
----
-
-## Draft vocabulary (observed in the 9 reference deals; pending ratification)
-
-### Start-of-process
-- `Bidder Interest`
-- `Bidder Sale`
-- `Target Sale`
-- `Target Sale Public`
-- `Activist Sale`
-- `Target Interest` *(Mac Gray only — status uncertain)*
-
-### Publicity
-- `Bid Press Release`
-- `Sale Press Release`
-
-### Advisors
-- `IB`
-- `IB Terminated` *(Mac Gray only — not in Alex's instructions)*
-- *(Legal counsel — see §J2)*
-
-### Counterparty events
-- `NDA`
-- `Drop`
-- `DropBelowM`
-- `DropBelowInf`
-- `DropAtInf`
-- `DropTarget`
-
-### Bid rows
-- `NA` or blank in `bid_note` (event-type implied by bid-value columns).
-- Candidate alternative: a dedicated `Bid` tag (see §C3).
-
-### Round structure
-- `Final Round Ann`
-- `Final Round`
-- `Final Round Inf Ann`
-- `Final Round Inf`
-- `Final Round Ext Ann`
-- `Final Round Ext`
-- `Final Round Inf Ext Ann`
-- `Final Round Inf Ext` *(Mac Gray)*
-- `Exclusivity 30 days` *(Zep — may belong on the bid row instead of as an event)*
-
-### Closing
-- `Executed`
-
-### Prior-process
-- `Terminated`
-- `Restarted`

@@ -2,13 +2,6 @@
 
 **Purpose.** Rules for mapping natural-language dates to calendar dates, handling undated events, and assigning `BidderID` event-sequence numbers.
 
-**Status legend:** 🟥 OPEN · 🟨 TENTATIVE · 🟩 RESOLVED
-
-> Stage 1 is complete. Some historical dependency prose below still uses the
-> word "pending" when describing how the rulebook was developed. Treat the
-> section headers and `Decision:` blocks as authoritative; if a section is
-> marked 🟩 RESOLVED, it is closed unless explicitly reopened.
-
 ---
 
 ## Resolved rules
@@ -103,7 +96,7 @@ gain.
 **Cross-references.**
 - `rules/dates.md` §B1 (inference rules).
 - `rules/dates.md` §B3 (undated events).
-- `rules/invariants.md` — validator check pending.
+- `rules/invariants.md` §P-D2 (`rough_date_mismatch_inference`).
 
 ---
 
@@ -130,7 +123,7 @@ preceding event if no chronological predecessor exists).
 **Why `date_unknown` is soft, not hard.** Some filings simply don't date
 certain events. Making this hard would force a fabricated date (violating
 source-quote discipline) or a skipped row (losing information). The
-`BidderID` sequence per §A (pending) preserves narrative order.
+`BidderID` sequence per §A preserves narrative order.
 
 **Rejected alternatives.**
 - **Infer from bracketing events (midpoint of prev and next)** — creates
@@ -143,7 +136,7 @@ source-quote discipline) or a skipped row (losing information). The
 
 **Cross-references.**
 - `rules/dates.md` §B1 (anchor offset table).
-- `rules/dates.md` §A (BidderID as ordering fallback — pending).
+- `rules/dates.md` §A (BidderID as ordering fallback).
 
 ---
 
@@ -231,7 +224,7 @@ code and removes a source of sort ambiguity.
 **Cross-references.**
 - `rules/dates.md` §A2 (what determines the ordering).
 - `rules/dates.md` §A3 (same-date tie-break).
-- `rules/dates.md` §A4 (invariants — pending).
+- `rules/dates.md` §A4 (invariants).
 - `rules/bidders.md` §E3 (canonical bidder IDs, separate from `BidderID`).
 
 ---
@@ -277,7 +270,7 @@ new counterparty) are narrative devices, not timeline events.
 **Cross-references.**
 - `rules/dates.md` §A3 (same-date tie-break).
 - `rules/dates.md` §B3 (undated event anchoring).
-- `rules/invariants.md` (validator checks, pending).
+- `rules/invariants.md` (validator checks).
 
 ---
 

@@ -2,13 +2,6 @@
 
 **Purpose.** Defines what the extractor emits: the exact columns, their types, and which are deal-level vs event-level.
 
-**Status legend:** 🟥 OPEN · 🟨 TENTATIVE · 🟩 RESOLVED
-
-> Stage 1 is complete. Some historical dependency prose below still uses the
-> word "pending" when describing how the rulebook was developed. Treat the
-> section headers and `Decision:` blocks as authoritative; if a section is
-> marked 🟩 RESOLVED, it is closed unless explicitly reopened.
-
 ---
 
 ## Resolved rules
@@ -56,16 +49,15 @@ filtered downstream on `auction == true`.
 **Schema implication.** `auction: bool` is a deal-level field (see §N1 when
 that resolves — `deal` object either way).
 
-**Validator implication.** A new deal-level invariant is implied: `auction`
-must agree with "≥2 non-advisor bidder NDAs in the current process." Filed
-under `rules/invariants.md` as a future §P-D*; flagged here as a pending
-addition.
+**Validator implication.** A deal-level invariant checks that `auction`
+agrees with "≥2 non-advisor bidder NDAs in the current process." Implemented
+as `rules/invariants.md` §P-S2.
 
 **Cross-references.**
 - `rules/events.md` §L1 — definition of "stale prior process."
 - `rules/bidders.md` §F2 — `bidder_type` classification needed to exclude
   financial-advisor NDAs from the auction count.
-- `rules/invariants.md` — new deal-level check pending.
+- `rules/invariants.md` §P-S2 (deal-level auction check).
 
 ---
 
@@ -163,7 +155,7 @@ does NOT produce:
   `scripts/fetch_filings.py`'s job, per §Scope-2).
 - Assign new `BidderID` values across deals; `BidderID` is within-deal only.
 
-**What the AI DOES produce from the filing (pending §R1 for the full list):**
+**What the AI DOES produce from the filing (see §R1 for the full list):**
 1. The event array (the main product).
 2. A deal-level `auction: bool` computed from extracted NDA events (per
    §Scope-1).
@@ -173,11 +165,11 @@ does NOT produce:
    `seeds.csv` / `manifest.json`, emit a flag `deal_identity_mismatch` on the
    deal; the output carries the **filing-read** value (filing is ground
    truth per `CLAUDE.md`).
-4. `all_cash` — pending §N2 decision (may belong to AI or downstream).
+4. `all_cash` — per §N2 (AI-derived from consideration structure).
 
-**Validator implication.** A new row-level check is implied: the deal-level
+**Validator implication.** A row-level check is implied: the deal-level
 identity fields emitted by the AI must either match `manifest.json` or carry
-a `deal_identity_mismatch` flag. Filed for `rules/invariants.md` pending §R1.
+a `deal_identity_mismatch` flag.
 
 **Cross-references.**
 - `rules/schema.md` §R1 — final column set (will formalize which of the
@@ -185,7 +177,7 @@ a `deal_identity_mismatch` flag. Filed for `rules/invariants.md` pending §R1.
 - `rules/schema.md` §N1 — deal-level vs event-level split.
 - `rules/schema.md` §N2 — `all_cash` derivation.
 - `scripts/fetch_filings.py` — adds `source.date_filed` to `manifest.json`
-  (pending; not yet implemented).
+  (not yet implemented).
 - `CLAUDE.md` — "ground-truth epistemology" section.
 
 ---
@@ -224,7 +216,7 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - `DealNumber` — legacy Chicago row-group ID. Pipeline keys on `slug`.
 
 **`events[]` — per-row columns (kept from Alex's legacy except as noted):**
-- `BidderID` — int or decimal (per `rules/dates.md` §A, pending).
+- `BidderID` — int or decimal (per `rules/dates.md` §A).
 - `process_phase` — int. `0` = stale prior, `1` = main, `2` = restart (per `rules/events.md` §L2).
 - `role` — string. `"bidder" | "advisor_financial" | "advisor_legal"`. Defaults to `"bidder"`. Auction classifier (§Scope-1) filters `role == "bidder"`. Per `rules/bids.md` §M3.
 - `exclusivity_days` — int OR null. Exclusivity period granted at this bid event. Per `rules/bids.md` §O1.
@@ -255,7 +247,7 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
   field order is: the canonical id of the merger-agreement counterparty
   first (where applicable), then the other constituents in filing
   narrative order. Ids must exist in `deal.bidder_registry`.
-- `bid_note` — string from closed vocabulary (§C1, pending).
+- `bid_note` — string from closed vocabulary (§C1).
 - `bid_type` — `"formal" | "informal" | null` (per §G1).
 - `bid_date_precise` — ISO date OR null.
 - `bid_date_rough` — natural-language phrase OR null.
@@ -339,8 +331,7 @@ scripts need it. The current repo stops at JSON extraction and does not
 provide a `run.py --rebuild-excel` entrypoint.
 
 **Validator implication.** Drops `§P-D9` ("deal-level fields consistent
-across rows") — no longer applicable since deal fields exist once. Replaced
-with `§P-D9' (pending): deal-level fields present and non-null`.
+across rows") — no longer applicable since deal fields exist once.
 
 **Rationale.** JSON-native; avoids 16× duplication per deal; matches the
 natural extraction structure (scan once for deal-level identity, then scan
@@ -367,7 +358,7 @@ section).
 go on the `Executed` row's existing quote rather than duplicating at the
 deal level.
 
-**Interaction with §H2 (composite consideration, pending).** The composite
+**Interaction with §H2 (composite consideration).** The composite
 schema decided in §H2 determines how cash + CVR / cash + earnout is
 represented in the `events[]` rows. `all_cash` is downstream of that — any
 composite makes `all_cash = false`.
@@ -455,7 +446,6 @@ requires re-fetching or accepting page-drift on old extractions.
 ## Canonical output schema (resolved)
 
 Reflects resolved decisions §Scope-1/2/3, §R1, §R2, §R3, §N1, §N2, §N3.
-Fields depending on still-open decisions are marked in comments.
 
 ```json
 {
@@ -502,7 +492,7 @@ Fields depending on still-open decisions are marked in comments.
 }
 ```
 
-Still-open field semantics:
+Field semantics cross-references:
 - `BidderID` format (int vs decimal) — `rules/dates.md` §A1.
 - `bid_date_precise` vs `bid_date_rough` rules — `rules/dates.md` §B1–B4.
 - `bid_note` closed vocabulary — `rules/events.md` §C1.
@@ -511,5 +501,5 @@ Still-open field semantics:
 - `bid_value*` structure for ranges/single-bound — `rules/bids.md` §H1.
 - Composite-consideration representation — `rules/bids.md` §H2.
 
-The shape above is the contract; the still-open items above fill in the
-semantics of individual fields without changing the shape.
+The shape above is the contract; the items above fill in the semantics of
+individual fields without changing the shape.

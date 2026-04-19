@@ -19,7 +19,7 @@ Scope decisions first (they constrain everything), schema next (defines the outp
 5. `rules/events.md` §D1 — start-of-process decision tree.
 6. `rules/events.md` §I1, §I2 — dropout codes.
 7. `rules/events.md` §J1, §J2 — investment bank + legal counsel.
-8. `rules/events.md` §K1, §K2, §K3 — final-round vocabulary and edge cases.
+8. `rules/events.md` §K1, §K2 — final-round vocabulary and edge cases.
 9. `rules/events.md` §L1, §L2 — prior-process inclusion.
 10. `rules/bidders.md` §E1, §E2, §E3, §E4 — identity, aggregation, joint bidders, winner retrofit.
 11. `rules/bidders.md` §F1, §F2, §F3 — bidder type canonical format.
@@ -29,7 +29,7 @@ Scope decisions first (they constrain everything), schema next (defines the outp
 15. `rules/bids.md` §O1 — process conditions.
 16. `rules/dates.md` §B1, §B2, §B3, §B4 — natural-language date mapping.
 17. `rules/dates.md` §A1, §A2, §A3, §A4 — `BidderID` event sequencing.
-18. §Q1–§Q4 — Alex-flagged rows in the reference workbook (what to do during xlsx → JSON conversion; now documented in `scripts/build_reference.py` module docstring).
+18. §Q1–§Q5 — Alex-flagged rows in the reference workbook (what to do during xlsx → JSON conversion; now documented in `scripts/build_reference.py` module docstring).
 19. `rules/invariants.md` §P-R*, §P-D*, §P-S* — validator invariants. Write only after 1–18.
 
 ---
@@ -57,7 +57,6 @@ Scope decisions first (they constrain everything), schema next (defines the outp
 | 17 | `rules/events.md` | §J2 | Legal counsel structural home | 🟩 |
 | 18 | `rules/events.md` | §K1 | Final-round vocabulary | 🟩 |
 | 19 | `rules/events.md` | §K2 | Implicit final rounds | 🟩 |
-| 20 | `rules/events.md` | §K3 | Providence row 6058 edge case | 🟩 |
 | 21 | `rules/events.md` | §L1 | Prior-process inclusion | 🟩 |
 | 22 | `rules/events.md` | §L2 | `process_phase` column | 🟩 |
 | 23 | `rules/bidders.md` | §E1 | Aggregate vs atomize | 🟩 |
@@ -91,11 +90,12 @@ Scope decisions first (they constrain everything), schema next (defines the outp
 | 51 | `scripts/build_reference.py` | §Q2 | Zep row 6390 | 🟩 |
 | 52 | `scripts/build_reference.py` | §Q3 | Mac Gray `BidderID=21` dup | 🟩 |
 | 53 | `scripts/build_reference.py` | §Q4 | Medivation `BidderID=5` dup | 🟩 |
-| 54 | `rules/invariants.md` | §P-R1…§P-S4 | All validator invariants | 🟩 |
+| 54 | `scripts/build_reference.py` | §Q5 | Medivation 'Several parties' atomization | 🟩 |
+| 55 | `rules/invariants.md` | §P-R1…§P-S4 | All validator invariants | 🟩 |
 
 **Total open:** 0 🟥 · 0 🟨 · 54 🟩
 
-> 🎉 **Stage 1 complete — 2026-04-18.** All 54 rule decisions have been ratified and written into `rules/*.md`. Proceed to Stage 2.
+> 🎉 **Stage 1 complete — 2026-04-18.** All 54 rule decisions have been ratified and written into `rules/*.md`. Proceed to Stage 2. (Row 20 / §K3 was retired post-facto; §Q5 added later bringing the final rulebook count back to 54.)
 
 Some questions are tightly coupled and will likely be resolved together (e.g., §E1 + §E2 + §Q2 all concern the aggregate-vs-atomize decision). Handle them as bundles where natural.
 

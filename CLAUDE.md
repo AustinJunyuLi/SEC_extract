@@ -229,8 +229,8 @@ These are rows in Alex's workbook that Alex himself annotated as wrong or unreso
 
 Current handling:
 - `scripts/build_reference.py` fixes the structurally invalid rows in the
-  generated reference JSONs per `rules/dates.md` §Q1–§Q5, while preserving
-  provenance in `alex_flagged_rows.json`.
+  generated reference JSONs per its own §Q1–§Q5 module docstring, while
+  preserving provenance in `alex_flagged_rows.json`.
 - The Medivation converter also now atomizes the aggregated "Several
   parties" rows (§Q5), so the reference side matches the rulebook's
   atomization stance better than the raw workbook did.

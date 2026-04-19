@@ -717,14 +717,7 @@ def apply_q1_saks(rows: list[RawRow], deal: dict[str, Any]) -> list[RawRow]:
 
 
 def apply_q2_zep(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Expand xlsx row 6390 into 5 atomized event rows per §Q2.
-
-    Alex's ambiguous note: 'one bid 20, another 22, another three [20,22]?'
-    We emit 5 rows with `bidder_alias = 'Party A'..'Party E'`, bid values
-    populated conservatively (20, 22, [20-22], [20-22], [20-22]), each
-    carrying the `alex_row_expanded` + `bid_value_ambiguous_per_alex` flags.
-    Austin re-reads Zep's filing in Stage 3 and adjudicates.
-    """
+    """Apply §Q2 — expand Zep row 6390 into 5 atomized rows. See module docstring §Q2 for rationale."""
     out = []
     for ev in events:
         if ev["_xlsx_row"] != 6390:
@@ -759,23 +752,7 @@ MEDIVATION_UNNAMED_PLACEHOLDER_ALIASES = ("Party A", "Party B")
 
 
 def apply_q5_medivation(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Expand Medivation's aggregated NDA + Drop rows into atomic rows per §E1.
-
-    Two xlsx rows compress multiple entities:
-      - 6065: `"Several parties, including Sanofi"` NDA on 7/5 (≥3 entities)
-      - 6075: `"Several parties"` Drop on 8/20 (≥2 unnamed entities)
-
-    Expansion:
-      - 6065 → 3 rows: Sanofi (reuses her existing canonical id from her 4/13
-        Bidder Sale row) + Party A + Party B (new canonical ids).
-      - 6075 → 2 rows: Party A + Party B Drops, reusing the Party A/B canonical
-        ids from 6065. Sanofi has her own 8/20 Drop row already.
-
-    "Several" is ≥ 3 in standard English → ≥ 2 unnamed parties beyond Sanofi.
-    We emit exactly 2 placeholders to match that lower bound; if the AI
-    extraction infers a different count, that surfaces in the diff as a
-    legitimate both-defensible judgment call per the adjudication pass.
-    """
+    """Apply §Q5 — atomize Medivation's aggregated 'Several parties' rows. See module docstring §Q5 for rationale."""
     # Locate the aggregated rows.
     nda_idx = next(
         (i for i, ev in enumerate(events) if ev.get("_xlsx_row") == MEDIVATION_NDA_AGG_XLSX_ROW),
@@ -959,7 +936,10 @@ def _summary(slug: str, payload: dict[str, Any]) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument("--slug", help=f"One of {list(DEAL_ROWS)}")
     parser.add_argument("--all", action="store_true", help="Build all 9 reference deals.")
     parser.add_argument("--dump", action="store_true", help="Print JSON to stdout instead of writing.")

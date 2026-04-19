@@ -4,13 +4,6 @@
 
 **This is the most subjective file in the rulebook.** Informal-vs-formal is the highest-risk classification in the whole pipeline. Treat every borderline call as a flag, not a forced choice.
 
-**Status legend:** 🟥 OPEN · 🟨 TENTATIVE · 🟩 RESOLVED
-
-> Stage 1 is complete. Some historical dependency prose below still uses the
-> word "pending" when describing how the rulebook was developed. Treat the
-> section headers and `Decision:` blocks as authoritative; if a section is
-> marked 🟩 RESOLVED, it is closed unless explicitly reopened.
-
 ---
 
 ## Resolved rules
@@ -306,7 +299,6 @@ soft would drown the flag queue. Info-level is enough for audit.
 
 **Cross-references.**
 - `rules/bids.md` §M (skip rules — related "unsolicited no-NDA" skip).
-- `rules/invariants.md` — new partial-bid flag invariant pending.
 
 ---
 
@@ -388,7 +380,7 @@ with >1 bid row, bids are chronologically ordered by `bid_date_precise`
 **Cross-references.**
 - `rules/bidders.md` §E3 (canonical bidder ID).
 - `rules/events.md` §I2 (re-engagement flag).
-- `rules/dates.md` §A (`BidderID` as event sequence — pending).
+- `rules/dates.md` §A (`BidderID` as event sequence).
 
 ---
 
@@ -660,6 +652,6 @@ relabel per the table above and flag any divergent legacy rows as
 
 **Cross-references.**
 - `rules/bids.md` §G1 (range → informal).
-- `rules/bids.md` §H2 (composite consideration — pending).
-- `rules/bids.md` §H4 (aggregate-dollar bids — pending).
+- `rules/bids.md` §H2 (composite consideration).
+- `rules/bids.md` §H4 (aggregate-dollar bids).
 - `rules/schema.md` §R1 (event-level value fields).
