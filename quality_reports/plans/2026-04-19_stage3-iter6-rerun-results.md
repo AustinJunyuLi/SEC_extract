@@ -16,25 +16,24 @@
 | imprivata | 28 | passed_clean | 0 | 27 | 1 | 2 | 14 |
 | zep | 72 | passed_clean | 0 | 14 | 58 | 13 | 7 |
 | providence-worcester | 84 | **validated** | **13** | 24 | 60 | 12 | 22 |
-| penford | 28 | **validated** | **6** | 18 | 10 | 7 | 16 |
+| penford | 28 | **validated** | **5** | 18 | 10 | 7 | 16 |
 | mac-gray | 62 | passed_clean | 0 | 28 | 34 | 6 | 26 |
 | petsmart-inc | 54 | passed_clean | 0 | 19 | 35 | 31 | 11 |
 | stec | 31 | **validated** | **2** | 25 | 6 | 3 | 20 |
 | saks | 26 | passed_clean | 0 | 17 | 9 | 6 | 7 |
-| **totals** | **406** | 6pc/3v | **21** | 186 | 220 | 85 | 136 |
+| **totals** | **406** | 6pc/3v | **20** | 186 | 220 | 85 | 136 |
 
 Clean runs: 6 of 9. Three deals carry hard flags.
 
 ---
 
-## Hard-flag breakdown (21 total)
+## Hard-flag breakdown (20 total)
 
 | Code | Count | Deals | Nature |
 |---|---:|---|---|
 | `bid_type_unsupported` (§P-G2) | 20 | providence (13), penford (5), stec (2) | Extractor missed `bid_type_trigger` phrase or `bid_type_inference_note`. **Extractor-side fix, not rule change.** |
-| `phase_termination_missing` | 1 | penford | Last event `bid_note="Drop"` instead of `{Executed, Terminated, Auction Closed}`. **Extractor-side fix.** |
 
-Handoff predicted ~33 `bid_type_unsupported`; observed 20. Prompt reminder in batch-3 appears to have helped (petsmart/stec/saks totalled 2 vs no-reminder deals in batch-2 totalling 18 across providence+penford).
+20 hard flags, all `bid_type_unsupported`. Handoff predicted ~33; observed 20. Prompt reminder in batch-3 appears to have helped (petsmart/stec/saks totalled 2 vs no-reminder deals in batch-2 totalling 18 across providence+penford).
 
 **Zero rule-change triggers.** All hard flags are extractor-side evidence gaps.
 
@@ -107,3 +106,22 @@ Conservative interpretation: stays at 0/3 until all 9 pass clean simultaneously.
 - **Final extractions:** `output/extractions/*.json` (committed)
 - **Diff reports:** `scoring/results/{deal}_20260419T*.md` (9 files)
 - **Flag log:** `state/flags.jsonl` (appended)
+
+---
+
+### Post-rerun rulebook work (commit b355286)
+
+Follow-up commit `b355286` closed the §P-D5 / §P-D6 rulebook gap:
+
+- **§P-D6** (Class B/D `pre_nda_informal_bid` exemption) is now explicitly
+  documented in `rules/invariants.md`.
+- **§P-D5** implemented in `pipeline.py` as the structural twin of §P-D6 —
+  same shape, different trigger condition. Zero new flags raised across the
+  9 current extractions (validated on the same raw JSONs).
+- **§G2** restructured to a 3-condition form matching §P-G2, with
+  content-based cross-references into `SKILL.md`.
+- **§D1.a** now exempts both §P-D5 and §P-D6.
+
+Austin's follow-up list item "close out ... 21 extractor-side hard flags"
+is now **20 hard flags** after removing the stale `phase_termination_missing`
+count; the post-c4ec361 validator already passes penford on that check.

@@ -136,12 +136,10 @@ repo.
   - **Passed clean (6):** medivation, imprivata, zep, mac-gray,
     petsmart-inc, saks.
   - **Validated with hard flags (3):** providence-worcester (13),
-    penford (6), stec (2).
-  - **21 hard flags total**, all extractor-side evidence gaps:
+    penford (5), stec (2).
+  - **20 hard flags total**, all extractor-side evidence gaps:
     20× `bid_type_unsupported` (§P-G2: extractor missed `bid_type_trigger`
-    phrase or inference note), 1× `phase_termination_missing` (penford's
-    last event was `Drop` instead of `{Executed, Terminated, Auction
-    Closed}`).
+    phrase or inference note).
   - **Zero rule-change triggers.** All three non-clean deals need
     extractor-side fixes, not rulebook changes.
   - Aggregate report:
@@ -155,6 +153,11 @@ repo.
   rationale from `rules/dates.md` into `scripts/build_reference.py`'s
   module docstring, deleted the old §K3 event label, etc.). Plans:
   `quality_reports/plans/2026-04-19_stage3-iter6-*-handoff.md`.
+  Post-rerun commit `b355286` closed the §P-D5/§P-D6 rulebook gap:
+  §P-D6 now explicitly documented in `rules/invariants.md`; §P-D5
+  implemented in `pipeline.py` as the structural twin of §P-D6; §G2
+  restructured to 3-condition form matching §P-G2; §D1.a exempts both
+  §P-D5 and §P-D6.
 - **Exit clock: 0/3 unchanged-rulebook clean runs.** Three deals are still
   non-clean, so the clock has not started. Conservative interpretation:
   stays at 0/3 until all 9 pass clean simultaneously.
@@ -279,12 +282,11 @@ Current handling:
 
 ## Current Stage 3 follow-ups
 
-- **Close out the 21 extractor-side hard flags on providence / penford /
-  stec.** All 20 `bid_type_unsupported` flags and the single
-  `phase_termination_missing` flag are extractor evidence gaps, not rule
-  failures. Re-running those three deals with the §P-G2 prompt reminder
-  that batch-3 used in iter-6 should bring the count to 0 and let all 9
-  deals pass clean simultaneously (starting the exit clock).
+- **Close out the 20 extractor-side hard flags on providence / penford /
+  stec.** All 20 are `bid_type_unsupported` — extractor evidence gaps,
+  not rule failures. Re-running those three deals with the §P-G2 prompt
+  reminder that batch-3 used in iter-6 should bring the count to 0 and
+  let all 9 deals pass clean simultaneously (starting the exit clock).
 - **Adjudicate the NDA atomization-vs-aggregation pattern.** AI extracted
   many more NDA/Drop rows than Alex on zep / mac-gray /
   providence-worcester / petsmart-inc. Current §E2.b says atomize unless
