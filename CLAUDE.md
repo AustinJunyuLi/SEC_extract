@@ -130,25 +130,40 @@ repo.
   finalization helpers) and rewrote `run.py` into a CLI shim that validates
   and finalizes a saved raw extraction instead of orchestrating the whole
   loop itself.
-- **Only Medivation has been run so far.** `state/progress.json` currently
-  shows `400 pending`, `1 validated`.
-- **Latest Medivation run:** `2026-04-18T17:45:00.363206Z`, commit
-  `a0397e1`.
-  - `output/extractions/medivation.json` contains 22 extracted events.
-  - `state/progress.json` marks `medivation` as `validated` with 7 hard
-    flags.
-  - All 7 hard flags are the same validator issue:
-    `rough_date_mismatch_inference` on 4 `IB` rows and 3 implicit `Drop`
-    rows. The extractor attached `date_inferred_from_context` without also
-    populating `bid_date_rough`.
-  - Latest diff report:
-    `scoring/results/medivation_20260418T174500Z.md`
-    summarises `16 matched`, `6 AI-only`, `3 Alex-only`, `8 field
-    disagreements` (all `bidder_type`), and `3 deal-level disagreements`.
-- **Immediate next step:** fix the inferred-date rows so `bid_date_rough`
-  is populated whenever `date_inferred_from_context` is present, rerun
-  Medivation, refresh the diff/adjudication memo, and only then move to
-  `imprivata`.
+- **Iter-6 full reference-set rerun completed 2026-04-19** under the
+  post-TIER-2 rulebook. `state/progress.json` now shows `392 pending`,
+  `6 passed_clean`, `3 validated`.
+  - **Passed clean (6):** medivation, imprivata, zep, mac-gray,
+    petsmart-inc, saks.
+  - **Validated with hard flags (3):** providence-worcester (13),
+    penford (6), stec (2).
+  - **21 hard flags total**, all extractor-side evidence gaps:
+    20× `bid_type_unsupported` (§P-G2: extractor missed `bid_type_trigger`
+    phrase or inference note), 1× `phase_termination_missing` (penford's
+    last event was `Drop` instead of `{Executed, Terminated, Auction
+    Closed}`).
+  - **Zero rule-change triggers.** All three non-clean deals need
+    extractor-side fixes, not rulebook changes.
+  - Aggregate report:
+    `quality_reports/plans/2026-04-19_stage3-iter6-rerun-results.md`.
+  - Latest per-deal diff reports live in `scoring/results/` with the
+    `20260419T15…` / `20260419T16…` timestamps (e.g.
+    `medivation_20260419T153940Z.md`).
+- **Iter-6 work summary.** TIER 0 reverted the §D1.a overfit from iter-5;
+  TIER 1a–e added safety gates including the `_invariant_p_g2` check;
+  TIER 2a–g ran a −601-line rulebook deletion pass (and moved §Q1–§Q5
+  rationale from `rules/dates.md` into `scripts/build_reference.py`'s
+  module docstring, deleted the old §K3 event label, etc.). Plans:
+  `quality_reports/plans/2026-04-19_stage3-iter6-*-handoff.md`.
+- **Exit clock: 0/3 unchanged-rulebook clean runs.** Three deals are still
+  non-clean, so the clock has not started. Conservative interpretation:
+  stays at 0/3 until all 9 pass clean simultaneously.
+- **Immediate next step (Austin's call):** re-run providence /
+  penford / stec with the §P-G2 prompt reminder that batch-3 used in
+  iter-6 (likely brings their hard flags to 0), then adjudicate the
+  NDA atomization-vs-aggregation pattern across zep / mac-gray /
+  providence / petsmart, and resolve the `bidder_type.public`
+  inference policy in `scripts/build_reference.py`.
 - **Target-deal gate remains closed.** Do **not** run on the 392 target
   deals until all 9 reference deals are manually verified against their
   filings and the rulebook is stable across 3 consecutive unchanged full
@@ -177,7 +192,7 @@ repo.
 | `reference/CollectionInstructions_Alex_2026.pdf` | Alex's data-collection rulebook. Black = original Chicago RAs; **bold red = Alex's additions** (most important). |
 | `reference/deal_details_Alex_2026.xlsx` | Legacy dataset. 9,336 rows × 35 columns. Red cells = Alex's corrections. |
 | `reference/alex/{deal}.json` | Alex's extraction of the 9 reference deals, converted to pipeline schema. Built in Stage 2. |
-| `reference/alex/alex_flagged_rows.json` | Rows in Alex's workbook that Alex himself has annotated as wrong/unresolved. See §Q in `rules/dates.md`. |
+| `reference/alex/alex_flagged_rows.json` | Rows in Alex's workbook that Alex himself has annotated as wrong/unresolved. See §Q1–§Q5 in `scripts/build_reference.py`'s module docstring. |
 | `reference/alex/README.md` | How `reference/alex/` is organized. |
 | `seeds.csv` | 401 candidate deals with SEC filing URLs. 9 flagged `is_reference=true` are Alex's hand-corrected set. |
 | `run.py` | CLI shim: validate/finalize a saved raw extraction, write output/state, optionally commit. |
@@ -217,6 +232,11 @@ Alex hand-corrected these from the legacy dataset. They are the development / ca
   filing-cited extraction.
 - **Reference JSONs are not literal xlsx dumps.** `scripts/build_reference.py`
   applies the resolved Stage 2/3 overrides and keeps provenance via flags.
+  The rationale for each override (§Q1 Saks delete, §Q2 Zep expand,
+  §Q3/§Q4 Mac-Gray / Medivation renumber, §Q5 Medivation "Several
+  parties" atomization) now lives in that script's module docstring
+  rather than in `rules/dates.md`, because the AI extractor never
+  consults Alex's workbook.
 
 ## Alex's own flags on his own work
 
@@ -229,8 +249,9 @@ These are rows in Alex's workbook that Alex himself annotated as wrong or unreso
 
 Current handling:
 - `scripts/build_reference.py` fixes the structurally invalid rows in the
-  generated reference JSONs per its own §Q1–§Q5 module docstring, while
-  preserving provenance in `alex_flagged_rows.json`.
+  generated reference JSONs per its own §Q1–§Q5 module docstring (moved
+  out of `rules/dates.md` in iter-6 TIER 2d), while preserving
+  provenance in `alex_flagged_rows.json`.
 - The Medivation converter also now atomizes the aggregated "Several
   parties" rows (§Q5), so the reference side matches the rulebook's
   atomization stance better than the raw workbook did.
@@ -258,23 +279,31 @@ Current handling:
 
 ## Current Stage 3 follow-ups
 
-- Fix the Medivation inferred-date rows so every
-  `date_inferred_from_context` flag has a non-null `bid_date_rough`
-  anchor. This is the only hard-validator failure class remaining in the
-  latest Medivation run.
-- Refresh `scoring/results/medivation_adjudicated.md` against the latest diff
-  report (`scoring/results/medivation_20260418T174500Z.md`). The current
-  adjudication memo was written against an earlier noisier diff.
-- Decide whether the reference converter should fully normalize
-  `bidder_type` to the §F1 structured shape (`public: true/false` plus
-  optional note) so the remaining Medivation field diffs stop being pure
-  serialization noise.
-- Decide how to anchor dates when the filing says a letter was "dated X"
-  but "received Y". Medivation surfaces this clearly for Sanofi.
-- Decide whether post-execution press releases should be emitted as their
-  own `Sale Press Release` rows or folded into `Executed`.
-- Decide the placeholder-count rule when a filing says "several parties"
-  but gives no exact number.
+- **Close out the 21 extractor-side hard flags on providence / penford /
+  stec.** All 20 `bid_type_unsupported` flags and the single
+  `phase_termination_missing` flag are extractor evidence gaps, not rule
+  failures. Re-running those three deals with the §P-G2 prompt reminder
+  that batch-3 used in iter-6 should bring the count to 0 and let all 9
+  deals pass clean simultaneously (starting the exit clock).
+- **Adjudicate the NDA atomization-vs-aggregation pattern.** AI extracted
+  many more NDA/Drop rows than Alex on zep / mac-gray /
+  providence-worcester / petsmart-inc. Current §E2.b says atomize unless
+  the filing narrates joint/consortium activity; Alex's workbook
+  aggregates. This is a legitimate "both correct, different
+  interpretation" — Austin's call per deal whether to tighten §E2.b or
+  accept AI's atomization and regenerate Alex's reference.
+- **Resolve the `bidder_type.public` inference policy** in
+  `scripts/build_reference.py`. `bidder_type` dominates the field diffs
+  across every deal (e.g. mac-gray=17, stec=17, imprivata=13,
+  penford=13). A more aggressive public-strategic inference in the
+  converter would collapse ~65 field diffs in one sweep. This is a
+  converter-policy question, not a rulebook question.
+- **Refresh the per-deal adjudication memos** in `scoring/results/` so
+  they track the post-iter-6 diff reports (`*_20260419T15…Z.md` /
+  `*_20260419T16…Z.md`), not the older pre-rerun timestamps.
+- **Deal-level diffs remain `TargetName` / `Acquirer` casing plus
+  `DateEffective`.** Same residual as iter-5 post-pin state; no new
+  action beyond confirming the filing-verbatim policy continues to hold.
 
 ## Exit criteria for each stage
 
