@@ -296,23 +296,16 @@ Non-negotiables:
   - When an unsolicited bid is itself the first contact, emit the Bid row
     only and note that it initiated the process. Do NOT emit a duplicate
     standalone Bidder Sale row for the same act.
-  - **§D1.a unsolicited-first-contact NDA-less exemption.** When the
-    unsolicited-first-contact bidder NEVER signs an NDA (filing
-    narrates the target declining to engage OR the bidder withdrawing
-    before any NDA), attach `{{"code": "unsolicited_first_contact",
-    "severity": "info", "reason": "<summary including a ≤120-char
-    single-quoted verbatim snippet from the filing showing the
-    decline/withdrawal language>"}}` to the Bid row. Pipeline's
-    `_invariant_p_d6()` skips rows carrying this flag so §P-D6
-    (NDA-before-Bid) does not fire. Attach conditions (all three MUST
-    hold): (1) row is §D1 unsolicited first-contact, (2) no NDA row
-    exists for this bidder in the same phase, (3) the flag's `reason`
-    field includes a short single-quoted verbatim snippet (≤ 120
-    chars) from the filing showing the decline/withdrawal language.
-    If the filing language is ambiguous, do NOT attach the flag — let
-    §P-D6 fire so Austin can adjudicate. The verbatim-quote
-    requirement is the generalizable safety check; no closed verb
-    list is imposed, because filings phrase these outcomes many ways.
+  - **§D1.a unsolicited-first-contact NDA-less exemption.** When a §D1
+    unsolicited-first-contact Bid row has no NDA for that bidder in the
+    same phase AND the filing narrates target decline / bidder
+    withdrawal before any NDA, attach `{{"code":
+    "unsolicited_first_contact", "severity": "info", "reason":
+    "<summary + ≤120-char single-quoted verbatim snippet from the
+    filing showing the decline/withdrawal language>"}}`.
+    `_invariant_p_d6()` skips rows carrying this flag. If the filing
+    language is ambiguous, do NOT attach — let §P-D6 fire for Austin to
+    adjudicate. Canonical definition: `rules/events.md` §D1.a.
   - **§C4 pre-NDA informal Bid (iter-4, Class D; amended iter-5).** When
     a bidder gives a concrete price indication BEFORE signing an NDA
     (pre-NDA price talk; bidder later DOES sign an NDA), emit a `Bid`

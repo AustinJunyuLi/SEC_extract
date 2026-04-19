@@ -161,50 +161,37 @@ the earlier row.
 
 ### §D1.a — Unsolicited first-contact Bid exemption from §P-D6 (🟩 RESOLVED, 2026-04-19)
 
-**Non-negotiable (reiterated).** When an unsolicited bid is itself the
-first contact from a bidder, emit the `Bid` row only. Do NOT emit a
-duplicate standalone `Bidder Sale` row — the `Bid` row's existence
-itself signals the initiation (the `Bidder Sale` role is folded into
-it).
+**Non-negotiable.** When an unsolicited bid is itself the first contact
+from a bidder, emit the `Bid` row only; do NOT emit a duplicate
+standalone `Bidder Sale` row.
 
-**Class B amendment (iter-4).** When the bidder **never signs an NDA**
-in this deal (target declines to proceed, bidder withdraws before NDA,
-etc.), the default `§P-D6` (NDA-before-Bid existence check) fires hard
-because the Bid row has no preceding NDA row. This is a false positive:
-§D1 itself authorizes the NDA-less Bid row in this pattern.
-
-**Rule.** When emitting a §D1 unsolicited-first-contact Bid row with no
-accompanying NDA (bidder declined by target OR bidder never progressed
-beyond the initial letter), attach the following row-level flag:
+**Rule.** When a §D1 unsolicited-first-contact Bid row has no
+accompanying NDA in the same `process_phase`, attach:
 
 ```json
 {"code": "unsolicited_first_contact", "severity": "info",
- "reason": "<summary including a verbatim verb phrase from the filing; format: 'Company H sent unsolicited $2.6B letter on 7/21; target \"declined to engage\" per filing p.34'>"}
+ "reason": "<summary + ≤120-char single-quoted verbatim snippet from the filing showing the decline/withdrawal language>"}
 ```
 
-Pipeline's `_invariant_p_d6()` skips Bid rows carrying this flag (Class B
-fix, iter-4). This is the ONLY §P-D6 exemption flag; contrast §C4's
-`pre_nda_informal_bid` which is documentation-only and does NOT exempt.
+`_invariant_p_d6()` skips rows carrying this flag. This is the ONLY
+§P-D6 exemption flag; §C4's `pre_nda_informal_bid` is documentation-only.
 
 **Attachment conditions (all three must hold).**
 
-1. The Bid row is classified as §D1 unsolicited first-contact (filing
-   describes the approach as unsolicited AND this is the first narrated
-   contact from this bidder).
+1. Row is §D1 unsolicited first-contact (approach is unsolicited AND
+   first narrated contact from this bidder).
 2. No `NDA` row with the same `bidder_name` exists in the same
-   `process_phase`. (Existence check, not ordering — if the bidder signs
-   an NDA later in the same phase, use §C4 instead.)
+   `process_phase`. (If the bidder signs an NDA later in the phase,
+   use §C4 instead.)
 3. The filing narrates the target declining to engage OR the bidder
-   withdrawing before any NDA is signed. The flag's `reason` field MUST
-   include a short verbatim quote from the filing (≤ 120 chars,
-   single-quoted inside the reason string) showing the language that
-   authorized attachment — this is the audit trail Austin reads.
+   withdrawing before any NDA is signed. The `reason` field MUST
+   include a ≤120-char single-quoted verbatim snippet showing that
+   language.
 
-If the filing language is ambiguous (neither a clear decline nor a clear
-withdrawal), do NOT attach the flag — let §P-D6 fire so Austin can
-adjudicate. The verbatim-quote requirement is the generalizable safety
-check; no closed verb list is imposed, because filings phrase these
-outcomes many ways and Austin reads every exemption anyway.
+If the filing language is ambiguous, do NOT attach the flag — let
+§P-D6 fire and let Austin adjudicate. The verbatim-quote requirement
+is the generalizable safety check; no closed verb list, because
+filings phrase these outcomes many ways.
 
 ### §D1.b — Multi-activist atomization (🟩 RESOLVED, 2026-04-19, Class F)
 
