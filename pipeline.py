@@ -109,9 +109,7 @@ DATE_INFERENCE_FLAG_CODES: frozenset[str] = frozenset({
 })
 
 # §G1 trigger phrases. Substring match, case-insensitive, on source_quote.
-# A row with non-null bid_type passes §G2 if source_quote contains any
-# trigger, OR the row is a range bid (structural signal), OR the row
-# carries a bid_type_inference_note.
+# MUST stay in sync with rules/bids.md §G1 formal/informal trigger tables.
 FORMAL_TRIGGERS: tuple[str, ...] = (
     "binding offer", "binding proposal", "binding bid",
     "executed commitment letter", "financing commitment",
@@ -128,6 +126,13 @@ INFORMAL_TRIGGERS: tuple[str, ...] = (
     "subject to due diligence",
     "preliminary proposal",
 )
+ALL_G1_TRIGGERS: tuple[str, ...] = FORMAL_TRIGGERS + INFORMAL_TRIGGERS
+
+
+def _row_flag_codes(ev: dict) -> set[str]:
+    """Return the set of flag codes attached to a row, guarding against
+    non-dict entries that may slip through LLM output."""
+    return {f.get("code") for f in (ev.get("flags") or []) if isinstance(f, dict)}
 
 # §A3 logical ordering rank table (lower rank = earlier within same date).
 # Keys are bid_note values; for Bid rows specifically, informal bids rank 6
@@ -719,12 +724,8 @@ def _invariant_p_d6(events: list[dict]) -> list[dict]:
             phase = 1
         if phase < 1:
             continue  # §M4 stale-prior phase 0 — skip
-        # iter-5: only §D1.a exemption; §C4 doesn't need a validator carve-out.
-        row_flag_codes = {
-            f.get("code") for f in (ev.get("flags") or [])
-            if isinstance(f, dict)
-        }
-        if "unsolicited_first_contact" in row_flag_codes:
+        # Only §D1.a exempts from §P-D6; §C4 is documentation-only.
+        if "unsolicited_first_contact" in _row_flag_codes(ev):
             continue
         if (name, phase) not in nda_keys:
             flags.append({
@@ -750,7 +751,7 @@ def _invariant_p_d2(events: list[dict]) -> list[dict]:
     flags: list[dict[str, Any]] = []
     for i, ev in enumerate(events):
         rough = ev.get("bid_date_rough")
-        row_flag_codes = {f.get("code") for f in (ev.get("flags") or []) if isinstance(f, dict)}
+        row_flag_codes = _row_flag_codes(ev)
         has_inference = bool(row_flag_codes & DATE_INFERENCE_FLAG_CODES)
         rough_present = rough not in (None, "", [])
 
@@ -771,13 +772,10 @@ def _invariant_p_d2(events: list[dict]) -> list[dict]:
 def _invariant_p_g2(events: list[dict]) -> list[dict]:
     """§P-G2 — every row with non-null bid_type satisfies one of:
     (1) source_quote contains a §G1 trigger phrase (case-insensitive
-    substring, formal OR informal tables), (2) the row is a true range
-    bid (bid_value_lower < bid_value_upper, both populated), or
-    (3) the row carries a ≤200-char `bid_type_inference_note: str`.
-    Violations emit the hard flag `bid_type_unsupported`. §G2 is
-    existence-only: it verifies evidence for *some* classification,
-    not that the trigger matches the declared bid_type — §G1's own
-    classification rule governs that."""
+    substring), (2) the row is a true range bid
+    (`bid_value_lower < bid_value_upper`), or (3) the row carries a
+    ≤200-char `bid_type_inference_note`. Violations emit the hard flag
+    `bid_type_unsupported`."""
     flags: list[dict[str, Any]] = []
     for i, ev in enumerate(events):
         bid_type = ev.get("bid_type")
@@ -804,21 +802,17 @@ def _invariant_p_g2(events: list[dict]) -> list[dict]:
             quote_text = raw_quote
         else:
             quote_text = ""
-        lowered = quote_text.lower()
-        # §G2 requires ANY §G1 trigger (formal OR informal tables). The
-        # classification call itself is §G1's job; §G2 only checks that
-        # evidence for *some* classification exists in the quote.
-        if any(t in lowered for t in FORMAL_TRIGGERS + INFORMAL_TRIGGERS):
+        # §G2 is existence-only: any §G1 trigger (formal or informal) suffices.
+        # §G1 governs which classification the trigger maps to.
+        if any(t in quote_text.lower() for t in ALL_G1_TRIGGERS):
             continue
 
         flags.append({
             "row_index": i, "code": "bid_type_unsupported", "severity": "hard",
             "reason": (
-                f"§P-G2: bid_type={bid_type!r} has no supporting evidence — "
-                f"source_quote contains no §G1 trigger phrase, row is not a "
-                f"range bid, and no bid_type_inference_note is present. "
-                f"Attach a trigger-phrase-bearing source_quote or a ≤200-char "
-                f"bid_type_inference_note explaining the inference."
+                f"§P-G2: bid_type={bid_type!r} has no §G1 trigger in "
+                f"source_quote, no range-bid structure, and no "
+                f"bid_type_inference_note. Attach one."
             ),
         })
     return flags
@@ -1336,15 +1330,14 @@ def finalize(
     """
     if filing is None:
         filing = load_filing(slug)
-    # Fix 2C: promote unnamed NDA placeholders to named bidders.
-    # Failed promotions leave their hint on the source row; we flag them
-    # after canonicalization so row indices are stable.
+    # Promote unnamed NDA placeholders to named bidders before sort.
+    # Failed promotions leave their hint on the source row; flagging
+    # happens post-canonicalize so row indices are stable.
     promotion_log = _apply_unnamed_nda_promotions(raw_extraction)
-    # Fix 1: deterministic canonical ordering + BidderID reassignment.
+    # Deterministic §A2/§A3 sort + BidderID reassignment.
     _canonicalize_order(raw_extraction)
-    # Registry-integrity hard flags for any promotion that failed. We locate
-    # the source row post-canonicalize via the residual hint (success path
-    # pops it; failure path leaves it) — this avoids index drift.
+    # Locate failed-promotion source rows via residual-hint identity
+    # (success path pops the hint; failure path leaves it).
     failed_reasons_by_hint_id = {
         id(entry["hint"]): entry["reason"]
         for entry in promotion_log if entry.get("status") == "failed"
@@ -1355,7 +1348,7 @@ def finalize(
             continue
         ev.setdefault("flags", []).append({
             "code": "nda_promotion_failed", "severity": "hard",
-            "reason": f"unnamed_nda_promotion: {failed_reasons_by_hint_id[id(promo)]}",
+            "reason": failed_reasons_by_hint_id[id(promo)],
         })
     result = validate(raw_extraction, filing)
     final = merge_flags(raw_extraction, result.row_flags, result.deal_flags)
