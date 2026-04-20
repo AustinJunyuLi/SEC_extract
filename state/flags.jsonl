@@ -2221,3 +2221,51 @@
 {"deal": "zep", "logged_at": "2026-04-20T17:29:21.131795Z", "row_index": 45, "code": "date_inferred_from_context", "severity": "soft", "reason": "'Over the next few weeks' after May 22 = +21 days per \u00a7B3 anchor"}
 {"deal": "zep", "logged_at": "2026-04-20T17:29:21.131795Z", "row_index": 46, "code": "date_inferred_from_context", "severity": "soft", "reason": "'Over the next few weeks' after May 22 = +21 days per \u00a7B3 anchor"}
 {"deal": "zep", "logged_at": "2026-04-20T17:29:21.131795Z", "row_index": 53, "code": "nda_revived_from_stale", "severity": "info", "reason": "revives NDA originally signed on 2014-03-19; Feb 27 2015 extension of confidentiality/standstill + 30-day exclusivity per \u00a7M4"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 4, "code": "bid_range", "severity": "info", "reason": "unsolicited pre-NDA range $17.00-$19.00 per share"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 4, "code": "pre_nda_informal_bid", "severity": "info", "reason": "Party A communicated $17-19/share concrete price indication on 2013-06-21; Party A's NDA executed 2013-08-05 (same process_phase 1); later NDA satisfies \u00a7P-D6 existence check"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 5, "code": "final_round_inferred", "severity": "info", "reason": "no explicit 'final round' phrase; inferred from preliminary-IOI-by-July-23 instruction setting the first informal round deadline"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 11, "code": "final_round_inferred", "severity": "info", "reason": "informal-round deadline 2013-07-23; inferred per \u00a7K2 from instruction to submit preliminary IOIs by that date"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 12, "code": "bid_range", "severity": "info", "reason": "preliminary IOI range $17.00-$18.00"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 13, "code": "bid_range", "severity": "info", "reason": "oral preliminary IOI range $15.00-$17.00"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 14, "code": "bid_range", "severity": "info", "reason": "written IOI range $16.00-$16.50"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 20, "code": "bid_range", "severity": "info", "reason": "revised IOI range $18.00-$19.00"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 21, "code": "bid_range", "severity": "info", "reason": "oral revised IOI range $16.00-$17.00"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 24, "code": "bid_range", "severity": "info", "reason": "final-round reiterated range $18.00-$19.00"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 24, "code": "range_with_formal_trigger", "severity": "soft", "reason": "'best and final' formal \u00a7G1 trigger coexists with range structure (normally \u00a7G1 informal); formal wins per \u00a7G1 rule but flagged for manual review"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 25, "code": "contingent_type_ambiguous", "severity": "info", "reason": "consideration is options (not CVR or classic earnout); using 'earnout' per \u00a7H2 default for milestone-based contingent components (options vest on base-case projections)"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 26, "code": "drop_reason_note", "severity": "info", "reason": "No reasons specified by Party C; voluntary non-submission in final round"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 29, "code": "drop_reason_note", "severity": "info", "reason": "Party A eliminated because target granted exclusivity to CSC/Pamplona on 9/24; price ($18-19 range) below CSC/Pamplona's $21.25"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 30, "code": "drop_reason_note", "severity": "info", "reason": "Party B eliminated because target granted exclusivity to CSC/Pamplona on 9/24; Party B's composite $21.50 value had contingent-options risk vs CSC/Pamplona's $21.25 all-cash no-financing-contingency certainty"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 32, "code": "date_unknown", "severity": "soft", "reason": "filing narrates aggregate NDA window 'over the next two months' without per-NDA date; \u00a7B3 no-anchor branch"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 32, "code": "event_sequence_by_narrative", "severity": "info", "reason": "undated NDA placeholder positioned by \u00a7A2 narrative-order fallback after the 'over the next two months' passage"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 32, "code": "unnamed_count_placeholder", "severity": "info", "reason": "filing commits to 16 unnamed financial NDAs (18 financial total - Party B - Party C); \u00a7E5 exact-count atomization"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 33, "code": "date_unknown", "severity": "soft", "reason": "filing narrates aggregate NDA window without per-NDA date; \u00a7B3 no-anchor branch"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 33, "code": "event_sequence_by_narrative", "severity": "info", "reason": "undated NDA placeholder positioned by \u00a7A2 narrative-order fallback"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 34, "code": "date_unknown", "severity": "soft", "reason": "filing narrates aggregate NDA window without per-NDA date"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 34, "code": "event_sequence_by_narrative", "severity": "info", "reason": "undated NDA placeholder positioned by narrative-order fallback"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 35, "code": "date_unknown", "severity": "soft", "reason": "aggregate NDA window"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 35, "code": "event_sequence_by_narrative", "severity": "info", "reason": "narrative order"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 36, "code": "date_unknown", "severity": "soft", "reason": "aggregate NDA window"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 36, "code": "event_sequence_by_narrative", "severity": "info", "reason": "narrative order"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 37, "code": "date_unknown", "severity": "soft", "reason": "aggregate NDA window"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 37, "code": "event_sequence_by_narrative", "severity": "info", "reason": "narrative order"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 38, "code": "date_unknown", "severity": "soft", "reason": "aggregate NDA window"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 38, "code": "event_sequence_by_narrative", "severity": "info", "reason": "narrative order"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 39, "code": "date_unknown", "severity": "soft", "reason": "aggregate NDA window"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 39, "code": "event_sequence_by_narrative", "severity": "info", "reason": "narrative order"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 40, "code": "date_unknown", "severity": "soft", "reason": "aggregate NDA window"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 40, "code": "event_sequence_by_narrative", "severity": "info", "reason": "narrative order"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 41, "code": "date_unknown", "severity": "soft", "reason": "aggregate NDA window"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 41, "code": "event_sequence_by_narrative", "severity": "info", "reason": "narrative order"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 42, "code": "date_unknown", "severity": "soft", "reason": "aggregate NDA window"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 42, "code": "event_sequence_by_narrative", "severity": "info", "reason": "narrative order"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 43, "code": "date_unknown", "severity": "soft", "reason": "aggregate NDA window"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 43, "code": "event_sequence_by_narrative", "severity": "info", "reason": "narrative order"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 44, "code": "date_unknown", "severity": "soft", "reason": "aggregate NDA window"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 44, "code": "event_sequence_by_narrative", "severity": "info", "reason": "narrative order"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 45, "code": "date_unknown", "severity": "soft", "reason": "aggregate NDA window"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 45, "code": "event_sequence_by_narrative", "severity": "info", "reason": "narrative order"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 46, "code": "date_unknown", "severity": "soft", "reason": "aggregate NDA window"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 46, "code": "event_sequence_by_narrative", "severity": "info", "reason": "narrative order"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 47, "code": "date_unknown", "severity": "soft", "reason": "aggregate NDA window"}
+{"deal": "mac-gray", "logged_at": "2026-04-20T17:29:21.196457Z", "row_index": 47, "code": "event_sequence_by_narrative", "severity": "info", "reason": "narrative order"}
