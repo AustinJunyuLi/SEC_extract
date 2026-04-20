@@ -2,7 +2,7 @@
   "schema_version": "v1",
   "rulebook_version": null,
   "created": "2026-04-18T12:29:42.084187Z",
-  "updated": "2026-04-20T17:16:49.441870Z",
+  "updated": "2026-04-20T17:29:20.998904Z",
   "deal_count_total": 401,
   "deal_count_reference": 9,
   "deals": {
@@ -3608,17 +3608,17 @@
       "notes": "hard=0 soft=33 info=88"
     },
     "medivation": {
-      "status": "validated",
+      "status": "passed",
       "is_reference": true,
       "target_name": "MEDIVATION INC",
       "acquirer": "PFIZER INC",
       "date_announced": "2016-08-22",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1011835/0001193125-16-696889-index.htm",
-      "flag_count": 19,
-      "last_run": "2026-04-20T15:53:54.670586Z",
+      "flag_count": 8,
+      "last_run": "2026-04-20T17:29:20.998904Z",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=2 soft=10 info=7"
+      "notes": "hard=0 soft=5 info=3"
     },
     "imprivata": {
       "status": "passed",
