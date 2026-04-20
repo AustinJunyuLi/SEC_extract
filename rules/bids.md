@@ -160,38 +160,51 @@ formal/informal scoring function rather than first-match.
 
 ---
 
-### §G2 — Classification evidence requirement (🟩 RESOLVED, 2026-04-18)
+### §G2 — Classification evidence requirement (🟩 RESOLVED, 2026-04-20)
 
 **Decision.** Hard invariant. Every row with non-null `bid_type` MUST
 satisfy at least one of:
 
-1. `source_quote` contains at least one trigger phrase from the §G1
-   table matching `bid_type` (formal triggers for `bid_type =
-   "formal"`, informal triggers for `bid_type = "informal"`;
-   case-insensitive substring match).
-2. The row is a true range bid — both `bid_value_lower` and
-   `bid_value_upper` are populated and `bid_value_lower <
-   bid_value_upper` (structural signal per §G1).
-3. The row carries `bid_type_inference_note: str` (≤ 200 chars)
-   explaining the process-position inference (e.g., *"submitted in
-   response to Final Round Ann row #12; classified formal per §G1
-   process-position fallback"*).
+1. The row is a true range bid — both `bid_value_lower` and
+   `bid_value_upper` populated, numeric, and `bid_value_lower <
+   bid_value_upper` (§G1 informal structural signal).
+2. The row carries `bid_type_inference_note: str`, non-empty, ≤ 300
+   chars, stating why this bid is informal or formal. The note SHOULD
+   cite §G1 guidance (trigger phrase it matches, process-position
+   fallback rule, or structural signal); it MUST be grounded in the
+   filing.
 
-**Validator.** Implemented as §P-G2 (`rules/invariants.md`):
-`pipeline._invariant_p_g2` verifies one of the above holds for every
-row with non-null `bid_type`. Violations → hard flag
-`bid_type_unsupported`.
+**§G1 triggers are classification guidance, not a validator
+satisfier.** The extractor uses §G1's formal/informal trigger tables
+and process-position fallback to *pick* `bid_type`. But §P-G2
+validates on range-OR-note only; a trigger match alone does not pass.
+Rationale: at 392-deal scale, a closed trigger list overfits the
+9-deal reference corpus. Empirical 9-deal distribution (2026-04-20):
+30% of 92 bids relied on trigger hits, 29% on range, 55% on
+inference_note; providence-worcester (22 bids) and penford (8 bids)
+had 0% trigger coverage. The note-on-every-non-range rule holds
+regardless of filing language.
 
-**Why hard.** Informal-vs-formal is the core research variable. Manual
-verification of 401 deals × ~5 bids each = ~2000 classifications is
-intractable without per-row evidence. Soft flagging would let silent
-drift accumulate.
+**Cap rationale.** 300 chars ≈ 2–3 sentences, enough for
+`"<classification> per §G1 <rule>: <filing evidence>"`. The iter-6
+200-char cap produced truncated reasoning; one iter-8 failure
+(medivation row 16) ran to ~370 chars. 300 leaves headroom without
+inviting essays.
+
+**Validator.** `pipeline._invariant_p_g2`: hard flag
+`bid_type_unsupported` if neither satisfier holds; hard flag
+`bid_range_inverted` if `lower >= upper`.
+
+**Why hard.** Informal-vs-formal is the core research variable.
+Manual verification of 401 deals × ~5 bids each = ~2000
+classifications is intractable without per-row evidence. Soft
+flagging would let silent drift accumulate.
 
 **Cross-references.**
-- `rules/bids.md` §G1 (classification rule).
+- `rules/bids.md` §G1 (classification rule; §G1 unchanged).
 - `rules/invariants.md` §P-G2.
-- `SKILL.md` §Non-negotiable rules (evidence citation: every row carries
-  `source_quote` and `source_page`).
+- `SKILL.md` §Non-negotiable rules (evidence citation: every row
+  carries `source_quote` and `source_page`).
 
 ---
 
