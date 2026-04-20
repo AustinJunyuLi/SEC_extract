@@ -8,27 +8,40 @@
 
 ### §E2 — Joint-bidder rows (🟩 RESOLVED, 2026-04-18; amended 2026-04-19)
 
-**Decision.** A joint bid by a consortium or pair of parties is represented
-as **one row per constituent** for *Bids* and *Drops*, all sharing the
-same `BidderID` and the same `bid_value*` fields. The joint-ness is
-signaled by a flag. **Two exceptions:**
+**Decision.** `BidderID` is an **event-sequence number, not a bidder-
+identity number**. Jointness is carried by `joint_bidder_members`, not by
+reusing a `BidderID` across multiple rows. **Two exceptions remain:**
 
 1. **Executed rows are always exactly 1 per deal** (see §E2.a below).
 2. **Group-narrated NDAs collapse to 1 row** when the filing does not
    give per-constituent detail (see §E2.b below).
 
-**Rule (Bids and Drops — per-constituent).**
-- For a single bid event submitted jointly by N parties, emit **N rows**.
-- Each row's `bidder_name` is the constituent's canonical deal-local ID
-  (per §E3). Each row's `bidder_alias` is the constituent's filing label.
-- All N rows share the same `BidderID` (event-sequence number per
-  `rules/dates.md` §A).
-- All N rows carry **identical** `bid_value`, `bid_value_pershare`,
-  `bid_value_lower`, `bid_value_upper`, `bid_value_unit`,
-  `bid_date_precise`, `bid_date_rough`, `bid_type`, `source_quote`,
-  `source_page`.
-- Each row carries flag `{"code": "joint_bid", "severity": "info",
-  "reason": "joint bid with <other constituent canonical ids>"}`.
+**Rule.**
+- When the filing narrates a **single consortium event** (joint NDA, Bid,
+  Drop, or Executed exception below), emit **one row** for that narrated
+  event.
+- `bidder_alias` is the filing's consortium label for that row.
+- `bidder_name` is the canonical id for the narrated signer on that row
+  (often the nominal acquirer or consortium label registered in §E3).
+- `joint_bidder_members` carries the constituent canonical ids, e.g.
+  `["bidder_06", "bidder_07"]`.
+- That row still receives its own unique event-sequence `BidderID`
+  assigned by `pipeline._canonicalize_order()`.
+- When the filing instead gives **per-constituent detail**, emit one row
+  per narrated constituent; each row still receives its own unique
+  `BidderID` and may carry `joint_bidder_members` if that adds clarity.
+
+**Example.** A consortium bid narrated once in the filing can appear as:
+
+```json
+{
+  "BidderID": 14,
+  "bid_note": "Bid",
+  "bidder_alias": "CSC/Pamplona",
+  "bidder_name": "bidder_06",
+  "joint_bidder_members": ["bidder_06", "bidder_07"]
+}
+```
 
 ### §E2.a — Executed-row joint-bidder exception (🟩 RESOLVED, 2026-04-19)
 
