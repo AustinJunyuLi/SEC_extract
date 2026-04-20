@@ -147,9 +147,9 @@ If any scope rule is 🟥 OPEN, stop and report — do not extract.
 
 **Status semantics:**
 - `pending` — not yet run.
-- `validated` — Validator ran; may have hard-error flags.
-- `passed` — Validator ran; only soft/info flags remain.
-- `passed_clean` — Validator ran; zero flags.
+- `validated` — combined extractor + validator flags contain at least one hard flag.
+- `passed` — combined extractor + validator flags contain only soft/info flags.
+- `passed_clean` — combined extractor + validator flags are zero.
 - `verified` — Austin manually read the filing and adjudicated any AI-vs-Alex diff. Only set on reference deals, and only by the manual review workflow (not by the pipeline). On target deals this status is never used; they typically stop at `validated`, `passed`, or `passed_clean`.
 - `failed` — pipeline error (fetch, section-location, etc.).
 

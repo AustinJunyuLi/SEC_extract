@@ -205,30 +205,6 @@ class ValidatorResult:
     row_flags: list[dict[str, Any]]
     deal_flags: list[dict[str, Any]]
 
-    def _severity_counts(self) -> dict[str, int]:
-        counts = {"hard": 0, "soft": 0, "info": 0}
-        for f in self.row_flags + self.deal_flags:
-            sev = f.get("severity", "hard")
-            if sev in counts:
-                counts[sev] += 1
-        return counts
-
-    @property
-    def hard_count(self) -> int:
-        return self._severity_counts()["hard"]
-
-    @property
-    def soft_count(self) -> int:
-        return self._severity_counts()["soft"]
-
-    @property
-    def info_count(self) -> int:
-        return self._severity_counts()["info"]
-
-    @property
-    def total_count(self) -> int:
-        return len(self.row_flags) + len(self.deal_flags)
-
 
 # ---------------------------------------------------------------------------
 # Filing loader
@@ -991,23 +967,46 @@ def merge_flags(
     return final
 
 
-def summarize(result: ValidatorResult) -> tuple[str, int, str]:
+def count_flags(final_extraction: dict[str, Any]) -> dict[str, int]:
+    """Count combined extractor + validator flags from the finalized output."""
+    counts = {"hard": 0, "soft": 0, "info": 0}
+    deal_flags = (final_extraction.get("deal") or {}).get("deal_flags") or []
+    event_lists = [
+        ev.get("flags") or []
+        for ev in (final_extraction.get("events") or [])
+    ]
+    for flag in deal_flags:
+        severity = flag.get("severity", "hard")
+        if severity not in counts:
+            severity = "hard"
+        counts[severity] += 1
+    for flags in event_lists:
+        for flag in flags:
+            severity = flag.get("severity", "hard")
+            if severity not in counts:
+                severity = "hard"
+            counts[severity] += 1
+    return counts
+
+
+def summarize(final_extraction: dict[str, Any]) -> tuple[str, int, str]:
     """Return (status, flag_count, notes) per the §Status taxonomy.
 
     hard > 0 → "validated" (blocks advancement, human review required)
-    only soft/info → "passed"
-    zero flags → "passed_clean"
+    any soft/info but zero hard → "passed"
+    zero combined flags → "passed_clean"
     """
-    hard = result.hard_count
-    soft = result.soft_count
-    info = result.info_count
+    counts = count_flags(final_extraction)
+    hard = counts["hard"]
+    soft = counts["soft"]
+    info = counts["info"]
     if hard > 0:
         status = "validated"
-    elif soft > 0:
+    elif soft > 0 or info > 0:
         status = "passed"
     else:
         status = "passed_clean"
-    flag_count = result.total_count
+    flag_count = hard + soft + info
     notes = f"hard={hard} soft={soft} info={info}"
     return status, flag_count, notes
 
@@ -1021,18 +1020,20 @@ def write_output(slug: str, final_extraction: dict[str, Any]) -> Path:
 
 def append_flags_log(
     slug: str,
-    row_flags: list[dict[str, Any]],
-    deal_flags: list[dict[str, Any]],
+    final_extraction: dict[str, Any],
 ) -> int:
     STATE_DIR.mkdir(parents=True, exist_ok=True)
     now = _dt.datetime.now(_dt.timezone.utc).isoformat().replace("+00:00", "Z")
     lines: list[str] = []
-    for f in row_flags:
-        entry = {"deal": slug, "logged_at": now, **f}
+    deal = final_extraction.get("deal") or {}
+    events = final_extraction.get("events") or []
+    for f in deal.get("deal_flags") or []:
+        entry = {"deal": slug, "logged_at": now, "deal_level": True, **f}
         lines.append(json.dumps(entry, default=str))
-    for f in deal_flags:
-        entry = {"deal": slug, "logged_at": now, **f}
-        lines.append(json.dumps(entry, default=str))
+    for i, ev in enumerate(events):
+        for f in ev.get("flags") or []:
+            entry = {"deal": slug, "logged_at": now, "row_index": i, **f}
+            lines.append(json.dumps(entry, default=str))
     if lines:
         with FLAGS_PATH.open("a") as fh:
             fh.write("\n".join(lines) + "\n")
@@ -1254,9 +1255,9 @@ def finalize(
     # Attach promotion log to deal object for audit (pipeline-internal field).
     if promotion_log:
         final.setdefault("deal", {})["_unnamed_nda_promotions"] = promotion_log
+    status, flag_count, notes = summarize(final)
     out_path = write_output(slug, final)
-    append_flags_log(slug, result.row_flags, result.deal_flags)
-    status, flag_count, notes = summarize(result)
+    append_flags_log(slug, final)
     update_progress(slug, status, flag_count, notes)
     return PipelineResult(
         status=status,

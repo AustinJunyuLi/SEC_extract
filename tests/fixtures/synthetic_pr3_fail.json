@@ -1,0 +1,14 @@
+{
+  "events": [
+    {
+      "bid_note": "Bogus"
+    }
+  ],
+  "expected_flags": [
+    {
+      "code": "invalid_event_type",
+      "severity": "hard",
+      "row_index": 0
+    }
+  ]
+}

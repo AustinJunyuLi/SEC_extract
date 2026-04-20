@@ -1,0 +1,14 @@
+{
+  "events": [
+    {
+      "bid_date_precise": "01/01/2020"
+    }
+  ],
+  "expected_flags": [
+    {
+      "code": "invalid_date_format",
+      "severity": "hard",
+      "row_index": 0
+    }
+  ]
+}

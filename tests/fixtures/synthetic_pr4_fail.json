@@ -1,0 +1,14 @@
+{
+  "events": [
+    {
+      "role": "executive"
+    }
+  ],
+  "expected_flags": [
+    {
+      "code": "invalid_role",
+      "severity": "hard",
+      "row_index": 0
+    }
+  ]
+}

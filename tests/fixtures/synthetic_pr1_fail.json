@@ -1,0 +1,17 @@
+{
+  "deal": {},
+  "events": [],
+  "pages": [
+    {
+      "number": 1,
+      "content": ""
+    }
+  ],
+  "expected_flags": [
+    {
+      "code": "empty_events_array",
+      "severity": "hard",
+      "deal_level": true
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "events": [
+    {
+      "bid_date_rough": "mid-July 2016"
+    }
+  ],
+  "expected_flags": [
+    {
+      "code": "rough_date_mismatch_inference",
+      "severity": "hard",
+      "row_index": 0
+    }
+  ]
+}

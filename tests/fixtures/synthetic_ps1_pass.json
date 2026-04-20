@@ -1,0 +1,17 @@
+{
+  "events": [
+    {
+      "bidder_name": "bidder_01",
+      "bid_note": "NDA",
+      "process_phase": 1,
+      "role": "bidder"
+    },
+    {
+      "bidder_name": "bidder_01",
+      "bid_note": "Bid",
+      "process_phase": 1,
+      "role": "bidder"
+    }
+  ],
+  "expected_flags": []
+}

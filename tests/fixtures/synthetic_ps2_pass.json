@@ -1,0 +1,18 @@
+{
+  "deal": {
+    "auction": true
+  },
+  "events": [
+    {
+      "bid_note": "NDA",
+      "role": "bidder",
+      "process_phase": 1
+    },
+    {
+      "bid_note": "NDA",
+      "role": "bidder",
+      "process_phase": 1
+    }
+  ],
+  "expected_flags": []
+}

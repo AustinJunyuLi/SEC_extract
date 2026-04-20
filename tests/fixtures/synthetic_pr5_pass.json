@@ -1,0 +1,16 @@
+{
+  "deal": {
+    "bidder_registry": {
+      "bidder_01": {
+        "aliases_observed": ["Party A"],
+        "resolved_name": "Party A"
+      }
+    }
+  },
+  "events": [
+    {
+      "bidder_name": "bidder_01"
+    }
+  ],
+  "expected_flags": []
+}

@@ -1,0 +1,17 @@
+{
+  "events": [
+    {
+      "bidder_name": "bidder_01",
+      "bid_note": "NDA",
+      "process_phase": 1,
+      "role": "bidder"
+    }
+  ],
+  "expected_flags": [
+    {
+      "code": "nda_without_bid_or_drop",
+      "severity": "soft",
+      "row_index": 0
+    }
+  ]
+}

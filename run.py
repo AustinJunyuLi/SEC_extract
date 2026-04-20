@@ -26,8 +26,8 @@ STATUS SEMANTICS (mirrors SKILL.md)
   pending    — not yet run.
   validated  — Validator ran; has hard flags. Pipeline's terminal status for
                a deal requiring human review.
-  passed     — Validator ran; soft/info flags only.
-  passed_clean — Zero flags.
+  passed     — Combined extractor + validator flags contain only soft/info.
+  passed_clean — Combined extractor + validator flags are zero.
   failed     — Pipeline error (filing missing, malformed JSON, etc.).
   verified   — Austin manually read the filing and adjudicated every diff.
                Only set by the manual review workflow, never by this script.
@@ -58,7 +58,8 @@ def finalize_deal(
 
     if dry_run:
         result = pipeline.validate(raw_extraction, filing)
-        status, flag_count, notes = pipeline.summarize(result)
+        final = pipeline.merge_flags(raw_extraction, result.row_flags, result.deal_flags)
+        status, flag_count, notes = pipeline.summarize(final)
         print(f"[{slug}] dry-run: status={status} flag_count={flag_count} notes={notes}")
         if result.row_flags:
             print(f"  row flags ({len(result.row_flags)}):")

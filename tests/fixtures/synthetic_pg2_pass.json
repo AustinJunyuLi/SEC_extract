@@ -1,0 +1,10 @@
+{
+  "events": [
+    {
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "source_quote": "Party A submitted a non-binding indication of interest."
+    }
+  ],
+  "expected_flags": []
+}

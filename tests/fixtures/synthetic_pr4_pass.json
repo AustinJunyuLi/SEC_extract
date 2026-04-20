@@ -1,0 +1,8 @@
+{
+  "events": [
+    {
+      "role": "bidder"
+    }
+  ],
+  "expected_flags": []
+}

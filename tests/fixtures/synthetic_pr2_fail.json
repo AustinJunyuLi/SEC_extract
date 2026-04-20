@@ -1,0 +1,21 @@
+{
+  "events": [
+    {
+      "source_quote": "signed a confidentiality agreement",
+      "source_page": 1
+    }
+  ],
+  "pages": [
+    {
+      "number": 1,
+      "content": "This page does not contain the quoted phrase."
+    }
+  ],
+  "expected_flags": [
+    {
+      "code": "source_quote_not_in_page",
+      "severity": "hard",
+      "row_index": 0
+    }
+  ]
+}
