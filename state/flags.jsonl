@@ -1094,3 +1094,12 @@
 {"deal": "providence-worcester", "logged_at": "2026-04-20T14:05:55.009259Z", "row_index": 63, "code": "resolved_name_not_observed", "severity": "soft", "reason": "\u00a7P-R5/\u00a7E4: resolved_name='Genesee & Wyoming Inc.' for 'bidder_03' not in aliases_observed=['G&W']"}
 {"deal": "providence-worcester", "logged_at": "2026-04-20T14:05:55.009259Z", "row_index": 65, "code": "final_round_inferred", "severity": "info", "reason": "Board determined G&W superior; closing of informal/formal auction."}
 {"deal": "providence-worcester", "logged_at": "2026-04-20T14:05:55.009259Z", "row_index": 66, "code": "resolved_name_not_observed", "severity": "soft", "reason": "\u00a7P-R5/\u00a7E4: resolved_name='Genesee & Wyoming Inc.' for 'bidder_03' not in aliases_observed=['G&W']"}
+{"deal": "penford", "logged_at": "2026-04-20T14:05:55.070854Z", "row_index": 0, "code": "date_inferred_from_rough", "severity": "info", "reason": "phrase: '2007'"}
+{"deal": "penford", "logged_at": "2026-04-20T14:05:55.070854Z", "row_index": 1, "code": "date_inferred_from_rough", "severity": "info", "reason": "phrase: '2007'"}
+{"deal": "penford", "logged_at": "2026-04-20T14:05:55.070854Z", "row_index": 2, "code": "date_inferred_from_rough", "severity": "info", "reason": "phrase: '2009'"}
+{"deal": "penford", "logged_at": "2026-04-20T14:05:55.070854Z", "row_index": 3, "code": "date_inferred_from_rough", "severity": "info", "reason": "phrase: '2009'"}
+{"deal": "penford", "logged_at": "2026-04-20T14:05:55.070854Z", "row_index": 4, "code": "date_inferred_from_context", "severity": "soft", "reason": "phase-0 stale discussions ended without an offer; anchored to the 2009 prior attempt"}
+{"deal": "penford", "logged_at": "2026-04-20T14:05:55.070854Z", "row_index": 18, "code": "nda_without_bid_or_drop", "severity": "soft", "reason": "bidder_name='bidder_08' signed NDA at row 18 but no follow-up (bid/drop/executed) was extracted"}
+{"deal": "penford", "logged_at": "2026-04-20T14:05:55.070854Z", "row_index": 19, "code": "bid_range", "severity": "info", "reason": "range: $18.25-$18.50 per share"}
+{"deal": "penford", "logged_at": "2026-04-20T14:05:55.070854Z", "row_index": 24, "code": "bid_range", "severity": "info", "reason": "range reference: below $17.50-$18.00 per share"}
+{"deal": "penford", "logged_at": "2026-04-20T14:05:55.070854Z", "row_index": 26, "code": "bid_range", "severity": "info", "reason": "range: $16.00-$18.00 per share"}
