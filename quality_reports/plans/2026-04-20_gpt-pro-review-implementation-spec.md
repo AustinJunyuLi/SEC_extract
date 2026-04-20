@@ -1,526 +1,877 @@
 # Implementation Spec — GPT Pro Review Round 1
 
 **Date:** 2026-04-20
-**Source review:** `diagnosis/gptpro/2026-04-20/round_1/PROMPT.md` (snapshot `aae59af`)
-**Reply (pasted into parent conversation):** see pre-spec transcript; formal copy should be saved to `diagnosis/gptpro/2026-04-20/round_1_reply.md` before execution.
-**Verification:** 4 parallel read-only agents audited 25 claims. **25 VERIFIED**, 2 PARTIAL clarifications, 0 REFUTED. Full verification transcript in parent conversation.
-**Status:** READY for execution. No changes landed yet.
+**Source review:** `diagnosis/gptpro/2026-04-20/round_1/PROMPT.md`
+**Full raw reviewer reply:** `diagnosis/gptpro/2026-04-20/round_1_reply.md`
+**Verification:** 4 parallel read-only agents audited 25 claims. **25 VERIFIED**, 2 PARTIAL clarifications, 0 REFUTED.
+**Status:** READY for clean-slate execution.
 
 ---
 
-## Prerequisites
+## 0. GROUND RULES (READ FIRST — applies to every fix below)
 
-- Current state: 8 `passed_clean` + 1 `passed` (providence, 20 soft). HEAD = `aae59af`.
-- Do **not** start a new reference rerun until TIER 1 lands; current `passed_clean` readings are unreliable (T1-A).
-- Exit clock is held at whatever interpretation Austin chooses. Neither strict 0/3 nor pragmatic 1/3 applies — the rulebook is about to change materially.
+### 0.1 No backward compatibility — ever
+
+**This project carries zero backward-compatibility concerns.** Everything is committed to git. Reverts and cherry-picks are free. Across the whole spec:
+
+- **Delete cleanly.** No `# removed X` comments, no deprecated aliases, no legacy function signatures "for compatibility," no migration shims, no `if old_behavior_flag:` branches, no warn-once deprecation wrappers. If a field/function/rule is replaced, the old name disappears.
+- **Don't preserve callsites that don't exist.** If a code path serves only hypothetical old consumers, delete it.
+- **Don't grandfather old data.** If the schema changes, regenerate reference JSONs / re-finalize extractions — don't teach the validator to accept both old and new shapes.
+- **Rulebook is timeless.** New rules replace old rules; they do not coexist with them. No "pre-iter-N" vs "post-iter-N" conditionals in `rules/*.md`.
+
+If an acceptance criterion below forces a choice between clean deletion and a compat shim, **always choose clean deletion**. Record the delete in the commit message.
+
+### 0.2 Stay overengineering-free
+
+Every fix below is scoped to exactly what the finding requires. **Do not**:
+- add abstraction layers ("I'll make this a class in case we need more later")
+- add feature flags, config knobs, or CLI options for "future flexibility"
+- introduce dependency injection / strategy patterns / factories to be "extensible"
+- implement both alternatives when the spec names one
+
+If you find yourself generalizing past what the spec asks for, stop.
+
+### 0.3 Correctness over speed
+
+We are in production. Austin is the research consumer and is happy to be told he's wrong. Prioritize:
+1. Reading the evidence (the filing, not the workbook) when the rulebook is ambiguous.
+2. Making every change atomically verifiable by a fixture test before it lands.
+3. Leaving breadcrumbs in commit messages (file:line citations, rationale) so a future reviewer can trace decisions.
 
 ---
 
-## Priority tiers
+## 1. Execution context
+
+### 1.1 Repo state when execution begins
+
+- **Branch:** `main` at HEAD `cdeed95` (post-iter-7 staleness pass + iter-7 rerun + this spec). All changes must land on `main` (or a short-lived branch merged back into `main`). The older worktree at `.claude/worktrees/sharp-sutherland-8d60d7` has been merged back; you do not need it.
+- **Reference-set state (post-iter-7, pre-spec):** 8 deals `passed_clean` (medivation, imprivata, zep, penford, mac-gray, petsmart-inc, stec, saks), 1 deal `passed` (providence-worcester, 20 soft `nda_without_bid_or_drop`). **Warning:** these `passed_clean` labels are unreliable — see T1-A. Do not treat them as ground truth before T1-A lands.
+- **Exit clock:** held in ambiguous state until the post-spec rerun. Neither strict 0/3 nor pragmatic 1/3 applies. This spec resets it to 0/3 on landing (see §6).
+
+### 1.2 Line numbers drift as you edit
+
+**Every `file:line` citation in this spec is accurate at commit `cdeed95`.** Once you start editing `pipeline.py` in T1-A, every subsequent line reference inside `pipeline.py` may shift. Rules:
+
+- **Do not navigate by line number.** Use grep/semantic search: `grep -n "_invariant_p_g2" pipeline.py`, `grep -n "§P-G2" rules/invariants.md`.
+- Line numbers in this spec are **sanity anchors**, not navigation aids. If a line number no longer matches the described code after earlier fixes, trust the description, not the number.
+
+### 1.3 Where artifacts live
+
+| Artifact | Path | Persistence |
+|---|---|---|
+| Source code | `pipeline.py`, `run.py`, `scoring/diff.py`, `scripts/*.py` | committed |
+| Rulebook | `rules/*.md`, `prompts/extract.md` | committed |
+| Reference JSONs (Alex) | `reference/alex/*.json` | committed |
+| Current deal state | `state/progress.json` | committed |
+| Append-only flag log | `state/flags.jsonl` | committed (filter by `logged_at` for current state — see T3-G) |
+| AI extractions (finalized) | `output/extractions/*.json` | **gitignored**; regenerated by `run.py` |
+| Diff reports | `scoring/results/*.md`, `*.json` | gitignored; regenerated by `scoring/diff.py` |
+| Pre-existing iter-7 raw extractions | `/tmp/iter7-raw/*.raw.json` | **session-scoped; likely gone by the time you execute** |
+| Filings (input to extractor) | `data/filings/{slug}/{pages.json,manifest.json,raw.htm,raw.md}` | committed via `scripts/fetch_filings.py` |
+
+### 1.4 How to regenerate a finalized extraction
+
+If you need a fresh extraction for any of the 9 reference deals after rule changes land, the pattern is:
+
+1. **Spawn an Extractor subagent** (this is a general-purpose agent, briefed with the prompt from `pipeline.build_extractor_prompt(slug)` + any rule-change specifics). You are the orchestrator; the subagent is clean-context. Point it at `data/filings/{slug}/pages.json` and `rules/*.md` + `prompts/extract.md`. Instruct it to write JSON to `/tmp/iter8-raw/{slug}.raw.json` (or similar).
+2. **Validate + finalize:** `python3 run.py --slug {slug} --raw-extraction /tmp/iter8-raw/{slug}.raw.json`. This runs `pipeline.finalize()` which (a) applies unnamed-NDA promotion, (b) canonicalizes row order, (c) validates, (d) writes `output/extractions/{slug}.json`, (e) updates `state/progress.json`, (f) commits per-deal.
+3. **Diff vs Alex (reference deals only):** `python3 scoring/diff.py --slug {slug}` writes `scoring/results/{slug}_YYYYMMDDTHHMMSSZ.md`.
+
+All 9 reference-deal slugs: `medivation imprivata zep providence-worcester penford mac-gray petsmart-inc stec saks`.
+
+### 1.5 Adjudicator pattern
+
+The Adjudicator is **not a Python function**. It is a subagent the orchestrator (you, running this spec) spawns when the validator raises soft flags that require judgment. Pattern:
+
+1. `pipeline.validate()` returns `ValidatorResult` with soft flags.
+2. Orchestrator reads flagged rows + surrounding filing pages, **spawns a scoped subagent** to read the relevant filing passages and return `{verdict: upheld|dismissed, reason: str}`.
+3. Orchestrator mutates `raw_extraction["events"][i]["flags"]` with verdict annotations, **then** calls `pipeline.finalize()`.
+
+You will use this pattern in the post-spec rerun (see §6) for any new soft-flag categories.
+
+### 1.6 Commit discipline
+
+- **One commit per TIER item.** (e.g. T1-A is one commit, T1-B is another.) Exception: if two items are one logical unit (e.g. T1-B + T1-C are both §P-G2 fixes and share a rulebook edit), one commit is fine — state the bundling in the commit message.
+- **Per-deal finalize auto-commits** via `run.py`. Do not squash these.
+- **Commit message format:** `{scope}: {short imperative} ({one-line why})` followed by a body with file:line citations and acceptance-test results. Example: `T1-A: combined flag accounting (extractor flags now count)`.
+- **Never amend published commits.** If a hook fails, fix and create a new commit.
+- Include `Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>` in every commit.
+
+### 1.7 Escalation protocol
+
+If a fix reveals something the spec did not anticipate:
+
+- **Small scope expansion** (e.g. "the fix required touching a fifth file"): proceed, note in commit message.
+- **Semantic ambiguity** (e.g. "the rulebook and the existing data disagree on X, and the spec doesn't say which wins"): **pause and ask Austin.** Do not guess. Leave the branch clean, document the ambiguity in `quality_reports/plans/`.
+- **Fix breaks more than it claims to fix** (e.g. "fixing §P-G2 directionality flags 40% of existing rows hard-wrong"): **pause**. This is a signal the underlying extractions may need redoing, which is a larger decision.
+
+### 1.8 Test framework (prerequisite for TIER 1 acceptance)
+
+No pytest framework exists. **Before landing T1-A, set up `tests/`:**
+
+```
+tests/
+  __init__.py
+  fixtures/
+    {slug}_{invariant}_{pass|fail}.json    # raw extraction fixtures
+  test_invariants.py                        # one test per invariant
+```
+
+Use plain `unittest` or `pytest` (either works). Each invariant gets at minimum a pass-case fixture and a fail-case fixture. Acceptance criteria in TIER 1/2 cite fixtures — those fixtures go into `tests/fixtures/`.
+
+This replaces the old T4-B item; fixture infrastructure is now a **prerequisite** to the TIER 1 acceptance criteria, not optional cleanup.
+
+---
+
+## 2. Priority tiers
 
 - **TIER 1 — CRITICAL** (fix before any rerun counts toward the exit clock).
 - **TIER 2 — MAJOR** (rulebook↔validator contract reconciliation; unblocks safe promotion to 392).
-- **TIER 3 — MEDIUM** (reference-data + diff tooling correctness; affects human review quality).
-- **TIER 4 — MINOR** (cleanup; no correctness impact).
+- **TIER 3 — MEDIUM** (reference-data + diff tooling correctness).
+- **TIER 4 — MINOR** (external-scope follow-up items).
 
-Each item: **Problem**, **Fix** (code or doc), **Acceptance**, **Effort**.
+Each item: **Problem**, **Fix**, **Acceptance**, **Effort**.
 
 ---
 
-## TIER 1 — CRITICAL
+## 3. TIER 1 — CRITICAL
 
 ### T1-A. Combined flag accounting (the exit clock is measuring the wrong thing)
 
-**Problem.** `ValidatorResult` stores only flags returned by `validate()`. `summarize()` counts only those. Extractor-embedded `flags[]` on event rows (e.g. `date_inferred_from_context` soft, `implicit_drop` info, `pre_nda_informal_bid` info, `unnamed_count_placeholder` info) are invisible to status computation. Empirically:
-- `state/progress.json` reports `zep: passed_clean, flag_count=0` while `output/extractions/zep.json` contains **75 soft + 53 info** severity occurrences.
-- `medivation: passed_clean, flag_count=0` while its output has **14 soft + 7 info**.
-Exit-clock logic (`passed_clean` across 3 runs) is measuring a subset of flags only.
+**Problem.** `ValidatorResult` stores only flags returned by `validate()`. `summarize()` counts only those. Extractor-embedded `flags[]` on event rows (codes like `date_inferred_from_context` soft, `implicit_drop` info, `pre_nda_informal_bid` info, `unnamed_count_placeholder` info) are invisible to status computation. Empirically: `state/progress.json` reports `zep: passed_clean, flag_count=0` while `output/extractions/zep.json` contains **75 soft + 53 info** occurrences. Medivation: `flag_count=0` vs **14 soft + 7 info** in output.
 
-Evidence: `pipeline.py:203-230`, `pipeline.py:994-1012`, `state/progress.json:3610-3855`, `output/extractions/{medivation,zep}.json`.
+Evidence: `pipeline.py` `ValidatorResult` class + `summarize()` function; `state/progress.json` entries for zep/medivation; `output/extractions/{medivation,zep}.json` event-level `flags[]` arrays.
 
 **Fix.**
-1. Add a `count_flags(final_extraction: dict) -> dict[str, int]` helper in `pipeline.py` that walks `final["deal"]["deal_flags"]` + `final["events"][i]["flags"]` and returns `{"hard": N, "soft": M, "info": K}` combining extractor + validator sources.
-2. Change `summarize()` to accept the final (post-merge) extraction and use `count_flags(final)`.
-3. Update `finalize()` to call `summarize(final)` not `summarize(result)`.
-4. Remove the now-redundant `hard_count/soft_count/info_count` properties on `ValidatorResult` (or retain only as private helpers with a comment).
+1. Add `count_flags(final_extraction: dict) -> dict[str, int]` helper in `pipeline.py`. It walks `final["deal"].get("deal_flags", [])` plus every `final["events"][i].get("flags", [])` and returns `{"hard": N, "soft": M, "info": K}` counting every flag in the combined post-merge output.
+2. Rewrite `summarize()` to take the **final** (post-merge) extraction, not a `ValidatorResult`. Use `count_flags(final)`.
+3. Rewrite `finalize()` to compute `final` (merge validator result with raw extraction's existing flags), then call `summarize(final)`. `update_progress()` and `append_flags_log()` also take `final`.
+4. **Delete** `ValidatorResult.hard_count / soft_count / info_count` properties. No compat shim — callers use `count_flags(final)` directly. If a caller was using `result.soft_count` elsewhere, migrate it; if nothing uses it, delete cleanly.
+5. Fix `status` semantics — **decided explicitly here, no ambiguity**:
+   - `passed_clean` = **zero hard + zero soft** across combined sources. `info` flags do NOT block `passed_clean`.
+   - `passed` = only soft and/or info flags in combined sources; zero hard.
+   - `validated` = at least one hard flag.
+   - Rationale: `info`-level codes (`implicit_drop`, `pre_nda_informal_bid`, `unnamed_count_placeholder`) are advisory metadata for human review. Treating them as clock-blockers would make the clock impossible to run.
 
 **Acceptance.**
-- Re-finalize all 9 deals. `state/progress.json` flag_counts should move from 0→(14+ for medivation, 128+ for zep, etc.).
-- `passed_clean` should now mean "zero hard AND zero soft AND zero info across combined sources."
-- `passed` should mean "only soft/info in combined sources."
-- If too many deals flip out of `passed_clean` due to info-level `implicit_drop` / `pre_nda_informal_bid` annotations, **and** those are purely informational, consider redefining `passed_clean` to mean "zero hard AND zero soft" (exclude info). Decide explicitly in commit message; don't leave ambiguous.
+- `tests/test_invariants.py::test_count_flags` covers: (a) zero everything → `passed_clean`; (b) only soft → `passed`; (c) one hard + any → `validated`; (d) info-only → `passed`.
+- After landing this fix, re-finalize all 9 deals (see §1.4 for the loop). Re-run result: medivation/imprivata/zep/penford/mac-gray/petsmart-inc/stec/saks should move from `passed_clean flag_count=0` to `passed flag_count>0` (they all have extractor-attached softs/infos). Providence should move from `passed flag_count=20` to `passed flag_count={20 + extractor-attached count}`. No deal should flip to `validated` (no new hard flags introduced).
+- Commit message: spell out the status-semantics decision (info doesn't block `passed_clean`).
 
-**Effort.** 30–60 minutes. Priority: ship this first.
+**Effort.** 45–75 minutes (code + fixture tests).
+
+**Dependencies.** None. **This is the very first commit.** All subsequent "rerun & verify" acceptance criteria depend on it.
 
 ---
 
-### T1-B. §P-G2 trigger directionality (validator accepts wrong formal/informal labels)
+### T1-B. §P-G2 trigger directionality
 
-**Problem.** `_invariant_p_g2` line 709 matches any trigger from `ALL_G1_TRIGGERS = FORMAL_TRIGGERS + INFORMAL_TRIGGERS`. A row with `bid_type="formal"` whose `source_quote` contains `"expression of interest"` (informal trigger) passes the hard validator. §G1's classification intent (formal triggers support formal bids; informal triggers support informal bids) is not enforced. `bid_type` — the core research variable — has only a proxy evidence check, not a directional one.
+**Problem.** `_invariant_p_g2` matches triggers against `ALL_G1_TRIGGERS = FORMAL_TRIGGERS + INFORMAL_TRIGGERS`. A row with `bid_type="formal"` whose `source_quote` contains `"expression of interest"` (informal-only trigger) passes the hard validator. `bid_type` — the core research variable — has only a proxy evidence check, not a direction-matched one. The existing code comment on the trigger line explicitly labels the check "existence-only" and punts direction to §G1 classification, which is never enforced.
 
-Evidence: `pipeline.py:672-720` (line 705-709 uses `ALL_G1_TRIGGERS`), docstring at 707-708 explicitly acknowledges "existence-only."
+Evidence: `pipeline.py` `_invariant_p_g2` function; `rules/bids.md` §G1 (trigger lists) + §G2 (evidence requirement); `rules/invariants.md` §P-G2.
 
-**Fix.** In `_invariant_p_g2`:
+**Fix.** In `_invariant_p_g2`, replace the `ALL_G1_TRIGGERS` membership check with a direction-matched one:
+
 ```python
 if bid_type == "formal":
     required = FORMAL_TRIGGERS
 elif bid_type == "informal":
     required = INFORMAL_TRIGGERS
 else:
-    continue  # unexpected bid_type — caught by §P-R3 separately
-if any(t in quote_text.lower() for t in required):
-    continue  # direction-matched trigger
-# range-bid and inference-note paths remain as before
+    # §P-R3 catches malformed bid_type values; this invariant only
+    # gates non-null {"formal","informal"}. Unknown values fall through
+    # to the inference-note/range-bid paths.
+    required = ()
+if required and any(t in quote_text.lower() for t in required):
+    continue
 ```
-Update `rules/invariants.md` §P-G2 condition (1) and `rules/bids.md` §G2 condition (1) to explicitly say "formal trigger for formal, informal trigger for informal."
+
+Update both rulebook sections:
+- `rules/invariants.md` §P-G2 condition (1): "source_quote contains a §G1 trigger phrase **from the table matching `bid_type`** (formal triggers for `formal`, informal triggers for `informal`), case-insensitive substring."
+- `rules/bids.md` §G2 condition (1): same wording.
+
+Delete any prose anywhere in the rulebook that said "formal OR informal table" generically — that's the bug.
 
 **Acceptance.**
-- Fixture test: row with `bid_type="formal"` + quote `"Party X submitted an expression of interest"` → HARD FLAG `bid_type_unsupported`.
-- Fixture test: row with `bid_type="formal"` + quote `"Party X submitted a binding offer"` → passes.
-- Rerun all 9 deals; document any rows newly flagged (these were wrongly classified under the old rule).
+- Fixture `tests/fixtures/pg2_formal_informal_trigger_mismatch.json`: one event with `bid_type="formal"`, `source_quote="...submitted an expression of interest..."`. Expected: HARD flag `bid_type_unsupported`.
+- Fixture `tests/fixtures/pg2_formal_trigger_match.json`: `bid_type="formal"`, `source_quote="...submitted a binding offer..."`. Expected: no flag.
+- Fixture `tests/fixtures/pg2_informal_trigger_match.json`: `bid_type="informal"`, `source_quote="...non-binding indication..."`. Expected: no flag.
+- Post-fix reference rerun (see §6): document every row newly flagged. Expected: some rows that previously passed via wrong-direction triggers now fail. These are **correct** new flags — they expose prior mislabeling.
 
-**Effort.** 45 minutes code + fixtures; 30 minutes to re-review any flips from the rerun.
+**Effort.** 60 minutes (code + 3 fixtures + rulebook edit + re-run audit).
+
+**Dependencies.** T1-A (needs fixture framework).
 
 ---
 
-### T1-C. §P-G2 range check uses != not < (validator accepts inverted ranges)
+### T1-C. §P-G2 range check (`!=` → `<`)
 
-**Problem.** `pipeline.py:696` uses `lower != upper`, allowing `lower=30, upper=25` to count as a "true range bid." Both `rules/invariants.md:223-224` and `rules/bids.md:170-172` require `lower < upper`. Also non-numeric strings comparing unequal (e.g. `"30"` vs `"twenty-five"`) trigger range-pass.
+**Problem.** `_invariant_p_g2` range-bid check uses `lower != upper` — allowing `lower=30, upper=25` to count as a range. Both `rules/invariants.md` §P-G2 and `rules/bids.md` §G2 specify `lower < upper`. Also, the current check treats non-numeric strings-unequal as a valid range pass (e.g. `"30"` vs `"twenty-five"`).
 
-Evidence: `pipeline.py:689-700`, code comment at line 696 itself admits intended `lower < upper`.
+Evidence: `pipeline.py` `_invariant_p_g2`, the inline comment on the range line itself acknowledges the intended spec is `lower < upper`.
 
 **Fix.**
 ```python
+lower = ev.get("bid_value_lower")
+upper = ev.get("bid_value_upper")
 try:
-    lo_num = float(lower)
-    hi_num = float(upper)
+    lo_num = float(lower) if lower is not None else None
+    hi_num = float(upper) if upper is not None else None
 except (TypeError, ValueError):
-    pass  # not numeric — fall through to trigger/note checks
-else:
+    lo_num = hi_num = None
+if lo_num is not None and hi_num is not None:
     if lo_num < hi_num:
-        continue
+        continue  # true range bid
+    flags.append({
+        "row_index": i,
+        "code": "bid_range_inverted",
+        "severity": "hard",
+        "reason": f"§P-G2: bid_value_lower={lower!r} >= bid_value_upper={upper!r}; ranges require lower < upper.",
+    })
+    continue  # do not also fail for bid_type_unsupported
 ```
-Emit hard flag `bid_range_inverted` when both are numeric and `lower >= upper`.
+
+Non-numeric `lower`/`upper` fall through to the trigger-check and inference-note paths (those may still satisfy §P-G2).
 
 **Acceptance.**
-- Fixture: `lower=25, upper=30, bid_type="informal"` → passes §P-G2.
-- Fixture: `lower=30, upper=25, bid_type="informal"` → HARD `bid_range_inverted`.
-- Fixture: `lower="$25", upper="$30"` → does NOT pass path (b); must fall to trigger or note.
+- Fixture `tests/fixtures/pg2_range_inverted.json`: `lower=30, upper=25`. Expected: HARD `bid_range_inverted`.
+- Fixture `tests/fixtures/pg2_range_valid.json`: `lower=25, upper=30, bid_type="informal"`. Expected: passes.
+- Fixture `tests/fixtures/pg2_range_nonnumeric.json`: `lower="$25", upper="$30", bid_type="informal", source_quote` without any §G1 trigger and no inference note. Expected: HARD `bid_type_unsupported` (falls through; non-numeric doesn't pass path b).
 
 **Effort.** 30 minutes.
 
+**Dependencies.** T1-A. Can share a commit with T1-B.
+
 ---
 
-### T1-D. Providence policy: delete the implicit-Drop mandates (§I1 + §M2 + stale flag)
+### T1-D. Providence Path A — delete implicit-Drop mandates
 
-**Problem.** Two rulebook sections demand the extractor emit "implicit Drop" rows for NDA signers with no later narrated activity:
-- `rules/events.md:263-275` (§I1) — "the extractor MUST emit an implicit `Drop` row at the end of the main process phase."
-- `rules/bids.md:492-503` (§M2) — "Folded into §I1's implicit-drop rule."
-Iter-7 extraction declined this (per §R2 evidence-specificity) and emitted 20 soft `nda_without_bid_or_drop` flags on providence instead. Project decision per iter-7 results report: **accept iter-7's behavior (Path A)**. Rulebook must be updated to match.
+**Problem.** Two rulebook sections mandate the extractor emit "catch-all implicit Drop" rows for NDA signers with no later narrated activity:
+- `rules/events.md` §I1: "the extractor MUST emit an implicit `Drop` row at the end of the main process phase."
+- `rules/bids.md` §M2: "Folded into §I1's implicit-drop rule."
 
-Also: `phase_boundary_inferred` soft flag promised in `rules/events.md:578-579` (§L2) is unused in `pipeline.py`. Flag vocabulary must match what actually fires.
+Iter-7 refused this (per §R2 evidence-specificity) and emitted 20 soft `nda_without_bid_or_drop` flags on providence-worcester instead. Project decision (GPT Pro + Austin): **Path A — accept iter-7's behavior; delete the mandates.**
 
-Evidence: `rules/events.md:263-275`, `rules/bids.md:492-503`, `quality_reports/plans/2026-04-19_stage3-iter7-results.md:102-135`.
+Also: `rules/events.md` §L2 advertises a `phase_boundary_inferred` soft flag that the validator never emits. Flag vocabulary must match what fires.
+
+Evidence: `rules/events.md` §I1 + §L2; `rules/bids.md` §M2; `quality_reports/plans/2026-04-19_stage3-iter7-results.md` §"Providence regression."
 
 **Fix.**
-1. Rewrite `rules/events.md §I1` to say: "NDA-signing bidders with no later narrated Bid/Drop/Executed remain as NDA-only rows. §P-S1 raises a soft `nda_without_bid_or_drop` flag for human review. Do NOT fabricate catch-all Drops with generic shared `source_quote`."
-2. Rewrite `rules/bids.md §M2` similarly — "no skip, no synthetic emission; NDA-only is permitted."
-3. Update `rules/invariants.md §P-S1` rationale to reference Path A decision.
-4. Delete the `phase_boundary_inferred` soft-flag mention in §L2 if not implementing it (see T2-D).
+1. Rewrite `rules/events.md` §I1 to permit NDA-only rows: "Bidders who sign NDAs but have no later narrated Bid/Drop/Executed remain as NDA-only rows. §P-S1 raises a soft `nda_without_bid_or_drop` flag for human review (advisory only). Do NOT fabricate catch-all Drop rows with a generic shared `source_quote` — that violates §R2 evidence-specificity."
+2. Rewrite `rules/bids.md` §M2 consistently: "No skip, no synthetic emission. NDA-only is permitted per §I1."
+3. Update `rules/invariants.md` §P-S1 rationale to cite this decision: "§P-S1 is soft (advisory). Providence (iter-7) demonstrated the necessity: 20 of 27 NDA bidders had no per-bidder follow-up narration in the filing; forcing synthetic Drops would reuse one generic quote across all 20 (§R2 violation)."
+4. **Delete** the `phase_boundary_inferred` soft-flag mention from §L2. Either T2-D implements the companion checks (which emit different flag codes) or the promise is false — either way, this specific flag name is dead. No code change needed — grep confirms it never fires.
 
 **Acceptance.**
-- Rerun providence-worcester — 27 NDA rows + no catch-all Drops + 20 soft `nda_without_bid_or_drop` (unchanged from iter-7). Status = `passed` (not `passed_clean`).
-- If `passed_clean` semantics are redefined (T1-A) to exclude info flags only, decide whether §P-S1 soft still blocks `passed_clean`. Recommendation: **yes**, keep `passed_clean` = zero hard + zero soft. Providence remains `passed`.
-- Rulebook delta is doc-only, no code changes. Clock interpretation: rulebook changed (conservative 0/3) OR Path A is the already-intended state and this is doc cleanup (pragmatic clock-resets neutral). Austin decides.
+- No grep hits for `"phase_boundary_inferred"` anywhere in repo.
+- `rules/events.md` §I1 and `rules/bids.md` §M2 unambiguously permit NDA-only rows.
+- Post-spec providence rerun emits NDA-only rows unchanged from iter-7 (27 NDAs, 20 soft `nda_without_bid_or_drop`). Status = `passed` (hard=0, soft=20). Not `passed_clean`. **This is the intended post-spec state for providence.**
 
-**Effort.** 1 hour rulebook rewrite + careful cross-check for dangling refs.
+**Effort.** 45 minutes rulebook rewrite + cross-ref sweep.
+
+**Dependencies.** None (doc-only). Can land in parallel with T1-A/B/C.
 
 ---
 
 ### T1-E. `scoring/diff.py` rstrip bug (silently mangling bidder aliases)
 
-**Problem.** `scoring/diff.py:85-89` uses `s.rstrip(suffix)` where `suffix` is a multi-char string like `" inc"`. Python's `str.rstrip(chars)` treats `chars` as a **set of characters to strip**, not a suffix string.
+**Problem.** `scoring/diff.py::normalize_bidder()` uses `s.rstrip(suffix)` with multi-char suffix strings like `" inc."`, `" llc"`. Python's `str.rstrip(chars)` treats the argument as a **character set** — any trailing character in the set is stripped. Empirical misfires: `"Penford Inc"` → `"penfor"` (strips `"d"` because `d ∈ " ltd"`); `"Alco"` → `"a"` (strips `c`, `o`, `l` ∈ `" llc"`).
 
-Empirical misfire: `normalize_bidder("Penford Inc")` → `"penfor"` (the "d" is stripped because `d` ∈ `" ltd"`). `"Alco"` → `"a"` (`c`, `o`, `l` ∈ `" llc"`). Any bidder alias ending in characters from the combined set `{' ', '.', ',', 'i', 'n', 'c', 'o', 'r', 'p', 'l', 't', 'd'}` gets truncated into gibberish.
+All AI-vs-Alex diff reports produced to date use this matcher. Field-disagreement counts are partly noise from collisions on truncated keys.
 
-Impact: AI-vs-Alex diff reports have been matching rows by garbled aliases. Many of the field-disagreement counts may be artifacts of collision on truncated keys.
+Evidence: `scoring/diff.py` `normalize_bidder` function; verified reproducible misfires.
 
-Evidence: `scoring/diff.py:75-95`, verified behavior.
+**Fix.** Replace `rstrip(suffix)` with `removesuffix(suffix)` (Python 3.9+) or explicit `endswith` + slice:
 
-**Fix.**
 ```python
-for suffix in (" inc.", " corp.", " ltd.", " inc", " corp", " ltd",
-               " llc", " plc", ","):
+s = alias.strip().lower()
+# Order longest first so "inc." strips before "inc".
+for suffix in (" inc.", " corp.", " ltd.", " llc.", " plc.",
+               " inc", " corp", " ltd", " llc", " plc", ","):
     if s.endswith(suffix):
         s = s[:-len(suffix)]
-        break  # strip at most one suffix per pass
+        break  # at most one suffix per pass; re-loop by calling normalize_bidder again if needed
 ```
-Or use `s.removesuffix(suffix)` (Python 3.9+).
 
 **Acceptance.**
-- Fixture: `normalize_bidder("Penford Inc")` → `"penford"` (not `"penfor"`).
-- Fixture: `normalize_bidder("SomeCo, Inc.")` → `"someco"` (sequential strips: `", Inc."` then `"Inc"`).
-- Regenerate all 9 diff reports. Field-disagreement counts likely change materially.
-- Suffix ordering: longest-first to avoid `" inc"` stripping before `" inc."`.
+- Fixture `tests/fixtures/normalize_bidder.py` or inline test: `normalize_bidder("Penford Inc") == "penford"`; `normalize_bidder("Alco") == "alco"`; `normalize_bidder("SomeCo, Inc.") == "someco"` (two passes: strips `", Inc."` then iterated call strips `,`).
+- Regenerate all 9 diff reports via `for slug in ...; python3 scoring/diff.py --slug $slug`. Field-disagreement counts will change materially — that's expected. Save the old reports somewhere retrievable for comparison (they're gitignored so they'll be overwritten; `cp -r scoring/results scoring/results.pre_T1E/` is fine as a local backup).
 
-**Effort.** 15 minutes code + 15 minutes re-review of diff reports.
+**Effort.** 20 minutes code + 10 minutes regenerating diffs.
+
+**Dependencies.** None.
 
 ---
 
 ### T1-F. Fetcher accepts excluded form type 425
 
-**Problem.** `scripts/fetch_filings.py:69-75` lists `"425"` in `PRIMARY_FORM_TYPES`. `rules/schema.md:91-105` §Scope-2 explicitly excludes 425 (merger communications, press-release-style, no Background section). A 425 filing will pass the form-type gate, get extracted, and fail silently against non-Background content.
+**Problem.** `scripts/fetch_filings.py` `PRIMARY_FORM_TYPES` includes `"425"`. `rules/schema.md` §Scope-2 explicitly excludes 425 (merger communications — press-release-style, no Background section). A 425 seed would currently pass the form-type gate, get fetched, and extracted against non-Background content.
 
-Evidence: `rules/schema.md:91-105`, `scripts/fetch_filings.py:69-75`.
+Evidence: `scripts/fetch_filings.py` `PRIMARY_FORM_TYPES` set; `rules/schema.md` §Scope-2.
 
 **Fix.**
 1. Remove `"425"` from `PRIMARY_FORM_TYPES`.
-2. Add a "fail-loud" check: if a seed's `form_type` is 425 or other §Scope-2-excluded value, emit a `state/progress.json` entry with `status="failed"` and `notes="excluded form type"`. Do not fetch.
+2. Add an `EXCLUDED_FORM_TYPES` set containing `{"425"}`. In the fetcher main loop, if a seed's `form_type` is in `EXCLUDED_FORM_TYPES`, **print a loud warning to stderr** ("skipping slug={slug}: form_type={t} is §Scope-2-excluded") and skip the seed. No state/progress.json mutation — that's `run.py`'s responsibility and 425 seeds wouldn't reach `run.py` anyway.
+3. If the fetcher encounters a seed with a form_type neither in `PRIMARY_FORM_TYPES` nor `EXCLUDED_FORM_TYPES`, raise an error (fail loud — an unknown form is a spec gap, not something to silently skip).
 
-**Acceptance.** `fetch_filings.py --dry-run` on a hypothetical 425 seed fails loudly rather than silently downloading.
+**Acceptance.**
+- Grep: `"425"` does not appear in `PRIMARY_FORM_TYPES`.
+- Synthetic test: a hypothetical seed row with `form_type=425` triggers the stderr warning and skip, no file-system side effects.
+- Synthetic test: a seed row with `form_type="UNKNOWN"` raises.
 
-**Effort.** 20 minutes.
+**Effort.** 25 minutes.
+
+**Dependencies.** None.
 
 ---
 
-## TIER 2 — MAJOR (rulebook↔validator contract reconciliation)
+## 4. TIER 2 — MAJOR (rulebook↔validator contract reconciliation)
 
 ### T2-A. §P-D5: "earlier row" vs "any row except self"
 
-**Problem.** Spec at `rules/invariants.md:108-136` says Drop needs an **earlier** same-phase engagement row. Code at `pipeline.py:498-574` checks "any witness except self" — a later NDA or later Drop can satisfy a prior Drop. Docstring at line 507-509 explicitly acknowledges the relaxation.
+**Problem.** `rules/invariants.md` §P-D5 says Drop requires an **earlier** engagement row in the same phase. `pipeline.py::_invariant_p_d5` checks "any witness except self." The docstring acknowledges the relaxation.
 
-**Fix.** Pick one and align both. Recommendation: **keep code behavior** (existence check, not chronological), because canonicalization has already sorted rows by `(process_phase, bid_date, §A3 rank)` and "earlier" has no unambiguous meaning after order normalization in same-date cases. Rewrite `rules/invariants.md §P-D5` condition to "there exists at least one OTHER row (any row_index) in the same `process_phase` with `bid_note` ∈ {NDA, Bidder Interest, IB} or another Drop-family row."
+**Fix.** Align both sides to existence-only (keep current code behavior; update rulebook). Canonicalization already normalizes row order; "earlier" has no unambiguous meaning after §A3 same-date rank-sort. Update `rules/invariants.md` §P-D5 to: "For each row with `bid_note ∈ {Drop, DropAtInf, DropBelowInf, DropBelowM, DropTarget}`, there exists at least one OTHER row in the same `process_phase` with the same `bidder_name` and `bid_note ∈ {NDA, Bidder Interest, IB}` or another Drop-family row. Position within phase is not enforced — §A2/§A3 canonicalization has already ordered rows."
 
-**Acceptance.** Fixture: Drop at row i=5, NDA at row i=7 (later), same phase, same bidder → passes §P-D5 (existence). No flag.
+**Acceptance.** Fixture `tests/fixtures/pd5_drop_after_nda_same_phase.json` (drop at row 5, nda at row 7, same phase, same bidder, per §A3 rank ordering) → no flag. Fixture `tests/fixtures/pd5_drop_orphan.json` (drop at row 5, no engagement row for that bidder/phase) → hard `drop_without_prior_engagement`.
 
-**Effort.** 20 minutes rulebook update.
+**Effort.** 25 minutes rulebook update + fixtures. No code change.
 
----
-
-### T2-B. §P-S3: "last row terminates" vs "any row in phase terminates"
-
-**Problem.** Spec `rules/invariants.md:197-205` says chronologically last event in each phase must be a terminator. Code `pipeline.py:854-915` checks "any terminator anywhere in phase." Code docstring at 858-886 admits the iter-5 relaxation.
-
-**Fix.** **Keep code behavior.** Update spec to "each `process_phase` contains at least one terminator (Executed / Terminated / Auction Closed); position within phase is not enforced." Document the rationale: go-shop trailing activity and §A3 rank inversions make strict last-position enforcement brittle.
-
-**Acceptance.** No code change. Rulebook updated.
-
-**Effort.** 15 minutes.
+**Dependencies.** T1-A (fixtures).
 
 ---
 
-### T2-C. §E2 joint-bidder BidderID vs §P-D3 unique/monotone
+### T2-B. §P-S3: "last row terminates" → "any row in phase terminates"
 
-**Problem.** `rules/bidders.md:9-40` says joint Bid/Drop rows share the same BidderID; `rules/invariants.md:92-104` + `_canonicalize_order` enforce unique 1..N event-sequence BidderIDs. The extractor's shared IDs are silently overwritten during canonicalization — §E2's promise never survives to finalized output.
+**Problem.** `rules/invariants.md` §P-S3 specifies chronological last-row-must-be-terminator. `pipeline.py::_invariant_p_s3` checks any-terminator-in-phase. Code docstring admits the relaxation.
 
-**Fix.** Keep canonicalization. Update §E2 to say: "Joint-bidder constituents share `joint_bidder_members` (canonical `bidder_NN` ids); each joint-bidder row still has its own unique event-sequence `BidderID`." Explicitly state that `BidderID` is event-sequence, not bidder-identity. Delete the "All N rows share the same BidderID" claim from §E2.
+**Fix.** Update rulebook to match code. Rewrite §P-S3: "For each distinct `process_phase` value, at least one event in that phase has `bid_note ∈ {Executed, Terminated, Auction Closed}`. Position within phase is not enforced — go-shop trailing activity and §A3 rank inversions can place terminators mid-phase."
 
-**Acceptance.** No code change. `rules/bidders.md §E2` updated. Existing joint-bidder data (e.g. mac-gray CSC/Pamplona) should display via `joint_bidder_members=["bidder_06","bidder_07"]` on the shared row, with `BidderID` = that row's event position.
+**Acceptance.** Fixture `tests/fixtures/ps3_terminator_mid_phase.json` (phase contains `Executed` followed by a `Bid Press Release`) → no flag. Fixture `tests/fixtures/ps3_no_terminator.json` (phase with no Executed/Terminated/Auction Closed) → hard `phase_termination_missing`.
 
-**Effort.** 20 minutes.
+**Effort.** 20 minutes. No code change.
 
----
-
-### T2-D. §L2 phase-boundary validations (implement or delete)
-
-**Problem.** `rules/events.md:569-600` §L2 promises 4 checks: (a) empty gap between Terminated and Restarted, (b) single Executed in highest phase, (c) no phase 2 without Terminated+Restarted, (d) no phase 0 within 6 months of phase 1/2. Only (b) is implemented (`_invariant_p_s4`). Three checks are promised but silent. The `phase_boundary_inferred` soft flag is also never emitted.
-
-**Fix.** Decision: **implement (c) and (d); delete (a) and the `phase_boundary_inferred` promise.**
-- (c) is cheap: scan events, assert `any(bid_note=="Restarted" and phase==1 for e in events_with_phase_2_predecessor)`.
-- (d) requires date arithmetic: for each `process_phase=0` row, assert min(date delta to any phase ≥ 1 row) ≥ 6 months. Emit hard `stale_prior_too_recent`.
-- (a) is ill-defined ("empty gap expected" is ambiguous — gap = zero events? or non-trivial gap allowed if no bidder activity?) — delete.
-- Delete `phase_boundary_inferred` soft promise from §L2.
-
-Update `rules/invariants.md` with §P-L1 and §P-L2 invariants, add table rows, wire into `validate()`.
-
-**Acceptance.**
-- Fixture: phase 2 row exists without preceding Terminated+Restarted pair → hard `orphan_phase_2`.
-- Fixture: phase 0 row 2013-01-01 + phase 1 row 2013-03-15 (<6 months) → hard `stale_prior_too_recent`.
-- Rerun reference set. Only zep has phase 2; only penford has phase 0 — verify both still pass.
-
-**Effort.** 90 minutes (2 new invariants + tests + §L2 rewrite).
+**Dependencies.** T1-A.
 
 ---
 
-### T2-E. §E4 alias-registry validation (implement or delete)
+### T2-C. §E2 joint-bidder BidderID contradiction
 
-**Problem.** `rules/bidders.md:173-200` §E4 promises alias checks: every `bidder_alias` must be in `aliases_observed` for its `bidder_name`; `resolved_name` (if non-null) should appear in `aliases_observed`. `pipeline.py:464-480` §P-R5 only checks `bidder_name` exists as registry key.
+**Problem.** `rules/bidders.md` §E2 says joint Bid/Drop rows share the same BidderID; `rules/invariants.md` §P-D3 + `_canonicalize_order` enforce unique 1..N event-sequence BidderIDs. The extractor's shared IDs are silently overwritten during canonicalization — §E2's claim never survives.
 
-**Fix.** Implement both checks:
+**Fix.** Keep canonicalization. Update `rules/bidders.md` §E2:
+- Delete: "All N rows share the same BidderID."
+- Add: "**BidderID is an event-sequence number, not a bidder-identity number.** Joint-bidder rows carry `joint_bidder_members=[bidder_NN, bidder_MM, ...]` (canonical IDs) on each row; each row still has its own unique event-sequence `BidderID` assigned by `pipeline._canonicalize_order()`. A joint consortium on a single Bid row has one BidderID; the constituent canonical IDs live in `joint_bidder_members`."
+- Ensure the example rows in §E2 (if any) reflect this — joint Bid row has `BidderID=14, joint_bidder_members=["bidder_06","bidder_07"]`, not two rows sharing BidderID.
+
+**Acceptance.** `rules/bidders.md` §E2 no longer says "share BidderID." Existing reference data (e.g. mac-gray CSC/Pamplona) should already match this — verify by grep.
+
+**Effort.** 25 minutes.
+
+**Dependencies.** None (doc-only).
+
+---
+
+### T2-D. §L2 phase-boundary validations
+
+**Problem.** `rules/events.md` §L2 promises four phase-boundary checks; only one (single-Executed in highest phase) is implemented (as §P-S4). Three are silent.
+
+**Fix.** Implement `orphan_phase_2` (hard) and `stale_prior_too_recent` (hard); delete the ambiguous "empty gap" promise.
+
+Implementation sketch (add `_invariant_p_l1` and `_invariant_p_l2` to `pipeline.py`, wire into `validate()`):
+
 ```python
-# In _invariant_p_r5:
-registry = deal.get("bidder_registry", {})
-for i, ev in enumerate(events):
-    name = ev.get("bidder_name")
-    alias = ev.get("bidder_alias")
-    if name is None:
-        continue
-    if name not in registry:
-        flags.append({"row_index": i, "code": "bidder_not_in_registry", "severity": "hard", ...})
-        continue
-    aliases = set(registry[name].get("aliases_observed", []))
-    resolved = registry[name].get("resolved_name")
-    if alias and alias not in aliases:
-        flags.append({"row_index": i, "code": "bidder_alias_not_observed", "severity": "hard",
-                      "reason": f"bidder_alias={alias!r} not in registry's aliases_observed for {name!r}"})
-    if resolved and resolved not in aliases:
-        flags.append({"row_index": i, "code": "resolved_name_not_observed", "severity": "soft", ...})
+def _invariant_p_l1(events: list[dict]) -> list[dict]:
+    """§P-L1 — if any event has process_phase == 2, then phase 1 must contain
+    both a Terminated and a Restarted event (the phase-1 closure + phase-2
+    opening pair)."""
+    phase_values = {ev.get("process_phase") for ev in events}
+    if 2 not in phase_values:
+        return []
+    phase_1_notes = {
+        ev.get("bid_note") for ev in events
+        if ev.get("process_phase") == 1
+    }
+    missing = [n for n in ("Terminated", "Restarted") if n not in phase_1_notes]
+    if missing:
+        return [{
+            "code": "orphan_phase_2",
+            "severity": "hard",
+            "reason": f"§P-L1: process_phase=2 events exist but phase 1 is missing {missing!r}",
+            "deal_level": True,
+        }]
+    return []
+
+def _invariant_p_l2(events: list[dict]) -> list[dict]:
+    """§P-L2 — phase 0 events (stale prior attempt) must be at least 6 months
+    before any phase≥1 event."""
+    import datetime as _dt
+    flags = []
+    phase_0_dates = [
+        ev.get("bid_date_precise") for ev in events
+        if ev.get("process_phase") == 0 and ev.get("bid_date_precise")
+    ]
+    main_dates = [
+        ev.get("bid_date_precise") for ev in events
+        if (ev.get("process_phase") or 0) >= 1 and ev.get("bid_date_precise")
+    ]
+    if not phase_0_dates or not main_dates:
+        return []
+    def _parse(s):
+        try: return _dt.date.fromisoformat(s)
+        except (TypeError, ValueError): return None
+    p0 = [d for d in (_parse(s) for s in phase_0_dates) if d]
+    pm = [d for d in (_parse(s) for s in main_dates) if d]
+    if not p0 or not pm:
+        return []
+    latest_stale = max(p0)
+    earliest_main = min(pm)
+    delta_days = (earliest_main - latest_stale).days
+    if delta_days < 180:  # ~6 months
+        flags.append({
+            "code": "stale_prior_too_recent",
+            "severity": "hard",
+            "reason": f"§P-L2: latest phase-0 {latest_stale.isoformat()} is only {delta_days} days before earliest phase≥1 {earliest_main.isoformat()} (<180-day minimum)",
+            "deal_level": True,
+        })
+    return flags
 ```
 
-**Acceptance.** Fixture: row with `bidder_alias="Party Z"` but registry has `aliases_observed=["Party A","Party B"]` → hard flag.
+Add §P-L1 and §P-L2 sections to `rules/invariants.md` + table rows. Delete the ambiguous "empty gap between Terminated and Restarted" clause from `rules/events.md` §L2. Delete the unimplemented `phase_boundary_inferred` flag name (already covered by T1-D).
 
-**Effort.** 45 minutes code + fixtures.
+**Acceptance.**
+- Fixture `tests/fixtures/pl1_phase2_without_restart.json` (has phase-2 event, phase-1 lacks Restarted) → hard `orphan_phase_2`.
+- Fixture `tests/fixtures/pl1_phase2_with_pair.json` (phase-1 has Terminated + Restarted, phase-2 exists) → no flag.
+- Fixture `tests/fixtures/pl2_stale_prior_too_recent.json` (phase-0 event at 2013-06-01, phase-1 earliest at 2013-08-01) → hard `stale_prior_too_recent`.
+- Fixture `tests/fixtures/pl2_stale_prior_ok.json` (phase-0 at 2013-01-01, phase-1 at 2013-08-01) → no flag.
+- Reference rerun: only zep has phase 2 (verify: should have Terminated+Restarted in phase 1 → no flag). Only penford has phase 0 (verify: Ingredion's 2007/2009 mentions are >>6 months before 2014 process → no flag).
+
+**Effort.** 90–120 minutes (2 invariants + 4 fixtures + rulebook sections + `validate()` wiring).
+
+**Dependencies.** T1-A.
 
 ---
 
-### T2-F. §H5 bid_revision_out_of_order (implement)
+### T2-E. §E4 alias-registry validation
 
-**Problem.** `rules/bids.md:350-379` §H5 promises a soft check: "for any bidder with >1 bid row, bids are chronologically ordered by `bid_date_precise`." No such invariant exists in `pipeline.py`. Also `rules/invariants.md` has no §P-H5 section.
+**Problem.** `rules/bidders.md` §E4 promises `bidder_alias ∈ aliases_observed[bidder_name]` and `resolved_name ∈ aliases_observed` checks. `pipeline.py::_invariant_p_r5` only checks `bidder_name ∈ registry`.
 
-**Fix.** Add `_invariant_p_h5`:
+**Fix.** Extend `_invariant_p_r5`:
+
 ```python
-def _invariant_p_h5(events):
+def _invariant_p_r5(events, deal):
+    flags = []
+    registry = deal.get("bidder_registry", {}) or {}
+    for i, ev in enumerate(events):
+        name = ev.get("bidder_name")
+        if name is None:
+            continue  # unnamed placeholder; §E3 allowed
+        if name not in registry:
+            flags.append({
+                "row_index": i, "code": "bidder_not_in_registry", "severity": "hard",
+                "reason": f"§P-R5/§E4: bidder_name={name!r} not a key in bidder_registry",
+            })
+            continue
+        entry = registry[name]
+        aliases = set(entry.get("aliases_observed", []) or [])
+        alias = ev.get("bidder_alias")
+        if alias is not None and alias not in aliases:
+            flags.append({
+                "row_index": i, "code": "bidder_alias_not_observed", "severity": "hard",
+                "reason": f"§P-R5/§E4: bidder_alias={alias!r} for {name!r} not in aliases_observed={sorted(aliases)!r}",
+            })
+        resolved = entry.get("resolved_name")
+        if resolved is not None and resolved not in aliases:
+            flags.append({
+                "row_index": i, "code": "resolved_name_not_observed", "severity": "soft",
+                "reason": f"§P-R5/§E4: resolved_name={resolved!r} for {name!r} not in aliases_observed={sorted(aliases)!r}",
+            })
+    return flags
+```
+
+Update `rules/invariants.md` §P-R5 description to match (list all three flag codes).
+
+**Acceptance.**
+- Fixture `tests/fixtures/pr5_alias_mismatch.json` (row has `bidder_alias="Party Z"`, registry has `aliases_observed=["Party A","Party B"]`) → hard `bidder_alias_not_observed`.
+- Reference rerun: should not emit new flags of this code if the extractor is emitting consistently.
+
+**Effort.** 45 minutes.
+
+**Dependencies.** T1-A.
+
+---
+
+### T2-F. §H5 bid_revision_out_of_order
+
+**Problem.** `rules/bids.md` §H5 promises a soft check for chronologically ordered bids by the same bidder. Not implemented. `rules/invariants.md` has no §P-H5 section.
+
+**Fix.** Add `_invariant_p_h5`, add `§P-H5` section to `rules/invariants.md` (include it in the §P-* reference table), wire into `validate()`:
+
+```python
+def _invariant_p_h5(events: list[dict]) -> list[dict]:
+    """§P-H5 — for any bidder with >1 bid row, bids should be chronologically
+    ordered by bid_date_precise. Violations emit soft bid_revision_out_of_order."""
+    from collections import defaultdict
     by_name = defaultdict(list)
     for i, ev in enumerate(events):
         if ev.get("bid_note") == "Bid" and ev.get("bidder_name"):
-            by_name[ev["bidder_name"]].append((i, ev))
+            d = ev.get("bid_date_precise")
+            if d:  # skip null dates; §B3 handles those separately
+                by_name[ev["bidder_name"]].append((i, d))
     flags = []
     for name, rows in by_name.items():
-        dates = [r[1].get("bid_date_precise") for r in rows if r[1].get("bid_date_precise")]
+        if len(rows) <= 1:
+            continue
+        dates = [d for _, d in rows]
         if dates != sorted(dates):
-            flags.append({"row_index": rows[-1][0], "code": "bid_revision_out_of_order",
-                          "severity": "soft", ...})
+            flags.append({
+                "row_index": rows[-1][0],
+                "code": "bid_revision_out_of_order",
+                "severity": "soft",
+                "reason": f"§P-H5: bidder {name!r} has {len(rows)} bids with dates not in chronological order: {dates!r}",
+            })
     return flags
 ```
-Add §P-H5 to `rules/invariants.md`. Wire into `validate()`.
 
-**Acceptance.** Fixture: bidder X has bid at 2016-05-10 then bid at 2016-04-20 (out of order) → soft flag.
+**Acceptance.** Fixture `tests/fixtures/ph5_out_of_order.json` (same bidder, bid at 2016-05-10 then bid at 2016-04-20) → soft `bid_revision_out_of_order`.
 
 **Effort.** 30 minutes.
+
+**Dependencies.** T1-A.
 
 ---
 
 ### T2-G. `_invariant_p_r3` null-permission too broad
 
-**Problem.** `pipeline.py:436-447`: `if bn is None or bn in EVENT_VOCABULARY: continue` — null allowed for any row. §P-R3 spec at `rules/invariants.md:55-58`: "null permitted only on bid rows per §C3" (a narrow legacy window). Current §C1/§C3 say bid rows use `bid_note="Bid"` (no null). The permissive code defeats the spec.
+**Problem.** `pipeline.py::_invariant_p_r3` allows `bid_note is None` for any row. `rules/invariants.md` §P-R3 says "null permitted only on bid rows per §C3," but §C3 now requires `bid_note="Bid"` on bid rows. The null permission is a legacy artifact.
 
-**Fix.**
+**Fix.** Remove the null-permissive short-circuit. Replace with hard rejection:
+
 ```python
 if bn is None:
-    # Under §C3, bid_note="Bid" is required on bid rows. null is a legacy
-    # artifact from migration. Reject in production.
-    flags.append({"row_index": i, "code": "bid_note_null", "severity": "hard",
-                  "reason": "§P-R3: bid_note=None; §C3 requires 'Bid' on bid rows."})
+    flags.append({
+        "row_index": i, "code": "bid_note_null", "severity": "hard",
+        "reason": "§P-R3: bid_note is null; §C1/§C3 require a closed-vocabulary value on every row (bid rows use 'Bid').",
+    })
     continue
 if bn not in EVENT_VOCABULARY:
-    flags.append({...})
+    flags.append({...})  # existing bid_note_unknown path
 ```
-OR: if legacy null rows actually exist and must be tolerated, narrow the permission to rows with `bid_value` / `bid_value_pershare` populated AND emit soft flag `bid_note_missing_legacy`.
 
-**Acceptance.** Rerun reference set — report any new flags. Decide tolerance policy.
+No backward-compat — if any existing data has null `bid_note`, those rows now flag hard and require extractor fix-up on rerun.
 
-**Effort.** 30 minutes.
+Update `rules/invariants.md` §P-R3 text to drop the "or is null (permitted on bid rows)" clause.
+
+**Acceptance.**
+- Fixture `tests/fixtures/pr3_null_bid_note.json`: row with `bid_note=None` → hard `bid_note_null`.
+- Reference rerun: spot-check — if any reference deal emits null `bid_note`, that's an extractor defect; flag via Austin adjudication.
+
+**Effort.** 25 minutes.
+
+**Dependencies.** T1-A.
 
 ---
 
-### T2-H. Clarify that the Adjudicator is orchestrator-spawned, not Python-spawned
+### T2-H. Clarify Adjudicator is orchestrator-spawned (doc-only)
 
-**Problem — miscalibrated in GPT Pro's review.** GPT Pro flagged "the Adjudicator is documented but never implemented, no Python spawn path." That's literally true but misreads the architecture: the Adjudicator is **intentionally** orchestrator-spawned. `pipeline.py:1224-1227` explicitly states: "Does NOT spawn adjudicator subagents — that's the orchestrator's job, performed BEFORE calling this function. If the caller has adjudicated soft flags, they should mutate raw_extraction['events'][i]['flags'] and/or raw_extraction['deal']['deal_flags'] with adjudicator verdicts before passing raw_extraction in."
+**Problem — miscalibrated in GPT Pro's review; corrected by Austin.** GPT Pro flagged "the Adjudicator is documented but never implemented, no Python spawn path." Literally true, but misreads the architecture: the Adjudicator is **intentionally** orchestrator-spawned. `pipeline.finalize()` docstring explicitly states: "Does NOT spawn adjudicator subagents — that's the orchestrator's job, performed BEFORE calling this function."
 
-This is an accurate design note, not ghost code. The orchestrator (the LLM driving the session — a Claude Code conversation) reads the validator's soft flags, spawns an Adjudicator subagent (or does adjudication inline), mutates the raw extraction with verdicts, then calls `pipeline.finalize()`. This pattern has been used repeatedly (e.g. the 4 verification agents in this very session, the 3 re-extraction agents for iter-7, the 2 dead-code audit agents).
+This is accurate — not ghost code. The orchestrator (LLM driving the session) spawns an Adjudicator subagent, gets a verdict, mutates the raw extraction, then calls `pipeline.finalize()`. This pattern is in active use (see §1.5).
 
-The real problem is that SKILL.md's orchestration pseudocode (lines 74-92) doesn't make it clear enough that "spawn Adjudicator subagent" is an **LLM-orchestrator action**, not a Python call.
+The problem is `SKILL.md`'s orchestration pseudocode doesn't make clear that "spawn Adjudicator subagent" is an **LLM-orchestrator action**, not a Python entrypoint.
 
-**Fix.** Documentation clarity, not deletion.
-1. Update `SKILL.md` orchestration pseudocode to explicitly label the Adjudicator step as "orchestrator-side LLM call, not a Python entry point." Add a cross-reference to the `pipeline.finalize()` docstring.
-2. Add a short note in `pipeline.py` module docstring (around line 1-23) restating the same division of concerns: Python owns the validator + finalization; the LLM orchestrator owns Extractor spawning, Adjudicator spawning, and pre-finalize flag mutation.
-3. Do NOT implement an `adjudicate()` function in Python — the soft-flag workflow remains orchestrator-controlled. Volume-driven: current soft-flag load (20 on one deal) is hand-tractable.
+**Fix.** Doc clarity only.
+1. Update `SKILL.md` orchestration pseudocode (around the "for each soft flag..." block): explicitly label the Adjudicator step as "orchestrator-side LLM call; no Python entrypoint. See `pipeline.finalize()` docstring for the mutation contract."
+2. Add a 2–3 line note in `pipeline.py` module docstring restating the division of concerns: Python owns validator + canonicalization + finalization; the LLM orchestrator owns Extractor spawning, Adjudicator spawning, and pre-finalize flag mutation.
+3. **Do NOT implement an `adjudicate()` function.** Soft-flag workflow remains orchestrator-controlled. Current volume (20 softs on one deal) is hand-tractable.
 
 **Acceptance.**
-- SKILL.md line 74-92 contract is unambiguous about which steps are Python vs LLM-orchestrator.
-- `pipeline.py` docstring does not invite readers to look for an `adjudicate()` that isn't there.
-- Architecture description matches the actual operating pattern (already working in this repo).
+- `SKILL.md` orchestration section is unambiguous about Python vs LLM-orchestrator boundaries.
+- `pipeline.py` module docstring does not invite readers to look for an `adjudicate()` that isn't there.
+- Architecture description matches the actual operating pattern.
 
-**Effort.** 15 minutes doc clarification.
+**Effort.** 15–20 minutes.
+
+**Dependencies.** None.
 
 ---
 
 ### T2-I. Fix `run.py --dry-run` asymmetry
 
-**Problem.** `run.py:59-75` dry-run calls `pipeline.validate()` directly; non-dry-run goes through `pipeline.finalize()` which applies `_apply_unnamed_nda_promotions()` + `_canonicalize_order()` first. Dry-run reports flags finalize would fix and misses flags finalize introduces.
+**Problem.** `run.py --dry-run` calls `pipeline.validate()` directly; non-dry-run calls `pipeline.finalize()` which first applies `_apply_unnamed_nda_promotions()` + `_canonicalize_order()`. Dry-run reports flags finalize would fix, and misses flags finalize introduces (e.g. `nda_promotion_failed`).
 
-**Fix.** In dry-run, call the same pre-validate transform path as finalize:
+**Fix.** Make dry-run go through the same transform path as finalize, but skip writes. Extract a shared helper from `finalize()`:
+
 ```python
-if dry_run:
-    raw_copy = copy.deepcopy(raw_extraction)
-    promotion_log = pipeline._apply_unnamed_nda_promotions(raw_copy)
-    pipeline._canonicalize_order(raw_copy)
-    # ... inject failed-promotion flags as finalize does ...
-    result = pipeline.validate(raw_copy, filing)
-    ...
+# pipeline.py — new helper
+def prepare_for_validate(slug, raw_extraction, filing=None):
+    """Apply all pre-validate transforms (promotion + canonicalize). Return
+    the mutated raw_extraction and a promotion log. Does NOT validate or write."""
+    if filing is None:
+        filing = load_filing(slug)
+    promotion_log = _apply_unnamed_nda_promotions(raw_extraction)
+    _canonicalize_order(raw_extraction)
+    # Inject failed-promotion flags (same as finalize does)
+    failed_by_id = {id(e["hint"]): e["reason"] for e in promotion_log if e.get("status") == "failed"}
+    for ev in raw_extraction.get("events", []):
+        promo = ev.get("unnamed_nda_promotion")
+        if promo and id(promo) in failed_by_id:
+            ev.setdefault("flags", []).append({
+                "code": "nda_promotion_failed", "severity": "hard",
+                "reason": failed_by_id[id(promo)],
+            })
+    return raw_extraction, filing, promotion_log
 ```
-Make the transform + validate block a helper used by both paths.
 
-**Acceptance.** Dry-run of iter-7 providence reports same flag profile (0 hard, 20 soft) as finalize.
+Call it from both `finalize()` (existing path) and `run.py::finalize_deal(dry_run=True)`. In dry-run, deep-copy raw_extraction before passing in so the on-disk file doesn't drift.
 
-**Effort.** 30 minutes.
+**Acceptance.**
+- `python3 run.py --slug providence-worcester --raw-extraction /tmp/iter8-raw/providence-worcester.raw.json --dry-run` reports the same flag profile as the subsequent non-dry-run.
 
----
+**Effort.** 40 minutes.
 
-## TIER 3 — MEDIUM (build_reference + diff + docs)
-
-### T3-A. Remove `bidder_type.note` from `scripts/build_reference.py`
-
-**Problem.** `scripts/build_reference.py:437-469` emits `{"base", "non_us", "public", "note"}`. Schema (§F1) requires only 3 fields — no `note`.
-
-**Fix.** Drop the `note` field. Any content that was going there should either (a) be discarded, or (b) go to a row-level `flags[]` entry with appropriate code. All 9 reference JSONs should be regenerated.
-
-**Acceptance.** `grep -rn '"note":' reference/alex/*.json` returns zero matches for `bidder_type.note`.
-
-**Effort.** 30 minutes (fix + regenerate + spot-check).
+**Dependencies.** None. Can land any time.
 
 ---
 
-### T3-B. Fix `first_appearance_row_index` field name in registry
+## 5. TIER 3 — MEDIUM
 
-**Problem.** `scripts/build_reference.py:883` emits `"first_appearance_BidderID"`; schema (§E3) specifies `"first_appearance_row_index"`. All 9 reference JSONs use the wrong key.
+### T3-A. Remove `bidder_type.note` from reference JSONs
 
-**Fix.** Rename the field in `build_reference.py` (it should be the row-index, not the BidderID — though in practice with §A4 strict monotonicity these coincide, the schema choice is row-index for interpretability).
-
-**Acceptance.** All 9 `reference/alex/*.json` have `first_appearance_row_index` under `bidder_registry.{bidder_XX}`.
-
-**Effort.** 15 minutes.
-
----
-
-### T3-C. `scoring/diff.py` duplicate-bucket matching brittleness
-
-**Problem.** `scoring/diff.py:168-184` matches rows by `join_key = (normalize_bidder(alias), bid_note, bid_date_precise)`. When AI has N rows with the same key and Alex has M rows (e.g. AI atomizes 15 NDAs on one day, Alex aggregates 3), `zip()` pairs the first min(N,M) in insertion order with no tiebreaker. Remaining rows go to `ai_only_rows` / `alex_only_rows`. Field diffs inside paired buckets are arbitrary.
-
-**Fix.** When `len(ai_bucket) != len(alex_bucket)`:
-- Emit a single pseudo-row disagreement `cardinality_mismatch: AI={N} vs Alex={M}` for that key.
-- Do NOT attempt field-level pairing inside buckets with cardinality mismatch (it's noise).
-- Mark all rows as `cardinality_mismatched` in the report so Austin knows to review the whole bucket.
-Alternatively, when cardinalities match, retain current zip. When they differ, collapse the whole bucket into a single diff entry.
-
-**Acceptance.** Run diff on providence iter-7: the 27-vs-2 NDA mismatch should produce ONE cardinality-mismatch entry, not 25 ai_only rows.
-
-**Effort.** 60 minutes (algorithm rewrite + test + regenerate reports).
-
----
-
-### T3-D. Remove deprecated vocabulary from `build_reference.py` rank map
-
-**Problem.** `scripts/build_reference.py:143-173` rank map contains `Target Initiated` (not in §C1), `DropBelowFormal` (not in §C1), `DropAtFormal`, `Final Round Formal`, `Late Bid` — 5 entries. `rules/events.md:9-63` §C1 is the closed vocabulary; these aren't in it.
+**Problem.** `scripts/build_reference.py` emits `bidder_type = {base, non_us, public, note}`. Schema (§F1) requires `{base, non_us, public}` — no `note` field.
 
 **Fix.**
-- Option A (safe): audit whether any Alex xlsx rows use these legacy labels. If yes, the `_migrate_bid_note()` function should convert them to current §C1 vocabulary (`Target Initiated` → `Target Interest`, `DropBelowFormal` → `DropBelowInf`, etc.). Then delete from rank map.
-- Option B (loud): delete rank map entries outright. If migration missed a row, the pipeline will emit a vocabulary-violation flag.
+1. Edit `scripts/build_reference.py` — delete the `note` field construction in `bidder_type` (it was preserving Alex's xlsx note-column content; we don't need it on the reference JSON). If there's salvageable content, move to a row-level `flags[]` entry with code `bidder_type_note_legacy` severity `info`. Otherwise discard.
+2. **Regenerate all 9 reference JSONs:**
+   ```bash
+   python3 scripts/build_reference.py --all
+   # or, if there is no --all flag:
+   for slug in medivation imprivata zep providence-worcester penford mac-gray petsmart-inc stec saks; do
+     python3 scripts/build_reference.py --slug $slug
+   done
+   ```
+   (Inspect `build_reference.py`'s main block to confirm the CLI — if neither flag exists, add one as part of this fix; this is not overengineering because it's immediately required.)
 
-Recommend B. Delete. Fail loud.
+**Acceptance.** `grep -c '"note"' reference/alex/*.json` within any `bidder_type` object returns 0 across all 9 files.
 
-**Acceptance.** `reference/alex/*.json` regenerated. No entries use deprecated labels. Any new `unknown_bid_note` flags = migration gap to investigate.
+**Effort.** 30 minutes (fix + regen + verify).
 
-**Effort.** 30 minutes + audit.
+**Dependencies.** None.
 
 ---
 
-### T3-E. "Several = 3 minimum" cross-reference: add to §E3 or repoint
+### T3-B. Fix `first_appearance_row_index` field in registry
 
-**Problem.** `prompts/extract.md:35` instructs the extractor "`several` = 3 minimum; vaguer plurals emit one placeholder plus ambiguity flag. Per rules/bidders.md §E3." But §E3 (`rules/bidders.md:96-162`) covers canonical IDs / aliases / registry — no count semantics.
+**Problem.** `scripts/build_reference.py` emits `first_appearance_BidderID`; schema (§E3) specifies `first_appearance_row_index`. All 9 reference JSONs use the wrong key.
 
-**Fix.** Two options:
-- **Option A:** Add the count policy as a new sub-section (e.g. `§E3.5 — Quantifier semantics`) to `rules/bidders.md` with the rule: "exact counts stay exact (e.g., 'three parties' → 3 placeholder rows); 'several' means minimum 3; 'a number of', 'a few', 'multiple' (vague plurals) → emit one placeholder row with `unnamed_count_placeholder` info flag."
-- **Option B:** Move the rule to `rules/schema.md` §Scope-3 (which already discusses placeholder row emission). Repoint the prompt.
+**Fix.** Rename the field in the converter. Grep confirms no code consumer reads this field — it's there for human readability / downstream analysis. Safe rename:
+- `scripts/build_reference.py`: emit `"first_appearance_row_index"`, value = the row's position in the events array (0-indexed or 1-indexed — pick whichever matches the §E3 example; likely 1-indexed by convention).
+- Regenerate all 9 reference JSONs (same command as T3-A).
 
-Recommend A (keep bidder concerns in bidders.md).
-
-**Acceptance.** `rules/bidders.md §E3.5` (or §E5) contains the rule. Prompt pointer updated.
+**Acceptance.** Grep:
+- `"first_appearance_BidderID"` appears 0 times in `reference/alex/*.json`.
+- `"first_appearance_row_index"` appears ≥ the count of registered bidders.
 
 **Effort.** 20 minutes.
 
+**Dependencies.** Share a commit with T3-A (both require reference regen).
+
 ---
 
-### T3-F. `prompts/extract.md` line 3 — "two-agent" is false
+### T3-C. `scoring/diff.py` cardinality-mismatch handling
 
-**Problem.** `prompts/extract.md:3`: "You are the Extractor in a two-agent M&A auction extraction pipeline." Current architecture is Extractor LLM + Python Validator (+ planned Adjudicator being deleted per T2-H). The prompt lies to the extractor about its surroundings on its first sentence.
+**Problem.** `scoring/diff.py` matches rows by `(normalized_alias, bid_note, bid_date_precise)`. When buckets have cardinality mismatch (AI=15 NDAs same day, Alex=3), the code `zip()`s the first min(N,M) arbitrarily, leaves tail rows as ai-only/alex-only, and field-diffs inside paired buckets are random.
 
-**Fix.** Rewrite as: "You are the Extractor. Your output feeds a deterministic Python validator (`pipeline.validate()`). A human reviewer (Austin) audits every flagged row against the filing text."
+**Fix.** In the diff algorithm, after building buckets:
+- If `len(ai_bucket) == len(alex_bucket) == 1`: compare fields as today.
+- If `len(ai_bucket) == len(alex_bucket) > 1`: still pair by zip (best-effort, document as "order-dependent match").
+- **If `len(ai_bucket) != len(alex_bucket)`:** do NOT attempt field-level pairing. Emit a single diff entry with code `cardinality_mismatch`, payload `{"ai_count": N, "alex_count": M, "bucket_key": key, "ai_rows": [...], "alex_rows": [...]}`. All rows in the bucket go into the mismatch entry; no ai-only/alex-only side-dump (those counts would be misleading).
 
-Also check `prompts/extract.md:47` reference to "Validator or human decide" — "Validator" is Python, not an agent. Adjust wording.
+Update `scoring/diff.py` report formatting (markdown + JSON) to show cardinality mismatches prominently.
 
-**Acceptance.** No "two-agent" anywhere in `prompts/extract.md`.
+**Acceptance.**
+- Regenerate providence diff: the 27-AI-NDA vs 2-Alex-NDA mismatch produces ONE entry (cardinality_mismatch), not 25 ai-only rows.
+- Regenerate all 9 diffs post-T1-E — report total field-disagreement counts and cardinality-mismatch counts as before/after.
 
-**Effort.** 15 minutes.
+**Effort.** 75 minutes (rewrite + re-run diffs + spot-check formatting).
+
+**Dependencies.** T1-E (rstrip bug fix; the bucket keys depend on correct normalization).
+
+---
+
+### T3-D. Delete deprecated vocabulary from `build_reference.py` rank map
+
+**Problem.** `scripts/build_reference.py` same-date rank map contains `Target Initiated`, `DropBelowFormal`, `DropAtFormal`, `Final Round Formal`, `Late Bid` — none of these are in `rules/events.md` §C1 closed vocabulary.
+
+**Fix.** Delete those entries from the rank map (fail loud per §0.1 — no backward-compat). If migration (`_migrate_bid_note`) correctly converts old xlsx labels to current vocabulary, the rank map never sees them. If any regenerated row ends up with one of these labels, the validator emits `bid_note_unknown` (§P-R3) — that's the intended signal.
+
+**Acceptance.**
+- Grep `scripts/build_reference.py` rank map: the 5 deprecated labels are gone.
+- Regenerate all 9 reference JSONs (share commit with T3-A + T3-B).
+- Post-regen `grep '"bid_note":' reference/alex/*.json | sort -u` — every value appears in §C1.
+
+**Effort.** 20 minutes.
+
+**Dependencies.** Share commit with T3-A + T3-B (all three touch `build_reference.py` + regen).
+
+---
+
+### T3-E. "Several = 3 minimum" — formalize in rulebook
+
+**Problem.** `prompts/extract.md` cites `rules/bidders.md §E3` for the "several = 3 minimum" quantifier rule. §E3 has no such content.
+
+**Fix.** Add a new subsection to `rules/bidders.md` (e.g. §E5 — Unnamed-party quantifier semantics):
+
+> ### §E5 — Unnamed-party quantifier semantics (🟩 RESOLVED)
+>
+> When the filing uses a quantifier for unnamed parties:
+> - **Exact counts:** "three parties" → 3 placeholder rows (`bidder_name` null, `unnamed_count_placeholder=3` info flag on the first).
+> - **"several":** minimum 3. Emit 3 placeholder rows + `unnamed_count_placeholder=3` info flag. A narrative elsewhere may reveal a higher count (e.g. "15 parties" in a subsequent narration) — reconcile by adjusting on Austin's review.
+> - **Vague plurals** ("a number of," "a few," "multiple"): emit ONE placeholder row with `bid_note="NDA"` (or whatever the event type is) and a `vague_plural_unnamed` info flag. Do not guess a count.
+> - **"certain parties", "various parties":** same as vague plurals.
+>
+> **Rationale.** Dominates quality at 392 scale; over-atomization inflates counts, under-atomization loses bidders. The explicit-count → "several" → vague-plural ladder is the minimum-bias stance.
+
+Update `prompts/extract.md` — point the "several = 3 minimum" line to `rules/bidders.md §E5` (not §E3).
+
+**Acceptance.** `rules/bidders.md` has a §E5 section. `prompts/extract.md` cites §E5 at the right line.
+
+**Effort.** 25 minutes.
+
+**Dependencies.** None.
+
+---
+
+### T3-F. `prompts/extract.md` "two-agent" rewrite
+
+**Problem.** `prompts/extract.md` line ~3: "You are the Extractor in a two-agent M&A auction extraction pipeline." Current architecture is Extractor LLM + Python Validator + orchestrator-spawned Adjudicator (optional).
+
+**Fix.** Rewrite the opening:
+
+> You are the Extractor in an M&A auction extraction pipeline. Your
+> output is a single JSON block conforming to `rules/schema.md` §R1.
+> Your JSON feeds a deterministic Python validator (`pipeline.validate()`)
+> that checks structural invariants. If the validator raises soft
+> flags requiring judgment, an Adjudicator subagent (spawned by the
+> orchestrator) reads the flagged rows against the filing and annotates
+> verdicts. Austin (human) performs final adjudication of every AI-vs-Alex
+> diff on reference deals against the SEC filing (ground truth).
+
+Also sweep `prompts/extract.md` for any other reference to "Validator" as an agent (it's Python) or references to a `Planner`/`Canonicalizer` agent (those don't exist — `_canonicalize_order` is Python).
+
+**Acceptance.** No grep hits for `"two-agent"` in `prompts/extract.md` or anywhere in repo. Any mention of "Validator" is clearly Python.
+
+**Effort.** 20 minutes.
+
+**Dependencies.** None.
 
 ---
 
 ### T3-G. Document `state/flags.jsonl` timestamp-filter requirement
 
-**Problem.** The jsonl file is append-only. Accumulated stale entries from prior runs inflate counts unless filtered by `logged_at`. Agents and humans have been fooled by this (per project-memory). Neither SKILL.md nor rules/schema.md documents the gotcha.
+**Problem.** `state/flags.jsonl` is append-only. Stale entries from prior runs inflate counts unless filtered by `logged_at`. SKILL.md and rules/schema.md don't document this.
 
-**Fix.** Add a note in `rules/schema.md` flag section (around line 311-313) and in `SKILL.md` state-log bullet:
-> "`state/flags.jsonl` is append-only and accumulates history. For current-state queries, filter by `logged_at` timestamp ≥ the latest finalize for the deal, OR trust `output/extractions/*.json` `flags[]` arrays (the post-finalize authoritative copy) and `state/progress.json` flag_count."
+**Fix.** Add a 2-line note in both files:
+
+In `rules/schema.md` flag-state section:
+> **Note:** `state/flags.jsonl` is append-only and accumulates history. For current-state queries, filter by `logged_at >= {deal's most recent finalize timestamp}`, OR read `output/extractions/{slug}.json` `flags[]` arrays (the post-finalize authoritative copy) and `state/progress.json` `flag_count` (which reflects the latest finalize).
+
+In `SKILL.md` state-log bullet: same note, cross-ref to `rules/schema.md`.
 
 **Acceptance.** Note appears in both files.
 
 **Effort.** 10 minutes.
 
----
-
-## TIER 4 — MINOR (cleanup)
-
-### T4-A. Reopen the deferred 25-deal language pilot
-
-Not a code change. Project decision: before promoting to 392 target deals, pilot §G1/§K2/date-phrase coverage on ~25 varied (non-reference) deals. The 9 reference deals are probably too homogeneous for trigger-phrase coverage signals. Decide scope after T1-B (§P-G2 directionality) lands.
-
-**Effort.** Scope decision + pilot run: 1 day.
+**Dependencies.** None.
 
 ---
 
-### T4-B. Fixture tests for every invariant
+## 6. TIER 4 — MINOR
 
-No pytest framework exists. Add `tests/` directory with one JSON fixture + one expected-flags JSON per invariant. Use `pytest` or plain `python -m unittest`. Start with invariants changed in TIER 1–2.
+### T4-A. Reopen the 25-deal language pilot
 
-Priorities: §P-G2 (T1-B, T1-C), §P-D5 (T2-A), §P-S1, §P-S3 (T2-B), §P-D3, §P-R3 (T2-G), §P-R5 (T2-E), §P-H5 (T2-F), §P-L1/L2 (T2-D).
+**Scope.** Before promoting to 392 target deals, run `scripts/fetch_filings.py` on ~25 non-reference seeds from `seeds.csv` (sampled across form types and deal archetypes). Spawn Extractor subagents on each. **Do not validate or diff** (no Alex reference); instead, scan the raw extractions for:
+- §G1 trigger phrases that did NOT fire (filing language that should have been informal/formal but wasn't captured in the trigger list).
+- `date_inferred_from_context` and `date_phrase_unmapped` flag rates.
+- `unknown_bid_note` / `phase_boundary_inferred` / other soft flags that suggest new rule gaps.
 
-**Effort.** 2–3 hours for initial framework + 10 fixtures.
+Produce a short report in `quality_reports/plans/YYYY-MM-DD_language-pilot-25.md`. Austin decides whether to extend §G1 trigger tables or §B1 date phrases before 392 promotion.
 
----
+**Not blocking this spec.** Schedule after TIER 1+2+3 lands.
 
-## Execution order
-
-1. **T1-A** first. (Flag accounting fixes all downstream status claims.)
-2. **T1-B, T1-C, T1-E** in parallel. (Independent; all catch real bugs.)
-3. **T1-D** (Providence/§I1/§M2) — doc-only, after or parallel with above.
-4. **T1-F** (fetcher 425) — standalone.
-5. **T2 tier** after T1 lands. Run reference set once post-T1 and re-baseline the flag profile.
-6. **T3 tier** after T2 lands.
-7. **T4** as available bandwidth permits.
-8. **Rerun reference set** only after T1 + T2 fixes land. Treat first post-fix rerun as baseline, not clock-run #1.
+**Effort.** 1 workday (fetch + 25 extractor spawns + report). Do not run during TIER 1–3 execution — the rulebook is unstable.
 
 ---
 
-## Exit-clock impact
+### T4-B. Expand fixture test coverage (opportunistic)
 
-All TIER 1 and TIER 2 changes **touch the rulebook** (rules/*.md + prompts/extract.md + validator code). Per the exit-clock definition, this resets the clock to **0/3**. The pre-spec "pragmatic 1/3" interpretation from iter-7 closeout is voided by this spec's changes.
+**Scope.** After TIER 1–2 land, extend `tests/fixtures/` to cover:
+- Every §P-* invariant with at least one pass-case and one fail-case fixture.
+- `_apply_unnamed_nda_promotions` — at least one success and one of each documented failure mode.
+- `_canonicalize_order` — at least one test for §A2 (date sort) and one for §A3 (same-date rank).
+- `count_flags` from T1-A — covered already.
 
-After T1+T2 land and one full reference-set rerun passes with: (a) zero hard flags, (b) all soft flags adjudicated or explicitly accepted (Path A on providence nda_without_bid_or_drop), (c) all extractor-embedded annotation flags accounted for — that rerun counts as **1/3**. Run 2 & 3 follow with no further rulebook change.
+This is ongoing maintenance, not blocking. Add fixtures when touching the related code.
 
----
-
-## Out of scope
-
-- NDA atomization-vs-aggregation adjudication (AI emits 15–27 NDAs, Alex aggregates 2–3) — per-deal human review, not a spec item.
-- `bidder_type.public` converter-policy inference — separate converter-policy decision, affects `scripts/build_reference.py`.
-- Target-deal rollout to 392 — blocked behind exit-clock gate.
+**Effort.** 15–30 minutes per fixture. No deadline.
 
 ---
 
-## Success criteria for this spec
+## 7. Execution order
 
-- All 25 VERIFIED findings from the GPT Pro review have been addressed (TIER 1–3).
-- Rulebook (rules/*.md + prompts/extract.md) and validator (pipeline.py) are internally consistent. Every documented invariant is implemented; every implemented invariant is documented.
-- Exit-clock semantics are explicit and measurable (combined hard+soft+info accounting from T1-A).
-- Fixture tests catch each class of bug.
-- Reference-set rerun under the post-spec rulebook produces zero hard flags + adjudicated softs.
+1. **T1-A** first (flag accounting + test framework). Nothing else's acceptance criteria work without this.
+2. **T1-B + T1-C** together (both §P-G2 fixes, share a commit + rulebook edit).
+3. **T1-D** (Providence Path A) — doc-only, parallel.
+4. **T1-E** (rstrip bug) — standalone.
+5. **T1-F** (fetcher 425) — standalone.
+6. **TIER 2**: T2-A through T2-I in any order after T1 lands. T2-D is the largest (new invariants + fixtures).
+7. **Post-TIER-2 reference-set rerun** (the first "clean" rerun under the post-spec rulebook — see §8). Treat as baseline, not clock-run #1.
+8. **TIER 3**: reference-data and diff tooling cleanup. T3-A+B+D share a commit.
+9. **Second reference-set rerun** if any TIER 3 fix changed reference JSONs or diff output — verify no regressions.
+10. **TIER 4** as bandwidth permits.
+
+---
+
+## 8. Exit-clock impact
+
+All TIER 1 and TIER 2 changes touch the rulebook (`rules/*.md` + `prompts/extract.md` + validator code). Per the exit-clock definition, **this resets the clock to 0/3** on landing. The pre-spec "pragmatic 1/3" interpretation from iter-7 closeout is voided.
+
+After all TIER 1 + TIER 2 items land and one full reference-set rerun passes with:
+- (a) **zero hard flags** across all 9 deals (combined extractor + validator, per T1-A accounting),
+- (b) all soft flags adjudicated or explicitly accepted (Path A on providence's `nda_without_bid_or_drop` is pre-accepted per T1-D),
+- (c) all extractor-embedded annotation flags accounted for in `state/progress.json` flag_counts,
+
+— **that rerun counts as 1/3.** Runs 2 and 3 follow with no further rulebook change.
+
+**If TIER 3 lands after TIER 2 rerun:** TIER 3 items that touch reference JSONs (T3-A/B/D) do NOT reset the clock (reference data is out-of-scope of the rulebook definition, per iter-7 handoff). TIER 3 items that touch the rulebook (T3-E adds §E5, T3-F rewrites prompts/extract.md) DO reset the clock. Land T3-E and T3-F before starting the clock, or after completing 3/3.
+
+---
+
+## 9. NDA atomization handling (post-spec rerun)
+
+On the post-spec rerun, the AI extractor will emit atomized NDAs (15–27 rows per deal on zep / mac-gray / providence / petsmart) while Alex's reference aggregates to 2–3 rows. Per CLAUDE.md epistemology, **this is "both correct, different interpretations"** — not a defect.
+
+For this spec's purposes: **accept the atomization asymmetry.** `scoring/diff.py` will (after T3-C lands) show cardinality-mismatch entries rather than noise. Do not modify §E2.b atomization rule. Do not regenerate Alex's reference to atomize. Those are separate decisions for Austin.
+
+---
+
+## 10. Out of scope
+
+- **NDA atomization-vs-aggregation rule change.** Covered in §9; explicitly deferred.
+- **`bidder_type.public` converter-policy inference.** 43+ field diffs trace to `scripts/build_reference.py` converter emitting `public=null` for obvious public strategics. Separate decision. Note: T3-A removes `bidder_type.note` but does not touch `public` policy.
+- **Target-deal rollout to 392.** Blocked behind exit-clock gate.
+- **Any new abstraction layer** (Planner, LLM Validator, Canonicalizer-as-agent). §0.2 forbids.
+
+---
+
+## 11. Success criteria
+
+The spec has succeeded when all of the following hold:
+
+- [ ] All 25 VERIFIED findings from the GPT Pro review have been addressed (TIER 1–3 complete).
+- [ ] Rulebook (`rules/*.md` + `prompts/extract.md`) and validator (`pipeline.py`) are internally consistent: every documented invariant is implemented; every implemented invariant is documented. Run `grep "§P-" rules/invariants.md` and `grep "_invariant_p_" pipeline.py` — every item in one list has a corresponding item in the other.
+- [ ] Exit-clock semantics are explicit and measurable (T1-A done; `passed_clean` means zero hard + zero soft across combined sources).
+- [ ] `tests/` directory exists with at least one fixture per invariant; `python3 -m pytest tests/` (or `unittest`) passes.
+- [ ] Post-spec reference-set rerun (run #1 toward 3/3) produces zero hard flags; provi­dence carries its 20 soft `nda_without_bid_or_drop` per Path A; all other soft/info flags are either expected (atomization, date inference) or adjudicated.
+- [ ] No grep hits for deprecated identifiers (`"bidder_type"."note"`, `"first_appearance_BidderID"`, `"phase_boundary_inferred"`, `"two-agent"`, `"Target Initiated"`, `"DropBelowFormal"`, `"DropAtFormal"`, `"Final Round Formal"`, `"Late Bid"`, `"425"` in `PRIMARY_FORM_TYPES`, `"Adjudicator"` as a Python symbol).
+- [ ] Commit graph reads as a clean changelog: one commit per TIER item (exceptions explicitly justified), all with file:line citations and acceptance-test results.
