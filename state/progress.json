@@ -2,7 +2,7 @@
   "schema_version": "v1",
   "rulebook_version": null,
   "created": "2026-04-18T12:29:42.084187Z",
-  "updated": "2026-04-20T12:14:05.107050Z",
+  "updated": "2026-04-20T12:20:51.195071Z",
   "deal_count_total": 401,
   "deal_count_reference": 9,
   "deals": {
@@ -3874,11 +3874,11 @@
       "acquirer": "INGREDION INC",
       "date_announced": "2014-10-15",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/739608/0001193125-14-455030-index.htm",
-      "flag_count": 21,
-      "last_run": "2026-04-20T11:52:16.903987Z",
+      "flag_count": 9,
+      "last_run": "2026-04-20T12:20:51.195071Z",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=0 soft=4 info=17"
+      "notes": "hard=0 soft=2 info=7"
     },
     "pike-corp": {
       "status": "pending",
