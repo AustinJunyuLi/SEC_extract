@@ -260,19 +260,19 @@ If the filing's language is genuinely ambiguous, default to `Drop` (generic)
 and emit flag `drop_agency_ambiguous` (severity: soft) with the unclear
 quote. **Do not guess.**
 
-**Implicit drops — bidders who signed NDA but took no further action.**
+**NDA-only rows — bidders who signed but have no later narrated activity.**
 
-A bidder appears on an `NDA` row but never subsequently bids, drops, or
-engages → the extractor MUST emit an **implicit `Drop` row** at the end of
-the main process phase with:
-- `drop_reason_note = "no further engagement in filing"`
-- Flag: `{"code": "implicit_drop", "severity": "info", "reason": "bidder signed NDA but took no action per filing"}`
-- `event_date` = the last date the main process was active (typically
-  `DateAnnounced` or a few days before), flagged as `date_inferred`.
+A bidder may appear on an `NDA` row and never subsequently bid, drop, or
+execute in bidder-specific narration. In that case:
+- Keep the `NDA` row.
+- Do **not** fabricate a catch-all `Drop` row with a generic shared
+  `source_quote`.
+- Let `rules/invariants.md` §P-S1 raise the soft advisory flag
+  `nda_without_bid_or_drop` for manual review.
 
-Rationale: the `auction` classifier (§Scope-1) and the NDA-count cross-check
-(§P-D6) require complete accounting of every NDA signer's fate. Silent
-attrition distorts the bidder-funnel analysis.
+Rationale: Providence iter-7 exposed the failure mode. Twenty NDA signers had
+no per-bidder follow-up narration; forcing synthetic Drops would have reused
+one generic quote across all 20 rows, violating §R2 evidence-specificity.
 
 **Consortium drops — split handling.**
 
@@ -575,8 +575,8 @@ ignore stale NDAs).
 2. **6-month silence heuristic (Austin's rule).** If two consecutive events
    in chronological order are **6 months or more apart**, and no
    `Terminated`/`Restarted` pair sits between them, they belong to
-   different phases. Emit flag
-   `{"code": "phase_boundary_inferred", "severity": "soft", "reason": "gap of <N> months between <event_date_a> and <event_date_b>"}`.
+   different phases. This is an assignment rule, not a standalone soft-flag
+   vocabulary item.
 
 3. **Assignment algorithm.** Walk backward from the `Executed` row:
    - `Executed` is in the main / current process. If no `Restarted` marker

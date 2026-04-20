@@ -471,8 +471,9 @@ flag preserves the audit trail so Austin can verify the skip was correct.
 **When NOT to skip** (even without NDA / price):
 - Party is mentioned as part of a **consortium** that later signed NDAs —
   handled via §E2 joint-bidder rule.
-- Party signed an NDA (Condition 1 fails) — the §I1 implicit-drop rule
-  applies.
+- Party signed an NDA (Condition 1 fails) — keep the NDA row; §P-S1 may
+  later raise `nda_without_bid_or_drop` if the filing gives no bidder-
+  specific follow-up.
 - Party stated bid intent without price (Condition 3 fails) — emit
   `Bidder Interest` row with `bid_value_unspecified` flag per §H1.
 
@@ -487,36 +488,39 @@ deal-level flag.
 
 **Cross-references.**
 - `rules/events.md` §D1 (`Bidder Interest` criteria).
-- `rules/events.md` §I1 (implicit drops for NDA signers).
+- `rules/events.md` §I1 (NDA-only rows for silent signers).
 
 ---
 
 ### §M2 — No-bid-intent skip (🟩 RESOLVED, 2026-04-18)
 
-**Decision.** Folded into §I1's **implicit-drop rule**. No separate skip.
+**Decision.** Folded into §I1's NDA-only rule. No separate skip.
 
 **Rule.** A party that signs an NDA but never submits a bid, drops, or
-otherwise engages further → emit an NDA row + an implicit `Drop` row (per
-§I1). Do NOT skip; do NOT omit the NDA.
+otherwise engages further remains as an NDA-only row (per §I1). Do NOT
+skip; do NOT omit the NDA; do NOT synthesize a generic `Drop`.
 
 Rationale: the §Scope-1 auction classifier counts non-advisor bidder NDAs.
 A party that signed an NDA with bid intent, even without a submitted bid,
-is a meaningful auction participant. The implicit-drop row ensures the
-NDA-to-drop 1:1 mapping (§P-D6 invariant) stays intact.
+is a meaningful auction participant. Providence iter-7 showed that forcing
+implicit drops would violate §R2 evidence-specificity by reusing one generic
+quote across many bidders.
 
 **Saks row 7015 (Sponsor A/E) migration note.** Alex flagged this as "not
 a separate bid, should be deleted." Under this rule: if the row
-represents non-bid activity by an NDA signer, replace with an NDA row +
-implicit Drop row during conversion. If it represents an activity of a
-party that never signed an NDA, apply §M1 skip.
+represents non-bid activity by an NDA signer, keep the NDA row and let
+§P-S1 raise `nda_without_bid_or_drop` if no later bidder-specific
+follow-up exists. If it represents an activity of a party that never
+signed an NDA, apply §M1 skip.
 
 **Rejected alternatives.**
 - **Skip entirely (no NDA, no drop)** — drops the NDA-signer from the
   auction count; silently breaks §Scope-1.
-- **Emit NDA only (no drop)** — breaks NDA-to-drop mapping (§P-D6).
+- **Emit synthetic Drop rows for silent NDA signers** — violates §R2
+  evidence-specificity by reusing one generic quote across many bidders.
 
 **Cross-references.**
-- `rules/events.md` §I1 (implicit drops).
+- `rules/events.md` §I1 (NDA-only rows for silent signers).
 - `rules/schema.md` §Scope-1 (auction classifier).
 
 ---

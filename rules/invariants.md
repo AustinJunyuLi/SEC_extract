@@ -179,12 +179,15 @@ graph tells a coherent M&A-process story.
 - **Check.** For every row with `bid_note = NDA` and `role = "bidder"`
   in `process_phase >= 1`, there exists a later row with the same
   `bidder_name` having one of: a bid (informal or formal), a dropout
-  code (`DropBelowInf`, `DropAtInf`, `DropBelowFormal`, `DropAtFormal`,
-  or implicit-drop), or the `Executed` row (if they won).
+  code, or the `Executed` row (if they won).
 - **Fail action.** Flag `nda_without_bid_or_drop`. **Soft.**
 - **Why soft.** Genuine cases exist where a party signs an NDA then
   silently exits filing attention; the filing doesn't always report
-  that. We want the flag for review but not to block the deal.
+  that. Providence iter-7 made the necessity concrete: 20 of 27 NDA
+  bidders had no per-bidder follow-up narration, and forcing synthetic
+  Drops would have reused one generic quote across all 20 rows in
+  violation of §R2 evidence-specificity. We want the flag for review
+  but not to block the deal.
 
 ### §P-S2 — `auction` flag matches §Scope-1 classifier
 - **Check.** Deal-level `auction` field IFF
