@@ -71,6 +71,10 @@ that a real extraction miss or is the filing genuinely silent?"
 - **Emits:** `{verdict: "upheld" | "dismissed", reason: str}` appended to
   the flag's `reason` field. Severity is NOT flipped in MVP — human review
   stays explicit.
+- **Execution model:** this is an orchestrator-side LLM call only. There is
+  no Python `adjudicate()` entrypoint. The orchestrator reads validator
+  output, spawns the Adjudicator, mutates `raw_extraction`, and only then
+  calls `pipeline.finalize()`.
 
 ### Orchestration (this conversation drives, not Python)
 
@@ -79,10 +83,10 @@ that a real extraction miss or is the filing genuinely silent?"
     1. spawn Extractor subagent → raw_extraction JSON (written to disk)
     2. filing = pipeline.load_filing(slug)
     3. result = pipeline.validate(raw_extraction, filing)
-    4. if result.soft_count > 0:
+    4. if any(flag["severity"] == "soft" for flag in result.row_flags + result.deal_flags):
          for each soft flag, spawn Adjudicator subagent, annotate it
          on raw_extraction before finalize (orchestrator-only — no
-         Python entrypoint in MVP)
+         Python entrypoint in MVP; see pipeline.finalize() docstring)
     5. pipeline.finalize(slug, raw_extraction)
          → output/extractions/{slug}.json
          → state/flags.jsonl (append)

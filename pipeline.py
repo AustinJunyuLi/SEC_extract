@@ -1,8 +1,10 @@
 """pipeline.py — Python plumbing for the M&A extraction skill.
 
 The Extractor and Adjudicator agents run as **Claude Code subagents** with
-clean-slate contexts, administered by the orchestrating conversation. This
-module provides the deterministic, non-LLM pieces only:
+clean-slate contexts, administered by the orchestrating conversation. Python
+owns validation, canonicalization, and finalization. The LLM orchestrator owns
+Extractor spawning, Adjudicator spawning, and any pre-finalize mutation of
+`raw_extraction`. This module provides the deterministic, non-LLM pieces only:
 
   - Filing loader (data/filings/{slug}/pages.json + manifest.json)
   - Vocabularies mirrored from rules/*.md (source of truth stays in markdown)
