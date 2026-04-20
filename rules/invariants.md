@@ -266,16 +266,27 @@ graph tells a coherent M&A-process story.
 
 ### §P-G2 — `bid_type` evidence requirement
 - **Check.** Every row with non-null `bid_type` satisfies one of:
-  (1) `source_quote` contains a §G1 trigger phrase from the table
-  matching `bid_type` (formal triggers for `formal`, informal triggers
-  for `informal`, case-insensitive substring), (2) the row is a true
-  range bid (both `bid_value_lower` and `bid_value_upper` populated AND
-  `bid_value_lower < bid_value_upper` — structural signal per §G1), or
-  (3) the row carries `bid_type_inference_note: str`.
-- **Fail action.** Flag `bid_type_unsupported`. Hard.
+  (1) the row is a true range bid — both `bid_value_lower` and
+  `bid_value_upper` populated, numeric, and `bid_value_lower <
+  bid_value_upper` (§G1 informal structural signal), or (2) the row
+  carries a non-empty `bid_type_inference_note: str` of ≤300 chars
+  justifying the classification. §G1 trigger tables are *classification
+  guidance for the extractor*, NOT a validator satisfier path: a
+  trigger phrase alone does not pass §P-G2.
+- **Fail action.** Flag `bid_type_unsupported` (no range, no note).
+  Inverted ranges (`lower >= upper`) flag `bid_range_inverted`. Both
+  hard.
 - **Why hard.** Informal-vs-formal is the core research variable per
-  `rules/bids.md` §G2. Silent classification drift across 401 deals
-  would be intractable to audit retrospectively.
+  `rules/bids.md` §G2. At 392-deal scale, requiring an explicit note
+  on every non-range row keeps classification auditable and avoids
+  brittle dependence on a closed phrase list.
+- **Why note, not trigger list.** Empirical 9-deal analysis
+  (2026-04-20): of 92 rows with non-null `bid_type`, only 30% contained
+  a §G1 trigger phrase; 29% were range bids; 55% relied on
+  `bid_type_inference_note`. Providence (22 bids) and Penford (8 bids)
+  had 0% trigger coverage. The trigger-list satisfier was overfit to
+  the reference sample and forced inference-note duplication on rows
+  that already cited filing language.
 
 ---
 
