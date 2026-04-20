@@ -61,6 +61,7 @@ class DiffReport:
     matched_rows: int = 0
     ai_only_rows: list[dict[str, Any]] = field(default_factory=list)
     alex_only_rows: list[dict[str, Any]] = field(default_factory=list)
+    cardinality_mismatches: list[dict[str, Any]] = field(default_factory=list)
     field_disagreements: dict[str, int] = field(default_factory=dict)
     deal_disagreements: list[dict[str, Any]] = field(default_factory=list)
     divergences: list[dict[str, Any]] = field(default_factory=list)
@@ -173,6 +174,30 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
     r = DiffReport(slug=slug)
     flagged = _load_flagged_rows()
 
+    def _record_cardinality_mismatch(
+        *,
+        scope: str,
+        bucket_key: dict[str, Any],
+        ai_bucket: list[dict[str, Any]],
+        alex_bucket: list[dict[str, Any]],
+        matched_ai_ids: set[int],
+        matched_alex_ids: set[int],
+    ) -> None:
+        matched_ai_ids.update(id(ev) for ev in ai_bucket)
+        matched_alex_ids.update(id(ev) for ev in alex_bucket)
+        mismatch = {
+            "type": "cardinality_mismatch",
+            "code": "cardinality_mismatch",
+            "match_scope": scope,
+            "bucket_key": bucket_key,
+            "ai_count": len(ai_bucket),
+            "alex_count": len(alex_bucket),
+            "ai_rows": ai_bucket,
+            "alex_rows": alex_bucket,
+        }
+        r.cardinality_mismatches.append(mismatch)
+        r.divergences.append(mismatch)
+
     # Build indexes. Allow duplicate keys by appending to a list.
     def _index(evs: list[dict[str, Any]]) -> dict[Any, list[dict[str, Any]]]:
         out: dict[Any, list[dict[str, Any]]] = {}
@@ -189,6 +214,22 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
     # Primary pass: exact join.
     for key, ai_bucket in ai_idx.items():
         alex_bucket = alex_idx.get(key, [])
+        if ai_bucket and alex_bucket and len(ai_bucket) != len(alex_bucket):
+            _record_cardinality_mismatch(
+                scope="exact_join_key",
+                bucket_key={
+                    "bidder_alias_normalized": key[0],
+                    "bid_note": key[1],
+                    "bid_date_precise": key[2],
+                },
+                ai_bucket=ai_bucket,
+                alex_bucket=alex_bucket,
+                matched_ai_ids=matched_ai_ids,
+                matched_alex_ids=matched_alex_ids,
+            )
+            continue
+
+        multi_match = len(ai_bucket) == len(alex_bucket) > 1
         for ai_ev, alex_ev in zip(ai_bucket, alex_bucket):
             matched_ai_ids.add(id(ai_ev))
             matched_alex_ids.add(id(alex_ev))
@@ -213,9 +254,42 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
                     "alex_BidderID": alex_ev.get("BidderID"),
                     "field_divergences": divs,
                     "alex_self_flag": flag_note,
+                    "bucket_match_mode": "order_dependent_zip" if multi_match else "exact_single",
                 })
                 if flag_note:
                     r.alex_flagged_hits.append(r.divergences[-1])
+
+    # Residual grouped mismatch: if unmatched rows remain on both sides for the
+    # same event type and counts differ, emit a single bucket-level mismatch
+    # before attempting looser alias-based recovery. This catches atomized-vs-
+    # aggregated patterns where alias/date granularity differs too much for the
+    # exact join to be meaningful.
+    still_unmatched_ai = [e for e in ai_events if id(e) not in matched_ai_ids]
+    still_unmatched_alex = [e for e in alex_events if id(e) not in matched_alex_ids]
+    residual_ai_by_note: dict[str | None, list[dict[str, Any]]] = {}
+    residual_alex_by_note: dict[str | None, list[dict[str, Any]]] = {}
+    for ev in still_unmatched_ai:
+        residual_ai_by_note.setdefault(ev.get("bid_note"), []).append(ev)
+    for ev in still_unmatched_alex:
+        residual_alex_by_note.setdefault(ev.get("bid_note"), []).append(ev)
+    for bid_note, ai_bucket in residual_ai_by_note.items():
+        alex_bucket = residual_alex_by_note.get(bid_note, [])
+        if not ai_bucket or not alex_bucket:
+            continue
+        if len(ai_bucket) == len(alex_bucket):
+            continue
+        _record_cardinality_mismatch(
+            scope="residual_bid_note",
+            bucket_key={
+                "bid_note": bid_note,
+                "ai_dates": sorted({ev.get("bid_date_precise") for ev in ai_bucket}, key=lambda v: (v is None, v or "")),
+                "alex_dates": sorted({ev.get("bid_date_precise") for ev in alex_bucket}, key=lambda v: (v is None, v or "")),
+            },
+            ai_bucket=ai_bucket,
+            alex_bucket=alex_bucket,
+            matched_ai_ids=matched_ai_ids,
+            matched_alex_ids=matched_alex_ids,
+        )
 
     # Fallback: try loose (alias, note) match for still-unmatched rows.
     still_unmatched_ai = [e for e in ai_events if id(e) not in matched_ai_ids]
@@ -301,6 +375,8 @@ def _format_divergence_md(div: dict[str, Any]) -> str:
             f"### Matched: `{jk['bidder_alias_alex']}` · `{jk['bid_note']}` · {jk['bid_date_precise']}"
         )
         lines.append(f"- AI BidderID {div['ai_BidderID']} · Alex BidderID {div['alex_BidderID']}")
+        if div.get("bucket_match_mode") == "order_dependent_zip":
+            lines.append("- Matching note: equal-cardinality multi-row bucket; field comparison is order-dependent.")
         if div.get("alex_self_flag"):
             lines.append(f"- ⚠️  {div['alex_self_flag']}")
         for fd in div.get("field_divergences", []):
@@ -313,6 +389,27 @@ def _format_divergence_md(div: dict[str, Any]) -> str:
             f"- AI date `{div['ai_date']}` · Alex date `{div['alex_date']}` "
             f"(AI id {div['ai_BidderID']}, Alex id {div['alex_BidderID']})"
         )
+        lines.append("- Verdict: `[ ] ai-right  [ ] alex-right  [ ] both-defensible  [ ] both-wrong`")
+    elif dtype == "cardinality_mismatch":
+        jk = div["bucket_key"]
+        if div.get("match_scope") == "exact_join_key":
+            lines.append(
+                f"### Cardinality mismatch: `{jk['bidder_alias_normalized']}` · `{jk['bid_note']}` · {jk['bid_date_precise']}"
+            )
+        else:
+            lines.append(f"### Cardinality mismatch: `{jk['bid_note']}` residual bucket")
+            lines.append(f"- AI dates `{jk.get('ai_dates')}` · Alex dates `{jk.get('alex_dates')}`")
+        lines.append(f"- AI rows `{div['ai_count']}` · Alex rows `{div['alex_count']}`")
+        lines.append(
+            f"- AI BidderIDs `{[ev.get('BidderID') for ev in div['ai_rows']]}`"
+        )
+        lines.append(
+            f"- Alex BidderIDs `{[ev.get('BidderID') for ev in div['alex_rows']]}`"
+        )
+        if div.get("match_scope") == "exact_join_key":
+            lines.append("- No field-level pairing attempted; counts differ within the exact bucket.")
+        else:
+            lines.append("- No field-level pairing attempted; counts differ within this residual event-type bucket.")
         lines.append("- Verdict: `[ ] ai-right  [ ] alex-right  [ ] both-defensible  [ ] both-wrong`")
     return "\n".join(lines)
 
@@ -342,6 +439,7 @@ def format_report_md(r: DiffReport) -> str:
         f"- matched rows: **{r.matched_rows}**",
         f"- AI-only rows: **{len(r.ai_only_rows)}**",
         f"- Alex-only rows: **{len(r.alex_only_rows)}**",
+        f"- cardinality mismatches: **{len(r.cardinality_mismatches)}**",
         f"- deal-level disagreements: **{len(r.deal_disagreements)}**",
         f"- field disagreements: **{sum(r.field_disagreements.values())}** "
         f"({', '.join(f'{k}={v}' for k,v in sorted(r.field_disagreements.items())) or 'none'})",
@@ -382,6 +480,7 @@ def format_report_txt(r: DiffReport) -> str:
         f"  matched rows:                {r.matched_rows}\n"
         f"  AI-only rows:                {len(r.ai_only_rows)}\n"
         f"  Alex-only rows:              {len(r.alex_only_rows)}\n"
+        f"  cardinality mismatches:      {len(r.cardinality_mismatches)}\n"
         f"  deal-level disagreements:    {len(r.deal_disagreements)}\n"
         f"  Alex-flagged rows in diff:   {len(r.alex_flagged_hits)}\n"
         f"  field disagreements:         {sum(r.field_disagreements.values())}"
@@ -401,6 +500,7 @@ def write_results(r: DiffReport) -> tuple[Path, Path]:
         "matched_rows": r.matched_rows,
         "ai_only_rows": r.ai_only_rows,
         "alex_only_rows": r.alex_only_rows,
+        "cardinality_mismatches": r.cardinality_mismatches,
         "field_disagreements": r.field_disagreements,
         "deal_disagreements": r.deal_disagreements,
         "divergences": r.divergences,
@@ -435,14 +535,26 @@ def main() -> None:
             return
         for r in reports:
             print(format_report_txt(r))
-            if not args.no_write and r.matched_rows + len(r.ai_only_rows) + len(r.alex_only_rows) > 0:
+            if not args.no_write and (
+                r.matched_rows
+                + len(r.ai_only_rows)
+                + len(r.alex_only_rows)
+                + len(r.cardinality_mismatches)
+                > 0
+            ):
                 md, js = write_results(r)
                 print(f"  -> {md.relative_to(REPO_ROOT)}")
             print()
     elif args.slug:
         r = diff_deal(args.slug)
         print(format_report_txt(r))
-        if not args.no_write and r.matched_rows + len(r.ai_only_rows) + len(r.alex_only_rows) > 0:
+        if not args.no_write and (
+            r.matched_rows
+            + len(r.ai_only_rows)
+            + len(r.alex_only_rows)
+            + len(r.cardinality_mismatches)
+            > 0
+        ):
             md, js = write_results(r)
             print(f"wrote {md.relative_to(REPO_ROOT)}")
             print(f"wrote {js.relative_to(REPO_ROOT)}")
