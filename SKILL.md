@@ -146,6 +146,10 @@ If any scope rule is 🟥 OPEN, stop and report — do not extract.
 ```json
 {"deal": "medivation", "row_index": 7, "flag": "informal_vs_formal_borderline", "reason": "…", "source_quote": "…"}
 ```
+For current-state queries, do not count this file raw: filter by
+`logged_at >=` the deal's most recent finalize timestamp, or prefer
+`output/extractions/{slug}.json` `flags[]` plus `state/progress.json`
+`flag_count` as the latest authoritative view.
 
 **`output/extractions/{deal.slug}.json`** schema conforms to `rules/schema.md`.
 

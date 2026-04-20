@@ -311,6 +311,10 @@ shape.
 **State log.** Every flag is ALSO appended to `state/flags.jsonl` by the
 pipeline, with deal slug + row index, for cross-deal analysis. Row-level
 `flags[]` in the JSON output is the in-place copy for human review.
+`state/flags.jsonl` is append-only history, not a current-state snapshot:
+filter by `logged_at >=` the deal's most recent finalize timestamp, or read
+`output/extractions/{slug}.json` `flags[]` plus `state/progress.json` `flag_count`
+for the authoritative current view.
 
 **Rejected: plain-string array.** Loses `severity` and `reason`; reviewer
 has to grep the rulebook to know if a flag is blocking.
