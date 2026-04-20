@@ -592,12 +592,12 @@ ignore stale NDAs).
 **Extractor guidance.** The extractor assigns `process_phase` as part of
 row emission, using the event chronology and markers. The validator
 rechecks:
-- Every row between `Terminated` and `Restarted` is flagged (empty gap
-  expected).
-- The single `Executed` row (§P-D1) sits in the highest-numbered phase.
-- No `process_phase = 2` rows exist without a preceding `Terminated` +
-  `Restarted` pair.
-- No `process_phase = 0` rows exist within 6 months of any phase-1/phase-2 event.
+- The single `Executed` row (§P-S4) sits in the highest-numbered phase.
+- No `process_phase = 2` rows exist without the explicit restart
+  boundary: a phase-1 `Terminated` row followed by a phase-2
+  `Restarted` row (§P-L1).
+- No `process_phase = 0` rows exist within 6 months of any
+  phase-1/phase-2 event (§P-L2).
 
 **Impact on existing §Scope-1 classifier.** The auction-threshold NDA count
 is taken over `{row ∈ events : row.bid_note == "NDA" and row.process_phase ≥ 1 and row.bidder_type not in advisor_types}`.

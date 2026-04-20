@@ -1,0 +1,21 @@
+{
+  "events": [
+    {
+      "bid_note": "NDA",
+      "process_phase": 0,
+      "bid_date_precise": "2013-06-01"
+    },
+    {
+      "bid_note": "Bid",
+      "process_phase": 1,
+      "bid_date_precise": "2013-08-01"
+    }
+  ],
+  "expected_flags": [
+    {
+      "code": "stale_prior_too_recent",
+      "severity": "hard",
+      "deal_level": true
+    }
+  ]
+}

@@ -221,6 +221,27 @@ graph tells a coherent M&A-process story.
 
 ---
 
+## §P-L — Phase-boundary invariants (🟩 RESOLVED, 2026-04-20)
+
+### §P-L1 — `process_phase = 2` requires an explicit restart boundary
+- **Check.** If any event has `process_phase = 2`, then phase 1 contains
+  a `Terminated` row and phase 2 contains a `Restarted` row.
+- **Fail action.** Flag `orphan_phase_2`. Hard.
+- **Why hard.** A restart phase without the narrated closure/restart pair
+  means either the extractor assigned `process_phase` incorrectly or the
+  phase markers were missed.
+
+### §P-L2 — Stale prior phase must be at least 6 months before main process
+- **Check.** If the deal contains any `process_phase = 0` rows and any
+  `process_phase >= 1` rows with precise dates, then the latest phase-0
+  date is at least 180 days before the earliest phase≥1 date.
+- **Fail action.** Flag `stale_prior_too_recent`. Hard.
+- **Why hard.** Phase 0 is reserved for stale prior attempts. If the
+  closest stale-prior date is too near the main process, the extractor
+  likely split one process into two phases incorrectly.
+
+---
+
 ## §P-G — Bid classification invariants (🟩 RESOLVED, 2026-04-19)
 
 ### §P-G2 — `bid_type` evidence requirement
@@ -252,6 +273,8 @@ graph tells a coherent M&A-process story.
 | §P-D3 | `rules/dates.md` §A4 |
 | §P-D5 | `rules/events.md` §I1 + §I2 + §D1 |
 | §P-D6 | `rules/events.md` §D1.a + `rules/bids.md` §C4 + `rules/bidders.md` §E3 |
+| §P-L1 | `rules/events.md` §L2 |
+| §P-L2 | `rules/events.md` §L2 |
 | §P-G2 | `rules/bids.md` §G1/§G2 |
 | §P-S1 | `rules/events.md` §I1 + `rules/bids.md` §M3 |
 | §P-S2 | `rules/schema.md` §Scope-1 |

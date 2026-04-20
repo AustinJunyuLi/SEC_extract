@@ -321,6 +321,8 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
     row_flags.extend(_invariant_p_s1(events))
 
     # Deal-level semantic invariants.
+    deal_flags.extend(_invariant_p_l1(events))
+    deal_flags.extend(_invariant_p_l2(events))
     deal_flags.extend(_invariant_p_s2(deal, events))
     deal_flags.extend(_invariant_p_s3(deal, events))
     deal_flags.extend(_invariant_p_s4(events))
@@ -818,6 +820,82 @@ def _invariant_p_s1(events: list[dict]) -> list[dict]:
                 "reason": f"bidder_name={name!r} signed NDA at row {i} but no follow-up (bid/drop/executed) was extracted",
             })
     return flags
+
+
+def _invariant_p_l1(events: list[dict]) -> list[dict]:
+    """§P-L1 — phase 2 requires phase-1 Terminated and phase-2 Restarted."""
+    phase_values = {ev.get("process_phase") for ev in events}
+    if 2 not in phase_values:
+        return []
+    phase_1_notes = {
+        ev.get("bid_note")
+        for ev in events
+        if ev.get("process_phase") == 1
+    }
+    phase_2_notes = {
+        ev.get("bid_note")
+        for ev in events
+        if ev.get("process_phase") == 2
+    }
+    missing: list[str] = []
+    if "Terminated" not in phase_1_notes:
+        missing.append("phase-1 Terminated")
+    if "Restarted" not in phase_2_notes:
+        missing.append("phase-2 Restarted")
+    if not missing:
+        return []
+    return [{
+        "code": "orphan_phase_2",
+        "severity": "hard",
+        "reason": (
+            f"§P-L1: process_phase=2 events exist but the restart boundary is "
+            f"missing {missing!r}"
+        ),
+        "deal_level": True,
+    }]
+
+
+def _invariant_p_l2(events: list[dict]) -> list[dict]:
+    """§P-L2 — stale-prior phase 0 must be at least 180 days before main."""
+    phase_0_dates = [
+        ev.get("bid_date_precise")
+        for ev in events
+        if ev.get("process_phase") == 0 and ev.get("bid_date_precise")
+    ]
+    main_dates = [
+        ev.get("bid_date_precise")
+        for ev in events
+        if (ev.get("process_phase") or 0) >= 1 and ev.get("bid_date_precise")
+    ]
+    if not phase_0_dates or not main_dates:
+        return []
+
+    def _parse(value: str | None) -> _dt.date | None:
+        try:
+            return _dt.date.fromisoformat(value) if value else None
+        except (TypeError, ValueError):
+            return None
+
+    stale_dates = [date for date in (_parse(value) for value in phase_0_dates) if date]
+    current_dates = [date for date in (_parse(value) for value in main_dates) if date]
+    if not stale_dates or not current_dates:
+        return []
+
+    latest_stale = max(stale_dates)
+    earliest_main = min(current_dates)
+    delta_days = (earliest_main - latest_stale).days
+    if delta_days >= 180:
+        return []
+    return [{
+        "code": "stale_prior_too_recent",
+        "severity": "hard",
+        "reason": (
+            f"§P-L2: latest phase-0 {latest_stale.isoformat()} is only "
+            f"{delta_days} days before earliest phase≥1 "
+            f"{earliest_main.isoformat()} (<180-day minimum)"
+        ),
+        "deal_level": True,
+    }]
 
 
 def _invariant_p_s2(deal: dict, events: list[dict]) -> list[dict]:

@@ -1,0 +1,21 @@
+{
+  "events": [
+    {
+      "bid_note": "Terminated",
+      "process_phase": 1,
+      "bid_date_precise": "2013-06-01"
+    },
+    {
+      "bid_note": "Bid",
+      "process_phase": 2,
+      "bid_date_precise": "2013-08-01"
+    }
+  ],
+  "expected_flags": [
+    {
+      "code": "orphan_phase_2",
+      "severity": "hard",
+      "deal_level": true
+    }
+  ]
+}

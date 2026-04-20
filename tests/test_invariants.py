@@ -49,6 +49,8 @@ RUNNERS = {
     "pd3": lambda fixture: pipeline._invariant_p_d3(fixture.get("events", [])),
     "pd5": lambda fixture: pipeline._invariant_p_d5(fixture.get("events", [])),
     "pd6": lambda fixture: pipeline._invariant_p_d6(fixture.get("events", [])),
+    "pl1": lambda fixture: pipeline._invariant_p_l1(fixture.get("events", [])),
+    "pl2": lambda fixture: pipeline._invariant_p_l2(fixture.get("events", [])),
     "pg2": lambda fixture: pipeline._invariant_p_g2(fixture.get("events", [])),
     "ps1": lambda fixture: pipeline._invariant_p_s1(fixture.get("events", [])),
     "ps2": lambda fixture: pipeline._invariant_p_s2(
@@ -161,6 +163,22 @@ def test_pd5_acceptance_fixtures(fixture_name):
 )
 def test_pd6(fixture_name):
     _assert_fixture(fixture_name, "pd6")
+
+
+@pytest.mark.parametrize(
+    "fixture_name",
+    ["pl1_phase2_without_restart.json", "pl1_phase2_with_pair.json"],
+)
+def test_pl1(fixture_name):
+    _assert_fixture(fixture_name, "pl1")
+
+
+@pytest.mark.parametrize(
+    "fixture_name",
+    ["pl2_stale_prior_too_recent.json", "pl2_stale_prior_ok.json"],
+)
+def test_pl2(fixture_name):
+    _assert_fixture(fixture_name, "pl2")
 
 
 @pytest.mark.parametrize(
