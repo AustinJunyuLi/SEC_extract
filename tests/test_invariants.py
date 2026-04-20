@@ -231,12 +231,14 @@ def test_pg2(fixture_name):
 @pytest.mark.parametrize(
     "fixture_name",
     [
-        "pg2_formal_informal_trigger_mismatch.json",
-        "pg2_formal_trigger_match.json",
-        "pg2_informal_trigger_match.json",
-        "pg2_range_inverted.json",
         "pg2_range_valid.json",
+        "pg2_range_inverted.json",
         "pg2_range_nonnumeric.json",
+        "pg2_note_formal_process_position.json",
+        "pg2_note_informal_process_position.json",
+        "pg2_note_empty.json",
+        "pg2_note_over_cap.json",
+        "pg2_note_at_cap.json",
     ],
 )
 def test_pg2_acceptance_fixtures(fixture_name):

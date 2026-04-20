@@ -3,7 +3,8 @@
     {
       "bid_note": "Bid",
       "bid_type": "formal",
-      "source_quote": "Party A submitted an expression of interest."
+      "bid_type_inference_note": "   ",
+      "source_quote": "Party A submitted a revised proposal."
     }
   ],
   "expected_flags": [
