@@ -323,21 +323,25 @@ OR: if legacy null rows actually exist and must be tolerated, narrow the permiss
 
 ---
 
-### T2-H. Delete Adjudicator from architecture
+### T2-H. Clarify that the Adjudicator is orchestrator-spawned, not Python-spawned
 
-**Problem.** SKILL.md (lines 28-92), pipeline.py docstrings (1-23, 1213-1228) describe an Adjudicator subagent that spawns on soft flags. No Python spawn path exists. It's ghost documentation.
+**Problem — miscalibrated in GPT Pro's review.** GPT Pro flagged "the Adjudicator is documented but never implemented, no Python spawn path." That's literally true but misreads the architecture: the Adjudicator is **intentionally** orchestrator-spawned. `pipeline.py:1224-1227` explicitly states: "Does NOT spawn adjudicator subagents — that's the orchestrator's job, performed BEFORE calling this function. If the caller has adjudicated soft flags, they should mutate raw_extraction['events'][i]['flags'] and/or raw_extraction['deal']['deal_flags'] with adjudicator verdicts before passing raw_extraction in."
 
-**Fix.** Two options:
-- **Option A (recommended):** Delete Adjudicator references from `SKILL.md` and `pipeline.py` docstrings. Replace with "Austin's manual diff-review loop handles soft-flag adjudication." Architecture becomes "Extractor LLM + Python Validator + manual adjudication."
-- **Option B:** Implement the Adjudicator. Requires orchestrator-side spawning, verdict merging into flags, acceptance tests. Don't do this unless soft-flag volume justifies it (currently: 20 soft flags on 1 deal, 0 on others — tractable by hand).
+This is an accurate design note, not ghost code. The orchestrator (the LLM driving the session — a Claude Code conversation) reads the validator's soft flags, spawns an Adjudicator subagent (or does adjudication inline), mutates the raw extraction with verdicts, then calls `pipeline.finalize()`. This pattern has been used repeatedly (e.g. the 4 verification agents in this very session, the 3 re-extraction agents for iter-7, the 2 dead-code audit agents).
 
-Go with A.
+The real problem is that SKILL.md's orchestration pseudocode (lines 74-92) doesn't make it clear enough that "spawn Adjudicator subagent" is an **LLM-orchestrator action**, not a Python call.
+
+**Fix.** Documentation clarity, not deletion.
+1. Update `SKILL.md` orchestration pseudocode to explicitly label the Adjudicator step as "orchestrator-side LLM call, not a Python entry point." Add a cross-reference to the `pipeline.finalize()` docstring.
+2. Add a short note in `pipeline.py` module docstring (around line 1-23) restating the same division of concerns: Python owns the validator + finalization; the LLM orchestrator owns Extractor spawning, Adjudicator spawning, and pre-finalize flag mutation.
+3. Do NOT implement an `adjudicate()` function in Python — the soft-flag workflow remains orchestrator-controlled. Volume-driven: current soft-flag load (20 on one deal) is hand-tractable.
 
 **Acceptance.**
-- `grep -rn "Adjudicator\|adjudicat" --include="*.md" --include="*.py"` returns only the deletion diff.
-- SKILL.md orchestration pseudocode no longer mentions Adjudicator.
+- SKILL.md line 74-92 contract is unambiguous about which steps are Python vs LLM-orchestrator.
+- `pipeline.py` docstring does not invite readers to look for an `adjudicate()` that isn't there.
+- Architecture description matches the actual operating pattern (already working in this repo).
 
-**Effort.** 20 minutes.
+**Effort.** 15 minutes doc clarification.
 
 ---
 
