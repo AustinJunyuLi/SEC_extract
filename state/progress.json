@@ -2,7 +2,7 @@
   "schema_version": "v1",
   "rulebook_version": null,
   "created": "2026-04-18T12:29:42.084187Z",
-  "updated": "2026-04-20T15:53:54.808487Z",
+  "updated": "2026-04-20T15:53:54.873889Z",
   "deal_count_total": 401,
   "deal_count_reference": 9,
   "deals": {
@@ -3601,11 +3601,11 @@
       "acquirer": "GENESEE & WYOMING INC",
       "date_announced": "2016-08-15",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/831968/0001193125-16-713780-index.htm",
-      "flag_count": 82,
-      "last_run": "2026-04-20T14:23:52.532289Z",
+      "flag_count": 121,
+      "last_run": "2026-04-20T15:53:54.873889Z",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=0 soft=28 info=54"
+      "notes": "hard=0 soft=33 info=88"
     },
     "medivation": {
       "status": "validated",
