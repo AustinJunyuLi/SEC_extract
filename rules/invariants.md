@@ -116,8 +116,7 @@ comparable across deals.
 
 ### §P-D5 — Drop rows require prior engagement in the same phase
 - **Check.** For every row with `bid_note` starting with `"Drop"` (the
-  `{Drop, DropTarget, DropBelowInf, DropAtInf, DropBelowFormal,
-  DropAtFormal, Dropped}` family — see `rules/events.md` §I1 and §K1),
+  current §C1 Drop-family labels — see `rules/events.md` §I1 and §K1),
   with non-null `bidder_name` and `process_phase >= 1`, there exists at
   least one other row in the same `process_phase` with the same
   `bidder_name` and `bid_note ∈ {NDA, Bidder Interest, IB,

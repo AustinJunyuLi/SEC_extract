@@ -291,18 +291,12 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
     row_flags: list[dict[str, Any]] = []
     deal_flags: list[dict[str, Any]] = []
 
+    deal_flags.extend(_invariant_p_r1(raw_extraction))
+    if deal_flags:
+        return ValidatorResult(row_flags=row_flags, deal_flags=deal_flags)
+
     deal = raw_extraction.get("deal") or {}
     events = raw_extraction.get("events") or []
-
-    # §P-R1 — events array non-empty
-    if not events:
-        deal_flags.append({
-            "code": "empty_events_array",
-            "severity": "hard",
-            "reason": "events[] is empty; every in-scope deal has at least an Executed row",
-            "deal_level": True,
-        })
-        return ValidatorResult(row_flags=row_flags, deal_flags=deal_flags)
 
     # Row-level invariants.
     row_flags.extend(_invariant_p_r2(events, filing))
@@ -335,6 +329,19 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
 
 def _nfkc(s: str) -> str:
     return unicodedata.normalize("NFKC", s)
+
+
+def _invariant_p_r1(raw_extraction: dict[str, Any]) -> list[dict]:
+    """§P-R1 — top-level `events` exists, is a list, and is non-empty."""
+    events = raw_extraction.get("events")
+    if isinstance(events, list) and events:
+        return []
+    return [{
+        "code": "empty_events_array",
+        "severity": "hard",
+        "reason": "events[] must exist as a non-empty list",
+        "deal_level": True,
+    }]
 
 
 def _invariant_p_r2(events: list[dict], filing: Filing) -> list[dict]:
@@ -509,9 +516,8 @@ def _invariant_p_d5(events: list[dict]) -> list[dict]:
 
     Closes the dangling-drop gap where an AI emits a Drop row for a bidder
     that was never shown engaging with the process (no NDA, no expression
-    of interest, no IB kickoff). Matches the full Drop family via string
-    prefix: `{Drop, DropTarget, DropBelowInf, DropAtInf, DropBelowFormal,
-    DropAtFormal, Dropped}`. Existence-only check via set membership over
+    of interest, no IB kickoff). Matches the current §C1 Drop-family
+    labels via `startswith("Drop")`. Existence-only check via set membership over
     per-(phase, bidder) engagement rows: canonicalization (§A2/§A3) has
     already ordered events, so "earlier row" reduces to "any engagement
     row for this (name, phase)" in practice. The prior-Drop carve-out

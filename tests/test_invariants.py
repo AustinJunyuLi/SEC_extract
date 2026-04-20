@@ -25,6 +25,12 @@ def _flatten(result: pipeline.ValidatorResult) -> list[dict]:
 
 
 RUNNERS = {
+    "pr1": lambda fixture: pipeline._invariant_p_r1(
+        {
+            "deal": fixture.get("deal", {}),
+            "events": fixture.get("events"),
+        }
+    ),
     "validate": lambda fixture: _flatten(
         pipeline.validate(
             {
@@ -76,6 +82,14 @@ def _assert_fixture(fixture_name: str, runner_key: str) -> None:
             all(flag.get(k) == v for k, v in expected.items())
             for flag in actual_flags
         ), actual_flags
+
+
+@pytest.mark.parametrize(
+    "fixture_name",
+    ["synthetic_pr1_pass.json", "synthetic_pr1_fail.json"],
+)
+def test_pr1(fixture_name):
+    _assert_fixture(fixture_name, "pr1")
 
 
 @pytest.mark.parametrize(
