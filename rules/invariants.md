@@ -110,10 +110,12 @@ comparable across deals.
   `{Drop, DropTarget, DropBelowInf, DropAtInf, DropBelowFormal,
   DropAtFormal, Dropped}` family — see `rules/events.md` §I1 and §K1),
   with non-null `bidder_name` and `process_phase >= 1`, there exists at
-  least one earlier row in the same `process_phase` with the same
+  least one other row in the same `process_phase` with the same
   `bidder_name` and `bid_note ∈ {NDA, Bidder Interest, IB,
-  <any prior Drop>}`. The prior-Drop branch covers §I2 re-engagement
-  cases where a bidder re-enters after an earlier drop.
+  <any Drop-family row>}`. Position within phase is not enforced —
+  §A2/§A3 canonicalization has already ordered rows. The Drop-family
+  branch covers §I2 re-engagement cases where a bidder re-enters after
+  an earlier drop.
 - **Fail action.** Flag `drop_without_prior_engagement`. Hard.
 - **Why hard.** A drop row without prior engagement means the extractor
   invented a dropout or missed the engagement row that named the

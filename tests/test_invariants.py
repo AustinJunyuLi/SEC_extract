@@ -149,6 +149,14 @@ def test_pd5(fixture_name):
 
 @pytest.mark.parametrize(
     "fixture_name",
+    ["pd5_drop_after_nda_same_phase.json", "pd5_drop_orphan.json"],
+)
+def test_pd5_acceptance_fixtures(fixture_name):
+    _assert_fixture(fixture_name, "pd5")
+
+
+@pytest.mark.parametrize(
+    "fixture_name",
     ["synthetic_pd6_pass.json", "synthetic_pd6_fail.json"],
 )
 def test_pd6(fixture_name):
