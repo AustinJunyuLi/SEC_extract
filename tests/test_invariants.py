@@ -119,6 +119,14 @@ def test_pr5(fixture_name):
 
 @pytest.mark.parametrize(
     "fixture_name",
+    ["pr5_alias_mismatch.json", "pr5_resolved_name_mismatch.json"],
+)
+def test_pr5_acceptance_fixtures(fixture_name):
+    _assert_fixture(fixture_name, "pr5")
+
+
+@pytest.mark.parametrize(
+    "fixture_name",
     ["synthetic_pd1_pass.json", "synthetic_pd1_fail.json"],
 )
 def test_pd1(fixture_name):

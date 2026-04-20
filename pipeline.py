@@ -437,7 +437,7 @@ def _invariant_p_r4(events: list[dict]) -> list[dict]:
 
 
 def _invariant_p_r5(events: list[dict], deal: dict) -> list[dict]:
-    """§P-R5 — every non-null bidder_name resolves in deal.bidder_registry."""
+    """§P-R5 — bidder registry keys, aliases, and resolved names align."""
     flags: list[dict[str, Any]] = []
     registry = (deal.get("bidder_registry") or {}) if deal else {}
     for i, ev in enumerate(events):
@@ -446,8 +446,29 @@ def _invariant_p_r5(events: list[dict], deal: dict) -> list[dict]:
             continue
         if name not in registry:
             flags.append({
-                "row_index": i, "code": "bidder_name_unregistered", "severity": "hard",
-                "reason": f"bidder_name={name!r} not a key of deal.bidder_registry",
+                "row_index": i, "code": "bidder_not_in_registry", "severity": "hard",
+                "reason": f"§P-R5/§E4: bidder_name={name!r} not a key in bidder_registry",
+            })
+            continue
+        entry = registry[name] or {}
+        aliases = set(entry.get("aliases_observed", []) or [])
+        alias = ev.get("bidder_alias")
+        if alias is not None and alias not in aliases:
+            flags.append({
+                "row_index": i, "code": "bidder_alias_not_observed", "severity": "hard",
+                "reason": (
+                    f"§P-R5/§E4: bidder_alias={alias!r} for {name!r} not in "
+                    f"aliases_observed={sorted(aliases)!r}"
+                ),
+            })
+        resolved = entry.get("resolved_name")
+        if resolved is not None and resolved not in aliases:
+            flags.append({
+                "row_index": i, "code": "resolved_name_not_observed", "severity": "soft",
+                "reason": (
+                    f"§P-R5/§E4: resolved_name={resolved!r} for {name!r} not in "
+                    f"aliases_observed={sorted(aliases)!r}"
+                ),
             })
     return flags
 

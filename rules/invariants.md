@@ -62,11 +62,18 @@ judgment calls.
   per `rules/bids.md` §M3.
 - **Fail action.** Flag `invalid_role`. Hard.
 
-### §P-R5 — `bidder_name` resolves in `bidder_registry`
-- **Check.** Every non-null `bidder_name` matches a key in the
-  deal-level `bidder_registry` (e.g., `bidder_01`), per
-  `rules/bidders.md` §E3.
-- **Fail action.** Flag `bidder_name_unregistered`. Hard.
+### §P-R5 — `bidder_registry` keys, aliases, and resolved names align
+- **Check.**
+  1. Every non-null `bidder_name` matches a key in the deal-level
+     `bidder_registry` (e.g., `bidder_01`), per `rules/bidders.md` §E3.
+  2. If a row carries `bidder_alias`, that alias appears in
+     `bidder_registry[bidder_name].aliases_observed`.
+  3. If a registry entry carries `resolved_name`, that string also
+     appears in `aliases_observed`.
+- **Fail actions.**
+  - Missing registry key → `bidder_not_in_registry`. Hard.
+  - Row alias absent from `aliases_observed` → `bidder_alias_not_observed`. Hard.
+  - `resolved_name` absent from `aliases_observed` → `resolved_name_not_observed`. Soft.
 - **Why.** The canonical-ID model only works if every row's bidder
   identity can be looked up.
 

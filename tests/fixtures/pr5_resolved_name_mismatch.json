@@ -1,0 +1,23 @@
+{
+  "deal": {
+    "bidder_registry": {
+      "bidder_01": {
+        "aliases_observed": ["Party A", "Party B"],
+        "resolved_name": "Buyer Group"
+      }
+    }
+  },
+  "events": [
+    {
+      "bidder_name": "bidder_01",
+      "bidder_alias": "Party A"
+    }
+  ],
+  "expected_flags": [
+    {
+      "code": "resolved_name_not_observed",
+      "severity": "soft",
+      "row_index": 0
+    }
+  ]
+}

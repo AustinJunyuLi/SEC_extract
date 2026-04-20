@@ -9,7 +9,7 @@
   ],
   "expected_flags": [
     {
-      "code": "bidder_name_unregistered",
+      "code": "bidder_not_in_registry",
       "severity": "hard",
       "row_index": 0
     }
