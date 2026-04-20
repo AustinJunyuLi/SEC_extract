@@ -54,8 +54,10 @@ judgment calls.
 
 ### §P-R3 — `bid_note` ∈ closed vocabulary
 - **Check.** `bid_note` ∈ the ratified set from `rules/events.md` §C1,
-  or is null (permitted only on bid rows per §C3).
-- **Fail action.** Flag `invalid_event_type`. Hard.
+  with no null exception. Bid rows use the literal value `"Bid"` per §C3.
+- **Fail action.**
+  - Null value → `bid_note_null`. Hard.
+  - Unknown vocabulary value → `invalid_event_type`. Hard.
 
 ### §P-R4 — `role` ∈ canonical set
 - **Check.** `role` ∈ {`bidder`, `advisor_financial`, `advisor_legal`}

@@ -410,11 +410,20 @@ def _invariant_p_r2(events: list[dict], filing: Filing) -> list[dict]:
 
 
 def _invariant_p_r3(events: list[dict]) -> list[dict]:
-    """§P-R3 — bid_note ∈ §C1 closed vocabulary (or null on bid rows)."""
+    """§P-R3 — bid_note ∈ §C1 closed vocabulary on every row."""
     flags: list[dict[str, Any]] = []
     for i, ev in enumerate(events):
         bn = ev.get("bid_note")
-        if bn is None or bn in EVENT_VOCABULARY:
+        if bn is None:
+            flags.append({
+                "row_index": i, "code": "bid_note_null", "severity": "hard",
+                "reason": (
+                    "§P-R3: bid_note is null; §C1/§C3 require a "
+                    "closed-vocabulary value on every row (bid rows use 'Bid')."
+                ),
+            })
+            continue
+        if bn in EVENT_VOCABULARY:
             continue
         flags.append({
             "row_index": i, "code": "invalid_event_type", "severity": "hard",

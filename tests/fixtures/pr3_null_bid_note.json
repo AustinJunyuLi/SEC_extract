@@ -1,0 +1,14 @@
+{
+  "events": [
+    {
+      "bid_note": null
+    }
+  ],
+  "expected_flags": [
+    {
+      "code": "bid_note_null",
+      "severity": "hard",
+      "row_index": 0
+    }
+  ]
+}

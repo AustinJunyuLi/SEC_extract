@@ -104,6 +104,14 @@ def test_pr3(fixture_name):
 
 @pytest.mark.parametrize(
     "fixture_name",
+    ["pr3_null_bid_note.json"],
+)
+def test_pr3_acceptance_fixtures(fixture_name):
+    _assert_fixture(fixture_name, "pr3")
+
+
+@pytest.mark.parametrize(
+    "fixture_name",
     ["synthetic_pr4_pass.json", "synthetic_pr4_fail.json"],
 )
 def test_pr4(fixture_name):
