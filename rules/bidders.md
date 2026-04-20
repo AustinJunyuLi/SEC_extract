@@ -206,6 +206,31 @@ canonical ID `bidder_03` stays the same across all rows.
 
 ---
 
+### §E5 — Unnamed-party quantifier semantics (🟩 RESOLVED, 2026-04-20)
+
+When the filing uses a quantifier for unnamed parties:
+
+- **Exact counts:** "three parties" → 3 placeholder rows (`bidder_name`
+  null, `unnamed_count_placeholder=3` info flag on the first).
+- **"Several":** minimum 3. Emit 3 placeholder rows +
+  `unnamed_count_placeholder=3` info flag. If a later narrative reveals a
+  higher count, Austin may reconcile it during review.
+- **Vague plurals** ("a number of," "a few," "multiple"): emit ONE
+  placeholder row with the relevant `bid_note` and a
+  `vague_plural_unnamed` info flag. Do not guess a count.
+- **"Certain parties", "various parties":** same as vague plurals.
+
+**Rationale.** This is the minimum-bias stance at 392-deal scale.
+Exact-count text should be preserved exactly; `"several"` supports a
+minimum of 3; vaguer plurals should not be over-atomized.
+
+**Cross-references.**
+- `prompts/extract.md` numeric-count and placeholder instructions.
+- `rules/invariants.md` §P-D6 (NDA-before-Bid existence checks depend on
+  placeholder rows being emitted when the filing commits to a count).
+
+---
+
 ### §F2 — Classification rules for `bidder_type.base` (🟩 RESOLVED, 2026-04-18)
 
 **Decision.** Accept the 8-rule decision table below. Ambiguous cases
