@@ -22,49 +22,49 @@
         "aliases_observed": [
           "1 party"
         ],
-        "first_appearance_BidderID": 1
+        "first_appearance_row_index": 1
       },
       "bidder_02": {
         "resolved_name": "A diffferent party",
         "aliases_observed": [
           "A diffferent party"
         ],
-        "first_appearance_BidderID": 2
+        "first_appearance_row_index": 2
       },
       "bidder_03": {
         "resolved_name": "Ingredion",
         "aliases_observed": [
           "Ingredion"
         ],
-        "first_appearance_BidderID": 5
+        "first_appearance_row_index": 5
       },
       "bidder_04": {
         "resolved_name": "Deutsche Bank",
         "aliases_observed": [
           "Deutsche Bank"
         ],
-        "first_appearance_BidderID": 9
+        "first_appearance_row_index": 9
       },
       "bidder_05": {
         "resolved_name": "Party C",
         "aliases_observed": [
           "Party C"
         ],
-        "first_appearance_BidderID": 11
+        "first_appearance_row_index": 11
       },
       "bidder_06": {
         "resolved_name": "Party D",
         "aliases_observed": [
           "Party D"
         ],
-        "first_appearance_BidderID": 13
+        "first_appearance_row_index": 13
       },
       "bidder_07": {
         "resolved_name": "Party A",
         "aliases_observed": [
           "Party A"
         ],
-        "first_appearance_BidderID": 14
+        "first_appearance_row_index": 14
       }
     },
     "deal_flags": [
@@ -85,8 +85,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "NDA",
       "bid_type": null,
@@ -119,8 +118,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "NDA",
       "bid_type": null,
@@ -153,8 +151,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Drop",
       "bid_type": null,
@@ -187,8 +184,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Drop",
       "bid_type": null,
@@ -221,8 +217,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Bidder Interest",
       "bid_type": null,
@@ -255,8 +250,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "NDA",
       "bid_type": null,
@@ -289,8 +283,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Bid",
       "bid_type": "informal",
@@ -323,8 +316,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Bid",
       "bid_type": "informal",
@@ -386,8 +378,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "NDA",
       "bid_type": null,
@@ -420,8 +411,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "NDA",
       "bid_type": null,
@@ -454,8 +444,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Bid",
       "bid_type": "informal",
@@ -488,8 +477,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "NDA",
       "bid_type": null,
@@ -522,8 +510,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "NDA",
       "bid_type": null,
@@ -585,8 +572,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Bid",
       "bid_type": "informal",
@@ -619,8 +605,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Bid",
       "bid_type": "informal",
@@ -653,8 +638,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Bid",
       "bid_type": "informal",
@@ -687,8 +671,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Bid",
       "bid_type": "formal",
@@ -721,8 +704,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Drop",
       "bid_type": null,
@@ -755,8 +737,7 @@
       "bidder_type": {
         "base": null,
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Executed",
       "bid_type": null,
@@ -789,8 +770,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Bid",
       "bid_type": "informal",
@@ -823,8 +803,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Bid",
       "bid_type": "informal",
@@ -857,8 +836,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Drop",
       "bid_type": null,
@@ -891,8 +869,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Drop",
       "bid_type": null,

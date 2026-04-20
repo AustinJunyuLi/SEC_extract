@@ -150,7 +150,7 @@ A3_RANK: dict[str, int] = {
     "Bidder Sale": 1, "Activist Sale": 1,
     # Rank 2 — process start/restart
     "Target Sale": 2, "Target Interest": 2,
-    "Target Initiated": 2, "Terminated": 2, "Restarted": 2,
+    "Terminated": 2, "Restarted": 2,
     # Rank 3 — advisor/IB changes
     "IB": 3, "IB Terminated": 3,
     # Rank 4 — bidder first-contact
@@ -161,13 +161,10 @@ A3_RANK: dict[str, int] = {
     "Bid": 6,
     # Rank 8 — mid-round dropouts
     "Drop": 8, "DropBelowInf": 8, "DropAtInf": 8, "DropBelowM": 8, "DropTarget": 8,
-    "DropBelowFormal": 8, "DropAtFormal": 8,
     # Rank 9 — final-round deadlines
     "Final Round": 9, "Final Round Inf": 9,
     "Final Round Ext": 9, "Final Round Inf Ext": 9,
-    "Final Round Formal": 9, "Auction Closed": 9,
-    # Rank 10 — post-deadline
-    "Late Bid": 10,
+    "Auction Closed": 9,
     # Rank 11 — signing
     "Executed": 11,
 }
@@ -465,7 +462,6 @@ def build_bidder_type(r: RawRow) -> dict[str, Any] | None:
         "base": base,
         "non_us": bool(nonus) if nonus is not None else False,
         "public": public,
-        "note": note,
     }
 
 
@@ -880,7 +876,7 @@ def build_deal(slug: str) -> dict[str, Any]:
             new_registry[cid] = {
                 "resolved_name": info.get("resolved_name") or alias,
                 "aliases_observed": aliases,
-                "first_appearance_BidderID": ev["BidderID"],
+                "first_appearance_row_index": ev["BidderID"],
             }
         else:
             # Accumulate additional aliases on subsequent rows (e.g., if a

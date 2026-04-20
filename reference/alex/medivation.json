@@ -22,35 +22,35 @@
         "aliases_observed": [
           "Sanofi"
         ],
-        "first_appearance_BidderID": 1
+        "first_appearance_row_index": 1
       },
       "bidder_02": {
         "resolved_name": "J.P. Morgan",
         "aliases_observed": [
           "J.P. Morgan"
         ],
-        "first_appearance_BidderID": 4
+        "first_appearance_row_index": 4
       },
       "bidder_03": {
         "resolved_name": "Pfizer",
         "aliases_observed": [
           "Pfizer"
         ],
-        "first_appearance_BidderID": 5
+        "first_appearance_row_index": 5
       },
       "bidder_06": {
         "resolved_name": "Party A",
         "aliases_observed": [
           "Party A"
         ],
-        "first_appearance_BidderID": 7
+        "first_appearance_row_index": 7
       },
       "bidder_07": {
         "resolved_name": "Party B",
         "aliases_observed": [
           "Party B"
         ],
-        "first_appearance_BidderID": 8
+        "first_appearance_row_index": 8
       }
     },
     "deal_flags": [
@@ -71,8 +71,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": true,
-        "public": true,
-        "note": "Non-US public S"
+        "public": true
       },
       "bid_note": "Bidder Sale",
       "bid_type": null,
@@ -134,8 +133,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": true,
-        "public": true,
-        "note": "Non-US public S"
+        "public": true
       },
       "bid_note": "Bid",
       "bid_type": "informal",
@@ -197,8 +195,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "NDA",
       "bid_type": null,
@@ -231,8 +228,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": true,
-        "public": true,
-        "note": "Non-US public S"
+        "public": true
       },
       "bid_note": "NDA",
       "bid_type": null,
@@ -356,8 +352,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Bid",
       "bid_type": "informal",
@@ -518,8 +513,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Bid",
       "bid_type": "formal",
@@ -552,8 +546,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Bid",
       "bid_type": "formal",
@@ -586,8 +579,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": true,
-        "public": true,
-        "note": "Non-US public S"
+        "public": true
       },
       "bid_note": "Drop",
       "bid_type": null,
@@ -700,8 +692,7 @@
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null,
-        "note": "S"
+        "public": null
       },
       "bid_note": "Executed",
       "bid_type": null,
