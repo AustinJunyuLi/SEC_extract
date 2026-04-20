@@ -315,30 +315,6 @@ graph tells a coherent M&A-process story.
 
 ---
 
-## Future extensions (not-yet-ratified, captured for record)
-
-Useful additional checks identified during Stage 1 but **not** part of
-the MVP validator. Revisit after the 25-deal stress-test study and
-after Stage 3 has run across the 9 reference deals.
-
-- **NDA count cross-check.** Filings often state "by <date>, X parties
-  had signed confidentiality agreements." Extractor could search for
-  such statements and cross-check extracted NDA count. Soft. Deferred
-  because extraction of the summary statement itself is non-trivial
-  and would add validator complexity.
-- **Bid value plausibility.** Numeric bids should be positive and
-  within a plausible window of the final executed price. Soft.
-  Deferred because bidder-type differences (strategic vs financial,
-  partial-acquisition) make plausibility windows non-uniform.
-- **Winner named.** `Executed` row's `bidder_name` is not an anonymous
-  placeholder. Hard. Deferred only because §P-R5 already catches
-  unregistered names; adding a check for "name not starting with
-  `Party `" is trivially addable.
-- **Dates within filing window.** Every date ≤ filing date + small
-  window (for go-shop coverage). Soft. Deferred because the go-shop
-  window isn't always explicitly bounded in the extractor's context.
----
-
 ## What the validator does NOT do
 
 - **Does not rewrite or correct rows.** Flag-only discipline preserves
