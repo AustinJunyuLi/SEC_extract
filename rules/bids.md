@@ -165,8 +165,10 @@ formal/informal scoring function rather than first-match.
 **Decision.** Hard invariant. Every row with non-null `bid_type` MUST
 satisfy at least one of:
 
-1. `source_quote` contains at least one trigger phrase from §G1's formal
-   or informal trigger tables (case-insensitive substring match).
+1. `source_quote` contains at least one trigger phrase from the §G1
+   table matching `bid_type` (formal triggers for `bid_type =
+   "formal"`, informal triggers for `bid_type = "informal"`;
+   case-insensitive substring match).
 2. The row is a true range bid — both `bid_value_lower` and
    `bid_value_upper` are populated and `bid_value_lower <
    bid_value_upper` (structural signal per §G1).

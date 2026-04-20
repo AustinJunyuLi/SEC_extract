@@ -1,0 +1,16 @@
+{
+  "events": [
+    {
+      "bid_note": "Bid",
+      "bid_type": "formal",
+      "source_quote": "Party A submitted an expression of interest."
+    }
+  ],
+  "expected_flags": [
+    {
+      "code": "bid_type_unsupported",
+      "severity": "hard",
+      "row_index": 0
+    }
+  ]
+}

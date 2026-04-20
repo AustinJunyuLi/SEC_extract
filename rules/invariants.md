@@ -218,9 +218,10 @@ graph tells a coherent M&A-process story.
 
 ### §P-G2 — `bid_type` evidence requirement
 - **Check.** Every row with non-null `bid_type` satisfies one of:
-  (1) `source_quote` contains a §G1 trigger phrase (case-insensitive
-  substring, formal OR informal table), (2) the row is a true range bid
-  (both `bid_value_lower` and `bid_value_upper` populated AND
+  (1) `source_quote` contains a §G1 trigger phrase from the table
+  matching `bid_type` (formal triggers for `formal`, informal triggers
+  for `informal`, case-insensitive substring), (2) the row is a true
+  range bid (both `bid_value_lower` and `bid_value_upper` populated AND
   `bid_value_lower < bid_value_upper` — structural signal per §G1), or
   (3) the row carries `bid_type_inference_note: str`.
 - **Fail action.** Flag `bid_type_unsupported`. Hard.

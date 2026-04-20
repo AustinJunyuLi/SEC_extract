@@ -1,0 +1,18 @@
+{
+  "events": [
+    {
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_value_lower": "$25",
+      "bid_value_upper": "$30",
+      "source_quote": "Party A submitted an updated proposal."
+    }
+  ],
+  "expected_flags": [
+    {
+      "code": "bid_type_unsupported",
+      "severity": "hard",
+      "row_index": 0
+    }
+  ]
+}

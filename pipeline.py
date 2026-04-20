@@ -127,9 +127,6 @@ INFORMAL_TRIGGERS: tuple[str, ...] = (
     "subject to due diligence",
     "preliminary proposal",
 )
-ALL_G1_TRIGGERS: tuple[str, ...] = FORMAL_TRIGGERS + INFORMAL_TRIGGERS
-
-
 def _row_flag_codes(ev: dict) -> set[str]:
     """Return the set of flag codes attached to a row, guarding against
     non-dict entries that may slip through LLM output."""
@@ -647,8 +644,9 @@ def _invariant_p_d2(events: list[dict]) -> list[dict]:
 
 def _invariant_p_g2(events: list[dict]) -> list[dict]:
     """§P-G2 — every row with non-null bid_type satisfies one of:
-    (1) source_quote contains a §G1 trigger phrase (case-insensitive
-    substring), (2) the row is a true range bid
+    (1) source_quote contains a direction-matched §G1 trigger phrase
+    (formal trigger for formal bid_type; informal trigger for informal
+    bid_type, case-insensitive substring), (2) the row is a true range bid
     (`bid_value_lower < bid_value_upper`), or (3) the row carries a
     ≤200-char `bid_type_inference_note`. Violations emit the hard flag
     `bid_type_unsupported`."""
@@ -664,12 +662,22 @@ def _invariant_p_g2(events: list[dict]) -> list[dict]:
 
         lower = ev.get("bid_value_lower")
         upper = ev.get("bid_value_upper")
-        if (
-            lower not in (None, "", [])
-            and upper not in (None, "", [])
-            and lower != upper
-        ):
-            continue  # true range-bid signal per §G1 (lower < upper)
+        try:
+            lo_num = float(lower) if lower not in (None, "", []) else None
+            hi_num = float(upper) if upper not in (None, "", []) else None
+        except (TypeError, ValueError):
+            lo_num = hi_num = None
+        if lo_num is not None and hi_num is not None:
+            if lo_num < hi_num:
+                continue
+            flags.append({
+                "row_index": i, "code": "bid_range_inverted", "severity": "hard",
+                "reason": (
+                    f"§P-G2: bid_value_lower={lower!r} >= "
+                    f"bid_value_upper={upper!r}; ranges require lower < upper."
+                ),
+            })
+            continue
 
         raw_quote = ev.get("source_quote")
         if isinstance(raw_quote, list):
@@ -678,9 +686,13 @@ def _invariant_p_g2(events: list[dict]) -> list[dict]:
             quote_text = raw_quote
         else:
             quote_text = ""
-        # §G2 is existence-only: any §G1 trigger (formal or informal) suffices.
-        # §G1 governs which classification the trigger maps to.
-        if any(t in quote_text.lower() for t in ALL_G1_TRIGGERS):
+        if bid_type == "formal":
+            required = FORMAL_TRIGGERS
+        elif bid_type == "informal":
+            required = INFORMAL_TRIGGERS
+        else:
+            required = ()
+        if required and any(t in quote_text.lower() for t in required):
             continue
 
         flags.append({
