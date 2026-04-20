@@ -201,8 +201,10 @@ graph tells a coherent M&A-process story.
 
 ### §P-S3 — Each `process_phase` terminates cleanly
 - **Check.** For each distinct `process_phase` value in the deal, the
-  chronologically last event for that phase is one of: `Executed`,
-  `Terminated`, or `Auction Closed`. Per `rules/events.md` §K1/§L2.
+  phase contains at least one event with `bid_note ∈ {Executed,
+  Terminated, Auction Closed}`. Position within the phase is not
+  enforced — go-shop trailing activity and §A3 rank inversions can place
+  terminators mid-phase. Per `rules/events.md` §K1/§L2.
 - **Fail action.** Flag `phase_termination_missing`. Hard.
 - **Why hard.** Every process phase has a real endpoint (it succeeded,
   failed, or auction closed without a winner). A phase without a

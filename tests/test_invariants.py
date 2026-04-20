@@ -212,6 +212,14 @@ def test_ps3(fixture_name):
 
 @pytest.mark.parametrize(
     "fixture_name",
+    ["ps3_terminator_mid_phase.json", "ps3_no_terminator.json"],
+)
+def test_ps3_acceptance_fixtures(fixture_name):
+    _assert_fixture(fixture_name, "ps3")
+
+
+@pytest.mark.parametrize(
+    "fixture_name",
     ["synthetic_ps4_pass.json", "synthetic_ps4_fail.json"],
 )
 def test_ps4(fixture_name):
