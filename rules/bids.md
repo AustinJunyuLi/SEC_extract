@@ -103,6 +103,14 @@ filing passage describing it, evaluated against the trigger tables below.
 Where no trigger fires, fall back to process-position heuristics. Where
 still ambiguous, emit `bid_type = null` + hard flag.
 
+These trigger tables and fallback heuristics are **classification
+guidance for the extractor** — they tell the extractor how to *pick*
+`informal` vs `formal`. The validator (§G2 / §P-G2) enforces
+*evidence* (range OR ≤300-char `bid_type_inference_note`), not trigger
+presence. A trigger hit in `source_quote` alone does NOT satisfy
+§P-G2; the extractor must still attach the inference note (unless the
+row is a true range bid).
+
 **Formal triggers** (any → `bid_type = "formal"`):
 - *"binding offer"*, *"binding proposal"*, *"binding bid"*
 - *"executed commitment letters"* or *"financing commitments"* (debt + equity)
@@ -120,11 +128,12 @@ still ambiguous, emit `bid_type = null` + hard flag.
 - *"indicative offer"*, *"indicative proposal"*
 - *"subject to due diligence"* (without financing commitments)
 - *"preliminary proposal"*
-- **Structural signal: bid is stated as a range** (`bid_value_lower` and
-  `bid_value_upper` both populated) — Austin's heuristic. Range-valued
-  bids are almost always informal; if a range coexists with a formal
-  trigger, the formal trigger wins but flag
-  `range_with_formal_trigger` (soft) for manual review.
+- **Structural signal: bid is stated as a true range** (both
+  `bid_value_lower` and `bid_value_upper` populated, numeric, with
+  `lower < upper` per §G2) — Austin's heuristic. Range-valued bids are
+  almost always informal; if a range coexists with a formal trigger,
+  the formal trigger wins but flag `range_with_formal_trigger` (soft)
+  for manual review.
 
 **Process-position fallback** (no explicit trigger present):
 - Bid submitted in response to `Final Round Ann` / `Final Round Inf Ann`

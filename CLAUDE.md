@@ -145,8 +145,11 @@ repo.
 - **Rulebook coherence closed.**
   - §P-D5 implemented in `pipeline.py` as the structural twin of §P-D6
     (both have §D1.a `unsolicited_first_contact` exemption). §G2 in
-    `rules/bids.md` restructured to match the 3-condition shape of
-    §P-G2 exactly (trigger / range-bid / ≤200-char inference note).
+    `rules/bids.md` defines the 2-satisfier §P-G2 invariant (true
+    range bid with `lower < upper`, or ≤300-char
+    `bid_type_inference_note`). Trigger tables in §G1 are extractor
+    classification guidance only; a trigger phrase alone does NOT
+    satisfy §P-G2.
   - §B5 (communication-date directionality) formalized in
     `rules/dates.md` — previously cited by `prompts/extract.md` but
     unwritten.

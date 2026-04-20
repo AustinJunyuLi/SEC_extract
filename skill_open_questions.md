@@ -126,7 +126,7 @@ Some questions are tightly coupled and will likely be resolved together (e.g., �
 - ~~§Scope-1 auction-only vs all-M&A~~ — 🟩 resolved 2026-04-18. Pipeline extracts every valid-filing-type deal and emits a deal-level `auction: bool`. An auction = ≥2 non-advisor bidder NDAs in the current (non-stale) process. Downstream filter on `auction == true`. See `rules/schema.md` §Scope-1.
 - ~~§Scope-2 accepted filing types~~ — 🟩 resolved 2026-04-18. Accepted: DEFM14A, PREM14A, SC TO-T, S-4 (primary). `/A` amendments accepted when they supersede. `SC 14D9` accepted as secondary. `DEFA14A`/`425`/`8-K`/`13D`/`13G` excluded. `fetch_filings.py` already implements this. See `rules/schema.md` §Scope-2.
 - ~~§Scope-3 out-of-scope fields~~ — 🟩 resolved 2026-04-18. AI excludes COMPUSTAT fields (`cshoc`, `gvkey*`), EDGAR metadata (`DateFiled`, `FormType`, `URL`, `CIK`, `accession`), and orchestration metadata (`DealNumber`, `rulebook_version`). AI produces event array + `auction` + confirmed deal-identity fields with mismatch flags. See `rules/schema.md` §Scope-3.
-- §G2 classification evidence — SKILL.md already mandates it; still needs formalization.
+- ~~§G2 classification evidence~~ — 🟩 resolved 2026-04-20. Two satisfiers: true range bid (`bid_value_lower < bid_value_upper`) or ≤300-char `bid_type_inference_note`. §G1 trigger tables are extractor guidance only; the validator `pipeline._invariant_p_g2` enforces range-OR-note. See `rules/bids.md` §G2 and `rules/invariants.md` §P-G2.
 
 When a decision requires Alex and he isn't available, leave 🟥 and note the dependency. Don't block Austin's decisions on Alex's.
 
