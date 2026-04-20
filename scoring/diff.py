@@ -83,9 +83,18 @@ def normalize_bidder(alias: str | None) -> str | None:
     if alias is None:
         return None
     s = alias.strip().lower()
-    for suffix in (" inc.", " inc", " corp.", " corp", " ltd.", " ltd",
-                   " llc", " plc", ","):
-        s = s.rstrip(suffix)
+    suffixes = (
+        " llc.", " corp.", " inc.", " ltd.", " plc.",
+        " llc", " corp", " inc", " ltd", " plc", ",",
+    )
+    while True:
+        for suffix in suffixes:
+            if not s.endswith(suffix):
+                continue
+            s = s[:-len(suffix)].rstrip()
+            break
+        else:
+            break
     return " ".join(s.split())
 
 
