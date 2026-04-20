@@ -49,6 +49,7 @@ RUNNERS = {
     "pd3": lambda fixture: pipeline._invariant_p_d3(fixture.get("events", [])),
     "pd5": lambda fixture: pipeline._invariant_p_d5(fixture.get("events", [])),
     "pd6": lambda fixture: pipeline._invariant_p_d6(fixture.get("events", [])),
+    "ph5": lambda fixture: pipeline._invariant_p_h5(fixture.get("events", [])),
     "pl1": lambda fixture: pipeline._invariant_p_l1(fixture.get("events", [])),
     "pl2": lambda fixture: pipeline._invariant_p_l2(fixture.get("events", [])),
     "pg2": lambda fixture: pipeline._invariant_p_g2(fixture.get("events", [])),
@@ -171,6 +172,14 @@ def test_pd5_acceptance_fixtures(fixture_name):
 )
 def test_pd6(fixture_name):
     _assert_fixture(fixture_name, "pd6")
+
+
+@pytest.mark.parametrize(
+    "fixture_name",
+    ["ph5_out_of_order.json", "ph5_in_order.json"],
+)
+def test_ph5(fixture_name):
+    _assert_fixture(fixture_name, "ph5")
 
 
 @pytest.mark.parametrize(

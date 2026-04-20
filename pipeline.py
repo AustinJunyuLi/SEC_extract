@@ -311,6 +311,7 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
     row_flags.extend(_invariant_p_d2(events))
     row_flags.extend(_invariant_p_d5(events))
     row_flags.extend(_invariant_p_d6(events))
+    row_flags.extend(_invariant_p_h5(events))
     row_flags.extend(_invariant_p_g2(events))
 
     # §P-D3 returns a mix (structural are deal-level; ordering violations are
@@ -637,6 +638,37 @@ def _invariant_p_d6(events: list[dict]) -> list[dict]:
                     f"to exempt this row."
                 ),
             })
+    return flags
+
+
+def _invariant_p_h5(events: list[dict]) -> list[dict]:
+    """§P-H5 — multi-bid sequences should be date-sorted per bidder."""
+    by_name: dict[str, list[tuple[int, str]]] = {}
+    for i, ev in enumerate(events):
+        if ev.get("bid_note") != "Bid":
+            continue
+        name = ev.get("bidder_name")
+        date = ev.get("bid_date_precise")
+        if not name or not date:
+            continue
+        by_name.setdefault(name, []).append((i, date))
+
+    flags: list[dict[str, Any]] = []
+    for name, rows in by_name.items():
+        if len(rows) <= 1:
+            continue
+        dates = [date for _, date in rows]
+        if dates == sorted(dates):
+            continue
+        flags.append({
+            "row_index": rows[-1][0],
+            "code": "bid_revision_out_of_order",
+            "severity": "soft",
+            "reason": (
+                f"§P-H5: bidder {name!r} has {len(rows)} bids with dates not "
+                f"in chronological order: {dates!r}"
+            ),
+        })
     return flags
 
 

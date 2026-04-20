@@ -249,6 +249,18 @@ graph tells a coherent M&A-process story.
 
 ---
 
+## §P-H — Bid-revision chronology invariants (🟩 RESOLVED, 2026-04-20)
+
+### §P-H5 — Multiple bids by the same bidder are chronologically ordered
+- **Check.** For any bidder with more than one `Bid` row carrying
+  `bid_date_precise`, those dates appear in chronological order.
+- **Fail action.** Flag `bid_revision_out_of_order`. Soft.
+- **Why soft.** Out-of-order revisions usually indicate extraction or
+  phase assignment drift, but they do not necessarily invalidate the row
+  if the filing narration itself is compressed or retrospective.
+
+---
+
 ## §P-G — Bid classification invariants (🟩 RESOLVED, 2026-04-19)
 
 ### §P-G2 — `bid_type` evidence requirement
@@ -280,6 +292,7 @@ graph tells a coherent M&A-process story.
 | §P-D3 | `rules/dates.md` §A4 |
 | §P-D5 | `rules/events.md` §I1 + §I2 + §D1 |
 | §P-D6 | `rules/events.md` §D1.a + `rules/bids.md` §C4 + `rules/bidders.md` §E3 |
+| §P-H5 | `rules/bids.md` §H5 |
 | §P-L1 | `rules/events.md` §L2 |
 | §P-L2 | `rules/events.md` §L2 |
 | §P-G2 | `rules/bids.md` §G1/§G2 |

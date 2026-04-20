@@ -1,0 +1,21 @@
+{
+  "events": [
+    {
+      "bidder_name": "bidder_01",
+      "bid_note": "Bid",
+      "bid_date_precise": "2016-05-10"
+    },
+    {
+      "bidder_name": "bidder_01",
+      "bid_note": "Bid",
+      "bid_date_precise": "2016-04-20"
+    }
+  ],
+  "expected_flags": [
+    {
+      "code": "bid_revision_out_of_order",
+      "severity": "soft",
+      "row_index": 1
+    }
+  ]
+}
