@@ -71,8 +71,8 @@ PRIMARY_FORM_TYPES = {
     "SC TO-T", "SC TO-T/A",
     "SC 14D9", "SC 14D9/A",
     "S-4", "S-4/A",
-    "425",
 }
+EXCLUDED_FORM_TYPES = {"425"}
 
 # Tender-offer covers (SC TO-T) are typically 50-100 KB and incorporate the actual
 # "Background of the Offer" narrative by reference from the Offer to Purchase,
@@ -153,6 +153,12 @@ class FilingDocument:
     url: str
 
 
+class ExcludedFormTypeError(Exception):
+    def __init__(self, form_type: str):
+        self.form_type = form_type
+        super().__init__(form_type)
+
+
 def _parse_index_table(index_url: str) -> list[tuple[str, str, str, str]]:
     """Fetch an EDGAR '…-index.htm' page and return raw (href, name, form_type, size) rows."""
     html = _rate_limited_get(index_url).decode("utf-8", errors="replace")
@@ -215,6 +221,12 @@ def resolve_substantive_document(seed_url: str) -> tuple[FilingDocument, str]:
                 break
         if primary is None:
             raise ValueError(f"No primary document identifiable on {index_url}")
+    if primary.form_type in EXCLUDED_FORM_TYPES:
+        raise ExcludedFormTypeError(primary.form_type)
+    if primary.form_type not in PRIMARY_FORM_TYPES:
+        raise ValueError(
+            f"Unknown substantive form type {primary.form_type!r} on {index_url}"
+        )
 
     # 3. For tender offers, prefer the Offer to Purchase exhibit.
     if primary.form_type in TENDER_OFFER_FORMS:
@@ -380,6 +392,12 @@ def main() -> None:
         try:
             process_deal(seed, force=args.force)
             ok += 1
+        except ExcludedFormTypeError as e:
+            print(
+                f"skipping slug={seed.slug}: form_type={e.form_type} "
+                f"is §Scope-2-excluded",
+                file=sys.stderr,
+            )
         except Exception as e:
             print(f"[{seed.slug}] FAILED: {e}", file=sys.stderr)
     print(f"\n{ok}/{len(targets)} deals fetched successfully")
