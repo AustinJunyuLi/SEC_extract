@@ -111,24 +111,6 @@ DATE_INFERENCE_FLAG_CODES: frozenset[str] = frozenset({
     "date_range_collapsed",
 })
 
-# §G1 trigger phrases. Substring match, case-insensitive, on source_quote.
-# MUST stay in sync with rules/bids.md §G1 formal/informal trigger tables.
-FORMAL_TRIGGERS: tuple[str, ...] = (
-    "binding offer", "binding proposal", "binding bid",
-    "executed commitment letter", "financing commitment",
-    "fully financed", "no financing contingency",
-    "definitive agreement submitted", "draft merger agreement",
-    "final bid", "best and final",
-    "markup of the merger agreement",
-    "process letter",
-)
-INFORMAL_TRIGGERS: tuple[str, ...] = (
-    "non-binding indication", "preliminary indication",
-    "expression of interest",
-    "indicative offer", "indicative proposal",
-    "subject to due diligence",
-    "preliminary proposal",
-)
 def _row_flag_codes(ev: dict) -> set[str]:
     """Return the set of flag codes attached to a row, guarding against
     non-dict entries that may slip through LLM output."""
@@ -716,20 +698,17 @@ def _invariant_p_d2(events: list[dict]) -> list[dict]:
 
 def _invariant_p_g2(events: list[dict]) -> list[dict]:
     """§P-G2 — every row with non-null bid_type satisfies one of:
-    (1) source_quote contains a direction-matched §G1 trigger phrase
-    (formal trigger for formal bid_type; informal trigger for informal
-    bid_type, case-insensitive substring), (2) the row is a true range bid
-    (`bid_value_lower < bid_value_upper`), or (3) the row carries a
-    ≤200-char `bid_type_inference_note`. Violations emit the hard flag
-    `bid_type_unsupported`."""
+    (1) the row is a true range bid (both `bid_value_lower` and
+    `bid_value_upper` numeric with `lower < upper`, a §G1 informal
+    structural signal), or (2) the row carries a non-empty
+    `bid_type_inference_note: str` of ≤300 chars. §G1 trigger tables are
+    classification guidance for the extractor, not a validator satisfier.
+    Violations emit hard `bid_type_unsupported`; inverted ranges emit
+    hard `bid_range_inverted`."""
     flags: list[dict[str, Any]] = []
     for i, ev in enumerate(events):
         bid_type = ev.get("bid_type")
         if bid_type in (None, "", []):
-            continue
-
-        note = ev.get("bid_type_inference_note")
-        if isinstance(note, str) and 0 < len(note.strip()) <= 200:
             continue
 
         lower = ev.get("bid_value_lower")
@@ -751,28 +730,16 @@ def _invariant_p_g2(events: list[dict]) -> list[dict]:
             })
             continue
 
-        raw_quote = ev.get("source_quote")
-        if isinstance(raw_quote, list):
-            quote_text = " ".join(q for q in raw_quote if isinstance(q, str))
-        elif isinstance(raw_quote, str):
-            quote_text = raw_quote
-        else:
-            quote_text = ""
-        if bid_type == "formal":
-            required = FORMAL_TRIGGERS
-        elif bid_type == "informal":
-            required = INFORMAL_TRIGGERS
-        else:
-            required = ()
-        if required and any(t in quote_text.lower() for t in required):
+        note = ev.get("bid_type_inference_note")
+        if isinstance(note, str) and 0 < len(note.strip()) <= 300:
             continue
 
         flags.append({
             "row_index": i, "code": "bid_type_unsupported", "severity": "hard",
             "reason": (
-                f"§P-G2: bid_type={bid_type!r} has no §G1 trigger in "
-                f"source_quote, no range-bid structure, and no "
-                f"bid_type_inference_note. Attach one."
+                f"§P-G2: bid_type={bid_type!r} lacks both a true range "
+                f"(lower<upper) and a non-empty ≤300-char "
+                f"bid_type_inference_note."
             ),
         })
     return flags
