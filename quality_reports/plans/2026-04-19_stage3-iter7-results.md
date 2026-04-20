@@ -1,5 +1,13 @@
 # Stage 3 Iter-7 — Re-extraction Results
 
+> **SUPERSEDED BY §P-G2 RECALIBRATION (2026-04-20, commits
+> `941d1bb..a732348`).** This iter-7 snapshot describes the
+> pre-recalibration 3-satisfier §P-G2 (trigger / range / ≤200-char
+> note) and the "20 soft NDA" providence pattern as of that state. For
+> the current design and final 9-deal results see
+> `quality_reports/plans/2026-04-20_pg2-recalibration-results.md`.
+> Retained as iter-history snapshot.
+
 **Status:** COMPLETE — 20 hard flags closed; 1 deal regressed from
 `validated` to `passed` (20 soft flags).
 **Branch:** `claude/sharp-sutherland-8d60d7` (22 commits ahead of

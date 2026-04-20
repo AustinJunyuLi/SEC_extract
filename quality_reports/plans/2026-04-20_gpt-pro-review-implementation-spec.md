@@ -1,5 +1,13 @@
 # Implementation Spec — GPT Pro Review Round 1
 
+> **EXECUTION COMPLETE (commits `941d1bb..a732348`, 2026-04-20).**
+> TIER 1 / 2 / 3 all landed. §P-G2 subsequently collapsed to a
+> 2-satisfier invariant, superseding the 3-satisfier T1-B/T1-C design
+> described below. For the live project state and final recalibration
+> rationale see
+> `quality_reports/plans/2026-04-20_pg2-recalibration-results.md`.
+> The spec below is retained as an execution-history snapshot.
+
 **Date:** 2026-04-20
 **Source review:** `diagnosis/gptpro/2026-04-20/round_1/PROMPT.md`
 **Full raw reviewer reply:** `diagnosis/gptpro/2026-04-20/round_1_reply.md`
