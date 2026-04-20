@@ -1365,6 +1365,31 @@ def _canonicalize_order(raw_extraction: dict[str, Any]) -> None:
             reg_entry["first_appearance_row_index"] = first_seen[name]
 
 
+def prepare_for_validate(
+    slug: str,
+    raw_extraction: dict[str, Any],
+    filing: Filing | None = None,
+) -> tuple[dict[str, Any], Filing, list[dict[str, Any]]]:
+    """Apply every pre-validate transform without writing output."""
+    if filing is None:
+        filing = load_filing(slug)
+    promotion_log = _apply_unnamed_nda_promotions(raw_extraction)
+    _canonicalize_order(raw_extraction)
+    failed_reasons_by_hint_id = {
+        id(entry["hint"]): entry["reason"]
+        for entry in promotion_log if entry.get("status") == "failed"
+    }
+    for ev in raw_extraction.get("events", []):
+        promo = ev.get("unnamed_nda_promotion")
+        if not promo or id(promo) not in failed_reasons_by_hint_id:
+            continue
+        ev.setdefault("flags", []).append({
+            "code": "nda_promotion_failed", "severity": "hard",
+            "reason": failed_reasons_by_hint_id[id(promo)],
+        })
+    return raw_extraction, filing, promotion_log
+
+
 def finalize(
     slug: str,
     raw_extraction: dict[str, Any],
@@ -1382,28 +1407,9 @@ def finalize(
     and/or raw_extraction['deal']['deal_flags'] with adjudicator verdicts
     before passing raw_extraction in.
     """
-    if filing is None:
-        filing = load_filing(slug)
-    # Promote unnamed NDA placeholders to named bidders before sort.
-    # Failed promotions leave their hint on the source row; flagging
-    # happens post-canonicalize so row indices are stable.
-    promotion_log = _apply_unnamed_nda_promotions(raw_extraction)
-    # Deterministic §A2/§A3 sort + BidderID reassignment.
-    _canonicalize_order(raw_extraction)
-    # Locate failed-promotion source rows via residual-hint identity
-    # (success path pops the hint; failure path leaves it).
-    failed_reasons_by_hint_id = {
-        id(entry["hint"]): entry["reason"]
-        for entry in promotion_log if entry.get("status") == "failed"
-    }
-    for ev in raw_extraction.get("events", []):
-        promo = ev.get("unnamed_nda_promotion")
-        if not promo or id(promo) not in failed_reasons_by_hint_id:
-            continue
-        ev.setdefault("flags", []).append({
-            "code": "nda_promotion_failed", "severity": "hard",
-            "reason": failed_reasons_by_hint_id[id(promo)],
-        })
+    raw_extraction, filing, promotion_log = prepare_for_validate(
+        slug, raw_extraction, filing=filing
+    )
     result = validate(raw_extraction, filing)
     final = merge_flags(raw_extraction, result.row_flags, result.deal_flags)
     # Attach promotion log to deal object for audit (pipeline-internal field).

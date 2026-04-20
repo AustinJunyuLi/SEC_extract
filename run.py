@@ -36,6 +36,7 @@ STATUS SEMANTICS (mirrors SKILL.md)
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import subprocess
 import sys
@@ -57,8 +58,13 @@ def finalize_deal(
     filing = pipeline.load_filing(slug)
 
     if dry_run:
-        result = pipeline.validate(raw_extraction, filing)
-        final = pipeline.merge_flags(raw_extraction, result.row_flags, result.deal_flags)
+        prepared, filing, _ = pipeline.prepare_for_validate(
+            slug,
+            copy.deepcopy(raw_extraction),
+            filing=filing,
+        )
+        result = pipeline.validate(prepared, filing)
+        final = pipeline.merge_flags(prepared, result.row_flags, result.deal_flags)
         status, flag_count, notes = pipeline.summarize(final)
         print(f"[{slug}] dry-run: status={status} flag_count={flag_count} notes={notes}")
         if result.row_flags:
