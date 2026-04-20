@@ -2,7 +2,7 @@
   "schema_version": "v1",
   "rulebook_version": null,
   "created": "2026-04-18T12:29:42.084187Z",
-  "updated": "2026-04-20T15:53:54.938885Z",
+  "updated": "2026-04-20T15:53:55.009143Z",
   "deal_count_total": 401,
   "deal_count_reference": 9,
   "deals": {
@@ -4089,17 +4089,17 @@
       "notes": ""
     },
     "mac-gray": {
-      "status": "passed",
+      "status": "validated",
       "is_reference": true,
       "target_name": "MAC GRAY CORP",
       "acquirer": "CSC SERVICEWORKS, INC.",
       "date_announced": "2013-10-15",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1038280/0001047469-13-010973-index.htm",
-      "flag_count": 36,
-      "last_run": "2026-04-20T14:23:52.598992Z",
+      "flag_count": 31,
+      "last_run": "2026-04-20T15:53:55.009143Z",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=0 soft=32 info=4"
+      "notes": "hard=1 soft=1 info=29"
     },
     "molex-inc": {
       "status": "pending",
