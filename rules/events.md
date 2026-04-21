@@ -324,6 +324,69 @@ re-engagement's new NDA.
 
 ---
 
+### §I3 — Soft-resolution cues do not auto-type exits (🟩 RESOLVED, 2026-04-21)
+
+**Decision.** The following prose phrases are **soft-resolution cues**.
+They surface for researcher audit via a review-only signal but the
+validator does **not** auto-type an exit (`Drop*` / `DropTarget`) from
+them alone:
+
+- `"would not be moving forward"`
+- `"not interested in pursuing"`
+- `"cease(d|s) working on the transaction"`
+- `"will not be submitting a bid"`
+- `"elected not to proceed"`
+
+**Why.** These are genuine signals of bidder disengagement in many
+filings, but they also routinely appear in narrative that does NOT
+represent process-terminating events — e.g., partial-business pivots
+("would not be moving forward on the Northeast assets"), PIPE pivots
+("would not be moving forward with a whole-company acquisition"),
+status-only fences ("would not be moving forward this week pending
+diligence"). Treating them as hard exit triggers over-emits exits.
+
+**Routing.** A soft-resolution cue without explicit acquisition-path
+abandonment routes to a review-only finding (flag
+`soft_resolution_cue_review`, severity: soft). The extractor should
+**not** emit a `Drop*` / `DropTarget` row for such cues unless the
+filing ALSO contains explicit language that the bidder is abandoning
+the acquisition path — see the prompt guidance in `prompts/extract.md`
+§ "Soft-resolution vs typed exit".
+
+**Source.** Imported from bids_pipeline's 2026-04-17 boundary-map
+sprint (Clusters 5/7, commit `acc6cdd`). Validated against a 30-deal
+stratified sample there.
+
+---
+
+### §I4 — `DropTarget` carrying a comparator clue → review signal (🟩 RESOLVED, 2026-04-21)
+
+**Decision.** When the Extractor emits a `DropTarget` row whose
+`source_quote` contains explicit terminal-price comparator language
+("below the merger price", "below the informal bid", "at the informal
+price"), the validator emits a **review-only** flag
+`comparator_on_droptarget` (severity: soft). The row is **not**
+auto-flipped to a Drop subtype (`DropBelowM` / `DropBelowInf` /
+`DropAtInf`).
+
+**Why.** Comparator clues imply voluntary-drop semantics (the bidder's
+last price vs. the eventual deal), but `DropTarget` is the
+target-initiated lane. The combination is a likely mis-classification
+the extractor should re-consider — but code does NOT silently rewrite
+the row, because the extractor may have correctly identified
+target-agency even when a comparator phrase is mentioned peripherally.
+The reviewer adjudicates.
+
+**Routing.** §P-* semantic soft check (future §P-S5 when added). For
+now, surfaced as `comparator_on_droptarget` in `flags.jsonl` with the
+offending quote.
+
+**Source.** Imported from bids_pipeline's 2026-04-17 boundary-map
+sprint (Cluster 4, commit `674c043`). Preserves Drop-vs-DropTarget
+agency distinction while surfacing the ambiguity.
+
+---
+
 ### §J1 — `IB` and `IB Terminated` emission (🟩 RESOLVED, 2026-04-18)
 
 **Decision.** Both `IB` and `IB Terminated` are event-row codes in §C1.
@@ -462,10 +525,34 @@ MVP**. Nine codes:
 Suffix grammar: `Inf` = informal round · `Ext` = deadline extension ·
 `Ann` = target's announcement of the round (vs. the bids submitted in it).
 
+**"Best and final" is NOT a Final Round Ext trigger (🟩 RESOLVED, 2026-04-21).**
+
+A phrase like `"best and final offers"` or `"best-and-final"` alone
+does **not** fire `Final Round Ext` / `Final Round Ext Ann`. It is
+*pressure language* the target uses to close a round, not a process
+step by itself.
+
+Extension rows fire only on **explicit deadline language**:
+- `"the deadline was extended to <date>"`
+- `"extended the <date> deadline by <n> days"`
+- `"requested additional time"` (from a bidder) + target granting it
+- `"pushed the final-round submission to <date>"`
+
+Bare `"best and final"` without any such deadline cue should produce
+**no** extension row. If `"best and final"` co-occurs with an explicit
+deadline cue, the deadline cue is what fires — `"best and final"` is
+just accompanying rhetoric.
+
+Rationale: imported from bids_pipeline's 2026-04-17 boundary-map
+sprint (Clusters 1/2, commit `af6047d`). A 30-deal stratified study
+showed bare `"best and final"` triggered spurious extension rows
+~40% of the time because filings use the phrase routinely at the
+final round itself, not only at extensions.
+
 **Gaps explicitly flagged for later revision.**
-- `Best and Final` vs. `Final Round Ext` — currently collapsed into
-  `Final Round Ext`. If the 25-deal lawyer-language study surfaces distinct
-  usage, add `Best and Final`.
+- `Best and Final` as a distinct code — current treatment is to leave
+  pressure phrasing uncoded (see above); revisit only if the 25-deal
+  lawyer-language study shows it's a process step in some filings.
 - `Final Round Deadline` as a date-only event distinct from `Final Round Ann`
   — not added; deadline is treated as an attribute of the `Final Round Ann`
   row via `round_deadline: ISO-date`.

@@ -130,6 +130,62 @@ The Python validator will hard-flag structural violations (source-quote presence
 
 If any judgment check is shaky, flag the row rather than guess silently.
 
+## Soft-resolution vs typed exit
+
+Some filings use soft-resolution phrases when describing a bidder's
+withdrawal:
+
+- `"would not be moving forward"`
+- `"not interested in pursuing"`
+- `"cease(d|s) working on the transaction"`
+- `"will not be submitting a bid"`
+- `"elected not to proceed"`
+
+These phrases **alone** do NOT justify emitting a typed exit (`Drop`,
+`DropTarget`, `DropBelowM`, `DropBelowInf`, `DropAtInf`). They carry a
+directional signal but are routinely used for non-terminating events.
+
+### Do NOT emit an exit when
+
+- **Partial-business pivot.** `"Party X would not be moving forward on
+  the Northeast assets but remained interested in the whole company"`
+  — still an active bidder, scope shifted.
+- **PIPE pivot.** `"Party Y was no longer interested in pursuing a
+  whole-company acquisition but indicated interest in a PIPE
+  investment"` — no longer an acquisition-path bidder, but no typed
+  exit until the filing states abandonment; emit `Bidder Interest
+  Shift` flag instead of an exit row.
+- **Status-only fence.** `"Party Z would not be moving forward this
+  week pending additional diligence"` — temporal, not terminal.
+- **Exclusivity pressure.** `"the exclusivity period would not be
+  extended and the parties agreed to cease working on the open items"`
+  — describes the exclusivity window, not bidder withdrawal.
+
+In every case above, emit `{"code": "soft_resolution_cue_review",
+"severity": "soft", "reason": "<verbatim quote>"}` on the nearest
+related row instead of a typed exit. The reviewer adjudicates.
+
+### DO emit an exit when
+
+Soft resolution co-occurs with **explicit acquisition-path
+abandonment** language, e.g.:
+
+- `"Party A informed the Company that it would not be moving forward
+  with its bid and was withdrawing from the process."`
+- `"Party B ceased working on the transaction; no further contact
+  followed."` (together with the absence of later re-engagement
+  narration)
+- `"the Board was notified that Party C had elected not to proceed
+  and would not submit a final-round bid."`
+
+In these cases emit the appropriate `Drop*` / `DropTarget` row per
+§I1 agency rules, with the full verbatim source_quote.
+
+Imported from bids_pipeline's 2026-04-17 boundary-map sprint
+(Clusters 5/7/8, commit `acc6cdd`). Cross-references:
+`rules/events.md` §I3 (soft-resolution cues are review-only without
+acquisition-path abandonment).
+
 ## What to do when stuck
 
 - **Ambiguous classification** → emit the best guess, flag the row, include the competing interpretations in `flags[]`.
