@@ -49,6 +49,7 @@ diff on reference deals against the SEC filing, which is ground truth.
 ## Non-negotiable constraints
 
 - **Every row has `source_quote` and `source_page`.** No exceptions.
+- **`source_quote` is verbatim.** Every `source_quote` is character-for-character contiguous text from `pages.json[source_page - 1].content`. Do not edit capitalization, do not elide middle text with "...", do not paraphrase, do not smooth page-break artifacts. When the quote legitimately spans a page break, use the `list[str]` / `list[int]` multi-quote form per `rules/schema.md` §R3 — one list element per contiguous-within-one-page segment.
 - **Do not invent bid values, dates, or bidder types.** If the filing is silent, emit `null` and flag.
 - **Do not resolve ambiguity by guessing.** Flag it, let the Python validator or Austin decide.
 - **Do not apply rules not in `rules/*.md`.** If you feel a rule is missing, emit a flag, do not create a new rule.
@@ -118,6 +119,7 @@ diff on reference deals against the SEC filing, which is ground truth.
 
 The Python validator will hard-flag structural violations (source-quote presence, vocabulary, §P-D2 rough-date symmetry, §P-D3 BidderID ordering, §P-D6 NDA-before-bid, §P-G2 bid_type evidence (range OR ≤300-char note), §P-S4 exactly-one-Executed, etc.) and force a retry. Before returning the JSON, audit the **judgment calls** the validator can't see:
 
+- [ ] **Verbatim source_quote.** Every `source_quote` string is an exact contiguous slice of `pages.json[source_page - 1].content`. No edited capitalization, no "..." elision, no paraphrase, no smoothed page-break artifacts. Cross-page quotes use the §R3 multi-quote list form.
 - [ ] **bid_type classification + note.** For every non-null `bid_type`, did you pick `informal` vs `formal` from filing language per §G1 guidance, and attach a non-empty `bid_type_inference_note` of ≤300 chars explaining the reasoning? The note is MANDATORY on every non-range bid row; §G1 trigger phrases alone do NOT satisfy §P-G2.
 - [ ] **Count audit.** For every numeric count the filing states (*"N strategic parties executed confidentiality agreements"*, *"M written indications of interest"*, *"K bidders submitted final proposals"*), the extraction has exactly N / M / K atomized rows of that type (named where known; §E5 placeholders for unnamed balance).
 - [ ] **§D1.a vs §C4 distinguishing.** An NDA-less first-contact bid the target declines → `unsolicited_first_contact` §D1.a flag (exempts §P-D6). A concrete pre-NDA price indication from a bidder who later signs an NDA → `pre_nda_informal_bid` §C4 flag (no exemption; later NDA satisfies §P-D6). Do not conflate — the later-NDA presence is the deciding factor.
