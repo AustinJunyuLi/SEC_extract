@@ -110,6 +110,14 @@ def test_pr2(fixture_name):
 
 @pytest.mark.parametrize(
     "fixture_name",
+    ["pr2_curly_quote_accepted.json", "pr2_paraphrase_rejected.json"],
+)
+def test_pr2_acceptance_fixtures(fixture_name):
+    _assert_fixture(fixture_name, "pr2")
+
+
+@pytest.mark.parametrize(
+    "fixture_name",
     ["synthetic_pr3_pass.json", "synthetic_pr3_fail.json"],
 )
 def test_pr3(fixture_name):
@@ -271,7 +279,11 @@ def test_ps3(fixture_name):
 
 @pytest.mark.parametrize(
     "fixture_name",
-    ["ps3_terminator_mid_phase.json", "ps3_no_terminator.json"],
+    [
+        "ps3_terminator_mid_phase.json",
+        "ps3_no_terminator.json",
+        "ps3_phase0_no_terminator_exempt.json",
+    ],
 )
 def test_ps3_acceptance_fixtures(fixture_name):
     _assert_fixture(fixture_name, "ps3")

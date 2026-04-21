@@ -1,0 +1,14 @@
+{
+  "deal": {},
+  "events": [
+    {
+      "bid_note": "NDA",
+      "process_phase": 0
+    },
+    {
+      "bid_note": "Executed",
+      "process_phase": 1
+    }
+  ],
+  "expected_flags": []
+}
