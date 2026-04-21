@@ -313,6 +313,31 @@ def _nfkc(s: str) -> str:
     return unicodedata.normalize("NFKC", s)
 
 
+# PDF-extraction artifact folding for §P-R2 substring check. Covers the
+# specific glyph variants PDFium / pdfplumber emit that diverge between
+# the extractor's context and pages.json[].content without changing
+# semantic meaning: curly quotes, non-breaking spaces, and ellipsis.
+# Case is NOT folded, whitespace is NOT collapsed, punctuation is NOT
+# stripped — those would mask real extractor paraphrase errors.
+_PDF_ARTIFACT_MAP = str.maketrans({
+    "‘": "'",   # left single quotation mark
+    "’": "'",   # right single quotation mark (apostrophe)
+    "“": '"',   # left double quotation mark
+    "”": '"',   # right double quotation mark
+    " ": " ",   # non-breaking space
+    "…": "...", # horizontal ellipsis
+})
+
+
+def _canonicalize_pdf_artifacts(s: str) -> str:
+    """Fold PDF-extraction glyph variants to ASCII equivalents.
+
+    Applied to both sides of the §P-R2 substring check so curly-vs-straight
+    quote mismatches and NBSP-vs-space mismatches do not spuriously fail.
+    """
+    return s.translate(_PDF_ARTIFACT_MAP)
+
+
 def _invariant_p_r1(raw_extraction: dict[str, Any]) -> list[dict]:
     """§P-R1 — top-level `events` exists, is a list, and is non-empty."""
     events = raw_extraction.get("events")
@@ -391,7 +416,9 @@ def _invariant_p_r2(events: list[dict], filing: Filing) -> list[dict]:
                 })
                 continue
             page_content = filing.page_content(p) or ""
-            if _nfkc(q).strip() not in _nfkc(page_content):
+            q_canon = _canonicalize_pdf_artifacts(_nfkc(q)).strip()
+            page_canon = _canonicalize_pdf_artifacts(_nfkc(page_content))
+            if q_canon not in page_canon:
                 excerpt = q[:120] + ("..." if len(q) > 120 else "")
                 flags.append({
                     "row_index": i, "code": "source_quote_not_in_page", "severity": "hard",
