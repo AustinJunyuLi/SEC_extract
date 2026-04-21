@@ -124,9 +124,6 @@ repo.
   (`skill_open_questions.md` shows 0 🟥 / 54 🟩); all 9 reference
   `reference/alex/*.json` files built; `scoring/diff.py` runs
   end-to-end.
-  - **Workstream C** — 25-deal lawyer-language study — **deferred
-    indefinitely.** Reopen only if Stage 3 diffs surface systematic
-    §G1/§L2 confusion the per-row verification loop can't resolve.
 - **Stage 3 live.** `pipeline.py` (filing loader, extractor prompt
   builder, deterministic Python validator, finalization helpers) +
   `run.py` CLI shim.

@@ -94,9 +94,7 @@ deprecated by §C4; current extraction re-encodes those rows as `Bid` +
 
 ### §G1 — Informal-vs-formal bid classification (🟩 RESOLVED, 2026-04-18)
 
-**This is the highest-risk classification in the pipeline.** It is also
-subject to revision based on the 25-deal lawyer-language study; the rules
-below are the MVP baseline.
+**This is the highest-risk classification in the pipeline.**
 
 **Decision.** A bid is classified by the **strongest signal** in the
 filing passage describing it, evaluated against the trigger tables below.
@@ -149,11 +147,6 @@ row is a true range bid).
 `informal_vs_formal_ambiguous` with the `source_quote` that caused the
 ambiguity. The row is still emitted; downstream research filters on
 non-null `bid_type`.
-
-**Stress-test plan.** The 25-deal lawyer-language study (deferred to
-post-Stage-1) will audit §G1 against a broader corpus. Expected revisions:
-more trigger phrases, refined process-position heuristics, possibly a
-formal/informal scoring function rather than first-match.
 
 **Rejected alternatives.**
 - **Trigger tables only, no fallback** — undercounts formal bids in clean

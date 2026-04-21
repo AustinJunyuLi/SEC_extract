@@ -349,8 +349,7 @@ row per named advisor:
   The rough phrase is required by §B3 and is enforced as a hard validator
   check (`rules/invariants.md` §P-D2 — `rough_date_mismatch_inference`).
 
-**Trigger phrases** (non-exhaustive; the 25-deal stress-test study may
-expand):
+**Trigger phrases** (non-exhaustive):
 - *"\[Target\] retained \[Firm\] as its financial advisor"*
 - *"\[Firm\], financial advisor to \[Target\]"* / *"\[Target\]'s financial advisor"*
 - *"representatives of \[Firm\], financial advisor to \[Target\], contacted…"*
@@ -462,14 +461,6 @@ MVP**. Nine codes:
 Suffix grammar: `Inf` = informal round · `Ext` = deadline extension ·
 `Ann` = target's announcement of the round (vs. the bids submitted in it).
 
-**Gaps explicitly flagged for later revision.**
-- `Best and Final` vs. `Final Round Ext` — currently collapsed into
-  `Final Round Ext`. If the 25-deal lawyer-language study surfaces distinct
-  usage, add `Best and Final`.
-- `Final Round Deadline` as a date-only event distinct from `Final Round Ann`
-  — not added; deadline is treated as an attribute of the `Final Round Ann`
-  row via `round_deadline: ISO-date`.
-
 **Extractor behavior.** If a filing uses final-round language that doesn't
 map to one of the 9 codes, emit flag `unknown_final_round_phrase` (severity:
 soft) with the verbatim quote. Do not force-fit.
@@ -485,8 +476,7 @@ soft) with the verbatim quote. Do not force-fit.
 **Decision.** The extractor **infers** a final-round row from subset-invitation
 language, even when the filing does not explicitly say "final round."
 
-**Inference triggers** (non-exhaustive; the 25-deal study will expand this
-list):
+**Inference triggers** (non-exhaustive):
 - *"the Board authorized [IB] to advance [subset] to the second phase"*
 - *"[subset] was invited to submit final proposals"*
 - *"[Target] selected [subset] to continue in the process"*

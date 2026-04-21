@@ -168,11 +168,6 @@ filings is imprecise dating rather than signal about duration
 event, not two). Midpoint + verbatim phrase + flag preserves the signal
 without schema churn.
 
-**Open to revisit.** If the 25-deal stress-test study reveals duration
-matters systematically (e.g., long exclusivity periods meaningfully
-differ from short ones), we may add a `duration_days` field or a
-closed list of "duration-bearing" event types that emit start/end rows.
-
 **Rejected alternatives.**
 - **Two rows (range start + range end)** — doubles rows for imprecise
   dating; no downstream consumer currently uses duration.

@@ -130,9 +130,6 @@ repo.
     §A1–§A3 chronological BidderID reassignment, and Scope-3 drops.
   - `scoring/diff.py` runs end-to-end and emits a human-review markdown +
     JSON report with verdict checkboxes per divergence.
-  - **Workstream C** — 25-deal lawyer-language study — **deferred
-    indefinitely.** Reopen only if Stage 3 diffs surface systematic
-    §G1/§L2 confusion the per-row manual-verification loop can't resolve.
 - **Stage 3 implementation landed.** `pipeline.py` (filing loader, prompt
   builder, Python validator, finalization helpers) is live, and `run.py`
   is a CLI shim that validates and finalizes a saved raw extraction

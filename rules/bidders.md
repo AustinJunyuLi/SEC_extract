@@ -266,8 +266,7 @@ from that row going forward; earlier rows for that bidder carry
 
 **Why default `f` on ambiguity.** Anecdotally, when filings are coy about
 bidder identity, it's usually because the bidder is a PE sponsor (operating
-companies have less competitive reason to hide their name). This default
-is a heuristic to be re-evaluated after the 25-deal lawyer-language study.
+companies have less competitive reason to hide their name).
 
 **Rejected alternatives.**
 - **Default `s` on ambiguity** — empirically wrong direction.
