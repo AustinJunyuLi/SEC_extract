@@ -41,8 +41,9 @@ judgment calls.
      with same-length `source_page`.
   2. `source_page` is a valid 1-based index into the deal's
      `data/filings/{slug}/pages.json`.
-  3. After Unicode NFKC normalization, each `source_quote` element is a
-     substring of `pages[source_page - 1].content`.
+  3. After Unicode NFKC normalization and curly-quote folding (per
+     `pipeline._canonicalize_pdf_artifacts`), each `source_quote`
+     element is a substring of `pages[source_page - 1].content`.
   4. Each `source_quote` element ≤ 1000 characters.
   5. List-length equality when both are lists.
 - **Fail actions.**
@@ -315,7 +316,7 @@ graph tells a coherent M&A-process story.
 | §P-G2 | `rules/bids.md` §G1/§G2 |
 | §P-S1 | `rules/events.md` §I1 + `rules/bids.md` §M3 |
 | §P-S2 | `rules/schema.md` §Scope-1 |
-| §P-S3 | `rules/events.md` §K1/§L2 |
+| §P-S3 | `rules/events.md` §K1/§L2 + `rules/bids.md` §M4 |
 | §P-S4 | `rules/schema.md` §Scope-2 |
 
 ---
