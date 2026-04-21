@@ -595,38 +595,50 @@ only to bidders. A validator check catches violations.
 
 ---
 
-### §M4 — Stale-process NDA handling (🟩 RESOLVED, 2026-04-18)
+### §M4 — Cross-phase NDA continuity (🟩 RESOLVED, 2026-04-18; extended 2026-04-21)
 
-**Decision.** An NDA that spans a stale-to-current transition (revival
-case) is recorded as **two NDA events** — one in `process_phase = 0` for
-the original signing, one in `process_phase = 1` (or higher) for the
-revival.
+**Decision.** An NDA that carries forward across any phase-change
+transition — phase 0 → phase 1 (stale prior revived) or phase 1 →
+phase 2 (Terminated then Restarted) — is recorded as **two NDA
+events**, one per phase. The earlier phase's NDA row records the
+original signing; the later phase's NDA row records the revival /
+continuation.
 
 **Rule.**
-- Original NDA signing in a prior stale process → `NDA` row with
-  `process_phase = 0`. Counted in no auction.
+- Original NDA signing → `NDA` row with the phase of the original
+  signing (`process_phase = 0` for prior stale processes,
+  `process_phase = 1` for an earlier run of the current deal that was
+  later Terminated and Restarted).
 - If the same NDA is explicitly **revived / still-binding** when the
-  bidder re-engages in the current process → second `NDA` row with:
-  - `process_phase` matching the current process (1 or 2).
+  bidder re-engages in the later phase → second `NDA` row with:
+  - `process_phase` matching the later process (1 or 2).
   - `bid_date_precise` = date of re-engagement / revival acknowledgement.
   - Flag `{"code": "nda_revived_from_stale", "severity": "info", "reason": "revives NDA originally signed on <date>"}`.
+    The flag name is historical; it applies to every phase-change
+    revival (phase-0→1 stale-prior AND phase-1→2 Terminated-Restarted).
 - If the bidder re-engages without an explicit NDA revival (filing
-  silent), emit only the phase-1 `Bidder Interest` / `Bidder Sale` row per
-  §D1 and flag `nda_revival_unclear` (soft).
-- If the bidder signs a **new** NDA in the current process (common), emit
-  only the current-process NDA at `process_phase = 1`; the old stale NDA
-  is a separate row with `process_phase = 0`.
+  silent), emit only the later-phase `Bidder Interest` / `Bidder Sale`
+  row per §D1 and flag `nda_revival_unclear` (soft).
+- If the bidder signs a **new** NDA in the later phase (common), emit
+  only the later-phase NDA; the old phase's NDA is a separate row.
 
 **Rationale.**
-- Preserves the 2007/2009 record (matches Alex's Penford inclusion).
+- Preserves the earlier-phase record (e.g. Penford 2007/2009 stale
+  priors; Zep's first-attempt bidders carrying into phase 2 after
+  Terminated → Restarted).
 - Auction classifier (§Scope-1) correctly counts the revived bidder as a
-  current-process NDA signer.
-- §P-D6 (NDA-to-drop mapping) operates within a single `process_phase`.
+  current-phase NDA signer.
+- §P-D6 (NDA-to-Bid existence) operates within a single `process_phase`,
+  so a bidder who bids in phase 2 needs a phase-2 NDA row — either a
+  newly-signed NDA or a revival row under this rule.
 
 **Rejected alternatives.**
-- **Single NDA in phase 1** (drop the 2007/2009 record) — loses history.
-- **Single NDA in phase 0** (ignore revival) — undercount current-process
-  NDAs; §Scope-1 misses revived bidders.
+- **Single NDA in the original phase only** (drop the revival record) —
+  loses history and forces §P-D6 violations whenever the bidder bids in
+  the later phase.
+- **Single NDA in the later phase only** (ignore prior signing) —
+  undercounts earlier-phase NDAs and breaks the Penford stale-prior
+  inclusion.
 
 **Cross-references.**
 - `rules/events.md` §L1 (prior-process inclusion).
