@@ -336,6 +336,19 @@ def _canonicalize_pdf_artifacts(s: str) -> str:
     return s.translate(_PDF_ARTIFACT_MAP)
 
 
+def _phase(ev: dict) -> int:
+    """§L2 default: `process_phase` is 1 when absent or None.
+
+    Centralizes the default so invariants that need "main-phase or default"
+    semantics share one implementation. Invariants that test phase 0 explicitly
+    (§P-L2's phase_0_dates, §P-S3's exemption guard) continue to use the raw
+    `ev.get("process_phase")` — defaulting None to 1 would hide the
+    distinction.
+    """
+    phase = ev.get("process_phase")
+    return 1 if phase is None else phase
+
+
 def _invariant_p_r1(raw_extraction: dict[str, Any]) -> list[dict]:
     """§P-R1 — top-level `events` exists, is a list, and is non-empty."""
     events = raw_extraction.get("events")
@@ -354,6 +367,8 @@ def _invariant_p_r2(events: list[dict], filing: Filing) -> list[dict]:
     NFKC-substring of pages[source_page-1].content, ≤ 1000 chars."""
     flags: list[dict[str, Any]] = []
     valid_pages = filing.page_numbers()
+    # Canonicalize each cited page at most once; ~N_pages instead of N_rows.
+    page_canon_cache: dict[int, str] = {}
     for i, ev in enumerate(events):
         quote = ev.get("source_quote")
         page = ev.get("source_page")
@@ -413,9 +428,11 @@ def _invariant_p_r2(events: list[dict], filing: Filing) -> list[dict]:
                     "reason": f"source_page={p} is not a valid page number for {filing.slug} (range: {min(valid_pages)}..{max(valid_pages)})",
                 })
                 continue
-            page_content = filing.page_content(p) or ""
+            page_canon = page_canon_cache.get(p)
+            if page_canon is None:
+                page_canon = _canonicalize_pdf_artifacts(_nfkc(filing.page_content(p) or ""))
+                page_canon_cache[p] = page_canon
             q_canon = _canonicalize_pdf_artifacts(_nfkc(q)).strip()
-            page_canon = _canonicalize_pdf_artifacts(_nfkc(page_content))
             if q_canon not in page_canon:
                 excerpt = q[:120] + ("..." if len(q) > 120 else "")
                 flags.append({
@@ -557,9 +574,7 @@ def _invariant_p_d5(events: list[dict]) -> list[dict]:
         name = ev.get("bidder_name")
         if not name:
             continue
-        phase = ev.get("process_phase")
-        if phase is None:
-            phase = 1
+        phase = _phase(ev)
         if "unsolicited_first_contact" in _row_flag_codes(ev):
             unsolicited_keys.add((name, phase))
         note = ev.get("bid_note", "") or ""
@@ -574,9 +589,7 @@ def _invariant_p_d5(events: list[dict]) -> list[dict]:
         name = ev.get("bidder_name")
         if not name:
             continue  # unnamed placeholder — skip
-        phase = ev.get("process_phase")
-        if phase is None:
-            phase = 1
+        phase = _phase(ev)
         if phase == 0:
             continue  # §M4 stale-prior phase 0 — skip
         if (name, phase) in unsolicited_keys:
@@ -629,10 +642,7 @@ def _invariant_p_d6(events: list[dict]) -> list[dict]:
         name = ev.get("bidder_name")
         if not name:
             continue
-        phase = ev.get("process_phase")
-        if phase is None:
-            phase = 1
-        nda_keys.add((name, phase))
+        nda_keys.add((name, _phase(ev)))
 
     for i, ev in enumerate(events):
         if ev.get("bid_note") != "Bid":
@@ -640,9 +650,7 @@ def _invariant_p_d6(events: list[dict]) -> list[dict]:
         name = ev.get("bidder_name")
         if not name:
             continue  # unnamed §E3 placeholder — skip
-        phase = ev.get("process_phase")
-        if phase is None:
-            phase = 1
+        phase = _phase(ev)
         if phase == 0:
             continue  # §M4 stale-prior phase 0 — skip
         # Only §D1.a exempts from §P-D6; §C4 is documentation-only.
@@ -868,8 +876,7 @@ def _invariant_p_s1(events: list[dict]) -> list[dict]:
             continue
         if ev.get("role", "bidder") != "bidder":
             continue
-        phase = ev.get("process_phase")
-        if phase is not None and phase < 1:
+        if _phase(ev) == 0:
             continue  # stale prior NDA — excluded per §L1
         name = ev.get("bidder_name")
         if name is None:
@@ -927,7 +934,7 @@ def _invariant_p_l2(events: list[dict]) -> list[dict]:
     main_dates = [
         ev.get("bid_date_precise")
         for ev in events
-        if (ev.get("process_phase") or 0) >= 1 and ev.get("bid_date_precise")
+        if _phase(ev) >= 1 and ev.get("bid_date_precise")
     ]
     if not phase_0_dates or not main_dates:
         return []
@@ -966,7 +973,7 @@ def _invariant_p_s2(deal: dict, events: list[dict]) -> list[dict]:
         1 for ev in events
         if ev.get("bid_note") == "NDA"
         and ev.get("role", "bidder") == "bidder"
-        and (ev.get("process_phase") is None or ev.get("process_phase") >= 1)
+        and _phase(ev) >= 1
     )
     expected = nda_count >= 2
     actual = bool((deal or {}).get("auction"))
@@ -1026,10 +1033,7 @@ def _invariant_p_s3(deal: dict, events: list[dict]) -> list[dict]:
     flags: list[dict[str, Any]] = []
     by_phase: dict[int, list[dict]] = {}
     for ev in events:
-        phase = ev.get("process_phase")
-        if phase is None:
-            phase = 1  # §L2 default for deals with no prior/restart
-        by_phase.setdefault(phase, []).append(ev)
+        by_phase.setdefault(_phase(ev), []).append(ev)
     for phase, rows in by_phase.items():
         if phase == 0:
             # §M4 stale-prior phase 0 is a narrative record of a prior
@@ -1075,11 +1079,8 @@ def _invariant_p_s4(events: list[dict]) -> list[dict]:
         })
         return flags
     _, ex_ev = executed[0]
-    ex_phase = ex_ev.get("process_phase") if ex_ev.get("process_phase") is not None else 1
-    max_phase = max(
-        (ev.get("process_phase") if ev.get("process_phase") is not None else 1)
-        for ev in events
-    )
+    ex_phase = _phase(ex_ev)
+    max_phase = max(_phase(ev) for ev in events)
     if ex_phase != max_phase:
         flags.append({
             "code": "executed_wrong_phase", "severity": "hard",
