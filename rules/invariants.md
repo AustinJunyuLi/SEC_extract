@@ -10,6 +10,80 @@ below are traced to the rule-file decisions that produced them.
 
 ---
 
+## Authority rule: invariant vs semantic
+
+> **Code may block on invariants. Code may not block on semantic
+> interpretation of prose.**
+
+This is the single organizing principle of this file. Every §P-* check
+below declares which side of the line it sits on. New invariants added
+in the future MUST declare their side explicitly before landing.
+
+### Definitions
+
+- **Invariant** — a property of the extraction JSON that must hold
+  regardless of filing style, *verifiable without re-reading the filing
+  prose*. Examples: `source_quote` is a non-empty string and is a NFKC
+  substring of its cited page; `bid_note` is in a closed vocabulary;
+  exactly one `Executed` row exists; BidderIDs are contiguous and
+  date-ordered. Invariants block saving on failure — they have severity
+  **hard**.
+
+- **Semantic** — any check that requires interpreting prose to reach a
+  verdict. Examples: whether a sentence's narrative implies a specific
+  event type; whether a count-phrase like "ten of the 11 parties
+  declined" matches an emitted row count; whether a "soft resolution"
+  phrase genuinely terminates a bidder's engagement. Semantic checks
+  raise review signals — they have severity **soft** (logged and
+  surfaced to diff review) or **info** (statistical only). They do
+  **not** block saving.
+
+### Why
+
+Semantic blocking hides LLM defects behind code-written verdicts the
+reviewer cannot audit. It also rejects correct extractions when the
+prose is unusual — e.g., "ten of the 11 parties declined to execute
+confidentiality agreements" is not a count-of-NDAs cue; any code that
+fires a count-mismatch hard flag from that prose over-rotates on
+language matching and blocks a valid extraction. The authority rule
+tells such checks to stay **soft** and surface for review.
+
+This rule is imported wholesale from `bids_pipeline`'s CLAUDE.md
+"Authority rule (invariant vs semantic)" subsection (`PRD:
+prd-invariant-authority-rule.md` in that repo), which was itself
+hard-earned after the imprivata "ten of the 11 parties declined"
+false-positive forced the rule into existence.
+
+### Classification of existing §P-* checks
+
+| Code | Severity | Side | Reason |
+|------|----------|------|--------|
+| §P-R1 | hard | invariant | JSON-structural (array existence) |
+| §P-R2 | hard | invariant | NFKC substring is deterministic on JSON + pages |
+| §P-R3 | hard | invariant | Closed-vocabulary membership |
+| §P-R4 | hard | invariant | Closed-vocabulary membership |
+| §P-R5 | hard | invariant | Bidder registry structural alignment |
+| §P-D1 | hard | invariant | Date format (ISO regex) |
+| §P-D2 | hard | invariant | Bidirectional inference-flag symmetry |
+| §P-D3 | hard | invariant | BidderID monotonic / contiguous / date-ordered |
+| §P-D5 | hard | invariant | Drop requires prior engagement (structural) |
+| §P-D6 | hard | invariant | Named Bid requires prior NDA (structural) |
+| §P-G2 | hard | invariant | bid_type evidence: either range OR note ≤300 chars |
+| §P-H5 | soft | semantic | Final Round Ann ordering is narrative-dependent |
+| §P-S1 | soft | semantic | NDA-without-followup is a filing-silence judgment |
+| §P-S2 | hard | invariant | auction flag derived from JSON NDA count |
+| §P-S3 | hard | invariant | Phase termination is structural |
+| §P-S4 | hard | invariant | Exactly-one-Executed in highest phase is structural |
+| §P-L1 | hard | invariant | phase=2 requires restart marker (JSON-structural) |
+| §P-L2 | hard | invariant | Stale-prior threshold arithmetic on dates |
+
+New hard checks must clear the invariant bar: the verdict is reachable
+from the JSON + `pages.json` alone, without reading filing prose for
+meaning. If the check requires interpreting prose ("does this sentence
+imply X?"), it is **semantic** and must be soft at most.
+
+---
+
 ## Severity taxonomy
 
 - **Hard error.** Pipeline marks the deal `status: validated` with

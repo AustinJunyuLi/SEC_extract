@@ -31,6 +31,25 @@ flag used downstream by `scoring/diff.py`.
 clean-slate subagents administered by the outer conversation. The Validator
 is **pure Python** in `pipeline.py`. No model SDK calls from Python.
 
+### Validator philosophy: authority rule
+
+> **Code may block on invariants. Code may not block on semantic
+> interpretation of prose.**
+
+An **invariant** is a property of the extraction JSON verifiable without
+re-reading filing prose (closed-vocabulary membership, NFKC substring
+check, BidderID monotonicity, exactly-one-Executed). Invariants are
+**hard**; failure blocks save.
+
+A **semantic** check requires prose interpretation ("does this sentence
+imply X?"). Semantic checks are **soft** at most; they surface review
+signals, never block save. Full classification of every §P-* check in
+`rules/invariants.md` §"Authority rule: invariant vs semantic".
+
+This rule prevents false-positive prose-matching from rejecting valid
+extractions (e.g., imprivata's "ten of the 11 parties declined" is not
+a count-of-NDAs cue; the pipeline must not treat it as one).
+
 **Why this shape, not "two LLM agents in series" as originally drafted.**
 Every invariant in `rules/invariants.md` (§P-R, §P-D, §P-G, §P-S) is
 mechanically checkable — substring, regex, set membership, graph
