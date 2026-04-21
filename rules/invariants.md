@@ -183,6 +183,33 @@ judgment calls.
     $Y rejected; mixed nominal values are not stand-alone per-share
     deal prices.
 
+### §P-R7 — Every event carries `source` in closed vocabulary
+- **Check.** Per `rules/schema.md` §R1, every event has `source ∈
+  {"llm", "code_gap_fill", "code_cohort_expansion", "code_promotion",
+  "adjudicator_verdict"}`.
+- **Fail actions.**
+  - Missing field → `source_field_missing`. Hard.
+  - Out-of-vocabulary value → `source_field_invalid`. Hard.
+- **Why.** Provenance plumbing (US-006) so the validator can tell
+  LLM-emitted rows apart from code-synthesized rows. Enables US-007
+  (cohort expansion) and US-008 (NDA gap-fill) to insert auditable
+  rows without breaking flag-only discipline. No backfill shim (PRD
+  NG-10) — pre-US-006 extractions are regenerated, not grandfathered.
+- **Side.** Invariant (closed-vocabulary membership on a JSON field).
+
+### §P-R2 interacts with §P-R7 (🟩 RESOLVED, 2026-04-21 via US-006)
+- For `source == "llm"` rows, §P-R2 is unchanged: NFKC substring check
+  of `source_quote` against `pages[source_page-1].content` applies.
+- For `source != "llm"` rows (code-synthesized, adjudicator-inserted),
+  §P-R2 is **relaxed**: `source_quote` must be a non-empty string but
+  is NOT verified against pages. `source_page` may be `null`. By
+  convention these rows carry `source_quote = "[synthesized: <reason>]"`.
+- **Rationale.** A gap-fill `Drop` row has no narrative location to
+  cite. An atomized cohort atomic has a synthesized placeholder name.
+  Subjecting them to NFKC would require inventing a fake substring of
+  the filing, which defeats the audit trail. The relaxation keeps
+  the audit honest: synthesized rows are visibly synthesized.
+
 ---
 
 ## §P-D — Date and sequencing invariants (🟩 RESOLVED, 2026-04-18)

@@ -1,7 +1,8 @@
 {
   "events": [
     {
-      "role": "bidder"
+      "role": "bidder",
+      "source": "llm"
     }
   ],
   "expected_flags": []

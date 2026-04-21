@@ -1,7 +1,8 @@
 {
   "events": [
     {
-      "bid_date_precise": "01/01/2020"
+      "bid_date_precise": "01/01/2020",
+      "source": "llm"
     }
   ],
   "expected_flags": [

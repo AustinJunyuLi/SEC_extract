@@ -1,0 +1,11 @@
+{
+  "events": [
+    {
+      "bid_note": "NDA",
+      "source": "llm",
+      "source_quote": "Party A signed a confidentiality agreement.",
+      "source_page": 1
+    }
+  ],
+  "expected_flags": []
+}

@@ -281,6 +281,7 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
     events = raw_extraction.get("events") or []
 
     # Row-level invariants.
+    row_flags.extend(_invariant_p_r7(events))
     row_flags.extend(_invariant_p_r2(events, filing))
     row_flags.extend(_invariant_p_r3(events))
     row_flags.extend(_invariant_p_r4(events))
@@ -327,14 +328,67 @@ def _invariant_p_r1(raw_extraction: dict[str, Any]) -> list[dict]:
     }]
 
 
+SOURCE_VOCABULARY = {
+    "llm",
+    "code_gap_fill",
+    "code_cohort_expansion",
+    "code_promotion",
+    "adjudicator_verdict",
+}
+
+
+def _invariant_p_r7(events: list[dict]) -> list[dict]:
+    """§P-R7 (US-006) — every row must carry `source` in the closed vocabulary.
+
+    Values: "llm" (extractor-emitted) | "code_gap_fill" (synthesized by
+    NDA gap-fill) | "code_cohort_expansion" (synthesized by cohort
+    atomization) | "code_promotion" (named bidder promoted into cohort
+    slot) | "adjudicator_verdict" (adjudicator inserted / modified).
+
+    No backfill shim. Missing `source` is a hard error per PRD NG-10.
+    """
+    flags: list[dict[str, Any]] = []
+    for i, ev in enumerate(events):
+        src = ev.get("source")
+        if src is None:
+            flags.append({
+                "row_index": i, "code": "source_field_missing", "severity": "hard",
+                "reason": (
+                    "§P-R7: every event must carry a `source` field. Closed "
+                    f"vocabulary: {sorted(SOURCE_VOCABULARY)}. Extractor-emitted "
+                    "rows MUST set source: \"llm\"."
+                ),
+            })
+            continue
+        if src not in SOURCE_VOCABULARY:
+            flags.append({
+                "row_index": i, "code": "source_field_invalid", "severity": "hard",
+                "reason": (
+                    f"§P-R7: source={src!r} not in closed vocabulary "
+                    f"{sorted(SOURCE_VOCABULARY)}."
+                ),
+            })
+    return flags
+
+
 def _invariant_p_r2(events: list[dict], filing: Filing) -> list[dict]:
-    """§P-R2 — every row has source_quote and source_page; quote is an
-    NFKC-substring of pages[source_page-1].content, ≤ 1000 chars."""
+    """§P-R2 — every row has source_quote and source_page.
+
+    For source=='llm' rows: source_quote is an NFKC-substring of
+    pages[source_page-1].content, ≤ 1000 chars.
+
+    For source!='llm' rows (code-synthesized, adjudicator-inserted): the
+    NFKC substring requirement is relaxed — these rows may carry a
+    bracketed placeholder like "[synthesized: <reason>]". The quote must
+    still be a non-empty string, but is not verified against pages.json.
+    (US-006.)
+    """
     flags: list[dict[str, Any]] = []
     valid_pages = filing.page_numbers()
     for i, ev in enumerate(events):
         quote = ev.get("source_quote")
         page = ev.get("source_page")
+        is_llm = ev.get("source") == "llm"
 
         if quote in (None, "", []):
             flags.append({
@@ -342,10 +396,22 @@ def _invariant_p_r2(events: list[dict], filing: Filing) -> list[dict]:
                 "reason": "source_quote absent or empty",
             })
             continue
+
+        # Synthesized rows are allowed to carry a null page number since
+        # there is no filing location they came from.
         if page in (None, "", []):
+            if is_llm:
+                flags.append({
+                    "row_index": i, "code": "missing_evidence", "severity": "hard",
+                    "reason": "source_page absent or empty",
+                })
+                continue
+            # Synthesized row with no page: must still have a string quote.
+            if isinstance(quote, str) and quote.strip():
+                continue
             flags.append({
                 "row_index": i, "code": "missing_evidence", "severity": "hard",
-                "reason": "source_page absent or empty",
+                "reason": f"source={ev.get('source')!r} row must carry a non-empty string source_quote",
             })
             continue
 
@@ -366,6 +432,19 @@ def _invariant_p_r2(events: list[dict], filing: Filing) -> list[dict]:
             pairs = list(zip(quote, page))
         else:
             pairs = [(quote, page)]
+
+        # For source!='llm' rows, skip the NFKC substring check entirely;
+        # their quote is a synthesized placeholder and does not need to
+        # appear in the filing.
+        if not is_llm:
+            for q, _p in pairs:
+                if not isinstance(q, str) or not q.strip():
+                    flags.append({
+                        "row_index": i, "code": "missing_evidence", "severity": "hard",
+                        "reason": f"source={ev.get('source')!r} row source_quote must be non-empty string",
+                    })
+                    break
+            continue
 
         for q, p in pairs:
             if not isinstance(q, str):
@@ -1238,8 +1317,12 @@ def append_flags_log(
         entry = {"deal": slug, "logged_at": now, "deal_level": True, **f}
         lines.append(json.dumps(entry, default=str))
     for i, ev in enumerate(events):
+        event_source = ev.get("source")
         for f in ev.get("flags") or []:
-            entry = {"deal": slug, "logged_at": now, "row_index": i, **f}
+            entry = {
+                "deal": slug, "logged_at": now, "row_index": i,
+                "event_source": event_source, **f,
+            }
             lines.append(json.dumps(entry, default=str))
     if lines:
         with FLAGS_PATH.open("a") as fh:

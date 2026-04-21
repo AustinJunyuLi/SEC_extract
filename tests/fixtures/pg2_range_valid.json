@@ -5,7 +5,8 @@
       "bid_type": "informal",
       "bid_value_lower": 25,
       "bid_value_upper": 30,
-      "source_quote": "Party A submitted an updated proposal."
+      "source_quote": "Party A submitted an updated proposal.",
+      "source": "llm"
     }
   ],
   "expected_flags": []

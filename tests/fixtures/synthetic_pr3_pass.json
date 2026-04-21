@@ -1,7 +1,8 @@
 {
   "events": [
     {
-      "bid_note": "Executed"
+      "bid_note": "Executed",
+      "source": "llm"
     }
   ],
   "expected_flags": []

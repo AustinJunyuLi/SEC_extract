@@ -3,11 +3,13 @@
   "events": [
     {
       "bid_note": "Executed",
-      "process_phase": 1
+      "process_phase": 1,
+      "source": "llm"
     },
     {
       "bid_note": "Bid Press Release",
-      "process_phase": 1
+      "process_phase": 1,
+      "source": "llm"
     }
   ],
   "expected_flags": []

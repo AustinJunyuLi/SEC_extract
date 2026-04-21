@@ -266,6 +266,18 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
   `comments_2` / `comments_3` into one free-text field.
 - `source_quote` — str OR list[str] (§R3).
 - `source_page` — int OR list[int] (§R3).
+- `source` — **required**, closed vocabulary: `"llm"` (Extractor-emitted,
+  default) | `"code_gap_fill"` (NDA signer with no narrated closure;
+  synthesized by validator) | `"code_cohort_expansion"` (atomic bidder
+  materialized from an aggregate cohort anchor) | `"code_promotion"`
+  (named bidder promoted into a cohort slot) | `"adjudicator_verdict"`
+  (row inserted or materially modified by the Adjudicator subagent).
+  Extractor MUST emit `source: "llm"` on every event it produces.
+  Validator hard-rejects events with missing or out-of-vocabulary
+  `source` per §P-R7. No backfill shim (PRD NG-10). When `source !=
+  "llm"`, §P-R2's NFKC substring check is relaxed; the row carries a
+  bracketed placeholder quote `"[synthesized: <reason>]"` and may have
+  `source_page = null`.
 - `flags` — array of flag objects (§R2).
 
 **Net change count from Alex's 35 cols:**

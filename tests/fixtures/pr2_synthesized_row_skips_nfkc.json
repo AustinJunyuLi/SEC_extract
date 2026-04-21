@@ -1,0 +1,15 @@
+{
+  "slug": "synthetic",
+  "pages": [
+    {"number": 1, "content": "Party A signed a confidentiality agreement on 2020-01-10."}
+  ],
+  "events": [
+    {
+      "bid_note": "Drop",
+      "source": "code_gap_fill",
+      "source_quote": "[synthesized: NDA signer with no explicit closure by end of Background section]",
+      "source_page": null
+    }
+  ],
+  "expected_flags": []
+}

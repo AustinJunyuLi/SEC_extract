@@ -2,7 +2,8 @@
   "events": [
     {
       "source_quote": "signed a confidentiality agreement",
-      "source_page": 1
+      "source_page": 1,
+      "source": "llm"
     }
   ],
   "pages": [

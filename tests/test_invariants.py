@@ -54,6 +54,7 @@ RUNNERS = {
         fixture.get("events", []),
         _make_filing(fixture),
     ),
+    "pr7": lambda fixture: pipeline._invariant_p_r7(fixture.get("events", [])),
     "pd1": lambda fixture: pipeline._invariant_p_d1(fixture.get("events", [])),
     "pd2": lambda fixture: pipeline._invariant_p_d2(fixture.get("events", [])),
     "pd3": lambda fixture: pipeline._invariant_p_d3(fixture.get("events", [])),
@@ -164,6 +165,26 @@ def test_pr5_acceptance_fixtures(fixture_name):
 )
 def test_pr6(fixture_name):
     _assert_fixture(fixture_name, "pr6")
+
+
+@pytest.mark.parametrize(
+    "fixture_name",
+    [
+        "pr7_source_missing.json",
+        "pr7_source_invalid.json",
+        "pr7_source_valid_llm.json",
+    ],
+)
+def test_pr7(fixture_name):
+    _assert_fixture(fixture_name, "pr7")
+
+
+@pytest.mark.parametrize(
+    "fixture_name",
+    ["pr2_synthesized_row_skips_nfkc.json"],
+)
+def test_pr2_synthesized_row_skips_nfkc(fixture_name):
+    _assert_fixture(fixture_name, "pr2")
 
 
 @pytest.mark.parametrize(

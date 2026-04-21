@@ -3,8 +3,9 @@
     {
       "bid_note": "Bid",
       "bid_type": "informal",
-      "bid_type_inference_note": "classified informal per §G1 process-position fallback: bid submitted pre-NDA, before any round structure was established; initial-approach default is informal.",
-      "source_quote": "On April 15, 2016, Dr. David Hung received a letter from the Chief Executive Officer of Sanofi proposing to acquire Medivation for $52.50 per share."
+      "bid_type_inference_note": "classified informal per \u00a7G1 process-position fallback: bid submitted pre-NDA, before any round structure was established; initial-approach default is informal.",
+      "source_quote": "On April 15, 2016, Dr. David Hung received a letter from the Chief Executive Officer of Sanofi proposing to acquire Medivation for $52.50 per share.",
+      "source": "llm"
     }
   ],
   "expected_flags": []

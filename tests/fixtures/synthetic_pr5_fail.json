@@ -4,7 +4,8 @@
   },
   "events": [
     {
-      "bidder_name": "bidder_99"
+      "bidder_name": "bidder_99",
+      "source": "llm"
     }
   ],
   "expected_flags": [

@@ -3,7 +3,8 @@
   "events": [
     {
       "bid_note": "NDA",
-      "process_phase": 1
+      "process_phase": 1,
+      "source": "llm"
     }
   ],
   "expected_flags": [

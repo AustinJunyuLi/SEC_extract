@@ -3,12 +3,14 @@
     {
       "bidder_name": "bidder_01",
       "bid_note": "Bid",
-      "bid_date_precise": "2016-04-20"
+      "bid_date_precise": "2016-04-20",
+      "source": "llm"
     },
     {
       "bidder_name": "bidder_01",
       "bid_note": "Bid",
-      "bid_date_precise": "2016-05-10"
+      "bid_date_precise": "2016-05-10",
+      "source": "llm"
     }
   ],
   "expected_flags": []

@@ -49,6 +49,7 @@ diff on reference deals against the SEC filing, which is ground truth.
 ## Non-negotiable constraints
 
 - **Every row has `source_quote` and `source_page`.** No exceptions.
+- **Every row has `source: "llm"`.** This is a required closed-vocabulary field. The Extractor ONLY ever emits `source: "llm"`; the other values (`code_gap_fill`, `code_cohort_expansion`, `code_promotion`, `adjudicator_verdict`) are reserved for the validator and Adjudicator to populate. Missing or wrong `source` is a hard §P-R7 flag — no backfill, no shim.
 - **Do not invent bid values, dates, or bidder types.** If the filing is silent, emit `null` and flag.
 - **Do not resolve ambiguity by guessing.** Flag it, let the Python validator or Austin decide.
 - **Do not apply rules not in `rules/*.md`.** If you feel a rule is missing, emit a flag, do not create a new rule.
@@ -108,6 +109,7 @@ diff on reference deals against the SEC filing, which is ground truth.
       "comments": null,
       "source_quote": "On March 14, 2014, the Board of Directors of Medivation convened …",
       "source_page": 23,
+      "source": "llm",
       "flags": []
     }
   ]

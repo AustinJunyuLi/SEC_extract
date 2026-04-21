@@ -3,8 +3,9 @@
     {
       "bid_note": "Bid",
       "bid_type": "formal",
-      "bid_type_inference_note": "classified formal per §G1 process-position fallback: submitted after Final Round Ann on 2013-09-11 (BidderID=21); matches announcing-phase formal default per §C1 final-round vocabulary.",
-      "source_quote": "On September 18, 2013, CSC/Pamplona submitted a proposal for an all-cash purchase price of $20.75 per share."
+      "bid_type_inference_note": "classified formal per \u00a7G1 process-position fallback: submitted after Final Round Ann on 2013-09-11 (BidderID=21); matches announcing-phase formal default per \u00a7C1 final-round vocabulary.",
+      "source_quote": "On September 18, 2013, CSC/Pamplona submitted a proposal for an all-cash purchase price of $20.75 per share.",
+      "source": "llm"
     }
   ],
   "expected_flags": []

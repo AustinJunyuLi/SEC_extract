@@ -1,17 +1,25 @@
 {
   "slug": "synthetic",
   "pages": [
-    {"number": 1, "content": "On the closing date, the parties executed the merger agreement at a price of $42.50 per share in cash."}
+    {
+      "number": 1,
+      "content": "On the closing date, the parties executed the merger agreement at a price of $42.50 per share in cash."
+    }
   ],
   "events": [
     {
       "bid_note": "Executed",
-      "bid_value_pershare": 47.00,
+      "bid_value_pershare": 47.0,
       "source_quote": "executed the merger agreement at a price of $42.50 per share in cash",
-      "source_page": 1
+      "source_page": 1,
+      "source": "llm"
     }
   ],
   "expected_flags": [
-    {"row_index": 0, "code": "merger_price_not_in_regex_scan", "severity": "hard"}
+    {
+      "row_index": 0,
+      "code": "merger_price_not_in_regex_scan",
+      "severity": "hard"
+    }
   ]
 }

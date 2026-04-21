@@ -6,12 +6,14 @@
     {
       "bid_note": "NDA",
       "role": "bidder",
-      "process_phase": 1
+      "process_phase": 1,
+      "source": "llm"
     },
     {
       "bid_note": "NDA",
       "role": "bidder",
-      "process_phase": 1
+      "process_phase": 1,
+      "source": "llm"
     }
   ],
   "expected_flags": [

@@ -3,7 +3,8 @@
     {
       "bid_note": "Bid",
       "bid_type": "informal",
-      "source_quote": "Party A met with management to discuss the transaction."
+      "source_quote": "Party A met with management to discuss the transaction.",
+      "source": "llm"
     }
   ],
   "expected_flags": [

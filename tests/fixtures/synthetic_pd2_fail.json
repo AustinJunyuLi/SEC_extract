@@ -1,7 +1,8 @@
 {
   "events": [
     {
-      "bid_date_rough": "mid-July 2016"
+      "bid_date_rough": "mid-July 2016",
+      "source": "llm"
     }
   ],
   "expected_flags": [

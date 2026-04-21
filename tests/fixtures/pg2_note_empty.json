@@ -4,7 +4,8 @@
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_type_inference_note": "   ",
-      "source_quote": "Party A submitted a revised proposal."
+      "source_quote": "Party A submitted a revised proposal.",
+      "source": "llm"
     }
   ],
   "expected_flags": [

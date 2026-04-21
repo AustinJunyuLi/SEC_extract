@@ -3,17 +3,20 @@
     {
       "bid_note": "Terminated",
       "process_phase": 1,
-      "bid_date_precise": "2013-06-01"
+      "bid_date_precise": "2013-06-01",
+      "source": "llm"
     },
     {
       "bid_note": "Restarted",
       "process_phase": 2,
-      "bid_date_precise": "2013-07-01"
+      "bid_date_precise": "2013-07-01",
+      "source": "llm"
     },
     {
       "bid_note": "Bid",
       "process_phase": 2,
-      "bid_date_precise": "2013-08-01"
+      "bid_date_precise": "2013-08-01",
+      "source": "llm"
     }
   ],
   "expected_flags": []

@@ -2,11 +2,13 @@
   "events": [
     {
       "bid_note": "NDA",
-      "process_phase": 1
+      "process_phase": 1,
+      "source": "llm"
     },
     {
       "bid_note": "Executed",
-      "process_phase": 2
+      "process_phase": 2,
+      "source": "llm"
     }
   ],
   "expected_flags": []

@@ -3,8 +3,9 @@
     {
       "bid_note": "Bid",
       "bid_type": "formal",
-      "bid_type_inference_note": "classified formal per §G1 process-position fallback: submitted in response to Final Round Ann (BidderID=12) dated 2016-08-14; matches the announcing-phase formal default.",
-      "source_quote": "On August 19, 2016, Pfizer submitted a revised written proposal to acquire Medivation for cash consideration of $77.00 per Share."
+      "bid_type_inference_note": "classified formal per \u00a7G1 process-position fallback: submitted in response to Final Round Ann (BidderID=12) dated 2016-08-14; matches the announcing-phase formal default.",
+      "source_quote": "On August 19, 2016, Pfizer submitted a revised written proposal to acquire Medivation for cash consideration of $77.00 per Share.",
+      "source": "llm"
     }
   ],
   "expected_flags": []

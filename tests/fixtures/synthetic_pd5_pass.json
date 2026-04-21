@@ -3,12 +3,14 @@
     {
       "bidder_name": "bidder_01",
       "bid_note": "NDA",
-      "process_phase": 1
+      "process_phase": 1,
+      "source": "llm"
     },
     {
       "bidder_name": "bidder_01",
       "bid_note": "Drop",
-      "process_phase": 1
+      "process_phase": 1,
+      "source": "llm"
     }
   ],
   "expected_flags": []

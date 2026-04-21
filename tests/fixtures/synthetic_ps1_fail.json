@@ -4,7 +4,8 @@
       "bidder_name": "bidder_01",
       "bid_note": "NDA",
       "process_phase": 1,
-      "role": "bidder"
+      "role": "bidder",
+      "source": "llm"
     }
   ],
   "expected_flags": [

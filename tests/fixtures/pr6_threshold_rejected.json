@@ -1,17 +1,25 @@
 {
   "slug": "synthetic",
   "pages": [
-    {"number": 1, "content": "The board required any bid to be at least $30.00 per share to be considered. The parties executed the merger at $42.50 per share in cash."}
+    {
+      "number": 1,
+      "content": "The board required any bid to be at least $30.00 per share to be considered. The parties executed the merger at $42.50 per share in cash."
+    }
   ],
   "events": [
     {
       "bid_note": "Executed",
-      "bid_value_pershare": 30.00,
+      "bid_value_pershare": 30.0,
       "source_quote": "at least $30.00 per share",
-      "source_page": 1
+      "source_page": 1,
+      "source": "llm"
     }
   ],
   "expected_flags": [
-    {"row_index": 0, "code": "merger_price_not_in_regex_scan", "severity": "hard"}
+    {
+      "row_index": 0,
+      "code": "merger_price_not_in_regex_scan",
+      "severity": "hard"
+    }
   ]
 }

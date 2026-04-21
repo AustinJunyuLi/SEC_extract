@@ -1,7 +1,8 @@
 {
   "events": [
     {
-      "role": "executive"
+      "role": "executive",
+      "source": "llm"
     }
   ],
   "expected_flags": [
