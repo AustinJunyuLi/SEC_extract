@@ -1018,6 +1018,12 @@ def _invariant_p_s3(deal: dict, events: list[dict]) -> list[dict]:
     still fires the flag. §P-S4 (exactly one Executed row, in the max
     phase) continues to enforce the deal-level close invariant
     independently.
+
+    §M4 stale-prior phase 0 is exempted: those rows narrate a prior
+    abandoned process that the filing references for context and that
+    §P-L2 already separates by ≥180 days. Requiring a terminator in
+    phase 0 penalized deals whose filings summarized the stale prior
+    without re-narrating its close (penford, stec, mac-gray).
     """
     flags: list[dict[str, Any]] = []
     by_phase: dict[int, list[dict]] = {}
@@ -1027,6 +1033,13 @@ def _invariant_p_s3(deal: dict, events: list[dict]) -> list[dict]:
             phase = 1  # §L2 default for deals with no prior/restart
         by_phase.setdefault(phase, []).append(ev)
     for phase, rows in by_phase.items():
+        if phase == 0:
+            # §M4 stale-prior phase 0 is a narrative record of a prior
+            # abandoned process; it is not required to carry an in-scope
+            # terminator event. §P-L2 enforces the ≥180-day gap between
+            # phase-0 and phase≥1, which is the real coherence check on
+            # stale priors.
+            continue
         has_terminator = any(
             r.get("bid_note") in PHASE_TERMINATORS for r in rows
         )

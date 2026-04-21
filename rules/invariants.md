@@ -213,10 +213,15 @@ graph tells a coherent M&A-process story.
   Terminated, Auction Closed}`. Position within the phase is not
   enforced — go-shop trailing activity and §A3 rank inversions can place
   terminators mid-phase. Per `rules/events.md` §K1/§L2.
+- **Exemption.** `process_phase = 0` (§M4 stale-prior) is skipped. Prior
+  abandoned processes are narrated for context and separated from the
+  current process by the §P-L2 ≥180-day gap; forcing them to carry an
+  in-scope terminator penalized deals whose filings summarized the
+  prior without re-narrating its close.
 - **Fail action.** Flag `phase_termination_missing`. Hard.
-- **Why hard.** Every process phase has a real endpoint (it succeeded,
-  failed, or auction closed without a winner). A phase without a
-  terminator means the extractor missed the end of a phase.
+- **Why hard.** Every active process phase has a real endpoint (it
+  succeeded, failed, or auction closed without a winner). A phase≥1
+  without a terminator means the extractor missed the end of a phase.
 
 ### §P-S4 — Deal-level `Executed` row present
 - **Check.** Exactly one row with `bid_note = Executed`, and it's in
