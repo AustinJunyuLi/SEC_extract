@@ -313,27 +313,25 @@ def _nfkc(s: str) -> str:
     return unicodedata.normalize("NFKC", s)
 
 
-# PDF-extraction artifact folding for §P-R2 substring check. Covers the
-# specific glyph variants PDFium / pdfplumber emit that diverge between
-# the extractor's context and pages.json[].content without changing
-# semantic meaning: curly quotes, non-breaking spaces, and ellipsis.
-# Case is NOT folded, whitespace is NOT collapsed, punctuation is NOT
-# stripped — those would mask real extractor paraphrase errors.
+# PDF-extraction curly-quote folding for §P-R2 substring check. Only the
+# four curly-quote codepoints need folding; NFKC (applied first on both
+# sides of the substring check) already canonicalizes NBSP (U+00A0 →
+# U+0020) and ellipsis (U+2026 → "..."), so those entries would be dead
+# code. Case is NOT folded, whitespace is NOT collapsed, punctuation is
+# NOT stripped — those would mask real extractor paraphrase errors.
 _PDF_ARTIFACT_MAP = str.maketrans({
     "‘": "'",   # left single quotation mark
     "’": "'",   # right single quotation mark (apostrophe)
     "“": '"',   # left double quotation mark
     "”": '"',   # right double quotation mark
-    " ": " ",   # non-breaking space
-    "…": "...", # horizontal ellipsis
 })
 
 
 def _canonicalize_pdf_artifacts(s: str) -> str:
-    """Fold PDF-extraction glyph variants to ASCII equivalents.
+    """Fold PDF-extraction curly-quote variants to ASCII equivalents.
 
     Applied to both sides of the §P-R2 substring check so curly-vs-straight
-    quote mismatches and NBSP-vs-space mismatches do not spuriously fail.
+    quote mismatches do not spuriously fail.
     """
     return s.translate(_PDF_ARTIFACT_MAP)
 
@@ -422,7 +420,7 @@ def _invariant_p_r2(events: list[dict], filing: Filing) -> list[dict]:
                 excerpt = q[:120] + ("..." if len(q) > 120 else "")
                 flags.append({
                     "row_index": i, "code": "source_quote_not_in_page", "severity": "hard",
-                    "reason": f"NFKC-normalized source_quote not a substring of pages[{p}].content; excerpt: {excerpt!r}",
+                    "reason": f"NFKC+PDF-artifact-normalized source_quote not a substring of pages[{p}].content; excerpt: {excerpt!r}",
                 })
     return flags
 
