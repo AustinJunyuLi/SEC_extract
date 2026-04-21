@@ -384,6 +384,119 @@ def _parse_cohort_type(text: str | None) -> str:
     return "unspecified"
 
 
+# US-008: NDA gap-fill. Closure event types per rules/events.md §I1.
+_CLOSURE_BID_NOTES = frozenset({
+    "Drop", "DropBelowM", "DropBelowInf", "DropAtInf", "DropTarget", "Executed",
+})
+
+
+def _bidder_identity_key(event: dict) -> str | None:
+    """Return a string key identifying the bidder on this row.
+
+    Prefers canonical `bidder_name` (e.g., 'bidder_04'); falls back to
+    `bidder_alias` for unnamed placeholders ('Financial 1') so
+    cohort-expanded atomic rows are individually addressable.
+    """
+    name = event.get("bidder_name")
+    if isinstance(name, str) and name.strip():
+        return f"name:{name.strip()}"
+    alias = event.get("bidder_alias")
+    if isinstance(alias, str) and alias.strip():
+        return f"alias:{alias.strip()}"
+    return None
+
+
+def _gapfill_nda_signers(raw_extraction: dict[str, Any]) -> list[dict]:
+    """US-008: synthesize Drop row for every NDA signer with no narrated closure.
+
+    Runs after cohort expansion (US-007) so atomic rows are the unit of
+    closure, not aggregate anchors.
+
+    Algorithm:
+      1. Build set of bidder-identity keys that appear on any closure
+         event (Drop* / DropTarget / Executed).
+      2. For each NDA event whose bidder has no closure in that set,
+         append a synthesized `Drop` row at the end of events[]:
+           - source = 'code_gap_fill'
+           - bid_note = 'Drop'
+           - bidder identity inherited
+           - bidder_type inherited
+           - source_quote = '[synthesized: NDA signer with no explicit
+             closure by end of Background section]'
+           - source_page = null
+           - bid_date_precise = null
+           - bid_date_rough = 'end of process'
+           - info-level flag 'nda_gap_fill_synthesized'
+
+    Returns a list of gap-fill log entries for normalization_log.
+    """
+    events = raw_extraction.get("events")
+    if not isinstance(events, list) or not events:
+        return []
+
+    closed_keys: set[str] = set()
+    nda_rows_by_key: dict[str, int] = {}  # key -> first NDA row_index
+
+    for i, ev in enumerate(events):
+        key = _bidder_identity_key(ev)
+        if key is None:
+            continue
+        note = ev.get("bid_note")
+        if note in _CLOSURE_BID_NOTES:
+            closed_keys.add(key)
+        if note == "NDA" and key not in nda_rows_by_key:
+            nda_rows_by_key[key] = i
+
+    log: list[dict] = []
+    to_append: list[dict] = []
+
+    for key, nda_idx in nda_rows_by_key.items():
+        if key in closed_keys:
+            continue
+        anchor = events[nda_idx]
+        synthesized = {
+            "source": "code_gap_fill",
+            "bid_note": "Drop",
+            "bidder_name": anchor.get("bidder_name"),
+            "bidder_alias": anchor.get("bidder_alias"),
+            "bidder_type": anchor.get("bidder_type"),
+            "bid_type": None,
+            "bid_date_precise": None,
+            "bid_date_rough": "end of process",
+            "bid_value": None,
+            "bid_value_pershare": None,
+            "bid_value_lower": None,
+            "bid_value_upper": None,
+            "bid_value_unit": None,
+            "additional_note": None,
+            "comments": None,
+            "source_quote": (
+                "[synthesized: NDA signer with no explicit closure by end "
+                "of Background section]"
+            ),
+            "source_page": None,
+            "flags": [{
+                "code": "nda_gap_fill_synthesized",
+                "severity": "info",
+                "reason": (
+                    f"§P-S1 gap-fill: NDA row {nda_idx} for {key} had no "
+                    "narrated closure event; synthesized Drop with "
+                    "source=code_gap_fill per US-008."
+                ),
+            }],
+        }
+        to_append.append(synthesized)
+        log.append({
+            "type": "gap_fill",
+            "bidder_key": key,
+            "nda_row_index": nda_idx,
+            "synthesized_drop_appended": True,
+        })
+
+    events.extend(to_append)
+    return log
+
+
 def _expand_aggregate_cohort_rows(raw_extraction: dict[str, Any]) -> list[dict]:
     """US-007: replace aggregate NDA rows with N atomic rows.
 
@@ -1646,6 +1759,9 @@ def prepare_for_validate(
     if cohort_log:
         raw_extraction.setdefault("normalization_log", []).extend(cohort_log)
     promotion_log = _apply_unnamed_nda_promotions(raw_extraction)
+    gap_fill_log = _gapfill_nda_signers(raw_extraction)
+    if gap_fill_log:
+        raw_extraction.setdefault("normalization_log", []).extend(gap_fill_log)
     _canonicalize_order(raw_extraction)
     failed_reasons_by_hint_id = {
         id(entry["hint"]): entry["reason"]
