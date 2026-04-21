@@ -336,6 +336,139 @@ SOURCE_VOCABULARY = {
     "adjudicator_verdict",
 }
 
+# US-007: lean cohort expansion. Safety net for when the Extractor emits
+# an aggregate row like "15 financial buyers" as a single bidder_name
+# instead of atomizing it per §E5. Expansion here never supersedes what
+# the Extractor correctly atomized.
+_NUMBER_WORDS = {
+    "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
+    "seven": 7, "eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12,
+    "thirteen": 13, "fourteen": 14, "fifteen": 15, "sixteen": 16,
+    "seventeen": 17, "eighteen": 18, "nineteen": 19, "twenty": 20,
+    "twenty-one": 21, "twenty-two": 22, "twenty-three": 23, "twenty-four": 24,
+    "twenty-five": 25, "thirty": 30, "forty": 40, "fifty": 50,
+}
+_COHORT_COUNT_PATTERN = (
+    r"\d+|" + "|".join(sorted(_NUMBER_WORDS.keys(), key=len, reverse=True))
+)
+_COHORT_AGGREGATE_RE = re.compile(
+    r"^\s*(?:approximately\s+|about\s+|other\s+|additional\s+|the\s+)*"
+    rf"(?P<count>{_COHORT_COUNT_PATTERN})\b"
+    r"\s+(?:(?P<adj>financial|strategic)\s+)?"
+    r"(?:[\w-]+\s+){0,2}"
+    r"(?P<term>bidders?|buyers?|parties|party|sponsors?)\s*$",
+    re.IGNORECASE,
+)
+
+
+def _parse_cohort_count(text: str | None) -> int | None:
+    if not text:
+        return None
+    m = _COHORT_AGGREGATE_RE.match(text.strip())
+    if not m:
+        return None
+    raw = m.group("count").lower()
+    if raw.isdigit():
+        n = int(raw)
+    else:
+        n = _NUMBER_WORDS.get(raw.replace(" ", "-"))
+    return n if n and 1 <= n <= 100 else None
+
+
+def _parse_cohort_type(text: str | None) -> str:
+    if not text:
+        return "unspecified"
+    m = _COHORT_AGGREGATE_RE.match(text.strip())
+    if m and m.group("adj"):
+        return m.group("adj").lower()
+    return "unspecified"
+
+
+def _expand_aggregate_cohort_rows(raw_extraction: dict[str, Any]) -> list[dict]:
+    """US-007: replace aggregate NDA rows with N atomic rows.
+
+    Operates on events whose `bidder_alias` or `bidder_name` parses as an
+    aggregate like "15 financial buyers" AND whose bid_note is NDA-ish.
+    Each atomic row carries:
+      - source = "code_cohort_expansion"
+      - bidder_alias = "Strategic k" / "Financial k" / "Party k" per type
+      - bidder_name = null (unnamed placeholder; §E5 convention)
+      - source_quote = "[synthesized: atomic slot k of N expanded from
+        aggregate row; anchor quote: <first 120 chars of anchor>]"
+      - source_page = inherited from anchor
+      - bid_date_* = inherited from anchor
+      - bidder_type = inherited from anchor
+
+    Returns a list of expansion-log entries for normalization_log.
+    """
+    events = raw_extraction.get("events")
+    if not isinstance(events, list) or not events:
+        return []
+
+    log: list[dict] = []
+    expanded: list[dict] = []
+    anchor_counter = 0
+
+    for ev in events:
+        if ev.get("source") != "llm":
+            expanded.append(ev)
+            continue
+        if ev.get("bid_note") != "NDA":
+            expanded.append(ev)
+            continue
+
+        name_for_parse = ev.get("bidder_alias") or ev.get("bidder_name") or ""
+        count = _parse_cohort_count(name_for_parse)
+        if count is None:
+            expanded.append(ev)
+            continue
+
+        cohort_type = _parse_cohort_type(name_for_parse)
+        anchor_counter += 1
+        cohort_id = (
+            {"financial": "FIN", "strategic": "STR"}.get(cohort_type, "COH")
+            + f"-{anchor_counter}"
+        )
+        alias_prefix = {
+            "financial": "Financial",
+            "strategic": "Strategic",
+            "unspecified": "Party",
+        }[cohort_type]
+
+        anchor_quote = ev.get("source_quote") or ""
+        if isinstance(anchor_quote, list):
+            anchor_quote = anchor_quote[0] if anchor_quote else ""
+        anchor_snippet = (anchor_quote or "")[:120]
+
+        for k in range(1, count + 1):
+            atomic = dict(ev)
+            atomic["source"] = "code_cohort_expansion"
+            atomic["bidder_alias"] = f"{alias_prefix} {k}"
+            atomic["bidder_name"] = None
+            atomic["source_quote"] = (
+                f"[synthesized: atomic slot {k} of {count} expanded "
+                f"from aggregate row {cohort_id!r}; anchor: {anchor_snippet!r}]"
+            )
+            atomic["flags"] = list(ev.get("flags") or [])
+            atomic["flags"].append({
+                "code": "cohort_atomic_expansion",
+                "severity": "info",
+                "reason": f"§E5 safety-net: slot {k}/{count} of {cohort_id}",
+            })
+            expanded.append(atomic)
+
+        log.append({
+            "type": "cohort_expansion",
+            "cohort_id": cohort_id,
+            "count": count,
+            "cohort_type": cohort_type,
+            "anchor_bidder_name_or_alias": name_for_parse,
+            "anchor_quote_prefix": anchor_snippet,
+        })
+
+    raw_extraction["events"] = expanded
+    return log
+
 
 def _invariant_p_r7(events: list[dict]) -> list[dict]:
     """§P-R7 (US-006) — every row must carry `source` in the closed vocabulary.
@@ -1509,6 +1642,9 @@ def prepare_for_validate(
     """Apply every pre-validate transform without writing output."""
     if filing is None:
         filing = load_filing(slug)
+    cohort_log = _expand_aggregate_cohort_rows(raw_extraction)
+    if cohort_log:
+        raw_extraction.setdefault("normalization_log", []).extend(cohort_log)
     promotion_log = _apply_unnamed_nda_promotions(raw_extraction)
     _canonicalize_order(raw_extraction)
     failed_reasons_by_hint_id = {
