@@ -44,7 +44,7 @@ diff on reference deals against the SEC filing, which is ground truth.
 
 8. **Classify bids.** Apply `rules/bids.md` §G1 to decide `bid_type ∈ {"informal", "formal"}`. Every bid row emits `bid_note = "Bid"` per `rules/events.md` §C3 (the unified-bid convention); `bid_type` is the ONLY distinguisher between informal and formal. Do NOT emit legacy labels (`"Inf"` / `"Formal Bid"` / `"Revised Bid"`) — those are deprecated by §C3 and fail `rules/invariants.md` §P-R3. Every non-null `bid_type` MUST carry a `bid_type_inference_note: str` (non-empty, ≤300 chars) justifying the classification — UNLESS the row is a true range bid (both `bid_value_lower` and `bid_value_upper` populated and numeric with `lower < upper`, a §G1 informal structural signal). The §G1 trigger tables guide which classification you pick; they do NOT exempt you from writing the note. Validator §P-G2 enforces this.
 
-9. **Apply skip rules.** Do NOT emit rows for events that match `rules/bids.md` §M1 (unsolicited, no NDA, no price), §M2 (no bid intent), §M3 (legal advisor NDA), §M4 (stale-process NDA).
+9. **Apply skip rules.** Do NOT emit rows for events that match `rules/bids.md` §M1 (unsolicited, no NDA, no price) or §M3 (legal advisor NDA). §M2 is folded into §I1's NDA-only rule (no separate skip); §M4 is an emit-two-rows cross-phase NDA continuity rule, not a skip (see self-check).
 
 10. **Emit the output.** JSON conforming to `rules/schema.md`. One object with `deal` (deal-level fields) and `events` (array of event rows).
 
@@ -132,7 +132,7 @@ The Python validator will hard-flag structural violations (source-quote presence
 - [ ] **Phase-0 vs phase-1 boundary.** Every `process_phase = 0` row belongs to a *prior abandoned process* narrated as its own complete lifecycle and separated from the current process by ≥180 days. Board discussions, activist pressure, or unsolicited approaches that open the *current* process are phase 1, not phase 0. If §P-L2 would fire, reassign the rows.
 - [ ] **Same-date multi-communication.** For every bidder-date pair where the filing narrates multiple distinct bid communications (verbal call + letter; two successive letters), there are separate `Bid` rows distinguished by `additional_note`.
 - [ ] **Bidder-identity resolution.** If a later named `Bid` row belongs to a bidder whose NDA was emitted as an unnamed §E5 placeholder, attach `unnamed_nda_promotion` on the Bid row so `pipeline.finalize()` can rewrite the placeholder. Verify `promote_to_bidder_name` is already registered in `bidder_registry`.
-- [ ] **§M skip rules.** No emitted rows match `rules/bids.md` §M1–§M4 (unsolicited no-NDA no-price, no bid intent, legal-advisor NDA, stale-process NDA).
+- [ ] **§M skip rules.** No emitted rows match `rules/bids.md` §M1 (unsolicited no-NDA no-price) or §M3 (legal-advisor NDA). §M2 folded into §I1; §M4 is emit-two-rows, not a skip.
 
 If any judgment check is shaky, flag the row rather than guess silently.
 
