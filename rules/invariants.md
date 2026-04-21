@@ -132,7 +132,7 @@ comparable across deals.
   asserts "every Drop has a prior engagement".
 - **Exemptions (row is skipped, no flag emitted).**
   1. `bidder_name` is null — unnamed placeholders are count-bound.
-  2. `process_phase < 1` — §M4 stale-prior phase 0 rows do not require
+  2. `process_phase = 0` — §M4 stale-prior phase 0 rows do not require
      an in-phase prior engagement.
   3. Any row for the same `(bidder_name, process_phase)` carries the
      `unsolicited_first_contact` info flag (§D1.a). An unsolicited
@@ -159,7 +159,7 @@ comparable across deals.
 - **Exemptions (row is skipped, no flag emitted).**
   1. `bidder_name` is null — unnamed §E3 placeholders are count-bound,
      not NDA-bound.
-  2. `process_phase < 1` — §M4 stale-prior phase 0 rows do not require
+  2. `process_phase = 0` — §M4 stale-prior phase 0 rows do not require
      an in-phase NDA.
   3. Row carries the `unsolicited_first_contact` info flag (§D1.a).
      This is the ONLY judgment-call exemption and is reserved for

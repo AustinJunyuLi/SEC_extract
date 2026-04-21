@@ -577,7 +577,7 @@ def _invariant_p_d5(events: list[dict]) -> list[dict]:
         phase = ev.get("process_phase")
         if phase is None:
             phase = 1
-        if phase < 1:
+        if phase == 0:
             continue  # §M4 stale-prior phase 0 — skip
         if (name, phase) in unsolicited_keys:
             continue  # §D1.a — bidder approached unsolicited and withdrew
@@ -643,7 +643,7 @@ def _invariant_p_d6(events: list[dict]) -> list[dict]:
         phase = ev.get("process_phase")
         if phase is None:
             phase = 1
-        if phase < 1:
+        if phase == 0:
             continue  # §M4 stale-prior phase 0 — skip
         # Only §D1.a exempts from §P-D6; §C4 is documentation-only.
         if "unsolicited_first_contact" in _row_flag_codes(ev):
