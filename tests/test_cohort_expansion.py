@@ -145,8 +145,13 @@ def test_cohort_expansion_runs_in_prepare_for_validate(monkeypatch):
     }
     filing = pipeline.Filing(slug="synthetic", pages=[{"number": 1, "content": "x"}])
     prepared, _, _ = pipeline.prepare_for_validate("synthetic", raw, filing=filing)
-    assert len(prepared["events"]) == 3
-    assert prepared["events"][0]["source"] == "code_cohort_expansion"
+    # US-007 expands the aggregate into 3 atomic NDAs. US-008 (wired in
+    # prepare_for_validate after cohort expansion) then synthesizes a
+    # gap-fill Drop for each atomic that has no closure event. Final
+    # count: 3 atomic NDAs + 3 gap-fill Drops = 6.
+    atomic_ndas = [ev for ev in prepared["events"] if ev.get("bid_note") == "NDA"]
+    assert len(atomic_ndas) == 3
+    assert all(ev["source"] == "code_cohort_expansion" for ev in atomic_ndas)
     assert any(
         entry["type"] == "cohort_expansion"
         for entry in prepared.get("normalization_log", [])
