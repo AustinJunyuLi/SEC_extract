@@ -1,4 +1,58 @@
+import json
+
 import pipeline
+
+
+def test_raw_extraction_preserved_before_canonicalization(tmp_path, monkeypatch):
+    """US-001: {slug}_raw.json must be written before prepare_for_validate mutates.
+
+    The raw file must capture the Extractor's pre-canonicalization BidderIDs
+    and pre-promotion event order so a downstream mutation bug can be
+    diagnosed without rerunning the LLM.
+    """
+    monkeypatch.setattr(pipeline, "EXTRACTIONS_DIR", tmp_path)
+    monkeypatch.setattr(pipeline, "STATE_DIR", tmp_path)
+    monkeypatch.setattr(pipeline, "PROGRESS_PATH", tmp_path / "progress.json")
+    monkeypatch.setattr(pipeline, "FLAGS_PATH", tmp_path / "flags.jsonl")
+    (tmp_path / "progress.json").write_text(json.dumps({"deals": {"synthetic": {}}}))
+
+    raw_input = {
+        "deal": {
+            "TargetName": "Acme Corp",
+            "Acquirer": "Buyer LLC",
+            "bidder_registry": {},
+        },
+        "events": [
+            {
+                "BidderID": 2,
+                "bid_note": "NDA",
+                "bidder_name": None,
+                "bidder_alias": "Strategic 5",
+                "bid_date_precise": "2020-01-01",
+            },
+            {
+                "BidderID": 1,
+                "bid_note": "Bid",
+                "bidder_name": "bidder_99",
+                "bidder_alias": "Party E",
+                "bid_date_precise": "2020-02-01",
+            },
+        ],
+    }
+    filing = pipeline.Filing(slug="synthetic", pages=[{"number": 1, "content": ""}])
+
+    try:
+        pipeline.finalize("synthetic", raw_input, filing=filing)
+    except Exception:
+        pass
+
+    raw_path = tmp_path / "synthetic_raw.json"
+    assert raw_path.exists(), "synthetic_raw.json must be written by finalize()"
+    persisted = json.loads(raw_path.read_text())
+    assert persisted["events"][0]["BidderID"] == 2, (
+        "raw file must preserve pre-canonicalization BidderID ordering (2 before 1)"
+    )
+    assert persisted["events"][1]["BidderID"] == 1
 
 
 def test_prepare_for_validate_applies_failed_promotion_flag_and_canonicalizes():

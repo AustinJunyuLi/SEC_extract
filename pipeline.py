@@ -1145,6 +1145,13 @@ def write_output(slug: str, final_extraction: dict[str, Any]) -> Path:
     return out_path
 
 
+def write_raw_output(slug: str, raw_extraction: dict[str, Any]) -> Path:
+    EXTRACTIONS_DIR.mkdir(parents=True, exist_ok=True)
+    out_path = EXTRACTIONS_DIR / f"{slug}_raw.json"
+    out_path.write_text(json.dumps(raw_extraction, indent=2, default=str) + "\n")
+    return out_path
+
+
 def append_flags_log(
     slug: str,
     final_extraction: dict[str, Any],
@@ -1379,7 +1386,13 @@ def finalize(
     soft flags, they should mutate raw_extraction['events'][i]['flags']
     and/or raw_extraction['deal']['deal_flags'] with adjudicator verdicts
     before passing raw_extraction in.
+
+    US-001: the Extractor's original JSON is persisted as {slug}_raw.json
+    BEFORE any mutation (promotion, canonicalization, flag merging) so
+    that a bug in downstream transforms is always recoverable without
+    rerunning the LLM.
     """
+    write_raw_output(slug, raw_extraction)
     raw_extraction, filing, promotion_log = prepare_for_validate(
         slug, raw_extraction, filing=filing
     )
