@@ -2,7 +2,7 @@
   "schema_version": "v1",
   "rulebook_version": null,
   "created": "2026-04-18T12:29:42.084187Z",
-  "updated": "2026-04-20T20:19:12.977682Z",
+  "updated": "2026-04-21T15:42:13.497369Z",
   "deal_count_total": 401,
   "deal_count_reference": 9,
   "deals": {
@@ -3595,43 +3595,43 @@
       "notes": ""
     },
     "providence-worcester": {
-      "status": "passed",
+      "status": "pending",
       "is_reference": true,
       "target_name": "PROVIDENCE & WORCESTER RR CO",
       "acquirer": "GENESEE & WYOMING INC",
       "date_announced": "2016-08-15",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/831968/0001193125-16-713780-index.htm",
-      "flag_count": 85,
-      "last_run": "2026-04-20T20:19:12.977682Z",
+      "flag_count": 0,
+      "last_run": null,
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=0 soft=47 info=38"
+      "notes": "reset 2026-04-21 post-fix-apply; awaiting rerun"
     },
     "medivation": {
-      "status": "passed",
+      "status": "pending",
       "is_reference": true,
       "target_name": "MEDIVATION INC",
       "acquirer": "PFIZER INC",
       "date_announced": "2016-08-22",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1011835/0001193125-16-696889-index.htm",
-      "flag_count": 25,
-      "last_run": "2026-04-20T20:13:22.812690Z",
+      "flag_count": 0,
+      "last_run": null,
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=0 soft=15 info=10"
+      "notes": "reset 2026-04-21 post-fix-apply; awaiting rerun"
     },
     "imprivata": {
-      "status": "passed",
+      "status": "pending",
       "is_reference": true,
       "target_name": "IMPRIVATA INC",
       "acquirer": "THOMA BRAVO, LLC",
       "date_announced": "2016-07-13",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1328015/0001193125-16-677939-index.htm",
-      "flag_count": 31,
-      "last_run": "2026-04-20T20:13:35.637699Z",
+      "flag_count": 0,
+      "last_run": null,
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=0 soft=12 info=19"
+      "notes": "reset 2026-04-21 post-fix-apply; awaiting rerun"
     },
     "examworks-group-inc": {
       "status": "pending",
@@ -3842,43 +3842,43 @@
       "notes": ""
     },
     "zep": {
-      "status": "validated",
+      "status": "pending",
       "is_reference": true,
       "target_name": "ZEP INC",
       "acquirer": "NEW MOUNTAIN CAPITAL",
       "date_announced": "2015-04-08",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1408287/0001047469-15-004989-index.htm",
-      "flag_count": 98,
-      "last_run": "2026-04-20T20:13:11.380195Z",
+      "flag_count": 0,
+      "last_run": null,
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=6 soft=63 info=29"
+      "notes": "reset 2026-04-21 post-fix-apply; awaiting rerun"
     },
     "petsmart-inc": {
-      "status": "validated",
+      "status": "pending",
       "is_reference": true,
       "target_name": "PETSMART INC",
       "acquirer": "BC Partners, Inc., La Caisse de d\u00c3\u00a9p\u00c3\u00b4t et placement du Qu\u00c3\u00a9bec, affiliates of GIC Special Investments Pte Ltd, affiliates of StepStone Group LP and Longview Asset Management, LLC",
       "date_announced": "2014-12-14",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/863157/0001571049-15-000695-index.htm",
-      "flag_count": 93,
-      "last_run": "2026-04-20T20:13:35.711920Z",
+      "flag_count": 0,
+      "last_run": null,
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=21 soft=26 info=46"
+      "notes": "reset 2026-04-21 post-fix-apply; awaiting rerun"
     },
     "penford": {
-      "status": "validated",
+      "status": "pending",
       "is_reference": true,
       "target_name": "PENFORD CORP",
       "acquirer": "INGREDION INC",
       "date_announced": "2014-10-15",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/739608/0001193125-14-455030-index.htm",
-      "flag_count": 30,
-      "last_run": "2026-04-20T20:13:22.846643Z",
+      "flag_count": 0,
+      "last_run": null,
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=1 soft=17 info=12"
+      "notes": "reset 2026-04-21 post-fix-apply; awaiting rerun"
     },
     "pike-corp": {
       "status": "pending",
@@ -4089,17 +4089,17 @@
       "notes": ""
     },
     "mac-gray": {
-      "status": "validated",
+      "status": "pending",
       "is_reference": true,
       "target_name": "MAC GRAY CORP",
       "acquirer": "CSC SERVICEWORKS, INC.",
       "date_announced": "2013-10-15",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1038280/0001047469-13-010973-index.htm",
-      "flag_count": 79,
-      "last_run": "2026-04-20T20:13:35.676049Z",
+      "flag_count": 0,
+      "last_run": null,
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=3 soft=46 info=30"
+      "notes": "reset 2026-04-21 post-fix-apply; awaiting rerun"
     },
     "molex-inc": {
       "status": "pending",
@@ -4141,17 +4141,17 @@
       "notes": ""
     },
     "saks": {
-      "status": "passed",
+      "status": "pending",
       "is_reference": true,
       "target_name": "SAKS INC",
       "acquirer": "HUDSON'S BAY COMPANy",
       "date_announced": "2013-07-29",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/812900/0001193125-13-390275-index.htm",
-      "flag_count": 41,
-      "last_run": "2026-04-20T20:13:22.778832Z",
+      "flag_count": 0,
+      "last_run": null,
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=0 soft=16 info=25"
+      "notes": "reset 2026-04-21 post-fix-apply; awaiting rerun"
     },
     "theragenics-corp": {
       "status": "pending",
@@ -4219,17 +4219,17 @@
       "notes": ""
     },
     "stec": {
-      "status": "validated",
+      "status": "pending",
       "is_reference": true,
       "target_name": "S T E C INC",
       "acquirer": "WESTERN DIGITAL CORP",
       "date_announced": "2013-06-24",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1102741/0001193125-13-325730-index.htm",
-      "flag_count": 26,
-      "last_run": "2026-04-20T20:13:22.740817Z",
+      "flag_count": 0,
+      "last_run": null,
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=8 soft=8 info=10"
+      "notes": "reset 2026-04-21 post-fix-apply; awaiting rerun"
     },
     "b-m-c-software-inc": {
       "status": "pending",
