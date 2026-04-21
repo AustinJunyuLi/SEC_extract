@@ -285,6 +285,7 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
     row_flags.extend(_invariant_p_r3(events))
     row_flags.extend(_invariant_p_r4(events))
     row_flags.extend(_invariant_p_r5(events, deal))
+    row_flags.extend(_invariant_p_r6(events, filing))
     row_flags.extend(_invariant_p_d1(events))
     row_flags.extend(_invariant_p_d2(events))
     row_flags.extend(_invariant_p_d5(events))
@@ -742,6 +743,78 @@ def _invariant_p_g2(events: list[dict]) -> list[dict]:
                 f"bid_type_inference_note."
             ),
         })
+    return flags
+
+
+def _invariant_p_r6(events: list[dict], filing: Filing) -> list[dict]:
+    """§P-R6 — every per-share price on a priced row must appear in an
+    independent regex scan of the filing text.
+
+    Introduced by US-002 of the 2026-04-21 validator-hardening PRD. Catches
+    LLM-hallucinated numbers that the §P-R2 NFKC substring check cannot
+    (a real quote can be paired with a wrong number).
+
+    - Executed rows: hard fail on miss. The deal price MUST be in the
+      filing. Hallucination here is a correctness bug.
+    - Non-Executed priced rows: soft flag on miss. Narrative intermediate
+      prices can legitimately rephrase or round; reviewer adjudicates.
+
+    Ranges check both endpoints. Prices are compared numerically after
+    parsing to float; a mismatch of $0.01 counts as a mismatch.
+    """
+    import price_scan
+    flags: list[dict[str, Any]] = []
+    filing_prices = price_scan.filing_price_set(filing.pages)
+
+    def _parse_price(raw: Any) -> float | None:
+        if raw in (None, "", []):
+            return None
+        try:
+            return float(raw)
+        except (TypeError, ValueError):
+            return None
+
+    for i, ev in enumerate(events):
+        bid_note = ev.get("bid_note")
+        candidates: list[tuple[str, float]] = []
+        for field in ("bid_value_pershare", "bid_value_lower", "bid_value_upper"):
+            val = _parse_price(ev.get(field))
+            if val is not None:
+                candidates.append((field, val))
+
+        if not candidates:
+            continue
+
+        missing = [(field, val) for field, val in candidates if val not in filing_prices]
+        if not missing:
+            continue
+
+        if bid_note == "Executed":
+            for field, val in missing:
+                flags.append({
+                    "row_index": i,
+                    "code": "merger_price_not_in_regex_scan",
+                    "severity": "hard",
+                    "reason": (
+                        f"§P-R6: Executed row's {field}={val!r} not found "
+                        f"in regex scan of filing text. Either the price "
+                        f"was hallucinated or the regex patterns missed a "
+                        f"phrasing. Filing prices seen: "
+                        f"{sorted(filing_prices)[:10]}..."
+                    ),
+                })
+        else:
+            for field, val in missing:
+                flags.append({
+                    "row_index": i,
+                    "code": "bid_price_not_in_regex_scan",
+                    "severity": "soft",
+                    "reason": (
+                        f"§P-R6: {bid_note!r} row's {field}={val!r} not "
+                        f"in regex scan of filing text. Advisory: may be "
+                        f"rephrased narrative price; reviewer adjudicates."
+                    ),
+                })
     return flags
 
 

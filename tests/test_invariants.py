@@ -50,6 +50,10 @@ RUNNERS = {
         fixture.get("events", []),
         fixture.get("deal", {}),
     ),
+    "pr6": lambda fixture: pipeline._invariant_p_r6(
+        fixture.get("events", []),
+        _make_filing(fixture),
+    ),
     "pd1": lambda fixture: pipeline._invariant_p_d1(fixture.get("events", [])),
     "pd2": lambda fixture: pipeline._invariant_p_d2(fixture.get("events", [])),
     "pd3": lambda fixture: pipeline._invariant_p_d3(fixture.get("events", [])),
@@ -146,6 +150,20 @@ def test_pr5(fixture_name):
 )
 def test_pr5_acceptance_fixtures(fixture_name):
     _assert_fixture(fixture_name, "pr5")
+
+
+@pytest.mark.parametrize(
+    "fixture_name",
+    [
+        "pr6_executed_price_in_regex.json",
+        "pr6_executed_price_missing.json",
+        "pr6_threshold_rejected.json",
+        "pr6_component_tail_rejected.json",
+        "pr6_non_executed_soft.json",
+    ],
+)
+def test_pr6(fixture_name):
+    _assert_fixture(fixture_name, "pr6")
 
 
 @pytest.mark.parametrize(

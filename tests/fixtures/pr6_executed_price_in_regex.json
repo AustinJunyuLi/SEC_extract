@@ -1,0 +1,15 @@
+{
+  "slug": "synthetic",
+  "pages": [
+    {"number": 1, "content": "On the closing date, the parties executed the merger agreement at a price of $42.50 per share in cash."}
+  ],
+  "events": [
+    {
+      "bid_note": "Executed",
+      "bid_value_pershare": 42.50,
+      "source_quote": "executed the merger agreement at a price of $42.50 per share in cash",
+      "source_page": 1
+    }
+  ],
+  "expected_flags": []
+}

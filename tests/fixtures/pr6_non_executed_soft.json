@@ -1,0 +1,19 @@
+{
+  "slug": "synthetic",
+  "pages": [
+    {"number": 1, "content": "Party A's revised bid was $40.00 per share. The merger was later executed at $42.50 per share in cash."}
+  ],
+  "events": [
+    {
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_value_pershare": 41.00,
+      "bid_type_inference_note": "phrased as revised proposal",
+      "source_quote": "revised bid was $40.00 per share",
+      "source_page": 1
+    }
+  ],
+  "expected_flags": [
+    {"row_index": 0, "code": "bid_price_not_in_regex_scan", "severity": "soft"}
+  ]
+}

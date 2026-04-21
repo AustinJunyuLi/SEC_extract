@@ -153,6 +153,36 @@ judgment calls.
 - **Why.** The canonical-ID model only works if every row's bidder
   identity can be looked up.
 
+### §P-R6 — Per-share price must appear in regex scan of filing text
+- **Check.** For every row with a populated per-share price
+  (`bid_value_pershare`, `bid_value_lower`, or `bid_value_upper`),
+  compare the numeric value against `price_scan.filing_price_set(filing.pages)`
+  — an independent regex scan of every filing page that extracts every
+  dollar-per-share amount. Both range endpoints are checked individually.
+- **Fail actions.**
+  - `bid_note == "Executed"` miss → `merger_price_not_in_regex_scan`. **Hard**.
+  - Non-Executed priced row miss → `bid_price_not_in_regex_scan`. **Soft**.
+- **Why.** `source_quote` NFKC (§P-R2) proves the quote appears in the
+  filing; it does NOT prove the number attached to the quote is correct.
+  The extractor can (rarely) attach a hallucinated number to a real
+  sentence. An independent regex scan catches this at zero LLM cost.
+  Executed rows are hard-blocking because the final deal price must be
+  grounded in the filing; intermediate narrative prices can legitimately
+  rephrase/round, so soft-flag only.
+- **Side.** Invariant (the regex scan is deterministic and operates on
+  JSON + `pages.json` alone; no prose interpretation). Ported from
+  `bids_pipeline/pipeline/preprocess.py::extract_prices_regex`
+  (`_LOCAL_PRICE_PATTERNS` + threshold/component-tail rejectors);
+  pattern set was broadened in the 2026-04-17 boundary-map sprint's
+  Cluster 3 and is imported wholesale.
+- **Pitfalls the rejectors handle.**
+  - Thresholds: `"at least $X per share"`, `"minimum of $X per share"`,
+    `"no less than $X per share"`, `"floor of $X per share"` — all
+    rejected; they are not deal prices.
+  - Mixed consideration: `"$X in cash plus $Y in stock per share"` —
+    $Y rejected; mixed nominal values are not stand-alone per-share
+    deal prices.
+
 ---
 
 ## §P-D — Date and sequencing invariants (🟩 RESOLVED, 2026-04-18)
