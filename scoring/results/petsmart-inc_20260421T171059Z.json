@@ -1,0 +1,2465 @@
+{
+  "slug": "petsmart-inc",
+  "matched_rows": 33,
+  "ai_only_rows": [
+    {
+      "BidderID": 1,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_02",
+      "bidder_alias": "Industry Participant",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Target Interest",
+      "bid_type": null,
+      "bid_date_precise": "2014-03-15",
+      "bid_date_rough": "In March, 2014",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Target-initiated exploratory contact with Industry Participant (a privately-held industry participant) pre-dates the sale resolution.",
+      "comments": null,
+      "source_quote": "In March, 2014, the board authorized management to contact Industry Participant to determine Industry Participant\u2019s interest in initiating exploratory discussions concerning the feasibility of a merger or acquisition transaction.",
+      "source_page": 28,
+      "flags": [
+        {
+          "code": "date_inferred_from_rough",
+          "severity": "info",
+          "reason": "phrase: 'In March, 2014'"
+        }
+      ]
+    },
+    {
+      "BidderID": 5,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_02",
+      "bidder_alias": "Industry Participant",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Bidder Interest",
+      "bid_type": null,
+      "bid_date_precise": "2014-08-07",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Industry Participant contacted J.P. Morgan expressing possible interest in revisiting prior discussions; no NDA signed, no concrete price.",
+      "comments": null,
+      "source_quote": "On August 7, 2014, a representative of Industry Participant contacted a representative of J.P. Morgan. The Industry Participant representative indicated that she had heard rumors that J.P. Morgan was working with the Company and wanted to inform J.P. Morgan that, if the Company were to pursue strategic alternatives, Industry Participant might be interested in re-visiting the conversations that had taken place in the Spring concerning the feasibility of a possible combination of the two Companies.",
+      "source_page": 29,
+      "flags": []
+    },
+    {
+      "BidderID": 6,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Target Sale",
+      "bid_type": null,
+      "bid_date_precise": "2014-08-13",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Board determined to explore strategic alternatives including a sale of the Company.",
+      "comments": null,
+      "source_quote": "On August 13, 2014, the board met in person, together with members of management and representatives of J.P. Morgan and Wachtell Lipton, to complete its initial review of strategic and financial alternatives potentially available to the Company and to receive an update on communications from stockholders and other interested parties, including Industry Participant. As a result of this meeting, the board (1) determined to explore strategic alternatives (including a possible sale of the Company) for the Company to maximize value for stockholders including by commencing a process to determine the potential value that could be achieved via a sale of the Company",
+      "source_page": 29,
+      "flags": []
+    },
+    {
+      "BidderID": 22,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_15",
+      "bidder_alias": "Unnamed party 13",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-05",
+      "bid_date_rough": "first week of October 2014",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "1 of 15 confidentiality and standstill agreements with financial buyers; specific signer not narrated by filing.",
+      "comments": null,
+      "source_quote": "In the first week of October 2014, the Company entered into confidentiality and standstill agreements with 15 potentially interested financial buyers, all 15 of which, during the month of October engaged in due diligence, received management presentations involving the Company\u2019s senior-most management, and received detailed financial and business plan information, including detailed information concerning the Profit Improvement Plan and associated cost-saving plans and opportunities.",
+      "source_page": 30,
+      "flags": [
+        {
+          "code": "date_inferred_from_rough",
+          "severity": "info",
+          "reason": "phrase: 'first week of October 2014'"
+        },
+        {
+          "code": "unnamed_nda_member_of_group",
+          "severity": "info",
+          "reason": "atomized row from '15 potentially interested financial buyers' count."
+        }
+      ]
+    },
+    {
+      "BidderID": 23,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_16",
+      "bidder_alias": "Unnamed party 14",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-05",
+      "bid_date_rough": "first week of October 2014",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "1 of 15 confidentiality and standstill agreements with financial buyers; specific signer not narrated by filing.",
+      "comments": null,
+      "source_quote": "In the first week of October 2014, the Company entered into confidentiality and standstill agreements with 15 potentially interested financial buyers, all 15 of which, during the month of October engaged in due diligence, received management presentations involving the Company\u2019s senior-most management, and received detailed financial and business plan information, including detailed information concerning the Profit Improvement Plan and associated cost-saving plans and opportunities.",
+      "source_page": 30,
+      "flags": [
+        {
+          "code": "date_inferred_from_rough",
+          "severity": "info",
+          "reason": "phrase: 'first week of October 2014'"
+        },
+        {
+          "code": "unnamed_nda_member_of_group",
+          "severity": "info",
+          "reason": "atomized row from '15 potentially interested financial buyers' count."
+        }
+      ]
+    },
+    {
+      "BidderID": 24,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_17",
+      "bidder_alias": "Unnamed party 15",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-05",
+      "bid_date_rough": "first week of October 2014",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "1 of 15 confidentiality and standstill agreements with financial buyers; specific signer not narrated by filing.",
+      "comments": null,
+      "source_quote": "In the first week of October 2014, the Company entered into confidentiality and standstill agreements with 15 potentially interested financial buyers, all 15 of which, during the month of October engaged in due diligence, received management presentations involving the Company\u2019s senior-most management, and received detailed financial and business plan information, including detailed information concerning the Profit Improvement Plan and associated cost-saving plans and opportunities.",
+      "source_page": 30,
+      "flags": [
+        {
+          "code": "date_inferred_from_rough",
+          "severity": "info",
+          "reason": "phrase: 'first week of October 2014'"
+        },
+        {
+          "code": "unnamed_nda_member_of_group",
+          "severity": "info",
+          "reason": "atomized row from '15 potentially interested financial buyers' count."
+        }
+      ]
+    },
+    {
+      "BidderID": 33,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_09",
+      "bidder_alias": "Unnamed party 7",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "DropAtInf",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-31",
+      "bid_date_rough": "Between October 30 and November 2, 2014",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Self-withdrew at informal stage: did not submit indication of interest by Oct 30 deadline.",
+      "comments": null,
+      "source_quote": "From October 30 to November 2, 2014, representatives of J.P. Morgan spoke by telephone with all of the potentially interested parties, including those that did not submit an indication of interest, to hear the parties\u2019 respective rationales for the price levels suggested in their indications or rationales for not submitting an indication.",
+      "source_page": 31,
+      "flags": [
+        {
+          "code": "date_range_collapsed",
+          "severity": "info",
+          "reason": "phrase: 'From October 30 to November 2, 2014'; midpoint: 2014-10-31"
+        }
+      ]
+    },
+    {
+      "BidderID": 34,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_10",
+      "bidder_alias": "Unnamed party 8",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "DropAtInf",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-31",
+      "bid_date_rough": "Between October 30 and November 2, 2014",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Self-withdrew at informal stage: did not submit indication of interest by Oct 30 deadline.",
+      "comments": null,
+      "source_quote": "From October 30 to November 2, 2014, representatives of J.P. Morgan spoke by telephone with all of the potentially interested parties, including those that did not submit an indication of interest, to hear the parties\u2019 respective rationales for the price levels suggested in their indications or rationales for not submitting an indication.",
+      "source_page": 31,
+      "flags": [
+        {
+          "code": "date_range_collapsed",
+          "severity": "info",
+          "reason": "phrase: 'From October 30 to November 2, 2014'; midpoint: 2014-10-31"
+        }
+      ]
+    },
+    {
+      "BidderID": 35,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_11",
+      "bidder_alias": "Unnamed party 9",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "DropAtInf",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-31",
+      "bid_date_rough": "Between October 30 and November 2, 2014",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Self-withdrew at informal stage: did not submit indication of interest by Oct 30 deadline.",
+      "comments": null,
+      "source_quote": "From October 30 to November 2, 2014, representatives of J.P. Morgan spoke by telephone with all of the potentially interested parties, including those that did not submit an indication of interest, to hear the parties\u2019 respective rationales for the price levels suggested in their indications or rationales for not submitting an indication.",
+      "source_page": 31,
+      "flags": [
+        {
+          "code": "date_range_collapsed",
+          "severity": "info",
+          "reason": "phrase: 'From October 30 to November 2, 2014'; midpoint: 2014-10-31"
+        }
+      ]
+    },
+    {
+      "BidderID": 36,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_12",
+      "bidder_alias": "Unnamed party 10",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "DropAtInf",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-31",
+      "bid_date_rough": "Between October 30 and November 2, 2014",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Self-withdrew at informal stage: did not submit indication of interest by Oct 30 deadline.",
+      "comments": null,
+      "source_quote": "From October 30 to November 2, 2014, representatives of J.P. Morgan spoke by telephone with all of the potentially interested parties, including those that did not submit an indication of interest, to hear the parties\u2019 respective rationales for the price levels suggested in their indications or rationales for not submitting an indication.",
+      "source_page": 31,
+      "flags": [
+        {
+          "code": "date_range_collapsed",
+          "severity": "info",
+          "reason": "phrase: 'From October 30 to November 2, 2014'; midpoint: 2014-10-31"
+        }
+      ]
+    },
+    {
+      "BidderID": 37,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_13",
+      "bidder_alias": "Unnamed party 11",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "DropAtInf",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-31",
+      "bid_date_rough": "Between October 30 and November 2, 2014",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Self-withdrew at informal stage: did not submit indication of interest by Oct 30 deadline.",
+      "comments": null,
+      "source_quote": "From October 30 to November 2, 2014, representatives of J.P. Morgan spoke by telephone with all of the potentially interested parties, including those that did not submit an indication of interest, to hear the parties\u2019 respective rationales for the price levels suggested in their indications or rationales for not submitting an indication.",
+      "source_page": 31,
+      "flags": [
+        {
+          "code": "date_range_collapsed",
+          "severity": "info",
+          "reason": "phrase: 'From October 30 to November 2, 2014'; midpoint: 2014-10-31"
+        }
+      ]
+    },
+    {
+      "BidderID": 38,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_14",
+      "bidder_alias": "Unnamed party 12",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "DropAtInf",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-31",
+      "bid_date_rough": "Between October 30 and November 2, 2014",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Self-withdrew at informal stage: did not submit indication of interest by Oct 30 deadline.",
+      "comments": null,
+      "source_quote": "From October 30 to November 2, 2014, representatives of J.P. Morgan spoke by telephone with all of the potentially interested parties, including those that did not submit an indication of interest, to hear the parties\u2019 respective rationales for the price levels suggested in their indications or rationales for not submitting an indication.",
+      "source_page": 31,
+      "flags": [
+        {
+          "code": "date_range_collapsed",
+          "severity": "info",
+          "reason": "phrase: 'From October 30 to November 2, 2014'; midpoint: 2014-10-31"
+        }
+      ]
+    },
+    {
+      "BidderID": 39,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_15",
+      "bidder_alias": "Unnamed party 13",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "DropAtInf",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-31",
+      "bid_date_rough": "Between October 30 and November 2, 2014",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Self-withdrew at informal stage: did not submit indication of interest by Oct 30 deadline.",
+      "comments": null,
+      "source_quote": "From October 30 to November 2, 2014, representatives of J.P. Morgan spoke by telephone with all of the potentially interested parties, including those that did not submit an indication of interest, to hear the parties\u2019 respective rationales for the price levels suggested in their indications or rationales for not submitting an indication.",
+      "source_page": 31,
+      "flags": [
+        {
+          "code": "date_range_collapsed",
+          "severity": "info",
+          "reason": "phrase: 'From October 30 to November 2, 2014'; midpoint: 2014-10-31"
+        }
+      ]
+    },
+    {
+      "BidderID": 40,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_16",
+      "bidder_alias": "Unnamed party 14",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "DropAtInf",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-31",
+      "bid_date_rough": "Between October 30 and November 2, 2014",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Self-withdrew at informal stage: did not submit indication of interest by Oct 30 deadline.",
+      "comments": null,
+      "source_quote": "From October 30 to November 2, 2014, representatives of J.P. Morgan spoke by telephone with all of the potentially interested parties, including those that did not submit an indication of interest, to hear the parties\u2019 respective rationales for the price levels suggested in their indications or rationales for not submitting an indication.",
+      "source_page": 31,
+      "flags": [
+        {
+          "code": "date_range_collapsed",
+          "severity": "info",
+          "reason": "phrase: 'From October 30 to November 2, 2014'; midpoint: 2014-10-31"
+        }
+      ]
+    },
+    {
+      "BidderID": 41,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_17",
+      "bidder_alias": "Unnamed party 15",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "DropAtInf",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-31",
+      "bid_date_rough": "Between October 30 and November 2, 2014",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Self-withdrew at informal stage: did not submit indication of interest by Oct 30 deadline.",
+      "comments": null,
+      "source_quote": "From October 30 to November 2, 2014, representatives of J.P. Morgan spoke by telephone with all of the potentially interested parties, including those that did not submit an indication of interest, to hear the parties\u2019 respective rationales for the price levels suggested in their indications or rationales for not submitting an indication.",
+      "source_page": 31,
+      "flags": [
+        {
+          "code": "date_range_collapsed",
+          "severity": "info",
+          "reason": "phrase: 'From October 30 to November 2, 2014'; midpoint: 2014-10-31"
+        }
+      ]
+    },
+    {
+      "BidderID": 43,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_04",
+      "bidder_alias": "Unnamed party 2",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "DropBelowInf",
+      "bid_type": null,
+      "bid_date_precise": "2014-11-03",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Target-initiated cut at informal stage: submitted <$80 indication and did not raise; not invited to final round.",
+      "comments": null,
+      "source_quote": "Following this meeting, representatives of J.P. Morgan notified the eliminated parties, none of which indicated any interest or ability to remain in the process at price levels above their respective initial indications.",
+      "source_page": 31,
+      "flags": []
+    },
+    {
+      "BidderID": 44,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_05",
+      "bidder_alias": "Unnamed party 3",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "DropBelowInf",
+      "bid_type": null,
+      "bid_date_precise": "2014-11-03",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Target-initiated cut at informal stage: submitted <$80 indication and did not raise; not invited to final round.",
+      "comments": null,
+      "source_quote": "Following this meeting, representatives of J.P. Morgan notified the eliminated parties, none of which indicated any interest or ability to remain in the process at price levels above their respective initial indications.",
+      "source_page": 31,
+      "flags": []
+    },
+    {
+      "BidderID": 49,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Unnamed party 1",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "DropBelowInf",
+      "bid_type": null,
+      "bid_date_precise": "2014-12-10",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Bidder 3 constituent A; target-initiated cut after verbal ~$78 was communicated to be unlikely to be competitive; no written formal offer submitted.",
+      "comments": null,
+      "source_quote": "Bidder 3 verbally communicated to J.P. Morgan that their valuation would not be above the current stock price of approximately $78 per share. J.P. Morgan communicated to Bidder 3 that it was unlikely to be competitive and accordingly Bidder 3 did not submit a written offer.",
+      "source_page": 32,
+      "flags": [
+        {
+          "code": "consortium_drop_split",
+          "severity": "info",
+          "reason": "Bidder 3 consortium dropped; row split per constituent NDA per \u00a7I1."
+        }
+      ]
+    },
+    {
+      "BidderID": 50,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_06",
+      "bidder_alias": "Unnamed party 4",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "DropBelowInf",
+      "bid_type": null,
+      "bid_date_precise": "2014-12-10",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Bidder 3 constituent B; target-initiated cut after verbal ~$78 was communicated to be unlikely to be competitive; no written formal offer submitted.",
+      "comments": null,
+      "source_quote": "Bidder 3 verbally communicated to J.P. Morgan that their valuation would not be above the current stock price of approximately $78 per share. J.P. Morgan communicated to Bidder 3 that it was unlikely to be competitive and accordingly Bidder 3 did not submit a written offer.",
+      "source_page": 32,
+      "flags": [
+        {
+          "code": "consortium_drop_split",
+          "severity": "info",
+          "reason": "Bidder 3 consortium dropped; row split per constituent NDA per \u00a7I1."
+        }
+      ]
+    },
+    {
+      "BidderID": 56,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_08",
+      "bidder_alias": "Bidder 2",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "DropBelowM",
+      "bid_type": null,
+      "bid_date_precise": "2014-12-13",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Target rejected Bidder 2's best-and-final $81.50 in favor of Buyer Group's $83.00; Bidder 2 stated $81.50 was its best and final.",
+      "comments": null,
+      "source_quote": "On December 13, 2014, the board met in person, together with the members of management and representatives of J.P. Morgan and Wachtell Lipton, to discuss and review the final bids and to consider the proposed transaction. Representatives of J.P. Morgan reviewed the respective bids as well as the recent progression of the sale process. Representatives of Wachtell Lipton reviewed the terms of the draft merger agreement and other transaction documents and reviewed the financing commitments that had been provided by the Buyer Group. Representatives of J.P. Morgan made a financial presentation concerning the proposed transaction with the Buyer Group, as well as the Company\u2019s alternatives to a sale of the Company, including a leveraged share repurchase.",
+      "source_page": 33,
+      "flags": []
+    },
+    {
+      "BidderID": 57,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_07",
+      "bidder_alias": "Buyer Group",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Executed",
+      "bid_type": null,
+      "bid_date_precise": "2014-12-14",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": 83.0,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": 83.0,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": false,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Merger agreement, voting agreement, and related transaction agreements executed; $83.00/share cash; Parent (Argos Holdings Inc.) is the legal counterparty owned by the Buyer Group consortium (BC Partners, La Caisse, GIC, StepStone, Longview).",
+      "comments": null,
+      "source_quote": [
+        "Following the board meeting, the parties completed negotiations on terms satisfactory to both parties, and finalized the terms of the Longview voting agreement. On December 14, 2014, the parties executed the merger agreement, the voting agreement and related transaction agreements and issued a press release announcing the transaction.",
+        "the \u201cBuyer Group\u201d refers to a consortium of funds advised by BC Partners, Inc., La Caisse de d\u00e9p\u00f4t et placement du Qu\u00e9bec, affiliates of GIC Special Investments Pte Ltd, affiliates of StepStone Group LP and, at all times after December 12, 2014, Longview Asset Management, LLC;"
+      ],
+      "source_page": [
+        33,
+        8
+      ],
+      "flags": [],
+      "joint_bidder_members": [
+        "bidder_07",
+        "bidder_20",
+        "bidder_21",
+        "bidder_22",
+        "bidder_23"
+      ]
+    }
+  ],
+  "alex_only_rows": [
+    {
+      "BidderID": 10,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_06",
+      "bidder_alias": "Unnamed party 5",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "2014-10-07 00:00:00",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 11,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_07",
+      "bidder_alias": "Unnamed party 6",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "2014-10-07 00:00:00",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 18,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_14",
+      "bidder_alias": "Bidder 1",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "2014-10-07 00:00:00",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 29,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_06",
+      "bidder_alias": "Unnamed party 5",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-30",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 30,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_07",
+      "bidder_alias": "Unnamed party 6",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-30",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 31,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_08",
+      "bidder_alias": "Unnamed party 7",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-30",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 32,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_09",
+      "bidder_alias": "Unnamed party 8",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-30",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 33,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_10",
+      "bidder_alias": "Unnamed party 9",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-30",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 34,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_11",
+      "bidder_alias": "Unnamed party 10",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-30",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 35,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_12",
+      "bidder_alias": "Unnamed party 11",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-30",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 36,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_13",
+      "bidder_alias": "Unnamed party 12",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-30",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 39,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Final Round Inf",
+      "bid_type": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "2014-10-30 00:00:00",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 41,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_02",
+      "bidder_alias": "Unnamed party 1",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2014-11-03",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 42,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_05",
+      "bidder_alias": "Unnamed party 4",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "2014-12-10 00:00:00",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    }
+  ],
+  "cardinality_mismatches": [
+    {
+      "type": "cardinality_mismatch",
+      "code": "cardinality_mismatch",
+      "match_scope": "residual_bid_note",
+      "bucket_key": {
+        "bid_note": "Activist Sale",
+        "ai_dates": [
+          "2014-07-03",
+          "2014-07-07"
+        ],
+        "alex_dates": [
+          null
+        ]
+      },
+      "ai_count": 2,
+      "alex_count": 1,
+      "ai_rows": [
+        {
+          "BidderID": 2,
+          "process_phase": 1,
+          "role": "bidder",
+          "bidder_name": "bidder_18",
+          "bidder_alias": "JANA Partners",
+          "bidder_type": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "bid_note": "Activist Sale",
+          "bid_type": null,
+          "bid_date_precise": "2014-07-03",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": "JANA filed Schedule 13D disclosing 9.9% stake and intent to advocate for sale.",
+          "comments": null,
+          "source_quote": "On July 3, 2014, JANA Partners filed a Schedule 13D with the SEC disclosing that JANA had acquired 9.9% of the Company\u2019s outstanding common stock and that JANA intended to engage in discussions with management and the board with respect to a review of strategic alternatives, including a sale of the Company.",
+          "source_page": 29,
+          "flags": [
+            {
+              "code": "multi_activist_coordination_ambiguous",
+              "severity": "info",
+              "reason": "\u00a7D1.b: separate Activist Sale rows for JANA and Longview (separately narrated activists)."
+            }
+          ]
+        },
+        {
+          "BidderID": 3,
+          "process_phase": 1,
+          "role": "bidder",
+          "bidder_name": "bidder_19",
+          "bidder_alias": "Longview",
+          "bidder_type": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "bid_note": "Activist Sale",
+          "bid_type": null,
+          "bid_date_precise": "2014-07-07",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": "Longview made public a letter advocating board consider a sale.",
+          "comments": null,
+          "source_quote": "On July 7, 2014, Longview made public a letter to the board in which Longview stated that the board should consider the a sale of the Company (as well as other strategic alternatives) and that should the board determine a sale transaction to be in the interests of all stockholders, Longview would consider, depending on the parties and terms involved, rolling part or all of its holdings into equity of the acquiring entity rather than receive cash consideration, should doing so prove necessary in order to enable the Company to complete a transaction.",
+          "source_page": 29,
+          "flags": []
+        }
+      ],
+      "alex_rows": [
+        {
+          "BidderID": 1,
+          "process_phase": null,
+          "role": "bidder",
+          "bidder_name": null,
+          "bidder_alias": null,
+          "bidder_type": null,
+          "bid_note": "Activist Sale",
+          "bid_type": null,
+          "bid_date_precise": null,
+          "bid_date_rough": "2014-07-03 00:00:00",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": null,
+          "comments": null,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "type": "cardinality_mismatch",
+      "code": "cardinality_mismatch",
+      "match_scope": "residual_bid_note",
+      "bucket_key": {
+        "bid_note": "DropTarget",
+        "ai_dates": [
+          "2014-08-27"
+        ],
+        "alex_dates": [
+          null
+        ]
+      },
+      "ai_count": 1,
+      "alex_count": 2,
+      "ai_rows": [
+        {
+          "BidderID": 9,
+          "process_phase": 1,
+          "role": "bidder",
+          "bidder_name": "bidder_02",
+          "bidder_alias": "Industry Participant",
+          "bidder_type": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "bid_note": "DropTarget",
+          "bid_type": null,
+          "bid_date_precise": "2014-08-27",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": "Target excluded Industry Participant from the sale process for antitrust / due-diligence / process-disruption concerns.",
+          "comments": null,
+          "source_quote": "On August 27, 2014, representatives of Industry Participant contacted by telephone the representative of J.P. Morgan. During this call, the Industry Participant representatives stated that Industry Participant would have interest in discussing the possibility of a combination of the two companies. The J.P. Morgan representative reiterated the concerns identified by the board that engaging with Industry Participant was unlikely to maximize value for PetSmart\u2019s stockholders. The J.P. Morgan representative stated that Industry Participant would not be invited into the exploratory process, but that if Industry Participant were to wish to submit a proposal or other communication to the Company, the board would consider it. There has been no contact between PetSmart and Industry Participant (or between any of their respective representatives) since August 27, 2014.",
+          "source_page": 30,
+          "flags": []
+        }
+      ],
+      "alex_rows": [
+        {
+          "BidderID": 37,
+          "process_phase": null,
+          "role": "bidder",
+          "bidder_name": "bidder_03",
+          "bidder_alias": "Unnamed party 2",
+          "bidder_type": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          },
+          "bid_note": "DropTarget",
+          "bid_type": null,
+          "bid_date_precise": null,
+          "bid_date_rough": "2014-11-03 00:00:00",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": null,
+          "comments": null,
+          "flags": []
+        },
+        {
+          "BidderID": 38,
+          "process_phase": null,
+          "role": "bidder",
+          "bidder_name": "bidder_04",
+          "bidder_alias": "Unnamed party 3",
+          "bidder_type": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          },
+          "bid_note": "DropTarget",
+          "bid_type": null,
+          "bid_date_precise": null,
+          "bid_date_rough": "2014-11-03 00:00:00",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": null,
+          "comments": null,
+          "flags": []
+        }
+      ]
+    }
+  ],
+  "field_disagreements": {
+    "bidder_type": 13,
+    "bid_value_unit": 2,
+    "bid_value_pershare": 4,
+    "bid_date_rough": 1,
+    "bid_value_upper": 1
+  },
+  "deal_disagreements": [
+    {
+      "field": "TargetName",
+      "ai": "PetSmart, Inc.",
+      "alex": "PETSMART INC"
+    },
+    {
+      "field": "Acquirer",
+      "ai": "Buyer Group (a consortium of funds advised by BC Partners, Inc., La Caisse de d\u00e9p\u00f4t et placement du Qu\u00e9bec, affiliates of GIC Special Investments Pte Ltd, affiliates of StepStone Group LP and Longview Asset Management, LLC)",
+      "alex": "BC Partners, Inc., La Caisse de d\u00e9p\u00f4t et placement du Qu\u00e9bec, affiliates of GIC Special Investments Pte Ltd, affiliates of StepStone Group LP and Longview Asset Management, LLC"
+    },
+    {
+      "field": "DateEffective",
+      "ai": null,
+      "alex": "2015-03-11"
+    }
+  ],
+  "divergences": [
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Unnamed party 1",
+        "bidder_alias_alex": "Unnamed party 1",
+        "bid_note": "Bid",
+        "bid_date_precise": "2014-10-30"
+      },
+      "ai_BidderID": 26,
+      "alex_BidderID": 22,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Unnamed party 2",
+        "bidder_alias_alex": "Unnamed party 2",
+        "bid_note": "Bid",
+        "bid_date_precise": "2014-10-30"
+      },
+      "ai_BidderID": 27,
+      "alex_BidderID": 23,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        },
+        {
+          "field": "bid_value_unit",
+          "ai": null,
+          "alex": "USD_per_share"
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Unnamed party 3",
+        "bidder_alias_alex": "Unnamed party 3",
+        "bid_note": "Bid",
+        "bid_date_precise": "2014-10-30"
+      },
+      "ai_BidderID": 28,
+      "alex_BidderID": 24,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        },
+        {
+          "field": "bid_value_unit",
+          "ai": null,
+          "alex": "USD_per_share"
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Unnamed party 4",
+        "bidder_alias_alex": "Unnamed party 4",
+        "bid_note": "Bid",
+        "bid_date_precise": "2014-10-30"
+      },
+      "ai_BidderID": 29,
+      "alex_BidderID": 26,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        },
+        {
+          "field": "bid_value_pershare",
+          "ai": null,
+          "alex": 80
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Buyer Group",
+        "bidder_alias_alex": "Buyer Group",
+        "bid_note": "Bid",
+        "bid_date_precise": "2014-10-30"
+      },
+      "ai_BidderID": 30,
+      "alex_BidderID": 25,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        },
+        {
+          "field": "bid_value_pershare",
+          "ai": null,
+          "alex": 81
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Bidder 2",
+        "bidder_alias_alex": "Bidder 2",
+        "bid_note": "Bid",
+        "bid_date_precise": "2014-10-30"
+      },
+      "ai_BidderID": 31,
+      "alex_BidderID": 27,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "order_dependent_zip"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Bidder 2",
+        "bidder_alias_alex": "Bidder 2",
+        "bid_note": "Bid",
+        "bid_date_precise": "2014-10-30"
+      },
+      "ai_BidderID": 32,
+      "alex_BidderID": 28,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        },
+        {
+          "field": "bid_value_pershare",
+          "ai": null,
+          "alex": 81
+        },
+        {
+          "field": "bid_date_rough",
+          "ai": "revision during Oct 30\u2013Nov 2, 2014 J.P. Morgan discussions; anchored to Oct 30 initial-indication date",
+          "alex": null
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "order_dependent_zip"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Bidder 3",
+        "bidder_alias_alex": "Bidder 3",
+        "bid_note": "Bid",
+        "bid_date_precise": "2014-12-10"
+      },
+      "ai_BidderID": 46,
+      "alex_BidderID": 44,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        },
+        {
+          "field": "bid_value_pershare",
+          "ai": null,
+          "alex": 78
+        },
+        {
+          "field": "bid_value_upper",
+          "ai": 78,
+          "alex": null
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Buyer Group",
+        "bidder_alias_alex": "Buyer Group",
+        "bid_note": "Bid",
+        "bid_date_precise": "2014-12-10"
+      },
+      "ai_BidderID": 47,
+      "alex_BidderID": 45,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Bidder 2",
+        "bidder_alias_alex": "Bidder 2",
+        "bid_note": "Bid",
+        "bid_date_precise": "2014-12-10"
+      },
+      "ai_BidderID": 48,
+      "alex_BidderID": 46,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Bidder 2",
+        "bidder_alias_alex": "Bidder 2",
+        "bid_note": "Bid",
+        "bid_date_precise": "2014-12-12"
+      },
+      "ai_BidderID": 52,
+      "alex_BidderID": 47,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Buyer Group",
+        "bidder_alias_alex": "Buyer Group",
+        "bid_note": "Bid",
+        "bid_date_precise": "2014-12-12"
+      },
+      "ai_BidderID": 53,
+      "alex_BidderID": 48,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "order_dependent_zip"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Buyer Group",
+        "bidder_alias_alex": "Buyer Group",
+        "bid_note": "Bid",
+        "bid_date_precise": "2014-12-12"
+      },
+      "ai_BidderID": 54,
+      "alex_BidderID": 49,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "order_dependent_zip"
+    },
+    {
+      "type": "cardinality_mismatch",
+      "code": "cardinality_mismatch",
+      "match_scope": "residual_bid_note",
+      "bucket_key": {
+        "bid_note": "Activist Sale",
+        "ai_dates": [
+          "2014-07-03",
+          "2014-07-07"
+        ],
+        "alex_dates": [
+          null
+        ]
+      },
+      "ai_count": 2,
+      "alex_count": 1,
+      "ai_rows": [
+        {
+          "BidderID": 2,
+          "process_phase": 1,
+          "role": "bidder",
+          "bidder_name": "bidder_18",
+          "bidder_alias": "JANA Partners",
+          "bidder_type": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "bid_note": "Activist Sale",
+          "bid_type": null,
+          "bid_date_precise": "2014-07-03",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": "JANA filed Schedule 13D disclosing 9.9% stake and intent to advocate for sale.",
+          "comments": null,
+          "source_quote": "On July 3, 2014, JANA Partners filed a Schedule 13D with the SEC disclosing that JANA had acquired 9.9% of the Company\u2019s outstanding common stock and that JANA intended to engage in discussions with management and the board with respect to a review of strategic alternatives, including a sale of the Company.",
+          "source_page": 29,
+          "flags": [
+            {
+              "code": "multi_activist_coordination_ambiguous",
+              "severity": "info",
+              "reason": "\u00a7D1.b: separate Activist Sale rows for JANA and Longview (separately narrated activists)."
+            }
+          ]
+        },
+        {
+          "BidderID": 3,
+          "process_phase": 1,
+          "role": "bidder",
+          "bidder_name": "bidder_19",
+          "bidder_alias": "Longview",
+          "bidder_type": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "bid_note": "Activist Sale",
+          "bid_type": null,
+          "bid_date_precise": "2014-07-07",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": "Longview made public a letter advocating board consider a sale.",
+          "comments": null,
+          "source_quote": "On July 7, 2014, Longview made public a letter to the board in which Longview stated that the board should consider the a sale of the Company (as well as other strategic alternatives) and that should the board determine a sale transaction to be in the interests of all stockholders, Longview would consider, depending on the parties and terms involved, rolling part or all of its holdings into equity of the acquiring entity rather than receive cash consideration, should doing so prove necessary in order to enable the Company to complete a transaction.",
+          "source_page": 29,
+          "flags": []
+        }
+      ],
+      "alex_rows": [
+        {
+          "BidderID": 1,
+          "process_phase": null,
+          "role": "bidder",
+          "bidder_name": null,
+          "bidder_alias": null,
+          "bidder_type": null,
+          "bid_note": "Activist Sale",
+          "bid_type": null,
+          "bid_date_precise": null,
+          "bid_date_rough": "2014-07-03 00:00:00",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": null,
+          "comments": null,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "type": "cardinality_mismatch",
+      "code": "cardinality_mismatch",
+      "match_scope": "residual_bid_note",
+      "bucket_key": {
+        "bid_note": "DropTarget",
+        "ai_dates": [
+          "2014-08-27"
+        ],
+        "alex_dates": [
+          null
+        ]
+      },
+      "ai_count": 1,
+      "alex_count": 2,
+      "ai_rows": [
+        {
+          "BidderID": 9,
+          "process_phase": 1,
+          "role": "bidder",
+          "bidder_name": "bidder_02",
+          "bidder_alias": "Industry Participant",
+          "bidder_type": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "bid_note": "DropTarget",
+          "bid_type": null,
+          "bid_date_precise": "2014-08-27",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": "Target excluded Industry Participant from the sale process for antitrust / due-diligence / process-disruption concerns.",
+          "comments": null,
+          "source_quote": "On August 27, 2014, representatives of Industry Participant contacted by telephone the representative of J.P. Morgan. During this call, the Industry Participant representatives stated that Industry Participant would have interest in discussing the possibility of a combination of the two companies. The J.P. Morgan representative reiterated the concerns identified by the board that engaging with Industry Participant was unlikely to maximize value for PetSmart\u2019s stockholders. The J.P. Morgan representative stated that Industry Participant would not be invited into the exploratory process, but that if Industry Participant were to wish to submit a proposal or other communication to the Company, the board would consider it. There has been no contact between PetSmart and Industry Participant (or between any of their respective representatives) since August 27, 2014.",
+          "source_page": 30,
+          "flags": []
+        }
+      ],
+      "alex_rows": [
+        {
+          "BidderID": 37,
+          "process_phase": null,
+          "role": "bidder",
+          "bidder_name": "bidder_03",
+          "bidder_alias": "Unnamed party 2",
+          "bidder_type": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          },
+          "bid_note": "DropTarget",
+          "bid_type": null,
+          "bid_date_precise": null,
+          "bid_date_rough": "2014-11-03 00:00:00",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": null,
+          "comments": null,
+          "flags": []
+        },
+        {
+          "BidderID": 38,
+          "process_phase": null,
+          "role": "bidder",
+          "bidder_name": "bidder_04",
+          "bidder_alias": "Unnamed party 3",
+          "bidder_type": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          },
+          "bid_note": "DropTarget",
+          "bid_type": null,
+          "bid_date_precise": null,
+          "bid_date_rough": "2014-11-03 00:00:00",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": null,
+          "comments": null,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "J.P. Morgan",
+        "bid_note": "IB"
+      },
+      "ai_date": "2014-07-15",
+      "alex_date": null,
+      "ai_BidderID": 4,
+      "alex_BidderID": 5
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Target Sale Public"
+      },
+      "ai_date": "2014-08-19",
+      "alex_date": null,
+      "ai_BidderID": 7,
+      "alex_BidderID": 2
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Sale Press Release"
+      },
+      "ai_date": "2014-08-19",
+      "alex_date": null,
+      "ai_BidderID": 8,
+      "alex_BidderID": 3
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Unnamed party 1",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2014-10-05",
+      "alex_date": null,
+      "ai_BidderID": 10,
+      "alex_BidderID": 6
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Unnamed party 2",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2014-10-05",
+      "alex_date": null,
+      "ai_BidderID": 11,
+      "alex_BidderID": 7
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Unnamed party 3",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2014-10-05",
+      "alex_date": null,
+      "ai_BidderID": 12,
+      "alex_BidderID": 8
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Unnamed party 4",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2014-10-05",
+      "alex_date": null,
+      "ai_BidderID": 13,
+      "alex_BidderID": 9
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Buyer Group",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2014-10-05",
+      "alex_date": null,
+      "ai_BidderID": 14,
+      "alex_BidderID": 20
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Bidder 2",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2014-10-05",
+      "alex_date": null,
+      "ai_BidderID": 15,
+      "alex_BidderID": 19
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Unnamed party 7",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2014-10-05",
+      "alex_date": null,
+      "ai_BidderID": 16,
+      "alex_BidderID": 12
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Unnamed party 8",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2014-10-05",
+      "alex_date": null,
+      "ai_BidderID": 17,
+      "alex_BidderID": 13
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Unnamed party 9",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2014-10-05",
+      "alex_date": null,
+      "ai_BidderID": 18,
+      "alex_BidderID": 14
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Unnamed party 10",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2014-10-05",
+      "alex_date": null,
+      "ai_BidderID": 19,
+      "alex_BidderID": 15
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Unnamed party 11",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2014-10-05",
+      "alex_date": null,
+      "ai_BidderID": 20,
+      "alex_BidderID": 16
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Unnamed party 12",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2014-10-05",
+      "alex_date": null,
+      "ai_BidderID": 21,
+      "alex_BidderID": 17
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Final Round Inf Ann"
+      },
+      "ai_date": "2014-10-15",
+      "alex_date": null,
+      "ai_BidderID": 25,
+      "alex_BidderID": 4
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Final Round Ann"
+      },
+      "ai_date": "2014-11-03",
+      "alex_date": null,
+      "ai_BidderID": 42,
+      "alex_BidderID": 21
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Final Round Ext Ann"
+      },
+      "ai_date": "2014-12-10",
+      "alex_date": null,
+      "ai_BidderID": 45,
+      "alex_BidderID": 40
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Final Round"
+      },
+      "ai_date": "2014-12-10",
+      "alex_date": null,
+      "ai_BidderID": 51,
+      "alex_BidderID": 43
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Final Round Ext"
+      },
+      "ai_date": "2014-12-12",
+      "alex_date": null,
+      "ai_BidderID": 55,
+      "alex_BidderID": 50
+    }
+  ],
+  "alex_flagged_hits": [],
+  "notes": []
+}

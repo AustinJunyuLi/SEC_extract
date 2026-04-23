@@ -1,0 +1,1585 @@
+{
+  "deal": {
+    "slug": "penford",
+    "TargetName": "PENFORD CORP",
+    "Acquirer": "INGREDION INC",
+    "DateAnnounced": "2014-10-15",
+    "DateEffective": null,
+    "FormType": "DEFM14A",
+    "URL": "https://www.sec.gov/Archives/edgar/data/739608/0001193125-14-455030-index.htm",
+    "auction": true,
+    "all_cash": true,
+    "target_legal_counsel": "Perkins Coie LLP",
+    "acquirer_legal_counsel": "Sidley Austin LLP",
+    "go_shop_days": null,
+    "termination_fee": null,
+    "termination_fee_pct": null,
+    "reverse_termination_fee": null,
+    "bidder_registry": {
+      "bidder_01": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "2007 unsolicited party"
+        ],
+        "first_appearance_row_index": 1
+      },
+      "bidder_02": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "2009 unsolicited party"
+        ],
+        "first_appearance_row_index": 3
+      },
+      "bidder_03": {
+        "resolved_name": "Ingredion Incorporated",
+        "aliases_observed": [
+          "Ingredion"
+        ],
+        "first_appearance_row_index": 5
+      },
+      "bidder_04": {
+        "resolved_name": "Deutsche Bank",
+        "aliases_observed": [
+          "Deutsche Bank"
+        ],
+        "first_appearance_row_index": 7
+      },
+      "bidder_05": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Party A"
+        ],
+        "first_appearance_row_index": 8
+      },
+      "bidder_06": {
+        "resolved_name": "J.P. Morgan Securities",
+        "aliases_observed": [
+          "J.P. Morgan Securities"
+        ],
+        "first_appearance_row_index": 12
+      },
+      "bidder_07": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Party B"
+        ],
+        "first_appearance_row_index": 14
+      },
+      "bidder_08": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Party C"
+        ],
+        "first_appearance_row_index": 16
+      },
+      "bidder_09": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Party D"
+        ],
+        "first_appearance_row_index": 17
+      },
+      "bidder_10": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Party F"
+        ],
+        "first_appearance_row_index": 22
+      }
+    },
+    "deal_flags": [
+      {
+        "code": "unsolicited_letter_skipped",
+        "severity": "info",
+        "reason": "Party E: Deutsche Bank left multiple voicemails on/after 9/12/2014; Party E never responded. No NDA, no price, no bid intent. Skipped per \u00a7M1. Quote on p34: 'Deutsche Bank left a voicemail for another strategic counterparty (referred to as Party E)...received no response.'"
+      },
+      {
+        "code": "unsolicited_letter_skipped",
+        "severity": "info",
+        "reason": "Party G: On 9/24/2014 board decided NOT to contact Party G. Never contacted, no engagement. Skipped \u2014 internal deliberation only. Quote on p35: 'The board determined that Party F should be approached regarding a potential transaction with Penford, but due to the factors noted above, Party G should not be contacted.'"
+      },
+      {
+        "code": "legal_counsel_evidence",
+        "severity": "info",
+        "reason": "target_legal_counsel 'Perkins Coie LLP' \u2014 p31: 'representatives of Perkins Coie LLP (referred to as Perkins Coie), Penford\u2019s legal counsel'. acquirer_legal_counsel 'Sidley Austin LLP' \u2014 p37: 'Sidley Austin LLP (referred to as Sidley Austin), Ingredion\u2019s legal counsel'"
+      },
+      {
+        "code": "stale_prior_phase0",
+        "severity": "info",
+        "reason": "Two stale-prior NDAs (2007 and 2009) emitted with process_phase=0 per \u00a7L2; each ended without offers. No \u00a7M4 revival needed \u2014 per filing, these bidders do not re-engage in the 2014 process."
+      },
+      {
+        "code": "all_cash_evidence",
+        "severity": "info",
+        "reason": "all_cash=true. Evidence on p39: 'receipt of $19.00 in cash per share of our common stock'"
+      }
+    ]
+  },
+  "events": [
+    {
+      "process_phase": 0,
+      "role": "bidder",
+      "bidder_name": "bidder_01",
+      "bidder_alias": "2007 unsolicited party",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2007-07-01",
+      "bid_date_rough": "2007",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "date_inferred_from_rough",
+          "severity": "info",
+          "reason": "phrase: '2007' (year-only per \u00a7B1 -> YYYY-07-01)"
+        },
+        {
+          "code": "unnamed_count_placeholder",
+          "severity": "info",
+          "reason": "2 placeholder rows per filing: 'In 2007 and 2009...from two parties'; each signed CA separately"
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "In 2007 and 2009, the Company received unsolicited indications of interest to acquire Penford from two parties engaged in the Company\u2019s industry. In each case, the Company entered into a confidentiality agreement and engaged in discussions and exchanged information with the party expressing interest. These discussions did not result in offers to acquire the Company.",
+      "source_page": 29,
+      "BidderID": 1
+    },
+    {
+      "process_phase": 0,
+      "role": "bidder",
+      "bidder_name": "bidder_01",
+      "bidder_alias": "2007 unsolicited party",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2007-07-01",
+      "bid_date_rough": "implicit drop at prior-process end: 2007",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Voluntary drop implied: discussions did not result in offers",
+      "comments": null,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "filing: 'These discussions did not result in offers to acquire the Company'; no explicit end date; anchored to 2007 year-only inference"
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "In 2007 and 2009, the Company received unsolicited indications of interest to acquire Penford from two parties engaged in the Company\u2019s industry. In each case, the Company entered into a confidentiality agreement and engaged in discussions and exchanged information with the party expressing interest. These discussions did not result in offers to acquire the Company.",
+      "source_page": 29,
+      "BidderID": 2
+    },
+    {
+      "process_phase": 0,
+      "role": "bidder",
+      "bidder_name": "bidder_02",
+      "bidder_alias": "2009 unsolicited party",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2009-07-01",
+      "bid_date_rough": "2009",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "date_inferred_from_rough",
+          "severity": "info",
+          "reason": "phrase: '2009' (year-only per \u00a7B1 -> YYYY-07-01)"
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "In 2007 and 2009, the Company received unsolicited indications of interest to acquire Penford from two parties engaged in the Company\u2019s industry. In each case, the Company entered into a confidentiality agreement and engaged in discussions and exchanged information with the party expressing interest. These discussions did not result in offers to acquire the Company.",
+      "source_page": 29,
+      "BidderID": 3
+    },
+    {
+      "process_phase": 0,
+      "role": "bidder",
+      "bidder_name": "bidder_02",
+      "bidder_alias": "2009 unsolicited party",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2009-07-01",
+      "bid_date_rough": "implicit drop at prior-process end: 2009",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Voluntary drop implied: discussions did not result in offers",
+      "comments": null,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "filing: 'These discussions did not result in offers to acquire the Company'; no explicit end date; anchored to 2009 year-only inference"
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "In 2007 and 2009, the Company received unsolicited indications of interest to acquire Penford from two parties engaged in the Company\u2019s industry. In each case, the Company entered into a confidentiality agreement and engaged in discussions and exchanged information with the party expressing interest. These discussions did not result in offers to acquire the Company.",
+      "source_page": 29,
+      "BidderID": 4
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Ingredion",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Bidder Interest",
+      "bid_type": null,
+      "bid_date_precise": "2014-07-17",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "resolved_name_not_observed",
+          "severity": "soft",
+          "reason": "\u00a7P-R5/\u00a7E4: resolved_name='Ingredion Incorporated' for 'bidder_03' not in aliases_observed=['Ingredion']"
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "On July 17, 2014, Mr. Malkoski and Ms. Gordon met for lunch, during which meeting Ms. Gordon advised Mr. Malkoski of Ingredion\u2019s interest in acquiring Penford.",
+      "source_page": 30,
+      "BidderID": 5
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Ingredion",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2014-07-20",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Secrecy Agreement; precursor to 8/21 full NDA+standstill that superseded it",
+      "comments": null,
+      "flags": [
+        {
+          "code": "resolved_name_not_observed",
+          "severity": "soft",
+          "reason": "\u00a7P-R5/\u00a7E4: resolved_name='Ingredion Incorporated' for 'bidder_03' not in aliases_observed=['Ingredion']"
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "Subsequently, Penford and Ingredion executed a Secrecy Agreement, effective as of July 20, 2014, providing for limited exchange of confidential information and obligating the companies to keep their discussions confidential in order to facilitate the providing of confidential information of Penford to Ingredion.",
+      "source_page": 30,
+      "BidderID": 6
+    },
+    {
+      "process_phase": 1,
+      "role": "advisor_financial",
+      "bidder_name": "bidder_04",
+      "bidder_alias": "Deutsche Bank",
+      "bidder_type": null,
+      "bid_note": "IB",
+      "bid_type": null,
+      "bid_date_precise": "2014-07-24",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Executive Committee directed retention 7/24; engagement letter executed 2014-09-11",
+      "comments": null,
+      "flags": [],
+      "joint_bidder_members": null,
+      "source_quote": "Following discussion of potential financial advisors, the Executive Committee directed management to proceed to retain Deutsche Bank as the Company\u2019s financial advisor and to advise on shareholder matters and to evaluate strategic alternatives, and directed management to negotiate a suitable engagement letter. An engagement letter with Deutsche Bank was executed on September 11, 2014.",
+      "source_page": 31,
+      "BidderID": 7
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_05",
+      "bidder_alias": "Party A",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Bidder Interest",
+      "bid_type": null,
+      "bid_date_precise": "2014-08-01",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Party A's representative sent email requesting a call; purpose not disclosed",
+      "comments": null,
+      "flags": [],
+      "joint_bidder_members": null,
+      "source_quote": "On August 1, 2014, a representative acting on behalf of a company in the industry (referred to as Party A) sent Mr. Malkoski an email asking for a call. On August 4, 2014, Mr. Malkoski and the representative acting on behalf of Party A discussed scheduling a meeting with the Chief Executive Officer of Party A for August 11, 2014. Party A\u2019s representative did not indicate the purpose of the meeting.",
+      "source_page": 31,
+      "BidderID": 8
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Ingredion",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2014-08-06",
+      "bid_date_rough": null,
+      "bid_value": 17.0,
+      "bid_value_pershare": 17.0,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": 17.0,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Verbal proposal at meeting; Mr. Fortnum indicated Ingredion was prepared to submit",
+      "comments": null,
+      "flags": [
+        {
+          "code": "bid_type_inference_note",
+          "severity": "info",
+          "reason": "informal per \u00a7G1: verbal price suggestion; no commitment letter, no process letter, no merger agreement markup"
+        },
+        {
+          "code": "resolved_name_not_observed",
+          "severity": "soft",
+          "reason": "\u00a7P-R5/\u00a7E4: resolved_name='Ingredion Incorporated' for 'bidder_03' not in aliases_observed=['Ingredion']"
+        },
+        {
+          "code": "bid_type_unsupported",
+          "severity": "hard",
+          "reason": "\u00a7P-G2: bid_type='informal' lacks both a true range (lower<upper) and a non-empty \u2264300-char bid_type_inference_note."
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "On August 6, 2014, Mr. Malkoski met with Mr. Fortnum, at which meeting Mr. Fortnum indicated Ingredion was prepared to submit a proposal to acquire the Company. Mr. Fortnum suggested that a price of $17.00 per share on a fully diluted basis could likely get support from Ingredion\u2019s board.",
+      "source_page": 31,
+      "BidderID": 9
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Ingredion",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2014-08-10",
+      "bid_date_rough": null,
+      "bid_value": 18.0,
+      "bid_value_pershare": 18.0,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": 18.0,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Letter indicative valuation; 49% premium over $12.10 close on 8/8",
+      "comments": null,
+      "flags": [
+        {
+          "code": "bid_type_inference_note",
+          "severity": "info",
+          "reason": "informal per \u00a7G1: filing calls it an 'indicative valuation' (informal trigger phrase)"
+        },
+        {
+          "code": "resolved_name_not_observed",
+          "severity": "soft",
+          "reason": "\u00a7P-R5/\u00a7E4: resolved_name='Ingredion Incorporated' for 'bidder_03' not in aliases_observed=['Ingredion']"
+        },
+        {
+          "code": "bid_type_unsupported",
+          "severity": "hard",
+          "reason": "\u00a7P-G2: bid_type='informal' lacks both a true range (lower<upper) and a non-empty \u2264300-char bid_type_inference_note."
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "On August 10, 2014, Penford received a letter from Mr. Fortnum, confirming Ingredion\u2019s interest in a possible business combination between Ingredion and the Company, citing certain strategic reasons for the proposed acquisition, and providing an indicative valuation of $18.00 per share in cash for all of the outstanding capital stock of Penford on a fully diluted basis.",
+      "source_page": 31,
+      "BidderID": 10
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_05",
+      "bidder_alias": "Party A",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Bidder Interest",
+      "bid_type": null,
+      "bid_date_precise": "2014-08-11",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Party A CEO informally discussed Party A's potential interest in acquiring or combining with Penford",
+      "comments": null,
+      "flags": [],
+      "joint_bidder_members": null,
+      "source_quote": "Also on August 11, 2014, Mr. Malkoski met with the Chief Executive Officer of Party A. Mr. Malkoski and Party A\u2019s Chief Executive Officer briefly discussed the recent SEACOR Filing. Party A\u2019s Chief Executive Officer also informally discussed Party A\u2019s potential interest in acquiring or combining with Penford. Party A noted that it saw value in Penford but only at a typical takeover premium based on current trading price, due to the fact that it would base any offer price on Penford\u2019s performance over the last twelve months, instead of Penford\u2019s strategic plan and any synergies that could be realized in the future.",
+      "source_page": 32,
+      "BidderID": 11
+    },
+    {
+      "process_phase": 1,
+      "role": "advisor_financial",
+      "bidder_name": "bidder_06",
+      "bidder_alias": "J.P. Morgan Securities",
+      "bidder_type": null,
+      "bid_note": "IB",
+      "bid_type": null,
+      "bid_date_precise": "2014-08-21",
+      "bid_date_rough": "first narration: 2014-08-21 presentation",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Acquirer-side IB; filing does not narrate a retention date \u2014 anchored to first narration per \u00a7J1",
+      "comments": null,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "filing does not narrate retention date; inferred from first mention per \u00a7J1"
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "On August 21, 2014, members of Penford\u2019s management team provided a presentation to Ms. Gordon, Mr. Fortnum, and certain other members of Ingredion\u2019s senior management and representatives of J.P. Morgan Securities, Ingredion\u2019s financial advisor.",
+      "source_page": 33,
+      "BidderID": 12
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Ingredion",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2014-08-21",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Full nondisclosure+standstill agreement; superseded prior Secrecy Agreement",
+      "comments": null,
+      "flags": [
+        {
+          "code": "resolved_name_not_observed",
+          "severity": "soft",
+          "reason": "\u00a7P-R5/\u00a7E4: resolved_name='Ingredion Incorporated' for 'bidder_03' not in aliases_observed=['Ingredion']"
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "On August 20 and 21, 2014, Ingredion and Penford negotiated provisions relating to, and exchanged drafts of, a nondisclosure and standstill agreement. Penford again declined to enter into exclusive negotiations with Ingredion. On August 21, 2014, Ingredion and Penford executed a nondisclosure and standstill agreement that superseded the prior Secrecy Agreement.",
+      "source_page": 33,
+      "BidderID": 13
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_07",
+      "bidder_alias": "Party B",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Bidder Interest",
+      "bid_type": null,
+      "bid_date_precise": "2014-09-09",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Market-check counterparty; expressed interest but never signed NDA",
+      "comments": null,
+      "flags": [],
+      "joint_bidder_members": null,
+      "source_quote": "Also on September 9, 2014, another strategic counterparty contacted by Deutsche Bank (referred to as Party B) expressed interest in further discussions, and Deutsche Bank forwarded a nondisclosure and standstill agreement to proceed with additional discussions with Party B.",
+      "source_page": 34,
+      "BidderID": 14
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_05",
+      "bidder_alias": "Party A",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Bidder Interest",
+      "bid_type": null,
+      "bid_date_precise": "2014-09-09",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Re-engaged through Deutsche Bank market check; NDA forwarded",
+      "comments": null,
+      "flags": [
+        {
+          "code": "bidder_reengagement",
+          "severity": "info",
+          "reason": "Party A previously contacted Penford directly on 8/1; Deutsche Bank re-engages as part of market check"
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "On September 9, 2014, Party A expressed interest in having further discussions regarding a transaction and Deutsche Bank forwarded Party A a nondisclosure and standstill agreement.",
+      "source_page": 34,
+      "BidderID": 15
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_08",
+      "bidder_alias": "Party C",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Bidder Interest",
+      "bid_type": null,
+      "bid_date_precise": "2014-09-10",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Market-check counterparty expressed interest; NDA forwarded 9/11",
+      "comments": null,
+      "flags": [],
+      "joint_bidder_members": null,
+      "source_quote": "On September 10, 2014, a third potential strategic counterparty contacted by Deutsche Bank (referred to as Party C) expressed interest in pursuing a transaction, and Deutsche Bank forwarded Party C a nondisclosure and standstill agreement on September 11, 2014.",
+      "source_page": 34,
+      "BidderID": 16
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_09",
+      "bidder_alias": "Party D",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Bidder Interest",
+      "bid_type": null,
+      "bid_date_precise": "2014-09-11",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Market-check counterparty expressed interest; NDA forwarded",
+      "comments": null,
+      "flags": [],
+      "joint_bidder_members": null,
+      "source_quote": "On September 11, 2014, a fourth potential strategic counterparty contacted by Deutsche Bank (referred to as Party D) expressed interest, and Deutsche Bank forwarded a nondisclosure and standstill agreement to Party D.",
+      "source_page": 34,
+      "BidderID": 17
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_07",
+      "bidder_alias": "Party B",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2014-09-12",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Voluntary: 'decided not to move forward with discussions or sign a nondisclosure agreement'",
+      "comments": null,
+      "flags": [],
+      "joint_bidder_members": null,
+      "source_quote": "On September 12, 2014, Party B informed Deutsche Bank that it had decided not to move forward with discussions or sign a nondisclosure agreement with respect to a potential transaction.",
+      "source_page": 34,
+      "BidderID": 18
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_08",
+      "bidder_alias": "Party C",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2014-09-15",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [],
+      "joint_bidder_members": null,
+      "source_quote": "On September 15, 2014, Penford and Party C executed a nondisclosure and standstill agreement, which included standard confidentiality restrictions and a standstill provision that automatically expired upon the public announcement of the entering into a definitive agreement for a sale of 50% or more of the capital stock of Penford, and Penford provided Party C with information regarding Penford including, but not limited to, information regarding Penford\u2019s corporate strategy, business segments, product applications and technologies, end markets, supply chain and manufacturing facilities, historical financial performance and financial projections.",
+      "source_page": 34,
+      "BidderID": 19
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Ingredion",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2014-09-17",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": 18.25,
+      "bid_value_upper": 18.5,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Verbal update from Mr. Fortnum: 'could potentially increase' proposal to $18.25 or $18.50",
+      "comments": null,
+      "flags": [
+        {
+          "code": "bid_range",
+          "severity": "info",
+          "reason": "range bid: $18.25 to $18.50"
+        },
+        {
+          "code": "resolved_name_not_observed",
+          "severity": "soft",
+          "reason": "\u00a7P-R5/\u00a7E4: resolved_name='Ingredion Incorporated' for 'bidder_03' not in aliases_observed=['Ingredion']"
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "On September 17, 2014, Mr. Fortnum contacted Mr. Malkoski to update him on Ingredion\u2019s board meeting that was held on September 16, 2014, reporting that Ingredion\u2019s board had discussed Ingredion\u2019s strategy, including the proposed acquisition of Penford. Mr. Fortnum indicated during the conversation that Ingredion could potentially increase its proposal from $18.00 to $18.25 or $18.50 per share on a fully diluted basis.",
+      "source_page": 35,
+      "BidderID": 20
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_09",
+      "bidder_alias": "Party D",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2014-09-23",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [],
+      "joint_bidder_members": null,
+      "source_quote": "On September 23, 2014, Penford and Party D executed a nondisclosure and standstill agreement, which included standard confidentiality restrictions and a standstill provision that automatically expired upon the public announcement of the entering into a definitive agreement for a sale of 50% or more of the capital stock of Penford.",
+      "source_page": 35,
+      "BidderID": 21
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_10",
+      "bidder_alias": "Party F",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Bidder Interest",
+      "bid_type": null,
+      "bid_date_precise": "2014-09-24",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Market-check counterparty contacted by Deutsche Bank; never signed NDA",
+      "comments": null,
+      "flags": [],
+      "joint_bidder_members": null,
+      "source_quote": "On September 24, 2014, in accordance with the board\u2019s authorization, Deutsche Bank contacted Party F regarding a potential transaction with Penford.",
+      "source_page": 35,
+      "BidderID": 22
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_10",
+      "bidder_alias": "Party F",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2014-09-29",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Voluntary: 'combination...was not a suitable strategic fit and declined to pursue further discussions'",
+      "comments": null,
+      "flags": [],
+      "joint_bidder_members": null,
+      "source_quote": "On September 29, 2014, Party F communicated to Deutsche Bank that a combination with Penford was not a suitable strategic fit and declined to pursue further discussions regarding a transaction.",
+      "source_page": 36,
+      "BidderID": 23
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_05",
+      "bidder_alias": "Party A",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2014-09-30",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [],
+      "joint_bidder_members": null,
+      "source_quote": "On September 30, 2014, Penford and Party A executed a nondisclosure and standstill agreement, which included standard confidentiality restrictions and a standstill provision that automatically expired upon the public announcement of the entering into a definitive agreement for a sale of 50% or more of the capital stock of Penford, and Deutsche Bank provided Party A with information regarding Penford\u2019s operations, business segments, product applications and technologies, end markets, key leadership, supply chain and manufacturing facilities, historical financial performance and financial projections.",
+      "source_page": 36,
+      "BidderID": 24
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Ingredion",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2014-10-02",
+      "bid_date_rough": null,
+      "bid_value": 18.5,
+      "bid_value_pershare": 18.5,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": 18.5,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Verbal call; Mr. Fortnum stated Ingredion was prepared to move forward at $18.50",
+      "comments": null,
+      "flags": [
+        {
+          "code": "bid_type_inference_note",
+          "severity": "info",
+          "reason": "informal per \u00a7G1: verbal indication; no binding language or merger agreement markup"
+        },
+        {
+          "code": "resolved_name_not_observed",
+          "severity": "soft",
+          "reason": "\u00a7P-R5/\u00a7E4: resolved_name='Ingredion Incorporated' for 'bidder_03' not in aliases_observed=['Ingredion']"
+        },
+        {
+          "code": "bid_type_unsupported",
+          "severity": "hard",
+          "reason": "\u00a7P-G2: bid_type='informal' lacks both a true range (lower<upper) and a non-empty \u2264300-char bid_type_inference_note."
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "Mr. Fortnum then stated that Ingredion was prepared to move forward based on a proposed price of $18.50 per share on a fully diluted basis.",
+      "source_page": 36,
+      "BidderID": 25
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Ingredion",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2014-10-02",
+      "bid_date_rough": null,
+      "bid_value": 19.0,
+      "bid_value_pershare": 19.0,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": 19.0,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Letter received; revised indication of interest at $19.00; 49% premium over 10/1 close",
+      "comments": null,
+      "flags": [
+        {
+          "code": "bid_type_inference_note",
+          "severity": "info",
+          "reason": "informal per \u00a7G1: 'indication of interest' phrasing (informal trigger); no commitment letter, no merger agreement submission"
+        },
+        {
+          "code": "resolved_name_not_observed",
+          "severity": "soft",
+          "reason": "\u00a7P-R5/\u00a7E4: resolved_name='Ingredion Incorporated' for 'bidder_03' not in aliases_observed=['Ingredion']"
+        },
+        {
+          "code": "bid_type_unsupported",
+          "severity": "hard",
+          "reason": "\u00a7P-G2: bid_type='informal' lacks both a true range (lower<upper) and a non-empty \u2264300-char bid_type_inference_note."
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "On October 2, 2014, Penford received a letter from Ingredion regarding its indication of interest and increasing the proposed price to $19.00 per share of outstanding Penford capital stock on a fully diluted basis.",
+      "source_page": 36,
+      "BidderID": 26
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Final Round Ann",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-03",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Implicit final round: board directed management to proceed to negotiate and finalize a definitive agreement with Ingredion (single-bidder endgame)",
+      "comments": null,
+      "flags": [
+        {
+          "code": "final_round_inferred",
+          "severity": "info",
+          "reason": "no explicit 'final round' phrase; inferred from board directive to finalize definitive agreement with Ingredion"
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "After further discussion, with input from Deutsche Bank, the directors present at the board meeting unanimously directed management to proceed to negotiate and finalize a definitive agreement with Ingredion.",
+      "source_page": 37,
+      "BidderID": 27
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_05",
+      "bidder_alias": "Party A",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2014-10-04",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": 17.5,
+      "bid_value_upper": 18.0,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Range indication: 'any offer would be below $17.50 - $18.00 per share in cash'; Deutsche Bank encouraged letter-of-interest",
+      "comments": null,
+      "flags": [
+        {
+          "code": "bid_range",
+          "severity": "info",
+          "reason": "range bid: $17.50 to $18.00"
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "On October 4, Deutsche Bank followed up with Party A regarding the potential transaction with Penford, pursuant to which Party A indicated any offer would be below $17.50 - $18.00 per share in cash. Deutsche Bank encouraged Party A to submit a letter of interest that could be reviewed by the board of directors.",
+      "source_page": 37,
+      "BidderID": 28
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Ingredion",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Bid",
+      "bid_type": "formal",
+      "bid_date_precise": "2014-10-08",
+      "bid_date_rough": null,
+      "bid_value": 19.0,
+      "bid_value_pershare": 19.0,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": 19.0,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Sidley Austin circulated revised draft merger agreement (price $19 from 10/2 letter); merger agreement markup per \u00a7G1",
+      "comments": null,
+      "flags": [
+        {
+          "code": "bid_type_inference_note",
+          "severity": "info",
+          "reason": "formal per \u00a7G1: revised draft merger agreement circulated (merger agreement markup trigger)"
+        },
+        {
+          "code": "resolved_name_not_observed",
+          "severity": "soft",
+          "reason": "\u00a7P-R5/\u00a7E4: resolved_name='Ingredion Incorporated' for 'bidder_03' not in aliases_observed=['Ingredion']"
+        },
+        {
+          "code": "bid_type_unsupported",
+          "severity": "hard",
+          "reason": "\u00a7P-G2: bid_type='formal' lacks both a true range (lower<upper) and a non-empty \u2264300-char bid_type_inference_note."
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "On October 8, 2014, Sidley Austin circulated a revised draft of the merger agreement to Perkins Coie.",
+      "source_page": 37,
+      "BidderID": 29
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_09",
+      "bidder_alias": "Party D",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-08",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Voluntary: 'did not intend to move forward with discussions regarding a potential transaction'",
+      "comments": null,
+      "flags": [],
+      "joint_bidder_members": null,
+      "source_quote": "Also on October 8, 2014, Deutsche Bank met with representatives from Party D, who indicated that it did not intend to move forward with discussions regarding a potential transaction involving the Company.",
+      "source_page": 37,
+      "BidderID": 30
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_05",
+      "bidder_alias": "Party A",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2014-10-13",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": 16.0,
+      "bid_value_upper": 18.0,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Value range reduced from $17.50-$18.00 to $16.00-$18.00 due to increased market volatility",
+      "comments": null,
+      "flags": [
+        {
+          "code": "bid_range",
+          "severity": "info",
+          "reason": "range bid: $16.00 to $18.00"
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "On October 13, 2014, Deutsche Bank had a discussion with representatives of Party A, who indicated that its value range for a potential transaction had been reduced from $17.50 - $18.00 per share to $16.00 - $18.00 per share, due to increased volatility in the markets.",
+      "source_page": 38,
+      "BidderID": 31
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_05",
+      "bidder_alias": "Party A",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2014-10-14",
+      "bid_date_rough": null,
+      "bid_value": 16.0,
+      "bid_value_pershare": 16.0,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": 16.0,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Formal letter delivered but content is 'indication of interest' at $16 (informal per \u00a7G1)",
+      "comments": null,
+      "flags": [
+        {
+          "code": "bid_type_inference_note",
+          "severity": "info",
+          "reason": "informal per \u00a7G1 despite 'formal letter' wording: content is non-binding 'indication of interest'; no merger agreement markup, no binding language, no commitment letters"
+        },
+        {
+          "code": "bid_type_unsupported",
+          "severity": "hard",
+          "reason": "\u00a7P-G2: bid_type='informal' lacks both a true range (lower<upper) and a non-empty \u2264300-char bid_type_inference_note."
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "Later on October 14, 2014, Party A provided a formal letter with its indication of interest with respect to an acquisition of the Company at a price of $16.00 per share, citing increased volatility in the markets as the reason for the decrease in the offer price.",
+      "source_page": 38,
+      "BidderID": 32
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_05",
+      "bidder_alias": "Party A",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "DropBelowInf",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-14",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Target-initiated: Party A's lower indication of value reported at board; board approved Ingredion transaction instead",
+      "comments": null,
+      "flags": [],
+      "joint_bidder_members": null,
+      "source_quote": "Deutsche Bank reported that as part of the market check process, it had contacted a total of six potential counterparties, two of which declined to enter into nondisclosure agreements, one of which never returned Deutsche Bank\u2019s voicemail regarding a potential transaction and the remaining three of which either did not move forward in a timely manner or made a lower indication of value.",
+      "source_page": 38,
+      "BidderID": 33
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_08",
+      "bidder_alias": "Party C",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "DropBelowInf",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-14",
+      "bid_date_rough": "implicit drop at 10/14 market-check recap",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Implicit target-initiated drop: Party C signed NDA 9/15, received presentation 9/25, but never submitted bid; among 'remaining three... either did not move forward in a timely manner or made a lower indication of value'",
+      "comments": null,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Party C's implicit drop not explicitly narrated; anchored to 10/14 board meeting when Deutsche Bank reported market-check outcome"
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": "Deutsche Bank reported that as part of the market check process, it had contacted a total of six potential counterparties, two of which declined to enter into nondisclosure agreements, one of which never returned Deutsche Bank\u2019s voicemail regarding a potential transaction and the remaining three of which either did not move forward in a timely manner or made a lower indication of value.",
+      "source_page": 38,
+      "BidderID": 34
+    },
+    {
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Ingredion",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Executed",
+      "bid_type": null,
+      "bid_date_precise": "2014-10-14",
+      "bid_date_rough": null,
+      "bid_value": 19.0,
+      "bid_value_pershare": 19.0,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": 19.0,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Merger agreement executed evening of 10/14; press releases 10/15 (folded into this row per 'no separate Sale Press Release' rule)",
+      "comments": null,
+      "flags": [
+        {
+          "code": "resolved_name_not_observed",
+          "severity": "soft",
+          "reason": "\u00a7P-R5/\u00a7E4: resolved_name='Ingredion Incorporated' for 'bidder_03' not in aliases_observed=['Ingredion']"
+        }
+      ],
+      "joint_bidder_members": null,
+      "source_quote": [
+        "Believing they were fully informed, on October 14, 2014, the Penford board unanimously determined that the merger agreement, the voting and support agreement, the merger and other transactions contemplated thereby were in the best interest of Penford and its shareholders and approved the merger agreement and the merger and recommended approval of the merger agreement to Penford\u2019s shareholders.",
+        "During the evening on October 14, 2014, Penford and Ingredion finalized and executed the merger agreement, and Penford, Ingredion and SEACOR executed the voting and support agreement. Penford and Ingredion issued press releases announcing the transaction on October 15, 2014 prior to the opening of trading."
+      ],
+      "source_page": [
+        39,
+        39
+      ],
+      "BidderID": 35
+    }
+  ]
+}

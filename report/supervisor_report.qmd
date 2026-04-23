@@ -1,0 +1,531 @@
+---
+title: "Standalone Review of `bids_try`, `bids_pipeline`, and the Reference Workbook"
+subtitle: "Design philosophy, rule structure, current status, and review guide for Alex Gorbenko"
+author: "Austin Li"
+date: "2026-04-21"
+toc: true
+toc-depth: 3
+number-sections: true
+format:
+  html:
+    css: styles/supervisor-report.css
+    embed-resources: true
+    include-in-header:
+      text: |
+        <link rel="icon" href="data:,">
+    toc-location: right
+    page-layout: article
+    fig-cap-location: bottom
+    code-fold: false
+    anchor-sections: true
+---
+
+::: {.source-note}
+**What this report is.** This is a standalone report for Alex Gorbenko. It is meant to explain how the current extraction system works, where its design helps, where it breaks down, how Alex can review and shape it, and how it differs from the older `bids_pipeline` system and from the workbook-derived reference set.
+
+**What this report is not.** It is not a ranking memo between the two pipelines. It does not treat the workbook as an oracle. It does not reopen past adjudications except to explain what kinds of disagreements exist.
+
+**Source boundary.** Current-state claims in this report come from live files in `bids_try`, mainly `AGENTS.md`, `SKILL.md`, `pipeline.py`, `run.py`, `rules/*.md`, `state/progress.json`, and `output/extractions/*.json`. Historical comparison material is labeled as dated when it comes from `quality_reports/comparisons/2026-04-21_three-way/*` and `quality_reports/adjudication/2026-04-21_rerun/*`. The `bids_pipeline` design description relies mainly on `/Users/austinli/Projects/bids_pipeline/README.md`, `CLAUDE.md`, and `docs/refactor/*`; its `reports/supervisor/pipeline_review_2026-04-17.qmd` is treated as a dated explanatory snapshot.
+:::
+
+:::: {.summary-grid}
+::: {.summary-card}
+<span class="eyebrow">Reference Set</span>
+<span class="metric">9 deals</span>
+Current calibration set used before any expansion to the remaining target deals.
+:::
+
+::: {.summary-card}
+<span class="eyebrow">Live Status</span>
+<span class="metric">8 passed / 1 validated</span>
+As of April 21, 2026, none of the 9 reference deals is yet marked <code>verified</code>.
+:::
+
+::: {.summary-card}
+<span class="eyebrow">Current Gate</span>
+<span class="metric">Closed</span>
+The 392-deal expansion gate remains closed until manual reference-set verification and stability conditions are met.
+:::
+
+::: {.summary-card}
+<span class="eyebrow">Live Flag Picture</span>
+<span class="metric">6 hard / 147 soft / 258 info</span>
+All current hard flags are concentrated in <code>penford</code>; most other warnings are review cues rather than immediate blockers.
+:::
+::::
+
+The central design choice in `bids_try` is simple: the SEC filing is treated as the only ground truth, and every extracted row must stay close enough to the filing that a human can check it quickly. That choice gives strong auditability, but it also means some difficult interpretation problems are left visible rather than silently repaired in code.
+
+# How To Read This Report
+
+Three different objects are being compared throughout this project.
+
+1. The **SEC filing** is the only primary source. It is the record of what happened.
+2. **Alex's workbook** is an expert reference set. It is valuable, but it is not assumed to be perfect.
+3. The machine-readable **reference JSONs** in `reference/alex/*.json` are workbook-derived comparison files. They are not literal workbook dumps, because `scripts/build_reference.py` already applies some converter-side adjustments.
+
+That distinction matters because a disagreement can come from several places:
+
+- the extraction may be wrong
+- the workbook may be wrong
+- the converter from workbook to JSON may have distorted something
+- the filing may support more than one reasonable interpretation under the current rulebook
+
+The dated three-way comparison material and the dated rerun adjudication material are still useful, but they serve different purposes.
+
+- The dated three-way comparison snapshot is best read as a map of **difference patterns** across `bids_try`, `bids_pipeline`, and the workbook-derived reference set.
+- The dated rerun adjudication snapshot is best read as a map of **remaining clean-up work** inside `bids_try`.
+- The live progress ledger in `state/progress.json` is the current source of truth for status.
+
+# Current Position Of `bids_try`
+
+`bids_try` is in Stage 3 of the project: build the extraction system, run it on the 9 reference deals, compare it against Alex's reference codings, and manually adjudicate every meaningful disagreement against the filing.
+
+The system also extracts first and filters later. It does not refuse to read a deal just because auction status is uncertain at the start. Instead, it extracts the filing and then sets the deal-level `auction` field from the evidence that was found.
+
+The current live status on April 21, 2026 is:
+
+- `passed`: `medivation`, `imprivata`, `zep`, `providence-worcester`, `mac-gray`, `petsmart-inc`, `stec`, `saks`
+- `validated`: `penford`
+- `verified`: none
+
+In the live status taxonomy, `passed` does **not** mean manually confirmed correct. It only means the latest saved extraction has no hard validator failures. Austin's manual filing review is still required before a deal can be called `verified`.
+
+![Live reference-set statuses from `state/progress.json`. The figure is current-state evidence, not a historical snapshot.](figures/live_reference_status.png)
+
+The live warning picture also shows what kinds of uncertainty the current design still surfaces most often.
+
+| Live warning family | Count | Plain-language meaning | Typical interpretation |
+|---|---:|---|---|
+| `date_inferred_from_context` | 64 | The filing gives enough context to infer a date, but not as a neat stated date | Often acceptable, but should stay visible |
+| `date_range_collapsed` | 56 | A date range had to be reduced to one anchor date under the rulebook | Usually a rule-driven simplification, not a defect |
+| `date_inferred_from_rough` | 40 | A phrase like "mid-July" was mapped to a calendar date | Expected under the rough-date rules |
+| `nda_without_bid_or_drop` | 39 | A bidder signed an NDA and then largely vanished from the narrative | Sometimes a real miss, sometimes genuine filing silence |
+| `unnamed_count_placeholder` | 38 | The filing states a count of unnamed parties, so placeholders were created | Structural transparency, but also row inflation |
+| `bid_range` | 29 | A bid was represented as a range rather than a single point | Usually correct behavior under the bid-value rules |
+
+![Live flag counts by code family from the current extraction payloads. This is current-state evidence from `output/extractions/*.json`.](figures/live_flag_codes.png)
+
+::: {.callout-important title="Question For Alex"}
+The rerun adjudication flagged five of the nine workbook-derived reference JSONs as needing refresh against filing-truth — `medivation`, `providence-worcester`, `mac-gray`, `petsmart-inc`, and `saks` each contain confirmed workbook or converter defects that the current extraction is correcting. Should the reference JSONs be regenerated so the diff harness stops surfacing known-stale reference rows, or should the workbook side stay frozen so that AI-vs-workbook divergences keep forcing filing-level adjudication?
+:::
+
+# `bids_try` Design Philosophy
+
+`bids_try` was designed around six principles. Each one solves a real problem, and each one creates a predictable cost.
+
+| Principle | What it is trying to accomplish | What it buys | What it costs |
+|---|---|---|---|
+| Filing over workbook | Treat the SEC filing as the only ground truth | Makes disagreements useful rather than embarrassing | Requires manual adjudication whenever the workbook and the filing diverge |
+| Explicit written rulebook | Put substantive decisions in `rules/*.md`, not in memory or chat | Makes the system explainable and reviewable | Rule changes are slower and more visible |
+| Row-level citation | Require `source_quote` and `source_page` on every row | Makes fast human checking possible | Raises technical issues around page boundaries and quote normalization |
+| Deterministic checking | Use Python to check structure, dates, vocabulary, and invariants | Makes failures reproducible and cheap to rerun | The validator flags problems but does not repair them |
+| Fresh context per deal | Run each deal without cross-deal model memory | Reduces contamination from earlier deals | The system cannot rely on remembered aliases or recurring fixes across deals |
+| Manual adjudication of ambiguity | Keep human judgment for hard semantic disputes | Preserves accountable research judgment | Slows convergence and keeps some uncertainty explicit |
+
+The design can be stated even more plainly:
+
+- the model is asked to read the filing and state what it sees
+- Python checks whether the output obeys the agreed structure
+- human review settles the disagreements that structure alone cannot settle
+
+That is a deliberate contrast with systems that automatically standardize and repair output until it fits a house format.
+
+# `bids_try` Workflow, Step By Step
+
+The live architecture described in `AGENTS.md` and `SKILL.md` has three active actors: an LLM extractor, a Python validator, and a scoped adjudication step for soft warnings. The older idea of a separate LLM validator is no longer the live design.
+
+## The workflow in plain language
+
+1. One deal is opened in a fresh model session.
+2. The extractor reads the filing plus the written rules and emits a JSON event history.
+3. Before validation, Python applies only narrow mechanical cleanup such as canonical event ordering and fresh `BidderID` assignment. It does not rewrite the substantive event history.
+4. Python checks that output against the schema and rulebook invariants.
+5. If only soft semantic warnings remain, a small adjudication step can inspect those warnings in context.
+6. The finalized extraction is saved to `output/extractions/{slug}.json`.
+7. The status ledger is updated in `state/progress.json`.
+8. If the deal is one of the 9 references, the extraction is compared against the workbook-derived reference JSON and Austin reviews the differences against the filing.
+
+## Who owns which decisions
+
+| Part of the workflow | Main owner | What that owner actually decides |
+|---|---|---|
+| Reading the filing and proposing rows | LLM extractor | What events exist, how rows are phrased, how evidence is attached, how rule-guided labels are applied in context |
+| Structural validation | Python validator | Whether required fields exist, whether dates and `BidderID` sequencing obey the rules, whether the event vocabulary is allowed, whether evidence fields are present, and which flags should be raised |
+| Finalizing output and updating state | Python | Writing the extraction file, appending flags, and updating the progress ledger |
+| Resolving soft semantic ambiguity | Scoped adjudicator plus Austin | Whether a soft warning looks like a true miss or filing silence, and whether a disagreement reflects an extractor issue, a workbook issue, or a judgment call |
+| Final research acceptance | Austin | Whether a reference deal is manually verified against the filing and whether the rulebook should change |
+
+## Why this split matters
+
+This split encodes a philosophy about trust.
+
+- The model is trusted to read prose and map it into a structured timeline.
+- Python is trusted to check mechanical consistency.
+- Austin is trusted to settle research judgments that remain ambiguous after both earlier steps.
+
+That separation is strict enough that the validator does **not** silently rewrite the extractor's rows. If the model misses something important, the system chooses to surface that miss as a flag or a later adjudication issue instead of repairing it invisibly.
+
+There is also an important implementation risk worth noting plainly. Some parts of the architecture live more in project convention than in one fully centralized code path. The adjudication step is described in the live design contract, but it is not a single Python entrypoint inside `pipeline.py`. That means process discipline currently depends partly on the outer orchestration following the documented workflow correctly.
+
+# `bids_try` Rule Families, In Plain Language
+
+The live rulebook is spread across `rules/schema.md`, `rules/events.md`, `rules/bidders.md`, `rules/bids.md`, `rules/dates.md`, and `rules/invariants.md`. The table below groups those rules by purpose.
+
+| Rule family | Current rule choice | Who mainly owns it | Benefit | Main friction point |
+|---|---|---|---|---|
+| Evidence on every row | Every row must include a page number and supporting quote | Extractor for first pass; Python for enforcement | Strong audit trail | Quote matching can fail on page splits or punctuation normalization |
+| Closed event vocabulary | `bid_note` values come from a fixed list rather than free text | Rulebook + Python validator | Easier comparison and cleaner downstream use | Some filing events fit imperfectly into the closed list |
+| Date anchoring | Rough phrases such as "mid-July" are mapped deterministically; incoming letters use receipt date, outgoing letters use sent date | Rulebook + extractor; Python checks consistency | Fewer arbitrary date choices | Some dates feel more precise in the workbook than the filing truly supports |
+| `BidderID` sequencing | `BidderID` is a row-sequence device, not a permanent bidder identity | Rulebook + Python | Dense, rule-driven ordering | Counterintuitive for readers who expect one bidder to have one identifier |
+| Bid value surface | Point bids, ranges, and single-bound bids are represented differently and explicitly | Extractor under `rules/bids.md`; Python checks evidence | Better separation between exact price and range language | More verbose than workbook-style duplicate point values |
+| Formal vs informal | The extractor applies rule triggers and records an inference note when needed | Extractor first; Python checks that justification exists | Keeps legal and process context visible | Borderline formality calls still require judgment |
+| Drop and exclusion handling | Only emit a dropout when the filing supports it; do not fabricate catch-all exits | Rulebook + extractor | Keeps rows close to what the filing actually says | Some readers may want a more fully closed process table than the filing supports |
+| Unnamed-party handling | Exact counts are split into placeholder bidders when the filing gives a count | Rulebook + extractor | Preserves the stated scale of outreach | Produces many placeholder rows that never reappear individually |
+| Flags and status | Hard, soft, and info flags remain attached to the extraction; status is derived from them | Python | Keeps uncertainty visible | A clean-looking status can still hide unresolved substantive differences |
+
+::: {.callout-important title="Question For Alex"}
+Should exact numeric counts of unnamed NDA parties continue to be split into separate placeholder rows, even when the filing never identifies most of those parties later?
+:::
+
+# Where `bids_try` Helps, And Where It Breaks Down
+
+The system's strengths and weaknesses follow directly from its philosophy.
+
+## Where the design helps
+
+| Design choice | What it helps with | Concrete effect |
+|---|---|---|
+| Row-level citations | Fast manual checking against the filing | A disputed row can be checked without rereading the whole deal |
+| Explicit markdown rules | Supervisor review of actual policy choices | Alex can review a rule family directly rather than guessing what the model was told |
+| Deterministic validation | Repeatable error reporting | The same structural problem appears the same way every rerun |
+| Fresh per-deal context | Cleaner deal-specific reading | A mistake in one deal does not become an unexamined prior in the next |
+| Flag-only discipline | Visibility of uncertainty | Borderline cases remain visible rather than being silently standardized away |
+
+## Where the design breaks down
+
+| Design choice | How it breaks down | Live or dated example |
+|---|---|---|
+| Extractor-first semantic reading | Important process structure can still be missed | Dated adjudication material still identifies missing round structure in `zep` and missing concrete Penford bid events |
+| Flag-only validator | The validator can detect many problems but cannot fix them | `penford` remains `validated` because the current blocker is real and unresolved |
+| Exact-count atomization | The output becomes much larger and noisier than the workbook | Providence, Zep, and PetSmart all produce large NDA placeholder populations |
+| Formal/informal inference in the extractor | Trigger priority can be applied inconsistently | Dated comparison work flagged formality under-calls in Providence and Mac Gray |
+| Strict evidence checking | Technical quote-match problems can look like content failures | Dated PetSmart notes identify quote-normalization false positives rather than substantive mistakes |
+| Manual adjudication gate | Accuracy discipline is strong, but throughput stays slow | None of the 9 live reference deals is yet marked `verified` |
+
+Three breakdown patterns matter most for future review.
+
+1. **Process-shape misses.** The extractor can miss round markers, revived NDAs, or early-stage interest that the filing does narrate.
+2. **Judgment-policy tension.** The system often has to choose between staying close to literal filing language and producing a more closed, analyst-friendly process table.
+3. **Reference noise.** Some apparent errors are really workbook defects or workbook-to-JSON converter defects, not extraction defects.
+
+Two quieter risks deserve mention as well.
+
+- **Documentation versus code drift.** Some project documents describe a broader finalized output contract than the current Python path visibly enforces. That matters because Alex may review the documents and reasonably assume those fields are already populated in the live extraction loop.
+- **Manual duplication of rules.** The markdown rulebook and the Python validator each carry pieces of the same logic. That is practical in a small project, but it creates maintenance risk when the rulebook changes faster than the code tables.
+
+::: {.callout-important title="Question For Alex"}
+The rulebook lets the extractor infer round markers such as `Final Round Inf Ann`, `Final Round Ann`, and `Final Round Ext Ann` from process letters and submission deadlines, even when the filing never labels a "final round" explicitly. `zep`'s rerun missed the phase-1 inferred round that the filing's March 27 process letter supports; `medivation`'s rerun added `Final Round Ext` rows that are defensible but not compelled. Should the extractor err toward completeness (infer whenever the procedural triggers exist) or toward minimalism (skip unless the filing names a round)?
+:::
+
+::: {.callout-important title="Question For Alex"}
+For formal versus informal bids, should certain legal-process triggers such as a merger-agreement markup or a stated "best and final" instruction automatically dominate softer language such as "non-binding"? The rerun surfaced three live cases where the default call is contested: `imprivata`'s June 9 IOIs (equity commitment letters, labeled "non-binding"), `imprivata`'s July 9 "best and final" (labeled "non-binding"), and `mac-gray` Party B's September 18 $21.50 indication (currently under-classified as informal).
+:::
+
+# How Alex Can Participate In Development And Future Extraction
+
+Alex does not need to learn the codebase as a software engineer in order to review this system well. The most useful role is narrower: review the rule choices, inspect disagreements against the filing, and mark where the current system is too literal, too synthetic, or simply wrong.
+
+## What Alex is being asked to review
+
+- whether the rulebook matches the intended research design
+- whether the extraction rows match what the filing actually says
+- whether a disputed case reflects an extraction mistake, a workbook issue, or a genuine judgment call
+- whether the output is shaped in the right way for later research use
+
+## What Alex does not need to learn technically
+
+- Git, branches, or version control
+- Python internals in `pipeline.py`
+- JSON syntax beyond the meaning of the main fields
+- terminal commands
+- Quarto or HTML rendering
+
+## Recommended review method
+
+Claude Cowork is the best fit for most supervisor review because it can read a small, targeted file set and summarize the design choice in plain language. Claude Desktop can still help when the file set is small enough to paste or attach directly.
+
+## Workflow 1: Review one rule family
+
+Use this when the question is about policy rather than about one particular deal.
+
+1. Point Claude Cowork to `AGENTS.md`, `SKILL.md`, and the relevant file in `rules/`.
+2. Ask for a plain-language summary of the current rule, the edge cases, and the remaining judgment calls.
+3. Mark one of three outcomes: keep, change, or uncertain.
+4. Send Austin a short note that names the rule family and the exact change in plain language.
+
+Suggested prompt:
+
+```text
+Read only AGENTS.md, SKILL.md, and rules/bids.md. Explain the current rule for classifying bids as formal or informal in plain language. Identify the exact situations where the rule still leaves room for judgment. Do not suggest code changes unless the rule itself is internally inconsistent.
+```
+
+## Workflow 2: Review one design choice
+
+Use this when the issue is structural, such as placeholder rows, synthetic drops, or what counts as a blocker.
+
+1. Point Claude Cowork to `AGENTS.md`, `SKILL.md`, and the two or three files that encode the design choice.
+2. Ask for the intended purpose of the design, its practical effect, and its tradeoff.
+3. Ask whether the tradeoff matches the research need.
+4. Send Austin a sentence that states the research principle Alex wants applied, not the software implementation.
+
+Suggested prompt:
+
+```text
+Read only AGENTS.md, SKILL.md, rules/bidders.md, and rules/invariants.md. Explain why the current system turns exact counts of unnamed NDA parties into separate placeholder rows. Then explain the main costs of that choice for a human reviewer. Keep the answer nontechnical.
+```
+
+## Workflow 3: Review one deal disagreement against the filing
+
+Use this when a specific deal looks wrong or overly complex.
+
+1. Start with the deal's current extraction in `output/extractions/{deal}.json`.
+2. Compare it with `reference/alex/{deal}.json`.
+3. If needed, ask for the relevant filing pages from `data/filings/{deal}/pages.json`.
+4. Ask Claude Cowork to classify the disagreement into one of four bins: extractor issue, workbook issue, converter issue, or genuine judgment call.
+5. Send Austin the bin plus one sentence on why.
+
+Suggested prompt:
+
+```text
+Read only AGENTS.md, rules/events.md, rules/bids.md, output/extractions/penford.json, and reference/alex/penford.json. Identify the biggest substantive disagreements. For each one, say whether it looks mainly like an extraction issue, a workbook issue, a converter issue, or a genuine judgment call. Keep the answer tied to the filing logic implied by the rules.
+```
+
+## Workflow 4: Review a future extraction batch
+
+Use this later, after the reference gate is met.
+
+1. Review a small batch summary rather than isolated raw JSON first.
+2. Look for recurring warning families rather than single-row noise.
+3. Ask whether the warnings signal a rule issue, a prompt issue, or normal ambiguity in the filings.
+4. Escalate only the recurring patterns that change research meaning.
+
+Suggested prompt:
+
+```text
+Read this batch summary and explain which warning families look like research-relevant problems and which look like expected ambiguity from SEC filing language. Focus on patterns, not on isolated rows.
+```
+
+## What Alex's feedback is most useful for
+
+- naming the intended policy when two reasonable readings exist
+- deciding how literal versus how standardized the final dataset should be
+- deciding how much invisible repair is acceptable
+- deciding which kinds of disagreement should count as rule changes rather than isolated mistakes
+
+::: {.callout-important title="Question For Alex"}
+When the filing leaves silence after an NDA, should the system preserve that silence as an unresolved warning, or should it infer a likely exit row in order to produce a more closed process table?
+:::
+
+# Neutral Comparison: `bids_try` Versus `bids_pipeline`
+
+The two pipelines are not just two versions of the same design. They encode different ideas about where structure should come from.
+
+- `bids_try` is closer to a filing-cited extraction system with explicit human adjudication.
+- `bids_pipeline` is closer to a code-driven standardization and repair system that aims to convert filing prose into a cleaner canonical dataset shape.
+
+Neither philosophy is inherently self-justifying. Each solves a different problem first.
+
+## Side-by-side design comparison
+
+| Dimension | `bids_try` | `bids_pipeline` | Practical consequence |
+|---|---|---|---|
+| Primary objective | Keep each row close to filing text and reviewable | Standardize and repair output into a house format | `bids_try` is easier to audit row by row; `bids_pipeline` is easier to consume as a closed canonical table |
+| Main workflow shape | Extractor -> Python validator -> optional scoped adjudication -> manual review | Preprocess -> pass 1 extractor -> validator/QC -> conditional pass 2 -> final normalization | `bids_pipeline` has a stronger automatic repair loop; `bids_try` keeps more uncertainty visible |
+| Ownership of labels | Many semantic labels are assigned in the extraction pass under a written rulebook | More derived labels are assigned or repaired in code | `bids_pipeline` pushes more judgment into deterministic post-processing |
+| Evidence surface | Every row is expected to carry `source_quote` and `source_page` | Provenance is recorded through process logs, QC findings, repair targets, and source tags, but row-level quote/page citation is not the same central output contract | `bids_try` supports direct row checking more easily |
+| Formal vs informal classification | Extractor applies rule triggers and records an inference note when needed | Code owns the classification logic with a fixed precedence order | `bids_pipeline` is more standardized; `bids_try` is closer to direct reading but more exposed to extractor inconsistency |
+| Unnamed NDA cohorts | Split exact counts into placeholder rows and leave unresolved cases visible | Expand cohorts and then use code to route, promote, or close them | `bids_pipeline` produces a more closed process table, but also more derived structure |
+| Drop handling | Avoid synthetic catch-all drop rows unless the filing supports them | Will project or gap-fill some closure structure in code | `bids_pipeline` can look more complete, while `bids_try` stays closer to explicit filing language |
+| Bidder identifiers | Strict integer row sequence under the current rulebook | Allows decimal or inserted identifier schemes in canonical handling | The two outputs are structurally different even before substantive comparison |
+| Relationship to workbook | Workbook is a reference and a calibration aid | Canonical validated JSON is treated as the stable contract, and workbook projection is downstream | `bids_pipeline` tends to feel more workbook-shaped at the end product level, even though the workbook is not supposed to drive runtime extraction |
+| Save blocker philosophy | Missing evidence and rule violations are central blockers | Structural normalization is a core response to ambiguity | The two systems disagree on whether to preserve uncertainty or resolve it into house form |
+
+## What each system tends to do well, and in what fashion
+
+| System | What it tends to do well | How it does it | Tradeoff it accepts |
+|---|---|---|---|
+| `bids_try` | Transparent filing review | Requires row-level evidence, explicit rules, and manual adjudication of hard judgment calls | Slower convergence and more visible unresolved warnings |
+| `bids_pipeline` | Canonicalized process tables | Uses code-owned normalization, repair targets, cohort routing, and second-pass correction | More derived structure and less literal closeness to the filing surface |
+| Alex workbook / reference set | Compact research-shaped coding | Encodes expert judgment in a familiar row structure | Less visible provenance, plus legacy inconsistency and converter noise |
+
+::: {.callout-important title="Question For Alex"}
+Which design principle matters more for the final research product: maximum row-level checkability against the filing, or a more fully standardized process table even when some structure is inferred or repaired after extraction?
+:::
+
+# Comparison Against Alex's Workbook And Reference Codings
+
+This section uses a **dated** comparison slice from `quality_reports/comparisons/2026-04-21_three-way/inputs/*`. It is useful because all three systems were compared on the same date slice. It should not be confused with the earlier current-state section, which reflects the latest live `bids_try` payloads.
+
+Across that dated nine-deal slice:
+
+- workbook-derived reference set: 269 rows, 52 NDA rows, 58 drop rows
+- dated `bids_try` slice: 329 rows, 118 NDA rows, 46 drop rows
+- dated `bids_pipeline` slice: 423 rows, 105 NDA rows, 111 drop rows
+
+Those totals already reveal a deep philosophical difference.
+
+- The workbook stays compact.
+- `bids_try` expands heavily on NDA counts and keeps many placeholders visible.
+- `bids_pipeline` expands heavily on both structure and closure, especially drops.
+
+![Dated three-way comparison snapshot from April 21, 2026. This figure is historical comparison evidence, not the current live state of `bids_try`.](figures/dated_three_way_comparison.png)
+
+## Short per-deal summaries from the dated three-way slice
+
+| Deal | Alex rows | `bids_try` rows | `bids_pipeline` rows | Main pattern in plain language |
+|---|---:|---:|---:|---|
+| `medivation` | 16 | 20 | 22 | Both machine systems are fuller than the workbook; `bids_try` is still closer to a tightly cited event log |
+| `imprivata` | 29 | 26 | 34 | `bids_pipeline` keeps broader process structure; `bids_try` is more selective under skip rules |
+| `zep` | 23 | 48 | 80 | Both machine systems are much more granular than the workbook, but `bids_pipeline` is by far the most expansive |
+| `providence-worcester` | 36 | 63 | 64 | The main difference is unnamed-party atomization rather than just factual disagreement |
+| `penford` | 25 | 26 | 33 | `bids_pipeline` preserves more counterparties and exits; `bids_try` stays structurally stricter but currently misses some concrete items |
+| `mac-gray` | 34 | 45 | 65 | `bids_pipeline` closes the process more aggressively; `bids_try` remains fuller than the workbook but less synthetic |
+| `petsmart-inc` | 53 | 41 | 55 | The workbook and `bids_pipeline` are closer in count; the dated `bids_try` slice is leaner because some prehistory and round markers were still missing |
+| `stec` | 28 | 31 | 42 | Both machine systems are fuller than the workbook, with `bids_pipeline` again more expansive |
+| `saks` | 25 | 29 | 28 | Counts are relatively close; the main issue is policy difference about scope and deletion rather than raw scale |
+
+## Three kinds of disagreement
+
+### 1. Likely workbook or reference-side defect
+
+These are cases where the extraction disagreement points back to the workbook or the workbook-to-JSON converter rather than to the current extractor logic.
+
+- duplicate or inconsistent `BidderID` usage in the workbook history
+- workbook rows Alex already marked as wrong or deletable
+- converter-side loss of information such as the `public` bit during workbook-to-JSON conversion
+- workbook-derived entity names that read like provenance notes rather than filing-verbatim names
+
+### 2. Likely extraction-side defect
+
+These are cases where the filing appears to support a row or a classification that the current extraction missed or mishandled.
+
+- missing concrete bid events
+- missed round markers or revived NDAs
+- incorrect formality classification despite clear process triggers
+- missing early-stage counterparties that the filing narrates clearly enough to keep
+
+### 3. Plausible judgment call or policy difference
+
+These are cases where the disagreement reflects a different theory of what the output should look like.
+
+- whether unnamed counts should be split into placeholder rows
+- whether silence after an NDA should remain silence or become an inferred exit
+- whether the output should preserve filing literalness or close the process table more aggressively
+- how to treat borderline formal-versus-informal language
+
+# Systematic Differences Across The Two Pipelines And The Workbook
+
+| Dimension | Workbook / reference set | `bids_try` | `bids_pipeline` |
+|---|---|---|---|
+| Row granularity | Compact, often aggregated | More granular, especially on exact counts | Most granular overall, especially when code closes open cohorts |
+| Evidence visibility | Minimal in the derived JSON reference files | Central contract at the row level | Richer process metadata, but not the same row-citation contract |
+| Rule ownership | Human-coded historical practice | Written rulebook plus extractor judgment plus manual adjudication | Code-owned normalization and repair with model-assisted extraction |
+| Synthetic structure | Low | Intentionally limited | More willing to infer or project closure structure |
+| Event vocabulary | Historical legacy terms mixed in workbook history | Closed vocabulary under current rules | Canonical vocabulary plus some house-specific structure in the older system |
+| Bid value representation | Legacy workbook conventions | Explicit distinction between point, range, and single-bound bids | Canonicalized value handling oriented toward downstream standardization |
+| Bidder identifier logic | Historical spreadsheet practice | Strict integer row sequence | More flexible inserted identifier handling |
+| Output orientation | Research spreadsheet artifact | Filing-cited extraction artifact | Canonicalized dataset artifact |
+
+The most important systematic difference is not a single bug. It is the answer to a structural question:
+
+Should the system mainly **show what the filing explicitly says**, even when that leaves some open edges visible, or should it mainly **produce a closed and regularized process table**, even when that requires more derived post-processing?
+
+That is the core choice underneath most of the row-count differences, dropout differences, and formality differences.
+
+# Questions For Alex
+
+The report raises seven policy decisions that Alex's judgment would close faster than another coding pass. Each one sits at a rulebook axis rather than a specific deal, so a single answer would cascade into many future extractions. The table is a decision queue, not a recap of the inline callouts: the callouts set context in the section where each question arises, and this list gathers the tradeoff for a one-pass read.
+
+| # | Policy decision | Tradeoff in one sentence | Where this report sets up the question |
+|---|---|---|---|
+| 1 | **Reference refresh.** Regenerate the workbook-derived reference JSONs against filing-truth, or keep them frozen? | Refreshing focuses the diff harness on live issues but loses visible contact with Alex's legacy coding; freezing keeps the calibration stable but lets known-stale reference rows churn through every rerun | §*Current Position Of `bids_try`* callout; §*Comparison Against Alex's Workbook And Reference Codings* |
+| 2 | **Unnamed-NDA atomization.** Split exact counts into placeholder rows, or aggregate? | Atomization preserves stated outreach scale but inflates row counts and silence flags; aggregation is compact but hides the breadth the filing actually claims | §*`bids_try` Rule Families* callout |
+| 3 | **NDA-silence policy.** Preserve silence as a soft flag, or infer a likely exit? | Preserving silence keeps filing literalness but leaves open process threads; inferring closure produces a cleaner process table at the cost of synthetic rows | §*How Alex Can Participate* callout |
+| 4 | **Formal/informal trigger precedence.** Let procedural triggers (merger-agreement markup, "best and final", equity commitment letter) automatically dominate soft labels ("non-binding", "indication of interest")? | Trigger-dominant rules are predictable and rule out borderline soft flags; label-sensitive rules stay closer to filing wording but keep producing judgment calls | §*Where `bids_try` Helps, And Where It Breaks Down* second callout |
+| 5 | **Round-structure inference aggressiveness (§K2).** Err toward completeness or minimalism? | Completeness recovers rounds like `zep`'s phase-1 markers but can add rows the filing never labels; minimalism stays literal but under-encodes when the filing describes a round implicitly through process letters and deadlines | §*Where `bids_try` Helps, And Where It Breaks Down* first callout |
+| 6 | **Multi-activist atomization (§D1.b).** Split per activist, or collapse to one row? | Splitting captures the real second activist (Potomac in `stec`, Longview in `petsmart`) but diverges from Alex's historical single-row shorthand; collapsing matches the workbook but loses distinct activist identity | §*Comparison Against Alex's Workbook And Reference Codings*, under "three kinds of disagreement" |
+| 7 | **Design-principle primacy.** Row-level filing checkability, or closed standardized process table? | This is the meta-question underneath all six above — the other answers tend to follow from which side of this axis the research prefers | §*Neutral Comparison: `bids_try` Versus `bids_pipeline`* callout |
+
+The 392-deal expansion gate is not listed as an open question here because it is fixed project protocol in `AGENTS.md` and `CLAUDE.md` — no reference deal is yet `verified`, and the gate remains closed. The live gate status is reported in `state/progress.json`; if Alex wants to revisit the three-consecutive-unchanged-rulebook criterion itself, that is a separate protocol conversation rather than a research policy decision.
+
+# Appendix A: Short Glossary
+
+| Term | Plain-language meaning |
+|---|---|
+| Atomization | Splitting an aggregate filing statement such as "15 bidders signed NDAs" into 15 separate placeholder rows |
+| Canonicalization | Standardizing different expressions into one house format |
+| Validator | A deterministic rule checker written in Python |
+| Scoped adjudicator | A small follow-up review step used only for limited warning types |
+| Soft flag | A warning that marks uncertainty or a likely problem without failing the extraction outright |
+| Hard flag | A blocker showing that a rule violation is severe enough that the extraction is not currently acceptable |
+| Reference refresh | Updating the workbook-derived comparison files after a filing-based review shows that the older reference is stale or distorted |
+
+# Appendix B: File Map For Alex
+
+| File or folder | Why it matters |
+|---|---|
+| `AGENTS.md` | Best single overview of project purpose, stage, and ground-truth philosophy |
+| `SKILL.md` | Best live description of the current workflow and status meanings |
+| `rules/schema.md` | Output columns and scope boundaries |
+| `rules/events.md` | Event vocabulary and timeline logic |
+| `rules/bidders.md` | Bidder naming, types, and unnamed-party handling |
+| `rules/bids.md` | Bid values, formality rules, and skip rules |
+| `rules/dates.md` | Date anchoring and `BidderID` sequencing |
+| `rules/invariants.md` | What the validator checks and flags |
+| `pipeline.py` | The deterministic logic that validates and finalizes output |
+| `output/extractions/{deal}.json` | The current extraction for a deal |
+| `reference/alex/{deal}.json` | The workbook-derived comparison target for that deal |
+| `state/progress.json` | Current live status ledger |
+| `quality_reports/comparisons/2026-04-21_three-way/*` | Dated comparison evidence across the two pipelines and the workbook-derived reference set |
+| `quality_reports/adjudication/2026-04-21_rerun/*` | Dated rerun adjudication snapshot for `bids_try` |
+
+# Appendix C: Prompt Templates For Claude Cowork
+
+## Review one rule family
+
+```text
+Read only AGENTS.md, SKILL.md, and rules/[FILE]. Explain the current rule in plain language, list the edge cases, and identify the exact places where human judgment still matters. Keep the answer nontechnical.
+```
+
+## Review one design choice
+
+```text
+Read only AGENTS.md, SKILL.md, and the listed rules files. Explain the intended purpose of this design choice, what it buys, and what it costs. Do not rank the design. Just explain the tradeoff in plain language.
+```
+
+## Review one deal
+
+```text
+Read only output/extractions/[DEAL].json and reference/alex/[DEAL].json, plus the relevant rules file if needed. Identify the biggest substantive differences and classify each one as likely extraction issue, likely workbook issue, likely converter issue, or genuine judgment call.
+```
+
+## Review a comparison question
+
+```text
+Read only the relevant sections of this supervisor report plus the cited files. Summarize the design difference between bids_try and bids_pipeline in plain language. Do not choose between the systems. State the practical consequences of each design choice.
+```
+
+# Appendix D: Dated Adjudication Labels Versus Live Status
+
+The labels in `quality_reports/adjudication/2026-04-21_rerun/MASTER_RERUN.md` are useful shorthand, but they are not the live status vocabulary used by the pipeline.
+
+| Dated rerun label | What it means in plain language | Why it should not be confused with live status |
+|---|---|---|
+| `ship-ready / reference-refresh` | The extraction looked strong, but the reference side likely also needed cleanup | Not a formal status in `state/progress.json` |
+| `fix-and-rerun` | A substantive extraction issue remained | Could still coexist with a live `passed` status if no hard flags remained |
+| `blocked / fix-and-rerun` | A serious issue remained | This is conceptually close to live `validated`, but it is still a dated narrative label |
+| `targeted-fix` | Narrow issue family remained | Not a formal pipeline status |
+| `hot-fix` | One or a few rows looked wrong enough to justify immediate repair | Not a formal pipeline status |
+
+That is why this report separates current-state claims from dated historical comparisons instead of merging them into one ranking table.

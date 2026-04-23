@@ -1,0 +1,1208 @@
+{
+  "slug": "stec",
+  "matched_rows": 26,
+  "ai_only_rows": [
+    {
+      "BidderID": 1,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Target Sale",
+      "bid_type": null,
+      "bid_date_precise": "2012-11-15",
+      "bid_date_rough": "mid-November, 2012",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": null,
+      "comments": "Board authorized management to contact potential financial advisors to begin exploration of strategic alternatives including a potential sale of the company.",
+      "source_quote": "Consequently, in mid-November, 2012, our board of directors authorized management to contact potential financial advisors to explore their interest in representing the company in its exploration of strategic alternatives, including a potential sale of the company.",
+      "source_page": 32,
+      "flags": [
+        {
+          "code": "date_inferred_from_rough",
+          "severity": "info",
+          "reason": "phrase: 'mid-November, 2012'"
+        }
+      ]
+    },
+    {
+      "BidderID": 2,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_01",
+      "bidder_alias": "Balch Hill",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Activist Sale",
+      "bid_type": null,
+      "bid_date_precise": "2012-11-16",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": null,
+      "comments": "Balch Hill Partners, L.P., an activist investor in the technology sector, reported 6.4% ownership; filed first 13D on 11/16/2012; subsequently urged board to explore strategic alternatives.",
+      "source_quote": "Around this timeframe, Balch Hill Partners, L.P. (\u201cBalch Hill\u201d), an activist investor in the technology sector, reported its acquisition of 6.4% of sTec\u2019s outstanding shares. Balch Hill filed its first Schedule 13D with the SEC on November 16, 2012.",
+      "source_page": 33,
+      "flags": []
+    },
+    {
+      "BidderID": 3,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_01",
+      "bidder_alias": "Balch Hill",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Activist Sale",
+      "bid_type": null,
+      "bid_date_precise": "2012-12-06",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "13D amendment + letter to board urging strategic alternatives",
+      "comments": "Balch Hill filed a Schedule 13D amendment and issued a letter to sTec's board urging it to explore strategic alternatives.",
+      "source_quote": "Then, on December 6, 2012, Balch Hill filed an amendment to its Schedule 13D, and concurrently issued a letter to our board of directors urging our board to reduce costs, focus on products with a SAS interface, and explore strategic alternatives.",
+      "source_page": 33,
+      "flags": []
+    },
+    {
+      "BidderID": 4,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Target Sale",
+      "bid_type": null,
+      "bid_date_precise": "2013-02-13",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "special committee formally established",
+      "comments": "Board established special committee with mandate to conduct a review of sTec's strategic alternatives, including a possible sale of the company.",
+      "source_quote": "During the meeting on February 13, our board of directors established a special committee of the board, initially composed of Dr. Daly, and Messrs. Colpitts and Witte, and subsequently expanded to four members on March 26, 2013. The mandate of the special committee was to conduct a review of sTec\u2019s strategic alternatives, including a possible sale of the company, as well as the alternative of continuing as a standalone company with further reductions in our workforce and other cost reduction initiatives.",
+      "source_page": 33,
+      "flags": []
+    },
+    {
+      "BidderID": 6,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Company B",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2013-02-27",
+      "bid_date_rough": "approximately two weeks after 2013-02-13 approach",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "voluntary; Company B's management declined after review",
+      "comments": "Company B's management determined it was not interested in acquiring sTec; declined voluntarily approximately two weeks after the February 13 approach.",
+      "source_quote": "Approximately two weeks later, the President of Company B contacted Mr. Manouch Moshayedi to inform Mr. Moshayedi that he had shared sTec\u2019s information with Company B\u2019s executive management, but that Company B\u2019s management had determined that it was not interested in acquiring sTec and believed that it could independently develop the technology it needed to compete in enterprise SSDs.",
+      "source_page": 34,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "phrase: 'Approximately two weeks later' anchored on 2013-02-13 Company B approach"
+        }
+      ]
+    },
+    {
+      "BidderID": 31,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_09",
+      "bidder_alias": "WDC",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": true
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2013-05-31",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "voluntary; reevaluating interest; discontinued due diligence; temporary withdrawal (later re-engaged 6/10)",
+      "comments": "WDC representatives communicated that WDC was reevaluating its interest and was not prepared to move forward at that time; also discontinued due diligence. Temporary withdrawal before re-engagement on 6/10/2013.",
+      "source_quote": "On May 31, 2013, a representative of WDC communicated to BofA Merrill Lynch that WDC was reevaluating its interest in acquiring sTec, and that WDC was not prepared to move forward with a transaction with sTec at that time. In addition, WDC discontinued their due diligence efforts with the company at that time.",
+      "source_page": 39,
+      "flags": []
+    },
+    {
+      "BidderID": 36,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_02",
+      "bidder_alias": "Potomac",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Activist Sale",
+      "bid_type": null,
+      "bid_date_precise": null,
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": null,
+      "comments": "Potomac joined Balch Hill as activist investor between 11/16/2012 and 12/06/2012; exact date not narrated in filing.",
+      "source_quote": "Balch Hill was later joined by Potomac Capital Partners II, L.P. (\u201cPotomac\u201d), and Balch Hill and Potomac subsequently jointly increased their beneficial holdings to 9.8%.",
+      "source_page": 33,
+      "flags": [
+        {
+          "code": "date_unknown",
+          "severity": "soft",
+          "reason": "filing narrates Potomac joined Balch Hill as co-activist but gives no specific date (only 'later')"
+        },
+        {
+          "code": "event_sequence_by_narrative",
+          "severity": "info",
+          "reason": "null bid_date_precise (date_unknown); placed by narrative position between Balch Hill 11/16/2012 13D and 12/06/2012 amendment"
+        }
+      ]
+    }
+  ],
+  "alex_only_rows": [],
+  "cardinality_mismatches": [
+    {
+      "type": "cardinality_mismatch",
+      "code": "cardinality_mismatch",
+      "match_scope": "residual_bid_note",
+      "bucket_key": {
+        "bid_note": "Bidder Interest",
+        "ai_dates": [
+          "2013-02-13",
+          "2013-03-15",
+          "2013-04-01"
+        ],
+        "alex_dates": [
+          "2013-04-04"
+        ]
+      },
+      "ai_count": 3,
+      "alex_count": 2,
+      "ai_rows": [
+        {
+          "BidderID": 5,
+          "process_phase": 1,
+          "role": "bidder",
+          "bidder_name": "bidder_03",
+          "bidder_alias": "Company B",
+          "bidder_type": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "bid_note": "Bidder Interest",
+          "bid_type": null,
+          "bid_date_precise": "2013-02-13",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": [],
+          "aggregate_basis": null,
+          "additional_note": null,
+          "comments": "Company B, a participant in the electronics industry; President intended to present sTec as a possible acquisition target to Company B's management.",
+          "source_quote": "On February 13, 2013, Mr. Manouch Moshayedi met with the President of Company B, a participant in the electronics industry. Company B\u2019s President stated that the following week Company B was holding a management meeting at which Company B would be discussing its SSD opportunities, and the President intended to present sTec as a possible acquisition target to the management of Company B.",
+          "source_page": 33,
+          "flags": []
+        },
+        {
+          "BidderID": 7,
+          "process_phase": 1,
+          "role": "bidder",
+          "bidder_name": "bidder_05",
+          "bidder_alias": "Company D",
+          "bidder_type": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "bid_note": "Bidder Interest",
+          "bid_type": null,
+          "bid_date_precise": "2013-03-15",
+          "bid_date_rough": "mid-March, 2013",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": [],
+          "aggregate_basis": null,
+          "additional_note": null,
+          "comments": "Company D, a participant in the storage industry; head of corporate development contacted management to express interest in exploring a potential acquisition.",
+          "source_quote": "In mid-March, 2013, the head of corporate development for Company D, a participant in the storage industry, contacted our management to express the interest of Company D in exploring a potential acquisition of the company.",
+          "source_page": 35,
+          "flags": [
+            {
+              "code": "date_inferred_from_rough",
+              "severity": "info",
+              "reason": "phrase: 'mid-March, 2013'"
+            }
+          ]
+        },
+        {
+          "BidderID": 9,
+          "process_phase": 1,
+          "role": "bidder",
+          "bidder_name": "bidder_09",
+          "bidder_alias": "WDC",
+          "bidder_type": {
+            "base": "s",
+            "non_us": false,
+            "public": true
+          },
+          "bid_note": "Bidder Interest",
+          "bid_type": null,
+          "bid_date_precise": "2013-04-01",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": [],
+          "aggregate_basis": null,
+          "additional_note": "one of 18 prospective acquirers contacted by BofA; later submitted written IOI",
+          "comments": "WDC was among the 18 prospective acquirers BofA Merrill Lynch began contacting on April 1, 2013; WDC ultimately submitted written indications of interest.",
+          "source_quote": "On April 1, 2013, as directed by the special committee, BofA Merrill Lynch began contacting potential acquirers of sTec. In total, BofA Merrill Lynch had discussions with 18 prospective acquirers, 17 of which were technology companies and one of which was a financial sponsor. Of these, three prospective acquirers (WDC, Company H, a participant in the storage industry, and Company D) submitted written indications of interest for a complete purchase of sTec, six potential strategic acquirers expressed an interest in purchasing limited, select assets of sTec, and nine prospective acquirers, including the financial sponsor and Company A, indicated they were not interested in a potential transaction.",
+          "source_page": 35,
+          "flags": []
+        }
+      ],
+      "alex_rows": [
+        {
+          "BidderID": 2,
+          "process_phase": null,
+          "role": "bidder",
+          "bidder_name": "bidder_01",
+          "bidder_alias": "Company B",
+          "bidder_type": {
+            "base": null,
+            "non_us": false,
+            "public": null
+          },
+          "bid_note": "Bidder Interest",
+          "bid_type": null,
+          "bid_date_precise": "2013-04-04",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": null,
+          "comments": "Approximately two weeks later, the President of Company B contacted Mr.\u00a0Manouch Moshayedi to inform Mr.\u00a0Moshayedi that he had shared sTec\u2019s information with Company B\u2019s executive management, but that Company B\u2019s management had determined that it was not interested in acquiring sTec and believed that it could independently develop the technology it needed to compete in enterprise SSDs.",
+          "flags": []
+        },
+        {
+          "BidderID": 3,
+          "process_phase": null,
+          "role": "bidder",
+          "bidder_name": "bidder_02",
+          "bidder_alias": "Company D",
+          "bidder_type": {
+            "base": null,
+            "non_us": false,
+            "public": null
+          },
+          "bid_note": "Bidder Interest",
+          "bid_type": null,
+          "bid_date_precise": "2013-04-04",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": null,
+          "comments": "In mid-March, 2013, the head of corporate development for Company D, a participant in the storage industry, contacted our management to express the interest of Company D in exploring a potential acquisition of the company. At the direction of the special committee, members of our management met with representatives of Company D to discuss their potential interest.",
+          "flags": []
+        }
+      ]
+    }
+  ],
+  "field_disagreements": {
+    "bidder_type": 17,
+    "bid_value_pershare": 3
+  },
+  "deal_disagreements": [
+    {
+      "field": "TargetName",
+      "ai": "sTec, Inc.",
+      "alex": "S T E C INC"
+    },
+    {
+      "field": "Acquirer",
+      "ai": "Western Digital Corporation",
+      "alex": "WESTERN DIGITAL CORP"
+    },
+    {
+      "field": "DateEffective",
+      "ai": null,
+      "alex": "2013-09-12"
+    }
+  ],
+  "divergences": [
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Company E",
+        "bidder_alias_alex": "Company E",
+        "bid_note": "NDA",
+        "bid_date_precise": "2013-04-04"
+      },
+      "ai_BidderID": 10,
+      "alex_BidderID": 4,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Company D",
+        "bidder_alias_alex": "Company D",
+        "bid_note": "NDA",
+        "bid_date_precise": "2013-04-10"
+      },
+      "ai_BidderID": 11,
+      "alex_BidderID": 5,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Company F",
+        "bidder_alias_alex": "Company F",
+        "bid_note": "NDA",
+        "bid_date_precise": "2013-04-11"
+      },
+      "ai_BidderID": 12,
+      "alex_BidderID": 6,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Company G",
+        "bidder_alias_alex": "Company G",
+        "bid_note": "NDA",
+        "bid_date_precise": "2013-04-17"
+      },
+      "ai_BidderID": 13,
+      "alex_BidderID": 7,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "WDC",
+        "bidder_alias_alex": "WDC",
+        "bid_note": "NDA",
+        "bid_date_precise": "2013-04-17"
+      },
+      "ai_BidderID": 14,
+      "alex_BidderID": 8,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": false,
+            "public": true
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Company D",
+        "bidder_alias_alex": "Company D",
+        "bid_note": "Bid",
+        "bid_date_precise": "2013-04-23"
+      },
+      "ai_BidderID": 16,
+      "alex_BidderID": 10,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Company F",
+        "bidder_alias_alex": "Company F",
+        "bid_note": "DropTarget",
+        "bid_date_precise": "2013-04-24"
+      },
+      "ai_BidderID": 17,
+      "alex_BidderID": 12,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "WDC",
+        "bidder_alias_alex": "WDC",
+        "bid_note": "Bid",
+        "bid_date_precise": "2013-05-03"
+      },
+      "ai_BidderID": 19,
+      "alex_BidderID": 14,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": false,
+            "public": true
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        },
+        {
+          "field": "bid_value_pershare",
+          "ai": null,
+          "alex": 6.6
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Company G",
+        "bidder_alias_alex": "Company G",
+        "bid_note": "Drop",
+        "bid_date_precise": "2013-05-03"
+      },
+      "ai_BidderID": 20,
+      "alex_BidderID": 15,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Company H",
+        "bidder_alias_alex": "Company H",
+        "bid_note": "NDA",
+        "bid_date_precise": "2013-05-08"
+      },
+      "ai_BidderID": 22,
+      "alex_BidderID": 16,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Company D",
+        "bidder_alias_alex": "Company D",
+        "bid_note": "Bid",
+        "bid_date_precise": "2013-05-10"
+      },
+      "ai_BidderID": 23,
+      "alex_BidderID": 17,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Company H",
+        "bidder_alias_alex": "Company H",
+        "bid_note": "Bid",
+        "bid_date_precise": "2013-05-15"
+      },
+      "ai_BidderID": 24,
+      "alex_BidderID": 18,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        },
+        {
+          "field": "bid_value_pershare",
+          "ai": null,
+          "alex": 5
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Company H",
+        "bidder_alias_alex": "Company H",
+        "bid_note": "Drop",
+        "bid_date_precise": "2013-05-23"
+      },
+      "ai_BidderID": 26,
+      "alex_BidderID": 23,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "WDC",
+        "bidder_alias_alex": "WDC",
+        "bid_note": "Bid",
+        "bid_date_precise": "2013-05-28"
+      },
+      "ai_BidderID": 27,
+      "alex_BidderID": 24,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": false,
+            "public": true
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Company D",
+        "bidder_alias_alex": "Company D",
+        "bid_note": "Drop",
+        "bid_date_precise": "2013-06-05"
+      },
+      "ai_BidderID": 32,
+      "alex_BidderID": 25,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "WDC",
+        "bidder_alias_alex": "WDC",
+        "bid_note": "Bid",
+        "bid_date_precise": "2013-06-10"
+      },
+      "ai_BidderID": 33,
+      "alex_BidderID": 26,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": false,
+            "public": true
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        },
+        {
+          "field": "bid_value_pershare",
+          "ai": null,
+          "alex": 6.6
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "WDC",
+        "bidder_alias_alex": "WDC",
+        "bid_note": "Bid",
+        "bid_date_precise": "2013-06-14"
+      },
+      "ai_BidderID": 34,
+      "alex_BidderID": 27,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": false,
+            "public": true
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "cardinality_mismatch",
+      "code": "cardinality_mismatch",
+      "match_scope": "residual_bid_note",
+      "bucket_key": {
+        "bid_note": "Bidder Interest",
+        "ai_dates": [
+          "2013-02-13",
+          "2013-03-15",
+          "2013-04-01"
+        ],
+        "alex_dates": [
+          "2013-04-04"
+        ]
+      },
+      "ai_count": 3,
+      "alex_count": 2,
+      "ai_rows": [
+        {
+          "BidderID": 5,
+          "process_phase": 1,
+          "role": "bidder",
+          "bidder_name": "bidder_03",
+          "bidder_alias": "Company B",
+          "bidder_type": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "bid_note": "Bidder Interest",
+          "bid_type": null,
+          "bid_date_precise": "2013-02-13",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": [],
+          "aggregate_basis": null,
+          "additional_note": null,
+          "comments": "Company B, a participant in the electronics industry; President intended to present sTec as a possible acquisition target to Company B's management.",
+          "source_quote": "On February 13, 2013, Mr. Manouch Moshayedi met with the President of Company B, a participant in the electronics industry. Company B\u2019s President stated that the following week Company B was holding a management meeting at which Company B would be discussing its SSD opportunities, and the President intended to present sTec as a possible acquisition target to the management of Company B.",
+          "source_page": 33,
+          "flags": []
+        },
+        {
+          "BidderID": 7,
+          "process_phase": 1,
+          "role": "bidder",
+          "bidder_name": "bidder_05",
+          "bidder_alias": "Company D",
+          "bidder_type": {
+            "base": "s",
+            "non_us": false,
+            "public": false
+          },
+          "bid_note": "Bidder Interest",
+          "bid_type": null,
+          "bid_date_precise": "2013-03-15",
+          "bid_date_rough": "mid-March, 2013",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": [],
+          "aggregate_basis": null,
+          "additional_note": null,
+          "comments": "Company D, a participant in the storage industry; head of corporate development contacted management to express interest in exploring a potential acquisition.",
+          "source_quote": "In mid-March, 2013, the head of corporate development for Company D, a participant in the storage industry, contacted our management to express the interest of Company D in exploring a potential acquisition of the company.",
+          "source_page": 35,
+          "flags": [
+            {
+              "code": "date_inferred_from_rough",
+              "severity": "info",
+              "reason": "phrase: 'mid-March, 2013'"
+            }
+          ]
+        },
+        {
+          "BidderID": 9,
+          "process_phase": 1,
+          "role": "bidder",
+          "bidder_name": "bidder_09",
+          "bidder_alias": "WDC",
+          "bidder_type": {
+            "base": "s",
+            "non_us": false,
+            "public": true
+          },
+          "bid_note": "Bidder Interest",
+          "bid_type": null,
+          "bid_date_precise": "2013-04-01",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": [],
+          "aggregate_basis": null,
+          "additional_note": "one of 18 prospective acquirers contacted by BofA; later submitted written IOI",
+          "comments": "WDC was among the 18 prospective acquirers BofA Merrill Lynch began contacting on April 1, 2013; WDC ultimately submitted written indications of interest.",
+          "source_quote": "On April 1, 2013, as directed by the special committee, BofA Merrill Lynch began contacting potential acquirers of sTec. In total, BofA Merrill Lynch had discussions with 18 prospective acquirers, 17 of which were technology companies and one of which was a financial sponsor. Of these, three prospective acquirers (WDC, Company H, a participant in the storage industry, and Company D) submitted written indications of interest for a complete purchase of sTec, six potential strategic acquirers expressed an interest in purchasing limited, select assets of sTec, and nine prospective acquirers, including the financial sponsor and Company A, indicated they were not interested in a potential transaction.",
+          "source_page": 35,
+          "flags": []
+        }
+      ],
+      "alex_rows": [
+        {
+          "BidderID": 2,
+          "process_phase": null,
+          "role": "bidder",
+          "bidder_name": "bidder_01",
+          "bidder_alias": "Company B",
+          "bidder_type": {
+            "base": null,
+            "non_us": false,
+            "public": null
+          },
+          "bid_note": "Bidder Interest",
+          "bid_type": null,
+          "bid_date_precise": "2013-04-04",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": null,
+          "comments": "Approximately two weeks later, the President of Company B contacted Mr.\u00a0Manouch Moshayedi to inform Mr.\u00a0Moshayedi that he had shared sTec\u2019s information with Company B\u2019s executive management, but that Company B\u2019s management had determined that it was not interested in acquiring sTec and believed that it could independently develop the technology it needed to compete in enterprise SSDs.",
+          "flags": []
+        },
+        {
+          "BidderID": 3,
+          "process_phase": null,
+          "role": "bidder",
+          "bidder_name": "bidder_02",
+          "bidder_alias": "Company D",
+          "bidder_type": {
+            "base": null,
+            "non_us": false,
+            "public": null
+          },
+          "bid_note": "Bidder Interest",
+          "bid_type": null,
+          "bid_date_precise": "2013-04-04",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": null,
+          "comments": "In mid-March, 2013, the head of corporate development for Company D, a participant in the storage industry, contacted our management to express the interest of Company D in exploring a potential acquisition of the company. At the direction of the special committee, members of our management met with representatives of Company D to discuss their potential interest.",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "BofA Merrill Lynch",
+        "bid_note": "IB"
+      },
+      "ai_date": "2013-03-26",
+      "alex_date": "2013-04-04",
+      "ai_BidderID": 8,
+      "alex_BidderID": 1
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Company E",
+        "bid_note": "DropTarget"
+      },
+      "ai_date": "2013-05-01",
+      "alex_date": "2013-04-24",
+      "ai_BidderID": 18,
+      "alex_BidderID": 13
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Final Round Inf"
+      },
+      "ai_date": "2013-05-03",
+      "alex_date": "2013-04-23",
+      "ai_BidderID": 21,
+      "alex_BidderID": 11
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Final Round"
+      },
+      "ai_date": "2013-05-28",
+      "alex_date": "2013-05-16",
+      "ai_BidderID": 28,
+      "alex_BidderID": 21
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Final Round Ext Ann"
+      },
+      "ai_date": "2013-05-29",
+      "alex_date": "2013-05-16",
+      "ai_BidderID": 29,
+      "alex_BidderID": 20
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Final Round Ext"
+      },
+      "ai_date": "2013-05-30",
+      "alex_date": "2013-05-16",
+      "ai_BidderID": 30,
+      "alex_BidderID": 22
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "WDC",
+        "bid_note": "Executed"
+      },
+      "ai_date": "2013-06-23",
+      "alex_date": "2013-06-14",
+      "ai_BidderID": 35,
+      "alex_BidderID": 28
+    }
+  ],
+  "alex_flagged_hits": [],
+  "notes": []
+}

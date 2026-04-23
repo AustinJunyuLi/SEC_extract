@@ -1,0 +1,944 @@
+{
+  "slug": "imprivata",
+  "matched_rows": 24,
+  "ai_only_rows": [
+    {
+      "BidderID": 6,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Target Sale",
+      "bid_type": null,
+      "bid_date_precise": "2016-05-05",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Board resolution to launch 'strategic process' \u2014 contact 15 parties on confidential basis.",
+      "comments": null,
+      "source_quote": "Based on the benefits and risks discussed at this meeting and the previous Board meeting, the Board determined, based on their knowledge of the industry and the Company, the preliminary observations of Barclays, the strategic alternatives potentially available to the Company, including remaining as an independent public company, and the indication of interest received from Thoma Bravo, that it was in the best interests of the Company and its stockholders to take steps to further explore a potential business combination transaction involving the Company. The Board also approved the indicative list of parties and determined that Barclays should contact each of the parties on the indicative list on a confidential basis to gauge its interest in a potential transaction with the Company, which we refer to as the \u201cstrategic process.\u201d",
+      "source_page": 31,
+      "flags": []
+    },
+    {
+      "BidderID": 13,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_08",
+      "bidder_alias": "Financial 1",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2016-05-23",
+      "bid_date_rough": "During the period from May 6 through June 9, 2016",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Unnamed financial sponsor (\u00a7E5 placeholder) \u2014 the fourth financial sponsor among the 4 that signed NDAs; declined interest shortly after signing.",
+      "comments": null,
+      "source_quote": "Except for one financial sponsor that declined interest shortly after executing its confidentiality agreement, each party that entered into a confidentiality agreement attended a high-level management presentation conducted by members of Company management and attended by Barclays.",
+      "source_page": 31,
+      "flags": [
+        {
+          "code": "date_range_collapsed",
+          "severity": "info",
+          "reason": "phrase: 'During the period from May 6 through June 9, 2016'; midpoint 2016-05-23 (filing does not state this unnamed sponsor's specific NDA date)"
+        },
+        {
+          "code": "unnamed_count_placeholder",
+          "severity": "info",
+          "reason": "\u00a7E5 exact-count placeholder for 'one financial sponsor that declined interest shortly after executing its confidentiality agreement' (p.31); 1 unnamed of 4 total financial sponsors signing CAs."
+        }
+      ]
+    },
+    {
+      "BidderID": 15,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_08",
+      "bidder_alias": "Financial 1",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2016-05-30",
+      "bid_date_rough": "shortly after executing its confidentiality agreement",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Voluntary withdrawal ('declined interest'); no price or bid intent recorded. \u00a7B3 anchored-relative: anchor = NDA date 2016-05-23; 'shortly thereafter' = +7 days \u2192 2016-05-30.",
+      "comments": null,
+      "source_quote": "Except for one financial sponsor that declined interest shortly after executing its confidentiality agreement, each party that entered into a confidentiality agreement attended a high-level management presentation conducted by members of Company management and attended by Barclays.",
+      "source_page": 31,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "phrase: 'shortly after executing its confidentiality agreement'; anchor = 2016-05-23 NDA midpoint; \u00a7B1 'shortly thereafter' = anchor + 7 days \u2192 2016-05-30"
+        }
+      ]
+    }
+  ],
+  "alex_only_rows": [
+    {
+      "BidderID": 9,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_08",
+      "bidder_alias": "Another financial sponsor",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "2016-05-06 00:00:00",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 12,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_08",
+      "bidder_alias": "Another financial sponsor",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "2016-05-07 00:00:00",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": "Dropped shortly after NDA, how to record given that we do not know NDA date here?",
+      "flags": []
+    },
+    {
+      "BidderID": 23,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Final Round Ext Ann",
+      "bid_type": null,
+      "bid_date_precise": "2016-06-24",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 25,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Final Round Ext",
+      "bid_type": null,
+      "bid_date_precise": "2016-06-24",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    }
+  ],
+  "cardinality_mismatches": [
+    {
+      "type": "cardinality_mismatch",
+      "code": "cardinality_mismatch",
+      "match_scope": "residual_bid_note",
+      "bucket_key": {
+        "bid_note": "Bidder Interest",
+        "ai_dates": [
+          "2015-04-15",
+          "2016-01-15"
+        ],
+        "alex_dates": [
+          "2016-03-09"
+        ]
+      },
+      "ai_count": 2,
+      "alex_count": 1,
+      "ai_rows": [
+        {
+          "BidderID": 1,
+          "process_phase": 1,
+          "role": "bidder",
+          "bidder_name": "bidder_01",
+          "bidder_alias": "Thoma Bravo",
+          "bidder_type": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "bid_note": "Bidder Interest",
+          "bid_type": null,
+          "bid_date_precise": "2015-04-15",
+          "bid_date_rough": "In early 2015, and again in June 2015",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": "Thoma Bravo's first two informal approaches (early 2015 and June 2015), collapsed to one row via \u00a7B4 range midpoint.",
+          "comments": null,
+          "source_quote": "In early 2015, and again in June 2015, representatives of Thoma Bravo informally approached and had brief meetings with representatives of the Company, and expressed Thoma Bravo\u2019s potential interest in exploring a possible business transaction with the Company. The Company indicated that it was focused on executing on its business plan and taking steps to enhance stockholder value. No specific proposals were made during these meetings.",
+          "source_page": 28,
+          "flags": [
+            {
+              "code": "date_range_collapsed",
+              "severity": "info",
+              "reason": "phrase: 'In early 2015, and again in June 2015'; midpoint between Q1-2015 (2015-02-15) and June-2015 (2015-06-15) \u2248 2015-04-15"
+            }
+          ]
+        },
+        {
+          "BidderID": 2,
+          "process_phase": 1,
+          "role": "bidder",
+          "bidder_name": "bidder_01",
+          "bidder_alias": "Thoma Bravo",
+          "bidder_type": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "bid_note": "Bidder Interest",
+          "bid_type": null,
+          "bid_date_precise": "2016-01-15",
+          "bid_date_rough": "In January 2016",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": null,
+          "comments": null,
+          "source_quote": "In January 2016, representatives of Thoma Bravo met with members of Company management during an industry conference and reiterated Thoma Bravo\u2019s interest in a potential transaction with the Company. No specific proposal was made. Company management indicated that if Thoma Bravo were to make a proposal, it would be considered by the Board.",
+          "source_page": 28,
+          "flags": [
+            {
+              "code": "date_inferred_from_rough",
+              "severity": "info",
+              "reason": "phrase: 'In January 2016'; \u00a7B1 'Month Year' \u2192 2016-01-15"
+            }
+          ]
+        }
+      ],
+      "alex_rows": [
+        {
+          "BidderID": 3,
+          "process_phase": null,
+          "role": "bidder",
+          "bidder_name": "bidder_01",
+          "bidder_alias": "Thoma Bravo",
+          "bidder_type": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          },
+          "bid_note": "Bidder Interest",
+          "bid_type": null,
+          "bid_date_precise": "2016-03-09",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": null,
+          "comments": "Confirmatory DD <=30 days",
+          "flags": []
+        }
+      ]
+    }
+  ],
+  "field_disagreements": {
+    "bidder_type": 10,
+    "bid_value_pershare": 1
+  },
+  "deal_disagreements": [
+    {
+      "field": "TargetName",
+      "ai": "Imprivata, Inc.",
+      "alex": "IMPRIVATA INC"
+    },
+    {
+      "field": "Acquirer",
+      "ai": "Thoma Bravo, LLC",
+      "alex": "THOMA BRAVO, LLC"
+    },
+    {
+      "field": "DateEffective",
+      "ai": null,
+      "alex": "2016-09-16"
+    }
+  ],
+  "divergences": [
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Thoma Bravo",
+        "bidder_alias_alex": "Thoma Bravo",
+        "bid_note": "Bidder Sale",
+        "bid_date_precise": "2016-03-09"
+      },
+      "ai_BidderID": 3,
+      "alex_BidderID": 1,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Thoma Bravo",
+        "bidder_alias_alex": "Thoma Bravo",
+        "bid_note": "Bid",
+        "bid_date_precise": "2016-03-09"
+      },
+      "ai_BidderID": 4,
+      "alex_BidderID": 10,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Thoma Bravo",
+        "bidder_alias_alex": "Thoma Bravo",
+        "bid_note": "NDA",
+        "bid_date_precise": "2016-05-10"
+      },
+      "ai_BidderID": 7,
+      "alex_BidderID": 11,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Sponsor A",
+        "bidder_alias_alex": "Sponsor A",
+        "bid_note": "Bid",
+        "bid_date_precise": "2016-06-09"
+      },
+      "ai_BidderID": 17,
+      "alex_BidderID": 16,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Sponsor B",
+        "bidder_alias_alex": "Sponsor B",
+        "bid_note": "Bid",
+        "bid_date_precise": "2016-06-09"
+      },
+      "ai_BidderID": 18,
+      "alex_BidderID": 17,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        },
+        {
+          "field": "bid_value_pershare",
+          "ai": null,
+          "alex": 17
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Thoma Bravo",
+        "bidder_alias_alex": "Thoma Bravo",
+        "bid_note": "Bid",
+        "bid_date_precise": "2016-06-09"
+      },
+      "ai_BidderID": 19,
+      "alex_BidderID": 18,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Sponsor A",
+        "bidder_alias_alex": "Sponsor A",
+        "bid_note": "DropAtInf",
+        "bid_date_precise": "2016-06-15"
+      },
+      "ai_BidderID": 23,
+      "alex_BidderID": 22,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Sponsor B",
+        "bidder_alias_alex": "Sponsor B",
+        "bid_note": "DropBelowInf",
+        "bid_date_precise": "2016-06-29"
+      },
+      "ai_BidderID": 25,
+      "alex_BidderID": 26,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Thoma Bravo",
+        "bidder_alias_alex": "Thoma Bravo",
+        "bid_note": "Bid",
+        "bid_date_precise": "2016-07-08"
+      },
+      "ai_BidderID": 26,
+      "alex_BidderID": 27,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Thoma Bravo",
+        "bidder_alias_alex": "Thoma Bravo",
+        "bid_note": "Bid",
+        "bid_date_precise": "2016-07-09"
+      },
+      "ai_BidderID": 28,
+      "alex_BidderID": 28,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "alex": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "cardinality_mismatch",
+      "code": "cardinality_mismatch",
+      "match_scope": "residual_bid_note",
+      "bucket_key": {
+        "bid_note": "Bidder Interest",
+        "ai_dates": [
+          "2015-04-15",
+          "2016-01-15"
+        ],
+        "alex_dates": [
+          "2016-03-09"
+        ]
+      },
+      "ai_count": 2,
+      "alex_count": 1,
+      "ai_rows": [
+        {
+          "BidderID": 1,
+          "process_phase": 1,
+          "role": "bidder",
+          "bidder_name": "bidder_01",
+          "bidder_alias": "Thoma Bravo",
+          "bidder_type": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "bid_note": "Bidder Interest",
+          "bid_type": null,
+          "bid_date_precise": "2015-04-15",
+          "bid_date_rough": "In early 2015, and again in June 2015",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": "Thoma Bravo's first two informal approaches (early 2015 and June 2015), collapsed to one row via \u00a7B4 range midpoint.",
+          "comments": null,
+          "source_quote": "In early 2015, and again in June 2015, representatives of Thoma Bravo informally approached and had brief meetings with representatives of the Company, and expressed Thoma Bravo\u2019s potential interest in exploring a possible business transaction with the Company. The Company indicated that it was focused on executing on its business plan and taking steps to enhance stockholder value. No specific proposals were made during these meetings.",
+          "source_page": 28,
+          "flags": [
+            {
+              "code": "date_range_collapsed",
+              "severity": "info",
+              "reason": "phrase: 'In early 2015, and again in June 2015'; midpoint between Q1-2015 (2015-02-15) and June-2015 (2015-06-15) \u2248 2015-04-15"
+            }
+          ]
+        },
+        {
+          "BidderID": 2,
+          "process_phase": 1,
+          "role": "bidder",
+          "bidder_name": "bidder_01",
+          "bidder_alias": "Thoma Bravo",
+          "bidder_type": {
+            "base": "f",
+            "non_us": false,
+            "public": false
+          },
+          "bid_note": "Bidder Interest",
+          "bid_type": null,
+          "bid_date_precise": "2016-01-15",
+          "bid_date_rough": "In January 2016",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": null,
+          "comments": null,
+          "source_quote": "In January 2016, representatives of Thoma Bravo met with members of Company management during an industry conference and reiterated Thoma Bravo\u2019s interest in a potential transaction with the Company. No specific proposal was made. Company management indicated that if Thoma Bravo were to make a proposal, it would be considered by the Board.",
+          "source_page": 28,
+          "flags": [
+            {
+              "code": "date_inferred_from_rough",
+              "severity": "info",
+              "reason": "phrase: 'In January 2016'; \u00a7B1 'Month Year' \u2192 2016-01-15"
+            }
+          ]
+        }
+      ],
+      "alex_rows": [
+        {
+          "BidderID": 3,
+          "process_phase": null,
+          "role": "bidder",
+          "bidder_name": "bidder_01",
+          "bidder_alias": "Thoma Bravo",
+          "bidder_type": {
+            "base": "f",
+            "non_us": false,
+            "public": null
+          },
+          "bid_note": "Bidder Interest",
+          "bid_type": null,
+          "bid_date_precise": "2016-03-09",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": null,
+          "comments": "Confirmatory DD <=30 days",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Barclays",
+        "bid_note": "IB"
+      },
+      "ai_date": "2016-04-15",
+      "alex_date": "2016-03-09",
+      "ai_BidderID": 5,
+      "alex_BidderID": 2
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Strategic 1",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2016-05-23",
+      "alex_date": null,
+      "ai_BidderID": 8,
+      "alex_BidderID": 4
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Strategic 2",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2016-05-23",
+      "alex_date": null,
+      "ai_BidderID": 9,
+      "alex_BidderID": 5
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Strategic 3",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2016-05-23",
+      "alex_date": null,
+      "ai_BidderID": 10,
+      "alex_BidderID": 6
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Sponsor A",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2016-05-23",
+      "alex_date": null,
+      "ai_BidderID": 11,
+      "alex_BidderID": 7
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Sponsor B",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2016-05-23",
+      "alex_date": null,
+      "ai_BidderID": 12,
+      "alex_BidderID": 8
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Final Round Inf Ann"
+      },
+      "ai_date": "2016-05-26",
+      "alex_date": "2016-06-09",
+      "ai_BidderID": 14,
+      "alex_BidderID": 14
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Final Round Ann"
+      },
+      "ai_date": "2016-06-24",
+      "alex_date": "2016-06-09",
+      "ai_BidderID": 24,
+      "alex_BidderID": 15
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Final Round"
+      },
+      "ai_date": "2016-07-08",
+      "alex_date": "2016-06-24",
+      "ai_BidderID": 27,
+      "alex_BidderID": 24
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Thoma Bravo",
+        "bid_note": "Executed"
+      },
+      "ai_date": "2016-07-13",
+      "alex_date": "2016-07-09",
+      "ai_BidderID": 29,
+      "alex_BidderID": 29
+    }
+  ],
+  "alex_flagged_hits": [],
+  "notes": []
+}

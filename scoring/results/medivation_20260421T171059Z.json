@@ -1,0 +1,1072 @@
+{
+  "slug": "medivation",
+  "matched_rows": 12,
+  "ai_only_rows": [
+    {
+      "BidderID": 3,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_02",
+      "bidder_alias": "Pfizer",
+      "bidder_type": {
+        "base": "s",
+        "non_us": null,
+        "public": null
+      },
+      "bid_note": "Bidder Interest",
+      "bid_type": null,
+      "bid_date_precise": "2016-05-02",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Pfizer expressed exploratory interest; no price or concrete sale proposal (\u00a7D1 Bidder Interest).",
+      "comments": null,
+      "source_quote": "On May 2, 2016, Mr. Giordano and Dr. Hung spoke by phone. During this conversation, and in light of the public announcement on April 28 of Sanofi\u2019s proposal, Mr. Giordano expressed Pfizer\u2019s interest in a possible transaction when, and if, Medivation decided to pursue such a transaction.",
+      "source_page": 25,
+      "flags": []
+    },
+    {
+      "BidderID": 9,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_06",
+      "bidder_alias": "Strategic 1",
+      "bidder_type": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2016-07-05",
+      "bid_date_rough": "inferred from press release: 2016-07-05 Medivation announcement of NDAs with several parties",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Unnamed \u00a7E5 placeholder for one of the 'several parties' (minimum 3 per \u00a7E5) who signed NDAs besides Sanofi.",
+      "comments": null,
+      "source_quote": "On July 5, 2016, Medivation issued a press release announcing that it had entered into confidentiality agreements with several parties, including Sanofi, and that Sanofi had agreed to withdraw its consent solicitation.",
+      "source_page": 25,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "filing does not narrate NDA execution date for unnamed parties; anchored to 7/5 press release announcement"
+        },
+        {
+          "code": "unnamed_count_placeholder",
+          "severity": "info",
+          "reason": "\"several parties, including Sanofi\" = minimum 3 per \u00a7E5; Sanofi named + 2 unnamed placeholders (Strategic 1, Strategic 2)"
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_06' signed NDA at row 8 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 10,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_07",
+      "bidder_alias": "Strategic 2",
+      "bidder_type": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2016-07-05",
+      "bid_date_rough": "inferred from press release: 2016-07-05 Medivation announcement of NDAs with several parties",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Unnamed \u00a7E5 placeholder for one of the 'several parties' (minimum 3 per \u00a7E5) who signed NDAs besides Sanofi.",
+      "comments": null,
+      "source_quote": "On July 5, 2016, Medivation issued a press release announcing that it had entered into confidentiality agreements with several parties, including Sanofi, and that Sanofi had agreed to withdraw its consent solicitation.",
+      "source_page": 25,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "filing does not narrate NDA execution date for unnamed parties; anchored to 7/5 press release announcement"
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_07' signed NDA at row 9 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 16,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Final Round Ext Ann",
+      "bid_type": null,
+      "bid_date_precise": "2016-08-19",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Medivation's advisors verbally requested Pfizer submit 'best and final' proposal by 8/20 \u2014 extension of the 8/19 final-round deadline.",
+      "comments": null,
+      "source_quote": "In addition, on August 19, 2016, Mr. Giordano spoke with representatives of J.P. Morgan and Evercore, who informed Mr. Giordano that Pfizer should submit its \u201cbest and final\u201d offer on Saturday, August 20, 2016.",
+      "source_page": 27,
+      "flags": [
+        {
+          "code": "final_round_inferred",
+          "severity": "info",
+          "reason": "no explicit 'extension' phrase; inferred per \u00a7K2 from post-8/19-bid verbal 'best and final' request"
+        }
+      ]
+    },
+    {
+      "BidderID": 20,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Final Round Ext",
+      "bid_type": null,
+      "bid_date_precise": "2016-08-20",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": "Extension-round submission deadline per \u00a7K2 (paired with 8/19 Final Round Ext Ann).",
+      "comments": null,
+      "source_quote": "Following a written request by J.P. Morgan and Evercore to provide Pfizer\u2019s \u201cbest and final\u201d proposal by the afternoon of August 20, 2016, Pfizer communicated a \u201cbest and final\u201d proposal to acquire Medivation for cash consideration of $81.50 per Share on August 20, 2016.",
+      "source_page": 27,
+      "flags": [
+        {
+          "code": "final_round_inferred",
+          "severity": "info",
+          "reason": "no explicit 'extension' phrase; deadline inferred from 8/20 'best and final' submission following 8/19 verbal request"
+        }
+      ]
+    }
+  ],
+  "alex_only_rows": [
+    {
+      "BidderID": 1,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_01",
+      "bidder_alias": "Sanofi",
+      "bidder_type": {
+        "base": "s",
+        "non_us": true,
+        "public": true
+      },
+      "bid_note": "Bidder Sale",
+      "bid_type": null,
+      "bid_date_precise": "2016-04-13",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 7,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_06",
+      "bidder_alias": "Party A",
+      "bidder_type": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "2016-07-05 00:00:00",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "alex_row_expanded",
+          "severity": "info",
+          "reason": "\u00a7Q5: from xlsx row 6065 ('Several parties, including Sanofi'); atomized per \u00a7E1 \u2014 the xlsx compressed \u22653 NDA signers into one row"
+        },
+        {
+          "code": "bidder_id_renumbered_from_alex",
+          "severity": "info",
+          "reason": "xlsx row 6065 flagged in alex_flagged_rows.json (original BidderID=3); renumbered to 7"
+        }
+      ]
+    },
+    {
+      "BidderID": 8,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_07",
+      "bidder_alias": "Party B",
+      "bidder_type": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "2016-07-05 00:00:00",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "alex_row_expanded",
+          "severity": "info",
+          "reason": "\u00a7Q5: from xlsx row 6065 ('Several parties, including Sanofi'); atomized per \u00a7E1 \u2014 the xlsx compressed \u22653 NDA signers into one row"
+        },
+        {
+          "code": "bidder_id_renumbered_from_alex",
+          "severity": "info",
+          "reason": "xlsx row 6065 flagged in alex_flagged_rows.json (original BidderID=3); renumbered to 8"
+        }
+      ]
+    },
+    {
+      "BidderID": 16,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_01",
+      "bidder_alias": "Sanofi",
+      "bidder_type": {
+        "base": "s",
+        "non_us": true,
+        "public": true
+      },
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2016-08-20",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": []
+    },
+    {
+      "BidderID": 17,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_06",
+      "bidder_alias": "Party A",
+      "bidder_type": null,
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2016-08-20",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "alex_row_expanded",
+          "severity": "info",
+          "reason": "\u00a7Q5: from xlsx row 6075 ('Several parties'); atomized per \u00a7E1 \u2014 companion to xlsx 6065's unnamed-party NDAs"
+        },
+        {
+          "code": "bidder_id_renumbered_from_alex",
+          "severity": "info",
+          "reason": "xlsx row 6075 flagged in alex_flagged_rows.json (original BidderID=9); renumbered to 17"
+        }
+      ]
+    },
+    {
+      "BidderID": 18,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_07",
+      "bidder_alias": "Party B",
+      "bidder_type": null,
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_date_precise": "2016-08-20",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "alex_row_expanded",
+          "severity": "info",
+          "reason": "\u00a7Q5: from xlsx row 6075 ('Several parties'); atomized per \u00a7E1 \u2014 companion to xlsx 6065's unnamed-party NDAs"
+        },
+        {
+          "code": "bidder_id_renumbered_from_alex",
+          "severity": "info",
+          "reason": "xlsx row 6075 flagged in alex_flagged_rows.json (original BidderID=9); renumbered to 18"
+        }
+      ]
+    }
+  ],
+  "cardinality_mismatches": [
+    {
+      "type": "cardinality_mismatch",
+      "code": "cardinality_mismatch",
+      "match_scope": "residual_bid_note",
+      "bucket_key": {
+        "bid_note": "IB",
+        "ai_dates": [
+          "2016-05-11",
+          "2016-07-07"
+        ],
+        "alex_dates": [
+          "2016-06-29"
+        ]
+      },
+      "ai_count": 4,
+      "alex_count": 1,
+      "ai_rows": [
+        {
+          "BidderID": 4,
+          "process_phase": 1,
+          "role": "advisor_financial",
+          "bidder_name": "bidder_03",
+          "bidder_alias": "Centerview Partners LLC",
+          "bidder_type": null,
+          "bid_note": "IB",
+          "bid_type": null,
+          "bid_date_precise": "2016-05-11",
+          "bid_date_rough": "first narration: 2016-05-11 Centerview contacts Medivation advisors for Pfizer",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": "Financial advisor to Pfizer; retention date not narrated, anchored to earliest action per \u00a7J1.",
+          "comments": null,
+          "source_quote": "On May 11, 2016, representatives of Centerview Partners LLC (\u201cCenterview\u201d), a financial advisor to Pfizer, contacted representatives of J.P. Morgan Securities LLC (\u201cJ.P. Morgan\u201d) and Evercore Group L.L.C. (\u201cEvercore\u201d), financial advisors to Medivation, regarding Pfizer\u2019s potential strategic interest in Medivation.",
+          "source_page": 25,
+          "flags": [
+            {
+              "code": "date_inferred_from_context",
+              "severity": "soft",
+              "reason": "filing does not narrate retention date; inferred from first mention (\u00a7J1)"
+            }
+          ]
+        },
+        {
+          "BidderID": 5,
+          "process_phase": 1,
+          "role": "advisor_financial",
+          "bidder_name": "bidder_04",
+          "bidder_alias": "J.P. Morgan Securities LLC",
+          "bidder_type": null,
+          "bid_note": "IB",
+          "bid_type": null,
+          "bid_date_precise": "2016-05-11",
+          "bid_date_rough": "first narration: 2016-05-11 acting as Medivation financial advisor",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": "Financial advisor to Medivation; retention date not narrated, anchored to earliest action per \u00a7J1.",
+          "comments": null,
+          "source_quote": "On May 11, 2016, representatives of Centerview Partners LLC (\u201cCenterview\u201d), a financial advisor to Pfizer, contacted representatives of J.P. Morgan Securities LLC (\u201cJ.P. Morgan\u201d) and Evercore Group L.L.C. (\u201cEvercore\u201d), financial advisors to Medivation, regarding Pfizer\u2019s potential strategic interest in Medivation.",
+          "source_page": 25,
+          "flags": [
+            {
+              "code": "date_inferred_from_context",
+              "severity": "soft",
+              "reason": "filing does not narrate retention date; inferred from first mention (\u00a7J1)"
+            }
+          ]
+        },
+        {
+          "BidderID": 6,
+          "process_phase": 1,
+          "role": "advisor_financial",
+          "bidder_name": "bidder_05",
+          "bidder_alias": "Evercore Group L.L.C.",
+          "bidder_type": null,
+          "bid_note": "IB",
+          "bid_type": null,
+          "bid_date_precise": "2016-05-11",
+          "bid_date_rough": "first narration: 2016-05-11 acting as Medivation financial advisor",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": "Financial advisor to Medivation; retention date not narrated, anchored to earliest action per \u00a7J1.",
+          "comments": null,
+          "source_quote": "On May 11, 2016, representatives of Centerview Partners LLC (\u201cCenterview\u201d), a financial advisor to Pfizer, contacted representatives of J.P. Morgan Securities LLC (\u201cJ.P. Morgan\u201d) and Evercore Group L.L.C. (\u201cEvercore\u201d), financial advisors to Medivation, regarding Pfizer\u2019s potential strategic interest in Medivation.",
+          "source_page": 25,
+          "flags": [
+            {
+              "code": "date_inferred_from_context",
+              "severity": "soft",
+              "reason": "filing does not narrate retention date; inferred from first mention (\u00a7J1)"
+            }
+          ]
+        },
+        {
+          "BidderID": 11,
+          "process_phase": 1,
+          "role": "advisor_financial",
+          "bidder_name": "bidder_08",
+          "bidder_alias": "Guggenheim Securities, LLC",
+          "bidder_type": null,
+          "bid_note": "IB",
+          "bid_type": null,
+          "bid_date_precise": "2016-07-07",
+          "bid_date_rough": "first narration: 2016-07-07 Guggenheim acts for Pfizer in DD discussions with Medivation advisors",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": "Financial advisor to Pfizer; retention date not narrated, anchored to earliest action per \u00a7J1 (first day of July 7-11 range).",
+          "comments": null,
+          "source_quote": "On July 7 through July 11, 2016, representatives of Pfizer, Guggenheim Securities, LLC (\u201cGuggenheim\u201d), a financial advisor to Pfizer, and Centerview had discussions by telephone with representatives of Evercore and J.P. Morgan regarding the due diligence process.",
+          "source_page": 25,
+          "flags": [
+            {
+              "code": "date_inferred_from_context",
+              "severity": "soft",
+              "reason": "filing does not narrate retention date; inferred from first mention (\u00a7J1)"
+            }
+          ]
+        }
+      ],
+      "alex_rows": [
+        {
+          "BidderID": 4,
+          "process_phase": null,
+          "role": "bidder",
+          "bidder_name": "bidder_02",
+          "bidder_alias": "J.P. Morgan",
+          "bidder_type": null,
+          "bid_note": "IB",
+          "bid_type": null,
+          "bid_date_precise": "2016-06-29",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": null,
+          "comments": "Legal advisor: Cooley. May 2: Pfizer's contact that was viewed well by the target. No mention of the IB engagement earlier",
+          "flags": []
+        }
+      ]
+    }
+  ],
+  "field_disagreements": {
+    "bidder_type": 5,
+    "bid_value_pershare": 1,
+    "bid_value_unit": 1
+  },
+  "deal_disagreements": [
+    {
+      "field": "TargetName",
+      "ai": "Medivation, Inc.",
+      "alex": "MEDIVATION INC"
+    },
+    {
+      "field": "Acquirer",
+      "ai": "Pfizer Inc.",
+      "alex": "PFIZER INC"
+    },
+    {
+      "field": "DateEffective",
+      "ai": null,
+      "alex": "2016-09-28"
+    }
+  ],
+  "divergences": [
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Pfizer",
+        "bidder_alias_alex": "Pfizer",
+        "bid_note": "NDA",
+        "bid_date_precise": "2016-06-29"
+      },
+      "ai_BidderID": 7,
+      "alex_BidderID": 5,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": null,
+            "public": null
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Pfizer",
+        "bidder_alias_alex": "Pfizer",
+        "bid_note": "Bid",
+        "bid_date_precise": "2016-08-08"
+      },
+      "ai_BidderID": 13,
+      "alex_BidderID": 9,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": null,
+            "public": null
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Pfizer",
+        "bidder_alias_alex": "Pfizer",
+        "bid_note": "Bid",
+        "bid_date_precise": "2016-08-19"
+      },
+      "ai_BidderID": 17,
+      "alex_BidderID": 14,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": null,
+            "public": null
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Pfizer",
+        "bidder_alias_alex": "Pfizer",
+        "bid_note": "Bid",
+        "bid_date_precise": "2016-08-20"
+      },
+      "ai_BidderID": 19,
+      "alex_BidderID": 15,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": null,
+            "public": null
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "field_mismatch",
+      "join_key": {
+        "bidder_alias_ai": "Pfizer",
+        "bidder_alias_alex": "Pfizer",
+        "bid_note": "Executed",
+        "bid_date_precise": "2016-08-20"
+      },
+      "ai_BidderID": 21,
+      "alex_BidderID": 19,
+      "field_divergences": [
+        {
+          "field": "bidder_type",
+          "ai": {
+            "base": "s",
+            "non_us": null,
+            "public": null
+          },
+          "alex": {
+            "base": "s",
+            "non_us": false,
+            "public": null
+          }
+        },
+        {
+          "field": "bid_value_pershare",
+          "ai": 81.5,
+          "alex": null
+        },
+        {
+          "field": "bid_value_unit",
+          "ai": "USD_per_share",
+          "alex": null
+        }
+      ],
+      "alex_self_flag": null,
+      "bucket_match_mode": "exact_single"
+    },
+    {
+      "type": "cardinality_mismatch",
+      "code": "cardinality_mismatch",
+      "match_scope": "residual_bid_note",
+      "bucket_key": {
+        "bid_note": "IB",
+        "ai_dates": [
+          "2016-05-11",
+          "2016-07-07"
+        ],
+        "alex_dates": [
+          "2016-06-29"
+        ]
+      },
+      "ai_count": 4,
+      "alex_count": 1,
+      "ai_rows": [
+        {
+          "BidderID": 4,
+          "process_phase": 1,
+          "role": "advisor_financial",
+          "bidder_name": "bidder_03",
+          "bidder_alias": "Centerview Partners LLC",
+          "bidder_type": null,
+          "bid_note": "IB",
+          "bid_type": null,
+          "bid_date_precise": "2016-05-11",
+          "bid_date_rough": "first narration: 2016-05-11 Centerview contacts Medivation advisors for Pfizer",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": "Financial advisor to Pfizer; retention date not narrated, anchored to earliest action per \u00a7J1.",
+          "comments": null,
+          "source_quote": "On May 11, 2016, representatives of Centerview Partners LLC (\u201cCenterview\u201d), a financial advisor to Pfizer, contacted representatives of J.P. Morgan Securities LLC (\u201cJ.P. Morgan\u201d) and Evercore Group L.L.C. (\u201cEvercore\u201d), financial advisors to Medivation, regarding Pfizer\u2019s potential strategic interest in Medivation.",
+          "source_page": 25,
+          "flags": [
+            {
+              "code": "date_inferred_from_context",
+              "severity": "soft",
+              "reason": "filing does not narrate retention date; inferred from first mention (\u00a7J1)"
+            }
+          ]
+        },
+        {
+          "BidderID": 5,
+          "process_phase": 1,
+          "role": "advisor_financial",
+          "bidder_name": "bidder_04",
+          "bidder_alias": "J.P. Morgan Securities LLC",
+          "bidder_type": null,
+          "bid_note": "IB",
+          "bid_type": null,
+          "bid_date_precise": "2016-05-11",
+          "bid_date_rough": "first narration: 2016-05-11 acting as Medivation financial advisor",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": "Financial advisor to Medivation; retention date not narrated, anchored to earliest action per \u00a7J1.",
+          "comments": null,
+          "source_quote": "On May 11, 2016, representatives of Centerview Partners LLC (\u201cCenterview\u201d), a financial advisor to Pfizer, contacted representatives of J.P. Morgan Securities LLC (\u201cJ.P. Morgan\u201d) and Evercore Group L.L.C. (\u201cEvercore\u201d), financial advisors to Medivation, regarding Pfizer\u2019s potential strategic interest in Medivation.",
+          "source_page": 25,
+          "flags": [
+            {
+              "code": "date_inferred_from_context",
+              "severity": "soft",
+              "reason": "filing does not narrate retention date; inferred from first mention (\u00a7J1)"
+            }
+          ]
+        },
+        {
+          "BidderID": 6,
+          "process_phase": 1,
+          "role": "advisor_financial",
+          "bidder_name": "bidder_05",
+          "bidder_alias": "Evercore Group L.L.C.",
+          "bidder_type": null,
+          "bid_note": "IB",
+          "bid_type": null,
+          "bid_date_precise": "2016-05-11",
+          "bid_date_rough": "first narration: 2016-05-11 acting as Medivation financial advisor",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": "Financial advisor to Medivation; retention date not narrated, anchored to earliest action per \u00a7J1.",
+          "comments": null,
+          "source_quote": "On May 11, 2016, representatives of Centerview Partners LLC (\u201cCenterview\u201d), a financial advisor to Pfizer, contacted representatives of J.P. Morgan Securities LLC (\u201cJ.P. Morgan\u201d) and Evercore Group L.L.C. (\u201cEvercore\u201d), financial advisors to Medivation, regarding Pfizer\u2019s potential strategic interest in Medivation.",
+          "source_page": 25,
+          "flags": [
+            {
+              "code": "date_inferred_from_context",
+              "severity": "soft",
+              "reason": "filing does not narrate retention date; inferred from first mention (\u00a7J1)"
+            }
+          ]
+        },
+        {
+          "BidderID": 11,
+          "process_phase": 1,
+          "role": "advisor_financial",
+          "bidder_name": "bidder_08",
+          "bidder_alias": "Guggenheim Securities, LLC",
+          "bidder_type": null,
+          "bid_note": "IB",
+          "bid_type": null,
+          "bid_date_precise": "2016-07-07",
+          "bid_date_rough": "first narration: 2016-07-07 Guggenheim acts for Pfizer in DD discussions with Medivation advisors",
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": "Financial advisor to Pfizer; retention date not narrated, anchored to earliest action per \u00a7J1 (first day of July 7-11 range).",
+          "comments": null,
+          "source_quote": "On July 7 through July 11, 2016, representatives of Pfizer, Guggenheim Securities, LLC (\u201cGuggenheim\u201d), a financial advisor to Pfizer, and Centerview had discussions by telephone with representatives of Evercore and J.P. Morgan regarding the due diligence process.",
+          "source_page": 25,
+          "flags": [
+            {
+              "code": "date_inferred_from_context",
+              "severity": "soft",
+              "reason": "filing does not narrate retention date; inferred from first mention (\u00a7J1)"
+            }
+          ]
+        }
+      ],
+      "alex_rows": [
+        {
+          "BidderID": 4,
+          "process_phase": null,
+          "role": "bidder",
+          "bidder_name": "bidder_02",
+          "bidder_alias": "J.P. Morgan",
+          "bidder_type": null,
+          "bid_note": "IB",
+          "bid_type": null,
+          "bid_date_precise": "2016-06-29",
+          "bid_date_rough": null,
+          "bid_value": null,
+          "bid_value_pershare": null,
+          "bid_value_lower": null,
+          "bid_value_upper": null,
+          "bid_value_unit": null,
+          "cash_per_share": null,
+          "stock_per_share": null,
+          "contingent_per_share": null,
+          "consideration_components": null,
+          "aggregate_basis": null,
+          "exclusivity_days": null,
+          "financing_contingent": null,
+          "highly_confident_letter": false,
+          "process_conditions_note": null,
+          "additional_note": null,
+          "comments": "Legal advisor: Cooley. May 2: Pfizer's contact that was viewed well by the target. No mention of the IB engagement earlier",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Sanofi",
+        "bid_note": "Bid"
+      },
+      "ai_date": "2016-04-15",
+      "alex_date": "2016-04-13",
+      "ai_BidderID": 1,
+      "alex_BidderID": 3
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Bid Press Release"
+      },
+      "ai_date": "2016-04-28",
+      "alex_date": "2016-04-13",
+      "ai_BidderID": 2,
+      "alex_BidderID": 2
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": "Sanofi",
+        "bid_note": "NDA"
+      },
+      "ai_date": "2016-07-05",
+      "alex_date": null,
+      "ai_BidderID": 8,
+      "alex_BidderID": 6
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Final Round Inf Ann"
+      },
+      "ai_date": "2016-07-19",
+      "alex_date": "2016-08-14",
+      "ai_BidderID": 12,
+      "alex_BidderID": 10
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Final Round Inf"
+      },
+      "ai_date": "2016-08-08",
+      "alex_date": "2016-08-14",
+      "ai_BidderID": 14,
+      "alex_BidderID": 12
+    },
+    {
+      "type": "loose_match_date_mismatch",
+      "join_key_loose": {
+        "bidder_alias": null,
+        "bid_note": "Final Round"
+      },
+      "ai_date": "2016-08-19",
+      "alex_date": "2016-08-14",
+      "ai_BidderID": 18,
+      "alex_BidderID": 13
+    }
+  ],
+  "alex_flagged_hits": [],
+  "notes": []
+}

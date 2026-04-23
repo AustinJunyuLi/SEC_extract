@@ -1,0 +1,1963 @@
+{
+  "deal": {
+    "slug": "mac-gray",
+    "TargetName": "MAC-GRAY CORPORATION",
+    "Acquirer": "CSC SERVICEWORKS, INC.",
+    "DateAnnounced": "2013-10-15",
+    "DateEffective": null,
+    "FormType": "DEFM14A",
+    "URL": "https://www.sec.gov/Archives/edgar/data/1038280/0001047469-13-010973-index.htm",
+    "auction": true,
+    "all_cash": true,
+    "target_legal_counsel": "Goodwin Procter LLP",
+    "acquirer_legal_counsel": "Kirkland & Ellis LLP",
+    "go_shop_days": null,
+    "termination_fee": 11000000.0,
+    "termination_fee_pct": 3.2,
+    "reverse_termination_fee": 15000000.0,
+    "bidder_registry": {
+      "bidder_01": {
+        "resolved_name": "BofA Merrill Lynch",
+        "aliases_observed": [
+          "BofA Merrill Lynch"
+        ],
+        "first_appearance_row_index": 1
+      },
+      "bidder_02": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Party A"
+        ],
+        "first_appearance_row_index": 2
+      },
+      "bidder_03": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Party B"
+        ],
+        "first_appearance_row_index": 8
+      },
+      "bidder_04": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Party C"
+        ],
+        "first_appearance_row_index": 9
+      },
+      "bidder_05": {
+        "resolved_name": "CSC/Pamplona",
+        "aliases_observed": [
+          "CSC/Pamplona"
+        ],
+        "first_appearance_row_index": 10
+      },
+      "bidder_06": {
+        "resolved_name": "CSC",
+        "aliases_observed": [
+          "CSC"
+        ],
+        "first_appearance_row_index": 9
+      },
+      "bidder_07": {
+        "resolved_name": "Pamplona",
+        "aliases_observed": [
+          "Pamplona"
+        ],
+        "first_appearance_row_index": 9
+      },
+      "bidder_08": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Financial 1"
+        ],
+        "first_appearance_row_index": 12
+      },
+      "bidder_09": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Financial 2"
+        ],
+        "first_appearance_row_index": 13
+      },
+      "bidder_10": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Financial 3"
+        ],
+        "first_appearance_row_index": 14
+      },
+      "bidder_11": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Financial 4"
+        ],
+        "first_appearance_row_index": 15
+      },
+      "bidder_12": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Financial 5"
+        ],
+        "first_appearance_row_index": 16
+      },
+      "bidder_13": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Financial 6"
+        ],
+        "first_appearance_row_index": 17
+      },
+      "bidder_14": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Financial 7"
+        ],
+        "first_appearance_row_index": 18
+      },
+      "bidder_15": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Financial 8"
+        ],
+        "first_appearance_row_index": 19
+      },
+      "bidder_16": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Financial 9"
+        ],
+        "first_appearance_row_index": 20
+      },
+      "bidder_17": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Financial 10"
+        ],
+        "first_appearance_row_index": 21
+      },
+      "bidder_18": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Financial 11"
+        ],
+        "first_appearance_row_index": 22
+      },
+      "bidder_19": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Financial 12"
+        ],
+        "first_appearance_row_index": 23
+      },
+      "bidder_20": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Financial 13"
+        ],
+        "first_appearance_row_index": 24
+      },
+      "bidder_21": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Financial 14"
+        ],
+        "first_appearance_row_index": 25
+      },
+      "bidder_22": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Financial 15"
+        ],
+        "first_appearance_row_index": 26
+      },
+      "bidder_23": {
+        "resolved_name": null,
+        "aliases_observed": [
+          "Financial 16"
+        ],
+        "first_appearance_row_index": 27
+      }
+    },
+    "deal_flags": []
+  },
+  "events": [
+    {
+      "BidderID": 1,
+      "process_phase": 1,
+      "role": "advisor_financial",
+      "bidder_name": "bidder_01",
+      "bidder_alias": "BofA Merrill Lynch",
+      "bidder_type": null,
+      "bid_note": "IB",
+      "bid_type": null,
+      "bid_date_precise": "2012-10-23",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": null,
+      "comments": "Original BofA engagement for the 2011-2012 Discussions (Mac-Gray's possible acquisition of CSC); subsequently terminated on 5/15/2013 and BofA re-engaged for the sale process on 5/31/2013.",
+      "source_quote": "In connection with Mac-Gray's consideration of a possible acquisition of CSC, which we refer to as the 2011-2012 Discussions, Mac-Gray engaged BofA Merrill Lynch on October 23, 2012.",
+      "source_page": 33,
+      "flags": [],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 2,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_02",
+      "bidder_alias": "Party A",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Target Interest",
+      "bid_type": null,
+      "bid_date_precise": "2013-04-05",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": null,
+      "comments": "Board authorized management to work with BofA Merrill Lynch to explore transactional opportunities, specifically identifying Party A as a strategic party of interest.",
+      "source_quote": "As part of its ongoing review of strategic alternatives, at an in-person meeting of the Board on April 5, 2013, the Board discussed the sale of CSC to Pamplona as well as industry-wide merger and acquisition activity and dynamics, and authorized Mac-Gray management to work with BofA Merrill Lynch to explore transactional opportunities that might be available to Mac-Gray, including opportunities with another strategic party, whom we refer to as Party A, in the laundry facilities management industry.",
+      "source_page": 33,
+      "flags": [
+        {
+          "code": "bidder_type_provisional",
+          "severity": "info",
+          "reason": "Party A classification provisional; resolved on later rows as a strategic industry participant (laundry facilities management)."
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 3,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_02",
+      "bidder_alias": "Party A",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Bidder Interest",
+      "bid_type": null,
+      "bid_date_precise": "2013-04-08",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": null,
+      "comments": "BofA (on Board's instruction) phoned Party A; Party A indicated interest in a possible business combination.",
+      "source_quote": "On April 8, 2013, representatives of BofA Merrill Lynch, as instructed by the Board, telephoned a representative of Party A to discuss generally a possible business combination between Party A and Mac-Gray. During this call, the representative of Party A indicated that Party A might consider a business combination with Mac-Gray.",
+      "source_page": 33,
+      "flags": [],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 4,
+      "process_phase": 1,
+      "role": "advisor_financial",
+      "bidder_name": "bidder_01",
+      "bidder_alias": "BofA Merrill Lynch",
+      "bidder_type": null,
+      "bid_note": "IB Terminated",
+      "bid_type": null,
+      "bid_date_precise": "2013-05-15",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": null,
+      "comments": "Termination of the 2011-2012 Discussions engagement letter; precedes re-engagement for the sale process on 5/31/2013.",
+      "source_quote": "On May 15, 2013, Mac-Gray sent a letter to BofA Merrill Lynch terminating their engagement in connection with the 2011-2012 Discussions.",
+      "source_page": 35,
+      "flags": [],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 5,
+      "process_phase": 1,
+      "role": "advisor_financial",
+      "bidder_name": "bidder_01",
+      "bidder_alias": "BofA Merrill Lynch",
+      "bidder_type": null,
+      "bid_note": "IB",
+      "bid_type": null,
+      "bid_date_precise": "2013-05-31",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": null,
+      "comments": "Re-engagement of BofA Merrill Lynch as financial advisor for the Mac-Gray sale process.",
+      "source_quote": "On May 31, 2013, Mac-Gray entered into an engagement letter with BofA Merrill Lynch with respect to the Board's undertaking a review of strategic alternatives, including a potential sale process, and in which BofA Merrill Lynch agreed not to engage as a possible source of new acquisition financing for any potential buyers in connection with any such sale process without Mac-Gray's prior written consent.",
+      "source_page": 36,
+      "flags": [],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 6,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_02",
+      "bidder_alias": "Party A",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2013-06-21",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": 17.0,
+      "bid_value_upper": 19.0,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "additional_note": "Unsolicited proposal; Party A signed NDA later on 2013-08-05 (\u00a7C4 pattern, not \u00a7D1.a).",
+      "comments": "Party A June 21 proposal (per filing's defined term).",
+      "source_quote": "On June 21, 2013, Party A submitted an unsolicited proposal to the Mac-Gray Board of Directors offering to purchase Mac-Gray for an all-cash purchase price of $17.00 to $19.00 per share, which we refer to as the Party A June 21 proposal.",
+      "source_page": 36,
+      "flags": [
+        {
+          "code": "pre_nda_informal_bid",
+          "severity": "info",
+          "reason": "Party A submitted an unsolicited concrete price indication ($17-19) on 6/21/2013 BEFORE signing an NDA; Party A later signed NDA on 8/5/2013 (\u00a7C4, not \u00a7D1.a). Range-valued pre-NDA indication is informal by construction."
+        },
+        {
+          "code": "bid_range",
+          "severity": "info",
+          "reason": "Range $17.00-$19.00 per share"
+        }
+      ],
+      "bid_type_inference_note": "Informal per \u00a7G1 structural signal (true range bid, lower 17.00 < upper 19.00) and \u00a7C4 (pre-NDA concrete-price indication from a bidder who later signs NDA \u2192 informal by construction).",
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 7,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Target Sale",
+      "bid_type": null,
+      "bid_date_precise": "2013-06-24",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": null,
+      "comments": "Special Committee formally resolves to consider a sale of Mac-Gray and authorizes contacting 50 parties.",
+      "source_quote": "In light of the factors discussed at this meeting, the Special Committee concluded that it would be in the best interests of stockholders to consider a potential sale of Mac-Gray and to review this alternative as compared to Mac-Gray's continuing as a stand-alone company and the risks and opportunities associated with execution of Mac-Gray's strategic business plan.",
+      "source_page": 37,
+      "flags": [],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 8,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Party B",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-06-28",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": null,
+      "comments": null,
+      "source_quote": "Later on June 28, 2013, Party B, entered into a confidentiality and standstill agreement with Mac-Gray and was provided with an informational package for the purpose of providing Party B with data to formulate a preliminary indication of interest.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "bidder_type_provisional",
+          "severity": "info",
+          "reason": "Party B treated as financial bidder per page 38 enumeration ('18 financial bidders (including Party B and Party C)')."
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 9,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_04",
+      "bidder_alias": "Party C",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-06-30",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": null,
+      "comments": null,
+      "source_quote": "On June 30, 2013, Party C entered into a confidentiality and standstill agreement with Mac-Gray and was provided with an informational package for the purpose of providing Party C with data to formulate a preliminary indication of interest.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "bidder_type_provisional",
+          "severity": "info",
+          "reason": "Party C treated as financial bidder per page 38 enumeration ('18 financial bidders (including Party B and Party C)')."
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 10,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_05",
+      "bidder_alias": "CSC/Pamplona",
+      "bidder_type": {
+        "base": "mixed",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-07-11",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": null,
+      "comments": null,
+      "source_quote": "On July 11, 2013, CSC/Pamplona entered into a confidentiality and standstill agreement with Mac-Gray and were provided with an informational package for the purpose of providing CSC/Pamplona with data to formulate a preliminary indication of interest.",
+      "source_page": 39,
+      "flags": [
+        {
+          "code": "joint_nda_aggregated",
+          "severity": "info",
+          "reason": "Filing narrates a single consortium NDA event for 'CSC/Pamplona' (no per-constituent detail); \u00a7E2.b aggregated row; bidder_alias=CSC/Pamplona; constituents CSC (bidder_06) and Pamplona (bidder_07) carried in joint_bidder_members."
+        }
+      ],
+      "highly_confident_letter": false,
+      "joint_bidder_members": [
+        "bidder_06",
+        "bidder_07"
+      ]
+    },
+    {
+      "BidderID": 11,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_05",
+      "bidder_alias": "CSC/Pamplona",
+      "bidder_type": {
+        "base": "mixed",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2013-07-23",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": 18.5,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": 18.5,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "additional_note": "Preliminary indication of interest (initial round).",
+      "comments": null,
+      "source_quote": "On July 23, 2013, CSC/Pamplona submitted a preliminary indication of interest at an all-cash purchase price of $18.50 per share.",
+      "source_page": 39,
+      "flags": [],
+      "bid_type_inference_note": "Informal per \u00a7G1: filing explicitly labels it 'preliminary indication of interest'; no binding offer, no commitment letters, pre-final-round round.",
+      "highly_confident_letter": false,
+      "joint_bidder_members": [
+        "bidder_06",
+        "bidder_07"
+      ]
+    },
+    {
+      "BidderID": 12,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_08",
+      "bidder_alias": "Financial 1",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": "over the next two months (anchor: 2013-06-24 Special Committee decision + ~30 days midpoint)",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "\u00a7E5 unnamed financial placeholder 1/16; filling exact-count 20 NDAs minus 4 named.",
+      "comments": null,
+      "source_quote": "Over the next two months a total of 20 potential bidders, including two strategic bidders (Party A and CSC/Pamplona) and 18 financial bidders (including Party B and Party C), entered into confidentiality agreements with Mac-Gray on a form provided by Mac-Gray, the terms of which were individually negotiated with potential bidders, but did not vary materially from the form provided.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "unnamed_count_placeholder",
+          "severity": "info",
+          "reason": "16 unnamed financial \u00a7E5 placeholders (Financial 1..16) filling the balance of the filing's exact 20-NDA count (2 named strategic: Party A, CSC/Pamplona consortium; 18 financial of which 2 named: Party B, Party C)."
+        },
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Filing narrates 20 NDAs 'over the next two months' starting from 2013-06-24 Special Committee decision; placeholder anchored to midpoint."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_08' signed NDA at row 11 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 13,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_09",
+      "bidder_alias": "Financial 2",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": "over the next two months (anchor: 2013-06-24 Special Committee decision + ~30 days midpoint)",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "\u00a7E5 unnamed financial placeholder 2/16; filling exact-count 20 NDAs minus 4 named.",
+      "comments": null,
+      "source_quote": "Over the next two months a total of 20 potential bidders, including two strategic bidders (Party A and CSC/Pamplona) and 18 financial bidders (including Party B and Party C), entered into confidentiality agreements with Mac-Gray on a form provided by Mac-Gray, the terms of which were individually negotiated with potential bidders, but did not vary materially from the form provided.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Filing narrates 20 NDAs 'over the next two months' starting from 2013-06-24 Special Committee decision; placeholder anchored to midpoint."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_09' signed NDA at row 12 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 14,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_10",
+      "bidder_alias": "Financial 3",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": "over the next two months (anchor: 2013-06-24 Special Committee decision + ~30 days midpoint)",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "\u00a7E5 unnamed financial placeholder 3/16; filling exact-count 20 NDAs minus 4 named.",
+      "comments": null,
+      "source_quote": "Over the next two months a total of 20 potential bidders, including two strategic bidders (Party A and CSC/Pamplona) and 18 financial bidders (including Party B and Party C), entered into confidentiality agreements with Mac-Gray on a form provided by Mac-Gray, the terms of which were individually negotiated with potential bidders, but did not vary materially from the form provided.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Filing narrates 20 NDAs 'over the next two months' starting from 2013-06-24 Special Committee decision; placeholder anchored to midpoint."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_10' signed NDA at row 13 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 15,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_11",
+      "bidder_alias": "Financial 4",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": "over the next two months (anchor: 2013-06-24 Special Committee decision + ~30 days midpoint)",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "\u00a7E5 unnamed financial placeholder 4/16; filling exact-count 20 NDAs minus 4 named.",
+      "comments": null,
+      "source_quote": "Over the next two months a total of 20 potential bidders, including two strategic bidders (Party A and CSC/Pamplona) and 18 financial bidders (including Party B and Party C), entered into confidentiality agreements with Mac-Gray on a form provided by Mac-Gray, the terms of which were individually negotiated with potential bidders, but did not vary materially from the form provided.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Filing narrates 20 NDAs 'over the next two months' starting from 2013-06-24 Special Committee decision; placeholder anchored to midpoint."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_11' signed NDA at row 14 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 16,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_12",
+      "bidder_alias": "Financial 5",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": "over the next two months (anchor: 2013-06-24 Special Committee decision + ~30 days midpoint)",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "\u00a7E5 unnamed financial placeholder 5/16; filling exact-count 20 NDAs minus 4 named.",
+      "comments": null,
+      "source_quote": "Over the next two months a total of 20 potential bidders, including two strategic bidders (Party A and CSC/Pamplona) and 18 financial bidders (including Party B and Party C), entered into confidentiality agreements with Mac-Gray on a form provided by Mac-Gray, the terms of which were individually negotiated with potential bidders, but did not vary materially from the form provided.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Filing narrates 20 NDAs 'over the next two months' starting from 2013-06-24 Special Committee decision; placeholder anchored to midpoint."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_12' signed NDA at row 15 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 17,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_13",
+      "bidder_alias": "Financial 6",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": "over the next two months (anchor: 2013-06-24 Special Committee decision + ~30 days midpoint)",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "\u00a7E5 unnamed financial placeholder 6/16; filling exact-count 20 NDAs minus 4 named.",
+      "comments": null,
+      "source_quote": "Over the next two months a total of 20 potential bidders, including two strategic bidders (Party A and CSC/Pamplona) and 18 financial bidders (including Party B and Party C), entered into confidentiality agreements with Mac-Gray on a form provided by Mac-Gray, the terms of which were individually negotiated with potential bidders, but did not vary materially from the form provided.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Filing narrates 20 NDAs 'over the next two months' starting from 2013-06-24 Special Committee decision; placeholder anchored to midpoint."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_13' signed NDA at row 16 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 18,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_14",
+      "bidder_alias": "Financial 7",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": "over the next two months (anchor: 2013-06-24 Special Committee decision + ~30 days midpoint)",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "\u00a7E5 unnamed financial placeholder 7/16; filling exact-count 20 NDAs minus 4 named.",
+      "comments": null,
+      "source_quote": "Over the next two months a total of 20 potential bidders, including two strategic bidders (Party A and CSC/Pamplona) and 18 financial bidders (including Party B and Party C), entered into confidentiality agreements with Mac-Gray on a form provided by Mac-Gray, the terms of which were individually negotiated with potential bidders, but did not vary materially from the form provided.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Filing narrates 20 NDAs 'over the next two months' starting from 2013-06-24 Special Committee decision; placeholder anchored to midpoint."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_14' signed NDA at row 17 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 19,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_15",
+      "bidder_alias": "Financial 8",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": "over the next two months (anchor: 2013-06-24 Special Committee decision + ~30 days midpoint)",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "\u00a7E5 unnamed financial placeholder 8/16; filling exact-count 20 NDAs minus 4 named.",
+      "comments": null,
+      "source_quote": "Over the next two months a total of 20 potential bidders, including two strategic bidders (Party A and CSC/Pamplona) and 18 financial bidders (including Party B and Party C), entered into confidentiality agreements with Mac-Gray on a form provided by Mac-Gray, the terms of which were individually negotiated with potential bidders, but did not vary materially from the form provided.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Filing narrates 20 NDAs 'over the next two months' starting from 2013-06-24 Special Committee decision; placeholder anchored to midpoint."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_15' signed NDA at row 18 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 20,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_16",
+      "bidder_alias": "Financial 9",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": "over the next two months (anchor: 2013-06-24 Special Committee decision + ~30 days midpoint)",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "\u00a7E5 unnamed financial placeholder 9/16; filling exact-count 20 NDAs minus 4 named.",
+      "comments": null,
+      "source_quote": "Over the next two months a total of 20 potential bidders, including two strategic bidders (Party A and CSC/Pamplona) and 18 financial bidders (including Party B and Party C), entered into confidentiality agreements with Mac-Gray on a form provided by Mac-Gray, the terms of which were individually negotiated with potential bidders, but did not vary materially from the form provided.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Filing narrates 20 NDAs 'over the next two months' starting from 2013-06-24 Special Committee decision; placeholder anchored to midpoint."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_16' signed NDA at row 19 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 21,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_17",
+      "bidder_alias": "Financial 10",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": "over the next two months (anchor: 2013-06-24 Special Committee decision + ~30 days midpoint)",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "\u00a7E5 unnamed financial placeholder 10/16; filling exact-count 20 NDAs minus 4 named.",
+      "comments": null,
+      "source_quote": "Over the next two months a total of 20 potential bidders, including two strategic bidders (Party A and CSC/Pamplona) and 18 financial bidders (including Party B and Party C), entered into confidentiality agreements with Mac-Gray on a form provided by Mac-Gray, the terms of which were individually negotiated with potential bidders, but did not vary materially from the form provided.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Filing narrates 20 NDAs 'over the next two months' starting from 2013-06-24 Special Committee decision; placeholder anchored to midpoint."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_17' signed NDA at row 20 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 22,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_18",
+      "bidder_alias": "Financial 11",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": "over the next two months (anchor: 2013-06-24 Special Committee decision + ~30 days midpoint)",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "\u00a7E5 unnamed financial placeholder 11/16; filling exact-count 20 NDAs minus 4 named.",
+      "comments": null,
+      "source_quote": "Over the next two months a total of 20 potential bidders, including two strategic bidders (Party A and CSC/Pamplona) and 18 financial bidders (including Party B and Party C), entered into confidentiality agreements with Mac-Gray on a form provided by Mac-Gray, the terms of which were individually negotiated with potential bidders, but did not vary materially from the form provided.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Filing narrates 20 NDAs 'over the next two months' starting from 2013-06-24 Special Committee decision; placeholder anchored to midpoint."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_18' signed NDA at row 21 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 23,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_19",
+      "bidder_alias": "Financial 12",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": "over the next two months (anchor: 2013-06-24 Special Committee decision + ~30 days midpoint)",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "\u00a7E5 unnamed financial placeholder 12/16; filling exact-count 20 NDAs minus 4 named.",
+      "comments": null,
+      "source_quote": "Over the next two months a total of 20 potential bidders, including two strategic bidders (Party A and CSC/Pamplona) and 18 financial bidders (including Party B and Party C), entered into confidentiality agreements with Mac-Gray on a form provided by Mac-Gray, the terms of which were individually negotiated with potential bidders, but did not vary materially from the form provided.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Filing narrates 20 NDAs 'over the next two months' starting from 2013-06-24 Special Committee decision; placeholder anchored to midpoint."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_19' signed NDA at row 22 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 24,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_20",
+      "bidder_alias": "Financial 13",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": "over the next two months (anchor: 2013-06-24 Special Committee decision + ~30 days midpoint)",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "\u00a7E5 unnamed financial placeholder 13/16; filling exact-count 20 NDAs minus 4 named.",
+      "comments": null,
+      "source_quote": "Over the next two months a total of 20 potential bidders, including two strategic bidders (Party A and CSC/Pamplona) and 18 financial bidders (including Party B and Party C), entered into confidentiality agreements with Mac-Gray on a form provided by Mac-Gray, the terms of which were individually negotiated with potential bidders, but did not vary materially from the form provided.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Filing narrates 20 NDAs 'over the next two months' starting from 2013-06-24 Special Committee decision; placeholder anchored to midpoint."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_20' signed NDA at row 23 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 25,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_21",
+      "bidder_alias": "Financial 14",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": "over the next two months (anchor: 2013-06-24 Special Committee decision + ~30 days midpoint)",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "\u00a7E5 unnamed financial placeholder 14/16; filling exact-count 20 NDAs minus 4 named.",
+      "comments": null,
+      "source_quote": "Over the next two months a total of 20 potential bidders, including two strategic bidders (Party A and CSC/Pamplona) and 18 financial bidders (including Party B and Party C), entered into confidentiality agreements with Mac-Gray on a form provided by Mac-Gray, the terms of which were individually negotiated with potential bidders, but did not vary materially from the form provided.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Filing narrates 20 NDAs 'over the next two months' starting from 2013-06-24 Special Committee decision; placeholder anchored to midpoint."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_21' signed NDA at row 24 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 26,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_22",
+      "bidder_alias": "Financial 15",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": "over the next two months (anchor: 2013-06-24 Special Committee decision + ~30 days midpoint)",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "\u00a7E5 unnamed financial placeholder 15/16; filling exact-count 20 NDAs minus 4 named.",
+      "comments": null,
+      "source_quote": "Over the next two months a total of 20 potential bidders, including two strategic bidders (Party A and CSC/Pamplona) and 18 financial bidders (including Party B and Party C), entered into confidentiality agreements with Mac-Gray on a form provided by Mac-Gray, the terms of which were individually negotiated with potential bidders, but did not vary materially from the form provided.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Filing narrates 20 NDAs 'over the next two months' starting from 2013-06-24 Special Committee decision; placeholder anchored to midpoint."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_22' signed NDA at row 25 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 27,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_23",
+      "bidder_alias": "Financial 16",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": "over the next two months (anchor: 2013-06-24 Special Committee decision + ~30 days midpoint)",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "\u00a7E5 unnamed financial placeholder 16/16; filling exact-count 20 NDAs minus 4 named.",
+      "comments": null,
+      "source_quote": "Over the next two months a total of 20 potential bidders, including two strategic bidders (Party A and CSC/Pamplona) and 18 financial bidders (including Party B and Party C), entered into confidentiality agreements with Mac-Gray on a form provided by Mac-Gray, the terms of which were individually negotiated with potential bidders, but did not vary materially from the form provided.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Filing narrates 20 NDAs 'over the next two months' starting from 2013-06-24 Special Committee decision; placeholder anchored to midpoint."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_23' signed NDA at row 26 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 28,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Party B",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": 17.0,
+      "bid_value_upper": 18.0,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "additional_note": "Preliminary indication of interest (initial round).",
+      "comments": null,
+      "source_quote": "On July 24, 2013, Party B submitted a preliminary indication of interest at an all-cash purchase price of $17.00 to $18.00 per share.",
+      "source_page": 39,
+      "flags": [
+        {
+          "code": "bid_range",
+          "severity": "info",
+          "reason": "Range $17.00-$18.00 per share"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 29,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_04",
+      "bidder_alias": "Party C",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2013-07-24",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": 15.0,
+      "bid_value_upper": 17.0,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "additional_note": "Oral preliminary indication of interest (telephone call to BofA).",
+      "comments": null,
+      "source_quote": "Also on July 24, 2013, representatives from Party C called BofA Merrill Lynch and presented an oral preliminary indication of interest at an all-cash purchase price of $15.00 to $17.00 per share.",
+      "source_page": 39,
+      "flags": [
+        {
+          "code": "bid_range",
+          "severity": "info",
+          "reason": "Range $15.00-$17.00 per share"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 30,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_04",
+      "bidder_alias": "Party C",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2013-07-25",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": 16.0,
+      "bid_value_upper": 16.5,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "additional_note": "Written indication of interest superseding the 7/24 oral range.",
+      "comments": null,
+      "source_quote": "Later on July 25, 2013, Party C submitted a written indication of interest at an all-cash purchase price of $16.00 to $16.50 per share.",
+      "source_page": 40,
+      "flags": [
+        {
+          "code": "bid_range",
+          "severity": "info",
+          "reason": "Range $16.00-$16.50 per share"
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 31,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_02",
+      "bidder_alias": "Party A",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2013-08-05",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "NDA executed AFTER Party A's 6/21 pre-NDA informal bid per \u00a7C4.",
+      "comments": "Terms of customer and employee non-solicitation provisions finalized 7/27/2013; NDA executed 8/5/2013.",
+      "source_quote": "Discussions with Party A resumed on July 27, 2103 and Party A and the Transaction Committee agreed to the terms of the customer and employee non-solicitation provisions. On August 5, 2013, Party A entered into a confidentiality and standstill agreement with Mac-Gray and was provided with an informational package for the purpose of providing Party A with data to potentially improve the terms of the Party A June 21 proposal.",
+      "source_page": 40,
+      "flags": [],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 32,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_05",
+      "bidder_alias": "CSC/Pamplona",
+      "bidder_type": {
+        "base": "mixed",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2013-09-09",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": 19.5,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": 19.5,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "additional_note": "Revised indication of interest with Pamplona 100% capital commitment and 2-week exclusivity request.",
+      "comments": null,
+      "source_quote": "On September 9, 2013, CSC/Pamplona submitted a revised indication of interest with an all-cash purchase price of $19.50 per share, indicating that Pamplona was committed to provide 100% of the capital required to consummate the transaction and requesting that CSC/Pamplona and Mac-Gray agree to exclusive negotiations for two weeks.",
+      "source_page": 41,
+      "flags": [],
+      "bid_type_inference_note": "Informal per \u00a7G1: still labeled 'revised indication of interest' (not binding), no merger-agreement markup, submitted before the final round was announced; \u00a7C3 unified Bid with bid_type=informal.",
+      "highly_confident_letter": false,
+      "joint_bidder_members": [
+        "bidder_06",
+        "bidder_07"
+      ]
+    },
+    {
+      "BidderID": 33,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Party B",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2013-09-09",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": 18.5,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": 18.5,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "additional_note": "Revised indication of interest; proposed equity + third-party debt financing; NOT firm-financed.",
+      "comments": null,
+      "source_quote": "On September 9, 2013, Party B also submitted a revised indication of interest with an all-cash purchase price of $18.50 per share and proposed to finance the transaction with a combination of equity from affiliated funds and third party debt. Party B's revised indication of interest did not include a firm financing commitment.",
+      "source_page": 41,
+      "flags": [],
+      "bid_type_inference_note": "Informal per \u00a7G1: filing explicitly states 'revised indication of interest did not include a firm financing commitment'; \u00a7G1 formal triggers (fully financed, executed commitment letters) not met.",
+      "financing_contingent": true,
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 34,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_02",
+      "bidder_alias": "Party A",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2013-09-10",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": 18.0,
+      "bid_value_upper": 19.0,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "additional_note": "Revised indication of interest with credit facilities / affiliated equity financing; NOT firm-financed.",
+      "comments": null,
+      "source_quote": "On September 10, 2013, Party A submitted a revised indication of interest with an all-cash purchase price of $18.00 to $19.00 per share, to be financed by outstanding credit facilities or affiliated equity sources.",
+      "source_page": 41,
+      "flags": [
+        {
+          "code": "bid_range",
+          "severity": "info",
+          "reason": "Range $18.00-$19.00 per share"
+        }
+      ],
+      "financing_contingent": true,
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 35,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_04",
+      "bidder_alias": "Party C",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2013-09-10",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": 16.0,
+      "bid_value_upper": 17.0,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "additional_note": "Oral revised indication of interest (telephone call); NOT firm-financed.",
+      "comments": null,
+      "source_quote": "Also on September 10, 2013, in a telephone call to a representative of BofA Merrill Lynch, a representative of Party C indicated that it was submitting a revised oral indication of interest with an all-cash purchase price of $16.00 to $17.00 per share. Neither Party A's nor Party C's revised indication of interest included a firm financing commitment.",
+      "source_page": 41,
+      "flags": [
+        {
+          "code": "bid_range",
+          "severity": "info",
+          "reason": "Range $16.00-$17.00 per share"
+        }
+      ],
+      "financing_contingent": true,
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 36,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Final Round Inf Ann",
+      "bid_type": null,
+      "bid_date_precise": "2013-09-11",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "Informal final round announcement; BofA calls each of Party A, Party B, Party C, CSC/Pamplona.",
+      "comments": "Per \u00a7K2 implicit final-round inference; filing phrasing 'request final indications of interest' maps to Final Round Inf Ann (informal).",
+      "source_quote": "the Special Committee instructed BofA Merrill Lynch to call each of Party A, Party B, Party C and CSC/Pamplona to request final indications of interest by September 18, 2013 and to indicate that Mac-Gray would consider engaging in a short period of exclusive negotiations with one of the bidders depending upon, among other things, the proposed purchase price and the level of deal certainty indicated in the bidder's final proposal.",
+      "source_page": 42,
+      "flags": [
+        {
+          "code": "final_round_inferred",
+          "severity": "info",
+          "reason": "Filing says 'request final indications of interest' (no explicit 'final round' phrase); per \u00a7K2 the phrase maps to Final Round Inf Ann (informal final round)."
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 37,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_05",
+      "bidder_alias": "CSC/Pamplona",
+      "bidder_type": {
+        "base": "mixed",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2013-09-18",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": 20.75,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": 20.75,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "additional_note": "Final-round 'indication of interest' with Pamplona 100% capital commitment and request for 2-week exclusivity.",
+      "comments": null,
+      "source_quote": "On September 18, 2013, CSC/Pamplona submitted a proposal for an all-cash purchase price of $20.75 per share, reiterating that Pamplona was committed to provide 100% of the capital required to consummate the transaction and requesting that CSC/Pamplona and Mac-Gray agree to engage in exclusive negotiations for two weeks.",
+      "source_page": 42,
+      "flags": [],
+      "bid_type_inference_note": "Informal per \u00a7G1 process-position fallback: submitted in response to the 9/11 Final Round Inf Ann (informal final round); filing calls it a 'proposal' but no merger-agreement markup, no commitment letters, no 'binding' language.",
+      "highly_confident_letter": false,
+      "joint_bidder_members": [
+        "bidder_06",
+        "bidder_07"
+      ]
+    },
+    {
+      "BidderID": 38,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Party B",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2013-09-18",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": 21.5,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": 19.0,
+      "stock_per_share": null,
+      "contingent_per_share": 2.5,
+      "consideration_components": [
+        "cash",
+        "earnout"
+      ],
+      "aggregate_basis": null,
+      "additional_note": "$19 cash at closing + $2.50 option value (options representing 10% of new equity, strike = Party B's cost basis, vest on achievement of base-case management projections over 5 years).",
+      "comments": "Highest nominal bid of the final-round informal round; target ultimately dropped this bid in favor of CSC/Pamplona's $21.25 (Mac-Gray 'drops highest formal bid' archetype \u2014 though this bid is informal per filing).",
+      "source_quote": "On September 18, 2013, Party B also submitted a revised indication of interest with a purchase price that Party B valued at $21.50 per share, including $19.00 of cash to be paid at closing and the remaining per share price to be paid in the form of options to be issued to Mac-Gray stockholders, representing 10% of the new equity with a strike price equal to Party B's initial cost basis. These options, which we refer to as the Party B options, would vest on the achievement of the base case management projections ( *i.e.* , over five years), excluding any future acquisitions. Party B's proposal stated that it valued the Party B options at $2.50 of incremental value per share.",
+      "source_page": 42,
+      "flags": [
+        {
+          "code": "contingent_type_ambiguous",
+          "severity": "info",
+          "reason": "Party B options are equity-performance options (vest on base-case projections over 5 years); classified as 'earnout' rather than 'cvr' per \u00a7H2 filing-agnostic default, but could plausibly be classified differently."
+        }
+      ],
+      "bid_type_inference_note": "Informal per \u00a7G1 process-position fallback: submitted in response to 9/11 Final Round Inf Ann (informal round); filing explicitly labels 'revised indication of interest'; \u00a7G1 formal triggers not met.",
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 39,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_02",
+      "bidder_alias": "Party A",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Bid",
+      "bid_type": "formal",
+      "bid_date_precise": "2013-09-18",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": 18.0,
+      "bid_value_upper": 19.0,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "additional_note": "Reiteration-as-'best and final' of 9/10 $18-19 range; no new number.",
+      "comments": null,
+      "source_quote": "Also on September 18, 2013, Party A reiterated in a telephone call to a representative of BofA Merrill Lynch that its previous indication of interest with an all-cash purchase price of $18.00 to $19.00 per share was its best and final offer.",
+      "source_page": 42,
+      "flags": [
+        {
+          "code": "range_with_formal_trigger",
+          "severity": "soft",
+          "reason": "\u00a7G1 formal trigger 'best and final' coexists with range ($18-$19); per \u00a7G1 formal wins but flag soft for manual review."
+        },
+        {
+          "code": "bid_range",
+          "severity": "info",
+          "reason": "Range $18.00-$19.00 per share"
+        }
+      ],
+      "bid_type_inference_note": "Formal per \u00a7G1 trigger 'best and final offer'; range ($18-19) coexists with formal trigger per \u00a7G1 rule ('formal trigger wins') and range_with_formal_trigger soft flag attached for manual review.",
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 40,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_04",
+      "bidder_alias": "Party C",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "DropAtInf",
+      "bid_type": null,
+      "bid_date_precise": "2013-09-18",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "Party C did not submit a revised indication of interest or reiterate its prior bid on the 9/18 deadline.",
+      "comments": null,
+      "source_quote": "Party C did not submit a revised indication of interest or reiterate its prior indication of interest of an all-cash purchase price of $16.00 to $17.00 per share nor did it specify any reasons in connection therewith.",
+      "source_page": 42,
+      "flags": [],
+      "highly_confident_letter": false,
+      "drop_reason_note": "Party C self-withdrew at the informal final round by not submitting a revised indication of interest on the 9/18 deadline; no reasons specified."
+    },
+    {
+      "BidderID": 41,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "bid_note": "Final Round Inf",
+      "bid_type": null,
+      "bid_date_precise": "2013-09-18",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "Informal final-round deadline; bids from Party A (reiteration), Party B, CSC/Pamplona received; Party C did not submit.",
+      "comments": null,
+      "source_quote": "the Special Committee instructed BofA Merrill Lynch to call each of Party A, Party B, Party C and CSC/Pamplona to request final indications of interest by September 18, 2013 and to indicate that Mac-Gray would consider engaging in a short period of exclusive negotiations with one of the bidders depending upon, among other things, the proposed purchase price and the level of deal certainty indicated in the bidder's final proposal.",
+      "source_page": 42,
+      "flags": [
+        {
+          "code": "final_round_inferred",
+          "severity": "info",
+          "reason": "Filing states deadline as '9/18 final indications of interest'; Final Round Inf deadline row inferred per \u00a7K2."
+        }
+      ],
+      "highly_confident_letter": false
+    },
+    {
+      "BidderID": 42,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_05",
+      "bidder_alias": "CSC/Pamplona",
+      "bidder_type": {
+        "base": "mixed",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Bid",
+      "bid_type": "formal",
+      "bid_date_precise": "2013-09-21",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": 21.25,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": 21.25,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "additional_note": "'Last and best offer' with Pamplona 100% capital commitment, no financing contingency, and 2-week exclusivity grant.",
+      "comments": "Filing refers to this offer as the 'CSC/Pamplona final proposal'.",
+      "source_quote": "Later that same day, the representative of CSC/Pamplona called the members of the Transaction Committee to confirm that CSC/Pamplona were willing to increase their all-cash purchase price to $21.25 per share as a last and best offer, provided that Mac-Gray agree to a two week period of exclusive negotiations.",
+      "source_page": 43,
+      "flags": [],
+      "bid_type_inference_note": "Formal per \u00a7G1 triggers 'last and best offer' + 'no financing contingency' + 'Pamplona committing to fund 100% of the capital needed for closing' (from subsequent 9/23 exclusivity narration).",
+      "exclusivity_days": 14,
+      "financing_contingent": false,
+      "highly_confident_letter": false,
+      "joint_bidder_members": [
+        "bidder_06",
+        "bidder_07"
+      ]
+    },
+    {
+      "BidderID": 43,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_02",
+      "bidder_alias": "Party A",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "DropBelowInf",
+      "bid_type": null,
+      "bid_date_precise": "2013-09-23",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "Implicit target cut: Special Committee authorized exclusivity with CSC/Pamplona on 9/23, effectively terminating Party A's participation in the informal round.",
+      "comments": null,
+      "source_quote": "After discussion, the Special Committee authorized Mac-Gray to enter into an exclusivity agreement providing for exclusive negotiations until 5 p.m. ET on October 12, 2013 on the terms included in the CSC/Pamplona final proposal and authorized the Transaction Committee and Goodwin Procter to continue negotiations with CSC/Pamplona based on guidance provided by the Special Committee at this meeting.",
+      "source_page": 44,
+      "flags": [
+        {
+          "code": "drop_agency_ambiguous",
+          "severity": "soft",
+          "reason": "Filing does not explicitly narrate Party A being dropped; drop is implicit in the Special Committee's 9/23 authorization of exclusivity with CSC/Pamplona. Classified DropBelowInf per \u00a7I1 (target cut at informal round)."
+        }
+      ],
+      "highly_confident_letter": false,
+      "drop_reason_note": "Target-initiated cut at the informal final round: Special Committee selected CSC/Pamplona for exclusivity, implicitly terminating Party A's participation."
+    },
+    {
+      "BidderID": 44,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Party B",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "DropBelowInf",
+      "bid_type": null,
+      "bid_date_precise": "2013-09-23",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "Mac-Gray archetype: target drops highest nominal bid ($21.50 Party B with options) in favor of CSC/Pamplona's $21.25 all-cash with deal certainty (no financing contingency + 100% capital commitment).",
+      "comments": "Special Committee preferred CSC/Pamplona's $21.25 over Party B's $21.50-with-options because of execution risk (options vest on 5-yr projections; contingent value uncertain) and third-party debt financing (Party B had no firm commitment).",
+      "source_quote": "the Special Committee concluded that the revised indication of interest submitted by CSC/Pamplona had the potential of delivering the most value to stockholders, provided greater certainty and involved less potential risk than the other indications.",
+      "source_page": 43,
+      "flags": [
+        {
+          "code": "drop_agency_ambiguous",
+          "severity": "soft",
+          "reason": "Filing does not explicitly narrate Party B being dropped; drop is implicit in the Special Committee's 9/23 authorization of exclusivity with CSC/Pamplona. Classified DropBelowInf per \u00a7I1 (target cut at informal round)."
+        }
+      ],
+      "highly_confident_letter": false,
+      "drop_reason_note": "Target-initiated cut at the informal final round: Special Committee selected CSC/Pamplona's $21.25 all-cash offer (greater certainty, Pamplona-funded) over Party B's nominal $21.50-with-options proposal (uncertain option value; no firm financing commitment). Mac-Gray archetype."
+    },
+    {
+      "BidderID": 45,
+      "process_phase": 1,
+      "role": "bidder",
+      "bidder_name": "bidder_05",
+      "bidder_alias": "CSC/Pamplona",
+      "bidder_type": {
+        "base": "mixed",
+        "non_us": false,
+        "public": false
+      },
+      "bid_note": "Executed",
+      "bid_type": null,
+      "bid_date_precise": "2013-10-14",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": 21.25,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": 21.25,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "additional_note": "Merger agreement executed; $21.25/share all-cash; $11M Mac-Gray termination fee; $15M CSC reverse termination fee; no financing contingency (Pamplona capital commitment); no go-shop (standard non-solicitation with fiduciary-out). Public joint announcement 10/15/2013.",
+      "comments": "Parent = Spin Holdco Inc. (wholly-owned sub of CSC ServiceWorks, Inc., jointly owned by CSC and Pamplona). Filing consortium label 'CSC/Pamplona' used for bidder_alias per \u00a7E2.a.",
+      "source_quote": [
+        "Later in the day, on October 14, 2013, the merger agreement was executed, the Pamplona commitment letter was delivered, Moab and Parent executed the Moab voting agreement and the Mac-Donald voting agreements became effective.",
+        "On October 15, 2013, before the U.S. stock markets opened, Mac-Gray and CSC jointly announced the execution of the merger agreement."
+      ],
+      "source_page": [
+        47,
+        47
+      ],
+      "flags": [],
+      "highly_confident_letter": false,
+      "joint_bidder_members": [
+        "bidder_06",
+        "bidder_07"
+      ]
+    }
+  ]
+}
