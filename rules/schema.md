@@ -144,8 +144,14 @@ does NOT produce:
 - `DealNumber` — Alex's legacy workbook row-group identifier. The pipeline
   keys on `slug` (from `seeds.csv`); any downstream step that needs the
   legacy `DealNumber` can join on `slug`.
-- `rulebook_version` — the git SHA of `rules/` at extraction time. Written
-  by `run.py` into the output's `deal` object, not by the AI.
+- `rulebook_version` — SHA-256 content hash of the current `rules/*.md` files
+  at finalize time. Written by `pipeline.finalize()` into the output's `deal`
+  object, not by the AI. Mirrors `state/progress.json[deals][slug].rulebook_version`.
+- `last_run` — ISO8601-Z finalize timestamp. Written by `pipeline.finalize()`
+  into the output's `deal` object. The same timestamp is used for
+  `state/progress.json[deals][slug].last_run` and for every `logged_at`
+  appended to `state/flags.jsonl` during that finalize, so downstream queries
+  can match the three exactly.
 
 **Category D — behaviors the skill does not do:**
 - Fetch external data (SEC EDGAR beyond the filing itself, COMPUSTAT,
@@ -208,7 +214,8 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - `primary_document_url` — from `manifest.source.primary_document_url`.
 - `CIK`, `accession` — from manifest.
 - `DateFiled` — from `manifest.source.date_filed` (pending fetcher addition).
-- `rulebook_version` — git SHA of `rules/` at extraction time.
+- `rulebook_version` — SHA-256 content hash of the current `rules/*.md` files
+  at extraction time.
 
 **Fields DROPPED from Alex's legacy 35-col workbook (per §Scope-3):**
 - `gvkeyT`, `gvkeyA` — COMPUSTAT firm IDs. Downstream merge.
@@ -465,7 +472,7 @@ Reflects resolved decisions §Scope-1/2/3, §R1, §R2, §R3, §N1, §N2, §N3.
     "CIK": "1011835",
     "accession": "000119312516696889",
     "DateFiled": "2016-09-08",
-    "rulebook_version": "<git-sha>",
+    "rulebook_version": "<rules-content-sha256>",
 
     "deal_flags": []
   },

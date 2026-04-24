@@ -57,10 +57,13 @@ expansion.
 - `Terminated` — prior sale process formally ended (Zep pattern).
 - `Restarted` — new process begins after prior `Terminated` (Zep pattern).
 
-**Dropped from draft:**
-- `Exclusivity 30 days` — re-encoded as `exclusivity_days: int` attribute on the associated bid row, NOT an event. (Zep 6405.)
-
 **Total: 27 closed-vocabulary values.** Extractor emits exactly these; anything else → flag `unknown_bid_note`.
+
+**Note on exclusivity.** Exclusivity periods are NOT events in this vocabulary.
+They are re-encoded as an `exclusivity_days: int` attribute on the associated
+bid row (Zep 6405 pattern). `scripts/build_reference.py` migrates legacy
+"Exclusivity 30 days" xlsx rows accordingly; the extractor should never emit
+such a row.
 
 **Cross-references.**
 - `rules/events.md` §C2 (capitalization).

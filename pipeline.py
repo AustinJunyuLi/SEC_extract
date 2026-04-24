@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import copy
 import datetime as _dt
+import hashlib
 import json
 import re
 import unicodedata
@@ -43,6 +44,40 @@ EXTRACTIONS_DIR = REPO_ROOT / "output" / "extractions"
 STATE_DIR = REPO_ROOT / "state"
 PROGRESS_PATH = STATE_DIR / "progress.json"
 FLAGS_PATH = STATE_DIR / "flags.jsonl"
+
+
+def rulebook_version() -> str:
+    """Stable content hash for the live rulebook.
+
+    This is intentionally a content hash rather than a git lookup: it fails
+    less mysteriously in uncommitted development states and changes whenever
+    any current `rules/*.md` content changes. Git history is still the record
+    for older rulebooks; the live pipeline does not support old schemas.
+    """
+    h = hashlib.sha256()
+    rule_files = sorted(RULES_DIR.glob("*.md"))
+    if not rule_files:
+        raise FileNotFoundError(f"no rule files found under {RULES_DIR}")
+    for path in rule_files:
+        h.update(path.name.encode("utf-8"))
+        h.update(b"\0")
+        h.update(path.read_bytes())
+        h.update(b"\0")
+    return h.hexdigest()
+
+
+def _now_iso() -> str:
+    """UTC ISO-8601 timestamp with Z suffix (pipeline-standard format).
+
+    Centralized so finalize() can capture a single value once and use it
+    for both `logged_at` on every appended flag and `last_run` in state.
+    This makes the documented `logged_at == last_run` query an exact
+    equality rather than a timestamp-ordering question.
+    """
+    return _dt.datetime.now(_dt.timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+RULEBOOK_HISTORY_CAP = 10  # Per-deal rulebook_version_history tail length.
 
 # ---------------------------------------------------------------------------
 # Vocabularies — mirrors of rules/*.md
@@ -240,9 +275,10 @@ Read these files in full (absolute paths; use your Read tool):
     {DATA_DIR}/{slug}/pages.json     (list of {{"number": int, "content": str, ...}})
     {DATA_DIR}/{slug}/manifest.json  (EDGAR metadata + deal-identity cross-check)
 
-Everything in `prompts/extract.md` and `rules/*.md` is binding. Do not
-paraphrase, override, or reinterpret — follow the rulebook as written. If
-any rule is 🟥 OPEN, halt and emit the blocked form (see below).
+Everything in `prompts/extract.md` and the listed extractor rule files is
+binding. Do not paraphrase, override, or reinterpret — follow the rulebook
+as written. If any listed extractor rule is 🟥 OPEN, halt and emit the
+blocked form (see below).
 
 Output contract:
   Your FINAL message (and nothing else outside it) is a single fenced block:
@@ -409,6 +445,12 @@ def _invariant_p_r2(events: list[dict], filing: Filing) -> list[dict]:
                 flags.append({
                     "row_index": i, "code": "missing_evidence", "severity": "hard",
                     "reason": f"source_quote element must be str; got {type(q).__name__}",
+                })
+                continue
+            if not q.strip():
+                flags.append({
+                    "row_index": i, "code": "missing_evidence", "severity": "hard",
+                    "reason": "source_quote element is empty after trimming whitespace",
                 })
                 continue
             if not isinstance(p, int):
@@ -1187,18 +1229,25 @@ def write_output(slug: str, final_extraction: dict[str, Any]) -> Path:
 def append_flags_log(
     slug: str,
     final_extraction: dict[str, Any],
+    run_ts: str,
 ) -> int:
+    """Append this run's flags to state/flags.jsonl.
+
+    `run_ts` is stamped onto every line's `logged_at`. The caller
+    (`finalize()`) captures it once at the start of the run and passes the
+    same value to `update_progress()` so the documented query
+    `logged_at == last_run` returns exactly this run's flags.
+    """
     STATE_DIR.mkdir(parents=True, exist_ok=True)
-    now = _dt.datetime.now(_dt.timezone.utc).isoformat().replace("+00:00", "Z")
     lines: list[str] = []
     deal = final_extraction.get("deal") or {}
     events = final_extraction.get("events") or []
     for f in deal.get("deal_flags") or []:
-        entry = {"deal": slug, "logged_at": now, "deal_level": True, **f}
+        entry = {"deal": slug, "logged_at": run_ts, "deal_level": True, **f}
         lines.append(json.dumps(entry, default=str))
     for i, ev in enumerate(events):
         for f in ev.get("flags") or []:
-            entry = {"deal": slug, "logged_at": now, "row_index": i, **f}
+            entry = {"deal": slug, "logged_at": run_ts, "row_index": i, **f}
             lines.append(json.dumps(entry, default=str))
     if lines:
         with FLAGS_PATH.open("a") as fh:
@@ -1206,22 +1255,80 @@ def append_flags_log(
     return len(lines)
 
 
-def update_progress(slug: str, status: str, flag_count: int, notes: str) -> None:
+def update_progress(
+    slug: str,
+    status: str,
+    flag_count: int,
+    notes: str,
+    current_rulebook_version: str,
+    last_run: str,
+) -> None:
+    """Write this run's status + flag_count + rulebook pin to state/progress.json.
+
+    Auto-creates a minimal deal entry if `slug` was never seeded. Append-only
+    on `rulebook_version_history` (capped at `RULEBOOK_HISTORY_CAP`) so the
+    "3 consecutive unchanged-rulebook clean runs" gate can be audited per-deal.
+    No top-level `rulebook_version`; that key raced between concurrent deal
+    finalizes and had no history. If an older progress.json still carries it,
+    we drop it on this write.
+    """
     if not PROGRESS_PATH.exists():
         raise FileNotFoundError(f"{PROGRESS_PATH} does not exist; run scripts/build_seeds.py first")
     state = json.loads(PROGRESS_PATH.read_text())
+    # Drop legacy top-level key on any write (plan §2.1: no backward compat).
+    state.pop("rulebook_version", None)
     deals = state.setdefault("deals", {})
     if slug not in deals:
-        raise KeyError(f"slug={slug} not in state/progress.json")
-    now = _dt.datetime.now(_dt.timezone.utc).isoformat().replace("+00:00", "Z")
+        deals[slug] = {
+            "is_reference": False,
+            "status": "pending",
+            "flag_count": 0,
+            "last_run": None,
+            "last_verified_by": None,
+            "last_verified_at": None,
+            "notes": f"auto-created at {last_run} by update_progress; was not in seeds",
+        }
+    history = deals[slug].setdefault("rulebook_version_history", [])
+    history.append({"ts": last_run, "version": current_rulebook_version})
+    if len(history) > RULEBOOK_HISTORY_CAP:
+        deals[slug]["rulebook_version_history"] = history[-RULEBOOK_HISTORY_CAP:]
     deals[slug].update({
         "status": status,
         "flag_count": flag_count,
-        "last_run": now,
+        "last_run": last_run,
         "notes": notes,
+        "rulebook_version": current_rulebook_version,
     })
-    state["updated"] = now
+    state["updated"] = last_run
     PROGRESS_PATH.write_text(json.dumps(state, indent=2, sort_keys=False) + "\n")
+
+
+def mark_failed(slug: str, notes: str) -> None:
+    """Record a failed deal run.
+
+    This is for pipeline/runtime failures before a valid output can be written.
+    Uses `update_progress()`, which auto-creates the deal entry if the slug
+    is not in seeds — this is explicit so that failure-recording for
+    never-seeded slugs still lands rather than crashing. If the rules
+    directory is empty, records `rulebook_version="unavailable"` instead
+    of propagating the FileNotFoundError. Other exceptions (missing
+    progress.json, disk errors) still propagate — the caller needs to know
+    the recorder itself failed.
+    """
+    if not notes.strip():
+        raise ValueError("failure notes must be non-empty")
+    try:
+        current_version = rulebook_version()
+    except FileNotFoundError:
+        current_version = "unavailable"
+    update_progress(
+        slug=slug,
+        status="failed",
+        flag_count=0,
+        notes=notes,
+        current_rulebook_version=current_version,
+        last_run=_now_iso(),
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -1419,18 +1526,30 @@ def finalize(
     and/or raw_extraction['deal']['deal_flags'] with adjudicator verdicts
     before passing raw_extraction in.
     """
+    run_ts = _now_iso()
     raw_extraction, filing, promotion_log = prepare_for_validate(
         slug, raw_extraction, filing=filing
     )
     result = validate(raw_extraction, filing)
     final = merge_flags(raw_extraction, result.row_flags, result.deal_flags)
+    current_rulebook_version = rulebook_version()
+    deal_obj = final.setdefault("deal", {})
+    deal_obj["rulebook_version"] = current_rulebook_version
+    deal_obj["last_run"] = run_ts
     # Attach promotion log to deal object for audit (pipeline-internal field).
     if promotion_log:
-        final.setdefault("deal", {})["_unnamed_nda_promotions"] = promotion_log
+        deal_obj["_unnamed_nda_promotions"] = promotion_log
     status, flag_count, notes = summarize(final)
     out_path = write_output(slug, final)
-    append_flags_log(slug, final)
-    update_progress(slug, status, flag_count, notes)
+    append_flags_log(slug, final, run_ts=run_ts)
+    update_progress(
+        slug,
+        status,
+        flag_count,
+        notes,
+        current_rulebook_version,
+        last_run=run_ts,
+    )
     return PipelineResult(
         status=status,
         flag_count=flag_count,

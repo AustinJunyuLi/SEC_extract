@@ -116,6 +116,52 @@ def test_pr2_acceptance_fixtures(fixture_name):
     _assert_fixture(fixture_name, "pr2")
 
 
+def test_pr2_rejects_whitespace_only_quote():
+    flags = pipeline._invariant_p_r2(
+        [{"source_quote": "   ", "source_page": 1}],
+        pipeline.Filing(slug="synthetic", pages=[{"number": 1, "content": "real text"}]),
+    )
+
+    assert flags == [
+        {
+            "row_index": 0,
+            "code": "missing_evidence",
+            "severity": "hard",
+            "reason": "source_quote element is empty after trimming whitespace",
+        }
+    ]
+
+
+def test_pr2_rejects_whitespace_only_multi_quote_element():
+    """A multi-quote list with one valid element and one whitespace-only
+    element must flag the whitespace one (and only the whitespace one)."""
+    flags = pipeline._invariant_p_r2(
+        [{"source_quote": ["real text", "   "], "source_page": [1, 1]}],
+        pipeline.Filing(slug="synthetic", pages=[{"number": 1, "content": "real text"}]),
+    )
+
+    assert len(flags) == 1
+    assert flags[0]["code"] == "missing_evidence"
+    assert flags[0]["row_index"] == 0
+    assert "empty after trimming whitespace" in flags[0]["reason"]
+
+
+def test_pr2_multi_quote_distinguishes_paraphrase_from_whitespace():
+    """A multi-quote list with a paraphrase element AND a whitespace element
+    must produce TWO distinct flags with different codes, both tied to the
+    same row. Guards against the previous `any(...)` assertion that would
+    have passed even if only one failure fired."""
+    flags = pipeline._invariant_p_r2(
+        [{"source_quote": ["not on page", "   "], "source_page": [1, 1]}],
+        pipeline.Filing(slug="synthetic", pages=[{"number": 1, "content": "real text"}]),
+    )
+
+    codes = [f["code"] for f in flags]
+    assert "source_quote_not_in_page" in codes
+    assert "missing_evidence" in codes
+    assert all(f["row_index"] == 0 for f in flags)
+
+
 @pytest.mark.parametrize(
     "fixture_name",
     ["synthetic_pr3_pass.json", "synthetic_pr3_fail.json"],

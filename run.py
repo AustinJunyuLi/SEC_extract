@@ -8,12 +8,15 @@ This module handles the deterministic, non-LLM finalization:
   2. Run pipeline.validate() on it.
   3. Merge flags, write output/extractions/{slug}.json, append
      state/flags.jsonl, update state/progress.json.
-  4. Optionally commit.
+  4. Optionally commit only the current deal's output/state files.
 
 USAGE
 -----
     # Finalize a single deal from a subagent-produced JSON file:
     python run.py --slug medivation --raw-extraction /tmp/medivation.raw.json
+
+    # Finalize and commit only the current deal's output/state files:
+    python run.py --slug medivation --raw-extraction /tmp/medivation.raw.json --commit
 
     # Dry-run (validate only, do not write files):
     python run.py --slug medivation --raw-extraction /tmp/medivation.raw.json --dry-run
@@ -31,6 +34,13 @@ STATUS SEMANTICS (mirrors SKILL.md)
   failed     — Pipeline error (filing missing, malformed JSON, etc.).
   verified   — Austin manually read the filing and adjudicated every diff.
                Only set by the manual review workflow, never by this script.
+
+EXIT CODES
+----------
+  0  success
+  1  pipeline error; failure recorded in state/progress.json
+  2  pipeline error AND the failure recorder itself crashed — investigate
+     state/progress.json, rules/, or disk state before re-running
 """
 
 from __future__ import annotations
@@ -52,7 +62,7 @@ def finalize_deal(
     slug: str,
     raw_extraction: dict,
     dry_run: bool = False,
-    commit: bool = True,
+    commit: bool = False,
 ) -> pipeline.PipelineResult | None:
     """Run validator, merge flags, write output + state. Optionally commit."""
     filing = pipeline.load_filing(slug)
@@ -86,19 +96,82 @@ def finalize_deal(
     )
 
     if commit:
-        commit_message = (
-            f"deal={slug} status={result.status} flag_count={result.flag_count}"
-        )
         try:
-            subprocess.run(["git", "add", "-A"], cwd=REPO_ROOT, check=True)
-            subprocess.run(
-                ["git", "commit", "-m", commit_message],
-                cwd=REPO_ROOT, check=True,
-            )
+            commit_deal_outputs(slug, result)
         except subprocess.CalledProcessError as e:
             print(f"[{slug}] git commit failed: {e}", file=sys.stderr)
 
     return result
+
+
+def _repo_relative_path(path: Path) -> str:
+    return str(path.resolve().relative_to(REPO_ROOT.resolve()))
+
+
+def _commit_pathspecs(result: pipeline.PipelineResult) -> list[str]:
+    paths = [
+        result.output_path,
+        PROGRESS_PATH,
+    ]
+    if pipeline.FLAGS_PATH.exists():
+        paths.append(pipeline.FLAGS_PATH)
+
+    pathspecs: list[str] = []
+    seen: set[str] = set()
+    for path in paths:
+        pathspec = _repo_relative_path(path)
+        if pathspec in seen:
+            continue
+        seen.add(pathspec)
+        pathspecs.append(pathspec)
+    return pathspecs
+
+
+def _check_no_staged_drift(pathspecs: list[str]) -> None:
+    """Abort if any target path has staged content that differs from working tree.
+
+    `git commit --only -- <paths>` commits the working-tree version of the
+    listed paths, silently ignoring any deliberately-staged content for those
+    paths. If the user staged a different version (e.g., during manual
+    review), `--commit` would silently overwrite it. Refuse and tell the
+    user how to resolve.
+    """
+    if not pathspecs:
+        return
+    result = subprocess.run(
+        ["git", "diff", "--cached", "--name-only", "--", *pathspecs],
+        cwd=REPO_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    drifted = [p for p in result.stdout.splitlines() if p.strip()]
+    if drifted:
+        raise RuntimeError(
+            f"staged content for {drifted!r} differs from what --commit would "
+            f"write from the working tree; resolve (git commit or git reset) "
+            f"before re-running with --commit"
+        )
+
+
+def commit_deal_outputs(slug: str, result: pipeline.PipelineResult) -> None:
+    """Commit only files finalized for this deal.
+
+    `git add -A` is intentionally avoided because the repo often has unrelated
+    edits in flight. `git commit --only -- <paths>` also prevents already-staged
+    unrelated files from riding along with this deal commit. A pre-flight
+    check refuses if any target path has drifted between index and working
+    tree, since `--only` would silently rewrite staged content.
+    """
+    pathspecs = _commit_pathspecs(result)
+    _check_no_staged_drift(pathspecs)
+    commit_message = f"deal={slug} status={result.status} flag_count={result.flag_count}"
+    subprocess.run(["git", "add", "--", *pathspecs], cwd=REPO_ROOT, check=True)
+    subprocess.run(
+        ["git", "commit", "--only", "-m", commit_message, "--", *pathspecs],
+        cwd=REPO_ROOT,
+        check=True,
+    )
 
 
 def validate_slug(slug: str) -> None:
@@ -107,6 +180,33 @@ def validate_slug(slug: str) -> None:
     state = json.loads(PROGRESS_PATH.read_text())
     if slug not in state["deals"]:
         raise KeyError(f"slug={slug!r} not in state/progress.json")
+
+
+def _short_failure_note(code: str, detail: object) -> str:
+    detail_text = " ".join(str(detail).split())
+    return f"{code}: {detail_text}"[:500]
+
+
+def _record_failure(slug: str, note: str) -> bool:
+    """Try to record a failed run. Returns False if the recorder itself crashed.
+
+    `pipeline.mark_failed` can still raise on missing `state/progress.json` or
+    disk errors; that means the failure-recording promise itself is broken,
+    and the caller should surface that distinctly (exit 2) rather than treat
+    it as a normal pipeline failure (exit 1).
+    """
+    try:
+        pipeline.mark_failed(slug, note)
+    except Exception as e:
+        print(
+            f"[{slug}] unable to record failure "
+            f"(recorder crashed with {type(e).__name__}: {e}); "
+            f"original failure was: {note}",
+            file=sys.stderr,
+        )
+        return False
+    print(f"[{slug}] failed: {note}", file=sys.stderr)
+    return True
 
 
 def main() -> int:
@@ -131,9 +231,9 @@ def main() -> int:
         help="Run the validator and print flags, but do not write files or commit.",
     )
     parser.add_argument(
-        "--no-commit",
+        "--commit",
         action="store_true",
-        help="Write output and state, but skip the git commit.",
+        help="After writing output/state, commit only the current deal's output/state files.",
     )
     args = parser.parse_args()
 
@@ -143,12 +243,33 @@ def main() -> int:
 
     if args.raw_extraction is None:
         parser.error("--raw-extraction is required (unless --print-extractor-prompt)")
-    if not args.raw_extraction.exists():
-        parser.error(f"--raw-extraction path does not exist: {args.raw_extraction}")
 
     validate_slug(args.slug)
-    raw = json.loads(args.raw_extraction.read_text())
-    finalize_deal(args.slug, raw, dry_run=args.dry_run, commit=not args.no_commit)
+
+    if not args.raw_extraction.exists():
+        note = _short_failure_note("missing_raw_extraction", args.raw_extraction)
+        if args.dry_run:
+            print(f"[{args.slug}] failed: {note}", file=sys.stderr)
+            return 1
+        return 1 if _record_failure(args.slug, note) else 2
+
+    try:
+        raw = json.loads(args.raw_extraction.read_text())
+    except json.JSONDecodeError as e:
+        note = _short_failure_note("malformed_raw_json", e)
+        if args.dry_run:
+            print(f"[{args.slug}] failed: {note}", file=sys.stderr)
+            return 1
+        return 1 if _record_failure(args.slug, note) else 2
+
+    try:
+        finalize_deal(args.slug, raw, dry_run=args.dry_run, commit=args.commit)
+    except Exception as e:
+        note = _short_failure_note(type(e).__name__, e)
+        if args.dry_run:
+            print(f"[{args.slug}] failed: {note}", file=sys.stderr)
+            return 1
+        return 1 if _record_failure(args.slug, note) else 2
     return 0
 
 

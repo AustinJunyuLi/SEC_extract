@@ -15,8 +15,9 @@ Do not carry state across invocations.
 **Input** (from the orchestrator): a single `slug` (short identifier, e.g.
 `medivation`). Full filing text + deal metadata live on disk under
 `data/filings/{slug}/` (`pages.json`, `manifest.json`); the extractor
-subagent reads them directly. `state/progress.json` carries the `is_reference`
-flag used downstream by `scoring/diff.py`.
+subagent reads those local artifacts directly and does not fetch from SEC,
+EDGAR, the web, or other filings during extraction. `state/progress.json`
+carries the `is_reference` flag used downstream by `scoring/diff.py`.
 
 **Output** (written by `pipeline.finalize()` / `run.py` after validation):
 - `output/extractions/{slug}.json` — the extracted rows + deal-level fields.
@@ -45,8 +46,13 @@ that a real extraction miss or is the filing genuinely silent?"
 - **Spawned by:** the outer conversation, one subagent per deal, fresh
   context, no cross-deal knowledge.
 - **Reads (from disk, via the subagent's Read tool):**
-  `prompts/extract.md`, every `rules/*.md`, `data/filings/{slug}/pages.json`,
-  `data/filings/{slug}/manifest.json`.
+  `prompts/extract.md`, the operative extractor rules
+  (`rules/schema.md`, `rules/events.md`, `rules/bidders.md`,
+  `rules/bids.md`, `rules/dates.md`), `data/filings/{slug}/pages.json`,
+  and `data/filings/{slug}/manifest.json`.
+- **Does not read:** `rules/invariants.md`. That file is validator-facing
+  only; extractor prompts may name validator check codes only as fail-loud
+  guidance for the JSON they emit.
 - **Emits:** a single JSON payload `{deal: {...}, events: [...]}` conforming
   to `rules/schema.md` §R1. Every event row carries `source_quote` (NFKC
   substring of the cited page) and `source_page` (integer matching
@@ -128,7 +134,6 @@ If any scope rule is 🟥 OPEN, stop and report — do not extract.
 ```json
 {
   "schema_version": "v1",
-  "rulebook_version": "<git commit sha of rules/ at time of run>",
   "deals": {
     "<slug>": {
       "status": "pending | validated | passed | passed_clean | verified | failed",
@@ -136,22 +141,49 @@ If any scope rule is 🟥 OPEN, stop and report — do not extract.
       "last_run": "ISO8601",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": ""
+      "notes": "",
+      "rulebook_version": "<sha256 hash at time of last finalize>",
+      "rulebook_version_history": [
+        {"ts": "ISO8601", "version": "<sha256>"}
+      ]
     }
   }
 }
 ```
 
+Notes on the schema:
+- There is NO top-level `rulebook_version`. Per-deal finalizes race on a
+  global key and never had history anyway. Use `deals[slug].rulebook_version`
+  for the current pin and `rulebook_version_history` (last 10 entries) to
+  audit the "3 consecutive unchanged-rulebook clean runs" exit gate.
+- `rulebook_version_history` is append-only; `pipeline.RULEBOOK_HISTORY_CAP`
+  (default 10) truncates the oldest entries on overflow.
+- Target deals that have never been finalized have no `rulebook_version` and
+  no history — those fields appear on first finalize.
+
 **`state/flags.jsonl`** — append-only. One flag per line:
 ```json
-{"deal": "medivation", "row_index": 7, "flag": "informal_vs_formal_borderline", "reason": "…", "source_quote": "…"}
+{"deal": "medivation", "logged_at": "2026-04-24T12:00:00Z", "row_index": 7, "code": "informal_vs_formal_borderline", "severity": "soft", "reason": "…"}
 ```
-For current-state queries, do not count this file raw: filter by
-`logged_at >=` the deal's most recent finalize timestamp, or prefer
-`output/extractions/{slug}.json` `flags[]` plus `state/progress.json`
-`flag_count` as the latest authoritative view.
+
+`finalize()` captures a single `run_ts` and stamps it on every flag's
+`logged_at` AND on `deals[slug].last_run`. The current-run query is an
+exact match:
+
+```
+logged_at == deals[slug].last_run
+```
+
+Older entries for the same deal (prior finalizes) remain on disk as
+history. Do not use `>=` — that returns zero rows, because `last_run` is
+the same value as the newest `logged_at`. For the authoritative latest
+view without scanning jsonl, read `output/extractions/{slug}.json` `flags[]`
+and deal-level `deal_flags[]`.
 
 **`output/extractions/{deal.slug}.json`** schema conforms to `rules/schema.md`.
+Pipeline-stamped deal-level fields: `rulebook_version`, `last_run` (both
+ISO8601-Z, both populated on every finalize; both equal to the matching
+entries in `state/progress.json`).
 
 **Status semantics:**
 - `pending` — not yet run.
@@ -172,7 +204,7 @@ the current repo does not persist it into `state/progress.json`.
   `status: failed`, `notes: "missing_filing_artifacts: <detail>"`, exit.
 - If the "Background of the Merger" section can't be located → `status: failed`, `notes: "no_background_section"`, exit.
 - If any invariant in `rules/invariants.md` fails → `status: validated`, `flag_count: N` (the row is still emitted, but flagged).
-- If any 🟥 OPEN rule is encountered in `rules/*.md` → stop immediately and report. Never guess around an open question.
+- If any 🟥 OPEN rule is encountered in the extractor-read rule files → stop immediately and report. Never guess around an open question.
 
 ---
 
