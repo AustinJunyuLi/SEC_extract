@@ -5,98 +5,120 @@
     "Acquirer": "Hudson's Bay Company",
     "DateAnnounced": "2013-07-29",
     "DateEffective": null,
-    "FormType": "DEFM14A",
-    "URL": "https://www.sec.gov/Archives/edgar/data/812900/0001193125-13-390275-index.htm",
     "auction": true,
     "all_cash": true,
     "target_legal_counsel": "Wachtell, Lipton, Rosen & Katz",
-    "acquirer_legal_counsel": "Stikeman Elliott LLP; Willkie Farr & Gallagher LLP",
+    "acquirer_legal_counsel": null,
     "go_shop_days": 40,
-    "termination_fee": 73500000.0,
+    "termination_fee": 73500000,
     "termination_fee_pct": null,
-    "reverse_termination_fee": 173800000.0,
+    "reverse_termination_fee": 173800000,
+    "FormType": "DEFM14A",
+    "URL": "https://www.sec.gov/Archives/edgar/data/812900/0001193125-13-390275-index.htm",
+    "primary_document_url": "https://www.sec.gov/Archives/edgar/data/812900/000119312513390275/d585064ddefm14a.htm",
+    "CIK": "812900",
+    "accession": "000119312513390275",
+    "DateFiled": null,
+    "deal_flags": [
+      {
+        "code": "unsolicited_letter_skipped",
+        "severity": "info",
+        "reason": "Company H sent an unsolicited aggregate-price letter but provided no details, signed no NDA, and had no subsequent contact; skipped under \u00a7M1 Saks migration note.",
+        "source_quote": "On July 21, 2013, Saks received a letter from Company H, a privately held company based in the U.S. unknown to Saks and its advisors, purporting to propose to acquire Saks for an aggregate price of $2.6 billion in cash, with no details or further information. Goldman Sachs subsequently attempted on more than one occasion to contact the appropriate person at Company H both by telephone and by e-mail to discuss the purported offer further but was unsuccessful in making contact with such person. Neither Saks nor Goldman Sachs received any subsequent communications from Company H.",
+        "source_page": 34
+      },
+      {
+        "code": "out_of_scope_company_b_track_skipped",
+        "severity": "info",
+        "reason": "The filing narrates Saks exploring an acquisition of Company B; those rows are excluded because Company B was not a bidder for Saks.",
+        "source_quote": "The board had a general discussion of potential strategic transactions, including a potential acquisition of Saks and the potential for Saks to make a strategic acquisition of a privately held retail company, which we refer to as Company B.",
+        "source_page": 30
+      }
+    ],
     "bidder_registry": {
       "bidder_01": {
-        "resolved_name": "Goldman Sachs",
+        "resolved_name": "Goldman, Sachs & Co.",
         "aliases_observed": [
-          "Goldman Sachs"
+          "Goldman Sachs",
+          "Goldman, Sachs & Co."
         ],
         "first_appearance_row_index": 1
       },
       "bidder_02": {
         "resolved_name": null,
         "aliases_observed": [
-          "Sponsor A"
+          "Sponsor A",
+          "Sponsor A and Sponsor E"
         ],
         "first_appearance_row_index": 2
       },
       "bidder_03": {
         "resolved_name": "Hudson's Bay Company",
         "aliases_observed": [
-          "Hudson's Bay"
+          "Hudson's Bay",
+          "Hudson's Bay Company"
         ],
         "first_appearance_row_index": 3
       },
       "bidder_04": {
         "resolved_name": null,
         "aliases_observed": [
-          "Sponsor E"
+          "Sponsor E",
+          "Sponsor A and Sponsor E",
+          "Sponsor E and Sponsor G"
         ],
-        "first_appearance_row_index": 5
+        "first_appearance_row_index": 8
       },
       "bidder_05": {
         "resolved_name": null,
         "aliases_observed": [
-          "Sponsor G"
+          "Company F"
         ],
-        "first_appearance_row_index": 16
+        "first_appearance_row_index": 13
       },
       "bidder_06": {
         "resolved_name": null,
         "aliases_observed": [
-          "Company H"
+          "Sponsor G",
+          "Sponsor E and Sponsor G"
         ],
-        "first_appearance_row_index": 21
+        "first_appearance_row_index": 15
       },
       "bidder_07": {
-        "resolved_name": "Morgan Stanley",
+        "resolved_name": "Morgan Stanley & Co. LLC",
         "aliases_observed": [
           "Morgan Stanley & Co. LLC",
           "Morgan Stanley"
         ],
-        "first_appearance_row_index": 23
+        "first_appearance_row_index": 22
       },
       "bidder_08": {
         "resolved_name": null,
         "aliases_observed": [
           "Company I"
         ],
-        "first_appearance_row_index": 28
+        "first_appearance_row_index": 24
       }
     },
-    "deal_flags": [
-      {
-        "code": "unsolicited_letter_skipped",
-        "severity": "info",
-        "reason": "Go-shop contacted 58 potentially interested parties; of the 6 that expressed interest, only Company I executed a CA; the other 5 no-NDA, no-price expressions and the 52 non-responses are \u00a7M1 skips."
-      },
-      {
-        "code": "partial_bid_skipped",
-        "severity": "info",
-        "reason": "Saks' simultaneous pursuit of an acquisition of Company B (April\u2013July 2013) is Saks-as-acquirer activity, not a Saks-auction bid. Sponsors C and D (equity financing for Saks' acquisition of Company B) and Company B itself (Saks' acquisition target) are out of Saks-auction scope."
-      }
-    ]
+    "rulebook_version": "9aa8fce438d93f60c714ab62529e7793cfdb0accead3840c9306e0e8648391b5",
+    "last_run": "2026-04-24T19:54:01.308899Z"
   },
   "events": [
     {
       "BidderID": 1,
       "process_phase": 1,
       "role": "advisor_financial",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
       "bidder_name": "bidder_01",
       "bidder_alias": "Goldman Sachs",
       "bidder_type": null,
+      "joint_bidder_members": null,
       "bid_note": "IB",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2012-12-15",
       "bid_date_rough": "first narration: December 2012 review",
       "bid_value": null,
@@ -107,26 +129,17 @@
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
-      "consideration_components": null,
+      "consideration_components": [],
       "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "Goldman Sachs was Saks' longstanding financial advisor; the earliest narrated advisory engagement in the Background is the December 2012 strategic review.",
-      "source_quote": "For the past several years, Goldman Sachs, one of Saks\u2019 longstanding financial advisors, has participated in these reviews. One such review took place in December 2012.",
+      "additional_note": "Target financial advisor; filing does not narrate a discrete retention date before the December 2012 strategic review.",
+      "comments": null,
+      "source_quote": "As part of their ongoing evaluation of Saks\u2019 business, the board and Saks\u2019 senior management periodically review, consider and assess Saks\u2019 operations and financial performance and industry conditions as they may affect Saks\u2019 long-term strategic goals and plans, including the consideration of potential opportunities for business combinations, acquisitions and other financial and strategic alternatives. For the past several years, Goldman Sachs, one of Saks\u2019 longstanding financial advisors, has participated in these reviews. One such review took place in December 2012.",
       "source_page": 30,
       "flags": [
         {
           "code": "date_inferred_from_context",
           "severity": "soft",
-          "reason": "Filing does not narrate a specific retention date; inferred from first-narrated advisory action (December 2012 strategic review); per \u00a7B1 'December 2012' maps to 2012-12-15."
-        },
-        {
-          "code": "date_inferred_from_rough",
-          "severity": "info",
-          "reason": "phrase: 'December 2012'"
+          "reason": "filing does not narrate Goldman Sachs retention date; inferred from first Background mention"
         }
       ]
     },
@@ -134,6 +147,10 @@
       "BidderID": 2,
       "process_phase": 1,
       "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
       "bidder_name": "bidder_02",
       "bidder_alias": "Sponsor A",
       "bidder_type": {
@@ -141,8 +158,10 @@
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "Bidder Interest",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2013-02-15",
       "bid_date_rough": "February 2013",
       "bid_value": null,
@@ -153,21 +172,17 @@
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
-      "consideration_components": null,
+      "consideration_components": [],
       "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "Sponsor A's unsolicited phone call expressing interest in a potential acquisition; no price or specific terms.",
-      "source_quote": "In February 2013, Stephen I. Sadove, Saks\u2019 Chairman and Chief Executive Officer, received an unsolicited phone call from a representative of a private equity firm, which we refer to as Sponsor A, expressing interest in a potential acquisition of Saks.",
+      "additional_note": "Initial unsolicited contact with no specific proposal or terms.",
+      "comments": null,
+      "source_quote": "In February 2013, Stephen I. Sadove, Saks\u2019 Chairman and Chief Executive Officer, received an unsolicited phone call from a representative of a private equity firm, which we refer to as Sponsor A, expressing interest in a potential acquisition of Saks. In early March 2013, Mr. Sadove met with senior representatives of Sponsor A to discuss the possibility of a potential transaction. No specific proposals were made by Sponsor A, and no specific transaction terms were discussed.",
       "source_page": 30,
       "flags": [
         {
           "code": "date_inferred_from_rough",
           "severity": "info",
-          "reason": "phrase: 'February 2013'"
+          "reason": "phrase: 'In February 2013'"
         }
       ]
     },
@@ -175,15 +190,21 @@
       "BidderID": 3,
       "process_phase": 1,
       "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
       "bidder_name": "bidder_03",
       "bidder_alias": "Hudson's Bay",
       "bidder_type": {
         "base": "s",
         "non_us": true,
-        "public": true
+        "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "Bidder Interest",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2013-04-01",
       "bid_date_rough": null,
       "bid_value": null,
@@ -194,33 +215,29 @@
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
-      "consideration_components": null,
+      "consideration_components": [],
       "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "Hudson's Bay CEO Richard Baker met with Saks' CEO to discuss a potential acquisition; no price or specific terms.",
+      "additional_note": "Initial discussion at Hudson's Bay CEO's request; no proposal or terms.",
+      "comments": null,
       "source_quote": "On April 1, 2013, Mr. Sadove met with Richard Baker, the Director, Governor, and Chief Executive Officer of Hudson\u2019s Bay, at the request of Mr. Baker and discussed a potential acquisition of Saks by Hudson\u2019s Bay. No specific proposals were made by Hudson\u2019s Bay, and no specific transaction terms were discussed.",
       "source_page": 30,
-      "flags": [
-        {
-          "code": "resolved_name_not_observed",
-          "severity": "soft",
-          "reason": "\u00a7P-R5/\u00a7E4: resolved_name=\"Hudson's Bay Company\" for 'bidder_03' not in aliases_observed=[\"Hudson's Bay\"]"
-        }
-      ]
+      "flags": []
     },
     {
       "BidderID": 4,
       "process_phase": 1,
       "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
       "bidder_name": null,
       "bidder_alias": null,
       "bidder_type": null,
+      "joint_bidder_members": null,
       "bid_note": "Target Sale",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2013-04-04",
       "bid_date_rough": null,
       "bid_value": null,
@@ -231,14 +248,10 @@
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
-      "consideration_components": null,
+      "consideration_components": [],
       "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "Board meeting reviewing the Sponsor A and Hudson's Bay expressions of interest and directing continued exploration of potential transactions. This is the board-level resolution that formally opens the sale-exploration process.",
+      "additional_note": "Board directed management to continue exploring potential sale expressions of interest.",
+      "comments": null,
       "source_quote": "On April 4, 2013, the board held a regularly scheduled telephonic meeting. At this meeting, Mr. Sadove reviewed with the board the expressions of interest in a potential acquisition of Saks from Hudson\u2019s Bay and Sponsor A. The board discussed these expressions of interest, as well as a potential strategic acquisition of Company B. The board directed Mr. Sadove and Saks management to continue exploring these potential transactions.",
       "source_page": 30,
       "flags": []
@@ -247,40 +260,57 @@
       "BidderID": 5,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_04",
-      "bidder_alias": "Sponsor E",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_02",
+      "bidder_alias": "Sponsor A and Sponsor E",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
-      "bid_note": "Bidder Interest",
-      "bid_type": null,
+      "joint_bidder_members": [
+        "bidder_02",
+        "bidder_04"
+      ],
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_type_inference_note": "informal per \u00a7G1 process-position fallback and \u00a7C4: concrete pre-NDA price indication before any merger-agreement or financing materials.",
       "bid_date_precise": "2013-04-17",
-      "bid_date_rough": "Week of April 15, 2013",
+      "bid_date_rough": "During the week of April 15, 2013",
       "bid_value": null,
       "bid_value_pershare": null,
-      "bid_value_lower": null,
+      "bid_value_lower": 15,
       "bid_value_upper": null,
-      "bid_value_unit": null,
+      "bid_value_unit": "USD_per_share",
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
-      "consideration_components": null,
+      "consideration_components": [
+        "cash"
+      ],
       "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "Sponsor E first appears as a potential joint-acquisition partner with Sponsor A; no independent price indication for Sponsor E on this date (the $15 indication is attributed to Hudson's Bay and Sponsor A).",
-      "source_quote": "A private equity firm that we refer to as Sponsor E and that Sponsor A had stated was in discussions with Sponsor A regarding participation in a potential joint acquisition of Saks also participated in the meeting with Sponsor A.",
+      "additional_note": "Sponsor E participated in the meeting with Sponsor A; Sponsor A indicated at least $15/share.",
+      "comments": null,
+      "source_quote": "During the week of April 15, 2013, representatives of Goldman Sachs met separately with representatives of each of Hudson\u2019s Bay and Sponsor A in order to discuss their respective consideration of a potential acquisition of Saks. Each of Hudson\u2019s Bay and Sponsor A indicated that they were considering making an offer to acquire Saks for at least $15 per share, in cash. A private equity firm that we refer to as Sponsor E and that Sponsor A had stated was in discussions with Sponsor A regarding participation in a potential joint acquisition of Saks also participated in the meeting with Sponsor A.",
       "source_page": 31,
       "flags": [
         {
           "code": "date_range_collapsed",
           "severity": "info",
           "reason": "phrase: 'During the week of April 15, 2013'; midpoint: 2013-04-17"
+        },
+        {
+          "code": "bid_lower_only",
+          "severity": "info",
+          "reason": "price indication was 'at least $15 per share'"
+        },
+        {
+          "code": "pre_nda_informal_bid",
+          "severity": "info",
+          "reason": "Sponsor A communicated at least $15/share during week of 4/15; Sponsor A and Sponsor E executed NDAs on 4/26."
         }
       ]
     },
@@ -288,20 +318,26 @@
       "BidderID": 6,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_02",
-      "bidder_alias": "Sponsor A",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Hudson's Bay",
       "bidder_type": {
-        "base": "f",
-        "non_us": false,
+        "base": "s",
+        "non_us": true,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "Bid",
       "bid_type": "informal",
+      "bid_type_inference_note": "informal per \u00a7G1 process-position fallback and \u00a7C4: concrete price indication before Hudson's Bay signed an NDA.",
       "bid_date_precise": "2013-04-17",
-      "bid_date_rough": "Week of April 15, 2013",
+      "bid_date_rough": "During the week of April 15, 2013",
       "bid_value": null,
       "bid_value_pershare": null,
-      "bid_value_lower": 15.0,
+      "bid_value_lower": 15,
       "bid_value_upper": null,
       "bid_value_unit": "USD_per_share",
       "cash_per_share": null,
@@ -311,30 +347,25 @@
         "cash"
       ],
       "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "bid_type_inference_note": "Informal per \u00a7G1 process-position fallback (pre-NDA, pre-process-letter concrete indication; \u00a7C4) and \u00a7G1 informal-trigger language ('considering making an offer ... for at least $15 per share').",
-      "additional_note": "single lower bound: at least $15/share, cash",
-      "comments": "Pre-NDA concrete price indication (\u00a7C4). Sponsor A's NDA is executed on 4/26/2013 (later in same phase), so \u00a7P-D6 is satisfied naturally by the later NDA row; no exemption needed.",
+      "additional_note": "Hudson's Bay indicated it was considering making an offer for at least $15/share.",
+      "comments": null,
       "source_quote": "During the week of April 15, 2013, representatives of Goldman Sachs met separately with representatives of each of Hudson\u2019s Bay and Sponsor A in order to discuss their respective consideration of a potential acquisition of Saks. Each of Hudson\u2019s Bay and Sponsor A indicated that they were considering making an offer to acquire Saks for at least $15 per share, in cash.",
       "source_page": 31,
       "flags": [
         {
-          "code": "pre_nda_informal_bid",
+          "code": "date_range_collapsed",
           "severity": "info",
-          "reason": "Sponsor A communicated 'at least $15 per share' concrete price indication during week of April 15, 2013; Sponsor A's CA executed on April 26, 2013."
+          "reason": "phrase: 'During the week of April 15, 2013'; midpoint: 2013-04-17"
         },
         {
           "code": "bid_lower_only",
           "severity": "info",
-          "reason": "Single lower-bound (at least $15) per \u00a7H1."
+          "reason": "price indication was 'at least $15 per share'"
         },
         {
-          "code": "date_range_collapsed",
+          "code": "pre_nda_informal_bid",
           "severity": "info",
-          "reason": "phrase: 'During the week of April 15, 2013'; midpoint: 2013-04-17"
+          "reason": "Hudson's Bay communicated at least $15/share during week of 4/15; NDA executed on 4/30."
         }
       ]
     },
@@ -342,65 +373,10 @@
       "BidderID": 7,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_03",
-      "bidder_alias": "Hudson's Bay",
-      "bidder_type": {
-        "base": "s",
-        "non_us": true,
-        "public": true
-      },
-      "bid_note": "Bid",
-      "bid_type": "informal",
-      "bid_date_precise": "2013-04-17",
-      "bid_date_rough": "Week of April 15, 2013",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": 15.0,
-      "bid_value_upper": null,
-      "bid_value_unit": "USD_per_share",
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": [
-        "cash"
-      ],
-      "aggregate_basis": null,
       "exclusivity_days": null,
       "financing_contingent": null,
       "highly_confident_letter": false,
       "process_conditions_note": null,
-      "bid_type_inference_note": "Informal per \u00a7G1 process-position fallback (pre-NDA, pre-process-letter concrete indication; \u00a7C4) and \u00a7G1 informal-trigger language ('considering making an offer ... for at least $15 per share').",
-      "additional_note": "single lower bound: at least $15/share, cash",
-      "comments": "Pre-NDA concrete price indication (\u00a7C4). Hudson's Bay CA executed on April 30, 2013 (later in same phase).",
-      "source_quote": "During the week of April 15, 2013, representatives of Goldman Sachs met separately with representatives of each of Hudson\u2019s Bay and Sponsor A in order to discuss their respective consideration of a potential acquisition of Saks. Each of Hudson\u2019s Bay and Sponsor A indicated that they were considering making an offer to acquire Saks for at least $15 per share, in cash.",
-      "source_page": 31,
-      "flags": [
-        {
-          "code": "pre_nda_informal_bid",
-          "severity": "info",
-          "reason": "Hudson's Bay communicated 'at least $15 per share' concrete price indication during week of April 15, 2013; CA executed April 30, 2013."
-        },
-        {
-          "code": "bid_lower_only",
-          "severity": "info",
-          "reason": "Single lower-bound (at least $15) per \u00a7H1."
-        },
-        {
-          "code": "date_range_collapsed",
-          "severity": "info",
-          "reason": "phrase: 'During the week of April 15, 2013'; midpoint: 2013-04-17"
-        },
-        {
-          "code": "resolved_name_not_observed",
-          "severity": "soft",
-          "reason": "\u00a7P-R5/\u00a7E4: resolved_name=\"Hudson's Bay Company\" for 'bidder_03' not in aliases_observed=[\"Hudson's Bay\"]"
-        }
-      ]
-    },
-    {
-      "BidderID": 8,
-      "process_phase": 1,
-      "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Sponsor A",
       "bidder_type": {
@@ -408,8 +384,10 @@
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "NDA",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2013-04-26",
       "bid_date_rough": null,
       "bid_value": null,
@@ -420,14 +398,47 @@
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
-      "consideration_components": null,
+      "consideration_components": [],
       "aggregate_basis": null,
+      "additional_note": null,
+      "comments": null,
+      "source_quote": "On April 26, 2013, Saks entered into a confidentiality agreement with each of Sponsor A and Sponsor E, who were considering participating in a potential joint acquisition of Saks.",
+      "source_page": 31,
+      "flags": []
+    },
+    {
+      "BidderID": 8,
+      "process_phase": 1,
+      "role": "bidder",
       "exclusivity_days": null,
       "financing_contingent": null,
       "highly_confident_letter": false,
       "process_conditions_note": null,
+      "bidder_name": "bidder_04",
+      "bidder_alias": "Sponsor E",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2013-04-26",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
       "additional_note": null,
-      "comments": "Per-constituent NDA; filing narrates Saks entering CAs with 'each of Sponsor A and Sponsor E' on 4/26/2013.",
+      "comments": null,
       "source_quote": "On April 26, 2013, Saks entered into a confidentiality agreement with each of Sponsor A and Sponsor E, who were considering participating in a potential joint acquisition of Saks.",
       "source_page": 31,
       "flags": []
@@ -436,50 +447,21 @@
       "BidderID": 9,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_04",
-      "bidder_alias": "Sponsor E",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2013-04-26",
-      "bid_date_rough": null,
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
       "exclusivity_days": null,
       "financing_contingent": null,
       "highly_confident_letter": false,
       "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "Per-constituent NDA; filing narrates Saks entering CAs with 'each of Sponsor A and Sponsor E' on 4/26/2013.",
-      "source_quote": "On April 26, 2013, Saks entered into a confidentiality agreement with each of Sponsor A and Sponsor E, who were considering participating in a potential joint acquisition of Saks.",
-      "source_page": 31,
-      "flags": []
-    },
-    {
-      "BidderID": 10,
-      "process_phase": 1,
-      "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Hudson's Bay",
       "bidder_type": {
         "base": "s",
         "non_us": true,
-        "public": true
+        "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "NDA",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2013-04-30",
       "bid_date_rough": null,
       "bid_value": null,
@@ -490,42 +472,71 @@
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
-      "consideration_components": null,
+      "consideration_components": [],
       "aggregate_basis": null,
+      "additional_note": null,
+      "comments": null,
+      "source_quote": "On April 30, 2013, Saks and Hudson\u2019s Bay entered into a confidentiality agreement.",
+      "source_page": 31,
+      "flags": []
+    },
+    {
+      "BidderID": 10,
+      "process_phase": 1,
+      "role": "bidder",
       "exclusivity_days": null,
       "financing_contingent": null,
       "highly_confident_letter": false,
       "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "Hudson's Bay confidentiality agreement.",
-      "source_quote": "On April 30, 2013, Saks and Hudson\u2019s Bay entered into a confidentiality agreement.",
-      "source_page": 31,
-      "flags": [
-        {
-          "code": "resolved_name_not_observed",
-          "severity": "soft",
-          "reason": "\u00a7P-R5/\u00a7E4: resolved_name=\"Hudson's Bay Company\" for 'bidder_03' not in aliases_observed=[\"Hudson's Bay\"]"
-        }
-      ]
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "joint_bidder_members": null,
+      "bid_note": "Target Sale",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2013-06-05",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "Board authorized a process with potential acquirors that had executed confidentiality agreements.",
+      "comments": null,
+      "source_quote": "On June 5, 2013, the board held a regularly scheduled meeting attended by representatives of Goldman Sachs and Wachtell Lipton. At this meeting, the board reviewed with Mr. Sadove and Saks\u2019 advisors the discussions with each of Hudson\u2019s Bay, Sponsor A and Company B\u2019s principal shareholders regarding potential transactions, and authorized (1) the implementation of a process to determine whether a transaction with one of the potential acquirors which had executed a confidentiality agreement could be reached on terms that would offer attractive value to Saks shareholders and (2) the submission of a revised proposal to acquire Company B.",
+      "source_page": 32,
+      "flags": []
     },
     {
       "BidderID": 11,
       "process_phase": 1,
       "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
       "bidder_name": "bidder_03",
       "bidder_alias": "Hudson's Bay",
       "bidder_type": {
         "base": "s",
         "non_us": true,
-        "public": true
+        "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "Bid",
       "bid_type": "informal",
+      "bid_type_inference_note": null,
       "bid_date_precise": "2013-06-05",
-      "bid_date_rough": "Week of June 3, 2013",
+      "bid_date_rough": "During the week of June 3, 2013",
       "bid_value": null,
       "bid_value_pershare": null,
-      "bid_value_lower": 15.0,
+      "bid_value_lower": 15,
       "bid_value_upper": 15.25,
       "bid_value_unit": "USD_per_share",
       "cash_per_share": null,
@@ -535,29 +546,20 @@
         "cash"
       ],
       "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "Indicative price range communicated through Goldman Sachs.",
+      "additional_note": "Indicative price range.",
+      "comments": null,
       "source_quote": "During the week of June 3, 2013, representatives of Goldman Sachs spoke with representatives of each of Hudson\u2019s Bay, Sponsor A and Sponsor E and were informed that Hudson\u2019s Bay, on the one hand, and Sponsor A and Sponsor E, on the other hand, were each preliminarily prepared to proceed with the submission of a proposal to acquire Saks at indicative price ranges of $15 to $15.25 per share of common stock (in the case of Hudson\u2019s Bay) and $15 to $16 per share of common stock (in the case of Sponsor A and Sponsor E).",
       "source_page": 32,
       "flags": [
-        {
-          "code": "bid_range",
-          "severity": "info",
-          "reason": "True range $15.00-$15.25/share; informal per \u00a7G1 structural signal."
-        },
         {
           "code": "date_range_collapsed",
           "severity": "info",
           "reason": "phrase: 'During the week of June 3, 2013'; midpoint: 2013-06-05"
         },
         {
-          "code": "resolved_name_not_observed",
-          "severity": "soft",
-          "reason": "\u00a7P-R5/\u00a7E4: resolved_name=\"Hudson's Bay Company\" for 'bidder_03' not in aliases_observed=[\"Hudson's Bay\"]"
+          "code": "bid_range",
+          "severity": "info",
+          "reason": "indicative price range of $15 to $15.25 per share"
         }
       ]
     },
@@ -565,21 +567,30 @@
       "BidderID": 12,
       "process_phase": 1,
       "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
       "bidder_name": "bidder_02",
-      "bidder_alias": "Sponsor A",
+      "bidder_alias": "Sponsor A and Sponsor E",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": [
+        "bidder_02",
+        "bidder_04"
+      ],
       "bid_note": "Bid",
       "bid_type": "informal",
+      "bid_type_inference_note": null,
       "bid_date_precise": "2013-06-05",
-      "bid_date_rough": "Week of June 3, 2013",
+      "bid_date_rough": "During the week of June 3, 2013",
       "bid_value": null,
       "bid_value_pershare": null,
-      "bid_value_lower": 15.0,
-      "bid_value_upper": 16.0,
+      "bid_value_lower": 15,
+      "bid_value_upper": 16,
       "bid_value_unit": "USD_per_share",
       "cash_per_share": null,
       "stock_per_share": null,
@@ -588,24 +599,20 @@
         "cash"
       ],
       "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": "joint indication with Sponsor E",
-      "comments": "Joint Sponsor A and Sponsor E indicative range; atomized per \u00a7E2 (filing labels them 'Sponsor A and Sponsor E' on a joint basis \u2014 emit one row per narrated constituent).",
+      "additional_note": "Indicative price range for Sponsor A and Sponsor E.",
+      "comments": null,
       "source_quote": "During the week of June 3, 2013, representatives of Goldman Sachs spoke with representatives of each of Hudson\u2019s Bay, Sponsor A and Sponsor E and were informed that Hudson\u2019s Bay, on the one hand, and Sponsor A and Sponsor E, on the other hand, were each preliminarily prepared to proceed with the submission of a proposal to acquire Saks at indicative price ranges of $15 to $15.25 per share of common stock (in the case of Hudson\u2019s Bay) and $15 to $16 per share of common stock (in the case of Sponsor A and Sponsor E).",
       "source_page": 32,
       "flags": [
         {
-          "code": "bid_range",
-          "severity": "info",
-          "reason": "True range $15.00-$16.00/share; informal per \u00a7G1 structural signal."
-        },
-        {
           "code": "date_range_collapsed",
           "severity": "info",
           "reason": "phrase: 'During the week of June 3, 2013'; midpoint: 2013-06-05"
+        },
+        {
+          "code": "bid_range",
+          "severity": "info",
+          "reason": "indicative price range of $15 to $16 per share"
         }
       ]
     },
@@ -613,47 +620,42 @@
       "BidderID": 13,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_04",
-      "bidder_alias": "Sponsor E",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "Bid",
-      "bid_type": "informal",
-      "bid_date_precise": "2013-06-05",
-      "bid_date_rough": "Week of June 3, 2013",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": 15.0,
-      "bid_value_upper": 16.0,
-      "bid_value_unit": "USD_per_share",
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": [
-        "cash"
-      ],
-      "aggregate_basis": null,
       "exclusivity_days": null,
       "financing_contingent": null,
       "highly_confident_letter": false,
       "process_conditions_note": null,
-      "additional_note": "joint indication with Sponsor A",
-      "comments": "Joint Sponsor A and Sponsor E indicative range; per-constituent row.",
-      "source_quote": "During the week of June 3, 2013, representatives of Goldman Sachs spoke with representatives of each of Hudson\u2019s Bay, Sponsor A and Sponsor E and were informed that Hudson\u2019s Bay, on the one hand, and Sponsor A and Sponsor E, on the other hand, were each preliminarily prepared to proceed with the submission of a proposal to acquire Saks at indicative price ranges of $15 to $15.25 per share of common stock (in the case of Hudson\u2019s Bay) and $15 to $16 per share of common stock (in the case of Sponsor A and Sponsor E).",
+      "bidder_name": "bidder_05",
+      "bidder_alias": "Company F",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "Bidder Interest",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2013-06-12",
+      "bid_date_rough": "During the week of June 10, 2013",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "Potential participant with Sponsor A and Sponsor E; no meetings with Saks and no ultimate offer participation.",
+      "comments": null,
+      "source_quote": "During the week of June 10, 2013, Saks was informed that a privately held retail company, which we refer to as Company F, had indicated interest in participating with Sponsor A and Sponsor E in a potential acquisition of Saks. Company F engaged in due diligence of Saks. However, no meetings were held between representatives of Saks and representatives of Company F, and Company F did not participate in the offer that was ultimately submitted by Sponsor A and Sponsor G.",
       "source_page": 32,
       "flags": [
         {
-          "code": "bid_range",
-          "severity": "info",
-          "reason": "True range $15.00-$16.00/share; informal per \u00a7G1 structural signal."
-        },
-        {
           "code": "date_range_collapsed",
           "severity": "info",
-          "reason": "phrase: 'During the week of June 3, 2013'; midpoint: 2013-06-05"
+          "reason": "phrase: 'During the week of June 10, 2013'; midpoint: 2013-06-12"
         }
       ]
     },
@@ -661,11 +663,17 @@
       "BidderID": 14,
       "process_phase": 1,
       "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
       "bidder_name": null,
       "bidder_alias": null,
       "bidder_type": null,
+      "joint_bidder_members": null,
       "bid_note": "Final Round Ann",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2013-07-02",
       "bid_date_rough": null,
       "bid_value": null,
@@ -676,21 +684,17 @@
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
-      "consideration_components": null,
+      "consideration_components": [],
       "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "Process letter and draft merger agreement distributed to the three contacted counterparties with a July 11 submission deadline \u2014 treated as final-round announcement per \u00a7K2.",
+      "additional_note": "Process details and draft merger agreement were sent to Hudson's Bay, Sponsor A and Sponsor E with a July 11 offer deadline.",
+      "comments": null,
       "source_quote": "On July 2, 2013, at the direction of Saks, Goldman Sachs distributed a draft merger agreement and process details to each of Hudson\u2019s Bay, Sponsor A and Sponsor E, with a request for submission of offers for an all-cash acquisition of Saks, along with comments on the draft merger agreement, no later than July 11, 2013.",
       "source_page": 32,
       "flags": [
         {
           "code": "final_round_inferred",
           "severity": "info",
-          "reason": "No explicit 'final round' phrase; inferred per \u00a7K2 from process-letter language and explicit July 11 deadline."
+          "reason": "no explicit 'final round' phrase; inferred from process-letter deadline and draft merger agreement"
         }
       ]
     },
@@ -698,56 +702,21 @@
       "BidderID": 15,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_02",
-      "bidder_alias": "Sponsor A",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "Drop",
-      "bid_type": null,
-      "bid_date_precise": "2013-07-05",
-      "bid_date_rough": "early July 2013",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
       "exclusivity_days": null,
       "financing_contingent": null,
       "highly_confident_letter": false,
       "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "Sponsor A voluntarily stepped down from primary participation in favor of Sponsor E's new partnership with Sponsor G. Sponsor A later rejoins Sponsor E around July 11 (\u00a7I2 re-engagement).",
-      "source_quote": "In early July 2013, Sponsor E informed Saks that Sponsor A was no longer intending to be a primary participant in a potential transaction and that Sponsor E had entered into discussions with Sponsor G, a private equity firm, regarding a potential joint acquisition of Saks.",
-      "source_page": 33,
-      "flags": [
-        {
-          "code": "date_inferred_from_rough",
-          "severity": "info",
-          "reason": "phrase: 'In early July 2013'"
-        }
-      ]
-    },
-    {
-      "BidderID": 16,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_05",
+      "bidder_name": "bidder_06",
       "bidder_alias": "Sponsor G",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "NDA",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2013-07-08",
       "bid_date_rough": null,
       "bid_value": null,
@@ -758,117 +727,86 @@
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
-      "consideration_components": null,
+      "consideration_components": [],
       "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
       "additional_note": null,
-      "comments": "Sponsor G CA executed after Sponsor A stepped down and Sponsor E partnered with Sponsor G.",
-      "source_quote": "On July 8, 2013, Saks entered into a confidentiality agreement with Sponsor G.",
+      "comments": null,
+      "source_quote": "In early July 2013, Sponsor E informed Saks that Sponsor A was no longer intending to be a primary participant in a potential transaction and that Sponsor E had entered into discussions with Sponsor G, a private equity firm, regarding a potential joint acquisition of Saks. On July 8, 2013, Saks entered into a confidentiality agreement with Sponsor G.",
       "source_page": 33,
       "flags": []
+    },
+    {
+      "BidderID": 16,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": true,
+      "highly_confident_letter": false,
+      "process_conditions_note": "Required several more weeks of due diligence and did not include revised merger agreement or financing support.",
+      "bidder_name": "bidder_04",
+      "bidder_alias": "Sponsor E and Sponsor G",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": [
+        "bidder_04",
+        "bidder_06"
+      ],
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2013-07-11",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": 14.5,
+      "bid_value_upper": 15.5,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "additional_note": "Indicative range submitted jointly by Sponsor E and Sponsor G.",
+      "comments": null,
+      "source_quote": "The joint proposal from Sponsor E and Sponsor G included an indicative price range of $14.50\u2013$15.50 per share of common stock, but noted that the parties would require several weeks to continue their due diligence evaluation in order to submit a more definitive proposal and did not include a revised draft merger agreement or any documents supporting availability of financing for the proposal.",
+      "source_page": 33,
+      "flags": [
+        {
+          "code": "bid_range",
+          "severity": "info",
+          "reason": "indicative price range of $14.50-$15.50 per share"
+        },
+        {
+          "code": "informal_vs_formal_borderline",
+          "severity": "soft",
+          "reason": "Submitted after process request, but filing calls it indicative, says more due diligence was needed, and notes no merger agreement or financing support."
+        }
+      ]
     },
     {
       "BidderID": 17,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_04",
-      "bidder_alias": "Sponsor E",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "Bid",
-      "bid_type": "informal",
-      "bid_date_precise": "2013-07-11",
-      "bid_date_rough": null,
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": 14.5,
-      "bid_value_upper": 15.5,
-      "bid_value_unit": "USD_per_share",
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": [
-        "cash"
-      ],
-      "aggregate_basis": null,
       "exclusivity_days": null,
-      "financing_contingent": null,
+      "financing_contingent": false,
       "highly_confident_letter": false,
-      "process_conditions_note": "Several more weeks of due diligence required; no financing documentation; no revised merger agreement.",
-      "additional_note": "joint proposal with Sponsor G",
-      "comments": "Joint Sponsor E + Sponsor G final-round bid: $14.50-$15.50 range (informal per \u00a7G1 structural range signal), no merger-agreement markup, no financing support \u2014 per-constituent row per \u00a7E2.",
-      "source_quote": "The joint proposal from Sponsor E and Sponsor G included an indicative price range of $14.50\u2013$15.50 per share of common stock, but noted that the parties would require several weeks to continue their due diligence evaluation in order to submit a more definitive proposal and did not include a revised draft merger agreement or any documents supporting availability of financing for the proposal.",
-      "source_page": 33,
-      "flags": [
-        {
-          "code": "bid_range",
-          "severity": "info",
-          "reason": "True range $14.50-$15.50/share; informal per \u00a7G1 structural signal."
-        }
-      ]
-    },
-    {
-      "BidderID": 18,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_05",
-      "bidder_alias": "Sponsor G",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "Bid",
-      "bid_type": "informal",
-      "bid_date_precise": "2013-07-11",
-      "bid_date_rough": null,
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": 14.5,
-      "bid_value_upper": 15.5,
-      "bid_value_unit": "USD_per_share",
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": [
-        "cash"
-      ],
-      "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": "Several more weeks of due diligence required; no financing documentation; no revised merger agreement.",
-      "additional_note": "joint proposal with Sponsor E",
-      "comments": "Joint Sponsor E + Sponsor G final-round bid; per-constituent row per \u00a7E2.",
-      "source_quote": "The joint proposal from Sponsor E and Sponsor G included an indicative price range of $14.50\u2013$15.50 per share of common stock, but noted that the parties would require several weeks to continue their due diligence evaluation in order to submit a more definitive proposal and did not include a revised draft merger agreement or any documents supporting availability of financing for the proposal.",
-      "source_page": 33,
-      "flags": [
-        {
-          "code": "bid_range",
-          "severity": "info",
-          "reason": "True range $14.50-$15.50/share; informal per \u00a7G1 structural signal."
-        }
-      ]
-    },
-    {
-      "BidderID": 19,
-      "process_phase": 1,
-      "role": "bidder",
+      "process_conditions_note": "Submitted revised draft merger agreement and committed debt and equity financing documentation.",
       "bidder_name": "bidder_03",
       "bidder_alias": "Hudson's Bay",
       "bidder_type": {
         "base": "s",
         "non_us": true,
-        "public": true
+        "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "Bid",
       "bid_type": "formal",
+      "bid_type_inference_note": "formal per \u00a7G1: submitted by July 11 process deadline with revised draft merger agreement and committed financing documentation.",
       "bid_date_precise": "2013-07-11",
       "bid_date_rough": null,
       "bid_value": null,
@@ -883,38 +821,33 @@
         "cash"
       ],
       "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": false,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "bid_type_inference_note": "Formal per \u00a7G1 triggers: (a) 'committed debt and equity financing' (financing commitments); (b) 'revised draft merger agreement' (markup of the merger agreement); and (c) \u00a7G1 process-position \u2014 bid submitted in direct response to the July 2 process letter / final-round invitation.",
       "additional_note": null,
-      "comments": "Hudson's Bay final-round bid: $15.25/share with committed debt and equity financing and revised draft merger agreement \u2014 classified formal per \u00a7G1 triggers (committed financing + markup of merger agreement) and process-position (submitted in response to the July 2 process letter).",
+      "comments": null,
       "source_quote": "On July 11, 2013, each of Hudson\u2019s Bay, on the one hand, and Sponsor E, together with Sponsor G, on the other hand, submitted proposals expressing their continued interest in an acquisition of Saks. Hudson\u2019s Bay\u2019s proposal included a price of $15.25 per share of common stock, a revised draft merger agreement and information and documentation relating to Hudson\u2019s Bay\u2019s committed debt and equity financing for the potential transaction.",
       "source_page": 33,
-      "flags": [
-        {
-          "code": "resolved_name_not_observed",
-          "severity": "soft",
-          "reason": "\u00a7P-R5/\u00a7E4: resolved_name=\"Hudson's Bay Company\" for 'bidder_03' not in aliases_observed=[\"Hudson's Bay\"]"
-        }
-      ]
+      "flags": []
     },
     {
-      "BidderID": 20,
+      "BidderID": 18,
       "process_phase": 1,
       "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
       "bidder_name": "bidder_05",
-      "bidder_alias": "Sponsor G",
+      "bidder_alias": "Company F",
       "bidder_type": {
-        "base": "f",
+        "base": "s",
         "non_us": false,
         "public": false
       },
-      "bid_note": "Drop",
+      "joint_bidder_members": null,
+      "bid_note": "DropAtInf",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2013-07-11",
-      "bid_date_rough": "subsequently after 2013-07-11 submissions",
+      "bid_date_rough": "final offer date: July 11, 2013",
       "bid_value": null,
       "bid_value_pershare": null,
       "bid_value_lower": null,
@@ -923,153 +856,34 @@
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
-      "consideration_components": null,
+      "consideration_components": [],
       "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "Sponsor G voluntarily withdrew shortly after the July 11 joint bid; Sponsor A rejoined Sponsor E as primary participant. The filing narrates this 'subsequently' after the July 11 submissions and before the next dated event (week of July 15); attributing to July 11 as the narrated day of the withdrawal.",
-      "source_quote": "Saks was subsequently informed that Sponsor G was no longer participating in the process, and that Sponsor E would again be joined in its proposal by Sponsor A as a primary participant.",
-      "source_page": 33,
+      "additional_note": "Company F did not participate in the ultimately submitted offer.",
+      "comments": null,
+      "source_quote": [
+        "During the week of June 10, 2013, Saks was informed that a privately held retail company, which we refer to as Company F, had indicated interest in participating with Sponsor A and Sponsor E in a potential acquisition of Saks. Company F engaged in due diligence of Saks. However, no meetings were held between representatives of Saks and representatives of Company F, and Company F did not participate in the offer that was ultimately submitted by Sponsor A and Sponsor G.",
+        "On July 11, 2013, each of Hudson\u2019s Bay, on the one hand, and Sponsor E, together with Sponsor G, on the other hand, submitted proposals expressing their continued interest in an acquisition of Saks."
+      ],
+      "source_page": [
+        32,
+        33
+      ],
       "flags": [
         {
           "code": "date_inferred_from_context",
           "severity": "soft",
-          "reason": "Filing narrates withdrawal 'subsequently' after July 11 submissions and before July 15-week events; anchored to July 11 per \u00a7B3 context anchor."
+          "reason": "Company F non-participation anchored to the July 11 offer submission date"
         }
       ]
     },
     {
-      "BidderID": 21,
+      "BidderID": 19,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_06",
-      "bidder_alias": "Company H",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "Bid",
-      "bid_type": "informal",
-      "bid_date_precise": "2013-07-21",
-      "bid_date_rough": null,
-      "bid_value": 2600000000.0,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": "USD",
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": [
-        "cash"
-      ],
-      "aggregate_basis": "purchase_price",
       "exclusivity_days": null,
       "financing_contingent": null,
       "highly_confident_letter": false,
       "process_conditions_note": null,
-      "bid_type_inference_note": "Informal per \u00a7G1 process-position fallback: unsolicited first-contact letter, no NDA, no financing documentation, no merger-agreement markup, 'with no details or further information' \u2014 not a binding proposal. \u00a7D1.a first-contact exempts from \u00a7P-D6.",
-      "additional_note": "unsolicited letter; aggregate $2.6B, no per-share, no details",
-      "comments": "Unsolicited first-contact letter from Company H with an aggregate $2.6 billion cash offer; Goldman Sachs attempted contact multiple times without success and no further communication from Company H. Classified informal per \u00a7G1 process-position fallback (pre-process-letter for this bidder; no NDA; no financing documentation; not a binding proposal).",
-      "source_quote": "On July 21, 2013, Saks received a letter from Company H, a privately held company based in the U.S. unknown to Saks and its advisors, purporting to propose to acquire Saks for an aggregate price of $2.6 billion in cash, with no details or further information. Goldman Sachs subsequently attempted on more than one occasion to contact the appropriate person at Company H both by telephone and by e-mail to discuss the purported offer further but was unsuccessful in making contact with such person. Neither Saks nor Goldman Sachs received any subsequent communications from Company H.",
-      "source_page": 34,
-      "flags": [
-        {
-          "code": "unsolicited_first_contact",
-          "severity": "info",
-          "reason": "\u00a7D1.a: unsolicited first-contact Bid, no NDA in phase, Goldman attempted contact 'but was unsuccessful' and 'Neither Saks nor Goldman Sachs received any subsequent communications from Company H'."
-        }
-      ]
-    },
-    {
-      "BidderID": 22,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_03",
-      "bidder_alias": "Hudson's Bay",
-      "bidder_type": {
-        "base": "s",
-        "non_us": true,
-        "public": true
-      },
-      "bid_note": "Bid",
-      "bid_type": "formal",
-      "bid_date_precise": "2013-07-24",
-      "bid_date_rough": null,
-      "bid_value": null,
-      "bid_value_pershare": 16.0,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": "USD_per_share",
-      "cash_per_share": 16.0,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": [
-        "cash"
-      ],
-      "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": false,
-      "highly_confident_letter": false,
-      "process_conditions_note": "Subject to negotiating a definitive, binding agreement; agreeable to Saks' position on substantially all significant merger agreement and financing issues.",
-      "bid_type_inference_note": "Formal per \u00a7G1 triggers: 'subject to negotiating a definitive, binding agreement' (binding-offer language); 'committed financing of the merger' (financing commitments); and \u00a7G1 process-position \u2014 revised bid in the final-round negotiation window immediately before signing.",
-      "additional_note": "revised formal bid",
-      "comments": "Hudson's Bay revised formal bid at $16/share; \u00a7G1 formal triggers (committed debt and equity financing carried over from July 11 proposal; active merger-agreement negotiation).",
-      "source_quote": "On July 24, 2013, representatives of Hudson\u2019s Bay advised Goldman Sachs that, subject to negotiating a definitive, binding agreement, Hudson\u2019s Bay was prepared to offer $16 per share of common stock and was agreeable to Saks\u2019 position on substantially all of the significant issues in the draft merger agreement and the draft agreements relating to Hudson\u2019s Bay\u2019s committed financing of the merger conveyed by Goldman Sachs to Hudson\u2019s Bay.",
-      "source_page": 34,
-      "flags": [
-        {
-          "code": "resolved_name_not_observed",
-          "severity": "soft",
-          "reason": "\u00a7P-R5/\u00a7E4: resolved_name=\"Hudson's Bay Company\" for 'bidder_03' not in aliases_observed=[\"Hudson's Bay\"]"
-        }
-      ]
-    },
-    {
-      "BidderID": 23,
-      "process_phase": 1,
-      "role": "advisor_financial",
-      "bidder_name": "bidder_07",
-      "bidder_alias": "Morgan Stanley & Co. LLC",
-      "bidder_type": null,
-      "bid_note": "IB",
-      "bid_type": null,
-      "bid_date_precise": "2013-07-26",
-      "bid_date_rough": "first narration: 2013-07-26 board meeting",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "Morgan Stanley described as 'a long-time advisor to Saks' first narrated in the Background on July 26, 2013; no earlier retention date stated.",
-      "source_quote": "Also on July 26, 2013, the board held a special telephonic meeting attended by representatives of Goldman Sachs, Morgan Stanley & Co. LLC (a long-time advisor to Saks, referred to as \u201cMorgan Stanley\u201d) and Wachtell Lipton.",
-      "source_page": 35,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "Filing does not narrate Morgan Stanley's retention date; anchored to earliest Background mention (July 26, 2013)."
-        }
-      ]
-    },
-    {
-      "BidderID": 24,
-      "process_phase": 1,
-      "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Sponsor A",
       "bidder_type": {
@@ -1077,10 +891,12 @@
         "non_us": false,
         "public": false
       },
-      "bid_note": "DropTarget",
+      "joint_bidder_members": null,
+      "bid_note": "DropBelowM",
       "bid_type": null,
-      "bid_date_precise": "2013-07-28",
-      "bid_date_rough": "implicit drop at process end: 2013-07-28 board approval of Hudson's Bay merger",
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2013-07-23",
+      "bid_date_rough": null,
       "bid_value": null,
       "bid_value_pershare": null,
       "bid_value_lower": null,
@@ -1089,33 +905,22 @@
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
-      "consideration_components": null,
+      "consideration_components": [],
       "aggregate_basis": null,
+      "additional_note": "Sponsor A and Sponsor E did not appear likely to increase beyond the $14.50-$15.50 range after Saks required at least $16 from Hudson's Bay.",
+      "comments": null,
+      "source_quote": "In the evening of July 23, 2013, senior management of Saks met with representatives of Sponsor A and Sponsor E in connection with their evaluation of an acquisition of Saks. There was no indication from Sponsor A or Sponsor E that they were prepared to increase their indicated price beyond their initially indicated range of $14.50 to $15.50 per share of common stock, nor did it appear likely that Sponsor A and Sponsor E would be prepared to conclude their diligence more quickly than they had previously indicated.",
+      "source_page": 34,
+      "flags": []
+    },
+    {
+      "BidderID": 20,
+      "process_phase": 1,
+      "role": "bidder",
       "exclusivity_days": null,
       "financing_contingent": null,
       "highly_confident_letter": false,
       "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "Implicit drop: the Sponsor A/E joint bid capped at $15.50 vs Hudson's Bay's $16; by approving the Hudson's Bay merger on July 28, the board implicitly terminated the Sponsor A/E alternative. Split per \u00a7I1 to Sponsor A and Sponsor E individually since each signed its own NDA on 4/26.",
-      "source_quote": "In the evening of July 23, 2013, senior management of Saks met with representatives of Sponsor A and Sponsor E in connection with their evaluation of an acquisition of Saks. There was no indication from Sponsor A or Sponsor E that they were prepared to increase their indicated price beyond their initially indicated range of $14.50 to $15.50 per share of common stock, nor did it appear likely that Sponsor A and Sponsor E would be prepared to conclude their diligence more quickly than they had previously indicated.",
-      "source_page": 34,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "Filing does not narrate an explicit drop statement; inferred from board's July 28 approval of Hudson's Bay merger and the July 23 evening meeting at which Sponsor A/E would not match."
-        },
-        {
-          "code": "consortium_drop_split",
-          "severity": "info",
-          "reason": "Sponsor A/E joint proposal dropped; row split per constituent NDA (Sponsor A and Sponsor E each signed individually on 4/26)."
-        }
-      ]
-    },
-    {
-      "BidderID": 25,
-      "process_phase": 1,
-      "role": "bidder",
       "bidder_name": "bidder_04",
       "bidder_alias": "Sponsor E",
       "bidder_type": {
@@ -1123,10 +928,12 @@
         "non_us": false,
         "public": false
       },
-      "bid_note": "DropTarget",
+      "joint_bidder_members": null,
+      "bid_note": "DropBelowM",
       "bid_type": null,
-      "bid_date_precise": "2013-07-28",
-      "bid_date_rough": "implicit drop at process end: 2013-07-28 board approval of Hudson's Bay merger",
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2013-07-23",
+      "bid_date_rough": null,
       "bid_value": null,
       "bid_value_pershare": null,
       "bid_value_lower": null,
@@ -1135,88 +942,69 @@
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
-      "consideration_components": null,
+      "consideration_components": [],
       "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "Implicit drop of Sponsor A/E joint bid; per-constituent row per \u00a7I1 consortium-drop split.",
+      "additional_note": "Sponsor A and Sponsor E did not appear likely to increase beyond the $14.50-$15.50 range after Saks required at least $16 from Hudson's Bay.",
+      "comments": null,
       "source_quote": "In the evening of July 23, 2013, senior management of Saks met with representatives of Sponsor A and Sponsor E in connection with their evaluation of an acquisition of Saks. There was no indication from Sponsor A or Sponsor E that they were prepared to increase their indicated price beyond their initially indicated range of $14.50 to $15.50 per share of common stock, nor did it appear likely that Sponsor A and Sponsor E would be prepared to conclude their diligence more quickly than they had previously indicated.",
       "source_page": 34,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "Filing does not narrate an explicit drop statement; inferred from board's July 28 approval of Hudson's Bay merger."
-        },
-        {
-          "code": "consortium_drop_split",
-          "severity": "info",
-          "reason": "Sponsor A/E joint proposal dropped; row split per constituent NDA."
-        }
-      ]
+      "flags": []
     },
     {
-      "BidderID": 26,
+      "BidderID": 21,
       "process_phase": 1,
       "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": false,
+      "highly_confident_letter": false,
+      "process_conditions_note": "Subject to negotiating a definitive, binding agreement; agreeable to substantially all significant merger agreement and financing-document issues.",
       "bidder_name": "bidder_03",
       "bidder_alias": "Hudson's Bay",
       "bidder_type": {
         "base": "s",
         "non_us": true,
-        "public": true
+        "public": false
       },
-      "bid_note": "Executed",
-      "bid_type": null,
-      "bid_date_precise": "2013-07-28",
+      "joint_bidder_members": null,
+      "bid_note": "Bid",
+      "bid_type": "formal",
+      "bid_type_inference_note": "formal per \u00a7G1: revised $16 offer was tied to negotiating a definitive, binding agreement and resolving committed financing documents.",
+      "bid_date_precise": "2013-07-24",
       "bid_date_rough": null,
       "bid_value": null,
-      "bid_value_pershare": 16.0,
+      "bid_value_pershare": 16,
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": "USD_per_share",
-      "cash_per_share": 16.0,
+      "cash_per_share": 16,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": [
         "cash"
       ],
       "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": false,
-      "highly_confident_letter": false,
-      "process_conditions_note": "40-day go-shop provision; $73.5M target termination fee ($40.1M during go-shop-related terminations); $173.8M reverse termination fee; all-cash $16/share.",
       "additional_note": null,
-      "comments": "Merger agreement signed July 28, 2013 at $16/share cash. Public announcement press release issued July 29, 2013 per the \u00a7'Sale Press Release' convention folded into the Executed row.",
-      "source_quote": [
-        "Following the board\u2019s approval of the merger and the merger agreement, Saks, Hudson\u2019s Bay and Merger Sub finalized and executed the merger agreement and other transaction documents later on July 28, 2013.",
-        "On July 29, 2013, Saks and Hudson\u2019s Bay issued a joint press release announcing entry into the transaction."
-      ],
-      "source_page": [
-        35,
-        35
-      ],
-      "flags": [
-        {
-          "code": "resolved_name_not_observed",
-          "severity": "soft",
-          "reason": "\u00a7P-R5/\u00a7E4: resolved_name=\"Hudson's Bay Company\" for 'bidder_03' not in aliases_observed=[\"Hudson's Bay\"]"
-        }
-      ]
+      "comments": null,
+      "source_quote": "On July 24, 2013, representatives of Hudson\u2019s Bay advised Goldman Sachs that, subject to negotiating a definitive, binding agreement, Hudson\u2019s Bay was prepared to offer $16 per share of common stock and was agreeable to Saks\u2019 position on substantially all of the significant issues in the draft merger agreement and the draft agreements relating to Hudson\u2019s Bay\u2019s committed financing of the merger conveyed by Goldman Sachs to Hudson\u2019s Bay.",
+      "source_page": 34,
+      "flags": []
     },
     {
-      "BidderID": 27,
+      "BidderID": 22,
       "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": null,
-      "bidder_alias": null,
+      "role": "advisor_financial",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_07",
+      "bidder_alias": "Morgan Stanley & Co. LLC",
       "bidder_type": null,
-      "bid_note": "Sale Press Release",
+      "joint_bidder_members": null,
+      "bid_note": "IB",
       "bid_type": null,
-      "bid_date_precise": "2013-07-29",
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2013-07-26",
       "bid_date_rough": null,
       "bid_value": null,
       "bid_value_pershare": null,
@@ -1226,32 +1014,81 @@
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
-      "consideration_components": null,
+      "consideration_components": [],
       "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "Joint announcement press release by Saks and Hudson's Bay.",
-      "source_quote": "On July 29, 2013, Saks and Hudson\u2019s Bay issued a joint press release announcing entry into the transaction.",
+      "additional_note": "Target financial advisor; first named in Background at the July 26 board meeting.",
+      "comments": null,
+      "source_quote": "Also on July 26, 2013, the board held a special telephonic meeting attended by representatives of Goldman Sachs, Morgan Stanley & Co. LLC (a long-time advisor to Saks, referred to as \u201cMorgan Stanley\u201d) and Wachtell Lipton. The board, Saks\u2019 management and the legal and financial advisors again reviewed the terms of the proposal by Hudson\u2019s Bay, and discussed the status of negotiations with Hudson\u2019s Bay.",
       "source_page": 35,
       "flags": []
     },
     {
-      "BidderID": 28,
+      "BidderID": 23,
       "process_phase": 1,
       "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": false,
+      "highly_confident_letter": false,
+      "process_conditions_note": "Merger agreement included all-cash consideration, committed financing, a 40-day go-shop, a $73.5 million company termination fee reduced to $40.1 million in specified go-shop circumstances, and a $173.8 million reverse termination fee.",
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Hudson's Bay",
+      "bidder_type": {
+        "base": "s",
+        "non_us": true,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "Executed",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2013-07-28",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": 16,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": 16,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "aggregate_basis": null,
+      "additional_note": "Post-execution July 29 press release folded into Executed evidence per project rule.",
+      "comments": null,
+      "source_quote": [
+        "Following the board\u2019s approval of the merger and the merger agreement, Saks, Hudson\u2019s Bay and Merger Sub finalized and executed the merger agreement and other transaction documents later on July 28, 2013.",
+        "On July 29, 2013, Saks and Hudson\u2019s Bay issued a joint press release announcing entry into the transaction.",
+        "At the special meeting, holders of our common stock, par value $0.10 per share (\u201ccommon stock\u201d), will be asked to consider and vote on a proposal to approve the Agreement and Plan of Merger (as it may be amended from time to time, the \u201cmerger agreement\u201d), dated as of July 28, 2013, by and among Hudson\u2019s Bay Company, a corporation incorporated under the federal laws of Canada (\u201cHudson\u2019s Bay\u201d), Harry Acquisition Inc., a Delaware corporation and an indirect wholly owned subsidiary of Hudson\u2019s Bay (\u201cMerger Sub\u201d), and the Company. Pursuant to the merger agreement, Merger Sub will be merged with and into the Company (the \u201cmerger\u201d), and each share of common stock outstanding at the effective time of the merger (other than shares owned by the Company, any subsidiary of the Company, Hudson\u2019s Bay and Merger Sub) will be canceled and converted into the right to receive $16 in cash, without interest and less any applicable withholding taxes."
+      ],
+      "source_page": [
+        35,
+        35,
+        2
+      ],
+      "flags": []
+    },
+    {
+      "BidderID": 24,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
       "bidder_name": "bidder_08",
       "bidder_alias": "Company I",
       "bidder_type": {
-        "base": "s",
+        "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "NDA",
       "bid_type": null,
-      "bid_date_precise": "2013-08-12",
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2013-08-11",
       "bid_date_rough": "approximately two weeks after the merger agreement was executed",
       "bid_value": null,
       "bid_value_pershare": null,
@@ -1261,37 +1098,44 @@
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
-      "consideration_components": null,
+      "consideration_components": [],
       "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": "go-shop NDA",
-      "comments": "Go-shop NDA. Of 58 parties contacted by Goldman Sachs during the go-shop, 6 expressed interest and only Company I executed a CA. Filing locates the CA 'approximately two weeks after the merger agreement was executed' on 7/28/2013, so inferred to 2013-08-12 per \u00a7B1 anchored phrase (anchor 7/28 + ~14 days).",
-      "source_quote": "Company I had not signed a confidentiality agreement until approximately two weeks after the merger agreement was executed, that Company I had been given access to the same information that was provided to Hudson\u2019s Bay and other third parties with whom Saks had held discussions (as well as certain requested information that had not been (but then was) provided to Hudson\u2019s Bay) and that Company I had not requested a meeting with, or access to, any member of management of Saks.",
+      "additional_note": "Company I was the only go-shop party to sign a confidentiality agreement.",
+      "comments": null,
+      "source_quote": "Saks pointed out to Company I that Company I had not signed a confidentiality agreement until approximately two weeks after the merger agreement was executed, that Company I had been given access to the same information that was provided to Hudson\u2019s Bay and other third parties with whom Saks had held discussions",
       "source_page": 36,
       "flags": [
         {
           "code": "date_inferred_from_context",
           "severity": "soft",
-          "reason": "Filing states Company I's CA was executed 'approximately two weeks after the merger agreement was executed' (7/28/2013); inferred to 2013-08-12."
+          "reason": "NDA date inferred as approximately 14 days after July 28, 2013 execution"
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "filing does not identify Company I's category; defaulted to financial per \u00a7F2"
         }
       ]
     },
     {
-      "BidderID": 29,
+      "BidderID": 25,
       "process_phase": 1,
       "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
       "bidder_name": "bidder_08",
       "bidder_alias": "Company I",
       "bidder_type": {
-        "base": "s",
+        "base": "f",
         "non_us": false,
         "public": false
       },
-      "bid_note": "Drop",
+      "joint_bidder_members": null,
+      "bid_note": "DropAtInf",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2013-09-06",
       "bid_date_rough": null,
       "bid_value": null,
@@ -1302,17 +1146,72 @@
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
-      "consideration_components": null,
+      "consideration_components": [],
       "aggregate_basis": null,
+      "additional_note": "Company I conducted due diligence during the go-shop but submitted no acquisition proposal.",
+      "comments": null,
+      "source_quote": "The go shop period ended on September 6, 2013, and no party has been designated by Saks as an excluded party. During the go shop process, Goldman Sachs, on behalf of Saks, contacted 58 potentially interested third parties, including private equity firms, companies involved in the retail industry and other potential acquirors. Of those contacted, only six parties expressed interest, and only one of the six (which we refer to as Company I) executed a confidentiality agreement with, and conducted a due diligence investigation of, Saks. None of the parties contacted as part of the go shop process, including Company I, has submitted an acquisition proposal for Saks.",
+      "source_page": 35,
+      "flags": [
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "filing does not identify Company I's category; defaulted to financial per \u00a7F2"
+        }
+      ]
+    },
+    {
+      "BidderID": 26,
+      "process_phase": 1,
+      "role": "bidder",
       "exclusivity_days": null,
       "financing_contingent": null,
       "highly_confident_letter": false,
       "process_conditions_note": null,
-      "additional_note": null,
-      "comments": "Go-shop ended September 6, 2013 with no party designated as an excluded party; Company I did not submit an acquisition proposal before the go-shop deadline and subsequently only corresponded about the go-shop's duration rather than bidding. Row aligns to end-of-go-shop as the Drop date.",
-      "source_quote": "The go shop period ended on September 6, 2013, and no party has been designated by Saks as an excluded party. During the go shop process, Goldman Sachs, on behalf of Saks, contacted 58 potentially interested third parties, including private equity firms, companies involved in the retail industry and other potential acquirors. Of those contacted, only six parties expressed interest, and only one of the six (which we refer to as Company I) executed a confidentiality agreement with, and conducted a due diligence investigation of, Saks. None of the parties contacted as part of the go shop process, including Company I, has submitted an acquisition proposal for Saks.",
-      "source_page": 35,
-      "flags": []
+      "bidder_name": "bidder_06",
+      "bidder_alias": "Sponsor G",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "DropAtInf",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": null,
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [],
+      "aggregate_basis": null,
+      "additional_note": "Sponsor G stopped participating after the July 11 joint indication; filing gives no date.",
+      "comments": null,
+      "source_quote": "Saks was subsequently informed that Sponsor G was no longer participating in the process, and that Sponsor E would again be joined in its proposal by Sponsor A as a primary participant.",
+      "source_page": 33,
+      "flags": [
+        {
+          "code": "date_unknown",
+          "severity": "soft",
+          "reason": "filing says 'subsequently' but gives no calendar date for Sponsor G's exit"
+        },
+        {
+          "code": "drop_agency_ambiguous",
+          "severity": "soft",
+          "reason": "filing states Sponsor G was no longer participating but does not say who initiated the exit"
+        },
+        {
+          "code": "event_sequence_by_narrative",
+          "severity": "info",
+          "reason": "undated Sponsor G exit placed after July 11 joint proposal in filing narrative order"
+        }
+      ]
     }
   ]
 }

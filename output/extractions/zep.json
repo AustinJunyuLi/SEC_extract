@@ -5,8 +5,6 @@
     "Acquirer": "New Mountain Capital",
     "DateAnnounced": "2015-04-08",
     "DateEffective": null,
-    "FormType": "DEFM14A",
-    "URL": "https://www.sec.gov/Archives/edgar/data/1408287/0001047469-15-004989-index.htm",
     "auction": true,
     "all_cash": true,
     "target_legal_counsel": "King & Spalding LLP",
@@ -15,209 +13,243 @@
     "termination_fee": 17500000.0,
     "termination_fee_pct": null,
     "reverse_termination_fee": 33750000.0,
+    "FormType": "DEFM14A",
+    "URL": "https://www.sec.gov/Archives/edgar/data/1408287/0001047469-15-004989-index.htm",
+    "primary_document_url": "https://www.sec.gov/Archives/edgar/data/1408287/000104746915004989/a2224840zdefm14a.htm",
+    "CIK": "1408287",
+    "accession": "000104746915004989",
+    "DateFiled": null,
     "bidder_registry": {
       "bidder_01": {
+        "resolved_name": "BofA Merrill Lynch",
+        "aliases_observed": [
+          "BofA Merrill Lynch"
+        ],
+        "first_appearance_row_index": 2
+      },
+      "bidder_02": {
         "resolved_name": "New Mountain Capital",
         "aliases_observed": [
           "New Mountain Capital"
         ],
-        "first_appearance_row_index": 27
-      },
-      "bidder_02": {
-        "resolved_name": null,
-        "aliases_observed": [
-          "Financial 1"
-        ],
-        "first_appearance_row_index": 3
+        "first_appearance_row_index": 4
       },
       "bidder_03": {
         "resolved_name": null,
         "aliases_observed": [
-          "Financial 2"
+          "Financial Buyer 1"
         ],
-        "first_appearance_row_index": 4
+        "first_appearance_row_index": 5
       },
       "bidder_04": {
         "resolved_name": null,
         "aliases_observed": [
-          "Financial 3"
+          "Financial Buyer 2"
         ],
-        "first_appearance_row_index": 5
+        "first_appearance_row_index": 6
       },
       "bidder_05": {
         "resolved_name": null,
         "aliases_observed": [
-          "Financial 4"
+          "Financial Buyer 3"
         ],
-        "first_appearance_row_index": 6
+        "first_appearance_row_index": 7
       },
       "bidder_06": {
         "resolved_name": null,
         "aliases_observed": [
-          "Strategic 1"
+          "Financial Buyer 4"
         ],
-        "first_appearance_row_index": 7
+        "first_appearance_row_index": 8
       },
       "bidder_07": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 1"
+          "Strategic Buyer 1"
         ],
-        "first_appearance_row_index": 8
+        "first_appearance_row_index": 9
       },
       "bidder_08": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 2"
+          "Potential Buyer 1"
         ],
-        "first_appearance_row_index": 9
+        "first_appearance_row_index": 10
       },
       "bidder_09": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 3"
+          "Potential Buyer 2"
         ],
-        "first_appearance_row_index": 10
+        "first_appearance_row_index": 11
       },
       "bidder_10": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 4"
+          "Potential Buyer 3"
         ],
-        "first_appearance_row_index": 11
+        "first_appearance_row_index": 12
       },
       "bidder_11": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 5"
+          "Potential Buyer 4"
         ],
-        "first_appearance_row_index": 12
+        "first_appearance_row_index": 13
       },
       "bidder_12": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 6"
+          "Potential Buyer 5"
         ],
-        "first_appearance_row_index": 13
+        "first_appearance_row_index": 14
       },
       "bidder_13": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 7"
+          "Potential Buyer 6"
         ],
-        "first_appearance_row_index": 14
+        "first_appearance_row_index": 15
       },
       "bidder_14": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 8"
+          "Potential Buyer 7"
         ],
-        "first_appearance_row_index": 15
+        "first_appearance_row_index": 16
       },
       "bidder_15": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 9"
+          "Potential Buyer 8"
         ],
-        "first_appearance_row_index": 16
+        "first_appearance_row_index": 17
       },
       "bidder_16": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 10"
+          "Potential Buyer 9"
         ],
-        "first_appearance_row_index": 17
+        "first_appearance_row_index": 18
       },
       "bidder_17": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 11"
+          "Potential Buyer 10"
         ],
-        "first_appearance_row_index": 18
+        "first_appearance_row_index": 19
       },
       "bidder_18": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 12"
+          "Potential Buyer 11"
         ],
-        "first_appearance_row_index": 19
+        "first_appearance_row_index": 20
       },
       "bidder_19": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 13"
+          "Potential Buyer 12"
         ],
-        "first_appearance_row_index": 20
+        "first_appearance_row_index": 21
       },
       "bidder_20": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 14"
+          "Potential Buyer 13"
         ],
-        "first_appearance_row_index": 21
+        "first_appearance_row_index": 22
       },
       "bidder_21": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 15"
+          "Potential Buyer 14"
         ],
-        "first_appearance_row_index": 22
+        "first_appearance_row_index": 23
       },
       "bidder_22": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 16"
+          "Potential Buyer 15"
         ],
-        "first_appearance_row_index": 23
+        "first_appearance_row_index": 24
       },
       "bidder_23": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 17"
+          "Potential Buyer 16"
         ],
-        "first_appearance_row_index": 24
+        "first_appearance_row_index": 25
       },
       "bidder_24": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 18"
+          "Potential Buyer 17"
         ],
-        "first_appearance_row_index": 25
+        "first_appearance_row_index": 26
       },
       "bidder_25": {
         "resolved_name": null,
         "aliases_observed": [
-          "Buyer 19"
+          "Potential Buyer 18"
         ],
-        "first_appearance_row_index": 26
+        "first_appearance_row_index": 27
       },
       "bidder_26": {
         "resolved_name": null,
         "aliases_observed": [
-          "Party X"
+          "Potential Buyer 19"
         ],
-        "first_appearance_row_index": 34
+        "first_appearance_row_index": 28
       },
       "bidder_27": {
         "resolved_name": null,
         "aliases_observed": [
+          "Party X"
+        ],
+        "first_appearance_row_index": 35
+      },
+      "bidder_28": {
+        "resolved_name": null,
+        "aliases_observed": [
           "Party Y"
         ],
-        "first_appearance_row_index": 36
+        "first_appearance_row_index": 37
       }
     },
-    "deal_flags": []
+    "deal_flags": [
+      {
+        "code": "legal_counsel_evidence",
+        "severity": "info",
+        "reason": "Target legal counsel identified from Background page 35: King & Spalding LLP.",
+        "source_quote": "Following the July 1, 2013 board meeting, Mr. Nurkin and Mr. Squicciarino, members of the Company's management and representatives from King & Spalding LLP (\"King & Spalding\"), legal counsel to the Company, conducted introductory discussions with representatives of BofA Merrill Lynch and three other investment banks.",
+        "source_page": 35
+      },
+      {
+        "code": "acquirer_legal_counsel_not_found",
+        "severity": "info",
+        "reason": "Background names New Mountain Capital's advisors but does not identify acquirer legal counsel by firm."
+      }
+    ],
+    "rulebook_version": "9aa8fce438d93f60c714ab62529e7793cfdb0accead3840c9306e0e8648391b5",
+    "last_run": "2026-04-24T19:54:01.405660Z"
   },
   "events": [
     {
       "BidderID": 1,
       "process_phase": 1,
       "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
       "bidder_name": null,
       "bidder_alias": null,
       "bidder_type": null,
+      "joint_bidder_members": null,
       "bid_note": "Target Sale",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2014-01-28",
       "bid_date_rough": null,
       "bid_value": null,
@@ -225,18 +257,14 @@
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": null,
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
+      "additional_note": "Board decided to engage in a process to consider strategic alternatives.",
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
+      "drop_reason_note": null,
       "source_quote": "At a January 28, 2014 board meeting, our board of directors discussed our year to date performance, our anticipated performance against the fiscal year 2014 plan and various factors that could impact our future performance. Following discussions, our board of directors decided to engage in a process to consider strategic alternatives.",
       "source_page": 35,
       "flags": []
@@ -245,11 +273,17 @@
       "BidderID": 2,
       "process_phase": 1,
       "role": "advisor_financial",
-      "bidder_name": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_01",
       "bidder_alias": "BofA Merrill Lynch",
       "bidder_type": null,
+      "joint_bidder_members": null,
       "bid_note": "IB",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2014-01-28",
       "bid_date_rough": null,
       "bid_value": null,
@@ -257,18 +291,14 @@
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": null,
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
+      "additional_note": "Company financial advisor retention approved by engagement letter.",
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
+      "drop_reason_note": null,
       "source_quote": [
         "Following such discussions, our board of directors unanimously approved an engagement letter with BofA Merrill Lynch providing for",
         "BofA Merrill Lynch to act as our financial advisor in connection with reviewing our strategic alternatives."
@@ -283,1308 +313,55 @@
       "BidderID": 3,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_02",
-      "bidder_alias": "Financial 1",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": null,
+      "bidder_alias": null,
+      "bidder_type": null,
+      "joint_bidder_members": null,
+      "bid_note": "Target Sale",
       "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-02-27",
+      "bid_date_rough": null,
       "bid_value": null,
       "bid_value_pershare": null,
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": null,
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
+      "additional_note": "Board approved buyer contacts, confidentiality agreements, and meetings.",
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        }
-      ]
+      "drop_reason_note": null,
+      "source_quote": "Our board of directors unanimously approved moving forward with next steps, including contacting the potential buyers on the list discussed by our board of directors, executing confidentiality agreements with such parties and conducting meetings with such parties.",
+      "source_page": 36,
+      "flags": []
     },
     {
       "BidderID": 4,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_03",
-      "bidder_alias": "Financial 2",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
       "exclusivity_days": null,
       "financing_contingent": null,
       "highly_confident_letter": false,
       "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        }
-      ]
-    },
-    {
-      "BidderID": 5,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_04",
-      "bidder_alias": "Financial 3",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        }
-      ]
-    },
-    {
-      "BidderID": 6,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_05",
-      "bidder_alias": "Financial 4",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        }
-      ]
-    },
-    {
-      "BidderID": 7,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_06",
-      "bidder_alias": "Strategic 1",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        }
-      ]
-    },
-    {
-      "BidderID": 8,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_07",
-      "bidder_alias": "Buyer 1",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_07' signed NDA at row 7 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 9,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_08",
-      "bidder_alias": "Buyer 2",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_08' signed NDA at row 8 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 10,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_09",
-      "bidder_alias": "Buyer 3",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_09' signed NDA at row 9 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 11,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_10",
-      "bidder_alias": "Buyer 4",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_10' signed NDA at row 10 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 12,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_11",
-      "bidder_alias": "Buyer 5",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_11' signed NDA at row 11 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 13,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_12",
-      "bidder_alias": "Buyer 6",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_12' signed NDA at row 12 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 14,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_13",
-      "bidder_alias": "Buyer 7",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_13' signed NDA at row 13 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 15,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_14",
-      "bidder_alias": "Buyer 8",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_14' signed NDA at row 14 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 16,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_15",
-      "bidder_alias": "Buyer 9",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_15' signed NDA at row 15 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 17,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_16",
-      "bidder_alias": "Buyer 10",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_16' signed NDA at row 16 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 18,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_17",
-      "bidder_alias": "Buyer 11",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_17' signed NDA at row 17 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 19,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_18",
-      "bidder_alias": "Buyer 12",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_18' signed NDA at row 18 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 20,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_19",
-      "bidder_alias": "Buyer 13",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_19' signed NDA at row 19 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 21,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_20",
-      "bidder_alias": "Buyer 14",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_20' signed NDA at row 20 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 22,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_21",
-      "bidder_alias": "Buyer 15",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_21' signed NDA at row 21 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 23,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_22",
-      "bidder_alias": "Buyer 16",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_22' signed NDA at row 22 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 24,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_23",
-      "bidder_alias": "Buyer 17",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_23' signed NDA at row 23 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 25,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_24",
-      "bidder_alias": "Buyer 18",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_24' signed NDA at row 24 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 26,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_25",
-      "bidder_alias": "Buyer 19",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-03-15",
-      "bid_date_rough": "during the next several weeks (from 2014-02-27 board authorization)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing narrates NDAs signed 'during the next several weeks' after 2014-02-27 board authorization; individual NDA signing dates not narrated"
-        },
-        {
-          "code": "bidder_type_ambiguous",
-          "severity": "soft",
-          "reason": "filing does not identify strategic-vs-financial split for NDA-only signers; defaulted to 'f' per \u00a7F2 row 8"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "NDA-only placeholder per filing's 25 NDA count (= 1 NMC + 5 IOI submitters + 19 NDA-only)"
-        },
-        {
-          "code": "nda_without_bid_or_drop",
-          "severity": "soft",
-          "reason": "bidder_name='bidder_25' signed NDA at row 25 but no follow-up (bid/drop/executed) was extracted"
-        }
-      ]
-    },
-    {
-      "BidderID": 27,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_01",
+      "bidder_name": "bidder_02",
       "bidder_alias": "New Mountain Capital",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "NDA",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2014-03-19",
       "bid_date_rough": null,
       "bid_value": null,
@@ -1592,68 +369,1405 @@
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": null,
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
+      "additional_note": "New Mountain Capital is described as one of the financial buyers contacted.",
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "One of the financial buyers contacted during such time was New Mountain Capital. We entered into a confidentiality agreement with New Mountain Capital on March 19, 2014.",
+      "drop_reason_note": null,
+      "source_quote": "During the first weeks of March 2014, BofA Merrill Lynch, at the direction of our board of directors, continued to communicate with potential buyers and to regularly provide the Board Representatives with updates with respect to a potential transaction. One of the financial buyers contacted during such time was New Mountain Capital. We entered into a confidentiality agreement with New Mountain Capital on March 19, 2014. On March 20, 2014, management delivered the marketing materials and held an introductory meeting with representatives of New Mountain Capital.",
       "source_page": 37,
       "flags": []
     },
     {
-      "BidderID": 28,
+      "BidderID": 5,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_02",
-      "bidder_alias": "Financial 1",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Financial Buyer 1",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
-      "bid_note": "Bid",
-      "bid_type": "informal",
-      "bid_date_precise": "2014-04-14",
-      "bid_date_rough": null,
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
       "bid_value": null,
       "bid_value_pershare": null,
-      "bid_value_lower": 20.0,
-      "bid_value_upper": 22.0,
-      "bid_value_unit": "USD_per_share",
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
-      "consideration_components": [
-        "cash"
-      ],
-      "aggregate_basis": null,
-      "additional_note": null,
+      "consideration_components": null,
+      "additional_note": "Placeholder promoted from later April 14 bidder composition.",
       "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        }
+      ]
+    },
+    {
+      "BidderID": 6,
+      "process_phase": 1,
+      "role": "bidder",
       "exclusivity_days": null,
       "financing_contingent": null,
       "highly_confident_letter": false,
       "process_conditions_note": null,
+      "bidder_name": "bidder_04",
+      "bidder_alias": "Financial Buyer 2",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
       "joint_bidder_members": null,
-      "source_quote": "On April 14, 2014, five parties, comprising four financial buyers and one strategic buyer, submitted preliminary and non-binding indications of interest. The bids received in the preliminary indications of interest ranged from $20.00 per share to $22.00 per share.",
-      "source_page": 37,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Placeholder promoted from later April 14 bidder composition.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
       "flags": [
         {
-          "code": "bid_range",
-          "severity": "info",
-          "reason": "aggregate range $20.00-$22.00 across 5 April-14 IOIs; per-bidder breakdown not narrated"
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        }
+      ]
+    },
+    {
+      "BidderID": 7,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_05",
+      "bidder_alias": "Financial Buyer 3",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Placeholder promoted from later April 14 bidder composition.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        }
+      ]
+    },
+    {
+      "BidderID": 8,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_06",
+      "bidder_alias": "Financial Buyer 4",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Placeholder promoted from later April 14 bidder composition.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        }
+      ]
+    },
+    {
+      "BidderID": 9,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_07",
+      "bidder_alias": "Strategic Buyer 1",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Placeholder promoted from later April 14 bidder composition.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        }
+      ]
+    },
+    {
+      "BidderID": 10,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_08",
+      "bidder_alias": "Potential Buyer 1",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
         },
         {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "one of 5 April-14 IOI submitters (4F + 1S); individual per-share not narrated"
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_08' signed NDA at row 9 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 11,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_09",
+      "bidder_alias": "Potential Buyer 2",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_09' signed NDA at row 10 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 12,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_10",
+      "bidder_alias": "Potential Buyer 3",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_10' signed NDA at row 11 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 13,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_11",
+      "bidder_alias": "Potential Buyer 4",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_11' signed NDA at row 12 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 14,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_12",
+      "bidder_alias": "Potential Buyer 5",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_12' signed NDA at row 13 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 15,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_13",
+      "bidder_alias": "Potential Buyer 6",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_13' signed NDA at row 14 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 16,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_14",
+      "bidder_alias": "Potential Buyer 7",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_14' signed NDA at row 15 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 17,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_15",
+      "bidder_alias": "Potential Buyer 8",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_15' signed NDA at row 16 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 18,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_16",
+      "bidder_alias": "Potential Buyer 9",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_16' signed NDA at row 17 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 19,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_17",
+      "bidder_alias": "Potential Buyer 10",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_17' signed NDA at row 18 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 20,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_18",
+      "bidder_alias": "Potential Buyer 11",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_18' signed NDA at row 19 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 21,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_19",
+      "bidder_alias": "Potential Buyer 12",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_19' signed NDA at row 20 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 22,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_20",
+      "bidder_alias": "Potential Buyer 13",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_20' signed NDA at row 21 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 23,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_21",
+      "bidder_alias": "Potential Buyer 14",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_21' signed NDA at row 22 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 24,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_22",
+      "bidder_alias": "Potential Buyer 15",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_22' signed NDA at row 23 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 25,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_23",
+      "bidder_alias": "Potential Buyer 16",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_23' signed NDA at row 24 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 26,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_24",
+      "bidder_alias": "Potential Buyer 17",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_24' signed NDA at row 25 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 27,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_25",
+      "bidder_alias": "Potential Buyer 18",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_25' signed NDA at row 26 but no follow-up (bid/drop/executed) was extracted"
+        }
+      ]
+    },
+    {
+      "BidderID": 28,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_26",
+      "bidder_alias": "Potential Buyer 19",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-20",
+      "bid_date_rough": "During the next several weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Unnamed NDA signer included in the filing's count of twenty-five potential buyers.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": [
+        "During the next several weeks, BofA Merrill Lynch, at the direction of our board of directors, contacted fifty potential buyers (comprising twenty-eight strategic buyers and twenty-two financial buyers, including financial buyers who owned businesses similar to our businesses), and we executed confidentiality agreements with a number of the potential buyers.",
+        "In all, twenty-five potential buyers informed us that they were not interested in pursuing a potential transaction and declined to enter into a confidentiality agreement with us, and twenty-five potential buyers executed confidentiality agreements with us, received a copy of the marketing materials and/or met with the Company's management."
+      ],
+      "source_page": [
+        36,
+        37
+      ],
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "NDA date inferred from 'During the next several weeks' after February 27, 2014."
+        },
+        {
+          "code": "bidder_type_ambiguous",
+          "severity": "soft",
+          "reason": "Filing gives no signer-specific strategic/financial type for this NDA placeholder; defaulted to financial per \u00a7F2."
+        },
+        {
+          "code": "nda_without_bid_or_drop",
+          "severity": "soft",
+          "reason": "bidder_name='bidder_26' signed NDA at row 27 but no follow-up (bid/drop/executed) was extracted"
         }
       ]
     },
@@ -1661,64 +1775,59 @@
       "BidderID": 29,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_03",
-      "bidder_alias": "Financial 2",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_02",
+      "bidder_alias": "New Mountain Capital",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
-      "bid_note": "Bid",
-      "bid_type": "informal",
-      "bid_date_precise": "2014-04-14",
+      "joint_bidder_members": null,
+      "bid_note": "DropAtInf",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-03-27",
       "bid_date_rough": null,
       "bid_value": null,
       "bid_value_pershare": null,
-      "bid_value_lower": 20.0,
-      "bid_value_upper": 22.0,
-      "bid_value_unit": "USD_per_share",
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
-      "consideration_components": [
-        "cash"
-      ],
-      "aggregate_basis": null,
+      "consideration_components": null,
       "additional_note": null,
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "On April 14, 2014, five parties, comprising four financial buyers and one strategic buyer, submitted preliminary and non-binding indications of interest. The bids received in the preliminary indications of interest ranged from $20.00 per share to $22.00 per share.",
+      "drop_reason_note": "Decided not to submit a preliminary indication of interest.",
+      "source_quote": "While New Mountain Capital received the marketing materials and the first round process letter, it decided at the time not to submit a preliminary indication of interest.",
       "source_page": 37,
-      "flags": [
-        {
-          "code": "bid_range",
-          "severity": "info",
-          "reason": "aggregate range $20.00-$22.00 across 5 April-14 IOIs; per-bidder breakdown not narrated"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "one of 5 April-14 IOI submitters (4F + 1S); individual per-share not narrated"
-        }
-      ]
+      "flags": []
     },
     {
       "BidderID": 30,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_04",
-      "bidder_alias": "Financial 3",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Financial Buyer 1",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "Bid",
       "bid_type": "informal",
+      "bid_type_inference_note": null,
       "bid_date_precise": "2014-04-14",
       "bid_date_rough": null,
       "bid_value": null,
@@ -1726,32 +1835,23 @@
       "bid_value_lower": 20.0,
       "bid_value_upper": 22.0,
       "bid_value_unit": "USD_per_share",
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": [
         "cash"
       ],
-      "aggregate_basis": null,
-      "additional_note": null,
+      "additional_note": "One of five preliminary indications; filing does not identify individual values within the common range.",
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "On April 14, 2014, five parties, comprising four financial buyers and one strategic buyer, submitted preliminary and non-binding indications of interest. The bids received in the preliminary indications of interest ranged from $20.00 per share to $22.00 per share.",
+      "drop_reason_note": null,
+      "source_quote": "On April 14, 2014, five parties, comprising four financial buyers and one strategic buyer, submitted preliminary and non-binding indications of interest. The bids received in the preliminary indications of interest ranged from $20.00 per share to $22.00 per share. The Board Representatives reviewed the indications of interest as well as recent progress in the potential sale process.",
       "source_page": 37,
       "flags": [
         {
           "code": "bid_range",
           "severity": "info",
-          "reason": "aggregate range $20.00-$22.00 across 5 April-14 IOIs; per-bidder breakdown not narrated"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "one of 5 April-14 IOI submitters (4F + 1S); individual per-share not narrated"
+          "reason": "Preliminary non-binding indication range $20.00-$22.00 per share."
         }
       ]
     },
@@ -1759,15 +1859,21 @@
       "BidderID": 31,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_05",
-      "bidder_alias": "Financial 4",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_04",
+      "bidder_alias": "Financial Buyer 2",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "Bid",
       "bid_type": "informal",
+      "bid_type_inference_note": null,
       "bid_date_precise": "2014-04-14",
       "bid_date_rough": null,
       "bid_value": null,
@@ -1775,32 +1881,23 @@
       "bid_value_lower": 20.0,
       "bid_value_upper": 22.0,
       "bid_value_unit": "USD_per_share",
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": [
         "cash"
       ],
-      "aggregate_basis": null,
-      "additional_note": null,
+      "additional_note": "One of five preliminary indications; filing does not identify individual values within the common range.",
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "On April 14, 2014, five parties, comprising four financial buyers and one strategic buyer, submitted preliminary and non-binding indications of interest. The bids received in the preliminary indications of interest ranged from $20.00 per share to $22.00 per share.",
+      "drop_reason_note": null,
+      "source_quote": "On April 14, 2014, five parties, comprising four financial buyers and one strategic buyer, submitted preliminary and non-binding indications of interest. The bids received in the preliminary indications of interest ranged from $20.00 per share to $22.00 per share. The Board Representatives reviewed the indications of interest as well as recent progress in the potential sale process.",
       "source_page": 37,
       "flags": [
         {
           "code": "bid_range",
           "severity": "info",
-          "reason": "aggregate range $20.00-$22.00 across 5 April-14 IOIs; per-bidder breakdown not narrated"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "one of 5 April-14 IOI submitters (4F + 1S); individual per-share not narrated"
+          "reason": "Preliminary non-binding indication range $20.00-$22.00 per share."
         }
       ]
     },
@@ -1808,15 +1905,21 @@
       "BidderID": 32,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_06",
-      "bidder_alias": "Strategic 1",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_05",
+      "bidder_alias": "Financial Buyer 3",
       "bidder_type": {
-        "base": "s",
+        "base": "f",
         "non_us": false,
-        "public": null
+        "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "Bid",
       "bid_type": "informal",
+      "bid_type_inference_note": null,
       "bid_date_precise": "2014-04-14",
       "bid_date_rough": null,
       "bid_value": null,
@@ -1824,32 +1927,23 @@
       "bid_value_lower": 20.0,
       "bid_value_upper": 22.0,
       "bid_value_unit": "USD_per_share",
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": [
         "cash"
       ],
-      "aggregate_basis": null,
-      "additional_note": null,
+      "additional_note": "One of five preliminary indications; filing does not identify individual values within the common range.",
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "On April 14, 2014, five parties, comprising four financial buyers and one strategic buyer, submitted preliminary and non-binding indications of interest. The bids received in the preliminary indications of interest ranged from $20.00 per share to $22.00 per share.",
+      "drop_reason_note": null,
+      "source_quote": "On April 14, 2014, five parties, comprising four financial buyers and one strategic buyer, submitted preliminary and non-binding indications of interest. The bids received in the preliminary indications of interest ranged from $20.00 per share to $22.00 per share. The Board Representatives reviewed the indications of interest as well as recent progress in the potential sale process.",
       "source_page": 37,
       "flags": [
         {
           "code": "bid_range",
           "severity": "info",
-          "reason": "aggregate range $20.00-$22.00 across 5 April-14 IOIs; per-bidder breakdown not narrated"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "one of 5 April-14 IOI submitters (4F + 1S); individual per-share not narrated"
+          "reason": "Preliminary non-binding indication range $20.00-$22.00 per share."
         }
       ]
     },
@@ -1857,91 +1951,91 @@
       "BidderID": 33,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_01",
-      "bidder_alias": "New Mountain Capital",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": false
-      },
-      "bid_note": "DropAtInf",
-      "bid_type": null,
-      "bid_date_precise": "2014-04-14",
-      "bid_date_rough": "at the IOI deadline (2014-04-14)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
       "exclusivity_days": null,
       "financing_contingent": null,
       "highly_confident_letter": false,
       "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "While New Mountain Capital received the marketing materials and the first round process letter, it decided at the time not to submit a preliminary indication of interest.",
-      "source_page": 37,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing says NMC 'decided at the time not to submit' without explicit date; anchored to 2014-04-14 IOI deadline"
-        }
-      ],
-      "drop_reason_note": "Voluntary: NMC received first-round process letter but decided not to submit a preliminary indication of interest at the April 14, 2014 deadline."
-    },
-    {
-      "BidderID": 34,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_26",
-      "bidder_alias": "Party X",
+      "bidder_name": "bidder_06",
+      "bidder_alias": "Financial Buyer 4",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "Bid",
       "bid_type": "informal",
-      "bid_date_precise": "2014-05-09",
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-04-14",
       "bid_date_rough": null,
       "bid_value": null,
       "bid_value_pershare": null,
-      "bid_value_lower": 21.5,
-      "bid_value_upper": 23.0,
+      "bid_value_lower": 20.0,
+      "bid_value_upper": 22.0,
       "bid_value_unit": "USD_per_share",
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": [
         "cash"
       ],
-      "aggregate_basis": null,
-      "additional_note": null,
+      "additional_note": "One of five preliminary indications; filing does not identify individual values within the common range.",
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "On May 9, 2014, Party X submitted a preliminary and non-binding indication of interest to BofA Merrill Lynch, increasing the number of preliminary indications of interest received by us as of such date to six. The bid submitted by Party X ranged from $21.50 to $23.00 per share.",
+      "drop_reason_note": null,
+      "source_quote": "On April 14, 2014, five parties, comprising four financial buyers and one strategic buyer, submitted preliminary and non-binding indications of interest. The bids received in the preliminary indications of interest ranged from $20.00 per share to $22.00 per share. The Board Representatives reviewed the indications of interest as well as recent progress in the potential sale process.",
       "source_page": 37,
       "flags": [
         {
           "code": "bid_range",
           "severity": "info",
-          "reason": "range $21.50-$23.00 stated in filing"
-        },
+          "reason": "Preliminary non-binding indication range $20.00-$22.00 per share."
+        }
+      ]
+    },
+    {
+      "BidderID": 34,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_07",
+      "bidder_alias": "Strategic Buyer 1",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-04-14",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": 20.0,
+      "bid_value_upper": 22.0,
+      "bid_value_unit": "USD_per_share",
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "additional_note": "One of five preliminary indications; filing does not identify individual values within the common range.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": "On April 14, 2014, five parties, comprising four financial buyers and one strategic buyer, submitted preliminary and non-binding indications of interest. The bids received in the preliminary indications of interest ranged from $20.00 per share to $22.00 per share. The Board Representatives reviewed the indications of interest as well as recent progress in the potential sale process.",
+      "source_page": 37,
+      "flags": [
         {
-          "code": "unsolicited_first_contact",
+          "code": "bid_range",
           "severity": "info",
-          "reason": "Party X contacted BofA unsolicited and submitted IOI without signing an NDA; later withdrew 2014-05-14 prior to data-room access: 'Party X informed representatives of BofA Merrill Lynch that it was no longer interested'"
+          "reason": "Preliminary non-binding indication range $20.00-$22.00 per share."
         }
       ]
     },
@@ -1949,15 +2043,72 @@
       "BidderID": 35,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_26",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_27",
       "bidder_alias": "Party X",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-05-09",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": 21.5,
+      "bid_value_upper": 23.0,
+      "bid_value_unit": "USD_per_share",
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": [
+        "cash"
+      ],
+      "additional_note": "Unsolicited additional financial party; no confidentiality agreement is narrated before withdrawal.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": "On May 9, 2014, Party X submitted a preliminary and non-binding indication of interest to BofA Merrill Lynch, increasing the number of preliminary indications of interest received by us as of such date to six. The bid submitted by Party X ranged from $21.50 to $23.00 per share.",
+      "source_page": 37,
+      "flags": [
+        {
+          "code": "bid_range",
+          "severity": "info",
+          "reason": "Party X submitted a preliminary non-binding range $21.50-$23.00 per share."
+        },
+        {
+          "code": "unsolicited_first_contact",
+          "severity": "info",
+          "reason": "Unsolicited bidder withdrew before NDA: 'no longer interested in pursuing a potential transaction with the Company.'"
+        }
+      ]
+    },
+    {
+      "BidderID": 36,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_27",
+      "bidder_alias": "Party X",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
       "bid_note": "DropAtInf",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2014-05-14",
       "bid_date_rough": null,
       "bid_value": null,
@@ -1965,42 +2116,37 @@
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": null,
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": null,
-      "aggregate_basis": null,
       "additional_note": null,
       "comments": null,
+      "drop_reason_note": "No longer interested before data room access or management meeting.",
+      "source_quote": "May 14, 2014, prior to receiving access to the electronic data room or meeting with the Company's management, Party X informed representatives of BofA Merrill Lynch that it was no longer interested in pursuing a potential transaction with the Company.",
+      "source_page": 38,
+      "flags": []
+    },
+    {
+      "BidderID": 37,
+      "process_phase": 1,
+      "role": "bidder",
       "exclusivity_days": null,
       "financing_contingent": null,
       "highly_confident_letter": false,
       "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "May 14, 2014, prior to receiving access to the electronic data room or meeting with the Company's management, Party X informed representatives of BofA Merrill Lynch that it was no longer interested in pursuing a potential transaction with the Company.",
-      "source_page": 38,
-      "flags": [
-        {
-          "code": "unsolicited_first_contact",
-          "severity": "info",
-          "reason": "Party X never signed an NDA and voluntarily withdrew: 'Party X informed representatives of BofA Merrill Lynch that it was no longer interested'"
-        }
-      ],
-      "drop_reason_note": "Voluntary: Party X informed BofA Merrill Lynch that it was no longer interested in pursuing a potential transaction."
-    },
-    {
-      "BidderID": 36,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_27",
+      "bidder_name": "bidder_28",
       "bidder_alias": "Party Y",
       "bidder_type": {
         "base": "s",
         "non_us": false,
-        "public": null
+        "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "Bid",
       "bid_type": "informal",
+      "bid_type_inference_note": null,
       "bid_date_precise": "2014-05-20",
       "bid_date_rough": null,
       "bid_value": null,
@@ -2008,74 +2154,28 @@
       "bid_value_lower": 19.5,
       "bid_value_upper": 20.5,
       "bid_value_unit": "USD_per_share",
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": [
         "cash"
       ],
-      "aggregate_basis": null,
-      "additional_note": null,
+      "additional_note": "Unsolicited additional strategic party; filing says data room access was subsequently made available but does not expressly narrate an NDA.",
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
+      "drop_reason_note": null,
       "source_quote": "On May 20, 2014, Party Y submitted a preliminary and non-binding indication of interest, bringing the total number of preliminary indications of interest received by us to seven. The indication of interest submitted by Party Y ranged from $19.50 to $20.50 per share. Access to the electronic data room was subsequently made available to Party Y and the Company's management met with Party Y and provided a presentation about our business.",
       "source_page": 38,
       "flags": [
         {
           "code": "bid_range",
           "severity": "info",
-          "reason": "range $19.50-$20.50 stated in filing"
+          "reason": "Party Y submitted a preliminary non-binding range $19.50-$20.50 per share."
         },
         {
-          "code": "pre_nda_informal_bid",
+          "code": "unsolicited_first_contact",
           "severity": "info",
-          "reason": "Party Y submitted IOI on 2014-05-20 before signing an NDA; filing narrates data-room access granted 'subsequently' to the May 20 IOI, implying later NDA execution"
-        }
-      ]
-    },
-    {
-      "BidderID": 37,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_27",
-      "bidder_alias": "Party Y",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
-      "bid_note": "NDA",
-      "bid_type": null,
-      "bid_date_precise": "2014-05-21",
-      "bid_date_rough": "subsequently (after 2014-05-20 Party Y IOI, prior to data-room access)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "On May 20, 2014, Party Y submitted a preliminary and non-binding indication of interest, bringing the total number of preliminary indications of interest received by us to seven. The indication of interest submitted by Party Y ranged from $19.50 to $20.50 per share. Access to the electronic data room was subsequently made available to Party Y and the Company's management met with Party Y and provided a presentation about our business.",
-      "source_page": 38,
-      "flags": [
-        {
-          "code": "date_inferred_from_context",
-          "severity": "soft",
-          "reason": "filing does not state Party Y NDA date; inferred from narrative 'Access to the electronic data room was subsequently made available to Party Y' \u2014 data-room access implies NDA signed after 2014-05-20 IOI"
+          "reason": "Unsolicited bidder later did not proceed: 'unable to proceed with the process' / 'declined to respond'."
         }
       ]
     },
@@ -2083,299 +2183,311 @@
       "BidderID": 38,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_02",
-      "bidder_alias": "Financial 1",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Financial Buyer 1",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "DropAtInf",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2014-06-12",
-      "bid_date_rough": "over the next few weeks (from 2014-05-22 draft merger agreement distribution)",
+      "bid_date_rough": "Over the next few weeks",
       "bid_value": null,
       "bid_value_pershare": null,
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": null,
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": null,
-      "aggregate_basis": null,
       "additional_note": null,
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
+      "drop_reason_note": "Unable to proceed due to valuation and/or internal priorities.",
       "source_quote": "Over the next few weeks, five of the remaining six interested parties communicated to representatives of BofA Merrill Lynch that they were unable to proceed with the process due to concerns regarding valuation and, in some cases, the interested parties' own internal initiatives and strategic priorities. The sixth remaining interested party declined to respond to BofA Merrill Lynch's communications regarding a potential transaction.",
       "source_page": 38,
       "flags": [
         {
-          "code": "date_inferred_from_rough",
-          "severity": "info",
-          "reason": "phrase: 'Over the next few weeks'"
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Drop date inferred from 'Over the next few weeks' after May 22, 2014."
         },
         {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "one of 5 parties (of 6 remaining) that communicated inability to proceed due to valuation concerns"
+          "code": "drop_identity_ambiguous",
+          "severity": "soft",
+          "reason": "Filing reports five of six remaining bidders unable to proceed and a sixth nonresponsive, but does not map outcomes to specific bidders."
         }
-      ],
-      "drop_reason_note": "Voluntary: unable to proceed due to concerns regarding valuation and, in some cases, the interested parties' own internal initiatives and strategic priorities."
+      ]
     },
     {
       "BidderID": 39,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_03",
-      "bidder_alias": "Financial 2",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_04",
+      "bidder_alias": "Financial Buyer 2",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "DropAtInf",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2014-06-12",
-      "bid_date_rough": "over the next few weeks (from 2014-05-22 draft merger agreement distribution)",
+      "bid_date_rough": "Over the next few weeks",
       "bid_value": null,
       "bid_value_pershare": null,
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": null,
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": null,
-      "aggregate_basis": null,
       "additional_note": null,
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
+      "drop_reason_note": "Unable to proceed due to valuation and/or internal priorities.",
       "source_quote": "Over the next few weeks, five of the remaining six interested parties communicated to representatives of BofA Merrill Lynch that they were unable to proceed with the process due to concerns regarding valuation and, in some cases, the interested parties' own internal initiatives and strategic priorities. The sixth remaining interested party declined to respond to BofA Merrill Lynch's communications regarding a potential transaction.",
       "source_page": 38,
       "flags": [
         {
-          "code": "date_inferred_from_rough",
-          "severity": "info",
-          "reason": "phrase: 'Over the next few weeks'"
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Drop date inferred from 'Over the next few weeks' after May 22, 2014."
         },
         {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "one of 5 parties (of 6 remaining) that communicated inability to proceed due to valuation concerns"
+          "code": "drop_identity_ambiguous",
+          "severity": "soft",
+          "reason": "Filing reports five of six remaining bidders unable to proceed and a sixth nonresponsive, but does not map outcomes to specific bidders."
         }
-      ],
-      "drop_reason_note": "Voluntary: unable to proceed due to concerns regarding valuation and, in some cases, the interested parties' own internal initiatives and strategic priorities."
+      ]
     },
     {
       "BidderID": 40,
       "process_phase": 1,
       "role": "bidder",
-      "bidder_name": "bidder_04",
-      "bidder_alias": "Financial 3",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_05",
+      "bidder_alias": "Financial Buyer 3",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "DropAtInf",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2014-06-12",
-      "bid_date_rough": "over the next few weeks (from 2014-05-22 draft merger agreement distribution)",
+      "bid_date_rough": "Over the next few weeks",
       "bid_value": null,
       "bid_value_pershare": null,
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": null,
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": null,
-      "aggregate_basis": null,
       "additional_note": null,
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
+      "drop_reason_note": "Unable to proceed due to valuation and/or internal priorities.",
       "source_quote": "Over the next few weeks, five of the remaining six interested parties communicated to representatives of BofA Merrill Lynch that they were unable to proceed with the process due to concerns regarding valuation and, in some cases, the interested parties' own internal initiatives and strategic priorities. The sixth remaining interested party declined to respond to BofA Merrill Lynch's communications regarding a potential transaction.",
       "source_page": 38,
       "flags": [
         {
-          "code": "date_inferred_from_rough",
-          "severity": "info",
-          "reason": "phrase: 'Over the next few weeks'"
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Drop date inferred from 'Over the next few weeks' after May 22, 2014."
         },
         {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "one of 5 parties (of 6 remaining) that communicated inability to proceed due to valuation concerns"
+          "code": "drop_identity_ambiguous",
+          "severity": "soft",
+          "reason": "Filing reports five of six remaining bidders unable to proceed and a sixth nonresponsive, but does not map outcomes to specific bidders."
         }
-      ],
-      "drop_reason_note": "Voluntary: unable to proceed due to concerns regarding valuation and, in some cases, the interested parties' own internal initiatives and strategic priorities."
+      ]
     },
     {
       "BidderID": 41,
       "process_phase": 1,
       "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
       "bidder_name": "bidder_06",
-      "bidder_alias": "Strategic 1",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
-      "bid_note": "DropAtInf",
-      "bid_type": null,
-      "bid_date_precise": "2014-06-12",
-      "bid_date_rough": "over the next few weeks (from 2014-05-22 draft merger agreement distribution)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "Over the next few weeks, five of the remaining six interested parties communicated to representatives of BofA Merrill Lynch that they were unable to proceed with the process due to concerns regarding valuation and, in some cases, the interested parties' own internal initiatives and strategic priorities. The sixth remaining interested party declined to respond to BofA Merrill Lynch's communications regarding a potential transaction.",
-      "source_page": 38,
-      "flags": [
-        {
-          "code": "date_inferred_from_rough",
-          "severity": "info",
-          "reason": "phrase: 'Over the next few weeks'"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "one of 5 parties (of 6 remaining) that communicated inability to proceed due to valuation concerns"
-        }
-      ],
-      "drop_reason_note": "Voluntary: unable to proceed due to concerns regarding valuation and, in some cases, the interested parties' own internal initiatives and strategic priorities."
-    },
-    {
-      "BidderID": 42,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_27",
-      "bidder_alias": "Party Y",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
-      "bid_note": "DropAtInf",
-      "bid_type": null,
-      "bid_date_precise": "2014-06-12",
-      "bid_date_rough": "over the next few weeks (from 2014-05-22 draft merger agreement distribution)",
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
-      "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "Over the next few weeks, five of the remaining six interested parties communicated to representatives of BofA Merrill Lynch that they were unable to proceed with the process due to concerns regarding valuation and, in some cases, the interested parties' own internal initiatives and strategic priorities. The sixth remaining interested party declined to respond to BofA Merrill Lynch's communications regarding a potential transaction.",
-      "source_page": 38,
-      "flags": [
-        {
-          "code": "date_inferred_from_rough",
-          "severity": "info",
-          "reason": "phrase: 'Over the next few weeks'"
-        },
-        {
-          "code": "unnamed_count_placeholder",
-          "severity": "info",
-          "reason": "one of 5 parties (of 6 remaining) that communicated inability to proceed due to valuation concerns"
-        }
-      ],
-      "drop_reason_note": "Voluntary: unable to proceed due to concerns regarding valuation and, in some cases, the interested parties' own internal initiatives and strategic priorities."
-    },
-    {
-      "BidderID": 43,
-      "process_phase": 1,
-      "role": "bidder",
-      "bidder_name": "bidder_05",
-      "bidder_alias": "Financial 4",
+      "bidder_alias": "Financial Buyer 4",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "DropAtInf",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2014-06-12",
-      "bid_date_rough": "over the next few weeks (from 2014-05-22 draft merger agreement distribution)",
+      "bid_date_rough": "Over the next few weeks",
       "bid_value": null,
       "bid_value_pershare": null,
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": null,
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": null,
-      "aggregate_basis": null,
       "additional_note": null,
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
+      "drop_reason_note": "Unable to proceed due to valuation and/or internal priorities.",
       "source_quote": "Over the next few weeks, five of the remaining six interested parties communicated to representatives of BofA Merrill Lynch that they were unable to proceed with the process due to concerns regarding valuation and, in some cases, the interested parties' own internal initiatives and strategic priorities. The sixth remaining interested party declined to respond to BofA Merrill Lynch's communications regarding a potential transaction.",
       "source_page": 38,
       "flags": [
         {
-          "code": "date_inferred_from_rough",
-          "severity": "info",
-          "reason": "phrase: 'Over the next few weeks'"
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Drop date inferred from 'Over the next few weeks' after May 22, 2014."
         },
         {
-          "code": "drop_agency_ambiguous",
+          "code": "drop_identity_ambiguous",
           "severity": "soft",
-          "reason": "filing says sixth remaining interested party 'declined to respond' \u2014 identity not named; assigned arbitrarily to bidder_05 to satisfy filing's 6-remaining row-count commitment"
+          "reason": "Filing reports five of six remaining bidders unable to proceed and a sixth nonresponsive, but does not map outcomes to specific bidders."
         }
-      ],
-      "drop_reason_note": "Voluntary non-response: sixth remaining interested party declined to respond to BofA Merrill Lynch's communications regarding a potential transaction."
+      ]
+    },
+    {
+      "BidderID": 42,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_07",
+      "bidder_alias": "Strategic Buyer 1",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "DropAtInf",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-06-12",
+      "bid_date_rough": "Over the next few weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": null,
+      "comments": null,
+      "drop_reason_note": "Unable to proceed due to valuation and/or internal priorities.",
+      "source_quote": "Over the next few weeks, five of the remaining six interested parties communicated to representatives of BofA Merrill Lynch that they were unable to proceed with the process due to concerns regarding valuation and, in some cases, the interested parties' own internal initiatives and strategic priorities. The sixth remaining interested party declined to respond to BofA Merrill Lynch's communications regarding a potential transaction.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Drop date inferred from 'Over the next few weeks' after May 22, 2014."
+        },
+        {
+          "code": "drop_identity_ambiguous",
+          "severity": "soft",
+          "reason": "Filing reports five of six remaining bidders unable to proceed and a sixth nonresponsive, but does not map outcomes to specific bidders."
+        }
+      ]
+    },
+    {
+      "BidderID": 43,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_28",
+      "bidder_alias": "Party Y",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
+      "bid_note": "Drop",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2014-06-12",
+      "bid_date_rough": "Over the next few weeks",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": null,
+      "comments": null,
+      "drop_reason_note": "One of six remaining interested parties either unable to proceed or nonresponsive; filing does not allocate identity.",
+      "source_quote": "Over the next few weeks, five of the remaining six interested parties communicated to representatives of BofA Merrill Lynch that they were unable to proceed with the process due to concerns regarding valuation and, in some cases, the interested parties' own internal initiatives and strategic priorities. The sixth remaining interested party declined to respond to BofA Merrill Lynch's communications regarding a potential transaction.",
+      "source_page": 38,
+      "flags": [
+        {
+          "code": "date_inferred_from_context",
+          "severity": "soft",
+          "reason": "Drop date inferred from 'Over the next few weeks' after May 22, 2014."
+        },
+        {
+          "code": "drop_identity_ambiguous",
+          "severity": "soft",
+          "reason": "Filing reports five of six remaining bidders unable to proceed and a sixth nonresponsive, but does not map outcomes to specific bidders."
+        }
+      ]
     },
     {
       "BidderID": 44,
       "process_phase": 1,
       "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
       "bidder_name": null,
       "bidder_alias": null,
       "bidder_type": null,
+      "joint_bidder_members": null,
       "bid_note": "Terminated",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2014-06-26",
       "bid_date_rough": null,
       "bid_value": null,
@@ -2383,18 +2495,14 @@
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": null,
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
+      "additional_note": "Board terminated the 2014 strategic-alternatives process.",
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
+      "drop_reason_note": null,
       "source_quote": "At a June 26, 2014 meeting of our board of directors, based on the lack of buyer interest and the uncertainty surrounding the impact of the fire at our aerosol manufacturing facility in Marietta, Georgia, our board of directors decided to terminate the process to explore potential strategic alternatives at that time and to continue to focus on our business and financial performance.",
       "source_page": 38,
       "flags": []
@@ -2403,15 +2511,21 @@
       "BidderID": 45,
       "process_phase": 2,
       "role": "bidder",
-      "bidder_name": "bidder_01",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_02",
       "bidder_alias": "New Mountain Capital",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "Restarted",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2015-02-10",
       "bid_date_rough": null,
       "bid_value": null,
@@ -2419,41 +2533,75 @@
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": null,
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
+      "additional_note": "New Mountain's renewed approach restarted the process after the 2014 termination.",
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
+      "drop_reason_note": null,
       "source_quote": "In early February 2015, New Mountain Capital contacted representatives of BofA Merrill Lynch and requested a meeting. On February 10, 2015, New Mountain Capital met with representatives of BofA Merrill Lynch and expressed its interest in discussions with the Company regarding a potential transaction.",
       "source_page": 39,
-      "flags": [
-        {
-          "code": "bidder_reengagement",
-          "severity": "info",
-          "reason": "NMC previously dropped in phase 1 (2014-04-14) by declining to submit a preliminary indication of interest; returned in early February 2015 to restart process"
-        }
-      ]
+      "flags": []
     },
     {
       "BidderID": 46,
       "process_phase": 2,
       "role": "bidder",
-      "bidder_name": "bidder_01",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_02",
       "bidder_alias": "New Mountain Capital",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
+      "bid_note": "Bidder Interest",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "bid_date_precise": "2015-02-10",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "aggregate_basis": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "additional_note": "Requested a meeting and expressed interest in discussions regarding a potential transaction.",
+      "comments": null,
+      "drop_reason_note": null,
+      "source_quote": "In early February 2015, New Mountain Capital contacted representatives of BofA Merrill Lynch and requested a meeting. On February 10, 2015, New Mountain Capital met with representatives of BofA Merrill Lynch and expressed its interest in discussions with the Company regarding a potential transaction.",
+      "source_page": 39,
+      "flags": []
+    },
+    {
+      "BidderID": 47,
+      "process_phase": 2,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": true,
+      "process_conditions_note": "Supported by a highly confident financing letter; requested 45-day exclusivity and contemplated go-shop.",
+      "bidder_name": "bidder_02",
+      "bidder_alias": "New Mountain Capital",
+      "bidder_type": {
+        "base": "f",
+        "non_us": false,
+        "public": false
+      },
+      "joint_bidder_members": null,
       "bid_note": "Bid",
       "bid_type": "informal",
+      "bid_type_inference_note": "Informal per \u00a7G1 trigger: unsolicited indication of interest at $19.25, with diligence/exclusivity still requested.",
       "bid_date_precise": "2015-02-19",
       "bid_date_rough": null,
       "bid_value": null,
@@ -2461,44 +2609,39 @@
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": "USD_per_share",
+      "aggregate_basis": null,
       "cash_per_share": 19.25,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": [
         "cash"
       ],
-      "aggregate_basis": null,
       "additional_note": null,
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": true,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
+      "drop_reason_note": null,
       "source_quote": "On February 19, 2015, New Mountain Capital delivered an unsolicited indication of interest to the Company to acquire us for a per share price of $19.25. The indication of interest was supported by a highly confident financing letter from Jefferies Finance LLC, contained a request for a forty-five day exclusivity period and contemplated a \"go-shop\" period following the signing of any definitive merger agreement.",
       "source_page": 39,
-      "flags": [
-        {
-          "code": "pre_nda_informal_bid",
-          "severity": "info",
-          "reason": "NMC delivered concrete price indication ($19.25) in phase 2 before the Feb 27 NDA revival per \u00a7M4; later-phase NDA row satisfies \u00a7P-D6 existence"
-        }
-      ],
-      "bid_type_inference_note": "Informal per \u00a7G1: 'non-binding indication of interest' form; highly confident letter from Jefferies Finance LLC provides financing-strength signal but no firm commitment letters; request for 45-day exclusivity and go-shop in any definitive agreement."
+      "flags": []
     },
     {
-      "BidderID": 47,
+      "BidderID": 48,
       "process_phase": 2,
       "role": "bidder",
-      "bidder_name": "bidder_01",
+      "exclusivity_days": 30,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": "Requested 45-day exclusivity; board later offered approximately thirty days.",
+      "bidder_name": "bidder_02",
       "bidder_alias": "New Mountain Capital",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "Bid",
       "bid_type": "informal",
+      "bid_type_inference_note": "Informal per \u00a7G1 trigger: revised indication of interest; definitive agreement and final bid process had not yet occurred.",
       "bid_date_precise": "2015-02-26",
       "bid_date_rough": null,
       "bid_value": null,
@@ -2506,38 +2649,39 @@
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": "USD_per_share",
+      "aggregate_basis": null,
       "cash_per_share": 20.05,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": [
         "cash"
       ],
-      "aggregate_basis": null,
       "additional_note": null,
       "comments": null,
-      "exclusivity_days": 30,
-      "financing_contingent": null,
-      "highly_confident_letter": true,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
+      "drop_reason_note": null,
       "source_quote": "On February 26, 2015, New Mountain Capital delivered a revised indication of interest reflecting an increased per share price of $20.05, and indicated that this was the highest price it was willing to offer. As part of its submission of the revised indication of interest, New Mountain Capital again requested a forty-five day exclusivity period (and contemplated a countersignature by the Company), and reiterated that it would be willing to accept a \"go-shop\" provision in any definitive merger agreement.",
       "source_page": 39,
-      "flags": [],
-      "bid_type_inference_note": "Informal per \u00a7G1: still 'revised indication of interest' form (not binding); 'highest price willing to offer' is a strong-price signal but no merger agreement draft or firm commitment letters yet. Exclusivity granted ~30 days following this bid."
+      "flags": []
     },
     {
-      "BidderID": 48,
+      "BidderID": 49,
       "process_phase": 2,
       "role": "bidder",
-      "bidder_name": "bidder_01",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_02",
       "bidder_alias": "New Mountain Capital",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "NDA",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2015-02-27",
       "bid_date_rough": null,
       "bid_value": null,
@@ -2545,41 +2689,43 @@
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": null,
+      "aggregate_basis": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": null,
-      "aggregate_basis": null,
-      "additional_note": null,
+      "additional_note": "Confidentiality and standstill provisions from original agreement extended; exclusivity through March 31, 2015.",
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
+      "drop_reason_note": null,
       "source_quote": "On February 27, 2015, we signed an agreement with New Mountain Capital extending the term of the confidentiality provision, the \"standstill\" provision and the employee non-solicitation provision in our original confidentiality agreement with them as well as providing for an exclusivity period with New Mountain Capital through March 31, 2015.",
       "source_page": 40,
       "flags": [
         {
           "code": "nda_revived_from_stale",
           "severity": "info",
-          "reason": "phase-2 revival of original NMC NDA signed 2014-03-19 (phase 1); filing narrates Feb 27, 2015 agreement 'extending the term of the confidentiality provision...in our original confidentiality agreement'"
+          "reason": "Extends confidentiality provision from original 2014 confidentiality agreement signed on 2014-03-19."
         }
       ]
     },
     {
-      "BidderID": 49,
+      "BidderID": 50,
       "process_phase": 2,
       "role": "bidder",
-      "bidder_name": "bidder_01",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": "Requested extension of exclusivity through April 15, then through April 7.",
+      "bidder_name": "bidder_02",
       "bidder_alias": "New Mountain Capital",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "Bid",
-      "bid_type": "informal",
+      "bid_type": "formal",
+      "bid_type_inference_note": "Formal per \u00a7G1 trigger: $20.05 was communicated as New Mountain's 'best and final' offer.",
       "bid_date_precise": "2015-03-13",
       "bid_date_rough": null,
       "bid_value": null,
@@ -2587,83 +2733,79 @@
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": "USD_per_share",
+      "aggregate_basis": null,
       "cash_per_share": 20.05,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": [
         "cash"
       ],
-      "aggregate_basis": null,
-      "additional_note": "reiteration of Feb 26 IOI as 'best and final'; requested extension of exclusivity through 2015-04-15",
+      "additional_note": null,
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": true,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
+      "drop_reason_note": null,
       "source_quote": "On March 13, 2015, New Mountain Capital communicated that the $20.05 per share offer price was New Mountain Capital's \"best and final\" offer. New Mountain Capital also indicated a willingness to work expeditiously towards the signing of a definitive merger agreement by April 15, 2015 and requested an extension of its exclusivity period through that date.",
       "source_page": 40,
-      "flags": [
-        {
-          "code": "range_with_formal_trigger",
-          "severity": "soft",
-          "reason": "filing uses 'best and final' (\u00a7G1 formal trigger) on a reiteration row; classified informal per process-position fallback because instrument form is still pre-merger-agreement IOI"
-        }
-      ],
-      "bid_type_inference_note": "Informal per \u00a7G1 process-position: pre-merger-agreement draft; reiterates $20.05 as 'best and final'. Classified informal because no merger-agreement markup or firm commitment letters yet; 'best and final' formal trigger here reiterates the Feb 26 IOI rather than submitting a new binding instrument."
+      "flags": []
     },
     {
-      "BidderID": 50,
+      "BidderID": 51,
       "process_phase": 2,
       "role": "bidder",
-      "bidder_name": "bidder_01",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_02",
       "bidder_alias": "New Mountain Capital",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "Bid",
       "bid_type": "formal",
-      "bid_date_precise": "2015-03-29",
+      "bid_type_inference_note": "Formal per \u00a7G1 trigger: reiterated $20.05 as the 'best and final' offer during merger-agreement negotiations.",
+      "bid_date_precise": "2015-04-06",
       "bid_date_rough": null,
       "bid_value": null,
       "bid_value_pershare": 20.05,
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": "USD_per_share",
+      "aggregate_basis": null,
       "cash_per_share": 20.05,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": [
         "cash"
       ],
-      "aggregate_basis": null,
-      "additional_note": "revised draft merger agreement reduced go-shop from 60 to 30 days; price unchanged at $20.05",
+      "additional_note": "Price reaffirmed after Company and BofA Merrill Lynch sought an increase.",
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": true,
-      "process_conditions_note": null,
-      "joint_bidder_members": null,
-      "source_quote": "On March 29, 2015, we received a revised draft of the merger agreement from New Mountain Capital. Among other things, the revised merger agreement reduced the \"go-shop\" period from sixty days to thirty days.",
+      "drop_reason_note": null,
+      "source_quote": "As negotiations of the merger agreement continued into April, at the direction of our board of directors, both Mr. Morgan and representatives of BofA Merrill Lynch separately approached New Mountain Capital in an effort to negotiate an increase in the $20.05 per share offer price. New Mountain Capital reiterated its previous position that the $20.05 per share price offer was New Mountain Capital's \"best and final\" offer.",
       "source_page": 41,
-      "flags": [],
-      "bid_type_inference_note": "Formal per \u00a7G1: 'markup of the merger agreement' trigger \u2014 NMC delivered a revised draft merger agreement (reducing go-shop from 60 to 30 days); ongoing negotiation of definitive agreement terms (termination fees, exclusivity, no-shop)."
+      "flags": []
     },
     {
-      "BidderID": 51,
+      "BidderID": 52,
       "process_phase": 2,
       "role": "bidder",
-      "bidder_name": "bidder_01",
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "bidder_name": "bidder_02",
       "bidder_alias": "New Mountain Capital",
       "bidder_type": {
         "base": "f",
         "non_us": false,
         "public": false
       },
+      "joint_bidder_members": null,
       "bid_note": "Executed",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "bid_date_precise": "2015-04-07",
       "bid_date_rough": null,
       "bid_value": null,
@@ -2671,29 +2813,23 @@
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": "USD_per_share",
+      "aggregate_basis": null,
       "cash_per_share": 20.05,
       "stock_per_share": null,
       "contingent_per_share": null,
       "consideration_components": [
         "cash"
       ],
-      "aggregate_basis": null,
-      "additional_note": null,
+      "additional_note": "Merger agreement dated April 7, 2015; transaction announced morning of April 8, 2015.",
       "comments": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": true,
-      "process_conditions_note": "30-day go-shop period; target termination fee $17.5M (post go-shop) and $8.75M (during go-shop); reverse termination fee $33.75M payable by New Mountain Capital. 58 parties contacted during go-shop; no competing proposals received.",
-      "joint_bidder_members": null,
+      "drop_reason_note": null,
       "source_quote": [
-        "Following the meeting of our board of directors, the parties executed the merger agreement and the related transaction documents and issued a press release announcing the transaction on the morning of April 8, 2015.",
-        "As of the end of the go-shop period, none of the parties contacted during the go-shop process had submitted a competing acquisition proposal to us or our representatives, and no such party remained engaged in discussions or negotiations with us or our representatives with respect to a potential acquisition proposal.",
-        "Upon the consummation of the merger, each share of our common stock issued and outstanding immediately prior to the effective time of the merger (other than shares we own or shares owned by Parent or by holders who are entitled to, and who properly exercise, appraisal rights under Delaware law) will be converted into the right to receive $20.05 in cash."
+        "On April 7, 2015, our board of directors met again, together with members of the Company's management and representatives of BofA Merrill Lynch and King & Spalding, to discuss and review the transaction documents and to consider approval of the proposed transaction with New Mountain",
+        "Following the meeting of our board of directors, the parties executed the merger agreement and the related transaction documents and issued a press release announcing the transaction on the morning of April 8, 2015."
       ],
       "source_page": [
-        42,
-        42,
-        34
+        41,
+        42
       ],
       "flags": []
     }
