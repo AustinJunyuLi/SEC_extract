@@ -896,49 +896,22 @@
       "contingent_per_share": null,
       "consideration_components": null,
       "aggregate_basis": null,
-      "exclusivity_days": null,
+      "exclusivity_days": 30,
       "financing_contingent": null,
       "highly_confident_letter": false,
       "process_conditions_note": null,
       "additional_note": null,
       "comments": "[USEFUL FOR TARGET MOTIVATION] Our board of directors also considered again the importance of limiting any distractions that might be associated with pursuing another potential sale of the Company.",
-      "flags": []
+      "flags": [
+        {
+          "code": "legacy_exclusivity_event_migrated",
+          "severity": "info",
+          "reason": "xlsx row 6405 bid_note='Exclusivity 30 days' dropped; set exclusivity_days=30 on xlsx row 6404 per rules/events.md \u00a7C1 and rules/bids.md \u00a7O1"
+        }
+      ]
     },
     {
       "BidderID": 25,
-      "process_phase": null,
-      "role": "bidder",
-      "bidder_name": "bidder_03",
-      "bidder_alias": "New Mountain Capital",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
-      "bid_note": "Exclusivity 30 days",
-      "bid_type": null,
-      "bid_date_precise": "2015-02-27",
-      "bid_date_rough": null,
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": null,
-      "flags": []
-    },
-    {
-      "BidderID": 26,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_03",
@@ -971,13 +944,13 @@
       "flags": []
     },
     {
-      "BidderID": 27,
+      "BidderID": 26,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "New Mountain Capital",
       "bidder_type": {
-        "base": null,
+        "base": "f",
         "non_us": false,
         "public": null
       },

@@ -119,7 +119,7 @@
       "bidder_name": "bidder_01",
       "bidder_alias": "Company B",
       "bidder_type": {
-        "base": null,
+        "base": "s",
         "non_us": false,
         "public": null
       },
@@ -152,7 +152,7 @@
       "bidder_name": "bidder_02",
       "bidder_alias": "Company D",
       "bidder_type": {
-        "base": null,
+        "base": "s",
         "non_us": false,
         "public": null
       },
@@ -953,7 +953,7 @@
       "bidder_name": "bidder_07",
       "bidder_alias": "WDC",
       "bidder_type": {
-        "base": null,
+        "base": "s",
         "non_us": false,
         "public": null
       },

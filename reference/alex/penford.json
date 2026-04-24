@@ -735,7 +735,7 @@
       "bidder_name": "bidder_03",
       "bidder_alias": "Ingredion",
       "bidder_type": {
-        "base": null,
+        "base": "s",
         "non_us": false,
         "public": null
       },

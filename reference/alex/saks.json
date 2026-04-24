@@ -102,7 +102,7 @@
       "bidder_name": "bidder_01",
       "bidder_alias": "Goldman Sachs",
       "bidder_type": {
-        "base": null,
+        "base": "f",
         "non_us": false,
         "public": null
       },
@@ -135,7 +135,7 @@
       "bidder_name": "bidder_02",
       "bidder_alias": "Sponsor A",
       "bidder_type": {
-        "base": null,
+        "base": "f",
         "non_us": false,
         "public": null
       },
@@ -787,8 +787,8 @@
       "bidder_name": "bidder_03",
       "bidder_alias": "Hudson's Bay",
       "bidder_type": {
-        "base": null,
-        "non_us": false,
+        "base": "s",
+        "non_us": true,
         "public": true
       },
       "bid_note": "Executed",

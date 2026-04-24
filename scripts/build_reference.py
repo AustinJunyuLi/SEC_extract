@@ -169,6 +169,18 @@ A3_RANK: dict[str, int] = {
     "Executed": 11,
 }
 
+VALID_BID_NOTES = frozenset(A3_RANK)
+
+BLANK_BID_NOTE_REPAIRS: dict[int, tuple[str, str]] = {
+    6028: (
+        "NDA",
+        "xlsx row 6028 has a blank bid_note; the row identifies G&W's "
+        "2016-04-13 confidentiality-agreement event",
+    ),
+}
+
+EXCLUSIVITY_EVENT_RE = re.compile(r"^Exclusivity\s+(\d+)\s+days$", re.IGNORECASE)
+
 
 def _a3_rank(ev: dict[str, Any]) -> int:
     """§A3 same-date rank. Bid rows (§C3) rank by bid_type:
@@ -431,12 +443,58 @@ def canonicalize_bidders(rows: list[RawRow]) -> tuple[dict[int, str], dict[str, 
 # Bidder-type collapse (§F1)
 # ---------------------------------------------------------------------------
 
+def _bidder_type_note_signals(note: Any) -> dict[str, bool | None]:
+    """Parse Alex's type-note column without inventing outside facts.
+
+    The workbook has no separate public-company boolean. Its note column uses
+    strings like "S", "F", "S/F", "11S, 14F", and "Non-US public S".
+    Plain type notes (`S`, `F`, `strategic`, `financial`) do not answer the
+    public/private question, so the converter leaves `public = null` unless
+    the note explicitly says public or private/PE/sponsor.
+    """
+    if not isinstance(note, str):
+        return {
+            "financial": None,
+            "strategic": None,
+            "mixed": None,
+            "non_us": None,
+            "public": None,
+        }
+
+    normalized = re.sub(r"non[-\s]?us", "nonus", note.strip().lower())
+    tokens = re.findall(r"[a-z]+|\d+[a-z]+", normalized)
+    has_financial = any(
+        token in {"f", "financial"} or re.fullmatch(r"\d+f", token)
+        for token in tokens
+    )
+    has_strategic = any(
+        token in {"s", "strategic"} or re.fullmatch(r"\d+s", token)
+        for token in tokens
+    )
+    has_mixed = "mixed" in tokens or (has_financial and has_strategic)
+    has_non_us = "nonus" in tokens
+    has_public = "public" in tokens
+    has_private = any(
+        token in {"private", "pe", "sponsor", "sponsors"}
+        for token in tokens
+    ) or ("private" in tokens and "equity" in tokens)
+
+    return {
+        "financial": has_financial,
+        "strategic": has_strategic,
+        "mixed": has_mixed,
+        "non_us": has_non_us,
+        "public": True if has_public else False if has_private else None,
+    }
+
+
 def build_bidder_type(r: RawRow) -> dict[str, Any] | None:
     fin  = _bool(r.get("bt_financial"))
     strat = _bool(r.get("bt_strategic"))
     mixed = _bool(r.get("bt_mixed"))
     nonus = _bool(r.get("bt_nonUS"))
     note  = r.get("bidder_type_note")
+    note_signals = _bidder_type_note_signals(note)
     # If none set, no type.
     if not any([fin, strat, mixed]):
         if note is None and nonus is None:
@@ -450,18 +508,26 @@ def build_bidder_type(r: RawRow) -> dict[str, Any] | None:
     elif strat:
         base = "s"
     else:
-        base = None
-    # §F1: parse legacy note substring to populate `public: bool`. Alex's
-    # workbook uses strings like "S" (no signal), "public S", "Non-US public S",
-    # "public financial". The word "public" in the note means public=true.
-    # Absent that token we leave public=null (ambiguous; AI can disambiguate).
-    public = None
-    if note and isinstance(note, str) and "public" in note.lower():
-        public = True
+        if note_signals["mixed"]:
+            base = "mixed"
+        elif note_signals["financial"] and note_signals["strategic"]:
+            base = "mixed"
+        elif note_signals["financial"]:
+            base = "f"
+        elif note_signals["strategic"]:
+            base = "s"
+        else:
+            base = None
+
+    if nonus is not None:
+        non_us_value = bool(nonus)
+    else:
+        non_us_value = bool(note_signals["non_us"])
+
     return {
         "base": base,
-        "non_us": bool(nonus) if nonus is not None else False,
-        "public": public,
+        "non_us": non_us_value,
+        "public": note_signals["public"],
     }
 
 
@@ -512,6 +578,9 @@ def _migrate_bid_note(r: RawRow) -> tuple[str | None, str | None, str | None]:
             return ("Bid", "informal", None)
         if bt == "formal":
             return ("Bid", "formal", None)
+        if r.xlsx_row in BLANK_BID_NOTE_REPAIRS:
+            repaired_note, _ = BLANK_BID_NOTE_REPAIRS[r.xlsx_row]
+            return (repaired_note, None, None)
         return (None, None, None)
 
     # Case 3: non-bid §C1 event (NDA, IB, Drop, Executed, ...).
@@ -583,6 +652,13 @@ def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
                 f"xlsx bid_note={legacy_label!r} migrated to bid_note='Bid' + "
                 f"bid_type={bid_type!r} per rules/events.md §C3"
             ),
+        })
+    if r.xlsx_row in BLANK_BID_NOTE_REPAIRS:
+        _, reason = BLANK_BID_NOTE_REPAIRS[r.xlsx_row]
+        flags.append({
+            "code": "legacy_blank_bid_note_normalized",
+            "severity": "info",
+            "reason": f"{reason}; normalized to bid_note={note!r} per current schema",
         })
 
     # Revised Bid provenance: the xlsx distinguished a bidder's subsequent
@@ -723,6 +799,70 @@ def apply_q2_zep(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return out
 
 
+def apply_legacy_exclusivity_events(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Drop legacy exclusivity event rows after moving days onto the bid row."""
+    out: list[dict[str, Any]] = []
+    for ev in events:
+        note = ev.get("bid_note")
+        match = EXCLUSIVITY_EVENT_RE.match(note) if isinstance(note, str) else None
+        if match is None:
+            out.append(ev)
+            continue
+
+        days = int(match.group(1))
+        bidder_name = ev.get("bidder_name")
+        bidder_alias = ev.get("bidder_alias")
+        target = next(
+            (
+                prev
+                for prev in reversed(out)
+                if prev.get("bid_note") == "Bid"
+                and (
+                    (bidder_name is not None and prev.get("bidder_name") == bidder_name)
+                    or (bidder_alias is not None and prev.get("bidder_alias") == bidder_alias)
+                )
+            ),
+            None,
+        )
+        if target is None:
+            raise ValueError(
+                f"xlsx row {ev.get('_xlsx_row')}: cannot attach legacy bid_note={note!r}; "
+                "no preceding bid row for the same bidder"
+            )
+
+        existing = target.get("exclusivity_days")
+        if existing is not None and existing != days:
+            raise ValueError(
+                f"xlsx row {ev.get('_xlsx_row')}: legacy bid_note={note!r} conflicts with "
+                f"existing exclusivity_days={existing!r} on xlsx row {target.get('_xlsx_row')}"
+            )
+
+        target["exclusivity_days"] = days
+        target.setdefault("flags", []).append({
+            "code": "legacy_exclusivity_event_migrated",
+            "severity": "info",
+            "reason": (
+                f"xlsx row {ev.get('_xlsx_row')} bid_note={note!r} dropped; "
+                f"set exclusivity_days={days} on xlsx row {target.get('_xlsx_row')} "
+                "per rules/events.md §C1 and rules/bids.md §O1"
+            ),
+        })
+    return out
+
+
+def validate_current_schema_events(events: list[dict[str, Any]]) -> None:
+    """Fail loudly if stale legacy event codes survived converter cleanup."""
+    for ev in events:
+        note = ev.get("bid_note")
+        if note is None:
+            raise ValueError(f"xlsx row {ev.get('_xlsx_row')}: bid_note is null after conversion")
+        if note not in VALID_BID_NOTES:
+            raise ValueError(
+                f"xlsx row {ev.get('_xlsx_row')}: bid_note={note!r} is not in the "
+                "current rules/events.md §C1 vocabulary"
+            )
+
+
 # §Q5 — Medivation: aggregated NDA row (xlsx 6065) + Drop row (xlsx 6075).
 MEDIVATION_NDA_AGG_XLSX_ROW = 6065
 MEDIVATION_DROP_AGG_XLSX_ROW = 6075
@@ -840,6 +980,8 @@ def build_deal(slug: str) -> dict[str, Any]:
         events = apply_q2_zep(events)
     if slug == "medivation":
         events = apply_q5_medivation(events)
+    events = apply_legacy_exclusivity_events(events)
+    validate_current_schema_events(events)
 
     flagged_rows = _load_flagged_xlsx_rows().get(slug, set())
     events = renumber_chronologically(events, flagged_rows)

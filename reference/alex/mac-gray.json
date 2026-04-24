@@ -1063,7 +1063,7 @@
       "bidder_name": "bidder_06",
       "bidder_alias": "CSC/Pamplona",
       "bidder_type": {
-        "base": null,
+        "base": "s",
         "non_us": false,
         "public": null
       },

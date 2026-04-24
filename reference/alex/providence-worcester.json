@@ -17,17 +17,17 @@
     "termination_fee_pct": null,
     "reverse_termination_fee": null,
     "bidder_registry": {
-      "bidder_05": {
-        "resolved_name": "9 parties",
-        "aliases_observed": [
-          "9 parties"
-        ],
-        "first_appearance_row_index": 1
-      },
       "bidder_04": {
         "resolved_name": "G&W",
         "aliases_observed": [
           "G&W"
+        ],
+        "first_appearance_row_index": 1
+      },
+      "bidder_05": {
+        "resolved_name": "9 parties",
+        "aliases_observed": [
+          "9 parties"
         ],
         "first_appearance_row_index": 2
       },
@@ -129,6 +129,45 @@
       "BidderID": 1,
       "process_phase": null,
       "role": "bidder",
+      "bidder_name": "bidder_04",
+      "bidder_alias": "G&W",
+      "bidder_type": {
+        "base": "s",
+        "non_us": false,
+        "public": null
+      },
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_date_precise": "2016-04-13",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "legacy_blank_bid_note_normalized",
+          "severity": "info",
+          "reason": "xlsx row 6028 has a blank bid_note; the row identifies G&W's 2016-04-13 confidentiality-agreement event; normalized to bid_note='NDA' per current schema"
+        }
+      ]
+    },
+    {
+      "BidderID": 2,
+      "process_phase": null,
+      "role": "bidder",
       "bidder_name": "bidder_05",
       "bidder_alias": "9 parties",
       "bidder_type": null,
@@ -141,39 +180,6 @@
       "bid_value_lower": 17.93,
       "bid_value_upper": 26.5,
       "bid_value_unit": "USD_per_share",
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": null,
-      "flags": []
-    },
-    {
-      "BidderID": 2,
-      "process_phase": null,
-      "role": "bidder",
-      "bidder_name": "bidder_04",
-      "bidder_alias": "G&W",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
-      "bid_note": null,
-      "bid_type": null,
-      "bid_date_precise": "2016-04-13",
-      "bid_date_rough": null,
-      "bid_value": null,
-      "bid_value_pershare": null,
-      "bid_value_lower": null,
-      "bid_value_upper": null,
-      "bid_value_unit": null,
       "cash_per_share": null,
       "stock_per_share": null,
       "contingent_per_share": null,
