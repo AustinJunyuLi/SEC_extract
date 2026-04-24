@@ -1,6 +1,6 @@
 ---
 date: 2026-04-21
-status: DRAFT
+status: HISTORICAL_DRAFT_NOT_LIVE
 owner: Austin + Claude (implementer)
 related:
   - quality_reports/plans/2026-04-20_pipeline-comparison.md
@@ -10,6 +10,14 @@ target_repo: /Users/austinli/bids_try (remote github.com/AustinJunyuLi/SEC_extra
 ---
 
 # PRD: Validator Hardening — Cherry-picks from `bids_pipeline`
+
+> **Current-status note, 2026-04-23.** This file is a historical draft, not a
+> live implementation plan. It remains only as background for possible future
+> validator-hardening ideas. The active plan is
+> `quality_reports/plans/2026-04-23_stabilize-reference-and-claim-shadow-plan.md`,
+> and live behavior is defined by `AGENTS.md`, `CLAUDE.md`, `SKILL.md`,
+> `rules/*.md`, and the code. Do not implement from this PRD unless Austin
+> explicitly reactivates a specific story.
 
 ## 1. Introduction
 
