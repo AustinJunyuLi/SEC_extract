@@ -1,0 +1,5 @@
+sec2md==0.1.22
+openpyxl==3.1.5
+pytest==8.4.2
+matplotlib==3.10.7
+numpy==2.3.5

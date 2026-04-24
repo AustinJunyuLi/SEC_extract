@@ -11,9 +11,15 @@ diff on reference deals against the SEC filing, which is ground truth.
 ## Context you will be given at invocation time
 
 - `deal.slug` — deal identifier.
-- `deal.filing_url` — SEC filing URL.
-- The filing text (already fetched, or fetch it via the provided tool).
-- The full contents of `rules/schema.md`, `rules/events.md`, `rules/bidders.md`, `rules/bids.md`, `rules/dates.md`.
+- Local filing artifacts under `data/filings/{deal.slug}/`:
+  `pages.json` (authoritative page-aware filing text) and `manifest.json`
+  (fetch provenance + EDGAR metadata).
+- The full contents of `rules/schema.md`, `rules/events.md`,
+  `rules/bidders.md`, `rules/bids.md`, and `rules/dates.md`.
+
+`rules/invariants.md` is validator-facing only. You may see validator check
+codes named in this prompt because they describe how Python will flag the JSON,
+but the extractor does not read or implement `rules/invariants.md` directly.
 
 ## Your procedure
 
@@ -25,7 +31,7 @@ diff on reference deals against the SEC filing, which is ground truth.
 
 3. **Identify phases.** Mentally segment: pre-process (activist/board-level discussions before IB retained), solicitation (NDAs signed, initial bids), final round (final-round letters + bids), execution (agreement signed), post-execution (go-shop, topping bids).
 
-   **Phase 0 vs phase 1 boundary.** Phase 0 (§M4 stale-prior) is reserved for a *prior abandoned process* that the filing narrates as its own complete lifecycle — an earlier IB was retained, bidders were contacted, the process ended — separated from the current process by ≥180 days (§P-L2). Rows that read as the start of the *current* process — board-level discussions, activist pressure, unsolicited approaches — belong to phase 1 even when they predate the current IB's retention. If `rules/invariants.md` §P-L2 fires on your output, the phase assignment is wrong: collapse the mislabeled phase-0 rows into phase 1.
+   **Phase 0 vs phase 1 boundary.** Phase 0 (§M4 stale-prior) is reserved for a *prior abandoned process* that the filing narrates as its own complete lifecycle — an earlier IB was retained, bidders were contacted, the process ended — separated from the current process by ≥180 days (§P-L2). Rows that read as the start of the *current* process — board-level discussions, activist pressure, unsolicited approaches — belong to phase 1 even when they predate the current IB's retention. If validator check §P-L2 fires on your output, the phase assignment is wrong: collapse the mislabeled phase-0 rows into phase 1.
 
 4. **Extract events row-by-row.** Read the section linearly. For each discrete event (one date, one bidder, one action), emit one row conforming to `rules/schema.md`. **Every row must include `source_quote` (verbatim filing text, 1–3 sentences) and `source_page`.**
 
@@ -38,11 +44,11 @@ diff on reference deals against the SEC filing, which is ground truth.
 
 6. **Handle dates.** Apply `rules/dates.md` §B1 deterministically. If a date phrase isn't covered by the mapping table, emit the literal phrase in a `date_source_phrase` field and flag `date_phrase_unmapped`. Per `rules/dates.md` §B5, incoming communications with both authored and receipt dates anchor on the **receipt** date; outgoing process letters / requests anchor on the **sent** date. **Whenever you attach a date-inference flag** (`date_inferred_from_rough`, `date_inferred_from_context`, or `date_range_collapsed`), you MUST populate `bid_date_rough` with a short anchor phrase identifying the signal you inferred from — not left null. Examples: `"mid-July 2016"` (rough phrase per §B1); `"first narration: 2016-05-11 contact"` (context-inferred IB retention per §B3); `"implicit drop at process end: 2016-08-20"` (context-inferred implicit drop per §I1); `"Between July 15 and 22, 2016"` (collapsed range per §B4). **§B3 symmetry rule (bi-directional)** — `bid_date_rough` populated **IFF** a date-inference flag is present on the row. The two directions are both hard invariants:
    - *inference-flag → rough populated* — if any of `date_inferred_from_rough` / `date_inferred_from_context` / `date_range_collapsed` appears in `flags[]`, `bid_date_rough` MUST be non-null.
-   - *rough populated → inference-flag* — if `bid_date_rough` is non-null, one of the three inference flags MUST appear in `flags[]`. Populating `bid_date_rough` without the flag (e.g., copying the filing phrase `"late July 2016"` onto a precise-dated row) is a hard validator error. Per `rules/invariants.md` §P-D2 both directions produce `rough_date_mismatch_inference` hard.
+   - *rough populated → inference-flag* — if `bid_date_rough` is non-null, one of the three inference flags MUST appear in `flags[]`. Populating `bid_date_rough` without the flag (e.g., copying the filing phrase `"late July 2016"` onto a precise-dated row) is a hard validator error. Per validator check §P-D2 both directions produce `rough_date_mismatch_inference` hard.
 
 7. **Handle group/joint/aggregate rows.** Apply `rules/bidders.md` §E1 (atomize events), §E2 (joint bidders), §E2.a (Executed collapse to one row), §E2.b (NDA granularity follows filing narration), and §E5 (unnamed-party quantifiers: exact counts stay exact; `"several"` = 3 minimum; vaguer plurals emit one placeholder plus ambiguity flag). See `rules/bidders.md` for the full decision tables and `joint_bidder_members` / `joint_nda_aggregated` flag shapes.
 
-8. **Classify bids.** Apply `rules/bids.md` §G1 to decide `bid_type ∈ {"informal", "formal"}`. Every bid row emits `bid_note = "Bid"` per `rules/events.md` §C3 (the unified-bid convention); `bid_type` is the ONLY distinguisher between informal and formal. Do NOT emit legacy labels (`"Inf"` / `"Formal Bid"` / `"Revised Bid"`) — those are deprecated by §C3 and fail `rules/invariants.md` §P-R3. Every non-null `bid_type` MUST carry a `bid_type_inference_note: str` (non-empty, ≤300 chars) justifying the classification — UNLESS the row is a true range bid (both `bid_value_lower` and `bid_value_upper` populated and numeric with `lower < upper`, a §G1 informal structural signal). The §G1 trigger tables guide which classification you pick; they do NOT exempt you from writing the note. Validator §P-G2 enforces this.
+8. **Classify bids.** Apply `rules/bids.md` §G1 to decide `bid_type ∈ {"informal", "formal"}`. Every bid row emits `bid_note = "Bid"` per `rules/events.md` §C3 (the unified-bid convention); `bid_type` is the ONLY distinguisher between informal and formal. Do NOT emit legacy labels (`"Inf"` / `"Formal Bid"` / `"Revised Bid"`) — those are deprecated by §C3 and fail validator check §P-R3. Every non-null `bid_type` MUST carry a `bid_type_inference_note: str` (non-empty, ≤300 chars) justifying the classification — UNLESS the row is a true range bid (both `bid_value_lower` and `bid_value_upper` populated and numeric with `lower < upper`, a §G1 informal structural signal). The §G1 trigger tables guide which classification you pick; they do NOT exempt you from writing the note. Validator §P-G2 enforces this.
 
 9. **Apply skip rules.** Do NOT emit rows for events that match `rules/bids.md` §M1 (unsolicited, no NDA, no price) or §M3 (legal advisor NDA). §M2 is folded into §I1's NDA-only rule (no separate skip); §M4 is an emit-two-rows cross-phase NDA continuity rule, not a skip (see self-check).
 
@@ -52,9 +58,10 @@ diff on reference deals against the SEC filing, which is ground truth.
 
 - **Every row has `source_quote` and `source_page`.** No exceptions.
 - **`source_quote` is verbatim.** Every `source_quote` is character-for-character contiguous text from `pages.json[source_page - 1].content`. Do not edit capitalization, do not elide middle text with "...", do not paraphrase, do not smooth page-break artifacts. When the quote legitimately spans a page break, use the `list[str]` / `list[int]` multi-quote form per `rules/schema.md` §R3 — one list element per contiguous-within-one-page segment.
+- **Use local filing artifacts only.** The filing text in `data/filings/{deal.slug}/pages.json` is the sole extraction source. Do not fetch from SEC/EDGAR, browse the web, or consult other filings during extraction. If the local artifacts are missing or unusable, stop and report the missing artifact to the orchestrator.
 - **Do not invent bid values, dates, or bidder types.** If the filing is silent, emit `null` and flag.
 - **Do not resolve ambiguity by guessing.** Flag it, let the Python validator or Austin decide.
-- **Do not apply rules not in `rules/*.md`.** If you feel a rule is missing, emit a flag, do not create a new rule.
+- **Do not apply rules outside the extractor contract.** Use this prompt plus `rules/schema.md`, `rules/events.md`, `rules/bidders.md`, `rules/bids.md`, and `rules/dates.md`. If you feel a rule is missing, emit a flag, do not create a new rule.
 - **Bidder names come from the filing verbatim.** Only the winner retrofit (per `rules/bidders.md` §E4) may rename, and only if §E4 is resolved to "retrofit."
 - **Deal identity fields come from the filing verbatim.** Preserve the filing's casing and punctuation for `TargetName` / `Acquirer`. Leave `DateEffective = null` unless the same filing explicitly states it.
 - **Do not emit a separate post-execution `Sale Press Release` row.** Fold post-signing announcement evidence into the `Executed` row's `source_quote` / `source_page` instead.

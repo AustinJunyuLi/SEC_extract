@@ -38,7 +38,7 @@ Extractor agent plus a separate Validator agent.
 seeds.csv ──► for each deal ──► fresh Claude session ─────────────┐
                                                                    │
                                 ┌── rules/ + prompts/ ─────────┐   │
-                                │   rules/*.md                 │   │
+                                │   extractor rules            │   │
                                 │   prompts/extract.md         │──►│ Extractor subagent
                                 └───────────────────────────────┘   │
                                                                    ▼
@@ -171,7 +171,7 @@ repo.
 | `rules/bidders.md` | Bidder identity, type classification (S/F/public/non-US), aggregation, joint bidders. |
 | `rules/bids.md` | Bid value structure (ranges, composite, aggregate), informal-vs-formal classification, skip rules. |
 | `rules/dates.md` | Rough-date mapping ("mid-July" → calendar date), event sequencing, BidderID. |
-| `rules/invariants.md` | Hard/soft/info checks the Python validator runs. |
+| `rules/invariants.md` | Validator-facing hard/soft/info checks. The Extractor does not read this file directly. |
 | `prompts/extract.md` | Extractor agent prompt. |
 | `pipeline.py` | Live Python plumbing: filing loader, extractor prompt builder, validator, output writers, state updaters. |
 | `scoring/diff.py` | AI-vs-Alex diff report generator. Produces human-readable reports for manual review. Not a grader. |
@@ -264,6 +264,14 @@ Current handling:
   `SKILL.md`, and this file.
 - **Use the user's folder name ("the folder you selected") when referring to file locations**, not sandbox paths.
 - **Before adding a new agent or rule file, name the assumption it encodes.** If you can't say what the model fails at without it, don't add it.
+- **No backward compatibility.** When a schema, rule, prompt contract, state
+  format, or output format changes, update the live contract, regenerate
+  affected data, and delete stale code/docs. Do not add compatibility shims,
+  old-format readers, hidden migrations, deprecated code paths, or docs that
+  describe old and new behavior as simultaneously supported. Fail loudly on
+  stale inputs instead of falling back. Use git history as the compatibility
+  record; do not restore old behavior from prior commits unless Austin
+  explicitly asks.
 
 ## Current Stage 3 follow-ups
 

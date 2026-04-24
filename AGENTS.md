@@ -259,6 +259,14 @@ Current handling:
   `SKILL.md`, and this file.
 - **Use the user's folder name ("the folder you selected") when referring to file locations**, not sandbox paths.
 - **Before adding a new agent or rule file, name the assumption it encodes.** If you can't say what the model fails at without it, don't add it.
+- **No backward compatibility.** When a schema, rule, prompt contract, state
+  format, or output format changes, update the live contract, regenerate
+  affected data, and delete stale code/docs. Do not add compatibility shims,
+  old-format readers, hidden migrations, deprecated code paths, or docs that
+  describe old and new behavior as simultaneously supported. Fail loudly on
+  stale inputs instead of falling back. Use git history as the compatibility
+  record; do not restore old behavior from prior commits unless Austin
+  explicitly asks.
 
 ## Current Stage 3 follow-ups
 
