@@ -22,7 +22,7 @@ discarded options stay here.
 | 3 | `Acquirer` field semantics (legal vs operating) | 🟩 IMPLEMENTED (pending re-extraction) | 2026-04-26 |
 | 4 | NDA scope: target-bidder only, or include inter-bidder/rollover CAs? | 🟩 IMPLEMENTED (pending re-extraction) | 2026-04-26 |
 | 5 | Same-price reaffirmations: new bid row or note? | 🟩 IMPLEMENTED (pending re-extraction) | 2026-04-26 |
-| 6 | IB date anchor: board approval vs engagement letter vs first action | 🟥 OPEN | 2026-04-26 |
+| 6 | IB date anchor: board approval vs engagement letter vs first action | 🟩 IMPLEMENTED (pending re-extraction) | 2026-04-26 |
 
 **Legend:** 🟩 DECIDED · 🟨 LEANING (Austin has a view, wants discussion) · 🟥 OPEN
 
@@ -1089,15 +1089,96 @@ letter), not 2013-03-26 (board approval) or 2013-04-04 (Alex's wrong date).
 3. For acquirer-side IBs, the engagement letter is usually before the
    acquirer is publicly known — does that affect the anchor choice?
 
-### Decision (to be filled in after discussion)
+### Decision (2026-04-26)
 
-_Pending Austin discussion_
+**Sharpened Option C: the IB date is the bank's first narrated
+action; board approval to retain (the target's act) does NOT count.
+No fallback chain.**
 
-### Implementation (after decision)
+After framing the choice as A (board-approval-first chain) vs B
+(engagement-letter-first chain) vs C (first action), Austin asked
+"what is the least overengineered and overfitting option?" — which
+forced a critical re-evaluation. Sharpened-C wins on both axes:
 
-- `rules/dates.md` §J1 — rewrite with the chosen anchor and fallback chain
-- `prompts/extract.md` — instruct extractor on the anchor preference
-- All 9 reference deals will need IB date review and possible regeneration
+- **Least overengineered:** one rule (find the bank's earliest action),
+  not a 3-tier fallback chain. Zero priority logic, zero "what if X is
+  missing then Y else Z" branching.
+- **Least overfit:** A and B both encoded priorities derived from the
+  2 reference cases (STec + Penford). C makes one observability claim
+  ("when did the bank start acting?") and avoids extrapolating
+  priorities to 392 target deals.
+
+The "sharpening" — explicitly excluding board approval from the
+"action" set — removes the one ambiguity in C's prior wording. The
+bank has no advisory relationship until the engagement letter is
+signed; pre-engagement board votes are corporate-governance steps,
+not bank actions.
+
+### Rationale
+
+- **Engagement letter signing IS a first action and dominates
+  naturally.** No chain needed: when an engagement letter date is
+  narrated, it precedes any subsequent advisory work and is the
+  earliest action by construction.
+- **Board approval gets excluded for a principled reason, not a deal-
+  specific carve-out.** The exclusion follows from "whose action is
+  this?" — not from "STec's 03-26 was wrong." The rule generalizes.
+- **Single-question rule is more honest about future deals.** If a
+  future deal has only board approval narrated (no engagement letter,
+  no actions yet), under sharpened-C the IB row is anchored on the
+  earliest later action — which is the right answer (the bank hasn't
+  acted yet at the board-approval moment).
+
+### Implementation (2026-04-26 — completed)
+
+Two files touched:
+
+1. **`rules/events.md` §J1** — `bid_date_precise` description rewritten
+   from vague *"earliest narrated date acting in advisory capacity"*
+   to the sharpened-C rule. Added two new sub-blocks:
+   - "Bank's first-action set" — enumerated qualifying actions
+     (engagement letter, process letters, contacting bidders,
+     presenting to committee, etc.).
+   - "Does NOT count as the bank's first action" — explicit
+     exclusion of board approval, retention discussions, and
+     unrelated prior-engagement mentions.
+   Updated the inference-clause language to specify "engagement-
+   letter date" as the typical anchor when explicit. Trigger
+   phrases section reorganized around bank-action language. New
+   "Why first-narrated-action and not fallback chain" justification
+   block.
+2. **`prompts/extract.md` Step 2a** — codified the same first-action
+   set with the board-approval exclusion called out explicitly.
+
+No vocabulary, validator, schema, converter, or test changes.
+
+### Verification (2026-04-26)
+
+- `pytest tests/`: 103 passed in 2.65s.
+- `python scripts/build_reference.py --all`: rebuild succeeds with
+  no deltas (rules-only change).
+- Working tree: only `rules/events.md` and `prompts/extract.md`
+  modified for this decision.
+
+### Reference impact (after re-extraction, not in this commit)
+
+- **STec:** AI today uses 03-26 (board approval). Under sharpened-C
+  → 03-28 (engagement letter signing IS the bank's first action;
+  board approval doesn't count). Alex used 04-04 (a process date —
+  Alex's date was wrong). AI shifts to 03-28 and converges on the
+  legally-clear answer.
+- **Penford:** AI today uses 8/11 (first action). Under sharpened-C
+  → 8/11 (no engagement-letter date narrated; first action is the
+  bank's earliest narrated action, which is 8/11). Already aligned.
+- **Other 7 reference deals:** mostly already aligned on the bank's
+  first action; minor date shifts possible per deal as the rule's
+  precision improves. Will surface in diff harness.
+
+### Status
+
+🟩 **IMPLEMENTED at policy level.** Pending: re-extract all 9
+reference deals; expected per-deal change: STec IB date 03-26 →
+03-28; other deals largely unchanged or minor adjustments.
 
 ---
 
@@ -1123,6 +1204,7 @@ then start the rulebook-stability clock.
 | Date | Change |
 |---|---|
 | 2026-04-26 | File created. #1 decided at policy level; #2-6 framed for discussion. |
+| 2026-04-26 | #6 implementation completed (rules-only, minimal touch). Files: `rules/events.md` §J1 (`bid_date_precise` rewritten from vague "earliest narrated date acting in advisory capacity" to sharpened Option C — bank's first narrated action set + explicit board-approval exclusion + reorganized trigger phrases + "why no fallback chain" justification), `prompts/extract.md` Step 2a (codified first-action set with board-approval exclusion). No vocabulary / validator / schema / converter / test changes. After framing the decision as A vs B vs C 3-tier-fallback chains, Austin's "least overengineered + least overfitting" question forced critical re-evaluation; sharpened-C wins both axes (1 rule vs 3-tier chain; observability claim vs priorities derived from 2 reference cases). All 103 tests pass; reference rebuild succeeds with no deltas. Pending: re-run extractor — expected: STec IB date 03-26 (board approval) → 03-28 (engagement letter signing IS first bank action); other 7 deals mostly already aligned. |
 | 2026-04-26 | #5 implementation completed (rules-only, minimal touch). Files: `rules/bids.md` (new §C5 with operational reaffirmation rule + trigger-language table + reference-deal classifications + explicit no-vocabulary / no-flag rationale), `prompts/extract.md` (Step 8 paragraph + new self-check item). No vocabulary additions, no new flags, no validator changes, no converter changes, no reference regeneration. Mid-decision course-correct: dropped the proposed `bid_reaffirmation` info flag in favor of plain `additional_note` capture per "least-overengineered" preference. All 103 tests pass; reference rebuild succeeds with no deltas. Pending: re-run extractor — expected per-deal: zep loses 1 row (note on prior), penford loses 1 row (fold into Executed), stec keeps 1 row with reaffirmation context in `additional_note`. |
 | 2026-04-26 | #4 implementation completed. Files: `pipeline.py` (`EVENT_VOCABULARY` + `EVENT_RANK` add `ConsortiumCA` at rank 5; vocabulary count 30 → 31), `rules/events.md` (§C1 `NDA` description specifies "target ↔ bidder Type A"; new `ConsortiumCA` entry; new §I3 with three-CA-type definitions, disambiguation table, validator behavior summary), `rules/bids.md` (new §M5 skip rule for Type C rollover CAs), `prompts/extract.md` (Step 7 expanded with three-CA-type classification block; Step 9 references §M5; new self-check item "CA classification (§I3)"; DropSilent paragraph notes ConsortiumCA exclusion), `scripts/build_reference.py` (`A3_RANK` adds `ConsortiumCA: 5` for vocabulary completeness; no synthesis). All 103 tests pass; ConsortiumCA ∈ EVENT_VOCABULARY (size 31); ConsortiumCA ∉ BID_NOTE_FOLLOWUPS (correct — does not discharge §P-S1). No reference regeneration needed (Alex's xlsx coding doesn't preserve the CA-type distinction; AI-vs-Alex CA reclassifications surface as adjudication signal). Pending: re-run extractor — petsmart's 2 "Longview and the Buyer Group" NDA rows (12/9 + 12/12) should reclassify to ConsortiumCA. |
 | 2026-04-26 | #3 implementation completed. Files: `rules/schema.md` (§R1 `Acquirer` clarified to operating; new `Acquirer_legal` field added; new §N4 with 5-rule decision table covering single buyer / shell-mediated / single PE sponsor / sponsor-backed corporate / PE consortium; canonical example updated), `prompts/extract.md` (new non-negotiable bullet codifies §N4 with shell-name heuristics + lead-sponsor instruction + sponsor-backed-corporate pattern; deal skeleton example updated), `scripts/build_reference.py` (new §Q6 override with `Q6_ACQUIRER_OVERRIDES` map + `apply_q6_acquirer_override()` function for petsmart-inc, mac-gray, zep, saks; module docstring extended; `Acquirer_legal: null` seeded in `build_deal_object()`), `scoring/diff.py` (`Acquirer_legal` added to `COMPARE_DEAL_FIELDS`). All 103 unit tests pass. Reference rebuild applies the 4 overrides correctly with provenance flags; the other 5 deals carry `Acquirer_legal: null`. Pending: re-run extractor on all 9 reference deals — petsmart's AI today emits `Argos Holdings Inc.` (legal shell); post-re-extraction it should match the reference's `BC Partners, Inc.` and the persistent Acquirer mismatch drops. |

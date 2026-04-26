@@ -472,29 +472,76 @@ row per named advisor:
 - `bidder_name` = canonical id assigned to the bank (per `rules/bidders.md`
   §E3)
 - `bidder_alias` = filing's verbatim label for the bank
-- `bid_date_precise` = the **earliest narrated date** on which the filing
-  describes the bank acting in an advisory capacity (typically the first
-  time the bank is named in the Background section)
-- If the filing does not explicitly state a retention date, populate
-  `bid_date_precise` with the earliest-mentioned date, populate
-  `bid_date_rough` with a short anchor phrase naming the inference source
-  (e.g., `"first narration: 2016-05-11 contact"`), and attach
-  `{"code": "date_inferred_from_context", "severity": "soft",
-    "reason": "filing does not narrate retention date; inferred from first mention"}`.
-  The rough phrase is required by §B3 and is enforced as a hard validator
-  check (`rules/invariants.md` §P-D2 — `rough_date_mismatch_inference`).
+- `bid_date_precise` = the **bank's first narrated action** in advisory
+  capacity (per the IB date anchor rule below).
 
-**Trigger phrases** (non-exhaustive):
-- *"\[Target\] retained \[Firm\] as its financial advisor"*
-- *"\[Firm\], financial advisor to \[Target\]"* / *"\[Target\]'s financial advisor"*
-- *"representatives of \[Firm\], financial advisor to \[Target\], contacted…"*
-- *"\[Firm\] sent a process letter…"* (the IB is acting on retention)
+**IB date anchor (sharpened 2026-04-26 per Decision #6).** The
+`bid_date_precise` on an IB row is the **earliest narrated date on
+which the bank itself takes an action in advisory capacity** for its
+side. The rule is observability-driven and excludes target-side
+preparatory acts.
 
-Do NOT require an explicit "retained" verb. If the filing describes
-\[Firm\] taking advisor actions on behalf of \[Side\], the bank is retained
-for that process; emit an `IB` row. If `\[Firm\]` acts for the same
-\[Side\] on multiple events (sent process letters, contacted bidders, ran
-the auction), emit **one** `IB` row for the earliest action.
+**Bank's first-action set** (any of these qualifies; pick the earliest
+narrated):
+
+- Signing the engagement letter (*"entered into an engagement letter"*,
+  *"executed an engagement letter"*).
+- Sending process letters or NDAs to potential bidders on behalf of
+  its side.
+- Contacting bidders (*"\[Firm\] contacted potential strategic acquirers"*).
+- Presenting to the special committee or board (*"\[Firm\] presented its
+  preliminary analysis"*, *"\[Firm\] reviewed strategic alternatives"*).
+- Any other narrated action where the bank, named explicitly, takes a
+  step on behalf of its side.
+
+**Does NOT count as the bank's first action:**
+
+- **Board approval to retain** (*"the board approved the retention of
+  \[Firm\]"*, *"the board authorized management to engage \[Firm\]"*).
+  This is the **target's** action — a corporate-governance step that
+  precedes the bank's involvement. The bank has no advisory
+  relationship until the engagement letter is signed.
+- **Discussions about which bank to retain** (*"the board considered
+  candidates including \[Firm\]"*). Pre-relationship.
+- **Mentions of the bank in a different context** (*"a year earlier,
+  \[Firm\] had advised the company on …"*). Different engagement.
+
+**When neither engagement letter nor any narrated action carries an
+explicit date**, populate `bid_date_precise` with the earliest-narrated
+date the bank is named in advisory capacity for this process,
+populate `bid_date_rough` with a short anchor phrase naming the
+inference source (e.g., `"first narration: 2016-05-11 contact"`), and
+attach `{"code": "date_inferred_from_context", "severity": "soft",
+"reason": "filing does not narrate engagement-letter date; inferred
+from first action"}`. The rough phrase is required by §B3 and is
+enforced as a hard validator check (`rules/invariants.md` §P-D2 —
+`rough_date_mismatch_inference`).
+
+**Trigger phrases for the bank's first action** (non-exhaustive):
+- *"\[Firm\] entered into an engagement letter with \[Side\] on \[date\]"*
+- *"\[Firm\] sent a process letter to \[N\] potential bidders on \[date\]"*
+- *"representatives of \[Firm\], financial advisor to \[Side\], contacted \[Bidder\] on \[date\]"*
+- *"\[Firm\] presented its preliminary analysis to the board on \[date\]"*
+- *"\[Firm\] sent a confidentiality agreement to \[Bidder\] on \[date\]"*
+
+If the filing describes \[Firm\] taking advisor actions on behalf of
+\[Side\] but does not narrate an explicit retention or engagement-
+letter event, the bank is retained for that process; emit one `IB`
+row anchored on the **earliest** such action. If \[Firm\] acts for
+the same \[Side\] on multiple events (sent process letters, contacted
+bidders, ran the auction), emit **one** `IB` row for the earliest
+action.
+
+**Why first-narrated-action and not engagement-letter-or-board-approval
+fallback chain.** Per Decision #6 (2026-04-26), the rule is the
+single-question one: *"what is the earliest narrated date on which the
+bank acted?"* — instead of a multi-tier priority chain
+(engagement-letter > board-approval > first-action). Engagement-letter
+signing IS a first action and dominates naturally because it precedes
+any subsequent advisory work; board approval is excluded because it is
+not the bank's act. The single-question rule generalizes more honestly
+across the 392 target deals than a fallback chain built from the 9
+reference cases.
 
 **Termination and re-hire.**
 - When a filing describes an investment bank relationship ending, emit an
