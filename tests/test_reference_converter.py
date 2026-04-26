@@ -77,7 +77,14 @@ def test_build_deal_keeps_public_unknown_for_plain_type_note():
     assert sanofi_bid["bidder_type"] == {"base": "s", "non_us": True, "public": True}
 
 
-def test_bidder_type_sets_public_false_only_on_private_signal():
+def test_bidder_type_pe_token_keeps_public_null():
+    """Decision #2 (2026-04-26): Alex's "private equity"/"PE"/"sponsor"
+    tokens describe the fund vehicle, not the sponsor firm's listing
+    status. The converter must leave `public = None`, not infer
+    `public = False`. KKR / Blackstone / Apollo / Carlyle / Ares / TPG
+    are listed sponsor firms; "private equity" is not evidence of
+    firm-level non-listing.
+    """
     row = RawRow(
         xlsx_row=1,
         cells={
@@ -92,5 +99,5 @@ def test_bidder_type_sets_public_false_only_on_private_signal():
     assert build_bidder_type(row) == {
         "base": "f",
         "non_us": False,
-        "public": False,
+        "public": None,
     }

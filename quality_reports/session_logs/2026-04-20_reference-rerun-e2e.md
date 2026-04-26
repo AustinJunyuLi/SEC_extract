@@ -156,3 +156,36 @@ Suggested next actions:
 ---
 **Context compaction (manual) at 12:51**
 Check git log and quality_reports/plans/ for current state.
+
+---
+**2026-04-26 — Six policy decisions implemented + cleanup pass**
+
+Six cross-deal policy decisions surfaced from the 04-23 clean_ref9
+adjudication and decided this session. All implemented at policy +
+code level; pending re-extraction for end-to-end verification.
+
+Tracker: `quality_reports/decisions/2026-04-26_six-policy-decisions.md`.
+
+Commits:
+- `721a8d2` — #1 silent-NDA→DropSilent (§I1) + #2 tri-state public (§F2)
+- `0159ce9` — #3 operating Acquirer + Acquirer_legal sidecar (§N4) + #4 ConsortiumCA (§I3)
+- `2f85696` — #5 same-price reaffirmations as note-or-row (§C5)
+- `a781567` — #6 IB date = bank's first action, board approval excluded (§J1)
+
+Recurring style choices Austin pushed for and that landed in the rules:
+- "Least overengineered" → reject fallback chains, info flags, new
+  vocabulary entries unless they earn their keep. #5 dropped a proposed
+  `bid_reaffirmation` info flag mid-decision; #6 picked sharpened-C
+  (single rule) over Option A/B (3-tier chain).
+- "Alex's reference stays unchanged where possible" → Decisions #1, #4,
+  #5 leave the converter alone and let the diff harness surface
+  AI-vs-Alex disagreements as adjudication signal. Only #3 added a §Q6
+  converter override (4 sponsor-backed deals) because the operating-
+  Acquirer rule made the change uniformly applicable.
+
+Currently in progress: thorough staleness sweep across code/docs/state
+before re-extraction. Three parallel Explore audits dispatched; first
+back (state files) recommends pruning 54 stale `nda_without_bid_or_drop`
+entries from `state/flags.jsonl` and deleting `scoring/results/`.
+Awaiting code + docs audit results. Plan after sweep: commit + push to
+GitHub, then user runs re-extraction.

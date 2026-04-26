@@ -548,9 +548,16 @@ def _bidder_type_note_signals(note: Any) -> dict[str, bool | None]:
 
     The workbook has no separate public-company boolean. Its note column uses
     strings like "S", "F", "S/F", "11S, 14F", and "Non-US public S".
-    Plain type notes (`S`, `F`, `strategic`, `financial`) do not answer the
-    public/private question, so the converter leaves `public = null` unless
-    the note explicitly says public or private/PE/sponsor.
+
+    `public` is tri-state per `rules/bidders.md` §F1/§F2 (Decision #2,
+    2026-04-26): `True` only when the note contains the explicit token
+    `"public"`; otherwise `None`. Tokens like `"PE"`, `"sponsor"`, or
+    `"private equity"` describe the fund-vehicle type (a `base = "f"`
+    signal) and do NOT mean the sponsor firm is private — KKR /
+    Blackstone / Apollo / Carlyle / Ares / TPG are all listed sponsor
+    firms. The pre-2026 `False if has_private` branch (which mapped
+    PE/sponsor tokens to `public = False`) was the converter-side
+    equivalent of §F2's removed PE-firm carve-out and is gone.
     """
     if not isinstance(note, str):
         return {
@@ -574,17 +581,13 @@ def _bidder_type_note_signals(note: Any) -> dict[str, bool | None]:
     has_mixed = "mixed" in tokens or (has_financial and has_strategic)
     has_non_us = "nonus" in tokens
     has_public = "public" in tokens
-    has_private = any(
-        token in {"private", "pe", "sponsor", "sponsors"}
-        for token in tokens
-    ) or ("private" in tokens and "equity" in tokens)
 
     return {
         "financial": has_financial,
         "strategic": has_strategic,
         "mixed": has_mixed,
         "non_us": has_non_us,
-        "public": True if has_public else False if has_private else None,
+        "public": True if has_public else None,
     }
 
 
