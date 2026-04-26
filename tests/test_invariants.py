@@ -301,7 +301,11 @@ def test_pg2_acceptance_fixtures(fixture_name):
 
 @pytest.mark.parametrize(
     "fixture_name",
-    ["synthetic_ps1_pass.json", "synthetic_ps1_fail.json"],
+    [
+        "synthetic_ps1_pass.json",
+        "synthetic_ps1_fail.json",
+        "synthetic_ps1_dropsilent_pass.json",
+    ],
 )
 def test_ps1(fixture_name):
     _assert_fixture(fixture_name, "ps1")

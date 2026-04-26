@@ -152,3 +152,7 @@ Suggested next actions:
    permitted shape (update §P-S3 to carve out phase 0) or re-extract.
 3. Adjudicate zep's phase-2 `bid_without_preceding_nda` against the
    filing text.
+
+---
+**Context compaction (manual) at 12:51**
+Check git log and quality_reports/plans/ for current state.

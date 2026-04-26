@@ -54,6 +54,16 @@ AI_ONLY_EVENT_FIELDS = {
     "contingent_per_share", "consideration_components", "aggregate_basis",
 }
 
+# Bid-notes emitted by the AI as inferred metadata that are not present
+# in Alex's reference. Stripped from the AI side before comparison so they
+# don't appear as spurious "AI-only row" mismatches.
+#
+# DropSilent: per rules/events.md §I1, the AI emits one DropSilent row per
+# silent NDA signer (NDA + no later activity). Alex's reference predates
+# this policy and represents silent signers as bare NDA rows, so the AI's
+# DropSilent rows have no Alex counterpart by design.
+AI_ONLY_BID_NOTES: frozenset[str] = frozenset({"DropSilent"})
+
 
 @dataclass
 class DiffReport:
@@ -357,8 +367,21 @@ def diff_deal(slug: str) -> DiffReport:
     ref = json.loads(reference_path.read_text())
     ext = json.loads(extraction_path.read_text())
 
-    r = diff_events(slug, ext.get("events", []), ref.get("events", []))
+    # Filter AI-only bid-notes (e.g., DropSilent per §I1) before comparison.
+    # These are inferred metadata not present in Alex's reference; including
+    # them produces spurious "AI-only row" mismatches.
+    ai_events_raw = ext.get("events", [])
+    filtered_count = sum(1 for ev in ai_events_raw if ev.get("bid_note") in AI_ONLY_BID_NOTES)
+    ai_events = [ev for ev in ai_events_raw if ev.get("bid_note") not in AI_ONLY_BID_NOTES]
+
+    r = diff_events(slug, ai_events, ref.get("events", []))
     r.deal_disagreements = diff_deal_fields(ext.get("deal", {}), ref.get("deal", {}))
+    if filtered_count:
+        r.notes.append(
+            f"Filtered {filtered_count} AI-side row(s) with bid_note in "
+            f"{sorted(AI_ONLY_BID_NOTES)} per §I1 (inferred metadata not "
+            f"present in Alex's reference)."
+        )
     return r
 
 

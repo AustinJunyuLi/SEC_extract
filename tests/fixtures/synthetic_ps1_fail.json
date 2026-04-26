@@ -9,7 +9,7 @@
   ],
   "expected_flags": [
     {
-      "code": "nda_without_bid_or_drop",
+      "code": "missing_nda_dropsilent",
       "severity": "soft",
       "row_index": 0
     }

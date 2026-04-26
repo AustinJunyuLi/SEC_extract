@@ -186,19 +186,20 @@ comparable across deals.
 One soft (§P-S1), three hard. These check that the extracted event
 graph tells a coherent M&A-process story.
 
-### §P-S1 — NDA has follow-up or explicit drop (SOFT)
+### §P-S1 — NDA-only signer must have DropSilent (SOFT)
 - **Check.** For every row with `bid_note = NDA` and `role = "bidder"`
   in `process_phase >= 1`, there exists a later row with the same
-  `bidder_name` having one of: a bid (informal or formal), a dropout
-  code, or the `Executed` row (if they won).
-- **Fail action.** Flag `nda_without_bid_or_drop`. **Soft.**
-- **Why soft.** Genuine cases exist where a party signs an NDA then
-  silently exits filing attention; the filing doesn't always report
-  that. Providence iter-7 made the necessity concrete: 20 of 27 NDA
-  bidders had no per-bidder follow-up narration, and forcing synthetic
-  Drops would have reused one generic quote across all 20 rows in
-  violation of §R2 evidence-specificity. We want the flag for review
-  but not to block the deal.
+  `bidder_name` having one of: a bid (informal or formal), any dropout
+  code (including `DropSilent`), or the `Executed` row (if they won).
+  Per `rules/events.md` §I1, silent NDA signers are represented by an
+  emitted `DropSilent` row immediately following their NDA.
+- **Fail action.** Flag `missing_nda_dropsilent`. **Soft.**
+- **Why soft.** Safety net for extractor failure to emit the required
+  `DropSilent` row. The §I1 contract is "silent NDA → emit DropSilent";
+  this invariant fires only when the extractor missed that emission.
+  Soft severity allows the orchestrator to surface the miss for review
+  without blocking the deal. In a healthy run, this flag count is zero
+  across the entire reference set.
 
 ### §P-S2 — `auction` flag matches §Scope-1 classifier
 - **Check.** Deal-level `auction` field IFF

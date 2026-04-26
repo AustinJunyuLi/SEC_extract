@@ -35,6 +35,7 @@ expansion.
 - `DropBelowInf` — bidder does not advance past informal round.
 - `DropAtInf` — bidder self-withdraws at informal stage.
 - `DropTarget` — target rejects for other reasons (strategic, financing, scope).
+- `DropSilent` — bidder signed NDA but the filing narrates no later activity (no bid, no narrated drop, no execution); inferred withdrawal. Required by §I1; date is null with `date_unknown` info flag; agency is unknowable.
 
 **Bid rows:**
 - `Bid` — a bid was submitted (per §C3; replaces legacy `NA`-in-bid_note convention).
@@ -57,7 +58,7 @@ expansion.
 - `Terminated` — prior sale process formally ended (Zep pattern).
 - `Restarted` — new process begins after prior `Terminated` (Zep pattern).
 
-**Total: 27 closed-vocabulary values.** Extractor emits exactly these; anything else → flag `unknown_bid_note`.
+**Total: 30 closed-vocabulary values.** Extractor emits exactly these; anything else → flag `unknown_bid_note`.
 
 **Note on exclusivity.** Exclusivity periods are NOT events in this vocabulary.
 They are re-encoded as an `exclusivity_days: int` attribute on the associated
@@ -246,6 +247,7 @@ legitimate AI-identified correction per the ground-truth epistemology
 | `DropBelowInf` | Bidder does not advance past informal round (target's cut) | **Target** |
 | `DropAtInf` | Bidder self-withdraws at informal stage | **Voluntary** (bidder) |
 | `DropTarget` | Target rejects for other reasons (financing concerns, strategic fit, scope mismatch, regulatory) | **Target** |
+| `DropSilent` | Bidder signed NDA but the filing narrates no later activity for them (no bid, no narrated drop, no execution); inferred withdrawal | **Inferred** (no narrated agency) |
 
 **Narrative reason** captured in `drop_reason_note` (free text). Examples:
 `"Not a strategic fit"` (Imprivata 6089), `"No firm financing"` (Mac Gray
@@ -266,16 +268,38 @@ quote. **Do not guess.**
 **NDA-only rows — bidders who signed but have no later narrated activity.**
 
 A bidder may appear on an `NDA` row and never subsequently bid, drop, or
-execute in bidder-specific narration. In that case:
-- Keep the `NDA` row.
-- Do **not** fabricate a catch-all `Drop` row with a generic shared
-  `source_quote`.
-- Let `rules/invariants.md` §P-S1 raise the soft advisory flag
-  `nda_without_bid_or_drop` for manual review.
+execute in bidder-specific narration. In that case the extractor MUST emit
+a `DropSilent` row for that bidder, immediately after the matching NDA row
+in narrative order:
 
-Rationale: Providence iter-7 exposed the failure mode. Twenty NDA signers had
-no per-bidder follow-up narration; forcing synthetic Drops would have reused
-one generic quote across all 20 rows, violating §R2 evidence-specificity.
+- `bid_note = "DropSilent"`
+- `bid_date_precise = null`, `bid_date_rough = null`
+- `flags` includes `{"code": "date_unknown", "severity": "info", "reason":
+  "DropSilent: filing narrates no withdrawal date for silent NDA signer"}`
+- `source_quote` and `source_page` re-cite the matching NDA row (the
+  silence in the rest of the filing is the evidence; the NDA passage is
+  the closest filing anchor)
+- All other identity fields (`bidder_name`, `bidder_alias`, `bidder_type`,
+  `process_phase`, `role`) copied verbatim from the matching NDA row
+
+Validator `rules/invariants.md` §P-S1 fires (soft, `missing_nda_dropsilent`)
+only when the extractor failed to emit the required `DropSilent` row. It is
+a backstop, not an expected-noise channel.
+
+Rationale: silent post-NDA behavior IS a withdrawal — the filing's silence
+is the evidence. Encoding it as a dedicated `DropSilent` code (rather than
+generic `Drop` or `DropAtInf`) preserves the distinction between
+filing-narrated drops and inferred-from-silence drops, which matters for
+downstream auction-funnel analysis. Re-citing the NDA quote is consistent
+with §R2 because the row's *meaning* (no later activity) is genuinely
+sourced from that bidder's absence from the rest of the filing; the NDA
+passage is the only concrete anchor the filing gives us.
+
+Reverses the Providence iter-7 stance ("do not fabricate catch-all
+Drops"). The earlier rationale — "synthetic Drops would have reused one
+generic quote across all 20 rows" — is addressed by the dedicated
+`DropSilent` code: the row's semantics make explicit that the quote is the
+NDA passage, not a fabricated drop narration.
 
 **Consortium drops — split handling.**
 

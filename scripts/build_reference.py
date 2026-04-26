@@ -159,8 +159,12 @@ A3_RANK: dict[str, int] = {
     "NDA": 5,
     # Rank 6 — informal bids (default for "Bid"; bumps to 7 for bid_type="formal")
     "Bid": 6,
-    # Rank 8 — mid-round dropouts
+    # Rank 8 — mid-round dropouts (DropSilent included for vocabulary
+    # completeness; the converter does not synthesize DropSilent rows from
+    # silent NDA signers — Alex's reference predates the §I1 policy and
+    # stays as-is. The diff harness filters DropSilent from the AI side.)
     "Drop": 8, "DropBelowInf": 8, "DropAtInf": 8, "DropBelowM": 8, "DropTarget": 8,
+    "DropSilent": 8,
     # Rank 9 — final-round deadlines
     "Final Round": 9, "Final Round Inf": 9,
     "Final Round Ext": 9, "Final Round Inf Ext": 9,

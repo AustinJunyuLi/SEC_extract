@@ -102,6 +102,7 @@ EVENT_VOCABULARY: frozenset[str] = frozenset({
     "IB", "IB Terminated",
     # Counterparty events
     "NDA", "Drop", "DropBelowM", "DropBelowInf", "DropAtInf", "DropTarget",
+    "DropSilent",
     # Bid rows — §C3 unified; bid_type disambiguates formal/informal
     "Bid",
     # Round structure (§K1)
@@ -134,6 +135,7 @@ PHASE_TERMINATORS: frozenset[str] = frozenset({
 BID_NOTE_FOLLOWUPS: frozenset[str] = frozenset({
     "Bid",
     "Drop", "DropBelowM", "DropBelowInf", "DropAtInf", "DropTarget",
+    "DropSilent",
     "Executed",
     "Final Round", "Final Round Inf",
     "Final Round Ext", "Final Round Inf Ext",
@@ -185,6 +187,7 @@ EVENT_RANK: dict[str, int] = {
     "DropAtInf": 8,
     "DropBelowM": 8,
     "DropTarget": 8,
+    "DropSilent": 8,
     # Rank 9 — final-round deadlines / auction closed
     "Final Round": 9,
     "Final Round Inf": 9,
@@ -266,7 +269,7 @@ Read these files in full (absolute paths; use your Read tool):
 
   Rulebook (all resolved; if you see 🟥 OPEN anywhere, halt and emit the blocked form):
     {RULES_DIR}/schema.md      (output shape §R1, evidence §R3)
-    {RULES_DIR}/events.md      (bid_note closed vocabulary §C1, 27 values)
+    {RULES_DIR}/events.md      (bid_note closed vocabulary §C1, 30 values)
     {RULES_DIR}/bidders.md     (canonical IDs §E3, bidder_type §F1)
     {RULES_DIR}/bids.md        (formal/informal §G1, skip rules §M)
     {RULES_DIR}/dates.md       (date mapping §B, BidderID sequence §A1–§A4)
@@ -904,8 +907,13 @@ def _invariant_p_d3(events: list[dict]) -> list[dict]:
 
 
 def _invariant_p_s1(events: list[dict]) -> list[dict]:
-    """§P-S1 (SOFT) — every NDA row (role=bidder, phase ≥ 1) has a later
-    follow-up event (bid, drop, executed) for the same bidder_name."""
+    """§P-S1 (SOFT) — safety net for the §I1 DropSilent contract.
+
+    Per rules/events.md §I1, every NDA row (role=bidder, phase ≥ 1) for a
+    silent signer must be followed by a `DropSilent` row from the same
+    bidder. This invariant fires only when the extractor failed to emit
+    that required DropSilent (or any other follow-up). It is a backstop,
+    not an expected-noise channel."""
     flags: list[dict[str, Any]] = []
     by_name: dict[str, list[tuple[int, dict]]] = {}
     for i, ev in enumerate(events):
@@ -927,8 +935,8 @@ def _invariant_p_s1(events: list[dict]) -> list[dict]:
         has_followup = any(e.get("bid_note") in BID_NOTE_FOLLOWUPS for _, e in later)
         if not has_followup:
             flags.append({
-                "row_index": i, "code": "nda_without_bid_or_drop", "severity": "soft",
-                "reason": f"bidder_name={name!r} signed NDA at row {i} but no follow-up (bid/drop/executed) was extracted",
+                "row_index": i, "code": "missing_nda_dropsilent", "severity": "soft",
+                "reason": f"bidder_name={name!r} signed NDA at row {i} but no DropSilent (or other follow-up) was emitted; per §I1 the extractor must emit DropSilent for silent signers",
             })
     return flags
 

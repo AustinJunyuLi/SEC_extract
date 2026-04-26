@@ -486,9 +486,10 @@ flag preserves the audit trail so Austin can verify the skip was correct.
 **When NOT to skip** (even without NDA / price):
 - Party is mentioned as part of a **consortium** that later signed NDAs —
   handled via §E2 joint-bidder rule.
-- Party signed an NDA (Condition 1 fails) — keep the NDA row; §P-S1 may
-  later raise `nda_without_bid_or_drop` if the filing gives no bidder-
-  specific follow-up.
+- Party signed an NDA (Condition 1 fails) — keep the NDA row; per §I1
+  the extractor must also emit a `DropSilent` row for that signer.
+  Validator §P-S1 raises `missing_nda_dropsilent` (soft) only if the
+  required `DropSilent` is missing.
 - Party stated bid intent without price (Condition 3 fails) — emit
   `Bidder Interest` row with `bid_value_unspecified` flag per §H1.
 
@@ -507,32 +508,44 @@ deal-level flag.
 
 ---
 
-### §M2 — No-bid-intent skip (🟩 RESOLVED, 2026-04-18)
+### §M2 — No-bid-intent skip (🟩 RESOLVED, 2026-04-18; revised 2026-04-26)
 
 **Decision.** Folded into §I1's NDA-only rule. No separate skip.
 
 **Rule.** A party that signs an NDA but never submits a bid, drops, or
-otherwise engages further remains as an NDA-only row (per §I1). Do NOT
-skip; do NOT omit the NDA; do NOT synthesize a generic `Drop`.
+otherwise engages further is an NDA-only signer per §I1. Do NOT skip;
+do NOT omit the NDA. The extractor MUST emit a `DropSilent` row for that
+signer, immediately after the matching NDA row in narrative order, with
+null dates and a `date_unknown` info flag (see §I1 for the full row
+shape). The dedicated `DropSilent` code distinguishes inferred-from-
+silence drops from filing-narrated drops.
 
 Rationale: the §Scope-1 auction classifier counts non-advisor bidder NDAs.
 A party that signed an NDA with bid intent, even without a submitted bid,
-is a meaningful auction participant. Providence iter-7 showed that forcing
-implicit drops would violate §R2 evidence-specificity by reusing one generic
-quote across many bidders.
+is a meaningful auction participant. The 2026-04-26 policy revision
+(see `quality_reports/decisions/2026-04-26_six-policy-decisions.md`,
+Problem #1) reverses the prior "do not synthesize" stance: silent post-NDA
+behavior IS a withdrawal, and the dedicated `DropSilent` code makes the
+inferred-from-silence semantics explicit. The earlier §R2 concern about
+reusing generic quotes is addressed by the dedicated code itself — the
+re-cited NDA quote is no longer pretending to narrate a drop.
 
 **Saks row 7015 (Sponsor A/E) migration note.** Alex flagged this as "not
 a separate bid, should be deleted." Under this rule: if the row
-represents non-bid activity by an NDA signer, keep the NDA row and let
-§P-S1 raise `nda_without_bid_or_drop` if no later bidder-specific
-follow-up exists. If it represents an activity of a party that never
-signed an NDA, apply §M1 skip.
+represents non-bid activity by an NDA signer, keep the NDA row and emit
+a paired `DropSilent` row per §I1. Validator §P-S1 raises
+`missing_nda_dropsilent` (soft) only if that pairing is missing. If the
+party never signed an NDA, apply §M1 skip.
 
 **Rejected alternatives.**
 - **Skip entirely (no NDA, no drop)** — drops the NDA-signer from the
   auction count; silently breaks §Scope-1.
-- **Emit synthetic Drop rows for silent NDA signers** — violates §R2
-  evidence-specificity by reusing one generic quote across many bidders.
+- **Emit synthetic generic `Drop` rows for silent NDA signers** —
+  loses the inferred-from-silence distinction. The dedicated `DropSilent`
+  code preserves it.
+- **Leave NDA-only with a soft-flag warning (pre-2026-04-26 stance)** —
+  produced 153 recurring noise flags across the 9 reference deals,
+  re-litigated every adjudication run. Reversed.
 
 **Cross-references.**
 - `rules/events.md` §I1 (NDA-only rows for silent signers).

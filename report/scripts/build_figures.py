@@ -87,7 +87,7 @@ FLAG_LABELS = {
     "date_inferred_from_context": "Inferred date from context",
     "date_range_collapsed": "Collapsed narrated date range",
     "date_inferred_from_rough": "Inferred precise date from rough date",
-    "nda_without_bid_or_drop": "NDA with no later bid/drop",
+    "missing_nda_dropsilent": "Extractor failed to emit DropSilent for silent NDA signer",
     "unnamed_count_placeholder": "Unnamed bidder placeholders",
     "bid_range": "Bid encoded as range",
     "bidder_type_ambiguous": "Bidder type ambiguous",

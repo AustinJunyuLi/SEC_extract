@@ -231,7 +231,7 @@ minimum of 3; vaguer plurals should not be over-atomized.
 
 ---
 
-### §F2 — Classification rules for `bidder_type.base` (🟩 RESOLVED, 2026-04-18)
+### §F2 — Classification rules for `bidder_type.base` (🟩 RESOLVED, 2026-04-18; `public` derivation rewritten 2026-04-26)
 
 **Decision.** Accept the 8-rule decision table below. Ambiguous cases
 default to `"f"` and flag.
@@ -249,37 +249,103 @@ default to `"f"` and flag.
 | 7 | **SPAC** (special-purpose acquisition company) | `f` | — |
 | 8 | Genuinely ambiguous → default | `f` | `bidder_type_ambiguous` (soft) |
 
-**`non_us` and `public` determination:**
+**`non_us` determination.**
 - `non_us: true` iff filing states the bidder is incorporated or
   headquartered outside the US.
-- `public: true` iff filing states the bidder is publicly traded. For PE
-  firms, this is always `false` (PE sponsors are private). For SPACs,
-  `public: true` if the SPAC is itself listed.
+- Otherwise `false`. (`non_us` remains a strict boolean; non-US status
+  is structurally observable from the filing's incorporation language
+  and not subject to the same listing-ambiguity problem as `public`.)
 
-**Evidence requirement.** The `source_quote` on the first row for each
-bidder MUST contain the filing language that supports the classification
-(e.g., *"a private equity firm"*, *"a publicly traded pharmaceutical
-company"*, *"a strategic acquirer in the same industry"*). If the filing
-only reveals the bidder type on a later row, the classification is set
-from that row going forward; earlier rows for that bidder carry
-`bidder_type_provisional: true` until the evidence-bearing row resolves it.
+**`public` determination — strict filing-only, tri-state (per Decision #2, 2026-04-26).**
 
-**Why default `f` on ambiguity.** Anecdotally, when filings are coy about
-bidder identity, it's usually because the bidder is a PE sponsor (operating
-companies have less competitive reason to hide their name).
+`public` measures **capital structure** (is the bidding firm itself
+publicly traded), not disclosure or identification. The rule is
+strict-filing-only:
+
+| Filing signal on the bidder row | `public` |
+|---|---|
+| Filing explicitly states publicly traded — e.g., *"a publicly traded pharmaceutical company"*, *"NYSE-listed"*, *"NASDAQ-listed"*, *"listed on the [exchange]"*, *"public company"* | `true` |
+| Filing explicitly states non-public — e.g., *"a private company"*, *"a non-public entity"*, *"a privately held [industry] firm"* | `false` |
+| Filing is silent on listing status — including all of the cases below | `null` |
+
+**The "silent → null" cases (this is the change).**
+
+1. **Named or unnamed PE-sponsor rows where the filing does not address
+   the sponsor firm's own listing.** Many sponsor firms — KKR (NYSE: KKR),
+   Blackstone (NYSE: BX), Apollo (NYSE: APO), Carlyle (NASDAQ: CG),
+   Ares (NYSE: ARES), TPG (NASDAQ: TPG) — are themselves publicly listed
+   on the day of the bid. Generic descriptors like *"a private equity
+   firm"* refer to the **fund vehicle's** structure (private by
+   definition), not to whether the **sponsor firm** is listed. Treat
+   such rows as `public: null` unless the filing names the sponsor AND
+   states its listing status.
+2. **Named strategic acquirers without a "publicly traded" qualifier**
+   (e.g., *"Ingredion expressed interest"* with no qualifier). Strict
+   filing-only: `null`. Do not infer from common knowledge of the company.
+3. **All anonymized rows** (`Party A`, `Sponsor B`, `Strategic 1`,
+   `Financial 7`). The filing has not even named the entity, let alone
+   its listing status. `null`.
+4. **SPAC rows** when the filing does not say whether the SPAC itself is
+   listed. (Most SPACs are listed, but the filing may not say so;
+   strict-filing-only still applies.)
+
+**Why strict-filing-only and not common-knowledge inference.** The whole
+point of the tri-state is honesty about what the filing reports. If you
+later want a "merge against CRSP/Compustat to fill in listing status"
+column, do it as a deterministic post-pass with a clean join key — not
+by asking the AI to guess from a name. Strict-filing-only also keeps the
+extractor's behavior reproducible across runs (no LLM-knowledge drift).
+
+**Why `public` is independent of `base`.** `base = "f"` (financial /
+PE-sponsor) classifies the **bidding vehicle's funding model**;
+`public = true/false/null` classifies the **bidding firm's listing
+status**. The two are orthogonal. KKR is `base = "f"` and can be
+`public = true` if the filing says so. Pre-2026 §F2 conflated these by
+forcing `public = false` on every PE-firm row; that special case is
+removed.
+
+**Evidence requirement.** When `public` is `true` or `false`, the
+`source_quote` on the first row for that bidder MUST contain the
+filing language that supports the classification (e.g., *"a publicly
+traded pharmaceutical company"*, *"a privately held energy firm"*).
+When `public` is `null`, no specific evidence is required — the absence
+of listing language in the bidder's introduction is itself the
+justification, which the source_quote on the row already documents
+indirectly.
+
+If the filing only reveals listing status on a later row, the
+classification is set from that row going forward; earlier rows for
+that bidder carry `bidder_type_provisional: true` until the
+evidence-bearing row resolves it.
+
+**Why default `f` on `base`-ambiguity.** Anecdotally, when filings are
+coy about bidder identity, it's usually because the bidder is a PE
+sponsor (operating companies have less competitive reason to hide their
+name). This is unchanged.
 
 **Rejected alternatives.**
 - **Default `s` on ambiguity** — empirically wrong direction.
 - **Hard-flag all ambiguity** — creates too much manual-review burden on a
   recoverable judgment.
+- **Strict boolean `public` (`true`/`false`, false = silent)** — the
+  pre-2026 stance; conflates "filing says private" with "filing says
+  nothing." Rejected because it produced N×M-row-count diff noise
+  against Alex's reference (the largest single source on the 04-23 run)
+  and because it was actively wrong on listed PE sponsors.
+- **Common-knowledge inference** (AI sets `public = true` when it
+  recognizes a Fortune-500 name) — opens the door to lookalike errors
+  and breaks reproducibility; do enrichment as a post-pass instead.
+- **Companion `public_known` boolean alongside strict `public`** —
+  schema bloat, no real win over the tri-state.
 
 **Cross-references.**
-- `rules/bidders.md` §F1 (structured object schema).
+- `rules/bidders.md` §F1 (structured object schema; tri-state typing).
 - `rules/bidders.md` §F3 (consortium type — `base: "mixed"`).
+- `rules/schema.md` §R1 (event-level `bidder_type` object signature).
 
 ---
 
-### §F1 — Bidder type canonical format (🟩 RESOLVED, 2026-04-18)
+### §F1 — Bidder type canonical format (🟩 RESOLVED, 2026-04-18; `public` retyped 2026-04-26)
 
 **Decision.** `bidder_type` is a **structured object** (not a string) with
 three fields.
@@ -297,8 +363,17 @@ three fields.
   with both strategic and financial members).
 - `non_us: bool` — true iff the filing describes the bidder as a non-US
   entity (country of incorporation or headquarters outside the US).
-- `public: bool` — true iff the bidder is publicly traded at the time of
-  the bid.
+- `public: bool | null` — **tri-state** (per Decision #2, 2026-04-26).
+  - `true` iff the filing affirmatively states the bidder is publicly
+    traded (e.g., *"a publicly traded pharmaceutical company"*,
+    *"NYSE-listed"*, *"NASDAQ-listed"*).
+  - `false` iff the filing affirmatively states the bidder is non-public
+    (e.g., *"a private company"*, *"a non-public entity"*).
+  - `null` when the filing is silent on listing status. Includes named
+    PE-sponsor rows when the filing does not address the sponsor firm's
+    own listing — KKR, Blackstone, Apollo etc. are NYSE-listed sponsor
+    firms, so a generic *"a private equity firm"* label is **not**
+    evidence the firm is private. See §F2 for the full inference rule.
 
 **Classification rules** — §F2.
 

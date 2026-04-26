@@ -71,7 +71,7 @@ that a real extraction miss or is the filing genuinely silent?"
 
 ### 3. Adjudicator — subagent (LLM), scoped
 - **Fires when:** the Python Validator raises a soft flag (MVP: §P-S1
-  `nda_without_bid_or_drop`). No-op when zero soft flags.
+  `missing_nda_dropsilent`). No-op when zero soft flags.
 - **Reads:** the flagged row + same-bidder context rows + a small window
   of filing pages.
 - **Emits:** `{verdict: "upheld" | "dismissed", reason: str}` appended to

@@ -235,9 +235,13 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - `bidder_alias` — string. Filing's verbatim label for this bidder on this
   row (`"Party A"`, `"Pfizer Inc."`, `"Strategic 1"`). Per `rules/bidders.md` §E3.
 - `bidder_type` — **structured object** `{base, non_us, public}` where
-  `base ∈ {"s", "f", "mixed"}`, `non_us: bool`, `public: bool`.
-  REPLACES Alex's 4 booleans (`bidder_type_financial` / `_strategic` /
-  `_mixed` / `_nonUS`) + `bidder_type_note`. Per `rules/bidders.md` §F1.
+  `base ∈ {"s", "f", "mixed"}`, `non_us: bool`, `public: bool | null`.
+  `public` is **tri-state** per `rules/bidders.md` §F1 / §F2 (rewritten
+  2026-04-26): `true` / `false` only when the filing affirmatively
+  states listing status; `null` when the filing is silent (including
+  named PE-sponsor rows where the sponsor firm's own listing is not
+  addressed). REPLACES Alex's 4 booleans (`bidder_type_financial` /
+  `_strategic` / `_mixed` / `_nonUS`) + `bidder_type_note`.
 - `joint_bidder_members` — `list[str]` OR null. Canonical `bidder_NN`
   ids of consortium constituents, for rows that represent a joint-bidder
   group event.
