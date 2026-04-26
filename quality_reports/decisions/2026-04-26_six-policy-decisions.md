@@ -21,7 +21,7 @@ discarded options stay here.
 | 2 | `bidder_type.public` for unknown bidders | 🟩 IMPLEMENTED (pending re-extraction) | 2026-04-26 |
 | 3 | `Acquirer` field semantics (legal vs operating) | 🟩 IMPLEMENTED (pending re-extraction) | 2026-04-26 |
 | 4 | NDA scope: target-bidder only, or include inter-bidder/rollover CAs? | 🟩 IMPLEMENTED (pending re-extraction) | 2026-04-26 |
-| 5 | Same-price reaffirmations: new bid row or note? | 🟥 OPEN | 2026-04-26 |
+| 5 | Same-price reaffirmations: new bid row or note? | 🟩 IMPLEMENTED (pending re-extraction) | 2026-04-26 |
 | 6 | IB date anchor: board approval vs engagement letter vs first action | 🟥 OPEN | 2026-04-26 |
 
 **Legend:** 🟩 DECIDED · 🟨 LEANING (Austin has a view, wants discussion) · 🟥 OPEN
@@ -885,17 +885,87 @@ to look for "best and final" or "in response to" language.
 3. Should there be a distinct `Bid Confirmation` event type for Case 3, to
    keep `Bid` rows pure to economic events?
 
-### Decision (to be filled in after discussion)
+### Decision (2026-04-26)
 
-_Pending Austin discussion_
+**Same-price reaffirmation → new `Bid` row ONLY when the filing
+narrates a process-step response. Otherwise append to prior bid's
+`additional_note`. No new vocabulary, no new flag.**
 
-### Implementation (after decision)
+Three sub-decisions, all settled:
 
-- `rules/bids.md` — add the new section (suggested name: §C5 or §G3,
-  "reaffirmations and confirmations")
-- `prompts/extract.md` — explicit guidance with worked examples
-- Possibly `rules/events.md` if a new event type is added
-- Affected deals (zep, penford, stec) need regeneration
+- **A — Option B with refinement:** Confirmed. Same-price
+  reaffirmations are not always rows; the rule discriminates by
+  filing language.
+- **B — Per-deal classifications:** Confirmed.
+  - zep → Case 2 (verbal "stands" during merger-agreement negotiations) → note
+  - penford → Case 4 (pre-signing day-of confirmation) → fold into `Executed`
+  - stec → Case 3 (best-and-final response under board deadline) → new row
+- **C — Reference handling:** Leave Alex alone; diff harness handles
+  the AI-vs-Alex disagreements per deal.
+
+### Rationale
+
+- **Auction theory cares about commitment under deadline.** Case 3
+  reaffirmations (best-and-final responses to formal process steps)
+  ARE substantive process events even when the price is unchanged —
+  they signal the bidder's commitment to that price under the board's
+  deadline.
+- **Verbal reiteration and pre-signing glue are not events.** Cases 2
+  and 4 are operational artifacts of how M&A negotiations work; they
+  belong in `additional_note`, not as separate rows.
+- **No new vocabulary, no `bid_reaffirmation` flag.** A reaffirmation
+  row IS a regular `Bid` row. The trigger language ("best and final"
+  / "in response to the board's request") is preserved verbatim in
+  `source_quote` and `additional_note`. Downstream code that wants to
+  count reaffirmations greps `additional_note` for the trigger
+  phrases. This is the explicit "least-overengineered" choice from
+  the discussion (mid-decision course-correct from earlier
+  recommendation that included a `bid_reaffirmation` info flag).
+
+### Implementation (2026-04-26 — completed)
+
+Two files touched:
+
+1. **`rules/bids.md` §C5 (new section, between §C4 and §G1)** — the
+   full operational rule. Defines "same-price reaffirmation" by three
+   conjunctive conditions (same bidder + same phase + identical
+   bid-value fields + unchanged structural terms). Trigger-language
+   table classifies each pattern: best-and-final response → new row;
+   verbal reiteration → note; pre-signing → fold into Executed;
+   ambiguous → default to note. Documents the three reference deals
+   and their per-case treatment. Documents why no new vocabulary or
+   flag (least-overengineered choice).
+2. **`prompts/extract.md`** — Step 8 expanded with a same-price
+   reaffirmation paragraph cross-referencing §C5 and listing the
+   trigger-language patterns; new self-check item "Same-price
+   reaffirmation (§C5)".
+
+**No code, vocabulary, validator, or converter changes.** A
+reaffirmation `Bid` row goes through §G1 / §P-G2 normally. The
+`bid_type_inference_note` for Case 3 reaffirmation rows can read
+*"reaffirmation of formal best-and-final from [prior-row date];
+bid_type inherited"* — that satisfies §P-G2.
+
+### Verification (2026-04-26)
+
+- `pytest tests/`: 103 passed in 2.69s.
+- `python scripts/build_reference.py --all`: rebuild succeeds with
+  no deltas (no reference regeneration needed; rules-only change).
+- Working tree: only `rules/bids.md` and `prompts/extract.md` modified
+  for this decision.
+
+### Status
+
+🟩 **IMPLEMENTED at policy level.** Pending: re-extract all 9
+reference deals; expected per-deal change:
+- zep: AI loses 1 row (April 2015 reiteration → note on prior).
+- penford: AI loses 1 row (Oct 14 confirmation → fold into Executed).
+- stec: AI keeps 1 row (May 30 best-and-final reaffirmation), with
+  trigger language captured in `additional_note`.
+
+These will surface in the diff harness as cardinality / field
+disagreements against Alex's reference, all of which Austin can
+adjudicate per case during reference verification.
 
 ---
 
@@ -1053,6 +1123,7 @@ then start the rulebook-stability clock.
 | Date | Change |
 |---|---|
 | 2026-04-26 | File created. #1 decided at policy level; #2-6 framed for discussion. |
+| 2026-04-26 | #5 implementation completed (rules-only, minimal touch). Files: `rules/bids.md` (new §C5 with operational reaffirmation rule + trigger-language table + reference-deal classifications + explicit no-vocabulary / no-flag rationale), `prompts/extract.md` (Step 8 paragraph + new self-check item). No vocabulary additions, no new flags, no validator changes, no converter changes, no reference regeneration. Mid-decision course-correct: dropped the proposed `bid_reaffirmation` info flag in favor of plain `additional_note` capture per "least-overengineered" preference. All 103 tests pass; reference rebuild succeeds with no deltas. Pending: re-run extractor — expected per-deal: zep loses 1 row (note on prior), penford loses 1 row (fold into Executed), stec keeps 1 row with reaffirmation context in `additional_note`. |
 | 2026-04-26 | #4 implementation completed. Files: `pipeline.py` (`EVENT_VOCABULARY` + `EVENT_RANK` add `ConsortiumCA` at rank 5; vocabulary count 30 → 31), `rules/events.md` (§C1 `NDA` description specifies "target ↔ bidder Type A"; new `ConsortiumCA` entry; new §I3 with three-CA-type definitions, disambiguation table, validator behavior summary), `rules/bids.md` (new §M5 skip rule for Type C rollover CAs), `prompts/extract.md` (Step 7 expanded with three-CA-type classification block; Step 9 references §M5; new self-check item "CA classification (§I3)"; DropSilent paragraph notes ConsortiumCA exclusion), `scripts/build_reference.py` (`A3_RANK` adds `ConsortiumCA: 5` for vocabulary completeness; no synthesis). All 103 tests pass; ConsortiumCA ∈ EVENT_VOCABULARY (size 31); ConsortiumCA ∉ BID_NOTE_FOLLOWUPS (correct — does not discharge §P-S1). No reference regeneration needed (Alex's xlsx coding doesn't preserve the CA-type distinction; AI-vs-Alex CA reclassifications surface as adjudication signal). Pending: re-run extractor — petsmart's 2 "Longview and the Buyer Group" NDA rows (12/9 + 12/12) should reclassify to ConsortiumCA. |
 | 2026-04-26 | #3 implementation completed. Files: `rules/schema.md` (§R1 `Acquirer` clarified to operating; new `Acquirer_legal` field added; new §N4 with 5-rule decision table covering single buyer / shell-mediated / single PE sponsor / sponsor-backed corporate / PE consortium; canonical example updated), `prompts/extract.md` (new non-negotiable bullet codifies §N4 with shell-name heuristics + lead-sponsor instruction + sponsor-backed-corporate pattern; deal skeleton example updated), `scripts/build_reference.py` (new §Q6 override with `Q6_ACQUIRER_OVERRIDES` map + `apply_q6_acquirer_override()` function for petsmart-inc, mac-gray, zep, saks; module docstring extended; `Acquirer_legal: null` seeded in `build_deal_object()`), `scoring/diff.py` (`Acquirer_legal` added to `COMPARE_DEAL_FIELDS`). All 103 unit tests pass. Reference rebuild applies the 4 overrides correctly with provenance flags; the other 5 deals carry `Acquirer_legal: null`. Pending: re-run extractor on all 9 reference deals — petsmart's AI today emits `Argos Holdings Inc.` (legal shell); post-re-extraction it should match the reference's `BC Partners, Inc.` and the persistent Acquirer mismatch drops. |
 | 2026-04-26 | #2 implementation completed. Files: `rules/bidders.md` (§F1 type signature → `bool | null`; §F2 derivation rule rewritten with strict-filing-only tri-state semantics; pre-2026 PE-firm `public=false` carve-out removed), `rules/schema.md` (§R1 `bidder_type.public` updated to `bool | null`), `prompts/extract.md` (new non-negotiable constraint on tri-state `public` rule). No changes needed in `scripts/build_reference.py` (already produces `null` for silent rows; zero `public=false` rows in actual reference data) or `pipeline.py` (no validator enforces `public` typing). All 103 unit tests still pass. Reference rebuild bit-identical. Simulation: 302 currently-spurious AI `public=false` rows across the 9 deals will flip to `null` after re-extraction, collapsing the largest single source of field mismatches in the 04-23 diff. Pending: re-run extractor on all 9 reference deals. |

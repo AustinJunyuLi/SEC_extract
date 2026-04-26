@@ -92,6 +92,96 @@ deprecated by §C4; current extraction re-encodes those rows as `Bid` +
 
 ---
 
+### §C5 — Same-price reaffirmations (🟩 RESOLVED, 2026-04-26 per Decision #5)
+
+**Problem.** A bidder restates a price they previously submitted —
+verbally, in a confirming letter, or in response to a board prompt.
+Without a rule, the extractor inconsistently emits a second `Bid` row
+sometimes and a note other times. Bid counts become unstable
+run-to-run.
+
+**Decision.** A same-price reaffirmation gets a new `Bid` row **only
+when the filing language describes it as a substantive response to a
+narrated process step** (e.g., a board's "best and final" deadline, a
+formal final-round letter, an explicit invitation to confirm). In all
+other reaffirmation patterns — verbal "my $X stands" between scheduled
+events, day-of-signing confirmations — append the reaffirmation
+language to the prior bid row's `additional_note` instead of emitting
+a new row.
+
+**The rule, operationalized.**
+
+A bid event is a **same-price reaffirmation** when:
+1. The same bidder (same `bidder_name`) has a prior `bid_note = "Bid"`
+   row in the same `process_phase`, AND
+2. The reaffirmed price equals the prior price on every populated
+   bid-value field (`bid_value_pershare` / `bid_value_lower` /
+   `bid_value_upper` / `bid_value` all match), AND
+3. The structural terms (consideration components, financing
+   contingency, exclusivity, etc.) are unchanged.
+
+When all three hold, decide row-vs-note by trigger language:
+
+| Filing language pattern in the reaffirmation passage | Treatment |
+|---|---|
+| *"in response to the Board's best-and-final request,"* / *"\[Bidder\] confirmed its best and final offer of \$X,"* / *"as its formal final-round bid in response to the process letter dated …"* | **New `Bid` row.** Same price; capture the trigger language in `additional_note` (e.g., `"reaffirmation in response to board's best-and-final deadline of May 30, 2013"`). |
+| *"\[Bidder\] verbally reiterated"* / *"called to confirm \$X stood"* / *"reaffirmed during the negotiation of the merger agreement"* | **Note, not row.** Append to prior bid's `additional_note`: `"verbally reaffirmed on [date]: '<short verbatim phrase>'"`. |
+| Day-of-signing or pre-signing confirmation: *"on \[signing-day\], \[Bidder\] confirmed it remained at \$X and was prepared to execute"* | **Note on `Executed` row.** Fold into `Executed` row's `source_quote` / `additional_note`; do not emit a separate Bid row. |
+| Anything else (ambiguous, one-off, no clear trigger language) | **Default: note, not row.** When in doubt, append to prior bid. |
+
+**Why a single rule, not four sub-cases.** The 4-case framing in
+Decision #5's discussion was pedagogical; the operational rule is one
+filter (was the reaffirmation a substantive response to a narrated
+process step?) with one default (no → note). The reference cases just
+exemplify the boundary.
+
+**Why no separate event vocabulary or new flag.** A reaffirmation row
+IS a `Bid` row. Inventing `Bid Confirmation` as a vocabulary entry, or
+attaching a `bid_reaffirmation: true` flag, would add schema bloat for
+a pattern whose trigger language ("best and final" / "in response to
+the board's request") is already preserved verbatim in `source_quote`
+and `additional_note`. Downstream code that wants to count
+reaffirmations across the dataset can grep `additional_note` for the
+trigger phrases. Keeping the rule note-only is the explicit
+"least-overengineered" choice from Decision #5.
+
+**Reference deals affected (3 of 9):**
+
+- **zep:** New Mountain's April 2015 reiteration of $20.05
+  best-and-final during merger-agreement negotiations is a verbal
+  reaffirmation, not a response to a new process step → **note**, not
+  a new row. AI today emits a row; after re-extraction it becomes a
+  note on the prior best-and-final row.
+- **penford:** Ingredion's October 14, 2014 confirmation of $19.00
+  the day before signing is pre-signing glue → **note** on the
+  `Executed` row (or fold into its `additional_note`). AI today emits
+  a row; after re-extraction it disappears from the events list.
+- **stec:** WDC's May 30, 2013 verbal confirmation of $9.15 was made
+  in direct response to the board's "best and final by May 30"
+  request → **new `Bid` row**, same price, with `additional_note`
+  capturing the trigger language. AI today already emits a row; the
+  change is to ensure the reaffirmation context lives in
+  `additional_note`.
+
+**Validator implications.** None. A reaffirmation `Bid` row is a
+regular bid row and goes through §G1 / §P-G2 normally. The
+`bid_type_inference_note` for Case 3 reaffirmation rows can read
+*"reaffirmation of formal best-and-final from [prior-row date];
+bid_type inherited"* — that satisfies §P-G2.
+
+**Reference data.** Alex's reference is not regenerated. AI-vs-Alex
+disagreements on these 3 deals are real adjudication signal, not noise
+(Alex's coding here was inconsistent and worth re-evaluating against
+the filing per case).
+
+**Cross-references.**
+- `rules/bids.md` §C3 / §C4 / §G1 / §H1 (the surrounding bid-row
+  emission rules).
+- `prompts/extract.md` (extractor classification guidance).
+- `quality_reports/decisions/2026-04-26_six-policy-decisions.md` #5.
+
+---
+
 ### §G1 — Informal-vs-formal bid classification (🟩 RESOLVED, 2026-04-18)
 
 **This is the highest-risk classification in the pipeline.**
