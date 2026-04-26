@@ -2,7 +2,8 @@
   "deal": {
     "slug": "mac-gray",
     "TargetName": "MAC GRAY CORP",
-    "Acquirer": "CSC purchased by Pamplona in May/2013",
+    "Acquirer": "CSC ServiceWorks, Inc.",
+    "Acquirer_legal": "Spin Holdco Inc.",
     "DateAnnounced": "2013-10-15",
     "DateEffective": "2014-01-09",
     "DateFiled": "2013-12-04",
@@ -61,6 +62,11 @@
       }
     },
     "deal_flags": [
+      {
+        "code": "acquirer_overridden_per_q6",
+        "severity": "info",
+        "reason": "\u00a7Q6 (per \u00a7N4): xlsx Acquirer='CSC purchased by Pamplona in May/2013'; overridden to operating='CSC ServiceWorks, Inc.' with legal shell Acquirer_legal='Spin Holdco Inc.'. Sponsor-backed corporate buyer: CSC ServiceWorks operates the laundry business; Pamplona Capital Partners is the funding sponsor (documented on the Executed row's additional_note per \u00a7N4 rule 4)."
+      },
       {
         "code": "bidder_ids_renumbered_per_a1",
         "severity": "info",

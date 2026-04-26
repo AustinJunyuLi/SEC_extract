@@ -3,6 +3,7 @@
     "slug": "imprivata",
     "TargetName": "IMPRIVATA INC",
     "Acquirer": "THOMA BRAVO, LLC",
+    "Acquirer_legal": null,
     "DateAnnounced": "2016-07-13",
     "DateEffective": "2016-09-16",
     "DateFiled": "2016-08-10",

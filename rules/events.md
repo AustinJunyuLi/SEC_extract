@@ -29,7 +29,8 @@ expansion.
 - `IB Terminated` — investment bank relationship ended (Mac Gray edge case, kept).
 
 **Counterparty events:**
-- `NDA` — confidentiality agreement signed.
+- `NDA` — **target ↔ bidder** confidentiality agreement (auction NDA, Type A per §I3). Grants the bidder access to MNPI; usually paired with a standstill. This is the auction-funnel signal counted by §Scope-1.
+- `ConsortiumCA` — **bidder ↔ bidder** confidentiality agreement (consortium / inter-bidder, Type B per §I3). Two would-be bidders share proprietary analysis / financing plans / strategic intent under mutual confidentiality. NOT auction-funnel signal; does NOT count toward §Scope-1's auction threshold; does NOT discharge §P-D6 (target-NDA precondition for a Bid).
 - `Drop` — bidder withdraws, unspecified reason.
 - `DropBelowM` — target rejects bid below minimum.
 - `DropBelowInf` — bidder does not advance past informal round.
@@ -58,7 +59,7 @@ expansion.
 - `Terminated` — prior sale process formally ended (Zep pattern).
 - `Restarted` — new process begins after prior `Terminated` (Zep pattern).
 
-**Total: 30 closed-vocabulary values.** Extractor emits exactly these; anything else → flag `unknown_bid_note`.
+**Total: 31 closed-vocabulary values.** Extractor emits exactly these; anything else → flag `unknown_bid_note`.
 
 **Note on exclusivity.** Exclusivity periods are NOT events in this vocabulary.
 They are re-encoded as an `exclusivity_days: int` attribute on the associated
@@ -328,6 +329,113 @@ drop row, so the bidder funnel stays clean: every NDA-signer has a fate.
 - `rules/events.md` §I2 (re-engagement after drop).
 - `rules/bidders.md` §E2 (joint-bidder representation).
 - `rules/invariants.md` §P-D5 (drop-without-prior-engagement check).
+
+---
+
+### §I3 — Confidentiality-agreement scope: target ↔ bidder vs consortium vs rollover (🟩 RESOLVED, 2026-04-26 per Decision #4)
+
+**Problem.** The "Background of the Merger" section often describes
+multiple confidentiality agreements within the deal process. Three
+legally distinct CA types appear:
+
+- **Type A — Target ↔ bidder NDA (auction NDA).** The classic.
+  Asymmetric: the target shares MNPI (material non-public information)
+  with a potential bidder under confidentiality, usually paired with a
+  standstill restricting the bidder from buying target stock or making
+  unsolicited offers. **This is the auction-funnel signal** counted by
+  §Scope-1 (≥2 ⇒ `auction = true`).
+- **Type B — Bidder ↔ bidder CA (consortium / inter-bidder).** Two
+  would-be bidders sign a mutual CA to share their proprietary
+  analysis, financing plans, or strategic intent before forming a
+  consortium. Mutual, not asymmetric. Does NOT grant MNPI access; does
+  NOT involve the target as a party. Examples: petsmart's December 2014
+  CAs between Longview (an activist holder) and the BC Partners-led
+  Buyer Group.
+- **Type C — Shareholder ↔ acquirer rollover CA.** A major target
+  shareholder agrees to roll their equity into the post-merger entity;
+  the CA covers the negotiation period for that side-deal. Operational;
+  not auction-funnel signal. Rare across the 9 reference deals.
+
+**Decision** (2026-04-26):
+
+- **Type A** → `bid_note = "NDA"` (the existing event). Counted by
+  §Scope-1; satisfies §P-D6 (NDA-before-Bid precondition); subject to
+  §I1 DropSilent rule for silent signers.
+- **Type B** → `bid_note = "ConsortiumCA"` (new event in §C1; rank 5
+  by §A3). NOT counted by §Scope-1; does NOT satisfy §P-D6 (a Type B
+  CA is not target-bidder, so a separate Type A NDA is still required
+  for that bidder's later target-NDA-precondition); does NOT trigger
+  §I1 DropSilent (a silent ConsortiumCA signer is not a silent
+  auction-funnel signer).
+- **Type C** → **skipped.** No row emitted. See `rules/bids.md` §M5.
+  Rollover CAs are not auction-process events; they belong to a
+  separate research domain (post-merger capital structure).
+
+**Disambiguation guidance for the extractor.** When the filing narrates
+a CA, use these heuristics to classify:
+
+| Filing language pattern | Type | Code |
+|---|---|---|
+| *"\[Target\] entered into a confidentiality agreement with \[Bidder\]"* / *"\[Bidder\] executed a confidentiality agreement with \[Target\]"* | A | `NDA` |
+| *"\[Target\]'s representatives delivered a confidentiality agreement to \[Bidder\]"* / *"\[Bidder\] signed a CA in connection with the auction process"* | A | `NDA` |
+| *"\[Bidder1\] and \[Bidder2\] entered into a confidentiality agreement"* / *"the consortium members entered into a confidentiality agreement among themselves"* / *"\[Bidder\] joined the buyer group / consortium and executed a confidentiality agreement with \[other-bidder(s)\]"* | B | `ConsortiumCA` |
+| *"\[Activist Holder\] / \[Major Shareholder\] entered into a confidentiality agreement with \[Buyer Group\] regarding their potential rollover"* / *"\[Shareholder\] agreed to roll their equity"* | C | **skip** (per §M5) |
+
+**When the language is ambiguous** between A and B (e.g., a CA whose
+parties are not clearly named), default to Type A and attach
+`{"code": "ca_type_ambiguous", "severity": "soft", "reason": "<summary>"}`.
+Austin adjudicates against the filing.
+
+**ConsortiumCA emission rule.**
+- `bid_note = "ConsortiumCA"`
+- `bidder_name` = canonical id of the named CA signer (the bidder side
+  the filing identifies; for the petsmart example, Longview's id)
+- `bidder_alias` = filing's verbatim label for the consortium relationship
+  (e.g., `"Longview and the Buyer Group"`)
+- `bid_date_precise` = the CA execution date as narrated
+- `joint_bidder_members` = optional; populated when the filing names
+  the consortium constituents
+- `source_quote` / `source_page` = the filing language describing the
+  consortium CA
+- `process_phase` follows the surrounding events (typically phase 1)
+- `role = "bidder"` (still a bidder-side event, just not target-bidder)
+
+**Validator behavior on ConsortiumCA.**
+- §P-S1 (silent NDA → DropSilent) applies only to `bid_note = "NDA"`.
+  ConsortiumCA signers without later activity do NOT trigger
+  `missing_nda_dropsilent`.
+- §P-S2 (auction count) counts only `bid_note = "NDA"`. ConsortiumCA
+  is NOT in the count.
+- §P-D6 (NDA-before-Bid precondition) requires a `bid_note = "NDA"`.
+  ConsortiumCA does NOT discharge §P-D6; a bidder who later submits a
+  Bid still needs a Type A NDA for §P-D6.
+- §P-D5 (drop-without-prior-engagement) — the engagement set
+  (`{"NDA", "Bidder Interest", "IB"}` plus all Drop codes) does NOT
+  include `ConsortiumCA`. A bidder who signed only a ConsortiumCA and
+  then dropped will fire §P-D5; this is intentional (the filing should
+  show how the bidder engaged with the target before withdrawing).
+
+**Why a new event type, not a flag on NDA.**
+- Type A is the auction signal. Mixing types (even with a
+  disambiguating flag) muddies every NDA-count downstream and forces
+  every consumer to filter.
+- The new vocabulary entry is cheap (1 closed-vocabulary value); the
+  signal-cleanliness benefit applies to every analysis.
+
+**Why skip Type C, not capture it.**
+- Rare (1 ambiguous instance in petsmart across 9 reference deals).
+- Tangential to auction theory.
+- Capture-cost (extraction time, schema bloat) > value.
+- If a future paper needs rollover behavior, re-extract with a
+  targeted pass.
+
+**Cross-references.**
+- `rules/events.md` §C1 (vocabulary entry for `NDA` / `ConsortiumCA`).
+- `rules/bids.md` §M5 (skip rule for Type C rollover CAs).
+- `rules/schema.md` §Scope-1 (auction count uses NDA only).
+- `rules/invariants.md` §P-D6, §P-S1, §P-S2 (validator behavior).
+- `prompts/extract.md` (extractor classification guidance).
+- `quality_reports/decisions/2026-04-26_six-policy-decisions.md` #4.
 
 ---
 

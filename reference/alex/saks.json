@@ -2,7 +2,8 @@
   "deal": {
     "slug": "saks",
     "TargetName": "SAKS INC",
-    "Acquirer": "HUDSON'S BAY COMPANy",
+    "Acquirer": "Hudson's Bay Company",
+    "Acquirer_legal": "Harry Acquisition Inc.",
     "DateAnnounced": "2013-07-29",
     "DateEffective": "2013-11-04",
     "DateFiled": "2013-10-03",
@@ -82,6 +83,11 @@
       }
     },
     "deal_flags": [
+      {
+        "code": "acquirer_overridden_per_q6",
+        "severity": "info",
+        "reason": "\u00a7Q6 (per \u00a7N4): xlsx Acquirer=\"HUDSON'S BAY COMPANy\"; overridden to operating=\"Hudson's Bay Company\" with legal shell Acquirer_legal='Harry Acquisition Inc.'. Operating company is also the ultimate buyer: Hudson's Bay Company; merger executed via the Harry Acquisition shell. Per \u00a7N4 rule 2."
+      },
       {
         "code": "applied_alex_deletion",
         "severity": "info",

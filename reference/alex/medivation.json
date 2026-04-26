@@ -3,6 +3,7 @@
     "slug": "medivation",
     "TargetName": "MEDIVATION INC",
     "Acquirer": "PFIZER INC",
+    "Acquirer_legal": null,
     "DateAnnounced": "2016-08-22",
     "DateEffective": "2016-09-28",
     "DateFiled": "2016-08-30",

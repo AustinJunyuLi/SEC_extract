@@ -41,8 +41,8 @@ COMPARE_EVENT_FIELDS = [
 ]
 
 COMPARE_DEAL_FIELDS = [
-    "TargetName", "Acquirer", "DateAnnounced", "DateEffective",
-    "auction", "all_cash",
+    "TargetName", "Acquirer", "Acquirer_legal", "DateAnnounced",
+    "DateEffective", "auction", "all_cash",
 ]
 
 # AI-only fields whose absence on Alex's side is expected and should NOT

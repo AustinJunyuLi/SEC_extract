@@ -2,7 +2,8 @@
   "deal": {
     "slug": "zep",
     "TargetName": "ZEP INC",
-    "Acquirer": "NEW MOUNTAIN CAPITAL",
+    "Acquirer": "New Mountain Capital",
+    "Acquirer_legal": "NM Z Parent Inc.",
     "DateAnnounced": "2015-04-08",
     "DateEffective": "2015-06-26",
     "DateFiled": "2015-05-26",
@@ -80,6 +81,11 @@
       }
     },
     "deal_flags": [
+      {
+        "code": "acquirer_overridden_per_q6",
+        "severity": "info",
+        "reason": "\u00a7Q6 (per \u00a7N4): xlsx Acquirer='NEW MOUNTAIN CAPITAL'; overridden to operating='New Mountain Capital' with legal shell Acquirer_legal='NM Z Parent Inc.'. PE sponsor as operating acquirer: New Mountain Capital (fund) is also the operating buyer; merger executed via the NM Z Parent shell. Per \u00a7N4 rule 3."
+      },
       {
         "code": "bidder_ids_renumbered_per_a1",
         "severity": "info",

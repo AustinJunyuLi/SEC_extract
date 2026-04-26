@@ -3,6 +3,7 @@
     "slug": "stec",
     "TargetName": "S T E C INC",
     "Acquirer": "WESTERN DIGITAL CORP",
+    "Acquirer_legal": null,
     "DateAnnounced": "2013-06-24",
     "DateEffective": "2013-09-12",
     "DateFiled": "2013-08-08",

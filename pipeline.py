@@ -101,7 +101,8 @@ EVENT_VOCABULARY: frozenset[str] = frozenset({
     # Advisors
     "IB", "IB Terminated",
     # Counterparty events
-    "NDA", "Drop", "DropBelowM", "DropBelowInf", "DropAtInf", "DropTarget",
+    "NDA", "ConsortiumCA",
+    "Drop", "DropBelowM", "DropBelowInf", "DropAtInf", "DropTarget",
     "DropSilent",
     # Bid rows — §C3 unified; bid_type disambiguates formal/informal
     "Bid",
@@ -177,8 +178,9 @@ EVENT_RANK: dict[str, int] = {
     "IB Terminated": 3,
     # Rank 4 — bidder first-contact
     "Bidder Interest": 4,
-    # Rank 5 — NDAs
+    # Rank 5 — NDAs and consortium CAs (§I2 distinguishes Type A vs Type B)
     "NDA": 5,
+    "ConsortiumCA": 5,
     # Rank 6/7 — bids (§C3 unified "Bid"; formal bumps to 7 via _rank())
     "Bid": 6,
     # Rank 8 — dropouts
@@ -269,7 +271,7 @@ Read these files in full (absolute paths; use your Read tool):
 
   Rulebook (all resolved; if you see 🟥 OPEN anywhere, halt and emit the blocked form):
     {RULES_DIR}/schema.md      (output shape §R1, evidence §R3)
-    {RULES_DIR}/events.md      (bid_note closed vocabulary §C1, 30 values)
+    {RULES_DIR}/events.md      (bid_note closed vocabulary §C1, 31 values)
     {RULES_DIR}/bidders.md     (canonical IDs §E3, bidder_type §F1)
     {RULES_DIR}/bids.md        (formal/informal §G1, skip rules §M)
     {RULES_DIR}/dates.md       (date mapping §B, BidderID sequence §A1–§A4)

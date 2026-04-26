@@ -653,6 +653,61 @@ continuation.
 
 ---
 
+### §M5 — Rollover-CA skip (Type C confidentiality agreements) (🟩 RESOLVED, 2026-04-26 per Decision #4)
+
+**Decision.** When the filing narrates a confidentiality agreement
+between a target shareholder and the acquirer / buyer group covering
+the shareholder's potential equity rollover, **skip it**. Do not
+emit a row. Do not classify as `NDA` or `ConsortiumCA`.
+
+**Definition (Type C per `rules/events.md` §I3).** A rollover CA is a
+confidentiality agreement between (a) a target shareholder (founder,
+strategic partner, holding fund, or similar) and (b) the acquirer or
+buyer group, covering the negotiation period for the shareholder's
+agreement to roll their existing equity into the post-merger entity
+rather than cash out. Distinct from:
+
+- **Type A (`NDA`)**: target ↔ bidder confidentiality covering MNPI access
+- **Type B (`ConsortiumCA`)**: bidder ↔ bidder consortium-formation CA
+
+**Identification heuristics.** The filing's language usually makes the
+shareholder-rollover purpose explicit:
+
+- *"\[Major Shareholder\] entered into a confidentiality agreement
+  with \[Buyer Group\] regarding their potential rollover"*
+- *"\[Shareholder\] agreed to roll over their equity in the merger"*
+- *"the rollover agreement"* / *"the equity-rollover commitment"*
+- *"\[Shareholder\]'s shares would be exchanged for equity in the
+  surviving company"* (paired with a CA reference)
+
+**When ambiguous between Type B and Type C.** If the filing's
+language could plausibly describe either a consortium-formation CA
+(Type B) or a rollover CA (Type C), prefer Type B (emit
+`ConsortiumCA`) and attach `{"code": "ca_type_ambiguous", "severity":
+"soft", "reason": "<summary including the specific Type B vs Type C
+ambiguity>"}`. Austin adjudicates against the filing.
+
+**Why skip.** Rollover CAs are not auction-process events; they
+belong to a separate research domain (post-merger capital structure).
+Across the 9 reference deals, only petsmart has any candidate
+narrative for Type C, and even that is ambiguous (Longview's CAs are
+classified as Type B per Decision #4 since Longview joined the BC
+Partners-led Buyer Group as a constituent rather than rolling over a
+passive stake).
+
+**Why not capture as a separate event type.** Capture-cost (extraction
+attention, schema entry, downstream filtering) > research value at
+this scale. If a future paper specifically needs rollover behavior,
+re-extract with a targeted pass.
+
+**Cross-references.**
+- `rules/events.md` §I3 (three CA types — auction NDA, consortium CA,
+  rollover CA — full definitions and disambiguation table).
+- `rules/events.md` §C1 (`NDA` and `ConsortiumCA` vocabulary entries).
+- `quality_reports/decisions/2026-04-26_six-policy-decisions.md` #4.
+
+---
+
 ### §H1 — Bid value ranges and single-bound bids (🟩 RESOLVED, 2026-04-18)
 
 **Decision.** Ranges populate `bid_value_lower` and `bid_value_upper`;

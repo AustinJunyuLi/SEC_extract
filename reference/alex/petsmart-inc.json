@@ -2,7 +2,8 @@
   "deal": {
     "slug": "petsmart-inc",
     "TargetName": "PETSMART INC",
-    "Acquirer": "BC Partners, Inc., La Caisse de d\u00e9p\u00f4t et placement du Qu\u00e9bec, affiliates of GIC Special Investments Pte Ltd, affiliates of StepStone Group LP and Longview Asset Management, LLC",
+    "Acquirer": "BC Partners, Inc.",
+    "Acquirer_legal": "Argos Holdings Inc.",
     "DateAnnounced": "2014-12-14",
     "DateEffective": "2015-03-11",
     "DateFiled": "2015-02-02",
@@ -138,6 +139,11 @@
       }
     },
     "deal_flags": [
+      {
+        "code": "acquirer_overridden_per_q6",
+        "severity": "info",
+        "reason": "\u00a7Q6 (per \u00a7N4): xlsx Acquirer='BC Partners, Inc., La Caisse de d\u00e9p\u00f4t et placement du Qu\u00e9bec, affiliates of GIC Special Investments Pte Ltd, affiliates of StepStone Group LP and Longview Asset Management, LLC'; overridden to operating='BC Partners, Inc.' with legal shell Acquirer_legal='Argos Holdings Inc.'. PE consortium / club deal: Buyer Group = BC Partners, La Caisse, GIC, StepStone, Longview. Per \u00a7N4 rule 5 the operating Acquirer is the lead sponsor (BC Partners)."
+      },
       {
         "code": "bidder_ids_renumbered_per_a1",
         "severity": "info",

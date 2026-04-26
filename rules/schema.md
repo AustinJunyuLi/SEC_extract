@@ -194,7 +194,14 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 
 **`deal` object — AI-produced fields (reads from filing):**
 - `TargetName` — string. Filing-read; flag `deal_identity_mismatch` if disagrees with seeds.
-- `Acquirer` — string. Same.
+- `Acquirer` — string. The **operating acquirer** per §N4 (the entity that
+  actually negotiated and will own the target's assets), NOT the legal
+  shell. For consortium / club deals, the **lead sponsor**. See §N4 for
+  the full decision rule and the lead-sponsor heuristic.
+- `Acquirer_legal` — string OR null. The Delaware shell (or other
+  legally-formed acquisition vehicle) that signs the merger agreement,
+  when it differs from `Acquirer`. Null when the legal entity and
+  operating acquirer are the same. Per §N4.
 - `DateAnnounced` — ISO date. Same.
 - `DateEffective` — ISO date OR null. Null if filing predates closing.
 - `auction` — bool. Computed per §Scope-1 from extracted NDA events.
@@ -389,6 +396,87 @@ were outstanding") can serve as a cross-check but are not emitted as
 
 ---
 
+### §N4 — `Acquirer` semantics: operating acquirer + `Acquirer_legal` sidecar (🟩 RESOLVED, 2026-04-26 per Decision #3)
+
+**Problem.** Filings name two or three distinct entities for what is
+conceptually "the acquirer": (a) the legal vehicle (typically a Delaware
+shell), (b) the operating acquirer (the corporate buyer or fund that
+actually negotiated), (c) the ultimate sponsor / fund (when the operating
+acquirer is itself sponsor-backed). For sponsor-backed deals these
+diverge — petsmart's legal vehicle is `Argos Holdings Inc.` while the
+buyer-group consortium is BC Partners + Caisse + GIC + StepStone +
+Longview, and there is no single "operating company" between them.
+
+**Decision.** `Acquirer` = **operating acquirer** (per the rule below);
+`Acquirer_legal` = the legal shell when it differs from `Acquirer`,
+otherwise null. No third `sponsor` field.
+
+**`Acquirer` decision rule** (evaluate top-to-bottom; first match wins):
+
+| # | Filing pattern | `Acquirer` | `Acquirer_legal` |
+|---|---|---|---|
+| 1 | Single corporate buyer; no legal shell | the buyer | null |
+| 2 | Single corporate buyer; merger executed via a Delaware shell formed for this transaction | the operating buyer | the shell |
+| 3 | Single PE/financial sponsor acting as buyer; merger via shell | the sponsor (e.g., `New Mountain Capital`) | the shell |
+| 4 | Sponsor-backed corporate buyer (operating company funded by a sponsor that is not itself the bidder) | the operating company (e.g., `CSC ServiceWorks, Inc.`) | the shell. Funding sponsor goes in the `Executed` row's `additional_note` |
+| 5 | PE consortium / club deal (multiple sponsors as a buyer group, no single operating company) | the **lead sponsor** (largest LBO equity check / operationally lead, per filing language). Fall back to filing's verbatim consortium label if no lead is identifiable | the shell |
+
+**Lead-sponsor heuristic for rule 5.** Most filings describe the
+consortium with a primary sponsor in the lead position ("BC Partners,
+together with [others]") and a list of co-investors. The named primary
+is the lead. If the filing presents members in symmetric language (no
+clear primary), use the filing's verbatim consortium label (e.g.,
+`"Buyer Group"`). Atomization at the deal level loses joinability to
+acquirer-characteristic data and is rejected.
+
+**Why operating acquirer, not legal shell.** Standard convention in
+M&A research datasets (Thomson SDC, Refinitiv, MergerMarket) is the
+operating acquirer. The legal shell is irrelevant to auction theory,
+auction-process empirics, market reactions, and acquirer-characteristic
+joins. The shell exists for liability isolation and Delaware Chancery
+case law and disappears at closing.
+
+**Why a sidecar instead of replacement.** `Acquirer_legal` is rarely
+needed (4 of 9 reference deals carry one) but cheap to preserve. Drops
+nothing; downstream code that needs the legal counterparty for
+litigation or post-closing claims can join on it. Skipping it would be
+lossy.
+
+**Why no separate `sponsor` field.** Only mac-gray (CSC operating,
+Pamplona sponsor) needs a third entity in the 9 reference deals.
+Documenting Pamplona in the `Executed` row's `additional_note` is
+sufficient and avoids permanent schema bloat for a one-deal feature.
+If a future paper needs structured sponsor analysis across many deals,
+add the field then.
+
+**Reference values for the 4 sponsor-backed deals:**
+
+| Deal | `Acquirer` | `Acquirer_legal` | Notes |
+|---|---|---|---|
+| petsmart-inc | `BC Partners, Inc.` (lead) | `Argos Holdings Inc.` | Buyer Group: BC Partners + Caisse + GIC + StepStone + Longview |
+| mac-gray | `CSC ServiceWorks, Inc.` | `Spin Holdco Inc.` | Funding sponsor `Pamplona Capital Partners` documented on `Executed` row |
+| zep | `New Mountain Capital` | `NM Z Parent Inc.` | Fund acts as operating acquirer |
+| saks | `Hudson's Bay Company` | `Harry Acquisition Inc.` | Operating company == ultimate buyer |
+
+The other 5 reference deals (medivation, imprivata, providence-worcester,
+penford, stec) have no separate legal shell that the filing names
+distinctly; `Acquirer_legal = null`.
+
+**Validator implications.**
+- `Acquirer_legal` is optional (`str | null`); no hard validator beyond
+  type acceptance.
+- The existing `deal_identity_mismatch` flag on `Acquirer` continues to
+  apply to the operating-acquirer value.
+
+**Cross-references.**
+- `rules/schema.md` §R1 (deal-level field list).
+- `prompts/extract.md` (extraction guidance + lead-sponsor heuristic).
+- `scripts/build_reference.py` §Q6 (per-deal converter override for the
+  4 sponsor-backed reference deals).
+- `quality_reports/decisions/2026-04-26_six-policy-decisions.md` #3.
+
+---
+
 ### §R3 — Evidence column (🟩 RESOLVED, 2026-04-18)
 
 Every event row carries two mandatory evidence fields that cite the filing text
@@ -457,7 +545,7 @@ requires re-fetching or accepting page-drift on old extractions.
 
 ## Canonical output schema (resolved)
 
-Reflects resolved decisions §Scope-1/2/3, §R1, §R2, §R3, §N1, §N2, §N3.
+Reflects resolved decisions §Scope-1/2/3, §R1, §R2, §R3, §N1, §N2, §N3, §N4.
 
 ```json
 {
@@ -465,6 +553,7 @@ Reflects resolved decisions §Scope-1/2/3, §R1, §R2, §R3, §N1, §N2, §N3.
     "slug": "medivation",
     "TargetName": "Medivation, Inc.",
     "Acquirer": "Pfizer Inc.",
+    "Acquirer_legal": null,
     "DateAnnounced": "2016-08-22",
     "DateEffective": "2016-09-28",
     "auction": true,

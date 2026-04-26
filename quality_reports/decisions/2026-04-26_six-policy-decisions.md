@@ -19,8 +19,8 @@ discarded options stay here.
 |---|---|---|---|
 | 1 | Silent NDA signers → emit DropSilent | 🟩 IMPLEMENTED (pending re-extraction) | 2026-04-26 |
 | 2 | `bidder_type.public` for unknown bidders | 🟩 IMPLEMENTED (pending re-extraction) | 2026-04-26 |
-| 3 | `Acquirer` field semantics (legal vs operating) | 🟥 OPEN | 2026-04-26 |
-| 4 | NDA scope: target-bidder only, or include inter-bidder/rollover CAs? | 🟥 OPEN | 2026-04-26 |
+| 3 | `Acquirer` field semantics (legal vs operating) | 🟩 IMPLEMENTED (pending re-extraction) | 2026-04-26 |
+| 4 | NDA scope: target-bidder only, or include inter-bidder/rollover CAs? | 🟩 IMPLEMENTED (pending re-extraction) | 2026-04-26 |
 | 5 | Same-price reaffirmations: new bid row or note? | 🟥 OPEN | 2026-04-26 |
 | 6 | IB date anchor: board approval vs engagement letter vs first action | 🟥 OPEN | 2026-04-26 |
 
@@ -438,15 +438,117 @@ brand (`Thoma Bravo, LLC`) for joinability and recognizability.
    like Mac-Gray where CSC is operationally the buyer but Pamplona is the
    funder?
 
-### Decision (to be filled in after discussion)
+### Decision (2026-04-26)
 
-_Pending Austin discussion_
+**`Acquirer` is the operating acquirer; `Acquirer_legal` is a new sidecar
+for the legal shell when it differs.**
 
-### Implementation (after decision)
+Four sub-decisions, all settled (Austin's "proceed as your recommendation"):
 
-- `rules/schema.md` §R1 — define `Acquirer` precisely
-- `prompts/extract.md` — tell the extractor which entity to pull
-- All 4 affected reference deals need regeneration
+- **Q1 — Default (single-buyer cases):** Operating acquirer (the entity
+  that negotiated, will own assets, appears in news / league tables).
+  Reject the legal shell. This matches Thomson SDC, Refinitiv,
+  MergerMarket, and every M&A research dataset.
+- **Q2 — PE consortia / club deals:** Lead sponsor (largest LBO equity
+  check / operationally lead per filing language); fall back to filing's
+  verbatim consortium label if no lead is identifiable. For petsmart:
+  `BC Partners, Inc.` (lead) over the full Buyer Group list.
+- **Q3 — Schema shape:** One primary `Acquirer` field plus optional
+  `Acquirer_legal: string | null` sidecar. No separate `sponsor` field
+  — for the one deal that needs it (mac-gray: CSC operates, Pamplona
+  funds), the funding sponsor goes in the `Executed` row's
+  `additional_note`.
+- **Q4 — Stickiness:** Deal-level only; no per-row change. The harder
+  per-row consortium-membership question is governed by §E2.a / §E2.b.
+
+### Rationale
+
+- **Operating acquirer is the research convention.** The legal shell is
+  irrelevant to auction theory, auction-process empirics, market
+  reactions, and acquirer-characteristic joins. It exists only for
+  liability isolation and Delaware Chancery case law and disappears at
+  closing. Standard M&A research datasets (Thomson SDC, Refinitiv,
+  MergerMarket) use the operating acquirer.
+- **Sidecar instead of replacement.** `Acquirer_legal` is rarely needed
+  (4 of 9 reference deals) but cheap to preserve. Drops nothing;
+  downstream code that needs the legal counterparty for litigation or
+  post-closing claims can join on it.
+- **Lead sponsor for consortia.** Atomization at the deal level loses
+  joinability. The lead sponsor is a clean primary key; the rest of the
+  consortium is recoverable from the `Executed` row's
+  `joint_bidder_members` per §E2.a.
+- **No `sponsor` field.** Only mac-gray needs a third entity; not worth
+  permanent schema bloat. Document Pamplona on the `Executed` row.
+
+### Implementation (2026-04-26 — completed)
+
+Five files touched:
+
+1. **`rules/schema.md` §R1 (line ~197)** — `Acquirer` description
+   updated to specify "operating acquirer per §N4"; new
+   `Acquirer_legal: string | null` field added.
+2. **`rules/schema.md` §N4 (new section, between §N3 and §R3)** —
+   the full `Acquirer` decision rule. 5-rule decision table covering
+   single corporate buyer, shell-mediated buyer, single PE sponsor as
+   buyer, sponsor-backed corporate buyer, and PE consortium / club
+   deal. Documents lead-sponsor heuristic, why operating not legal,
+   why sidecar over replacement, why no separate sponsor field, and
+   the per-deal reference values for the 4 sponsor-backed deals.
+3. **`rules/schema.md` canonical example** — updated to include
+   `"Acquirer_legal": null`.
+4. **`prompts/extract.md` (Non-negotiable constraints, after
+   "deal identity fields" bullet)** — new bullet codifies the §N4
+   rule with shell-name-shape heuristics ("X Holdings Inc.",
+   "X Acquisition Inc.", "X Parent Inc.", "X Merger Sub" → goes in
+   `Acquirer_legal`), lead-sponsor instruction for consortia, and
+   sponsor-backed-corporate-buyer pattern (operating in `Acquirer`,
+   funding sponsor in Executed row's `additional_note`).
+5. **`prompts/extract.md` deal-skeleton example** — `"Acquirer_legal": null`
+   added.
+6. **`scripts/build_reference.py`** — new constants:
+   - `Q6_ACQUIRER_OVERRIDES` map for the 4 sponsor-backed deals
+     (petsmart-inc, mac-gray, zep, saks) with operating + legal +
+     human-readable note.
+   - `apply_q6_acquirer_override(slug, deal)` mutates the deal in
+     place when slug ∈ Q6 map, sets Acquirer / Acquirer_legal, appends
+     `acquirer_overridden_per_q6` deal_flag with the original xlsx
+     Acquirer string for provenance.
+   - Wired into `build_deal()` immediately after `build_deal_object`,
+     before the §Q1 saks pass.
+   - `build_deal_object()` now seeds `Acquirer_legal: None` so all 9
+     deals carry the field even when no override applies.
+   - Module docstring extended with §Q6 entry.
+7. **`scoring/diff.py` `COMPARE_DEAL_FIELDS`** — `Acquirer_legal` added.
+
+### Verification (2026-04-26)
+
+- `pytest tests/`: 103 passed in 2.83s.
+- `python scripts/build_reference.py --all`: §Q6 override applied to 4
+  deals; `Acquirer_legal` populated for them and null for the other 5.
+- Reference values now match the §N4 decision table:
+  | Deal | `Acquirer` | `Acquirer_legal` |
+  |---|---|---|
+  | medivation | `PFIZER INC` | null |
+  | imprivata | `THOMA BRAVO, LLC` | null |
+  | zep | `New Mountain Capital` | `NM Z Parent Inc.` |
+  | providence-worcester | `GENESEE & WYOMING INC` | null |
+  | petsmart-inc | `BC Partners, Inc.` | `Argos Holdings Inc.` |
+  | penford | `INGREDION INC` | null |
+  | mac-gray | `CSC ServiceWorks, Inc.` | `Spin Holdco Inc.` |
+  | saks | `Hudson's Bay Company` | `Harry Acquisition Inc.` |
+  | stec | `WESTERN DIGITAL CORP` | null |
+- Each of the 4 overrides records its provenance in
+  `deal_flags` with `acquirer_overridden_per_q6` (original xlsx text
+  preserved in the reason field).
+
+### Status
+
+🟩 **IMPLEMENTED at policy + code level.** Pending: re-extract all 9
+reference deals; petsmart's AI today emits `Argos Holdings Inc.`
+(legal shell), so post-re-extraction it should match the reference's
+`BC Partners, Inc.` and the diff drops the persistent Acquirer
+mismatch on petsmart. The other 3 sponsor-backed deals should also see
+clean Acquirer / Acquirer_legal alignment after the next AI run.
 
 ---
 
@@ -568,16 +670,124 @@ If Austin wants Option C, the schema cost is real but manageable.
 3. For the Petsmart Buyer Group: do you want to know that it included a
    particular activist? That would push toward Option C.
 
-### Decision (to be filled in after discussion)
+### Decision (2026-04-26)
 
-_Pending Austin discussion_
+**Three CA types, three different treatments. Auction-funnel only.**
 
-### Implementation (after decision)
+Four sub-decisions, all settled (Austin's "A yes, B new event type, C
+skip, D confirm"):
 
-- `rules/events.md` — define NDA scope (and possibly add Consortium CA /
-  Rollover CA event types)
-- `prompts/extract.md` — explicit guidance on how to classify ambiguous CAs
-- Petsmart reference may need regeneration
+- **Q1 — Auction-funnel counts only:** Yes. The `NDA` event vocabulary
+  measures Type A (target ↔ bidder) confidentiality agreements only.
+  Type B and Type C are different legal acts and must not contaminate
+  the auction count.
+- **Q2 — Type B (consortium) handling:** New event type
+  `ConsortiumCA` (rank 5 alongside `NDA`). Captures bidder ↔ bidder
+  consortium-formation CAs without polluting the NDA count.
+- **Q3 — Type C (rollover) handling:** Skip entirely. New §M5 skip
+  rule. Rollover CAs are out of scope for the auction-process schema.
+- **Q4 — Petsmart Longview classification:** ConsortiumCA, not
+  RolloverCA. Longview joined the BC Partners-led Buyer Group as a
+  consortium constituent (named on the executed merger agreement),
+  not as a passive shareholder rolling over equity.
+
+### Rationale
+
+- **Legal mechanics differ.** Type A grants MNPI access and pairs
+  with a standstill. Type B is mutual information-sharing about
+  bidder-side analysis. Type C is shareholder-side capital-structure
+  negotiation. Conflating them muddles every downstream count.
+- **Auction signal cleanliness.** The §Scope-1 auction threshold
+  (≥2 NDA signers ⇒ `auction = true`) is meaningful only when `NDA`
+  rows are exclusively Type A. Mixing Type B inflates the count.
+- **Schema cost is one vocabulary entry.** `ConsortiumCA` adds 1
+  closed-vocabulary value (vocabulary 30 → 31). The signal-cleanliness
+  benefit applies to every analysis going forward.
+- **Type C frequency justifies skipping.** Across the 9 reference
+  deals, only petsmart has any candidate Type C narrative, and it
+  resolves to Type B (per Q4). Capture-cost for a hypothetical
+  future use > value at this scale.
+
+### Implementation (2026-04-26 — completed)
+
+Six files touched:
+
+1. **`pipeline.py`** — `EVENT_VOCABULARY` adds `"ConsortiumCA"`;
+   `EVENT_RANK` adds `"ConsortiumCA": 5`; vocabulary count comment
+   updated 30 → 31.
+2. **`rules/events.md` §C1** — `NDA` description rewritten to
+   specify "target ↔ bidder (Type A per §I3)"; new `ConsortiumCA`
+   entry; total count updated 30 → 31.
+3. **`rules/events.md` §I3 (new section, between §I2 and §J1)** —
+   full three-CA-type definition with disambiguation table,
+   ConsortiumCA emission rule, validator behavior summary
+   (§P-S1 / §P-S2 / §P-D5 / §P-D6 all checked), why-new-event-type
+   reasoning, why-skip-Type-C reasoning, cross-references.
+4. **`rules/bids.md` §M5 (new section, before §H1)** — Type C
+   skip rule with definition, identification heuristics
+   (rollover-language patterns), Type B vs Type C ambiguity
+   tiebreaker (default to Type B with `ca_type_ambiguous`), why-skip
+   rationale.
+5. **`prompts/extract.md`** — Step 7 expanded with the three-CA-type
+   classification block (Type A → NDA, Type B → ConsortiumCA, Type C
+   → skip per §M5); Step 9 references §M5; Step 7 DropSilent
+   paragraph notes that ConsortiumCA signers don't trigger §I1; new
+   self-check item "CA classification (§I3)".
+6. **`scripts/build_reference.py` `A3_RANK`** — `"ConsortiumCA": 5`
+   added with comment noting no synthesis (Alex's xlsx coding
+   doesn't preserve the CA-type distinction).
+
+**Validator interactions (no code change needed; pre-existing logic
+already correct):**
+
+- `_invariant_p_s1` (line 925) — already filters on
+  `bid_note != "NDA"`; ConsortiumCA does not trigger
+  `missing_nda_dropsilent`.
+- `_invariant_p_s2` (line 1024) — already filters on
+  `bid_note == "NDA"`; ConsortiumCA does not count toward auction
+  threshold.
+- `_invariant_p_d6` (line 685) — already requires
+  `bid_note == "NDA"` for the precondition; ConsortiumCA does not
+  satisfy NDA-before-Bid.
+- `_invariant_p_d5` (line 612) — `engagement_notes` set is
+  `{"NDA", "Bidder Interest", "IB"}` (plus all Drop codes);
+  ConsortiumCA is intentionally NOT in this set, so a bidder who
+  signed only a ConsortiumCA and then dropped will fire §P-D5
+  (intentional: the filing should narrate target-bidder engagement
+  before withdrawal).
+
+**Reference data:** No `§Q7` override added. Alex's xlsx coding
+doesn't preserve the CA-type distinction (only `NDA`); his
+"Buyer Group" NDA aggregations (e.g., petsmart) may correspond to
+Type A or Type B depending on filing context. Per the
+"Alex's reference stays unchanged" pattern from Decisions #1–#3, the
+reference is not regenerated. The diff harness will surface
+AI-vs-Alex disagreements (e.g., AI reclassifies petsmart's
+Longview/Buyer Group rows as `ConsortiumCA`; Alex has them as `NDA`)
+as cardinality mismatches Austin can adjudicate per deal.
+
+### Verification (2026-04-26)
+
+- `pytest tests/`: 103 passed in 2.69s.
+- `python scripts/build_reference.py --all`: rebuild succeeds; no
+  new reference deltas from Decision #4 (the deltas visible in
+  `git diff reference/alex/` are all from Decision #3's
+  `Acquirer_legal` field addition).
+- `from pipeline import ...`: `EVENT_VOCABULARY` size = 31;
+  `ConsortiumCA` ∈ `EVENT_VOCABULARY`; `EVENT_RANK['ConsortiumCA'] = 5`;
+  `ConsortiumCA` ∉ `BID_NOTE_FOLLOWUPS` (correct — does not discharge
+  §P-S1 silent-NDA obligation).
+
+### Status
+
+🟩 **IMPLEMENTED at policy + code level.** Pending: re-extract all 9
+reference deals; petsmart's AI today emits 2 `bid_note = "NDA"` rows
+for "Longview and the Buyer Group" (12/9 + 12/12); after re-extraction
+those should reclassify to `ConsortiumCA`. Cardinality mismatches
+against Alex's `NDA`-coded rows are adjudication signal, not noise.
+Other deals are unlikely to be affected (zep, mac-gray, providence,
+imprivata, medivation, penford, saks, stec do not appear to narrate
+clear Type B / Type C CAs in initial inspection).
 
 ---
 
@@ -843,5 +1053,7 @@ then start the rulebook-stability clock.
 | Date | Change |
 |---|---|
 | 2026-04-26 | File created. #1 decided at policy level; #2-6 framed for discussion. |
+| 2026-04-26 | #4 implementation completed. Files: `pipeline.py` (`EVENT_VOCABULARY` + `EVENT_RANK` add `ConsortiumCA` at rank 5; vocabulary count 30 → 31), `rules/events.md` (§C1 `NDA` description specifies "target ↔ bidder Type A"; new `ConsortiumCA` entry; new §I3 with three-CA-type definitions, disambiguation table, validator behavior summary), `rules/bids.md` (new §M5 skip rule for Type C rollover CAs), `prompts/extract.md` (Step 7 expanded with three-CA-type classification block; Step 9 references §M5; new self-check item "CA classification (§I3)"; DropSilent paragraph notes ConsortiumCA exclusion), `scripts/build_reference.py` (`A3_RANK` adds `ConsortiumCA: 5` for vocabulary completeness; no synthesis). All 103 tests pass; ConsortiumCA ∈ EVENT_VOCABULARY (size 31); ConsortiumCA ∉ BID_NOTE_FOLLOWUPS (correct — does not discharge §P-S1). No reference regeneration needed (Alex's xlsx coding doesn't preserve the CA-type distinction; AI-vs-Alex CA reclassifications surface as adjudication signal). Pending: re-run extractor — petsmart's 2 "Longview and the Buyer Group" NDA rows (12/9 + 12/12) should reclassify to ConsortiumCA. |
+| 2026-04-26 | #3 implementation completed. Files: `rules/schema.md` (§R1 `Acquirer` clarified to operating; new `Acquirer_legal` field added; new §N4 with 5-rule decision table covering single buyer / shell-mediated / single PE sponsor / sponsor-backed corporate / PE consortium; canonical example updated), `prompts/extract.md` (new non-negotiable bullet codifies §N4 with shell-name heuristics + lead-sponsor instruction + sponsor-backed-corporate pattern; deal skeleton example updated), `scripts/build_reference.py` (new §Q6 override with `Q6_ACQUIRER_OVERRIDES` map + `apply_q6_acquirer_override()` function for petsmart-inc, mac-gray, zep, saks; module docstring extended; `Acquirer_legal: null` seeded in `build_deal_object()`), `scoring/diff.py` (`Acquirer_legal` added to `COMPARE_DEAL_FIELDS`). All 103 unit tests pass. Reference rebuild applies the 4 overrides correctly with provenance flags; the other 5 deals carry `Acquirer_legal: null`. Pending: re-run extractor on all 9 reference deals — petsmart's AI today emits `Argos Holdings Inc.` (legal shell); post-re-extraction it should match the reference's `BC Partners, Inc.` and the persistent Acquirer mismatch drops. |
 | 2026-04-26 | #2 implementation completed. Files: `rules/bidders.md` (§F1 type signature → `bool | null`; §F2 derivation rule rewritten with strict-filing-only tri-state semantics; pre-2026 PE-firm `public=false` carve-out removed), `rules/schema.md` (§R1 `bidder_type.public` updated to `bool | null`), `prompts/extract.md` (new non-negotiable constraint on tri-state `public` rule). No changes needed in `scripts/build_reference.py` (already produces `null` for silent rows; zero `public=false` rows in actual reference data) or `pipeline.py` (no validator enforces `public` typing). All 103 unit tests still pass. Reference rebuild bit-identical. Simulation: 302 currently-spurious AI `public=false` rows across the 9 deals will flip to `null` after re-extraction, collapsing the largest single source of field mismatches in the 04-23 diff. Pending: re-run extractor on all 9 reference deals. |
 | 2026-04-26 | #1 implementation completed. Plan: `~/.claude/plans/i-think-encodinga-dropsilent-abundant-moler.md`. Files touched: `pipeline.py` (vocabulary + `_invariant_p_s1` rename to `missing_nda_dropsilent`), `rules/events.md` (§C1 + §I1 reversal), `rules/invariants.md` (§P-S1 rewrite), `rules/bids.md` (§M1/§M2 context), `prompts/extract.md` (Step 7 + Step 9 + self-check), `scripts/build_reference.py` (A3_RANK vocab only), `scoring/diff.py` (`AI_ONLY_BID_NOTES` filter), `tests/fixtures/synthetic_ps1_fail.json` (renamed flag), `tests/fixtures/synthetic_ps1_dropsilent_pass.json` (new positive test), `tests/test_invariants.py` (parametrize), `report/scripts/build_figures.py` (label), `SKILL.md` (flag rename). All 103 unit tests pass. Old flag `nda_without_bid_or_drop` produces 0 across the 9 reference deals. New flag `missing_nda_dropsilent` produces 54 on the existing pre-policy extractions, correctly identifying NDAs that need DropSilent rows added by the next extractor run. Pending: re-run extractor on all 9 reference deals to drive `missing_nda_dropsilent` count to 0. |
