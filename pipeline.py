@@ -326,6 +326,7 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
     row_flags.extend(_invariant_p_r3(events))
     row_flags.extend(_invariant_p_r4(events))
     row_flags.extend(_invariant_p_r5(events, deal))
+    row_flags.extend(_invariant_p_r6(events))
     row_flags.extend(_invariant_p_d1(events))
     row_flags.extend(_invariant_p_d2(events))
     row_flags.extend(_invariant_p_d5(events))
@@ -344,7 +345,7 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
     deal_flags.extend(_invariant_p_l1(events))
     deal_flags.extend(_invariant_p_l2(events))
     deal_flags.extend(_invariant_p_s2(deal, events))
-    deal_flags.extend(_invariant_p_s3(deal, events))
+    deal_flags.extend(_invariant_p_s3(events))
     deal_flags.extend(_invariant_p_s4(events))
 
     return ValidatorResult(row_flags=row_flags, deal_flags=deal_flags)
@@ -560,6 +561,34 @@ def _invariant_p_r5(events: list[dict], deal: dict) -> list[dict]:
                     f"aliases_observed={sorted(aliases)!r}"
                 ),
             })
+    return flags
+
+
+_BIDDER_TYPE_VALID: frozenset[str] = frozenset({"s", "f", "mixed"})
+
+
+def _invariant_p_r6(events: list[dict]) -> list[dict]:
+    """§P-R6 — `bidder_type`, when present, must be a scalar string in
+    {"s", "f", "mixed"} or null. Any other type (including a nested-object
+    regression to the pre-2026-04-27 {base, non_us, public} schema) or an
+    unknown string value fails hard."""
+    flags: list[dict[str, Any]] = []
+    for i, ev in enumerate(events):
+        bt = ev.get("bidder_type")
+        if bt is None:
+            continue
+        if isinstance(bt, str) and bt in _BIDDER_TYPE_VALID:
+            continue
+        flags.append({
+            "row_index": i,
+            "code": "bidder_type_invalid_value",
+            "severity": "hard",
+            "reason": (
+                f"§P-R6: bidder_type={bt!r} (type {type(bt).__name__!r}) is not a "
+                f"scalar in {{\"s\", \"f\", \"mixed\"}} or null. "
+                f"Nested objects indicate a pre-2026-04-27 schema regression."
+            ),
+        })
     return flags
 
 
@@ -1052,7 +1081,7 @@ def _invariant_p_s2(deal: dict, events: list[dict]) -> list[dict]:
     return []
 
 
-def _invariant_p_s3(deal: dict, events: list[dict]) -> list[dict]:
+def _invariant_p_s3(events: list[dict]) -> list[dict]:
     """§P-S3 — each process_phase contains a terminator event in
     {Executed, Terminated, Auction Closed}.
 

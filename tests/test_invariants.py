@@ -50,6 +50,7 @@ RUNNERS = {
         fixture.get("events", []),
         fixture.get("deal", {}),
     ),
+    "pr6": lambda fixture: pipeline._invariant_p_r6(fixture.get("events", [])),
     "pd1": lambda fixture: pipeline._invariant_p_d1(fixture.get("events", [])),
     "pd2": lambda fixture: pipeline._invariant_p_d2(fixture.get("events", [])),
     "pd3": lambda fixture: pipeline._invariant_p_d3(fixture.get("events", [])),
@@ -65,7 +66,6 @@ RUNNERS = {
         fixture.get("events", []),
     ),
     "ps3": lambda fixture: pipeline._invariant_p_s3(
-        fixture.get("deal", {}),
         fixture.get("events", []),
     ),
     "ps4": lambda fixture: pipeline._invariant_p_s4(fixture.get("events", [])),
@@ -354,6 +354,60 @@ def test_ps4_allows_atomized_executed_rows_in_max_phase():
         {"bid_note": "Executed", "process_phase": 2},
     ])
     assert flags == []
+
+
+def test_ps4_executed_in_non_max_phase_fails_hard():
+    """§P-S4: Executed row in a stale phase (not the max phase) must fire
+    executed_wrong_phase hard — even when there is also a valid Executed
+    row in the max phase."""
+    flags = pipeline._invariant_p_s4([
+        {"bid_note": "NDA", "process_phase": 1},
+        {"bid_note": "Executed", "process_phase": 1},  # wrong phase
+        {"bid_note": "Executed", "process_phase": 2},  # correct max phase
+    ])
+    codes = [f["code"] for f in flags]
+    assert "executed_wrong_phase" in codes, (
+        f"expected hard flag executed_wrong_phase; got {codes}"
+    )
+    severities = {f["code"]: f["severity"] for f in flags}
+    assert severities["executed_wrong_phase"] == "hard"
+
+
+def test_p_r6_rejects_object_bidder_type():
+    """§P-R6: nested-object bidder_type (old pre-2026-04-27 schema) must fail hard."""
+    events = [{
+        "bid_note": "Bid",
+        "bidder_type": {"base": "s", "non_us": True, "public": False},
+    }]
+    flags = pipeline._invariant_p_r6(events)
+    codes = [f["code"] for f in flags]
+    assert "bidder_type_invalid_value" in codes, (
+        f"expected bidder_type_invalid_value; got {codes}"
+    )
+    assert flags[0]["severity"] == "hard"
+
+
+def test_p_r6_rejects_unknown_string():
+    """§P-R6: an out-of-set string like 'x' must fail hard."""
+    events = [{"bid_note": "NDA", "bidder_type": "x"}]
+    flags = pipeline._invariant_p_r6(events)
+    codes = [f["code"] for f in flags]
+    assert "bidder_type_invalid_value" in codes, (
+        f"expected bidder_type_invalid_value for bidder_type='x'; got {codes}"
+    )
+    assert flags[0]["severity"] == "hard"
+
+
+def test_p_r6_accepts_scalar_values():
+    """§P-R6: 's', 'f', 'mixed', and null must all pass without flags."""
+    events = [
+        {"bid_note": "Bid", "bidder_type": "s"},
+        {"bid_note": "Bid", "bidder_type": "f"},
+        {"bid_note": "Bid", "bidder_type": "mixed"},
+        {"bid_note": "NDA", "bidder_type": None},
+    ]
+    flags = pipeline._invariant_p_r6(events)
+    assert flags == [], f"expected no flags; got {flags}"
 
 
 def test_p_g2_range_with_formal_bid_type_fails_hard():

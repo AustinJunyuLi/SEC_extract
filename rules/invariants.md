@@ -80,6 +80,17 @@ judgment calls.
 - **Why.** The canonical-ID model only works if every row's bidder
   identity can be looked up.
 
+### §P-R6 — `bidder_type` scalar value constraint
+- **Check.** For every event row where `bidder_type` is present (not absent /
+  not `null`), `bidder_type` must be a scalar string in `{"s", "f", "mixed"}`.
+  Any other type (including a nested object regression to the pre-2026-04-27
+  `{base, non_us, public}` schema) or any unknown string value fails.
+- **Fail action.** Flag `bidder_type_invalid_value`. Hard.
+- **Why hard.** The 2026-04-27 schema flatten made `bidder_type` a scalar.
+  A nested object or an out-of-set value means the extractor regressed to
+  the old schema or invented a value; either breaks downstream analysis.
+  `null` is the correct representation of "no bidder type recorded".
+
 ---
 
 ## §P-D — Date and sequencing invariants (🟩 RESOLVED, 2026-04-18)
@@ -112,8 +123,9 @@ comparable across deals.
   - Rule 5 → `bidder_id_date_order_violation`.
   - Rule 6 → `bidder_id_same_date_rank_violation`.
 - All **hard**.
-- **Escape hatch.** Rows with `bid_date_precise = null` skip rule 5 and
-  must carry the `event_sequence_by_narrative` info flag.
+- **Escape hatch.** Rows with `bid_date_precise = null` skip rule 5.
+  Such rows are placed by filing narrative order per `rules/dates.md`
+  §A2.
 
 ### §P-D5 — Drop rows require prior engagement in the same phase
 - **Check.** For every row with `bid_note` starting with `"Drop"` (the
@@ -247,7 +259,7 @@ graph tells a coherent M&A-process story.
   means either the extractor assigned `process_phase` incorrectly or the
   phase markers were missed.
 
-### §P-L2 — Stale prior phase must be at least 6 months before main process
+### §P-L2 — Stale prior phase must be at least 180 calendar days before main process
 - **Check.** If the deal contains any `process_phase = 0` rows and any
   `process_phase >= 1` rows with precise dates, then the latest phase-0
   date is at least 180 days before the earliest phase≥1 date.
@@ -312,6 +324,7 @@ graph tells a coherent M&A-process story.
 | §P-R3 | `rules/events.md` §C1 |
 | §P-R4 | `rules/bids.md` §M3 |
 | §P-R5 | `rules/bidders.md` §E3 |
+| §P-R6 | `rules/bidders.md` §F1 |
 | §P-D1 | `rules/dates.md` §B1/§B2 |
 | §P-D2 | `rules/dates.md` §B2/§B3/§B4 |
 | §P-D3 | `rules/dates.md` §A4 |
