@@ -67,10 +67,10 @@ The overrides only exist to make Alex's reference JSONs diffable.
     labelled "Several parties, including Sanofi" (Sanofi + ≥2 unnamed);
     row 6075 is an 8/20 Drop labelled "Several parties" (the same ≥2
     unnamed parties). "Several" is ≥3 in standard English, so we
-    atomize per the universal §E1 rule into: row 6065 → 3 rows (Sanofi reusing her
-    canonical id from her 4/13 Bidder Sale, plus Party A and Party B
+    atomize per the universal §E1 rule into: row 6065 → 3 rows (Sanofi reusing the
+    canonical id from its 4/13 Bidder Sale, plus Party A and Party B
     with fresh canonical ids), row 6075 → 2 Drop rows (Party A + Party
-    B reusing the ids from 6065; Sanofi already has her own 8/20 Drop).
+    B reusing the ids from 6065; Sanofi already has its own 8/20 Drop).
     Placeholder count matches the `≥3 → Sanofi + 2 unnamed` lower
     bound; differing AI counts surface as legitimate diff signal, not
     noise. Each expanded row carries `alex_row_expanded`.

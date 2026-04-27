@@ -373,27 +373,22 @@ def test_ps4_executed_in_non_max_phase_fails_hard():
     assert severities["executed_wrong_phase"] == "hard"
 
 
-def test_p_r6_rejects_object_bidder_type():
-    """§P-R6: nested-object bidder_type (old pre-2026-04-27 schema) must fail hard."""
-    events = [{
-        "bid_note": "Bid",
-        "bidder_type": {"base": "s", "non_us": True, "public": False},
-    }]
+@pytest.mark.parametrize(
+    "bad_bidder_type,label",
+    [
+        ({"base": "s", "non_us": True, "public": False}, "nested_object_pre_2026_04_27"),
+        ("x", "unknown_string"),
+    ],
+)
+def test_p_r6_rejects_invalid_bidder_type(bad_bidder_type, label):
+    """§P-R6: any bidder_type that is not a scalar in {"s","f","mixed"} or
+    null must fail hard. Covers the pre-2026-04-27 nested-object regression
+    and out-of-set string values."""
+    events = [{"bid_note": "Bid", "bidder_type": bad_bidder_type}]
     flags = pipeline._invariant_p_r6(events)
     codes = [f["code"] for f in flags]
     assert "bidder_type_invalid_value" in codes, (
-        f"expected bidder_type_invalid_value; got {codes}"
-    )
-    assert flags[0]["severity"] == "hard"
-
-
-def test_p_r6_rejects_unknown_string():
-    """§P-R6: an out-of-set string like 'x' must fail hard."""
-    events = [{"bid_note": "NDA", "bidder_type": "x"}]
-    flags = pipeline._invariant_p_r6(events)
-    codes = [f["code"] for f in flags]
-    assert "bidder_type_invalid_value" in codes, (
-        f"expected bidder_type_invalid_value for bidder_type='x'; got {codes}"
+        f"[{label}] expected bidder_type_invalid_value; got {codes}"
     )
     assert flags[0]["severity"] == "hard"
 

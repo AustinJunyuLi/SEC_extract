@@ -123,6 +123,10 @@ ROLE_VOCABULARY: frozenset[str] = frozenset({
     "bidder", "advisor_financial", "advisor_legal",
 })
 
+# Mirror of rules/bidders.md §F1 — scalar bidder_type after the 2026-04-27
+# flatten dropped the `non_us` and `public` dimensions. Enforced by §P-R6.
+BIDDER_TYPE_VOCABULARY: frozenset[str] = frozenset({"s", "f", "mixed"})
+
 # Mirror of rules/invariants.md §P-S3 — the only legitimate phase enders.
 PHASE_TERMINATORS: frozenset[str] = frozenset({
     "Executed", "Terminated", "Auction Closed",
@@ -564,9 +568,6 @@ def _invariant_p_r5(events: list[dict], deal: dict) -> list[dict]:
     return flags
 
 
-_BIDDER_TYPE_VALID: frozenset[str] = frozenset({"s", "f", "mixed"})
-
-
 def _invariant_p_r6(events: list[dict]) -> list[dict]:
     """§P-R6 — `bidder_type`, when present, must be a scalar string in
     {"s", "f", "mixed"} or null. Any other type (including a nested-object
@@ -577,7 +578,7 @@ def _invariant_p_r6(events: list[dict]) -> list[dict]:
         bt = ev.get("bidder_type")
         if bt is None:
             continue
-        if isinstance(bt, str) and bt in _BIDDER_TYPE_VALID:
+        if isinstance(bt, str) and bt in BIDDER_TYPE_VOCABULARY:
             continue
         flags.append({
             "row_index": i,
@@ -699,15 +700,15 @@ def _invariant_p_d6(events: list[dict]) -> list[dict]:
         count-bound, not NDA-bound.
       - §M4 stale-prior phase 0 — Bid rows emitted against aborted prior
         processes do not require an NDA.
-      - Rows carrying `unsolicited_first_contact` flag (§D1.a, Class B,
-        iter-4) — the bidder never signs an NDA in this deal; §D1 itself
+      - Rows carrying `unsolicited_first_contact` flag (§D1.a, Class B)
+        — the bidder never signs an NDA in this deal; §D1 itself
         authorizes the NDA-less Bid row.
 
-    Iter-5 removed the `pre_nda_informal_bid` exemption (Class D). §P-D6
-    is existence-only, not ordering — §C4's pre-NDA informal-bid pattern
-    has the bidder signing an NDA LATER in the same phase, so the NDA
-    does exist. The §C4 flag remains (documents the pre-NDA timing), but
-    no validator carve-out is needed.
+    No `pre_nda_informal_bid` exemption is needed. §P-D6 is existence-
+    only, not ordering — §C4's pre-NDA informal-bid pattern has the
+    bidder signing an NDA LATER in the same phase, so the NDA does
+    exist. The §C4 flag remains (documents the pre-NDA timing), but no
+    validator carve-out is needed.
     """
     flags: list[dict[str, Any]] = []
     # Build NDA index by (bidder_name, phase).
@@ -1085,14 +1086,13 @@ def _invariant_p_s3(events: list[dict]) -> list[dict]:
     """§P-S3 — each process_phase contains a terminator event in
     {Executed, Terminated, Auction Closed}.
 
-    Iter-5 simplification. The previous iter-4 form checked the LITERAL
-    LAST ROW after §A2/§A3 canonical sort. That interpretation was too
-    strict in three distinct cases:
+    The relaxed form (this implementation) accepts any terminator in
+    the phase, not the literal last row. The strict "literal last row"
+    interpretation was too narrow in three cases:
 
     1. **Go-shop trailing activity.** Post-Executed go-shop rows (new
        NDAs, IOIs, Drops during the go-shop window) trail the Executed
-       row and pushed "last row" past the terminator. Iter-4 added a
-       narrow `deal.go_shop_days > 0` carve-out.
+       row and push "last row" past the terminator.
 
     2. **§A3 rank inversions on stale priors.** §A3 places Terminated
        at rank 2 (Process start/restart) and Drop at rank 8 (Dropouts).
@@ -1102,9 +1102,9 @@ def _invariant_p_s3(events: list[dict]) -> list[dict]:
     3. **Null-dated §E3 placeholder rows.** Count-audit placeholders
        (e.g., mac-gray's 16 unnamed financial NDAs + 16 implicit Drops
        emitted from "over the next two months, 20 bidders signed NDAs")
-       sort AFTER all dated rows, trailing the Executed row. Even with
-       dated placeholders via §B4 range-collapse, they often still
-       land after Executed in narrative order.
+       sort AFTER all dated rows, trailing the Executed row. Dated
+       placeholders via §B4 range-collapse often still land after
+       Executed in narrative order.
 
     All three are cases where the phase DOES contain a terminator; the
     "literal last row" interpretation was conflating "last row" with
