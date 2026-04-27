@@ -3,7 +3,6 @@
     "slug": "petsmart-inc",
     "TargetName": "PETSMART INC",
     "Acquirer": "BC Partners, Inc.",
-    "Acquirer_legal": "Argos Holdings Inc.",
     "DateAnnounced": "2014-12-14",
     "DateEffective": "2015-03-11",
     "DateFiled": "2015-02-02",
@@ -136,13 +135,48 @@
           "Bidder 3"
         ],
         "first_appearance_row_index": 44
+      },
+      "bidder_18": {
+        "resolved_name": "BC Partners, Inc.",
+        "aliases_observed": [
+          "BC Partners, Inc."
+        ],
+        "first_appearance_row_index": 51
+      },
+      "bidder_19": {
+        "resolved_name": "La Caisse",
+        "aliases_observed": [
+          "La Caisse"
+        ],
+        "first_appearance_row_index": 52
+      },
+      "bidder_20": {
+        "resolved_name": "GIC Pte Ltd",
+        "aliases_observed": [
+          "GIC Pte Ltd"
+        ],
+        "first_appearance_row_index": 53
+      },
+      "bidder_21": {
+        "resolved_name": "StepStone Group",
+        "aliases_observed": [
+          "StepStone Group"
+        ],
+        "first_appearance_row_index": 54
+      },
+      "bidder_22": {
+        "resolved_name": "Longview Asset Management",
+        "aliases_observed": [
+          "Longview Asset Management"
+        ],
+        "first_appearance_row_index": 55
       }
     },
     "deal_flags": [
       {
-        "code": "acquirer_overridden_per_q6",
+        "code": "acquirer_normalized",
         "severity": "info",
-        "reason": "\u00a7Q6 (per \u00a7N4): xlsx Acquirer='BC Partners, Inc., La Caisse de d\u00e9p\u00f4t et placement du Qu\u00e9bec, affiliates of GIC Special Investments Pte Ltd, affiliates of StepStone Group LP and Longview Asset Management, LLC'; overridden to operating='BC Partners, Inc.' with legal shell Acquirer_legal='Argos Holdings Inc.'. PE consortium / club deal: Buyer Group = BC Partners, La Caisse, GIC, StepStone, Longview. Per \u00a7N4 rule 5 the operating Acquirer is the lead sponsor (BC Partners)."
+        "reason": "\u00a7Q6: xlsx Acquirer='BC Partners, Inc., La Caisse de d\u00e9p\u00f4t et placement du Qu\u00e9bec, affiliates of GIC Special Investments Pte Ltd, affiliates of StepStone Group LP and Longview Asset Management, LLC' normalized to operating acquirer 'BC Partners, Inc.' per Alex 2026-04-27 directive."
       },
       {
         "code": "bidder_ids_renumbered_per_a1",
@@ -303,11 +337,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Unnamed party 1",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -336,11 +366,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Unnamed party 2",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -369,11 +395,7 @@
       "role": "bidder",
       "bidder_name": "bidder_04",
       "bidder_alias": "Unnamed party 3",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -402,11 +424,7 @@
       "role": "bidder",
       "bidder_name": "bidder_05",
       "bidder_alias": "Unnamed party 4",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -435,11 +453,7 @@
       "role": "bidder",
       "bidder_name": "bidder_06",
       "bidder_alias": "Unnamed party 5",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -468,11 +482,7 @@
       "role": "bidder",
       "bidder_name": "bidder_07",
       "bidder_alias": "Unnamed party 6",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -501,11 +511,7 @@
       "role": "bidder",
       "bidder_name": "bidder_08",
       "bidder_alias": "Unnamed party 7",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -534,11 +540,7 @@
       "role": "bidder",
       "bidder_name": "bidder_09",
       "bidder_alias": "Unnamed party 8",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -567,11 +569,7 @@
       "role": "bidder",
       "bidder_name": "bidder_10",
       "bidder_alias": "Unnamed party 9",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -600,11 +598,7 @@
       "role": "bidder",
       "bidder_name": "bidder_11",
       "bidder_alias": "Unnamed party 10",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -633,11 +627,7 @@
       "role": "bidder",
       "bidder_name": "bidder_12",
       "bidder_alias": "Unnamed party 11",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -666,11 +656,7 @@
       "role": "bidder",
       "bidder_name": "bidder_13",
       "bidder_alias": "Unnamed party 12",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -699,11 +685,7 @@
       "role": "bidder",
       "bidder_name": "bidder_14",
       "bidder_alias": "Bidder 1",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -732,11 +714,7 @@
       "role": "bidder",
       "bidder_name": "bidder_15",
       "bidder_alias": "Bidder 2",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -765,11 +743,7 @@
       "role": "bidder",
       "bidder_name": "bidder_16",
       "bidder_alias": "Buyer Group",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -827,11 +801,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Unnamed party 1",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-30",
@@ -860,11 +830,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Unnamed party 2",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-30",
@@ -893,11 +859,7 @@
       "role": "bidder",
       "bidder_name": "bidder_04",
       "bidder_alias": "Unnamed party 3",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-30",
@@ -926,11 +888,7 @@
       "role": "bidder",
       "bidder_name": "bidder_16",
       "bidder_alias": "Buyer Group",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-30",
@@ -959,11 +917,7 @@
       "role": "bidder",
       "bidder_name": "bidder_05",
       "bidder_alias": "Unnamed party 4",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-30",
@@ -992,11 +946,7 @@
       "role": "bidder",
       "bidder_name": "bidder_15",
       "bidder_alias": "Bidder 2",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-30",
@@ -1025,11 +975,7 @@
       "role": "bidder",
       "bidder_name": "bidder_15",
       "bidder_alias": "Bidder 2",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-30",
@@ -1058,11 +1004,7 @@
       "role": "bidder",
       "bidder_name": "bidder_06",
       "bidder_alias": "Unnamed party 5",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2014-10-30",
@@ -1091,11 +1033,7 @@
       "role": "bidder",
       "bidder_name": "bidder_07",
       "bidder_alias": "Unnamed party 6",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2014-10-30",
@@ -1124,11 +1062,7 @@
       "role": "bidder",
       "bidder_name": "bidder_08",
       "bidder_alias": "Unnamed party 7",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2014-10-30",
@@ -1157,11 +1091,7 @@
       "role": "bidder",
       "bidder_name": "bidder_09",
       "bidder_alias": "Unnamed party 8",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2014-10-30",
@@ -1190,11 +1120,7 @@
       "role": "bidder",
       "bidder_name": "bidder_10",
       "bidder_alias": "Unnamed party 9",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2014-10-30",
@@ -1223,11 +1149,7 @@
       "role": "bidder",
       "bidder_name": "bidder_11",
       "bidder_alias": "Unnamed party 10",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2014-10-30",
@@ -1256,11 +1178,7 @@
       "role": "bidder",
       "bidder_name": "bidder_12",
       "bidder_alias": "Unnamed party 11",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2014-10-30",
@@ -1289,11 +1207,7 @@
       "role": "bidder",
       "bidder_name": "bidder_13",
       "bidder_alias": "Unnamed party 12",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2014-10-30",
@@ -1322,11 +1236,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Unnamed party 2",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "DropTarget",
       "bid_type": null,
       "bid_date_precise": null,
@@ -1355,11 +1265,7 @@
       "role": "bidder",
       "bidder_name": "bidder_04",
       "bidder_alias": "Unnamed party 3",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "DropTarget",
       "bid_type": null,
       "bid_date_precise": null,
@@ -1446,11 +1352,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Unnamed party 1",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2014-11-03",
@@ -1479,11 +1381,7 @@
       "role": "bidder",
       "bidder_name": "bidder_05",
       "bidder_alias": "Unnamed party 4",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": null,
@@ -1541,11 +1439,7 @@
       "role": "bidder",
       "bidder_name": "bidder_17",
       "bidder_alias": "Bidder 3",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-12-10",
@@ -1574,11 +1468,7 @@
       "role": "bidder",
       "bidder_name": "bidder_16",
       "bidder_alias": "Buyer Group",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2014-12-10",
@@ -1607,11 +1497,7 @@
       "role": "bidder",
       "bidder_name": "bidder_15",
       "bidder_alias": "Bidder 2",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2014-12-10",
@@ -1640,11 +1526,7 @@
       "role": "bidder",
       "bidder_name": "bidder_15",
       "bidder_alias": "Bidder 2",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2014-12-12",
@@ -1673,11 +1555,7 @@
       "role": "bidder",
       "bidder_name": "bidder_16",
       "bidder_alias": "Buyer Group",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2014-12-12",
@@ -1706,11 +1584,7 @@
       "role": "bidder",
       "bidder_name": "bidder_16",
       "bidder_alias": "Buyer Group",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2014-12-12",
@@ -1761,6 +1635,206 @@
       "additional_note": null,
       "comments": null,
       "flags": []
+    },
+    {
+      "BidderID": 51,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_18",
+      "bidder_alias": "BC Partners, Inc.",
+      "bidder_type": "f",
+      "bid_note": "Executed",
+      "bid_type": null,
+      "bid_date_precise": "2014-12-14",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "executed_synthesized_per_q7",
+          "severity": "info",
+          "reason": "\u00a7Q7: petsmart-inc xlsx lacked an Executed row; synthesized from the final Buyer Group bid using the merger-agreement signature date 2014-12-14."
+        },
+        {
+          "code": "executed_atomized",
+          "severity": "info",
+          "reason": "\u00a7Q7 (per \u00a7E1+\u00a7E2.b 2026-04-27): synthesized Executed row alias='Buyer Group' atomized to member 1/5 = 'BC Partners, Inc.'."
+        }
+      ]
+    },
+    {
+      "BidderID": 52,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_19",
+      "bidder_alias": "La Caisse",
+      "bidder_type": "f",
+      "bid_note": "Executed",
+      "bid_type": null,
+      "bid_date_precise": "2014-12-14",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "executed_synthesized_per_q7",
+          "severity": "info",
+          "reason": "\u00a7Q7: petsmart-inc xlsx lacked an Executed row; synthesized from the final Buyer Group bid using the merger-agreement signature date 2014-12-14."
+        },
+        {
+          "code": "executed_atomized",
+          "severity": "info",
+          "reason": "\u00a7Q7 (per \u00a7E1+\u00a7E2.b 2026-04-27): synthesized Executed row alias='Buyer Group' atomized to member 2/5 = 'La Caisse'."
+        }
+      ]
+    },
+    {
+      "BidderID": 53,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_20",
+      "bidder_alias": "GIC Pte Ltd",
+      "bidder_type": "f",
+      "bid_note": "Executed",
+      "bid_type": null,
+      "bid_date_precise": "2014-12-14",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "executed_synthesized_per_q7",
+          "severity": "info",
+          "reason": "\u00a7Q7: petsmart-inc xlsx lacked an Executed row; synthesized from the final Buyer Group bid using the merger-agreement signature date 2014-12-14."
+        },
+        {
+          "code": "executed_atomized",
+          "severity": "info",
+          "reason": "\u00a7Q7 (per \u00a7E1+\u00a7E2.b 2026-04-27): synthesized Executed row alias='Buyer Group' atomized to member 3/5 = 'GIC Pte Ltd'."
+        }
+      ]
+    },
+    {
+      "BidderID": 54,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_21",
+      "bidder_alias": "StepStone Group",
+      "bidder_type": "f",
+      "bid_note": "Executed",
+      "bid_type": null,
+      "bid_date_precise": "2014-12-14",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "executed_synthesized_per_q7",
+          "severity": "info",
+          "reason": "\u00a7Q7: petsmart-inc xlsx lacked an Executed row; synthesized from the final Buyer Group bid using the merger-agreement signature date 2014-12-14."
+        },
+        {
+          "code": "executed_atomized",
+          "severity": "info",
+          "reason": "\u00a7Q7 (per \u00a7E1+\u00a7E2.b 2026-04-27): synthesized Executed row alias='Buyer Group' atomized to member 4/5 = 'StepStone Group'."
+        }
+      ]
+    },
+    {
+      "BidderID": 55,
+      "process_phase": null,
+      "role": "bidder",
+      "bidder_name": "bidder_22",
+      "bidder_alias": "Longview Asset Management",
+      "bidder_type": "f",
+      "bid_note": "Executed",
+      "bid_type": null,
+      "bid_date_precise": "2014-12-14",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "executed_synthesized_per_q7",
+          "severity": "info",
+          "reason": "\u00a7Q7: petsmart-inc xlsx lacked an Executed row; synthesized from the final Buyer Group bid using the merger-agreement signature date 2014-12-14."
+        },
+        {
+          "code": "executed_atomized",
+          "severity": "info",
+          "reason": "\u00a7Q7 (per \u00a7E1+\u00a7E2.b 2026-04-27): synthesized Executed row alias='Buyer Group' atomized to member 5/5 = 'Longview Asset Management'."
+        }
+      ]
     }
   ]
 }

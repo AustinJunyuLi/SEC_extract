@@ -3,7 +3,6 @@
     "slug": "zep",
     "TargetName": "ZEP INC",
     "Acquirer": "New Mountain Capital",
-    "Acquirer_legal": "NM Z Parent Inc.",
     "DateAnnounced": "2015-04-08",
     "DateEffective": "2015-06-26",
     "DateFiled": "2015-05-26",
@@ -82,9 +81,9 @@
     },
     "deal_flags": [
       {
-        "code": "acquirer_overridden_per_q6",
+        "code": "acquirer_normalized",
         "severity": "info",
-        "reason": "\u00a7Q6 (per \u00a7N4): xlsx Acquirer='NEW MOUNTAIN CAPITAL'; overridden to operating='New Mountain Capital' with legal shell Acquirer_legal='NM Z Parent Inc.'. PE sponsor as operating acquirer: New Mountain Capital (fund) is also the operating buyer; merger executed via the NM Z Parent shell. Per \u00a7N4 rule 3."
+        "reason": "\u00a7Q6: xlsx Acquirer='NEW MOUNTAIN CAPITAL' normalized to operating acquirer 'New Mountain Capital' per Alex 2026-04-27 directive."
       },
       {
         "code": "bidder_ids_renumbered_per_a1",
@@ -158,11 +157,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "24 parties",
-      "bidder_type": {
-        "base": "mixed",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "mixed",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -220,11 +215,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "New Mountain Capital",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2014-03-19",
@@ -478,11 +469,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "New Mountain Capital",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2014-04-14",
@@ -598,11 +585,7 @@
       "role": "bidder",
       "bidder_name": "bidder_06",
       "bidder_alias": "Party X",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-05-09",
@@ -631,11 +614,7 @@
       "role": "bidder",
       "bidder_name": "bidder_06",
       "bidder_alias": "Party X",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2014-05-14",
@@ -722,11 +701,7 @@
       "role": "bidder",
       "bidder_name": "bidder_07",
       "bidder_alias": "Party Y",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -755,11 +730,7 @@
       "role": "bidder",
       "bidder_name": "bidder_07",
       "bidder_alias": "Party Y",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-05-20",
@@ -817,11 +788,7 @@
       "role": "bidder",
       "bidder_name": "bidder_07",
       "bidder_alias": "Party Y",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": null,
@@ -850,11 +817,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "New Mountain Capital",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2015-02-10",
@@ -883,11 +846,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "New Mountain Capital",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2015-02-26",
@@ -922,11 +881,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "New Mountain Capital",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2015-03-29",
@@ -955,11 +910,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "New Mountain Capital",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Executed",
       "bid_type": null,
       "bid_date_precise": null,
@@ -980,7 +931,13 @@
       "process_conditions_note": null,
       "additional_note": null,
       "comments": null,
-      "flags": []
+      "flags": [
+        {
+          "code": "executed_atomized",
+          "severity": "info",
+          "reason": "\u00a7Q7 (per \u00a7E1+\u00a7E2.b 2026-04-27): xlsx Executed row alias='New Mountain Capital' atomized to member 1/1 = 'New Mountain Capital'."
+        }
+      ]
     }
   ]
 }

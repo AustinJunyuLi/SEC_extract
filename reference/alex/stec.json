@@ -3,7 +3,6 @@
     "slug": "stec",
     "TargetName": "S T E C INC",
     "Acquirer": "WESTERN DIGITAL CORP",
-    "Acquirer_legal": null,
     "DateAnnounced": "2013-06-24",
     "DateEffective": "2013-09-12",
     "DateFiled": "2013-08-08",
@@ -119,11 +118,7 @@
       "role": "bidder",
       "bidder_name": "bidder_01",
       "bidder_alias": "Company B",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bidder Interest",
       "bid_type": null,
       "bid_date_precise": "2013-04-04",
@@ -152,11 +147,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Company D",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bidder Interest",
       "bid_type": null,
       "bid_date_precise": "2013-04-04",
@@ -185,11 +176,7 @@
       "role": "bidder",
       "bidder_name": "bidder_04",
       "bidder_alias": "Company E",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2013-04-04",
@@ -218,11 +205,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Company D",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2013-04-10",
@@ -251,11 +234,7 @@
       "role": "bidder",
       "bidder_name": "bidder_05",
       "bidder_alias": "Company F",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2013-04-11",
@@ -284,11 +263,7 @@
       "role": "bidder",
       "bidder_name": "bidder_06",
       "bidder_alias": "Company G",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2013-04-17",
@@ -317,11 +292,7 @@
       "role": "bidder",
       "bidder_name": "bidder_07",
       "bidder_alias": "WDC",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2013-04-17",
@@ -379,11 +350,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Company D",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2013-04-23",
@@ -441,11 +408,7 @@
       "role": "bidder",
       "bidder_name": "bidder_05",
       "bidder_alias": "Company F",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "DropTarget",
       "bid_type": null,
       "bid_date_precise": "2013-04-24",
@@ -474,11 +437,7 @@
       "role": "bidder",
       "bidder_name": "bidder_04",
       "bidder_alias": "Company E",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "DropTarget",
       "bid_type": null,
       "bid_date_precise": "2013-04-24",
@@ -507,11 +466,7 @@
       "role": "bidder",
       "bidder_name": "bidder_07",
       "bidder_alias": "WDC",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2013-05-03",
@@ -540,11 +495,7 @@
       "role": "bidder",
       "bidder_name": "bidder_06",
       "bidder_alias": "Company G",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2013-05-03",
@@ -573,11 +524,7 @@
       "role": "bidder",
       "bidder_name": "bidder_08",
       "bidder_alias": "Company H",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2013-05-08",
@@ -606,11 +553,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Company D",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2013-05-10",
@@ -639,11 +582,7 @@
       "role": "bidder",
       "bidder_name": "bidder_08",
       "bidder_alias": "Company H",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2013-05-15",
@@ -788,11 +727,7 @@
       "role": "bidder",
       "bidder_name": "bidder_08",
       "bidder_alias": "Company H",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2013-05-23",
@@ -821,11 +756,7 @@
       "role": "bidder",
       "bidder_name": "bidder_07",
       "bidder_alias": "WDC",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2013-05-28",
@@ -854,11 +785,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Company D",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2013-06-05",
@@ -887,11 +814,7 @@
       "role": "bidder",
       "bidder_name": "bidder_07",
       "bidder_alias": "WDC",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2013-06-10",
@@ -920,11 +843,7 @@
       "role": "bidder",
       "bidder_name": "bidder_07",
       "bidder_alias": "WDC",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2013-06-14",
@@ -953,11 +872,7 @@
       "role": "bidder",
       "bidder_name": "bidder_07",
       "bidder_alias": "WDC",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Executed",
       "bid_type": null,
       "bid_date_precise": "2013-06-14",

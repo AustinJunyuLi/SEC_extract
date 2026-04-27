@@ -3,7 +3,6 @@
     "slug": "penford",
     "TargetName": "PENFORD CORP",
     "Acquirer": "INGREDION INC",
-    "Acquirer_legal": null,
     "DateAnnounced": "2014-10-15",
     "DateEffective": "2015-03-11",
     "DateFiled": "2014-12-29",
@@ -83,11 +82,7 @@
       "role": "bidder",
       "bidder_name": "bidder_01",
       "bidder_alias": "1 party",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -116,11 +111,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "A diffferent party",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -149,11 +140,7 @@
       "role": "bidder",
       "bidder_name": "bidder_01",
       "bidder_alias": "1 party",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": null,
@@ -182,11 +169,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "A diffferent party",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": null,
@@ -215,11 +198,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Ingredion",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bidder Interest",
       "bid_type": null,
       "bid_date_precise": "2014-07-20",
@@ -248,11 +227,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Ingredion",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2014-07-20",
@@ -281,11 +256,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Ingredion",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-08-06",
@@ -314,11 +285,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Ingredion",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-08-10",
@@ -376,11 +343,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Ingredion",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2014-08-21",
@@ -409,11 +372,7 @@
       "role": "bidder",
       "bidder_name": "bidder_05",
       "bidder_alias": "Party C",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2014-09-15",
@@ -442,11 +401,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Ingredion",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-09-17",
@@ -475,11 +430,7 @@
       "role": "bidder",
       "bidder_name": "bidder_06",
       "bidder_alias": "Party D",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2014-09-23",
@@ -508,11 +459,7 @@
       "role": "bidder",
       "bidder_name": "bidder_07",
       "bidder_alias": "Party A",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2014-09-30",
@@ -570,11 +517,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Ingredion",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-02",
@@ -603,11 +546,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Ingredion",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-02",
@@ -636,11 +575,7 @@
       "role": "bidder",
       "bidder_name": "bidder_07",
       "bidder_alias": "Party A",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-03",
@@ -669,11 +604,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Ingredion",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2014-10-08",
@@ -702,11 +633,7 @@
       "role": "bidder",
       "bidder_name": "bidder_06",
       "bidder_alias": "Party D",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2014-10-08",
@@ -735,11 +662,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Ingredion",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Executed",
       "bid_type": null,
       "bid_date_precise": "2014-10-08",
@@ -768,11 +691,7 @@
       "role": "bidder",
       "bidder_name": "bidder_07",
       "bidder_alias": "Party A",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-13",
@@ -801,11 +720,7 @@
       "role": "bidder",
       "bidder_name": "bidder_07",
       "bidder_alias": "Party A",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2014-10-14",
@@ -834,11 +749,7 @@
       "role": "bidder",
       "bidder_name": "bidder_07",
       "bidder_alias": "Party A",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2014-10-14",
@@ -867,11 +778,7 @@
       "role": "bidder",
       "bidder_name": "bidder_05",
       "bidder_alias": "Party C",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2014-10-14",

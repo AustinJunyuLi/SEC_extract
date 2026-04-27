@@ -3,7 +3,6 @@
     "slug": "mac-gray",
     "TargetName": "MAC GRAY CORP",
     "Acquirer": "CSC ServiceWorks, Inc.",
-    "Acquirer_legal": "Spin Holdco Inc.",
     "DateAnnounced": "2013-10-15",
     "DateEffective": "2014-01-09",
     "DateFiled": "2013-12-04",
@@ -59,13 +58,27 @@
           "CSC/Pamplona"
         ],
         "first_appearance_row_index": 11
+      },
+      "bidder_07": {
+        "resolved_name": "CSC ServiceWorks, Inc.",
+        "aliases_observed": [
+          "CSC ServiceWorks, Inc."
+        ],
+        "first_appearance_row_index": 32
+      },
+      "bidder_08": {
+        "resolved_name": "Pamplona Capital Partners",
+        "aliases_observed": [
+          "Pamplona Capital Partners"
+        ],
+        "first_appearance_row_index": 33
       }
     },
     "deal_flags": [
       {
-        "code": "acquirer_overridden_per_q6",
+        "code": "acquirer_normalized",
         "severity": "info",
-        "reason": "\u00a7Q6 (per \u00a7N4): xlsx Acquirer='CSC purchased by Pamplona in May/2013'; overridden to operating='CSC ServiceWorks, Inc.' with legal shell Acquirer_legal='Spin Holdco Inc.'. Sponsor-backed corporate buyer: CSC ServiceWorks operates the laundry business; Pamplona Capital Partners is the funding sponsor (documented on the Executed row's additional_note per \u00a7N4 rule 4)."
+        "reason": "\u00a7Q6: xlsx Acquirer='CSC purchased by Pamplona in May/2013' normalized to operating acquirer 'CSC ServiceWorks, Inc.' per Alex 2026-04-27 directive."
       },
       {
         "code": "bidder_ids_renumbered_per_a1",
@@ -81,11 +94,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Party A",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Target Interest",
       "bid_type": null,
       "bid_date_precise": null,
@@ -201,11 +210,7 @@
       "role": "bidder",
       "bidder_name": "bidder_05",
       "bidder_alias": "Party C",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2013-06-20",
@@ -234,11 +239,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Party A",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bidder Sale",
       "bid_type": null,
       "bid_date_precise": "2013-06-21",
@@ -296,11 +297,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "16 financial bidders",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -329,11 +326,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Party A",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2013-06-21",
@@ -362,11 +355,7 @@
       "role": "bidder",
       "bidder_name": "bidder_04",
       "bidder_alias": "Party B",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2013-06-28",
@@ -395,11 +384,7 @@
       "role": "bidder",
       "bidder_name": "bidder_06",
       "bidder_alias": "CSC/Pamplona",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2013-07-11",
@@ -428,11 +413,7 @@
       "role": "bidder",
       "bidder_name": "bidder_06",
       "bidder_alias": "CSC/Pamplona",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2013-07-23",
@@ -490,11 +471,7 @@
       "role": "bidder",
       "bidder_name": "bidder_04",
       "bidder_alias": "Party B",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2013-07-24",
@@ -523,11 +500,7 @@
       "role": "bidder",
       "bidder_name": "bidder_05",
       "bidder_alias": "Party C",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2013-07-24",
@@ -585,11 +558,7 @@
       "role": "bidder",
       "bidder_name": "bidder_05",
       "bidder_alias": "Party C",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2013-07-25",
@@ -618,11 +587,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "16 financial bidders",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2013-07-25",
@@ -651,11 +616,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Party A",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2013-08-05",
@@ -684,11 +645,7 @@
       "role": "bidder",
       "bidder_name": "bidder_06",
       "bidder_alias": "CSC/Pamplona",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2013-09-09",
@@ -717,11 +674,7 @@
       "role": "bidder",
       "bidder_name": "bidder_04",
       "bidder_alias": "Party B",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2013-09-09",
@@ -779,11 +732,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Party A",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2013-09-10",
@@ -812,11 +761,7 @@
       "role": "bidder",
       "bidder_name": "bidder_05",
       "bidder_alias": "Party C",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2013-09-10",
@@ -901,13 +846,44 @@
       "BidderID": 27,
       "process_phase": null,
       "role": "bidder",
+      "bidder_name": "bidder_02",
+      "bidder_alias": "Party A",
+      "bidder_type": "s",
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_date_precise": "2013-09-18",
+      "bid_date_rough": null,
+      "bid_value": 18,
+      "bid_value_pershare": 18,
+      "bid_value_lower": 18,
+      "bid_value_upper": 19,
+      "bid_value_unit": "USD_per_share",
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": null,
+      "flags": [
+        {
+          "code": "range_forced_informal_per_g1",
+          "severity": "info",
+          "reason": "\u00a7G1+\u00a7G2 (2026-04-27): xlsx bid_type='formal' on a true range (18..19) forced to 'informal'."
+        }
+      ]
+    },
+    {
+      "BidderID": 28,
+      "process_phase": null,
+      "role": "bidder",
       "bidder_name": "bidder_06",
       "bidder_alias": "CSC/Pamplona",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2013-09-18",
@@ -931,49 +907,12 @@
       "flags": []
     },
     {
-      "BidderID": 28,
-      "process_phase": null,
-      "role": "bidder",
-      "bidder_name": "bidder_02",
-      "bidder_alias": "Party A",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
-      "bid_note": "Bid",
-      "bid_type": "formal",
-      "bid_date_precise": "2013-09-18",
-      "bid_date_rough": null,
-      "bid_value": 18,
-      "bid_value_pershare": 18,
-      "bid_value_lower": 18,
-      "bid_value_upper": 19,
-      "bid_value_unit": "USD_per_share",
-      "cash_per_share": null,
-      "stock_per_share": null,
-      "contingent_per_share": null,
-      "consideration_components": null,
-      "aggregate_basis": null,
-      "exclusivity_days": null,
-      "financing_contingent": null,
-      "highly_confident_letter": false,
-      "process_conditions_note": null,
-      "additional_note": null,
-      "comments": null,
-      "flags": []
-    },
-    {
       "BidderID": 29,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_04",
       "bidder_alias": "Party B",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2013-09-18",
@@ -1002,11 +941,7 @@
       "role": "bidder",
       "bidder_name": "bidder_05",
       "bidder_alias": "Party C",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2013-09-18",
@@ -1035,11 +970,7 @@
       "role": "bidder",
       "bidder_name": "bidder_06",
       "bidder_alias": "CSC/Pamplona",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2013-09-21",
@@ -1066,13 +997,9 @@
       "BidderID": 32,
       "process_phase": null,
       "role": "bidder",
-      "bidder_name": "bidder_06",
-      "bidder_alias": "CSC/Pamplona",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_name": "bidder_07",
+      "bidder_alias": "CSC ServiceWorks, Inc.",
+      "bidder_type": "s",
       "bid_note": "Executed",
       "bid_type": null,
       "bid_date_precise": "2013-09-21",
@@ -1095,6 +1022,11 @@
       "comments": "Exclusivity 2 weeks",
       "flags": [
         {
+          "code": "executed_atomized",
+          "severity": "info",
+          "reason": "\u00a7Q7 (per \u00a7E1+\u00a7E2.b 2026-04-27): xlsx Executed row alias='CSC/Pamplona' atomized to member 1/2 = 'CSC ServiceWorks, Inc.'."
+        },
+        {
           "code": "bidder_id_renumbered_from_alex",
           "severity": "info",
           "reason": "xlsx row 6960 flagged in alex_flagged_rows.json (original BidderID=21); renumbered to 32"
@@ -1105,13 +1037,49 @@
       "BidderID": 33,
       "process_phase": null,
       "role": "bidder",
+      "bidder_name": "bidder_08",
+      "bidder_alias": "Pamplona Capital Partners",
+      "bidder_type": "s",
+      "bid_note": "Executed",
+      "bid_type": null,
+      "bid_date_precise": "2013-09-21",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "cash_per_share": null,
+      "stock_per_share": null,
+      "contingent_per_share": null,
+      "consideration_components": null,
+      "aggregate_basis": null,
+      "exclusivity_days": null,
+      "financing_contingent": null,
+      "highly_confident_letter": false,
+      "process_conditions_note": null,
+      "additional_note": null,
+      "comments": "Exclusivity 2 weeks",
+      "flags": [
+        {
+          "code": "executed_atomized",
+          "severity": "info",
+          "reason": "\u00a7Q7 (per \u00a7E1+\u00a7E2.b 2026-04-27): xlsx Executed row alias='CSC/Pamplona' atomized to member 2/2 = 'Pamplona Capital Partners'."
+        },
+        {
+          "code": "bidder_id_renumbered_from_alex",
+          "severity": "info",
+          "reason": "xlsx row 6960 flagged in alex_flagged_rows.json (original BidderID=21); renumbered to 33"
+        }
+      ]
+    },
+    {
+      "BidderID": 34,
+      "process_phase": null,
+      "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Party A",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "DropTarget",
       "bid_type": null,
       "bid_date_precise": "2013-09-24",
@@ -1135,16 +1103,12 @@
       "flags": []
     },
     {
-      "BidderID": 34,
+      "BidderID": 35,
       "process_phase": null,
       "role": "bidder",
       "bidder_name": "bidder_04",
       "bidder_alias": "Party B",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "DropTarget",
       "bid_type": null,
       "bid_date_precise": "2013-09-24",

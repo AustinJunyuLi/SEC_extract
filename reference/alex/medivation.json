@@ -3,7 +3,6 @@
     "slug": "medivation",
     "TargetName": "MEDIVATION INC",
     "Acquirer": "PFIZER INC",
-    "Acquirer_legal": null,
     "DateAnnounced": "2016-08-22",
     "DateEffective": "2016-09-28",
     "DateFiled": "2016-08-30",
@@ -69,11 +68,7 @@
       "role": "bidder",
       "bidder_name": "bidder_01",
       "bidder_alias": "Sanofi",
-      "bidder_type": {
-        "base": "s",
-        "non_us": true,
-        "public": true
-      },
+      "bidder_type": "s",
       "bid_note": "Bidder Sale",
       "bid_type": null,
       "bid_date_precise": "2016-04-13",
@@ -131,11 +126,7 @@
       "role": "bidder",
       "bidder_name": "bidder_01",
       "bidder_alias": "Sanofi",
-      "bidder_type": {
-        "base": "s",
-        "non_us": true,
-        "public": true
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-04-13",
@@ -193,11 +184,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Pfizer",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2016-06-29",
@@ -226,11 +213,7 @@
       "role": "bidder",
       "bidder_name": "bidder_01",
       "bidder_alias": "Sanofi",
-      "bidder_type": {
-        "base": "s",
-        "non_us": true,
-        "public": true
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -350,11 +333,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Pfizer",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-08-08",
@@ -511,11 +490,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Pfizer",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2016-08-19",
@@ -544,11 +519,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Pfizer",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2016-08-20",
@@ -577,11 +548,7 @@
       "role": "bidder",
       "bidder_name": "bidder_01",
       "bidder_alias": "Sanofi",
-      "bidder_type": {
-        "base": "s",
-        "non_us": true,
-        "public": true
-      },
+      "bidder_type": "s",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2016-08-20",
@@ -690,11 +657,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Pfizer",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Executed",
       "bid_type": null,
       "bid_date_precise": "2016-08-20",

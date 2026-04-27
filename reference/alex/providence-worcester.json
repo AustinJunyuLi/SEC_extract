@@ -3,7 +3,6 @@
     "slug": "providence-worcester",
     "TargetName": "PROVIDENCE & WORCESTER RR CO",
     "Acquirer": "GENESEE & WYOMING INC",
-    "Acquirer_legal": null,
     "DateAnnounced": "2016-08-15",
     "DateEffective": "2016-11-01",
     "DateFiled": "2016-09-20",
@@ -132,11 +131,7 @@
       "role": "bidder",
       "bidder_name": "bidder_04",
       "bidder_alias": "G&W",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2016-04-13",
@@ -229,11 +224,7 @@
       "role": "bidder",
       "bidder_name": "bidder_08",
       "bidder_alias": "Party C",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -320,11 +311,7 @@
       "role": "bidder",
       "bidder_name": "bidder_08",
       "bidder_alias": "Party C",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-07-12",
@@ -353,11 +340,7 @@
       "role": "bidder",
       "bidder_name": "bidder_10",
       "bidder_alias": "Party E",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-07-20",
@@ -386,11 +369,7 @@
       "role": "bidder",
       "bidder_name": "bidder_11",
       "bidder_alias": "Party D",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-07-20",
@@ -419,11 +398,7 @@
       "role": "bidder",
       "bidder_name": "bidder_08",
       "bidder_alias": "Party C",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-07-20",
@@ -452,11 +427,7 @@
       "role": "bidder",
       "bidder_name": "bidder_12",
       "bidder_alias": "Party F",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-07-20",
@@ -485,11 +456,7 @@
       "role": "bidder",
       "bidder_name": "bidder_09",
       "bidder_alias": "Party B",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2016-07-20",
@@ -547,11 +514,7 @@
       "role": "bidder",
       "bidder_name": "bidder_09",
       "bidder_alias": "Party B",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Executed",
       "bid_type": "formal",
       "bid_date_precise": "2016-07-20",
@@ -580,11 +543,7 @@
       "role": "bidder",
       "bidder_name": "bidder_04",
       "bidder_alias": "G&W",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-07-21",
@@ -671,11 +630,7 @@
       "role": "bidder",
       "bidder_name": "bidder_01",
       "bidder_alias": "Party A",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bidder Interest",
       "bid_type": null,
       "bid_date_precise": "2016-07-22",
@@ -704,11 +659,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "25 parties, including Parties A, B",
-      "bidder_type": {
-        "base": "mixed",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "mixed",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -737,11 +688,7 @@
       "role": "bidder",
       "bidder_name": "bidder_01",
       "bidder_alias": "Party A",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2016-07-22",
@@ -828,11 +775,7 @@
       "role": "bidder",
       "bidder_name": "bidder_04",
       "bidder_alias": "G&W",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2016-07-26",
@@ -861,11 +804,7 @@
       "role": "bidder",
       "bidder_name": "bidder_10",
       "bidder_alias": "Party E",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "DropTarget",
       "bid_type": null,
       "bid_date_precise": "2016-07-27",
@@ -894,11 +833,7 @@
       "role": "bidder",
       "bidder_name": "bidder_11",
       "bidder_alias": "Party D",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "DropTarget",
       "bid_type": null,
       "bid_date_precise": "2016-07-27",
@@ -927,11 +862,7 @@
       "role": "bidder",
       "bidder_name": "bidder_08",
       "bidder_alias": "Party C",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "DropTarget",
       "bid_type": null,
       "bid_date_precise": "2016-07-27",
@@ -960,11 +891,7 @@
       "role": "bidder",
       "bidder_name": "bidder_12",
       "bidder_alias": "Party F",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "DropTarget",
       "bid_type": null,
       "bid_date_precise": "2016-07-27",
@@ -993,11 +920,7 @@
       "role": "bidder",
       "bidder_name": "bidder_11",
       "bidder_alias": "Party D",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-08-01",
@@ -1026,11 +949,7 @@
       "role": "bidder",
       "bidder_name": "bidder_14",
       "bidder_alias": "Party E/F",
-      "bidder_type": {
-        "base": "mixed",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "mixed",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-08-01",
@@ -1059,11 +978,7 @@
       "role": "bidder",
       "bidder_name": "bidder_14",
       "bidder_alias": "Party E/F",
-      "bidder_type": {
-        "base": "mixed",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "mixed",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2016-08-02",
@@ -1092,11 +1007,7 @@
       "role": "bidder",
       "bidder_name": "bidder_11",
       "bidder_alias": "Party D",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2016-08-02",
@@ -1125,11 +1036,7 @@
       "role": "bidder",
       "bidder_name": "bidder_04",
       "bidder_alias": "G&W",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2016-08-12",
@@ -1158,11 +1065,7 @@
       "role": "bidder",
       "bidder_name": "bidder_09",
       "bidder_alias": "Party B",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2016-08-12",
@@ -1191,11 +1094,7 @@
       "role": "bidder",
       "bidder_name": "bidder_14",
       "bidder_alias": "Party E/F",
-      "bidder_type": {
-        "base": "mixed",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "mixed",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2016-08-12",
@@ -1253,11 +1152,7 @@
       "role": "bidder",
       "bidder_name": "bidder_04",
       "bidder_alias": "G&W",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Executed",
       "bid_type": null,
       "bid_date_precise": "2016-08-15",

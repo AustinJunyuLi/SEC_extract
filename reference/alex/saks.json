@@ -3,7 +3,6 @@
     "slug": "saks",
     "TargetName": "SAKS INC",
     "Acquirer": "Hudson's Bay Company",
-    "Acquirer_legal": "Harry Acquisition Inc.",
     "DateAnnounced": "2013-07-29",
     "DateEffective": "2013-11-04",
     "DateFiled": "2013-10-03",
@@ -80,13 +79,20 @@
           "Spnosor A/E"
         ],
         "first_appearance_row_index": 21
+      },
+      "bidder_10": {
+        "resolved_name": "Hudson's Bay Company",
+        "aliases_observed": [
+          "Hudson's Bay Company"
+        ],
+        "first_appearance_row_index": 22
       }
     },
     "deal_flags": [
       {
-        "code": "acquirer_overridden_per_q6",
+        "code": "acquirer_normalized",
         "severity": "info",
-        "reason": "\u00a7Q6 (per \u00a7N4): xlsx Acquirer=\"HUDSON'S BAY COMPANy\"; overridden to operating=\"Hudson's Bay Company\" with legal shell Acquirer_legal='Harry Acquisition Inc.'. Operating company is also the ultimate buyer: Hudson's Bay Company; merger executed via the Harry Acquisition shell. Per \u00a7N4 rule 2."
+        "reason": "\u00a7Q6: xlsx Acquirer=\"HUDSON'S BAY COMPANy\" normalized to operating acquirer \"Hudson's Bay Company\" per Alex 2026-04-27 directive."
       },
       {
         "code": "applied_alex_deletion",
@@ -107,11 +113,7 @@
       "role": "bidder",
       "bidder_name": "bidder_01",
       "bidder_alias": "Goldman Sachs",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "IB",
       "bid_type": null,
       "bid_date_precise": null,
@@ -140,11 +142,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Sponsor A",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bidder Interest",
       "bid_type": null,
       "bid_date_precise": null,
@@ -173,11 +171,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Hudson's Bay",
-      "bidder_type": {
-        "base": "s",
-        "non_us": true,
-        "public": true
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": null,
@@ -206,11 +200,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Sponsor A",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": null,
@@ -239,11 +229,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Sponsor A",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2013-04-26",
@@ -272,11 +258,7 @@
       "role": "bidder",
       "bidder_name": "bidder_04",
       "bidder_alias": "Sponsor E",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2013-04-26",
@@ -305,11 +287,7 @@
       "role": "bidder",
       "bidder_name": "bidder_02",
       "bidder_alias": "Sponsor A",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2013-04-26",
@@ -338,11 +316,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Hudson's Bay",
-      "bidder_type": {
-        "base": "s",
-        "non_us": true,
-        "public": true
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2013-04-30",
@@ -371,11 +345,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Hudson's Bay",
-      "bidder_type": {
-        "base": "s",
-        "non_us": true,
-        "public": true
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": null,
@@ -404,11 +374,7 @@
       "role": "bidder",
       "bidder_name": "bidder_05",
       "bidder_alias": "Sponsor A/E",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": null,
@@ -466,11 +432,7 @@
       "role": "bidder",
       "bidder_name": "bidder_05",
       "bidder_alias": "Sponsor A/E",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": null,
@@ -499,11 +461,7 @@
       "role": "bidder",
       "bidder_name": "bidder_06",
       "bidder_alias": "Sponsor G",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": null,
@@ -532,11 +490,7 @@
       "role": "bidder",
       "bidder_name": "bidder_07",
       "bidder_alias": "Company H",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": null,
@@ -594,11 +548,7 @@
       "role": "bidder",
       "bidder_name": "bidder_06",
       "bidder_alias": "Sponsor G",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": "2013-07-08",
@@ -627,11 +577,7 @@
       "role": "bidder",
       "bidder_name": "bidder_05",
       "bidder_alias": "Sponsor A/E",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "Bid",
       "bid_type": "informal",
       "bid_date_precise": "2013-07-11",
@@ -660,11 +606,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Hudson's Bay",
-      "bidder_type": {
-        "base": "s",
-        "non_us": true,
-        "public": true
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2013-07-11",
@@ -693,11 +635,7 @@
       "role": "bidder",
       "bidder_name": "bidder_03",
       "bidder_alias": "Hudson's Bay",
-      "bidder_type": {
-        "base": "s",
-        "non_us": true,
-        "public": true
-      },
+      "bidder_type": "s",
       "bid_note": "Bid",
       "bid_type": "formal",
       "bid_date_precise": "2013-07-24",
@@ -726,11 +664,7 @@
       "role": "bidder",
       "bidder_name": "bidder_09",
       "bidder_alias": "Company I",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "NDA",
       "bid_type": null,
       "bid_date_precise": null,
@@ -759,11 +693,7 @@
       "role": "bidder",
       "bidder_name": "bidder_08",
       "bidder_alias": "Spnosor A/E",
-      "bidder_type": {
-        "base": "f",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "f",
       "bid_note": "DropTarget",
       "bid_type": null,
       "bid_date_precise": "2013-07-28",
@@ -790,13 +720,9 @@
       "BidderID": 22,
       "process_phase": null,
       "role": "bidder",
-      "bidder_name": "bidder_03",
-      "bidder_alias": "Hudson's Bay",
-      "bidder_type": {
-        "base": "s",
-        "non_us": true,
-        "public": true
-      },
+      "bidder_name": "bidder_10",
+      "bidder_alias": "Hudson's Bay Company",
+      "bidder_type": "s",
       "bid_note": "Executed",
       "bid_type": null,
       "bid_date_precise": null,
@@ -817,7 +743,13 @@
       "process_conditions_note": null,
       "additional_note": null,
       "comments": null,
-      "flags": []
+      "flags": [
+        {
+          "code": "executed_atomized",
+          "severity": "info",
+          "reason": "\u00a7Q7 (per \u00a7E1+\u00a7E2.b 2026-04-27): xlsx Executed row alias=\"Hudson's Bay\" atomized to member 1/1 = \"Hudson's Bay Company\"."
+        }
+      ]
     },
     {
       "BidderID": 23,
@@ -825,11 +757,7 @@
       "role": "bidder",
       "bidder_name": "bidder_09",
       "bidder_alias": "Company I",
-      "bidder_type": {
-        "base": "s",
-        "non_us": false,
-        "public": null
-      },
+      "bidder_type": "s",
       "bid_note": "Drop",
       "bid_type": null,
       "bid_date_precise": "2013-09-06",
