@@ -845,7 +845,7 @@ def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
         elif marker not in str(additional_note).lower():
             additional_note = f"{additional_note} | {marker}"
 
-    return {
+    row = {
         # BidderID is assigned later (post-sort).
         "BidderID": None,
         "process_phase": None,
@@ -877,6 +877,30 @@ def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
         "_alex_bidder_id": r.get("BidderID"),     # provenance only; strip at write
         "flags": flags,
     }
+    # §G1+§G2 (2026-04-27): true range bids are unconditionally informal.
+    # Auto-coerce legacy xlsx rows where Alex labeled a range "formal".
+    lower = row.get("bid_value_lower")
+    upper = row.get("bid_value_upper")
+    try:
+        lo_num = float(lower) if lower is not None else None
+        hi_num = float(upper) if upper is not None else None
+    except (TypeError, ValueError):
+        lo_num = hi_num = None
+    if (
+        lo_num is not None and hi_num is not None and lo_num < hi_num
+        and row.get("bid_type") not in (None, "informal")
+    ):
+        original = row["bid_type"]
+        row["bid_type"] = "informal"
+        row.setdefault("flags", []).append({
+            "code": "range_forced_informal_per_g1",
+            "severity": "info",
+            "reason": (
+                f"§G1+§G2 (2026-04-27): xlsx bid_type={original!r} on a true "
+                f"range ({lower!r}..{upper!r}) forced to 'informal'."
+            ),
+        })
+    return row
 
 
 # ---------------------------------------------------------------------------

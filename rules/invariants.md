@@ -281,9 +281,14 @@ graph tells a coherent M&A-process story.
   justifying the classification. §G1 trigger tables are *classification
   guidance for the extractor*, NOT a validator satisfier path: a
   trigger phrase alone does not pass §P-G2.
+  
+  **Additional hard requirement (per 2026-04-27 directive).** When (1)
+  is true (the row is a true range bid), `bid_type` MUST equal
+  `"informal"`. Otherwise emit hard `bid_range_must_be_informal`.
 - **Fail action.** Flag `bid_type_unsupported` (no range, no note).
-  Inverted ranges (`lower >= upper`) flag `bid_range_inverted`. Both
-  hard.
+  Inverted ranges (`lower >= upper`) flag `bid_range_inverted`. Range
+  with `bid_type != "informal"` flags `bid_range_must_be_informal`.
+  All hard.
 - **Why hard.** Informal-vs-formal is the core research variable per
   `rules/bids.md` §G2. At 392-deal scale, requiring an explicit note
   on every non-range row keeps classification auditable and avoids

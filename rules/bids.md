@@ -216,12 +216,7 @@ row is a true range bid).
 - *"indicative offer"*, *"indicative proposal"*
 - *"subject to due diligence"* (without financing commitments)
 - *"preliminary proposal"*
-- **Structural signal: bid is stated as a true range** (both
-  `bid_value_lower` and `bid_value_upper` populated, numeric, with
-  `lower < upper` per §G2) — Austin's heuristic. Range-valued bids are
-  almost always informal; if a range coexists with a formal trigger,
-  the formal trigger wins but flag `range_with_formal_trigger` (soft)
-  for manual review.
+- **Structural signal: bid is stated as a true range** (both `bid_value_lower` and `bid_value_upper` populated, numeric, with `lower < upper` per §G2) — **range always wins**. Whenever a true range is present, `bid_type = "informal"` regardless of any formal trigger phrase the filing uses. If a formal trigger coexists with the range, emit soft flag `range_with_formal_trigger_override` to preserve the audit trail; do NOT change `bid_type` based on the trigger. Per Alex 2026-04-27 directive.
 
 **Process-position fallback** (no explicit trigger present):
 - Bid submitted in response to `Final Round Ann` / `Final Round Inf Ann`
@@ -285,7 +280,15 @@ inviting essays.
 
 **Validator.** `pipeline._invariant_p_g2`: hard flag
 `bid_type_unsupported` if neither satisfier holds; hard flag
-`bid_range_inverted` if `lower >= upper`.
+`bid_range_inverted` if `lower >= upper`; hard flag
+`bid_range_must_be_informal` if a true range carries any non-informal
+`bid_type`.
+
+**Additional hard requirement (per 2026-04-27 directive).** When the row
+satisfies satisfier (1) — i.e., is a true range bid — `bid_type` MUST
+equal `"informal"`. A range with `bid_type = "formal"` is a structural
+contradiction and the validator (§P-G2) flags it hard as
+`bid_range_must_be_informal`.
 
 **Why hard.** Informal-vs-formal is the core research variable.
 Manual verification of 401 deals × ~5 bids each = ~2000
@@ -293,7 +296,7 @@ classifications is intractable without per-row evidence. Soft
 flagging would let silent drift accumulate.
 
 **Cross-references.**
-- `rules/bids.md` §G1 (classification rule; §G1 unchanged).
+- `rules/bids.md` §G1 (classification rule).
 - `rules/invariants.md` §P-G2.
 - `SKILL.md` §Non-negotiable rules (evidence citation: every row
   carries `source_quote` and `source_page`).
@@ -815,8 +818,7 @@ populate neither but still emit a row with a flag.
 | Unspecified (*"willing to bid but did not state a price"*) | null | null | null | `bid_value_unspecified` (info) |
 
 **Key invariants.**
-- Exactly one of `{pershare, (lower, upper), (lower only), (upper only), all-null}`
-  is populated per bid row.
+- Exactly one of `{pershare, (lower, upper), (lower only), (upper only), all-null}` is populated per bid row. When the bid is shaped as a range, both `bid_value_lower` and `bid_value_upper` MUST be populated and numeric with `lower < upper`. Per Alex 2026-04-27.
 - Midpoints are NOT computed at extraction time. Downstream analysis can
   derive `(lower + upper) / 2` when needed; the raw range is preserved.
 - Unspecified-price rows still emit — the bid *event* occurred (the bidder

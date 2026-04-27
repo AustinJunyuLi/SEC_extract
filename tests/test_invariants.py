@@ -356,6 +356,41 @@ def test_ps4_allows_atomized_executed_rows_in_max_phase():
     assert flags == []
 
 
+def test_p_g2_range_with_formal_bid_type_fails_hard():
+    """C4 — a range bid with bid_type="formal" must fail hard."""
+    events = [{
+        "BidderID": 1,
+        "bid_note": "Bid",
+        "bid_type": "formal",
+        "bid_value_lower": 42.0,
+        "bid_value_upper": 48.0,
+        "bid_type_inference_note": None,
+    }]
+    flags = pipeline._invariant_p_g2(events)
+    codes = [f["code"] for f in flags]
+    assert "bid_range_must_be_informal" in codes, (
+        f"expected hard flag bid_range_must_be_informal; got {codes}"
+    )
+    severities = {f["code"]: f["severity"] for f in flags}
+    assert severities["bid_range_must_be_informal"] == "hard"
+
+
+def test_p_g2_range_with_informal_bid_type_passes():
+    """C4 — same range with bid_type='informal' is the canonical valid shape."""
+    events = [{
+        "BidderID": 1,
+        "bid_note": "Bid",
+        "bid_type": "informal",
+        "bid_value_lower": 42.0,
+        "bid_value_upper": 48.0,
+        "bid_type_inference_note": None,
+    }]
+    flags = pipeline._invariant_p_g2(events)
+    codes = [f["code"] for f in flags]
+    assert "bid_range_must_be_informal" not in codes
+    assert "bid_type_unsupported" not in codes
+
+
 @pytest.mark.parametrize(
     ("final_extraction", "expected_counts", "expected_status"),
     [

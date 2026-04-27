@@ -783,8 +783,13 @@ def _invariant_p_g2(events: list[dict]) -> list[dict]:
     structural signal), or (2) the row carries a non-empty
     `bid_type_inference_note: str` of ≤300 chars. §G1 trigger tables are
     classification guidance for the extractor, not a validator satisfier.
-    Violations emit hard `bid_type_unsupported`; inverted ranges emit
-    hard `bid_range_inverted`."""
+
+    Additional hard rule (per Alex 2026-04-27): when (1) is true, the row
+    MUST have `bid_type = "informal"`. A range with bid_type="formal" is
+    a structural contradiction.
+
+    Violations emit hard `bid_type_unsupported`, `bid_range_inverted`, or
+    `bid_range_must_be_informal`."""
     flags: list[dict[str, Any]] = []
     for i, ev in enumerate(events):
         bid_type = ev.get("bid_type")
@@ -799,15 +804,24 @@ def _invariant_p_g2(events: list[dict]) -> list[dict]:
         except (TypeError, ValueError):
             lo_num = hi_num = None
         if lo_num is not None and hi_num is not None:
-            if lo_num < hi_num:
+            if lo_num >= hi_num:
+                flags.append({
+                    "row_index": i, "code": "bid_range_inverted", "severity": "hard",
+                    "reason": (
+                        f"§P-G2: bid_value_lower={lower!r} >= "
+                        f"bid_value_upper={upper!r}; ranges require lower < upper."
+                    ),
+                })
                 continue
-            flags.append({
-                "row_index": i, "code": "bid_range_inverted", "severity": "hard",
-                "reason": (
-                    f"§P-G2: bid_value_lower={lower!r} >= "
-                    f"bid_value_upper={upper!r}; ranges require lower < upper."
-                ),
-            })
+            if bid_type != "informal":
+                flags.append({
+                    "row_index": i, "code": "bid_range_must_be_informal", "severity": "hard",
+                    "reason": (
+                        f"§P-G2 (2026-04-27): true range "
+                        f"({lower!r}..{upper!r}) requires bid_type='informal'; "
+                        f"got bid_type={bid_type!r}. Range bids are unconditionally informal."
+                    ),
+                })
             continue
 
         note = ev.get("bid_type_inference_note")

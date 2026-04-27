@@ -114,3 +114,23 @@ def test_mac_gray_executed_atomizes_to_two_rows():
     aliases = [ev.get("bidder_alias") for ev in executed_rows]
     expected = {"CSC ServiceWorks, Inc.", "Pamplona Capital Partners"}
     assert set(aliases) == expected
+
+
+def test_range_bid_with_formal_legacy_label_is_coerced_to_informal():
+    """C4 — true range rows are informal after converter migration."""
+    for slug in ("medivation", "imprivata", "zep", "providence-worcester",
+                 "penford", "mac-gray", "petsmart-inc", "stec", "saks"):
+        payload = build_deal(slug)
+        for ev in payload["events"]:
+            lower = ev.get("bid_value_lower")
+            upper = ev.get("bid_value_upper")
+            if lower is None or upper is None:
+                continue
+            if not (isinstance(lower, (int, float)) and isinstance(upper, (int, float))):
+                continue
+            if lower < upper:
+                assert ev.get("bid_type") == "informal", (
+                    f"{slug} row has range ({lower}..{upper}) but "
+                    f"bid_type={ev.get('bid_type')!r}; expected informal "
+                    f"per C4 auto-coerce."
+                )
