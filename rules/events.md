@@ -436,7 +436,6 @@ Austin adjudicates against the filing.
 - `rules/schema.md` §Scope-1 (auction count uses NDA only).
 - `rules/invariants.md` §P-D6, §P-S1, §P-S2 (validator behavior).
 - `prompts/extract.md` (extractor classification guidance).
-- `quality_reports/decisions/2026-04-26_six-policy-decisions.md` #4.
 
 ---
 

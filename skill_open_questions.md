@@ -2,7 +2,7 @@
 
 **Purpose.** Slim tracker of every 🟥 OPEN question across `rules/*.md`. Resolve them in the order below. When every item shows 🟩 RESOLVED, Stage 1 is done and Stage 2 can begin.
 
-**Scope.** This file tracks **Stage 1 rulebook ratification only.** Cross-deal policy decisions surfaced later (Stage 3 adjudication-driven) live in `quality_reports/decisions/`. As of 2026-04-26 the live cross-deal tracker is `quality_reports/decisions/2026-04-26_six-policy-decisions.md` (six decisions, all 🟩 IMPLEMENTED).
+**Scope.** This file tracks **Stage 1 rulebook ratification only.** Cross-deal policy decisions surfaced later in Stage 3 now live in the rulebook itself; dated decision logs were purged before the clean re-extraction pass.
 
 **How to use.** For each open item, open the referenced rule file, read the Context/Options for that section, discuss with Austin (and Alex when needed), and write the answer into the `Decision:` field in that file. When the decision lands, update this file's emoji to 🟩.
 

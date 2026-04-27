@@ -257,11 +257,12 @@ Current handling:
 - **Be skeptical. Cite rows. Check dates.** Austin explicitly asks for accuracy over speed and is happy to be told he's wrong.
 - **Every extracted row must carry `source_quote` and `source_page`.** Rows without evidence are rejected by the validator. This is also what makes manual verification tractable — Austin can confirm each row by reading the cited passage.
 - **Reset context per deal.** No cross-deal state in the model. Everything persists through `rules/`, `state/progress.json`, and `output/`.
-- **Treat dated planning docs as snapshots.** `quality_reports/` plans and
-  session logs, plus older adjudication notes in `scoring/results/`, are
-  useful history but not always live status. For current truth, prefer
-  `state/progress.json`, `output/extractions/`, `pipeline.py`, `run.py`,
-  `SKILL.md`, and this file.
+- **Treat dated planning docs as snapshots.** Historical adjudication,
+  comparison, handoff, session-log, report, and scoring-result artifacts
+  were purged on 2026-04-27 before the clean re-extraction pass. For
+  current truth, prefer `rules/`, `prompts/`, `pipeline.py`, `run.py`,
+  `state/progress.json`, `output/extractions/`, `SKILL.md`, and this file;
+  use git history for old reports.
 - **Use the user's folder name ("the folder you selected") when referring to file locations**, not sandbox paths.
 - **Before adding a new agent or rule file, name the assumption it encodes.** If you can't say what the model fails at without it, don't add it.
 - **No backward compatibility.** When a schema, rule, prompt contract, state

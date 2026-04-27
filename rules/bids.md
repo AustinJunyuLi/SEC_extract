@@ -178,7 +178,6 @@ the filing per case).
 - `rules/bids.md` §C3 / §C4 / §G1 / §H1 (the surrounding bid-row
   emission rules).
 - `prompts/extract.md` (extractor classification guidance).
-- `quality_reports/decisions/2026-04-26_six-policy-decisions.md` #5.
 
 ---
 
@@ -616,12 +615,11 @@ silence drops from filing-narrated drops.
 Rationale: the §Scope-1 auction classifier counts non-advisor bidder NDAs.
 A party that signed an NDA with bid intent, even without a submitted bid,
 is a meaningful auction participant. The 2026-04-26 policy revision
-(see `quality_reports/decisions/2026-04-26_six-policy-decisions.md`,
-Problem #1) reverses the prior "do not synthesize" stance: silent post-NDA
-behavior IS a withdrawal, and the dedicated `DropSilent` code makes the
-inferred-from-silence semantics explicit. The earlier §R2 concern about
-reusing generic quotes is addressed by the dedicated code itself — the
-re-cited NDA quote is no longer pretending to narrate a drop.
+reverses the prior "do not synthesize" stance: silent post-NDA behavior IS
+a withdrawal, and the dedicated `DropSilent` code makes the inferred-from-
+silence semantics explicit. The earlier §R2 concern about reusing generic
+quotes is addressed by the dedicated code itself — the re-cited NDA quote is
+no longer pretending to narrate a drop.
 
 **Saks row 7015 (Sponsor A/E) migration note.** Alex flagged this as "not
 a separate bid, should be deleted." Under this rule: if the row
@@ -797,7 +795,6 @@ re-extract with a targeted pass.
 - `rules/events.md` §I3 (three CA types — auction NDA, consortium CA,
   rollover CA — full definitions and disambiguation table).
 - `rules/events.md` §C1 (`NDA` and `ConsortiumCA` vocabulary entries).
-- `quality_reports/decisions/2026-04-26_six-policy-decisions.md` #4.
 
 ---
 
