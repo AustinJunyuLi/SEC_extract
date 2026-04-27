@@ -53,7 +53,7 @@ expansion.
 - `Auction Closed` — target unilaterally stops the auction without an announced deadline (distinct from `Final Round`, which has a formal cutoff).
 
 **Closing:**
-- `Executed` — merger agreement signed (exactly one per deal per §P-D1).
+- `Executed` — merger agreement signed (one row per signer under §E1 / §E2.b).
 
 **Prior-process:**
 - `Terminated` — prior sale process formally ended (Zep pattern).
@@ -318,7 +318,8 @@ individual NDAs, form a consortium to bid), and that consortium drops:
   the joint-bidder rule in `rules/bidders.md` §E2.
 
 If the bidders never signed individual NDAs (consortium formed before any
-NDA) → single consortium row per §E2. No split.
+NDA), atomize the consortium event per §E2.b using named constituents,
+signature-block constituents, or count placeholders as available.
 
 **Why split on individual NDAs.** Preserves the 1:1 mapping from NDA to
 drop row, so the bidder funnel stays clean: every NDA-signer has a fate.
@@ -744,8 +745,8 @@ ignore stale NDAs).
    `Terminated` event ends the current phase; the subsequent `Restarted`
    event begins the next phase. Phase number increments by 1.
 
-2. **6-month silence heuristic (Austin's rule).** If two consecutive events
-   in chronological order are **6 months or more apart**, and no
+2. **180-day silence heuristic (Austin's rule).** If two consecutive events
+   in chronological order are **180 calendar days or more apart**, and no
    `Terminated`/`Restarted` pair sits between them, they belong to
    different phases. This is an assignment rule, not a standalone soft-flag
    vocabulary item.
@@ -755,7 +756,7 @@ ignore stale NDAs).
      appears upstream, that process is **phase 1**. If one `Restarted`
      marker appears upstream, the current process is **phase 2** (the
      restart) and the pre-`Terminated` process is **phase 1**.
-   - Events separated from the main/restart chain by a ≥ 6-month gap
+   - Events separated from the main/restart chain by a ≥ 180-day gap
      (rule 2) with no `Restarted` linking them are **phase 0** (stale prior).
    - Multiple stale priors (Penford 2007 and 2009) all share `process_phase = 0`.
      If research ever needs to distinguish them, add `prior_attempt_index`
@@ -764,11 +765,11 @@ ignore stale NDAs).
 **Extractor guidance.** The extractor assigns `process_phase` as part of
 row emission, using the event chronology and markers. The validator
 rechecks:
-- The single `Executed` row (§P-S4) sits in the highest-numbered phase.
+- The `Executed` row(s) (§P-S4) sit in the highest-numbered phase.
 - No `process_phase = 2` rows exist without the explicit restart
   boundary: a phase-1 `Terminated` row followed by a phase-2
   `Restarted` row (§P-L1).
-- No `process_phase = 0` rows exist within 6 months of any
+- No `process_phase = 0` rows exist within 180 calendar days of any
   phase-1/phase-2 event (§P-L2).
 
 **Impact on existing §Scope-1 classifier.** The auction-threshold NDA count
@@ -778,7 +779,7 @@ is taken over `{row ∈ events : row.bid_note == "NDA" and row.process_phase ≥
 - **Infer phase from `bid_note` alone** — works for explicit Zep pattern
   but fails for Penford's pure-gap priors (no `Terminated` marker).
 - **Skip the field; reconstruct downstream** — pushes the judgment call
-  (6-month rule) into N different analysis scripts. Cleaner to freeze it
+  (180-day rule) into N different analysis scripts. Cleaner to freeze it
   once at extraction time.
 
 **Cross-references.**
