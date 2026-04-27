@@ -28,10 +28,11 @@ Deal slugs (match `seeds.csv`):
 pipeline schema, and writes JSON here.
 
 Current behavior:
-- applies the resolved §Q1–§Q5 overrides (documented in the
-  `scripts/build_reference.py` module docstring), including Saks
-  deletions, Zep expansion, Mac-Gray / Medivation renumbering, and
-  Medivation atomization of aggregated "Several parties" rows;
+- applies the §Q overrides defined in the `scripts/build_reference.py`
+  module docstring (Saks deletions, Zep expansion, Mac-Gray / Medivation
+  renumbering, Medivation atomization of aggregated "Several parties"
+  rows, Acquirer rewrites for sponsor-backed deals, and Executed-row
+  atomization for consortium deals);
 - migrates bid rows to the §C3 form (`bid_note="Bid"` + `bid_type`);
 - reassigns `BidderID` per the resolved `§A1`–`§A3` sequencing rules;
 - preserves provenance by attaching info flags where Alex's workbook had a

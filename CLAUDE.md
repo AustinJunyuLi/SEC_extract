@@ -150,10 +150,6 @@ repo.
      Current §E2.b says atomize unless filing narrates consortium
      activity. Decide per deal whether to tighten §E2.b or regenerate
      Alex's reference.
-  2. `bidder_type.public` inference policy in
-     `scripts/build_reference.py` — converter-side `public=null` drives
-     many field diffs against Alex's reference. Converter-policy
-     question, not rulebook.
 - **Target-deal gate remains closed.** Do **not** run on the 392 target
   deals until all 9 reference deals are manually verified against their
   filings and the rulebook is stable across 3 consecutive unchanged
@@ -168,7 +164,7 @@ repo.
 | `skill_open_questions.md` | Slim Stage 1 tracker. Indexes every 🟥 OPEN question across `rules/`. |
 | `rules/schema.md` | Output schema: columns, types, deal-level vs event-level. |
 | `rules/events.md` | Event vocabulary (closed list): start-of-process, NDA, IB, final rounds, dropouts, closing. |
-| `rules/bidders.md` | Bidder identity, type classification (S/F/public/non-US), aggregation, joint bidders. |
+| `rules/bidders.md` | Bidder identity, type classification (`"s"`/`"f"`/`"mixed"`), aggregation, joint bidders. |
 | `rules/bids.md` | Bid value structure (ranges, composite, aggregate), informal-vs-formal classification, skip rules. |
 | `rules/dates.md` | Rough-date mapping ("mid-July" → calendar date), event sequencing, BidderID. |
 | `rules/invariants.md` | Validator-facing hard/soft/info checks. The Extractor does not read this file directly. |
@@ -181,7 +177,7 @@ repo.
 | `reference/CollectionInstructions_Alex_2026.pdf` | Alex's data-collection rulebook. Black = original Chicago RAs; **bold red = Alex's additions** (most important). |
 | `reference/deal_details_Alex_2026.xlsx` | Legacy dataset. 9,336 rows × 35 columns. Red cells = Alex's corrections. |
 | `reference/alex/{deal}.json` | Alex's extraction of the 9 reference deals, converted to pipeline schema. Built in Stage 2. |
-| `reference/alex/alex_flagged_rows.json` | Rows in Alex's workbook that Alex himself has annotated as wrong/unresolved. See §Q1–§Q5 in `scripts/build_reference.py`'s module docstring. |
+| `reference/alex/alex_flagged_rows.json` | Rows in Alex's workbook that Alex himself has annotated as wrong/unresolved. See the §Q overrides in `scripts/build_reference.py`'s module docstring. |
 | `reference/alex/README.md` | How `reference/alex/` is organized. |
 | `seeds.csv` | 401 candidate deals with SEC filing URLs. 9 flagged `is_reference=true` are Alex's hand-corrected set. |
 | `run.py` | CLI shim: validate/finalize a saved raw extraction, write output/state, optionally commit. |
@@ -221,9 +217,9 @@ Alex hand-corrected these from the legacy dataset. They are the development / ca
   filing-cited extraction.
 - **Reference JSONs are not literal xlsx dumps.** `scripts/build_reference.py`
   applies the resolved Stage 2/3 overrides and keeps provenance via flags.
-  The rationale for each override (§Q1 Saks delete, §Q2 Zep expand,
-  §Q3/§Q4 Mac-Gray / Medivation renumber, §Q5 Medivation "Several
-  parties" atomization) now lives in that script's module docstring
+  The rationale for each override (§Q1–§Q7, including Saks delete, Zep
+  expand, Mac-Gray / Medivation renumber, Medivation atomization, Acquirer
+  rewrite, and Executed atomization) lives in that script's module docstring
   rather than in `rules/dates.md`, because the AI extractor never
   consults Alex's workbook.
 
@@ -238,7 +234,7 @@ These are rows in Alex's workbook that Alex himself annotated as wrong or unreso
 
 Current handling:
 - `scripts/build_reference.py` fixes the structurally invalid rows in the
-  generated reference JSONs per its own §Q1–§Q5 module docstring, while
+  generated reference JSONs per its own §Q module docstring, while
   preserving provenance in `alex_flagged_rows.json`.
 - The Medivation converter also atomizes the aggregated "Several
   parties" rows (§Q5), so the reference side matches the rulebook's
@@ -281,10 +277,6 @@ Current handling:
   rows). Current §E2.b says atomize unless filing narrates consortium
   activity. Austin's call per deal whether to tighten §E2.b or
   regenerate Alex's reference.
-- **Resolve the `bidder_type.public` inference policy** in
-  `scripts/build_reference.py`. Converter-side `public=null` drives
-  many field diffs against Alex's reference. Converter-policy question,
-  not rulebook.
 
 ## Exit criteria for each stage
 

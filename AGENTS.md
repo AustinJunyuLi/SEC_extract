@@ -125,7 +125,7 @@ repo.
   `skill_open_questions.md` shows 0 🟥 / 54 🟩.
 - **Stage 2 complete.**
   - `scripts/build_reference.py` converts the xlsx →
-    `reference/alex/{slug}.json` for all 9 reference deals, applying §Q1–§Q5
+    `reference/alex/{slug}.json` for all 9 reference deals, applying the §Q
     workbook overrides, §E3 canonical bidder IDs, §F1 bidder-type collapse,
     §A1–§A3 chronological BidderID reassignment, and Scope-3 drops.
   - `scoring/diff.py` runs end-to-end and emits a human-review markdown +
@@ -154,7 +154,7 @@ repo.
 | `skill_open_questions.md` | Slim Stage 1 tracker. Indexes every 🟥 OPEN question across `rules/`. |
 | `rules/schema.md` | Output schema: columns, types, deal-level vs event-level. |
 | `rules/events.md` | Event vocabulary (closed list): start-of-process, NDA, IB, final rounds, dropouts, closing. |
-| `rules/bidders.md` | Bidder identity, type classification (S/F/public/non-US), aggregation, joint bidders. |
+| `rules/bidders.md` | Bidder identity, type classification (`"s"`/`"f"`/`"mixed"`), aggregation, joint bidders. |
 | `rules/bids.md` | Bid value structure (ranges, composite, aggregate), informal-vs-formal classification, skip rules. |
 | `rules/dates.md` | Rough-date mapping ("mid-July" → calendar date), event sequencing, BidderID. |
 | `rules/invariants.md` | Hard/soft/info checks the Python validator runs. |
@@ -167,7 +167,7 @@ repo.
 | `reference/CollectionInstructions_Alex_2026.pdf` | Alex's data-collection rulebook. Black = original Chicago RAs; **bold red = Alex's additions** (most important). |
 | `reference/deal_details_Alex_2026.xlsx` | Legacy dataset. 9,336 rows × 35 columns. Red cells = Alex's corrections. |
 | `reference/alex/{deal}.json` | Alex's extraction of the 9 reference deals, converted to pipeline schema. Built in Stage 2. |
-| `reference/alex/alex_flagged_rows.json` | Rows in Alex's workbook that Alex himself has annotated as wrong/unresolved. See §Q1–§Q5 in the `scripts/build_reference.py` module docstring. |
+| `reference/alex/alex_flagged_rows.json` | Rows in Alex's workbook that Alex himself has annotated as wrong/unresolved. See the §Q overrides in the `scripts/build_reference.py` module docstring. |
 | `reference/alex/README.md` | How `reference/alex/` is organized. |
 | `seeds.csv` | 401 candidate deals with SEC filing URLs. 9 flagged `is_reference=true` are Alex's hand-corrected set. |
 | `run.py` | CLI shim: validate/finalize a saved raw extraction, write output/state, optionally commit. |
@@ -202,7 +202,7 @@ Alex hand-corrected these from the legacy dataset. They are the development / ca
   `bid_type` carries the informal/formal distinction. Legacy labels like
   `Inf`, `Formal Bid`, and `Revised Bid` are migration noise and should not
   appear in current AI output.
-- **`bidder_type` is exactly `{base, non_us, public}`.** There is no
+- **`bidder_type` is a scalar string `"s" | "f" | "mixed" | null`.** There is no
   schema-level `note` field; explanatory prose lives in evidence or
   free-text note fields.
 - **AI rows must carry `source_quote` and `source_page`.** Alex's reference
@@ -233,7 +233,7 @@ These are rows in Alex's workbook that Alex himself annotated as wrong or unreso
 
 Current handling:
 - `scripts/build_reference.py` fixes the structurally invalid rows in the
-  generated reference JSONs per its own §Q1–§Q5 module docstring, while
+  generated reference JSONs per its own §Q module docstring, while
   preserving provenance in `alex_flagged_rows.json`.
 - The Medivation converter also now atomizes the aggregated "Several
   parties" rows (§Q5), so the reference side matches the rulebook's
@@ -274,10 +274,6 @@ Current handling:
 - Adjudicate the NDA atomization-vs-aggregation pattern across
   zep / mac-gray / providence / petsmart (AI atomizes 15–27 NDAs; Alex
   aggregates 2–3). Either tighten §E2.b or regenerate Alex's reference.
-- Resolve the `bidder_type.public` inference policy in
-  `scripts/build_reference.py` — converter-side `public=null` drives
-  many field diffs against Alex's reference. Converter-policy question,
-  not rulebook.
 
 ## Exit criteria for each stage
 
