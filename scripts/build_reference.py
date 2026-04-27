@@ -67,7 +67,7 @@ The overrides only exist to make Alex's reference JSONs diffable.
     labelled "Several parties, including Sanofi" (Sanofi + ≥2 unnamed);
     row 6075 is an 8/20 Drop labelled "Several parties" (the same ≥2
     unnamed parties). "Several" is ≥3 in standard English, so we
-    atomize per §E1 into: row 6065 → 3 rows (Sanofi reusing her
+    atomize per the universal §E1 rule into: row 6065 → 3 rows (Sanofi reusing her
     canonical id from her 4/13 Bidder Sale, plus Party A and Party B
     with fresh canonical ids), row 6075 → 2 Drop rows (Party A + Party
     B reusing the ids from 6065; Sanofi already has her own 8/20 Drop).
@@ -75,7 +75,7 @@ The overrides only exist to make Alex's reference JSONs diffable.
     bound; differing AI counts surface as legitimate diff signal, not
     noise. Each expanded row carries `alex_row_expanded`.
 
-Without §Q5 atomization the AI's correctly-atomized output would diff as
+Without §Q5 atomization the AI's universally atomized output would diff as
 several `ai_only` rows against the aggregated reference, drowning out
 real extraction defects.
 
@@ -139,6 +139,34 @@ Q6_ACQUIRER_REWRITE: dict[str, str] = {
     "saks":         "Hudson's Bay Company",
 }
 
+# §Q7 — Executed-row atomization for the consortium reference deals.
+# Per `rules/bidders.md` §E1 + §E2.b (rewritten 2026-04-27): when the
+# merger-agreement counterparty is a consortium, emit one Executed row per
+# signer named in the merger-agreement signature block. Member names are
+# sourced from each filing's signature page.
+Q7_EXECUTED_MEMBERS: dict[str, list[str]] = {
+    "petsmart-inc": [
+        "BC Partners, Inc.",
+        "La Caisse",
+        "GIC Pte Ltd",
+        "StepStone Group",
+        "Longview Asset Management",
+    ],
+    "mac-gray": [
+        "CSC ServiceWorks, Inc.",
+        "Pamplona Capital Partners",
+    ],
+    "zep":  ["New Mountain Capital"],
+    "saks": ["Hudson's Bay Company"],
+}
+
+# Petsmart's xlsx reference has no Executed row, only the final Buyer Group
+# bid. The signature block date is hardcoded here so the regenerated
+# reference conforms to the live rulebook's mandatory Executed event.
+Q7_SYNTHETIC_EXECUTED_DATE: dict[str, str] = {
+    "petsmart-inc": "2014-12-14",
+}
+
 
 def apply_q6_acquirer_rewrite(slug: str, deal: dict[str, Any]) -> None:
     """§Q6 — overwrite deal['Acquirer'] with the operating acquirer for the
@@ -160,6 +188,143 @@ def apply_q6_acquirer_rewrite(slug: str, deal: dict[str, Any]) -> None:
             f"acquirer {new_value!r} per Alex 2026-04-27 directive."
         ),
     })
+
+
+def _next_canonical_ids(events: list[dict[str, Any]], count: int) -> list[str]:
+    used = {ev.get("bidder_name") for ev in events if ev.get("bidder_name")}
+    out: list[str] = []
+    n = 1
+    while len(out) < count:
+        cid = f"bidder_{n:02d}"
+        if cid not in used:
+            used.add(cid)
+            out.append(cid)
+        n += 1
+    return out
+
+
+def _canonical_ids_for_members(events: list[dict[str, Any]], members: list[str]) -> list[str]:
+    by_alias = {
+        ev.get("bidder_alias"): ev.get("bidder_name")
+        for ev in events
+        if ev.get("bidder_alias") and ev.get("bidder_name")
+    }
+    ids: list[str | None] = [by_alias.get(member) for member in members]
+    missing = [i for i, cid in enumerate(ids) if cid is None]
+    fresh = _next_canonical_ids(events, len(missing))
+    for idx, cid in zip(missing, fresh):
+        ids[idx] = cid
+    return [cid for cid in ids if cid is not None]
+
+
+def _petsmart_executed_template(events: list[dict[str, Any]]) -> dict[str, Any] | None:
+    candidates = [
+        ev for ev in events
+        if ev.get("bidder_alias") == "Buyer Group" and ev.get("bid_note") == "Bid"
+    ]
+    if not candidates:
+        return None
+    return max(
+        candidates,
+        key=lambda ev: (ev.get("bid_date_precise") or "", ev.get("_xlsx_row") or 0),
+    )
+
+
+def apply_q7_executed_atomization(
+    slug: str, events: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """§Q7 — atomize Executed row(s) per consortium constituent.
+
+    For consortium-signed mergers, the xlsx may contain a single Executed
+    row whose `bidder_alias` is the consortium label or shell. This function
+    clones that row N times, one per member in `Q7_EXECUTED_MEMBERS[slug]`,
+    sets `bidder_alias` and `bidder_name` per member, removes any
+    `joint_bidder_members`, and emits an info flag `executed_atomized`.
+    """
+    members = Q7_EXECUTED_MEMBERS.get(slug)
+    if not members:
+        return events
+
+    executed_rows = [ev for ev in events if ev.get("bid_note") == "Executed"]
+    synthesize = False
+    if not executed_rows and slug in Q7_SYNTHETIC_EXECUTED_DATE:
+        template = _petsmart_executed_template(events)
+        if template is None:
+            raise RuntimeError("§Q7: petsmart-inc has no Buyer Group bid to synthesize Executed row from")
+        synthetic = json.loads(json.dumps(template, default=str))
+        synthetic["bid_note"] = "Executed"
+        synthetic["bid_type"] = None
+        synthetic["bid_date_precise"] = Q7_SYNTHETIC_EXECUTED_DATE[slug]
+        synthetic["bid_date_rough"] = None
+        for key in (
+            "bid_value", "bid_value_pershare", "bid_value_lower", "bid_value_upper",
+            "bid_value_unit", "exclusivity_days", "financing_contingent",
+            "process_conditions_note",
+        ):
+            synthetic[key] = None
+        synthetic["highly_confident_letter"] = False
+        synthetic["additional_note"] = None
+        synthetic["comments"] = None
+        synthetic["_xlsx_row"] = (template.get("_xlsx_row") or 0) + 0.1
+        synthetic["_alex_bidder_id"] = None
+        synthetic["flags"] = list(template.get("flags") or []) + [{
+            "code": "executed_synthesized_per_q7",
+            "severity": "info",
+            "reason": (
+                "§Q7: petsmart-inc xlsx lacked an Executed row; synthesized "
+                "from the final Buyer Group bid using the merger-agreement "
+                "signature date 2014-12-14."
+            ),
+        }]
+        executed_rows = [synthetic]
+        synthesize = True
+    elif not executed_rows:
+        return events
+
+    member_ids = _canonical_ids_for_members(events, members)
+    out: list[dict[str, Any]] = []
+    replaced = False
+    for ev in events:
+        if ev.get("bid_note") != "Executed":
+            out.append(ev)
+            continue
+
+        replaced = True
+        original_alias = ev.get("bidder_alias")
+        for i, (member_name, cid) in enumerate(zip(members, member_ids), start=1):
+            new_ev = json.loads(json.dumps(ev, default=str))
+            new_ev["bidder_alias"] = member_name
+            new_ev["bidder_name"] = cid
+            new_ev.pop("joint_bidder_members", None)
+            new_ev["flags"] = list(ev.get("flags") or []) + [{
+                "code": "executed_atomized",
+                "severity": "info",
+                "reason": (
+                    f"§Q7 (per §E1+§E2.b 2026-04-27): xlsx Executed row "
+                    f"alias={original_alias!r} atomized to member "
+                    f"{i}/{len(members)} = {member_name!r}."
+                ),
+            }]
+            out.append(new_ev)
+
+    if synthesize and not replaced:
+        original_alias = executed_rows[0].get("bidder_alias")
+        for i, (member_name, cid) in enumerate(zip(members, member_ids), start=1):
+            new_ev = json.loads(json.dumps(executed_rows[0], default=str))
+            new_ev["bidder_alias"] = member_name
+            new_ev["bidder_name"] = cid
+            new_ev.pop("joint_bidder_members", None)
+            new_ev["flags"] = list(executed_rows[0].get("flags") or []) + [{
+                "code": "executed_atomized",
+                "severity": "info",
+                "reason": (
+                    f"§Q7 (per §E1+§E2.b 2026-04-27): synthesized Executed "
+                    f"row alias={original_alias!r} atomized to member "
+                    f"{i}/{len(members)} = {member_name!r}."
+                ),
+            }]
+            out.append(new_ev)
+    return out
 
 def _load_flagged_xlsx_rows() -> dict[str, set[int]]:
     """Parse reference/alex/alex_flagged_rows.json → {slug: {xlsx_row, ...}}."""
@@ -877,7 +1042,7 @@ MEDIVATION_UNNAMED_PLACEHOLDER_ALIASES = ("Party A", "Party B")
 
 
 def apply_q5_medivation(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Apply §Q5 — atomize Medivation's aggregated 'Several parties' rows. See module docstring §Q5 for rationale."""
+    """Apply §Q5 — atomize Medivation's aggregated rows per universal §E1."""
     # Locate the aggregated rows.
     nda_idx = next(
         (i for i, ev in enumerate(events) if ev.get("_xlsx_row") == MEDIVATION_NDA_AGG_XLSX_ROW),
@@ -988,6 +1153,7 @@ def build_deal(slug: str) -> dict[str, Any]:
         events = apply_q2_zep(events)
     if slug == "medivation":
         events = apply_q5_medivation(events)
+    events = apply_q7_executed_atomization(slug, events)
     events = apply_legacy_exclusivity_events(events)
     validate_current_schema_events(events)
 

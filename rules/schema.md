@@ -235,22 +235,11 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - `bidder_alias` — string. Filing's verbatim label for this bidder on this
   row (`"Party A"`, `"Pfizer Inc."`, `"Strategic 1"`). Per `rules/bidders.md` §E3.
 - `bidder_type` — string OR null. One of `"s"` / `"f"` / `"mixed"` per `rules/bidders.md` §F1 (rewritten 2026-04-27). Geography and listing status are NOT recorded — Alex's 2026-04-27 directive dropped both dimensions entirely.
-- `joint_bidder_members` — `list[str]` OR null. Canonical `bidder_NN`
-  ids of consortium constituents, for rows that represent a joint-bidder
-  group event.
-  Populated ONLY when the row represents a consortium / joint bidder:
-  (a) the single `Executed` row when the merger-agreement counterparty
-      is a consortium (per `rules/bidders.md` §E2.a; e.g.,
-      `["bidder_06", "bidder_07"]` for CSC/Pamplona on mac-gray);
-  (b) an aggregated `NDA` row when the filing narrates the consortium's
-      NDA as a single group event (per `rules/bidders.md` §E2.b);
-  (c) aggregated `Bid` or `Drop` rows when the filing narrates them
-      jointly for a consortium (per §E2).
-  Null / absent on all non-consortium rows and on per-constituent rows
-  in cases where the filing narrates each constituent separately. The
-  field order is: the canonical id of the merger-agreement counterparty
-  first (where applicable), then the other constituents in filing
-  narrative order. Ids must exist in `deal.bidder_registry`.
+- `joint_bidder_members` — `list[str]` OR null. Legacy escape hatch for
+  a consortium label when the filing names no constituent and gives no
+  count. Under the 2026-04-27 universal-atomization rule (§E1 / §E2.b),
+  identifiable constituents get their own rows and this field is null /
+  absent on those rows.
 - `bid_note` — string from closed vocabulary (§C1).
 - `bid_type` — `"formal" | "informal" | null` (per §G1).
 - `bid_date_precise` — ISO date OR null.

@@ -1072,8 +1072,8 @@ def _invariant_p_s3(deal: dict, events: list[dict]) -> list[dict]:
     allowed to trail the terminator in the canonical sequence.
 
     Hard-invariant coverage is preserved: a phase with NO terminator
-    still fires the flag. §P-S4 (exactly one Executed row, in the max
-    phase) continues to enforce the deal-level close invariant
+    still fires the flag. §P-S4 (Executed row(s) in the max phase)
+    continues to enforce the deal-level close invariant
     independently.
 
     §M4 stale-prior phase 0 is exempted: those rows narrate a prior
@@ -1113,7 +1113,7 @@ def _invariant_p_s3(deal: dict, events: list[dict]) -> list[dict]:
 
 
 def _invariant_p_s4(events: list[dict]) -> list[dict]:
-    """§P-S4 — exactly one Executed row, in the max phase."""
+    """§P-S4 — at least one Executed row, all in the max phase."""
     flags: list[dict[str, Any]] = []
     executed = [(i, ev) for i, ev in enumerate(events) if ev.get("bid_note") == "Executed"]
     if not executed:
@@ -1123,20 +1123,12 @@ def _invariant_p_s4(events: list[dict]) -> list[dict]:
             "deal_level": True,
         })
         return flags
-    if len(executed) > 1:
-        flags.append({
-            "code": "multiple_executed_rows", "severity": "hard",
-            "reason": f"{len(executed)} Executed rows; exactly one required",
-            "deal_level": True,
-        })
-        return flags
-    _, ex_ev = executed[0]
-    ex_phase = _phase(ex_ev)
     max_phase = max(_phase(ev) for ev in events)
-    if ex_phase != max_phase:
+    wrong_phases = sorted({_phase(ev) for _, ev in executed if _phase(ev) != max_phase})
+    if wrong_phases:
         flags.append({
             "code": "executed_wrong_phase", "severity": "hard",
-            "reason": f"Executed in process_phase={ex_phase}, but max phase is {max_phase}",
+            "reason": f"Executed row(s) in process_phase={wrong_phases}, but max phase is {max_phase}",
             "deal_level": True,
         })
     return flags

@@ -347,6 +347,15 @@ def test_ps4(fixture_name):
     _assert_fixture(fixture_name, "ps4")
 
 
+def test_ps4_allows_atomized_executed_rows_in_max_phase():
+    flags = pipeline._invariant_p_s4([
+        {"bid_note": "NDA", "process_phase": 1},
+        {"bid_note": "Executed", "process_phase": 2},
+        {"bid_note": "Executed", "process_phase": 2},
+    ])
+    assert flags == []
+
+
 @pytest.mark.parametrize(
     ("final_extraction", "expected_counts", "expected_status"),
     [

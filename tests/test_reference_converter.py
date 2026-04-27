@@ -82,3 +82,35 @@ def test_build_deal_emits_scalar_bidder_type():
         and ev["bid_note"] == "Bid"
     )
     assert sanofi_bid["bidder_type"] == "s"
+
+
+def test_petsmart_executed_atomizes_to_five_rows():
+    """C3 — petsmart's Buyer Group consortium emits 5 Executed rows
+    (BC Partners + Caisse + GIC + StepStone + Longview), one per
+    consortium signer named in the merger-agreement signature block.
+    """
+    payload = build_deal("petsmart-inc")
+    executed_rows = [ev for ev in payload["events"] if ev.get("bid_note") == "Executed"]
+    assert len(executed_rows) == 5, (
+        f"expected 5 atomized Executed rows for petsmart-inc; "
+        f"got {len(executed_rows)}"
+    )
+    aliases = [ev.get("bidder_alias") for ev in executed_rows]
+    expected = {"BC Partners, Inc.", "La Caisse", "GIC Pte Ltd",
+                "StepStone Group", "Longview Asset Management"}
+    assert set(aliases) == expected, (
+        f"expected aliases {expected}; got {set(aliases)}"
+    )
+
+
+def test_mac_gray_executed_atomizes_to_two_rows():
+    """C3 — mac-gray's CSC + Pamplona consortium emits 2 Executed rows."""
+    payload = build_deal("mac-gray")
+    executed_rows = [ev for ev in payload["events"] if ev.get("bid_note") == "Executed"]
+    assert len(executed_rows) == 2, (
+        f"expected 2 atomized Executed rows for mac-gray; "
+        f"got {len(executed_rows)}"
+    )
+    aliases = [ev.get("bidder_alias") for ev in executed_rows]
+    expected = {"CSC ServiceWorks, Inc.", "Pamplona Capital Partners"}
+    assert set(aliases) == expected

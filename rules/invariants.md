@@ -226,11 +226,12 @@ graph tells a coherent M&A-process story.
   without a terminator means the extractor missed the end of a phase.
 
 ### §P-S4 — Deal-level `Executed` row present
-- **Check.** Exactly one row with `bid_note = Executed`, and it's in
-  the highest `process_phase` value present in the deal.
+- **Check.** At least one row with `bid_note = Executed`, and every
+  `Executed` row is in the highest `process_phase` value present in the
+  deal. Multiple `Executed` rows are allowed when a consortium winner is
+  atomized per §E1 / §E2.b.
 - **Fail action.** Flag `no_executed_row` (if zero),
-  `multiple_executed_rows` (if >1), `executed_wrong_phase` (if in a
-  stale phase).
+  `executed_wrong_phase` (if any Executed row is in a stale phase).
 - **Why hard.** Every deal in scope closed — the filing itself is
   evidence. A missing `Executed` row is always an extraction error.
 

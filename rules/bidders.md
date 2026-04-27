@@ -6,103 +6,42 @@
 
 ## Resolved rules
 
-### §E2 — Joint-bidder rows (🟩 RESOLVED, 2026-04-18; amended 2026-04-19)
+### §E2 — Joint-bidder rows (🟩 RESOLVED, 2026-04-18; rewritten 2026-04-27 per Alex directive)
 
 **Decision.** `BidderID` is an **event-sequence number, not a bidder-
-identity number**. Jointness is carried by `joint_bidder_members`, not by
-reusing a `BidderID` across multiple rows. **Two exceptions remain:**
-
-1. **Executed rows are always exactly 1 per deal** (see §E2.a below).
-2. **Group-narrated NDAs collapse to 1 row** when the filing does not
-   give per-constituent detail (see §E2.b below).
+identity number**. Joint-bidder events are atomized per identifiable
+constituent. The pre-2026-04-27 Executed-row collapse is deleted.
 
 **Rule.**
-- When the filing narrates a **single consortium event** (joint NDA, Bid,
-  Drop, or Executed exception below), emit **one row** for that narrated
-  event.
-- `bidder_alias` is the filing's consortium label for that row.
-- `bidder_name` is the canonical id for the narrated signer on that row
-  (often the nominal acquirer or consortium label registered in §E3).
-- `joint_bidder_members` carries the constituent canonical ids, e.g.
-  `["bidder_06", "bidder_07"]`.
-- That row still receives its own unique event-sequence `BidderID`
-  assigned by `pipeline._canonicalize_order()`.
-- When the filing instead gives **per-constituent detail**, emit one row
-  per narrated constituent; each row still receives its own unique
-  `BidderID` and may carry `joint_bidder_members` if that adds clarity.
+- Filing names consortium constituents → emit one row per constituent.
+- Each atomized row receives its own unique event-sequence `BidderID`.
+- `bidder_alias` is the filing label for the constituent on that row.
+- `bidder_name` is that constituent's canonical id per §E3.
+- `joint_bidder_members` is null on atomized constituent rows. Use it only
+  when the filing gives a consortium label with no count and no named
+  constituents anywhere in the filing.
 
-**Example.** A consortium bid narrated once in the filing can appear as:
+### §E2.b — Group-narrated event atomization (🟩 RESOLVED, 2026-04-27 per Alex directive)
 
-```json
-{
-  "BidderID": 14,
-  "bid_note": "Bid",
-  "bidder_alias": "CSC/Pamplona",
-  "bidder_name": "bidder_06",
-  "joint_bidder_members": ["bidder_06", "bidder_07"]
-}
-```
-
-### §E2.a — Executed-row joint-bidder exception (🟩 RESOLVED, 2026-04-19)
-
-**Decision.** An `Executed` row is **always exactly one per deal**, even
-when the merger-agreement counterparty is a consortium / joint bidder.
-Hard invariant §P-S4 (`multiple_executed_rows`) remains the law.
-
-**Rule.**
-- When the merger agreement is executed by a consortium (e.g., Mac-Gray:
-  CSC + Pamplona; Petsmart: BC Partners + Caisse + GIC + StepStone +
-  Longview), emit **one** `Executed` row with:
-  - `bidder_alias` = the merger-agreement counterparty label as the
-    filing names it. Use the filing's exact consortium label when
-    present (e.g., `"CSC/Pamplona"`, `"Buyer Group"`). If the filing
-    lists only the nominal acquirer entity (`"Parent"` / `"MergerSub"`)
-    without narrating a consortium label, use that.
-  - `bidder_name` = the canonical id of the nominal acquirer (the entity
-    that is legally the counterparty on the merger agreement). If the
-    filing's consortium label is used as the alias and no canonical id
-    yet exists for it, register it in `bidder_registry`.
-  - `joint_bidder_members: list[str]` — a list of canonical ids of all
-    consortium constituents (e.g., `["bidder_04", "bidder_07"]`).
-    Required when the Executed counterparty is a consortium.
-- §E2's per-constituent atomization rule applies to NDAs (subject to
-  §E2.b), Bids, and Drops — but **NOT** to Executed.
-
-**Why one row for Executed.** There is exactly one merger agreement; the
-Executed event is a single atomic legal act. Per-constituent atomization
-of Executed would fabricate N signing events the filing does not narrate
-as distinct. The `joint_bidder_members` field preserves the consortium
-structure for downstream queries.
-
-**Interaction with §A3 ranking.** Executed remains rank 11 (closing).
-One row per deal; no same-date collision with itself.
-
-### §E2.b — Group-narrated NDA aggregation (🟩 RESOLVED, 2026-04-19)
-
-**Principle.** Emit one NDA row per *identifiable signer the filing
-narrates*. Filing granularity decides the shape; the rulebook does not
-re-split or re-aggregate against the filing.
+**Decision.** Filing granularity decides the shape — but every event of every type atomizes per identifiable signer. There is no "consortium-as-1-row" shortcut for any event type, including Executed.
 
 **Rule.**
 
-| Filing narrates the NDA as… | Emit | Key fields |
-|---|---|---|
-| Single consortium event, no per-constituent detail, no count (e.g., *"Buyer Group executed a CA on 7/11/2013"*) | **1 row**, consortium-as-signer | `bidder_alias` = consortium label; `bidder_name` = canonical id for consortium; `joint_bidder_members` = constituent ids if named elsewhere, else null; flag `{"code": "joint_nda_aggregated", "severity": "info", "reason": "...bidder_alias=<label>"}` |
-| Numeric count OR named individual signers (e.g., *"15 financial sponsors executed CAs"* or *"BC Partners, Caisse, GIC, … each executed CAs"*) | **N rows**, one per signer per §E3 | Named → filing label; unnamed → `"Strategic k"` / `"Financial k"` placeholders; each row's `bidder_name` = own canonical id; `joint_bidder_members` = null |
+| Filing narrates the event as… | Emit |
+|---|---|
+| Named individual signers (e.g., *"BC Partners, Caisse, GIC, … each executed CAs"*) | **N rows**, one per named signer per §E3 |
+| Numeric count without names (e.g., *"15 financial sponsors executed CAs"*) | **N rows**, where N is the stated count, with `bidder_alias` placeholders (`"Strategic 1"`, `"Financial 1"`, …) per §E5 |
+| Single consortium event with no per-constituent detail and no count (e.g., *"Buyer Group executed a CA on 7/11/2013"*) | **N rows**, where N is the number of consortium constituents named elsewhere in the filing. If the filing names zero constituents, emit one row per constituent the merger-agreement signature block names. If the filing names neither count nor constituents, emit one row with `bidder_alias = filing's consortium label` and `joint_bidder_members = null`. |
 
-**Example.** *"On July 11, 2013, Buyer Group entered into a
-confidentiality agreement with the Company."* → 1 aggregated row with
-`joint_bidder_members = ["bidder_06", "bidder_07"]` (the two constituents
-named earlier in the filing).
+The old Executed-row collapse is deleted: when the merger-agreement counterparty is a consortium (e.g., petsmart's BC Partners + Caisse + GIC + StepStone + Longview), emit one Executed row per constituent, all with the same date.
+
+**Rationale.** Per Alex 2026-04-27 directive: atomization is unconditional and applies symmetrically to NDA, Bid, Drop, Restarted, Terminated, and Executed. This matches the `DropSilent` convention (§I1) of one row per bidder.
 
 **Cross-references.**
-- §E1 (atomization), §E3 (canonical IDs / placeholders).
+- §E1 (universal atomization).
+- §E3 (canonical IDs / placeholders).
+- §E5 (numeric-count → row-count commitment).
 - `rules/events.md` §I1 (consortium-drop splitting).
-- `rules/invariants.md` §P-S4 (exactly-one Executed — §E2.a).
-- `rules/invariants.md` §P-D6 (NDA-before-Bid existence check matches
-  on `bidder_name`; if Bid rows use per-constituent ids while NDA is
-  aggregated, promote via `unnamed_nda_promotion` hint or emit
-  per-constituent NDAs up front).
 
 ---
 
@@ -290,12 +229,11 @@ appears on many rows (once for NDA, once per bid, once for drop, once for
 execution if winner). This matches Alex's legacy format.
 
 **Rule.**
-- No aggregated per-bidder rows. No aggregated per-group rows either —
-  Providence's "25 NDAs in one row" and Zep row 6390's "5 parties, 4F and
-  1S" are both **expanded** during the xlsx → JSON conversion in Stage 2.
+- Atomization is **unconditional**. There are no exceptions — NDA, Bid, Drop*, Restarted, Terminated, AND Executed all atomize one row per bidder.
+- No aggregated per-bidder rows. No aggregated per-group rows.
 - Each atomized row carries its own `source_quote` for the specific event.
 - Anonymous bidders get placeholder names per §E3.
-- Joint bidders are handled per §E2.
+- Joint bidders are handled per §E2 (every constituent gets its own row).
 
 **Why atomized.**
 1. Matches the research question (event-level auction dynamics, hazard

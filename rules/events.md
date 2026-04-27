@@ -231,7 +231,7 @@ legitimate AI-identified correction per the ground-truth epistemology
 **Cross-references.**
 - `rules/events.md` §I1 (how drops interact with initiation).
 - `rules/events.md` §C1 (`Activist Sale` vocabulary).
-- `rules/bidders.md` §E2 / §E2.a / §E2.b (joint-bidder handling).
+- `rules/bidders.md` §E2 / §E2.b (joint-bidder handling).
 - `rules/invariants.md` §P-D6 (§D1.a's `unsolicited_first_contact`
   flag exempts rows from §P-D6).
 
