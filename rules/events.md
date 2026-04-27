@@ -296,11 +296,11 @@ with §R2 because the row's *meaning* (no later activity) is genuinely
 sourced from that bidder's absence from the rest of the filing; the NDA
 passage is the only concrete anchor the filing gives us.
 
-Reverses the Providence iter-7 stance ("do not fabricate catch-all
-Drops"). The earlier rationale — "synthetic Drops would have reused one
-generic quote across all 20 rows" — is addressed by the dedicated
-`DropSilent` code: the row's semantics make explicit that the quote is the
-NDA passage, not a fabricated drop narration.
+Reverses the earlier "do not fabricate catch-all Drops" stance. The
+earlier rationale — "synthetic Drops would have reused one generic quote
+across all 20 rows" — is addressed by the dedicated `DropSilent` code:
+the row's semantics make explicit that the quote is the NDA passage, not
+a fabricated drop narration.
 
 **Consortium drops — split handling.**
 

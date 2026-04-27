@@ -272,8 +272,8 @@ had 0% trigger coverage. The note-on-every-non-range rule holds
 regardless of filing language.
 
 **Cap rationale.** 300 chars ≈ 2–3 sentences, enough for
-`"<classification> per §G1 <rule>: <filing evidence>"`. The iter-6
-200-char cap produced truncated reasoning; one iter-8 failure
+`"<classification> per §G1 <rule>: <filing evidence>"`. The prior
+200-char cap produced truncated reasoning; one observed failure
 (medivation row 16) ran to ~370 chars. 300 leaves headroom without
 inviting essays.
 
