@@ -1,3 +1,6 @@
+import pytest
+
+import scripts.build_reference as build_reference
 from scripts.build_reference import VALID_BID_NOTES, build_deal
 
 
@@ -87,7 +90,7 @@ def test_build_deal_emits_scalar_bidder_type():
 def test_petsmart_executed_atomizes_to_five_rows():
     """C3 — petsmart's Buyer Group consortium emits 5 Executed rows
     (BC Partners + Caisse + GIC + StepStone + Longview), one per
-    consortium signer named in the merger-agreement signature block.
+    operational/economic member explicitly identified in the filing.
     """
     payload = build_deal("petsmart-inc")
     executed_rows = [ev for ev in payload["events"] if ev.get("bid_note") == "Executed"]
@@ -101,6 +104,45 @@ def test_petsmart_executed_atomizes_to_five_rows():
     assert set(aliases) == expected, (
         f"expected aliases {expected}; got {set(aliases)}"
     )
+
+
+def test_petsmart_missing_executed_repair_is_declarative_and_evidence_checked():
+    repair = build_reference.Q7_MISSING_EXECUTED_REPAIRS["petsmart-inc"]
+
+    assert repair["template"]["bid_note"] == "Bid"
+    assert repair["template"]["bidder_alias"] == "Buyer Group"
+    assert repair["template"]["select"] == "latest"
+    assert repair["executed_date"] == "2014-12-14"
+    assert repair["members"] == [
+        "BC Partners, Inc.",
+        "La Caisse",
+        "GIC Pte Ltd",
+        "StepStone Group",
+        "Longview Asset Management",
+    ]
+
+    build_reference.validate_q7_missing_executed_repair("petsmart-inc", repair)
+    assert not hasattr(build_reference, "_petsmart_executed_template")
+    assert not hasattr(build_reference, "Q7_SYNTHETIC_EXECUTED_DATE")
+
+
+def test_missing_executed_repair_rejects_unverifiable_filing_evidence():
+    repair = dict(build_reference.Q7_MISSING_EXECUTED_REPAIRS["petsmart-inc"])
+    repair["membership_evidence"] = {
+        "page": 2,
+        "quote": "this quote is not in the local filing",
+    }
+
+    with pytest.raises(ValueError, match="membership_evidence"):
+        build_reference.validate_q7_missing_executed_repair("petsmart-inc", repair)
+
+
+def test_missing_executed_repair_rejects_unidentifiable_members():
+    repair = dict(build_reference.Q7_MISSING_EXECUTED_REPAIRS["petsmart-inc"])
+    repair["members"] = ["BC Partners, Inc.", "Unknown Party"]
+
+    with pytest.raises(ValueError, match="unidentifiable member"):
+        build_reference.validate_q7_missing_executed_repair("petsmart-inc", repair)
 
 
 def test_mac_gray_executed_atomizes_to_two_rows():

@@ -17,9 +17,10 @@ constituent. The pre-2026-04-27 Executed-row collapse is deleted.
 - Each atomized row receives its own unique event-sequence `BidderID`.
 - `bidder_alias` is the filing label for the constituent on that row.
 - `bidder_name` is that constituent's canonical id per §E3.
-- `joint_bidder_members` is null on atomized constituent rows. Use it only
-  when the filing gives a consortium label with no count and no named
-  constituents anywhere in the filing.
+- `joint_bidder_members` is null on atomized constituent rows.
+- If the filing does not provide either a numeric count or identifiable
+  constituent members, fail loud. Do not invent members, and do not collapse
+  to a single consortium-label row as a fallback.
 
 ### §E2.b — Group-narrated event atomization (🟩 RESOLVED, 2026-04-27 per Alex directive)
 
@@ -31,9 +32,15 @@ constituent. The pre-2026-04-27 Executed-row collapse is deleted.
 |---|---|
 | Named individual signers (e.g., *"BC Partners, Caisse, GIC, … each executed CAs"*) | **N rows**, one per named signer per §E3 |
 | Numeric count without names (e.g., *"15 financial sponsors executed CAs"*) | **N rows**, where N is the stated count, with `bidder_alias` placeholders (`"Strategic 1"`, `"Financial 1"`, …) per §E5 |
-| Single consortium event with no per-constituent detail and no count (e.g., *"Buyer Group executed a CA on 7/11/2013"*) | **N rows**, where N is the number of consortium constituents named elsewhere in the filing. If the filing names zero constituents, emit one row per constituent the merger-agreement signature block names. If the filing names neither count nor constituents, emit one row with `bidder_alias = filing's consortium label` and `joint_bidder_members = null`. |
+| Single consortium event with no per-constituent detail and no count (e.g., *"Buyer Group executed a CA on 7/11/2013"*) | **N rows** only when N identifiable consortium constituents are named elsewhere in the filing. If the filing names neither a count nor identifiable constituents, fail loud; do not invent members and do not emit a single consortium-label fallback row. |
 
-The old Executed-row collapse is deleted: when the merger-agreement counterparty is a consortium (e.g., petsmart's BC Partners + Caisse + GIC + StepStone + Longview), emit one Executed row per constituent, all with the same date.
+The old Executed-row collapse is deleted: when the merger agreement is with
+a legal shell but the filing explicitly identifies the operational/economic
+buyer consortium (e.g., petsmart's BC Partners + Caisse + GIC + StepStone +
+Longview), emit one Executed row per identified constituent, all with the
+same date. If the operational/economic members are not identifiable from the
+filing, treat the extraction as incomplete rather than silently creating a
+shell-only or consortium-label Executed row.
 
 **Rationale.** Per Alex 2026-04-27 directive: atomization is unconditional and applies symmetrically to NDA, Bid, Drop, Restarted, Terminated, and Executed. This matches the `DropSilent` convention (§I1) of one row per bidder.
 

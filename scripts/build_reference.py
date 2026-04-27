@@ -142,8 +142,9 @@ Q6_ACQUIRER_REWRITE: dict[str, str] = {
 # §Q7 — Executed-row atomization for the consortium reference deals.
 # Per `rules/bidders.md` §E1 + §E2.b (rewritten 2026-04-27): when the
 # merger-agreement counterparty is a consortium, emit one Executed row per
-# signer named in the merger-agreement signature block. Member names are
-# sourced from each filing's signature page.
+# explicitly identified operational/economic buyer member. If the xlsx lacks
+# an Executed row, a repair must cite filing evidence for both the agreement
+# execution date and the named member list; otherwise the converter fails loud.
 Q7_EXECUTED_MEMBERS: dict[str, list[str]] = {
     "petsmart-inc": [
         "BC Partners, Inc.",
@@ -160,12 +161,52 @@ Q7_EXECUTED_MEMBERS: dict[str, list[str]] = {
     "saks": ["Hudson's Bay Company"],
 }
 
-# Petsmart's xlsx reference has no Executed row, only the final Buyer Group
-# bid. The signature block date is hardcoded here so the regenerated
-# reference conforms to the live rulebook's mandatory Executed event.
-Q7_SYNTHETIC_EXECUTED_DATE: dict[str, str] = {
-    "petsmart-inc": "2014-12-14",
+# Explicit missing-Executed repairs. These are not inference rules: each
+# entry is a narrow, filing-cited patch for a known reference-converter
+# defect. The template selector chooses the xlsx row to copy non-bidder
+# context from; the filing evidence proves that an agreement was executed and
+# that the listed operating/economic buyer members are identifiable.
+Q7_MISSING_EXECUTED_REPAIRS: dict[str, dict[str, Any]] = {
+    "petsmart-inc": {
+        "template": {
+            "bid_note": "Bid",
+            "bidder_alias": "Buyer Group",
+            "select": "latest",
+        },
+        "executed_date": "2014-12-14",
+        "members": [
+            "BC Partners, Inc.",
+            "La Caisse",
+            "GIC Pte Ltd",
+            "StepStone Group",
+            "Longview Asset Management",
+        ],
+        "execution_evidence": {
+            "page": 2,
+            "quote": (
+                "Agreement and Plan of Merger (as it may be amended from time "
+                "to time, the “merger agreement”), dated as of December 14, 2014"
+            ),
+        },
+        "membership_evidence": {
+            "page": 2,
+            "quote": (
+                "owned by a consortium including funds advised by BC Partners, "
+                "Inc., La Caisse de dépôt et placement du Québec, affiliates "
+                "of GIC Special Investments Pte Ltd, affiliates of StepStone "
+                "Group LP and Longview Asset Management, LLC"
+            ),
+        },
+    },
 }
+
+Q7_UNIDENTIFIABLE_MEMBER_RE = re.compile(
+    r"\b("
+    r"unknown|unidentified|unnamed|other|others|various|certain|several|"
+    r"multiple|party\s+[a-z0-9]+|bidder\s+[a-z0-9]+|buyer\s+group|consortium"
+    r")\b",
+    re.IGNORECASE,
+)
 
 
 def apply_q6_acquirer_rewrite(slug: str, deal: dict[str, Any]) -> None:
@@ -217,13 +258,99 @@ def _canonical_ids_for_members(events: list[dict[str, Any]], members: list[str])
     return [cid for cid in ids if cid is not None]
 
 
-def _petsmart_executed_template(events: list[dict[str, Any]]) -> dict[str, Any] | None:
+def _filing_pages_by_number(slug: str) -> dict[int, str]:
+    path = REPO_ROOT / "data" / "filings" / slug / "pages.json"
+    if not path.exists():
+        raise ValueError(f"§Q7: {slug} filing pages not found at {path.relative_to(REPO_ROOT)}")
+    pages = json.loads(path.read_text())
+    if not isinstance(pages, list):
+        raise ValueError(f"§Q7: {slug} filing pages must be a list")
+    out: dict[int, str] = {}
+    for page in pages:
+        if not isinstance(page, dict):
+            continue
+        number = page.get("number")
+        content = page.get("content")
+        if isinstance(number, int) and isinstance(content, str):
+            out[number] = content
+    return out
+
+
+def _quote_in_page(content: str, quote: str) -> bool:
+    if quote in content:
+        return True
+    return " ".join(quote.split()) in " ".join(content.split())
+
+
+def _validate_q7_evidence(slug: str, repair: dict[str, Any], key: str) -> None:
+    evidence = repair.get(key)
+    if not isinstance(evidence, dict):
+        raise ValueError(f"§Q7: {slug} {key} must be an evidence dict")
+    page = evidence.get("page")
+    quote = evidence.get("quote")
+    if not isinstance(page, int) or not isinstance(quote, str) or not quote.strip():
+        raise ValueError(f"§Q7: {slug} {key} must include integer page and non-empty quote")
+    content = _filing_pages_by_number(slug).get(page)
+    if content is None:
+        raise ValueError(f"§Q7: {slug} {key} cites missing filing page {page}")
+    if not _quote_in_page(content, quote):
+        raise ValueError(f"§Q7: {slug} {key} quote not found on filing page {page}")
+
+
+def validate_q7_missing_executed_repair(slug: str, repair: dict[str, Any]) -> None:
+    """Validate a narrow, filing-cited repair for an xlsx missing Executed row.
+
+    This deliberately does not infer missing Executed rows. It only accepts
+    explicit repair specs whose template row and named consortium members are
+    known, and whose execution/member evidence is present in the local filing.
+    """
+    template = repair.get("template")
+    if not isinstance(template, dict):
+        raise ValueError(f"§Q7: {slug} repair template must be a dict")
+    if template.get("select") != "latest":
+        raise ValueError(f"§Q7: {slug} repair template only supports select='latest'")
+    for key in ("bid_note", "bidder_alias"):
+        if not isinstance(template.get(key), str) or not template[key].strip():
+            raise ValueError(f"§Q7: {slug} repair template must include {key}")
+
+    executed_date = repair.get("executed_date")
+    if not isinstance(executed_date, str):
+        raise ValueError(f"§Q7: {slug} repair must include executed_date")
+    try:
+        datetime.date.fromisoformat(executed_date)
+    except ValueError as exc:
+        raise ValueError(f"§Q7: {slug} executed_date must be ISO YYYY-MM-DD") from exc
+
+    members = repair.get("members")
+    if not isinstance(members, list) or not members:
+        raise ValueError(f"§Q7: {slug} repair must include non-empty members list")
+    for member in members:
+        if not isinstance(member, str) or not member.strip():
+            raise ValueError(f"§Q7: {slug} repair has blank or non-string member")
+        if Q7_UNIDENTIFIABLE_MEMBER_RE.search(member):
+            raise ValueError(f"§Q7: {slug} repair has unidentifiable member {member!r}")
+
+    _validate_q7_evidence(slug, repair, "execution_evidence")
+    _validate_q7_evidence(slug, repair, "membership_evidence")
+
+
+def _q7_missing_executed_template(
+    slug: str,
+    events: list[dict[str, Any]],
+    repair: dict[str, Any],
+) -> dict[str, Any]:
+    template = repair["template"]
     candidates = [
         ev for ev in events
-        if ev.get("bidder_alias") == "Buyer Group" and ev.get("bid_note") == "Bid"
+        if ev.get("bid_note") == template["bid_note"]
+        and ev.get("bidder_alias") == template["bidder_alias"]
     ]
     if not candidates:
-        return None
+        raise RuntimeError(
+            f"§Q7: {slug} missing-Executed repair found no template row "
+            f"matching bid_note={template['bid_note']!r}, "
+            f"bidder_alias={template['bidder_alias']!r}"
+        )
     return max(
         candidates,
         key=lambda ev: (ev.get("bid_date_precise") or "", ev.get("_xlsx_row") or 0),
@@ -235,26 +362,40 @@ def apply_q7_executed_atomization(
 ) -> list[dict[str, Any]]:
     """§Q7 — atomize Executed row(s) per consortium constituent.
 
-    For consortium-signed mergers, the xlsx may contain a single Executed
-    row whose `bidder_alias` is the consortium label or shell. This function
-    clones that row N times, one per member in `Q7_EXECUTED_MEMBERS[slug]`,
-    sets `bidder_alias` and `bidder_name` per member, removes any
-    `joint_bidder_members`, and emits an info flag `executed_atomized`.
+    For consortium-signed mergers, the xlsx may contain a single Executed row
+    whose `bidder_alias` is the consortium label or shell. The xlsx may also
+    omit the Executed row entirely for a known reference-converter defect; in
+    that case a `Q7_MISSING_EXECUTED_REPAIRS` entry must cite filing evidence.
+    This function clones the Executed template row N times, one per named
+    operational/economic buyer member, removes `joint_bidder_members`, and
+    emits an info flag `executed_atomized`.
     """
     members = Q7_EXECUTED_MEMBERS.get(slug)
-    if not members:
+    repair = Q7_MISSING_EXECUTED_REPAIRS.get(slug)
+    if not members and not repair:
         return events
 
     executed_rows = [ev for ev in events if ev.get("bid_note") == "Executed"]
     synthesize = False
-    if not executed_rows and slug in Q7_SYNTHETIC_EXECUTED_DATE:
-        template = _petsmart_executed_template(events)
-        if template is None:
-            raise RuntimeError("§Q7: petsmart-inc has no Buyer Group bid to synthesize Executed row from")
+    if not executed_rows:
+        if repair is None:
+            raise RuntimeError(
+                f"§Q7: {slug} has consortium Executed members but no xlsx "
+                "Executed row and no Q7_MISSING_EXECUTED_REPAIRS entry"
+            )
+        validate_q7_missing_executed_repair(slug, repair)
+        repair_members = list(repair["members"])
+        if members is not None and members != repair_members:
+            raise RuntimeError(
+                f"§Q7: {slug} Q7_EXECUTED_MEMBERS does not match "
+                "Q7_MISSING_EXECUTED_REPAIRS members"
+            )
+        members = repair_members
+        template = _q7_missing_executed_template(slug, events, repair)
         synthetic = json.loads(json.dumps(template, default=str))
         synthetic["bid_note"] = "Executed"
         synthetic["bid_type"] = None
-        synthetic["bid_date_precise"] = Q7_SYNTHETIC_EXECUTED_DATE[slug]
+        synthetic["bid_date_precise"] = repair["executed_date"]
         synthetic["bid_date_rough"] = None
         for key in (
             "bid_value", "bid_value_pershare", "bid_value_lower", "bid_value_upper",
@@ -271,15 +412,17 @@ def apply_q7_executed_atomization(
             "code": "executed_synthesized_per_q7",
             "severity": "info",
             "reason": (
-                "§Q7: petsmart-inc xlsx lacked an Executed row; synthesized "
-                "from the final Buyer Group bid using the merger-agreement "
-                "signature date 2014-12-14."
+                f"§Q7: {slug} xlsx lacked an Executed row; synthesized from "
+                "a filing-cited missing-Executed repair using template "
+                f"bidder_alias={repair['template']['bidder_alias']!r} and "
+                f"executed_date={repair['executed_date']}."
             ),
         }]
         executed_rows = [synthetic]
         synthesize = True
-    elif not executed_rows:
-        return events
+
+    if not members:
+        raise RuntimeError(f"§Q7: {slug} has Executed repair but no member list")
 
     member_ids = _canonical_ids_for_members(events, members)
     out: list[dict[str, Any]] = []

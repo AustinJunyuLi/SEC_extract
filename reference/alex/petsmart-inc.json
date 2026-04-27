@@ -1667,7 +1667,7 @@
         {
           "code": "executed_synthesized_per_q7",
           "severity": "info",
-          "reason": "\u00a7Q7: petsmart-inc xlsx lacked an Executed row; synthesized from the final Buyer Group bid using the merger-agreement signature date 2014-12-14."
+          "reason": "\u00a7Q7: petsmart-inc xlsx lacked an Executed row; synthesized from a filing-cited missing-Executed repair using template bidder_alias='Buyer Group' and executed_date=2014-12-14."
         },
         {
           "code": "executed_atomized",
@@ -1707,7 +1707,7 @@
         {
           "code": "executed_synthesized_per_q7",
           "severity": "info",
-          "reason": "\u00a7Q7: petsmart-inc xlsx lacked an Executed row; synthesized from the final Buyer Group bid using the merger-agreement signature date 2014-12-14."
+          "reason": "\u00a7Q7: petsmart-inc xlsx lacked an Executed row; synthesized from a filing-cited missing-Executed repair using template bidder_alias='Buyer Group' and executed_date=2014-12-14."
         },
         {
           "code": "executed_atomized",
@@ -1747,7 +1747,7 @@
         {
           "code": "executed_synthesized_per_q7",
           "severity": "info",
-          "reason": "\u00a7Q7: petsmart-inc xlsx lacked an Executed row; synthesized from the final Buyer Group bid using the merger-agreement signature date 2014-12-14."
+          "reason": "\u00a7Q7: petsmart-inc xlsx lacked an Executed row; synthesized from a filing-cited missing-Executed repair using template bidder_alias='Buyer Group' and executed_date=2014-12-14."
         },
         {
           "code": "executed_atomized",
@@ -1787,7 +1787,7 @@
         {
           "code": "executed_synthesized_per_q7",
           "severity": "info",
-          "reason": "\u00a7Q7: petsmart-inc xlsx lacked an Executed row; synthesized from the final Buyer Group bid using the merger-agreement signature date 2014-12-14."
+          "reason": "\u00a7Q7: petsmart-inc xlsx lacked an Executed row; synthesized from a filing-cited missing-Executed repair using template bidder_alias='Buyer Group' and executed_date=2014-12-14."
         },
         {
           "code": "executed_atomized",
@@ -1827,7 +1827,7 @@
         {
           "code": "executed_synthesized_per_q7",
           "severity": "info",
-          "reason": "\u00a7Q7: petsmart-inc xlsx lacked an Executed row; synthesized from the final Buyer Group bid using the merger-agreement signature date 2014-12-14."
+          "reason": "\u00a7Q7: petsmart-inc xlsx lacked an Executed row; synthesized from a filing-cited missing-Executed repair using template bidder_alias='Buyer Group' and executed_date=2014-12-14."
         },
         {
           "code": "executed_atomized",
