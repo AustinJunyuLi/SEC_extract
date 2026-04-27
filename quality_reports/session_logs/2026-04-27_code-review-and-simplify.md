@@ -41,4 +41,37 @@ Commits in order:
 
 ## Status
 
-In progress. 5 reviewers running.
+Complete. 5 commits landed on top of `ec0ba8e`:
+
+1. `26977b2` validator: §P-R6 scalar bidder_type + §P-S4 wrong-phase test + cleanup
+2. `7055015` docs: sync AGENTS/CLAUDE/README to current schema and §Q1–§Q7
+3. `6beb766` rules: strip iter-N provenance from rules/bids.md and rules/events.md
+4. `a044025` scripts: build_reference §Q1–§Q7 docstring + drop dead bt_nonUS load
+5. `34c4f0d` polish: align new code with existing module conventions
+
+## Findings
+
+- 5 parallel reviewers produced 16 raw findings; Haiku confidence scoring
+  + cross-reviewer agreement filtered to 12 actionable.
+- All 12 fixed. Final polish pass added 4 more (constant placement, test
+  parametrize, residual iter-N tags in pipeline.py, gendered pronoun) —
+  all 4 fixed.
+- Tests: 116 / 116 pass (was 112; +3 for §P-R6 parametrized + §P-S4
+  wrong-phase + accepts-scalar; net +4 distinct tests, +2 parametrize
+  cases).
+- Grep gates clean: no `non_us`/`{base,non_us`/`S/F/public/non-US` in
+  AGENTS or CLAUDE; no `iter-N` in any rules/*.md or pipeline.py; no
+  `§Q1–§Q5` stale refs anywhere; no `6 months` in invariants.md.
+
+## Outcomes
+
+- Validator now hard-rejects regressions to the pre-2026-04-27 nested
+  `bidder_type` schema, closing the false claim in `rules/bids.md`.
+- Multi-Executed wrong-phase path now exercised by tests, closing the
+  coverage gap from the §P-S4 relaxation in `20644dc`.
+- Orientation docs (CLAUDE / AGENTS / README) match the live §Q1–§Q7
+  state of `scripts/build_reference.py`.
+- Rulebook is timeless across `rules/bids.md`, `rules/events.md`,
+  `rules/invariants.md`, plus `pipeline.py` docstrings.
+- Dead code removed: `bt_nonUS` COL load, `_invariant_p_s3` `deal`
+  parameter.
