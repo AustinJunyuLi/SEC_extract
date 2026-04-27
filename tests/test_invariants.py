@@ -51,15 +51,19 @@ RUNNERS = {
         fixture.get("deal", {}),
     ),
     "pr6": lambda fixture: pipeline._invariant_p_r6(fixture.get("events", [])),
+    "pr7": lambda fixture: pipeline._invariant_p_r7(fixture.get("events", [])),
     "pd1": lambda fixture: pipeline._invariant_p_d1(fixture.get("events", [])),
     "pd2": lambda fixture: pipeline._invariant_p_d2(fixture.get("events", [])),
     "pd3": lambda fixture: pipeline._invariant_p_d3(fixture.get("events", [])),
     "pd5": lambda fixture: pipeline._invariant_p_d5(fixture.get("events", [])),
     "pd6": lambda fixture: pipeline._invariant_p_d6(fixture.get("events", [])),
+    "pd7": lambda fixture: pipeline._invariant_p_d7(fixture.get("events", [])),
+    "pd8": lambda fixture: pipeline._invariant_p_d8(fixture.get("events", [])),
     "ph5": lambda fixture: pipeline._invariant_p_h5(fixture.get("events", [])),
     "pl1": lambda fixture: pipeline._invariant_p_l1(fixture.get("events", [])),
     "pl2": lambda fixture: pipeline._invariant_p_l2(fixture.get("events", [])),
     "pg2": lambda fixture: pipeline._invariant_p_g2(fixture.get("events", [])),
+    "pg3": lambda fixture: pipeline._invariant_p_g3(fixture.get("events", [])),
     "ps1": lambda fixture: pipeline._invariant_p_s1(fixture.get("events", [])),
     "ps2": lambda fixture: pipeline._invariant_p_s2(
         fixture.get("deal", {}),
@@ -178,6 +182,18 @@ def test_pr3_acceptance_fixtures(fixture_name):
     _assert_fixture(fixture_name, "pr3")
 
 
+def test_p_r3_rejects_eliminated_taxonomy_codes():
+    invalid = ["Not In Vocabulary", "Finalist Round", "Bidder Rumor"]
+
+    flags = pipeline._invariant_p_r3([
+        {"bid_note": code} for code in invalid
+    ])
+
+    assert len(flags) == len(invalid)
+    assert {f["code"] for f in flags} == {"invalid_event_type"}
+    assert all(f["severity"] == "hard" for f in flags)
+
+
 @pytest.mark.parametrize(
     "fixture_name",
     ["synthetic_pr4_pass.json", "synthetic_pr4_fail.json"],
@@ -242,12 +258,138 @@ def test_pd5_acceptance_fixtures(fixture_name):
     _assert_fixture(fixture_name, "pd5")
 
 
+def test_p_d5_applies_only_to_explicit_drop_not_dropsilent():
+    events = [{
+        "bid_note": "DropSilent",
+        "bidder_name": "bidder_01",
+        "process_phase": 1,
+    }]
+
+    assert pipeline._invariant_p_d5(events) == []
+
+
 @pytest.mark.parametrize(
     "fixture_name",
     ["synthetic_pd6_pass.json", "synthetic_pd6_fail.json"],
 )
 def test_pd6(fixture_name):
     _assert_fixture(fixture_name, "pd6")
+
+
+def test_p_d7_valid_drop_reason_matrix_passes():
+    events = [
+        {
+            "bid_note": "Drop",
+            "drop_initiator": "target",
+            "drop_reason_class": "below_minimum",
+        },
+        {
+            "bid_note": "Drop",
+            "drop_initiator": "bidder",
+            "drop_reason_class": None,
+        },
+        {
+            "bid_note": "Drop",
+            "drop_initiator": "unknown",
+            "drop_reason_class": None,
+        },
+    ]
+
+    assert pipeline._invariant_p_d7(events) == []
+
+
+def test_p_d7_flags_inconsistent_drop_reason_matrix():
+    events = [
+        {
+            "bid_note": "Drop",
+            "drop_initiator": "target",
+            "drop_reason_class": None,
+        },
+        {
+            "bid_note": "Drop",
+            "drop_initiator": "bidder",
+            "drop_reason_class": "below_minimum",
+        },
+        {
+            "bid_note": "Drop",
+            "drop_initiator": "unknown",
+            "drop_reason_class": "target_other",
+        },
+    ]
+
+    flags = pipeline._invariant_p_d7(events)
+
+    assert [f["row_index"] for f in flags] == [0, 1, 2]
+    assert {f["code"] for f in flags} == {"drop_reason_class_inconsistent"}
+    assert all(f["severity"] == "soft" for f in flags)
+
+
+def test_p_d8_flags_formal_round_status_inconsistencies():
+    events = [
+        {
+            "bid_note": "Bid",
+            "bidder_name": "bidder_01",
+            "process_phase": 1,
+            "bid_type": "informal",
+            "submitted_formal_bid": True,
+            "invited_to_formal_round": True,
+        },
+        {
+            "bid_note": "Bid",
+            "bidder_name": "bidder_02",
+            "process_phase": 1,
+            "bid_type": "informal",
+            "submitted_formal_bid": False,
+            "invited_to_formal_round": True,
+        },
+        {
+            "bid_note": "Bid",
+            "bidder_name": "bidder_02",
+            "process_phase": 1,
+            "bid_type": "formal",
+        },
+        {
+            "bid_note": "Drop",
+            "bidder_name": "bidder_03",
+            "process_phase": 1,
+            "drop_reason_class": "never_advanced",
+            "invited_to_formal_round": True,
+        },
+    ]
+
+    flags = pipeline._invariant_p_d8(events)
+
+    assert [f["row_index"] for f in flags] == [0, 1, 3]
+    assert {f["code"] for f in flags} == {"formal_round_status_inconsistent"}
+    assert all(f["severity"] == "soft" for f in flags)
+
+
+def test_p_d8_valid_formal_round_status_passes():
+    events = [
+        {
+            "bid_note": "Bid",
+            "bidder_name": "bidder_01",
+            "process_phase": 1,
+            "bid_type": "informal",
+            "submitted_formal_bid": True,
+            "invited_to_formal_round": True,
+        },
+        {
+            "bid_note": "Bid",
+            "bidder_name": "bidder_01",
+            "process_phase": 1,
+            "bid_type": "formal",
+        },
+        {
+            "bid_note": "Drop",
+            "bidder_name": "bidder_02",
+            "process_phase": 1,
+            "drop_reason_class": "never_advanced",
+            "invited_to_formal_round": False,
+        },
+    ]
+
+    assert pipeline._invariant_p_d8(events) == []
 
 
 @pytest.mark.parametrize(
@@ -376,14 +518,13 @@ def test_ps4_executed_in_non_max_phase_fails_hard():
 @pytest.mark.parametrize(
     "bad_bidder_type,label",
     [
-        ({"base": "s", "non_us": True, "public": False}, "nested_object_pre_2026_04_27"),
+        ({"base": "s"}, "nested_object"),
         ("x", "unknown_string"),
     ],
 )
 def test_p_r6_rejects_invalid_bidder_type(bad_bidder_type, label):
-    """§P-R6: any bidder_type that is not a scalar in {"s","f","mixed"} or
-    null must fail hard. Covers the pre-2026-04-27 nested-object regression
-    and out-of-set string values."""
+    """§P-R6: any bidder_type that is not a scalar in {"s","f"} or
+    null must fail hard. Covers nested-object and out-of-set string values."""
     events = [{"bid_note": "Bid", "bidder_type": bad_bidder_type}]
     flags = pipeline._invariant_p_r6(events)
     codes = [f["code"] for f in flags]
@@ -393,16 +534,54 @@ def test_p_r6_rejects_invalid_bidder_type(bad_bidder_type, label):
     assert flags[0]["severity"] == "hard"
 
 
+def test_p_r6_rejects_out_of_set_scalar():
+    events = [{"bid_note": "Bid", "bidder_type": "unknown"}]
+
+    flags = pipeline._invariant_p_r6(events)
+
+    assert flags == [
+        {
+            "row_index": 0,
+            "code": "bidder_type_invalid_value",
+            "severity": "hard",
+            "reason": (
+                "§P-R6: bidder_type='unknown' (type 'str') is not a "
+                "scalar in {\"s\", \"f\"} or null."
+            ),
+        }
+    ]
+
+
 def test_p_r6_accepts_scalar_values():
-    """§P-R6: 's', 'f', 'mixed', and null must all pass without flags."""
+    """§P-R6: 's', 'f', and null must all pass without flags."""
     events = [
         {"bid_note": "Bid", "bidder_type": "s"},
         {"bid_note": "Bid", "bidder_type": "f"},
-        {"bid_note": "Bid", "bidder_type": "mixed"},
         {"bid_note": "NDA", "bidder_type": None},
     ]
     flags = pipeline._invariant_p_r6(events)
     assert flags == [], f"expected no flags; got {flags}"
+
+
+def test_p_r7_promotes_ca_type_ambiguous_to_hard():
+    events = [{
+        "bid_note": "ConsortiumCA",
+        "flags": [{"code": "ca_type_ambiguous", "severity": "soft"}],
+    }]
+
+    flags = pipeline._invariant_p_r7(events)
+
+    assert flags == [
+        {
+            "row_index": 0,
+            "code": "ca_type_ambiguous",
+            "severity": "hard",
+            "reason": (
+                "§P-R7: ca_type_ambiguous is hard after the taxonomy "
+                "redesign; ambiguous CA type requires adjudication."
+            ),
+        }
+    ]
 
 
 def test_p_g2_range_with_formal_bid_type_fails_hard():
@@ -438,6 +617,85 @@ def test_p_g2_range_with_informal_bid_type_passes():
     codes = [f["code"] for f in flags]
     assert "bid_range_must_be_informal" not in codes
     assert "bid_type_unsupported" not in codes
+
+
+def test_p_g2_accepts_final_round_informal_fallback_without_note():
+    events = [
+        {
+            "BidderID": 1,
+            "bid_note": "Final Round",
+            "process_phase": 1,
+            "bid_date_precise": "2026-01-10",
+            "final_round_announcement": False,
+            "final_round_informal": False,
+        },
+        {
+            "BidderID": 2,
+            "bid_note": "Bid",
+            "bidder_name": "bidder_01",
+            "process_phase": 1,
+            "bid_date_precise": "2026-01-10",
+            "bid_type": "formal",
+            "bid_type_inference_note": None,
+        },
+    ]
+
+    assert pipeline._invariant_p_g2(events) == []
+
+
+def test_p_g3_flags_final_round_announcement_without_submission_pair():
+    events = [
+        {
+            "bid_note": "Final Round",
+            "process_phase": 1,
+            "bid_date_precise": "2026-01-10",
+            "final_round_announcement": True,
+        },
+        {
+            "bid_note": "Bid",
+            "process_phase": 1,
+            "bid_date_precise": "2026-01-15",
+        },
+    ]
+
+    flags = pipeline._invariant_p_g3(events)
+
+    assert flags == [
+        {
+            "row_index": 0,
+            "code": "final_round_missing_non_announcement_pair",
+            "severity": "hard",
+            "reason": (
+                "§P-G3: Final Round announcement has subsequent bids "
+                "but no paired non-announcement Final Round row — check "
+                "for missing row."
+            ),
+        }
+    ]
+
+
+def test_p_g3_accepts_final_round_announcement_with_submission_pair():
+    events = [
+        {
+            "bid_note": "Final Round",
+            "process_phase": 1,
+            "bid_date_precise": "2026-01-10",
+            "final_round_announcement": True,
+        },
+        {
+            "bid_note": "Final Round",
+            "process_phase": 1,
+            "bid_date_precise": "2026-01-15",
+            "final_round_announcement": False,
+        },
+        {
+            "bid_note": "Bid",
+            "process_phase": 1,
+            "bid_date_precise": "2026-01-15",
+        },
+    ]
+
+    assert pipeline._invariant_p_g3(events) == []
 
 
 @pytest.mark.parametrize(

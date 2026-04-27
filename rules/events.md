@@ -6,7 +6,7 @@
 
 ## Resolved rules
 
-### §C1 — Final `bid_note` vocabulary (🟩 RESOLVED, 2026-04-18)
+### §C1 — Final `bid_note` vocabulary (🟩 RESOLVED, 2026-04-27)
 
 The `bid_note` field is drawn from a **closed vocabulary**. The extractor
 MUST NOT invent new values; if an event doesn't fit, flag it for rulebook
@@ -15,14 +15,12 @@ expansion.
 **Start-of-process:**
 - `Bidder Interest` — bidder approaches target, no concrete sale proposal.
 - `Bidder Sale` — bidder approaches with concrete sale proposal (price or clear intent).
-- `Target Interest` — target initiates discussions with a specific party, no committed sale (Alex's Mac Gray 6928 distinction — kept as its own code).
 - `Target Sale` — target's board resolves to sell / explore sale.
 - `Target Sale Public` — public announcement of target's sale process.
 - `Activist Sale` — activist pressure precedes the process (separate row before `Target Sale`).
 
 **Publicity:**
-- `Bid Press Release`
-- `Sale Press Release`
+- `Press Release` — public announcement not better represented by `Target Sale Public` or folded into `Executed`; use `press_release_subject` to distinguish `"bidder"` / `"sale"` / `"other"`.
 
 **Advisors:**
 - `IB` — investment bank retained.
@@ -31,26 +29,15 @@ expansion.
 **Counterparty events:**
 - `NDA` — **target ↔ bidder** confidentiality agreement (auction NDA, Type A per §I3). Grants the bidder access to MNPI; usually paired with a standstill. This is the auction-funnel signal counted by §Scope-1.
 - `ConsortiumCA` — **bidder ↔ bidder** confidentiality agreement (consortium / inter-bidder, Type B per §I3). Two would-be bidders share proprietary analysis / financing plans / strategic intent under mutual confidentiality. NOT auction-funnel signal; does NOT count toward §Scope-1's auction threshold; does NOT discharge §P-D6 (target-NDA precondition for a Bid).
-- `Drop` — bidder withdraws, unspecified reason.
-- `DropBelowM` — target rejects bid below minimum.
-- `DropBelowInf` — bidder does not advance past informal round.
-- `DropAtInf` — bidder self-withdraws at informal stage.
-- `DropTarget` — target rejects for other reasons (strategic, financing, scope).
+- `Drop` — filing-narrated withdrawal / rejection. Structured columns `drop_initiator` and `drop_reason_class` carry the agency and reason class.
 - `DropSilent` — bidder signed NDA but the filing narrates no later activity (no bid, no narrated drop, no execution); inferred withdrawal. Required by §I1; date is null with `date_unknown` info flag; agency is unknowable.
 
 **Bid rows:**
-- `Bid` — a bid was submitted (per §C3; replaces legacy `NA`-in-bid_note convention).
+- `Bid` — a bid was submitted (per §C3).
 
 **Round structure:**
-- `Final Round Ann`
-- `Final Round`
-- `Final Round Inf Ann`
-- `Final Round Inf`
-- `Final Round Ext Ann`
-- `Final Round Ext`
-- `Final Round Inf Ext Ann`
-- `Final Round Inf Ext`
-- `Auction Closed` — target unilaterally stops the auction without an announced deadline (distinct from `Final Round`, which has a formal cutoff).
+- `Final Round` — round-structure event. Structured columns `final_round_announcement`, `final_round_extension`, and `final_round_informal` carry the former matrix axes.
+- `Auction Closed` — target halts the auction without an announced deadline. Go-shop expiry with no topping bid is folded into `Executed.additional_note`, not a separate row.
 
 **Closing:**
 - `Executed` — merger agreement signed (one row per signer under §E1 / §E2.b).
@@ -59,13 +46,12 @@ expansion.
 - `Terminated` — prior sale process formally ended (Zep pattern).
 - `Restarted` — new process begins after prior `Terminated` (Zep pattern).
 
-**Total: 31 closed-vocabulary values.** Extractor emits exactly these; anything else → flag `unknown_bid_note`.
+**Total: 18 closed-vocabulary values.** Extractor emits exactly these; anything else → flag `unknown_bid_note`.
 
 **Note on exclusivity.** Exclusivity periods are NOT events in this vocabulary.
-They are re-encoded as an `exclusivity_days: int` attribute on the associated
-bid row (Zep 6405 pattern). `scripts/build_reference.py` migrates legacy
-"Exclusivity 30 days" xlsx rows accordingly; the extractor should never emit
-such a row.
+They are encoded as an `exclusivity_days: int` attribute on the associated
+bid row (Zep 6405 pattern). The extractor should never emit a separate
+exclusivity event row.
 
 **Cross-references.**
 - `rules/events.md` §C2 (capitalization).
@@ -84,34 +70,14 @@ carried by the other fields:
 - `bid_value*` fields — point/range/aggregate (per §H1–H4).
 - `bid_date_precise` / `bid_date_rough` (per §B).
 
-**Rejected — legacy convention (`bid_note = null` + non-null value columns).**
-Required the reader to infer event-type from which columns were populated.
-Brittle when a bid row has a null value (e.g., "indicated willingness to bid
-but declined to name a number"). Explicit `"Bid"` is unambiguous.
+**Rejected — inferred bid rows (`bid_note = null` + non-null value columns).**
+Required the reader to infer event type from populated value fields. This is
+brittle when a bid row has a null value, for example when a party indicates
+willingness to bid but declines to name a number. Explicit `"Bid"` is
+unambiguous.
 
-**Migration note.** Two legacy conventions appear in Alex's xlsx; both map
-to `bid_note = "Bid"` during the xlsx-to-JSON conversion:
-
-1. `bid_note` blank with non-null `bid_value*` columns → `bid_note = "Bid"`,
-   `bid_type` set from the xlsx `bid_type` column when present.
-
-2. `bid_note ∈ {"Inf", "Formal Bid", "Revised Bid"}` (Alex's event-type-
-   in-bid_note convention, which §C3 deprecates) → `bid_note = "Bid"` with:
-   - `"Inf"` → `bid_type = "informal"`
-   - `"Formal Bid"` → `bid_type = "formal"`
-   - `"Revised Bid"` → `bid_type = "formal"` and `additional_note` includes
-     `"revised"` provenance so a subsequent formal bid from the same bidder
-     remains traceable without a distinct `bid_note`.
-
-Both cases preserve the original xlsx label in a `legacy_bid_note` field on
-the converted row so the provenance survives. Documented in
-`reference/alex/README.md`.
-
-This resolves the prior internal tension between §C1 (text listed only
-`Bid`) and `rules/dates.md` §A3's rank table (which used the legacy labels
-`Inf`, `Formal Bid`, `Revised Bid` as distinct codes). §A3's rank table now
-ranks bid rows by `bid_type` rather than bid_note — see `rules/dates.md`
-§A3.
+Same-date ordering ranks bid rows by `bid_type` rather than by separate
+event labels — see `rules/dates.md` §A3.
 
 ---
 
@@ -121,11 +87,12 @@ ranks bid rows by `bid_type` rather than bid_note — see `rules/dates.md`
 rows as follows:
 
 - **Board resolves to sell** → `Target Sale`. Add `Target Sale Public` +
-  `Sale Press Release` as separate rows if the resolution is publicly
-  announced.
+  `Press Release` (`press_release_subject = "sale"`) only if the publicity
+  act is structurally distinct from the sale-process announcement.
 - **Unsolicited bid triggers the process** → `Bidder Sale` (on the bid row
-  itself OR a preceding discussion row). Add `Bid Press Release` if the
-  approach is leaked/announced publicly.
+  itself OR a preceding discussion row). Add `Press Release`
+  (`press_release_subject = "bidder"`) if the approach is leaked/announced
+  publicly.
 - **Bidder approaches with no concrete sale proposal** → `Bidder Interest`.
 - **Activist pressure precedes the process** → `Activist Sale` as a
   separate row BEFORE `Target Sale` (Petsmart pattern). Per §D1.b,
@@ -133,7 +100,18 @@ rows as follows:
   collapse to a single row only when the filing treats them as a
   coordinated group.
 - **Target initiates private discussions with a specific party without a
-  board-level sale resolution** → `Target Interest` (Mac Gray pattern).
+  board-level sale resolution** → `Bidder Interest` with
+  `additional_note` including `"target-initiated"` (Mac Gray pattern).
+
+`Bidder Interest` is for **first-contact initiation only**. A later
+diligence call, negotiation contact, or follow-up meeting with a bidder who
+already has a `Bidder Interest`, `NDA`, or `Bid` row in the same
+`process_phase` does NOT warrant a fresh `Bidder Interest` row. Use the
+later passage as context for the relevant existing row instead.
+
+Emit at most one `Target Sale` per `process_phase` unless the filing narrates
+a real re-authorization after a hiatus. Routine strategic-review discussion
+does not create another `Target Sale` row.
 
 **Concurrent / overlapping initiation patterns:**
 
@@ -208,8 +186,8 @@ Schedule 13D…"*).
    separate letters, separate press releases) → **N rows**, one per
    activist. Each row's `bidder_alias` = that activist's filing label.
 2. Filing narrates activists as a coordinated group → **1 row** with
-   `bidder_alias` = the group label and `joint_bidder_members` listing
-   the constituent canonical ids.
+   `bidder_alias` = the group label only when no constituent count or
+   identities are available; otherwise atomize per §E2.b.
 3. Ambiguous (filing narrates activists on different dates but mentions
    coordination at some point) → default to per-activist rows; flag
    `multi_activist_coordination_ambiguous` (soft).
@@ -220,8 +198,8 @@ Schedule 13D…"*).
   not 1.
 - Coordinated-group example (hypothetical): *"An investor consortium
   led by X, including Y and Z, filed a joint 13D and issued a press
-  release calling for a sale"* → **1 row** with the coordinated-group
-  label.
+  release calling for a sale"* → **rows for X, Y, and Z** if all three
+  constituents are identifiable.
 
 **Migration note.** Alex's Petsmart workbook collapsed JANA + Longview
 into 1 Activist Sale row; under this rule the AI emits 2. This is a
@@ -237,34 +215,60 @@ legitimate AI-identified correction per the ground-truth epistemology
 
 ---
 
-### §I1 — Dropout code set (🟩 RESOLVED, 2026-04-18)
+### §I1 — Dropout taxonomy (🟩 RESOLVED, 2026-04-27)
 
-**The closed dropout vocabulary:**
+**The closed dropout vocabulary has two codes.**
 
-| Code | Meaning | Initiator |
+| Code | Meaning | Structured fields |
 |---|---|---|
-| `Drop` | Bidder withdraws, unspecified / generic reason | **Voluntary** (bidder) |
-| `DropBelowM` | Target rejects because bid is below minimum / reserve | **Target** |
-| `DropBelowInf` | Bidder does not advance past informal round (target's cut) | **Target** |
-| `DropAtInf` | Bidder self-withdraws at informal stage | **Voluntary** (bidder) |
-| `DropTarget` | Target rejects for other reasons (financing concerns, strategic fit, scope mismatch, regulatory) | **Target** |
-| `DropSilent` | Bidder signed NDA but the filing narrates no later activity for them (no bid, no narrated drop, no execution); inferred withdrawal | **Inferred** (no narrated agency) |
+| `Drop` | Filing-narrated withdrawal or rejection | `drop_initiator`, `drop_reason_class`, optional free-text reason in `additional_note` |
+| `DropSilent` | Bidder signed NDA but filing narrates no later bidder-specific activity | both drop fields null; agency is unknowable |
 
-**Narrative reason** captured in `drop_reason_note` (free text). Examples:
-`"Not a strategic fit"` (Imprivata 6089), `"No firm financing"` (Mac Gray
-Party B), `"Only interested in select assets"` (STec 7154).
+**`Drop.drop_initiator` (required on `Drop`).**
+- `"target"` when the filing names the target, board, committee, management,
+  or target-side advisor as the subject of the rejection.
+- `"bidder"` when the filing names the bidder as withdrawing, declining,
+  stopping, or failing to respond.
+- `"unknown"` when agency is genuinely ambiguous after reading the source
+  quote. Attach `drop_initiator_ambiguous` (soft) with the unclear language.
 
-**Voluntary vs target-initiated — agency requirement.** Every `Drop*` row's
-`source_quote` MUST contain a verb / phrase that identifies the initiator:
-- Voluntary: `"withdrew"`, `"declined to continue"`, `"chose not to submit"`,
-  `"ceased discussions"`, `"informed [target] that it would not…"`.
-- Target-initiated: `"Company terminated discussions with…"`, `"[IB]
-  informed [bidder] that its bid was insufficient"`, `"[Target] decided not
-  to advance [bidder]"`, `"invited to submit…" → [bidder] not on list`.
+**`Drop.drop_reason_class` (required when applicable).**
 
-If the filing's language is genuinely ambiguous, default to `Drop` (generic)
-and emit flag `drop_agency_ambiguous` (severity: soft) with the unclear
-quote. **Do not guess.**
+| `drop_initiator` | Allowed values |
+|---|---|
+| `"target"` | `"below_market"` / `"below_minimum"` / `"target_other"` / `"never_advanced"` / `"scope_mismatch"` |
+| `"bidder"` | `null` by default, or `"no_response"` only when the filing literally narrates non-response, or `"scope_mismatch"` |
+| `"unknown"` | `null` |
+
+Use `"scope_mismatch"` when the filing says the bidder's interest ended
+because the assets or transaction scope did not match what the bidder sought.
+Follow the filing's verb subject for `drop_initiator`: if a bidder "declined"
+because it wanted only selected assets, this is `drop_initiator = "bidder"`
+and `drop_reason_class = "scope_mismatch"`.
+
+Treat "would not increase to match a superior offer" and "below a stated
+reserve/minimum" as `"below_minimum"`. The target's minimum may be an
+explicit reserve price or the superior competing bid the board required the
+bidder to match.
+
+**Conversion fixtures.**
+
+| Fixture | `drop_initiator` | `drop_reason_class` | Reason note |
+|---|---|---|---|
+| Imprivata Strategic 1: no longer interested | `"bidder"` | `null` | no longer interested |
+| Imprivata Strategic 2: internal priorities | `"bidder"` | `null` | internal corporate priorities |
+| Imprivata Sponsor A: board would not continue at same valuation | `"target"` | `"never_advanced"` | Board declined to advance at June-9 price |
+| Mac Gray Party C: did not submit or reiterate | `"bidder"` | `"no_response"` | null |
+| Mac Gray Party A: below board's stated threshold | `"target"` | `"below_minimum"` | below board's stated minimum |
+| Mac Gray Party B: contingent value and financing risk | `"target"` | `"target_other"` | financing risk |
+| Saks Sponsor A/E: would not improve above lower range | `"target"` | `"below_minimum"` | below board's stated minimum |
+| Petsmart Industry Participant: not invited because of board concerns | `"target"` | `"target_other"` | board concerns |
+| Petsmart Financial 5/6: below advancement threshold | `"target"` | `"never_advanced"` | below threshold for advancement |
+| Providence lower-price parties not advanced | `"target"` | `"never_advanced"` | lower price than advancing parties |
+| Providence final loser would not match superior offer | `"target"` | `"below_minimum"` | would not match superior offer |
+| STec Company E/F limited-assets mismatch | `"bidder"` | `"scope_mismatch"` | limited-assets scope mismatch |
+| STec Company D diligence-timeline incompatibility | `"bidder"` | `null` | diligence-timeline incompatible |
+| Penford stale-prior parties: discussions did not result in offers | `"unknown"` | `null` | discussions did not result in offers |
 
 **NDA-only rows — bidders who signed but have no later narrated activity.**
 
@@ -289,12 +293,12 @@ a backstop, not an expected-noise channel.
 
 Rationale: silent post-NDA behavior IS a withdrawal — the filing's silence
 is the evidence. Encoding it as a dedicated `DropSilent` code (rather than
-generic `Drop` or `DropAtInf`) preserves the distinction between
-filing-narrated drops and inferred-from-silence drops, which matters for
-downstream auction-funnel analysis. Re-citing the NDA quote is consistent
-with §R2 because the row's *meaning* (no later activity) is genuinely
-sourced from that bidder's absence from the rest of the filing; the NDA
-passage is the only concrete anchor the filing gives us.
+generic `Drop`) preserves the distinction between filing-narrated drops and
+inferred-from-silence drops, which matters for downstream auction-funnel
+analysis. Re-citing the NDA quote is consistent with §R2 because the row's
+*meaning* (no later activity) is genuinely sourced from that bidder's absence
+from the rest of the filing; the NDA passage is the only concrete anchor the
+filing gives us.
 
 Reverses the earlier "do not fabricate catch-all Drops" stance. The
 earlier rationale — "synthetic Drops would have reused one generic quote
@@ -308,9 +312,9 @@ When bidders who signed NDAs individually later join as a **joint bidder /
 consortium** (Petsmart pattern: multiple sponsors + strategics sign
 individual NDAs, form a consortium to bid), and that consortium drops:
 
-- Emit **one `Drop*` row per original bidder** (per their individual NDA),
+- Emit **one `Drop` row per original bidder** (per their individual NDA),
   citing the consortium drop event.
-- Each row carries the same `drop_reason_note` and `source_quote` (the
+- Each row carries the same structured drop fields and `source_quote` (the
   consortium's drop statement).
 - Each row flags `{"code": "consortium_drop_split", "severity": "info",
   "reason": "consortium <name> dropped; row split per constituent NDA"}`.
@@ -325,7 +329,7 @@ signature-block constituents, or count placeholders as available.
 drop row, so the bidder funnel stays clean: every NDA-signer has a fate.
 
 **Cross-references.**
-- `rules/events.md` §D1 (initiation; `Drop*` rows are always preceded by
+- `rules/events.md` §D1 (initiation; `Drop` rows are always preceded by
   an `NDA` or `Bidder Interest` row per §P-D5).
 - `rules/events.md` §I2 (re-engagement after drop).
 - `rules/bidders.md` §E2 (joint-bidder representation).
@@ -382,9 +386,15 @@ a CA, use these heuristics to classify:
 | *"\[Bidder1\] and \[Bidder2\] entered into a confidentiality agreement"* / *"the consortium members entered into a confidentiality agreement among themselves"* / *"\[Bidder\] joined the buyer group / consortium and executed a confidentiality agreement with \[other-bidder(s)\]"* | B | `ConsortiumCA` |
 | *"\[Activist Holder\] / \[Major Shareholder\] entered into a confidentiality agreement with \[Buyer Group\] regarding their potential rollover"* / *"\[Shareholder\] agreed to roll their equity"* | C | **skip** (per §M5) |
 
+`ConsortiumCA` requires the filing to explicitly say a confidentiality
+agreement was entered into, executed, or signed between two or more bidders.
+Phrases such as "permission to work together," "authorized to coordinate,"
+"discussions among bidders," or "joint participation in due diligence" are
+not CA events by themselves.
+
 **When the language is ambiguous** between A and B (e.g., a CA whose
 parties are not clearly named), default to Type A and attach
-`{"code": "ca_type_ambiguous", "severity": "soft", "reason": "<summary>"}`.
+`{"code": "ca_type_ambiguous", "severity": "hard", "reason": "<summary>"}`.
 Austin adjudicates against the filing.
 
 **ConsortiumCA emission rule.**
@@ -394,8 +404,6 @@ Austin adjudicates against the filing.
 - `bidder_alias` = filing's verbatim label for the consortium relationship
   (e.g., `"Longview and the Buyer Group"`)
 - `bid_date_precise` = the CA execution date as narrated
-- `joint_bidder_members` = optional; populated when the filing names
-  the consortium constituents
 - `source_quote` / `source_page` = the filing language describing the
   consortium CA
 - `process_phase` follows the surrounding events (typically phase 1)
@@ -613,39 +621,55 @@ now, treat as a deal-level evidence entry analogous to an event `source_quote`.)
 - **Both event + deal-level** — duplicative; the deal-level field already
   carries the name, and retention timing is analytically uninformative.
 
-**Migration note.** Alex's legacy `comments_1` entries containing "Legal
-advisor: [Firm]" are promoted to the deal-level fields during the
-xlsx → JSON conversion in Stage 2.
-
 **Cross-references.**
 - `rules/schema.md` §R1 (deal-level fields list).
 - `rules/schema.md` §R3 (evidence requirement extends to deal-level fields).
 
 ---
 
-### §K1 — Final-round vocabulary (🟩 RESOLVED, 2026-04-18)
+### §K1 — Final-round structure (🟩 RESOLVED, 2026-04-27)
 
-**Decision.** The §C1 final-round matrix is accepted as **complete for the
-MVP**. Nine codes:
+**Decision.** The final-round matrix is represented by one event code plus
+three structured columns:
 
-| Code | Informal? | Extension? | Announcement? |
+- `bid_note = "Final Round"`
+- `final_round_announcement: bool`
+- `final_round_extension: bool`
+- `final_round_informal: bool | null`
+
+`final_round_announcement = true` when the row records the announcement,
+process letter, invitation, or request. It is `false` when the row records
+the deadline/submission state.
+
+`final_round_extension = true` when the row records an extension or re-request
+after an earlier final-round event. It is `false` for the initial round.
+
+`final_round_informal = true` for non-binding indications or preliminary
+proposals; `false` for formal / binding / best-and-final rounds; `null` only
+when the filing genuinely does not classify the round.
+
+**Pairing rule.** A `Bid` row is paired first with the most recent
+`Final Round` event in the same `process_phase` whose
+`final_round_announcement = false` and whose date is no later than the bid
+date. If no non-announcement row exists, fall back to the most recent
+applicable `Final Round` event in the phase. If none exists, the bid is not
+in a final round and §G1's pre-process-letter informal default may apply.
+
+**Conversion fixtures.**
+
+| Fixture | `final_round_announcement` | `final_round_informal` | `final_round_extension` |
 |---|---|---|---|
-| `Final Round Ann` | No | No | Yes (target announces final round) |
-| `Final Round` | No | No | No (bids submitted at final round) |
-| `Final Round Inf Ann` | Yes | No | Yes |
-| `Final Round Inf` | Yes | No | No |
-| `Final Round Ext Ann` | No | Yes | Yes |
-| `Final Round Ext` | No | Yes | No |
-| `Final Round Inf Ext Ann` | Yes | Yes | Yes |
-| `Final Round Inf Ext` | Yes | Yes | No |
-| `Auction Closed` | — | — | — (target halts without announced deadline; distinct from `Final Round`, which has a formal cutoff) |
+| Imprivata June 24 process letters requesting final bids | `true` | `false` | `false` |
+| Imprivata July 8 only Thoma Bravo submitted | `false` | `false` | `false` |
+| Mac Gray August 27 revised written-proposal request | `true` | `true` | `false` |
+| Mac Gray September 11 final-indications request | `true` | `false` | `false` |
+| STec May 16 final-round process letters | `true` | `false` | `false` |
+| STec May 29 best-and-final request | `true` | `false` | `true` |
+| STec May 30 reaffirmation / additional-time response | `false` | `false` | `true` |
 
-Suffix grammar: `Inf` = informal round · `Ext` = deadline extension ·
-`Ann` = target's announcement of the round (vs. the bids submitted in it).
-
-**Extractor behavior.** If a filing uses final-round language that doesn't
-map to one of the 9 codes, emit flag `unknown_final_round_phrase` (severity:
-soft) with the verbatim quote. Do not force-fit.
+**Auction Closed.** Use `Auction Closed` only when the target halts the
+auction without an announced deadline. A go-shop expiry with no topping bid
+is not an `Auction Closed` row; fold it into `Executed.additional_note`.
 
 **Cross-references.**
 - `rules/events.md` §C1 (vocabulary).
@@ -662,21 +686,22 @@ language, even when the filing does not explicitly say "final round."
 - *"the Board authorized [IB] to advance [subset] to the second phase"*
 - *"[subset] was invited to submit final proposals"*
 - *"[Target] selected [subset] to continue in the process"*
-- *"[IB] sent process letters to [subset]"* (typically = `Final Round Ann`
-  since process letters contain the deadline and instructions)
+- *"[IB] sent process letters to [subset]"* (typically =
+  `Final Round` with `final_round_announcement = true`)
 
 **Emission rule.**
 - If the subsequent bids from the named subset are submitted with
-  binding-offer language → `Final Round Ann` on the invitation date,
-  `Final Round` on the submission date(s).
-- If subsequent bids are non-binding / informal → `Final Round Inf Ann`,
-  then `Final Round Inf`.
+  binding-offer language → `Final Round` announcement row with
+  `final_round_informal = false`, then a non-announcement `Final Round`
+  row on the submission date(s).
+- If subsequent bids are non-binding / informal → same structure with
+  `final_round_informal = true`.
 - Flag every inferred row with `{"code": "final_round_inferred", "severity": "info", "reason": "no explicit 'final round' phrase; inferred from subset-invitation language"}`.
 
 **When NOT to infer.**
 - Subset invitation without subsequent bids from the named parties → do NOT
-  emit a final-round row. Emit the subset as `DropBelowInf` / `DropAtInf` per
-  §I1 and note the pattern in `flags`.
+  emit a final-round row. Emit the subset as `Drop` per §I1 and note the
+  pattern in `flags`.
 - Subset invitation language that is ambiguous about whether it's a final
   round or just a narrowing (e.g., target continues to accept new bidders
   afterward) → flag `final_round_ambiguous` (soft) and default to NOT
@@ -690,7 +715,7 @@ language, even when the filing does not explicitly say "final round."
 
 **Cross-references.**
 - `rules/events.md` §C1 (vocabulary).
-- `rules/events.md` §K1 (final-round matrix).
+- `rules/events.md` §K1 (final-round structured columns).
 - `rules/bids.md` §G1 (informal vs formal — determines which `Inf` suffix).
 
 ---

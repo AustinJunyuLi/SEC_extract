@@ -13,14 +13,67 @@ def test_bidder_type_emits_scalar_after_drop_geography_and_listing():
 
     Pre-C1 the converter emitted a nested object with base, geography, and
     listing-status fields.
-    Post-C1 it emits "s" (or "f" / "mixed" / None).
+    Post-taxonomy-redesign it emits "s" (or "f" / None).
     """
     payload = build_deal("medivation")
     for ev in payload["events"]:
         bt = ev.get("bidder_type")
         assert bt is None or isinstance(bt, str), f"bidder_type must be str|None, got {type(bt).__name__}: {bt!r}"
         if isinstance(bt, str):
-            assert bt in ("s", "f", "mixed"), f"unexpected bidder_type value: {bt!r}"
+            assert bt in ("s", "f"), f"unexpected bidder_type value: {bt!r}"
+
+
+def test_reference_converter_emits_redesigned_taxonomy_for_all_deals():
+    required_new_columns = {
+        "drop_initiator",
+        "drop_reason_class",
+        "final_round_announcement",
+        "final_round_extension",
+        "final_round_informal",
+        "press_release_subject",
+        "invited_to_formal_round",
+        "submitted_formal_bid",
+    }
+
+    for slug in build_reference.DEAL_ROWS:
+        payload = build_deal(slug)
+        for ev in payload["events"]:
+            assert ev["bid_note"] in VALID_BID_NOTES
+            assert required_new_columns <= set(ev), (
+                f"{slug} row {ev.get('BidderID')} missing redesigned columns"
+            )
+            assert ev.get("bidder_type") in ("s", "f", None)
+
+
+def test_reference_converter_maps_source_rows_to_structured_modifiers():
+    medivation = build_deal("medivation")
+    press = next(
+        ev for ev in medivation["events"]
+        if ev.get("press_release_subject") == "bidder"
+    )
+    assert press["bid_note"] == "Press Release"
+
+    imprivata = build_deal("imprivata")
+    target_cut = next(
+        ev for ev in imprivata["events"]
+        if ev.get("bid_note") == "Drop"
+        and ev.get("drop_initiator") == "target"
+        and ev.get("drop_reason_class") == "never_advanced"
+    )
+    assert target_cut["bid_note"] == "Drop"
+    assert target_cut["drop_initiator"] == "target"
+    assert target_cut["drop_reason_class"] == "never_advanced"
+
+    final_round = next(
+        ev for ev in imprivata["events"]
+        if ev.get("bid_note") == "Final Round"
+        and ev.get("final_round_announcement") is True
+        and ev.get("final_round_extension") is True
+    )
+    assert final_round["bid_note"] == "Final Round"
+    assert final_round["final_round_announcement"] is True
+    assert final_round["final_round_extension"] is True
+    assert final_round["final_round_informal"] is False
 
 
 def test_build_deal_normalizes_providence_blank_bid_note_in_memory():
@@ -34,10 +87,6 @@ def test_build_deal_normalizes_providence_blank_bid_note_in_memory():
     )
     assert g_and_w_nda["bid_note"] == "NDA"
     assert g_and_w_nda["bid_type"] is None
-    assert any(
-        flag["code"] == "legacy_blank_bid_note_normalized"
-        for flag in g_and_w_nda["flags"]
-    )
 
 
 def test_build_deal_migrates_zep_exclusivity_event_in_memory():
@@ -53,10 +102,6 @@ def test_build_deal_migrates_zep_exclusivity_event_in_memory():
         and ev["bid_note"] == "Bid"
     )
     assert revised_bid["exclusivity_days"] == 30
-    assert any(
-        flag["code"] == "legacy_exclusivity_event_migrated"
-        for flag in revised_bid["flags"]
-    )
 
 
 def test_build_deal_emits_scalar_bidder_type():
@@ -158,7 +203,7 @@ def test_mac_gray_executed_atomizes_to_two_rows():
     assert set(aliases) == expected
 
 
-def test_range_bid_with_formal_legacy_label_is_coerced_to_informal():
+def test_range_bid_with_formal_source_label_is_coerced_to_informal():
     """C4 — true range rows are informal after converter migration."""
     for slug in ("medivation", "imprivata", "zep", "providence-worcester",
                  "penford", "mac-gray", "petsmart-inc", "stec", "saks"):

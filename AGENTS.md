@@ -120,26 +120,38 @@ repo.
 
 ## Current status
 
-- **Stage 1 complete.** All 54 rule decisions ratified with Alex in a
-  power-run session; full decision records live in `rules/*.md`. Tracker
-  `skill_open_questions.md` shows 0 🟥 / 54 🟩.
-- **Stage 2 complete.**
-  - `scripts/build_reference.py` converts the xlsx →
-    `reference/alex/{slug}.json` for all 9 reference deals, applying the §Q
-    workbook overrides, §E3 canonical bidder IDs, §F1 bidder-type collapse,
-    §A1–§A3 chronological BidderID reassignment, and Scope-3 drops.
-  - `scoring/diff.py` runs end-to-end and emits a human-review markdown +
-    JSON report with verdict checkboxes per divergence.
-- **Stage 3 implementation landed.** `pipeline.py` (filing loader, prompt
-  builder, Python validator, finalization helpers) is live, and `run.py`
-  is a CLI shim that validates and finalizes a saved raw extraction
-  instead of orchestrating the whole loop itself.
+- **Stages 1 & 2 complete.** 54 rule decisions ratified with Alex
+  (`skill_open_questions.md` shows 0 🟥 / 54 🟩); all 9
+  `reference/alex/*.json` files build under the current schema; and
+  `scoring/diff.py` runs end-to-end.
+- **Stage 3 live.** `pipeline.py` (filing loader, extractor prompt builder,
+  deterministic Python validator, finalization helpers) and the `run.py`
+  finalization CLI are live.
+- **Taxonomy redesign implemented and hard-cleaned.** The current
+  `rules/events.md` §C1 vocabulary has 18 values plus structured columns for
+  drop agency, final-round modifiers, publicity subject, and formal-stage
+  status. Retired labels, historical quality reports, generated scoring reports,
+  and one-off migration helpers were purged on 2026-04-27. Git history is
+  the compatibility record.
 - **Reference-set state:** see `state/progress.json` for live per-deal
   status. Specific counts are moving targets and drift quickly; treat
   the progress ledger as source of truth, not this file.
+- **Rulebook coherence.**
+  - §P-D5 is implemented in `pipeline.py` as the structural twin of §P-D6
+    (both have the §D1.a `unsolicited_first_contact` exemption).
+  - §G2 in `rules/bids.md` defines the §P-G2 satisfiers: true range bid
+    with `lower < upper`, a ≤300-character `bid_type_inference_note`, or
+    paired/fallback `Final Round.final_round_informal` evidence.
+  - §B5 communication-date directionality is formalized in
+    `rules/dates.md`.
 - **Exit clock:** not met. Gate is 3 consecutive unchanged-rulebook
   clean runs on all 9 reference deals; any rulebook change resets the
   clock. See `SKILL.md` for the status taxonomy.
+- **Open adjudication question (Austin's call):** NDA
+  atomization-vs-aggregation on zep / mac-gray / providence / petsmart.
+  Current §E2.b says atomize unless the filing narrates consortium
+  activity. Decide per deal whether to tighten §E2.b or regenerate Alex's
+  reference.
 - **Target-deal gate remains closed.** Do **not** run on the 392 target
   deals until all 9 reference deals are manually verified against their
   filings and the rulebook is stable across 3 consecutive unchanged full
@@ -154,13 +166,13 @@ repo.
 | `skill_open_questions.md` | Slim Stage 1 tracker. Indexes every 🟥 OPEN question across `rules/`. |
 | `rules/schema.md` | Output schema: columns, types, deal-level vs event-level. |
 | `rules/events.md` | Event vocabulary (closed list): start-of-process, NDA, IB, final rounds, dropouts, closing. |
-| `rules/bidders.md` | Bidder identity, type classification (`"s"`/`"f"`/`"mixed"`), aggregation, joint bidders. |
+| `rules/bidders.md` | Bidder identity, type classification (`"s"`/`"f"`), aggregation, consortium atomization. |
 | `rules/bids.md` | Bid value structure (ranges, composite, aggregate), informal-vs-formal classification, skip rules. |
 | `rules/dates.md` | Rough-date mapping ("mid-July" → calendar date), event sequencing, BidderID. |
 | `rules/invariants.md` | Hard/soft/info checks the Python validator runs. |
 | `prompts/extract.md` | Extractor agent prompt. |
 | `pipeline.py` | Live Python plumbing: filing loader, extractor prompt builder, validator, output writers, state updaters. |
-| `scoring/diff.py` | AI-vs-Alex diff report generator. Produces human-readable reports for manual review. Not a grader. |
+| `scoring/diff.py` | AI-vs-Alex diff reporter. Prints human-review diffs by default; `--write` explicitly emits markdown/JSON artifacts. Not a grader. |
 | `state/progress.json` | Per-deal status ledger (`pending`/`validated`/`passed`/`passed_clean`/`verified`/`failed`). |
 | `state/flags.jsonl` | Append-only validator flag log. |
 | `output/extractions/{deal}.json` | Per-deal extraction output (AI-produced). |
@@ -179,8 +191,8 @@ Alex hand-corrected these from the legacy dataset. They are the development / ca
 | Deal slug | Target | Rows | Archetype it tests |
 |---|---|---|---|
 | `providence-worcester` | Providence & Worcester | 6024–6059 | English-auction; CVR consideration; many rough dates |
-| `medivation` | Medivation | 6060–6075 | Classic `Bidder Sale`; `Bid Press Release` (simplest) |
-| `imprivata` | Imprivata | 6076–6104 | `Bidder Interest` → `Bidder Sale`; `DropBelowInf` / `DropAtInf` |
+| `medivation` | Medivation | 6060–6075 | Classic `Bidder Sale`; bidder publicity via `Press Release` (simplest) |
+| `imprivata` | Imprivata | 6076–6104 | `Bidder Interest` → `Bidder Sale`; `Drop` agency/reason classification |
 | `zep` | Zep | 6385–6407 | `Terminated` then `Restarted` (two separate auctions) |
 | `petsmart-inc` | Petsmart | 6408–6457 | `Activist Sale`; consortium winner; 15 NDAs same day |
 | `penford` | Penford | 6461–6485 | Two stale prior attempts (2007, 2009); near-single-bidder endgame |
@@ -202,7 +214,7 @@ Alex hand-corrected these from the legacy dataset. They are the development / ca
   `bid_type` carries the informal/formal distinction. Legacy labels like
   `Inf`, `Formal Bid`, and `Revised Bid` are migration noise and should not
   appear in current AI output.
-- **`bidder_type` is a scalar string `"s" | "f" | "mixed" | null`.** There is no
+- **`bidder_type` is a scalar string `"s" | "f" | null`.** There is no
   schema-level `note` field; explanatory prose lives in evidence or
   free-text note fields.
 - **AI rows must carry `source_quote` and `source_page`.** Alex's reference
@@ -217,7 +229,7 @@ Alex hand-corrected these from the legacy dataset. They are the development / ca
   received Y" communications use receipt date; outgoing process letters
   use sent date.
 - **Post-execution press releases are folded into `Executed`.** Do not
-  emit a separate `Sale Press Release` row after signing.
+  emit a separate sale `Press Release` row after signing.
 - **Unnamed-party placeholders follow the minimum-supported-count rule.**
   Exact counts stay exact; `"several"` means at least 3 total parties;
   vaguer plurals emit one placeholder plus an ambiguity flag.
@@ -252,12 +264,12 @@ Current handling:
 - **Be skeptical. Cite rows. Check dates.** Austin explicitly asks for accuracy over speed and is happy to be told he's wrong.
 - **Every extracted row must carry `source_quote` and `source_page`.** Rows without evidence are rejected by the validator. This is also what makes manual verification tractable — Austin can confirm each row by reading the cited passage.
 - **Reset context per deal.** No cross-deal state in the model. Everything persists through `rules/`, `state/progress.json`, and `output/`.
-- **Treat dated planning docs as snapshots.** Historical adjudication,
-  comparison, handoff, session-log, report, and scoring-result artifacts
-  were purged on 2026-04-27 before the clean re-extraction pass. For
-  current truth, prefer `rules/`, `prompts/`, `pipeline.py`, `run.py`,
-  `state/progress.json`, `output/extractions/`, `SKILL.md`, and this file;
-  use git history for old reports.
+- **Current truth lives in the live contract files.** Historical
+  adjudication, comparison, handoff, session-log, report, and scoring-result
+  artifacts were purged on 2026-04-27. Prefer `rules/`, `prompts/`,
+  `pipeline.py`, `run.py`, `state/progress.json`, `output/extractions/`,
+  `reference/alex/`, `SKILL.md`, and this file; use git history for old
+  reports.
 - **Use the user's folder name ("the folder you selected") when referring to file locations**, not sandbox paths.
 - **Before adding a new agent or rule file, name the assumption it encodes.** If you can't say what the model fails at without it, don't add it.
 - **No backward compatibility.** When a schema, rule, prompt contract, state
@@ -271,14 +283,15 @@ Current handling:
 
 ## Current Stage 3 follow-ups
 
-- Adjudicate the NDA atomization-vs-aggregation pattern across
-  zep / mac-gray / providence / petsmart (AI atomizes 15–27 NDAs; Alex
-  aggregates 2–3). Either tighten §E2.b or regenerate Alex's reference.
+- **Adjudicate the NDA atomization-vs-aggregation pattern.** AI
+  atomizes NDAs; Alex's workbook often aggregates. Current §E2.b says
+  atomize unless filing narrates consortium activity. Austin's call per deal
+  whether to tighten §E2.b or regenerate Alex's reference.
 
 ## Exit criteria for each stage
 
 **Stage 1 done when:** every 🟥 in every `rules/*.md` is resolved to 🟩. `skill_open_questions.md` shows zero open items.
 
-**Stage 2 done when:** `reference/alex/*.json` contains all 9 reference deals in schema-conformant form; `scoring/diff.py` runs end-to-end and emits a human-readable diff on one reference deal.
+**Stage 2 done when:** `reference/alex/*.json` contains all 9 reference deals in schema-conformant form; `scoring/diff.py` runs end-to-end and prints a human-readable diff on one reference deal.
 
 **Stage 3 done when:** Austin has manually verified the AI output against each of the 9 reference deals' filings. Every AI-vs-Alex disagreement has been adjudicated. Hard invariants pass 100%. The rulebook has remained unchanged across 3 consecutive full-reference-set runs. Only then turn the crank on the 392 target deals.

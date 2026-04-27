@@ -381,8 +381,8 @@ def apply_q7_executed_atomization(
     omit the Executed row entirely for a known reference-converter defect; in
     that case a `Q7_MISSING_EXECUTED_REPAIRS` entry must cite filing evidence.
     This function clones the Executed template row N times, one per named
-    operational/economic buyer member, removes `joint_bidder_members`, and
-    emits an info flag `executed_atomized`.
+    operational/economic buyer member, and emits an info flag
+    `executed_atomized`.
     """
     members = Q7_EXECUTED_MEMBERS.get(slug)
     repair = Q7_MISSING_EXECUTED_REPAIRS.get(slug)
@@ -452,7 +452,6 @@ def apply_q7_executed_atomization(
             new_ev = json.loads(json.dumps(ev, default=str))
             new_ev["bidder_alias"] = member_name
             new_ev["bidder_name"] = cid
-            new_ev.pop("joint_bidder_members", None)
             new_ev["flags"] = list(ev.get("flags") or []) + [{
                 "code": "executed_atomized",
                 "severity": "info",
@@ -470,7 +469,6 @@ def apply_q7_executed_atomization(
             new_ev = json.loads(json.dumps(executed_rows[0], default=str))
             new_ev["bidder_alias"] = member_name
             new_ev["bidder_name"] = cid
-            new_ev.pop("joint_bidder_members", None)
             new_ev["flags"] = list(executed_rows[0].get("flags") or []) + [{
                 "code": "executed_atomized",
                 "severity": "info",
@@ -509,12 +507,10 @@ ZEP_ROW_6390_EXPANSION_FLAG = {
 # Bid rows (bid_note="Bid") rank 6 or 7 per bid_type — see _a3_rank().
 A3_RANK: dict[str, int] = {
     # Rank 1 — process announcements / public events
-    "Bid Press Release": 1, "Sale Press Release": 1, "Target Sale Public": 1,
-    "Final Round Ann": 1, "Final Round Inf Ann": 1,
-    "Final Round Ext Ann": 1, "Final Round Inf Ext Ann": 1,
+    "Press Release": 1, "Target Sale Public": 1,
     "Bidder Sale": 1, "Activist Sale": 1,
     # Rank 2 — process start/restart
-    "Target Sale": 2, "Target Interest": 2,
+    "Target Sale": 2,
     "Terminated": 2, "Restarted": 2,
     # Rank 3 — advisor/IB changes
     "IB": 3, "IB Terminated": 3,
@@ -532,11 +528,9 @@ A3_RANK: dict[str, int] = {
     # completeness; the converter does not synthesize DropSilent rows from
     # silent NDA signers — Alex's reference predates the §I1 policy and
     # stays as-is. The diff harness filters DropSilent from the AI side.)
-    "Drop": 8, "DropBelowInf": 8, "DropAtInf": 8, "DropBelowM": 8, "DropTarget": 8,
-    "DropSilent": 8,
+    "Drop": 8, "DropSilent": 8,
     # Rank 9 — final-round deadlines
-    "Final Round": 9, "Final Round Inf": 9,
-    "Final Round Ext": 9, "Final Round Inf Ext": 9,
+    "Final Round": 9,
     "Auction Closed": 9,
     # Rank 11 — signing
     "Executed": 11,
@@ -559,6 +553,8 @@ def _a3_rank(ev: dict[str, Any]) -> int:
     """§A3 same-date rank. Bid rows (§C3) rank by bid_type:
     informal → 6, formal → 7."""
     bn = ev.get("bid_note") or ""
+    if bn == "Final Round" and ev.get("final_round_announcement") is True:
+        return 1
     if bn == "Bid":
         return 7 if ev.get("bid_type") == "formal" else 6
     return A3_RANK.get(bn, 99)
@@ -820,7 +816,7 @@ def build_bidder_type(r: RawRow) -> str | None:
 
     Reads the three boolean columns from Alex's xlsx (bt_financial,
     bt_strategic, bt_mixed) plus the free-text `bidder_type_note`.
-    Returns one of "s" / "f" / "mixed" / None.
+    Returns one of "s" / "f" / None.
 
     bt_nonUS is not loaded from the xlsx (removed from COL after the
     2026-04-27 bidder_type flatten). Geography and listing status are no
@@ -833,10 +829,8 @@ def build_bidder_type(r: RawRow) -> str | None:
     note  = r.get("bidder_type_note")
 
     # Boolean-column path (Alex's 4-boolean schema).
-    if mixed:
-        return "mixed"
-    if fin and strat:
-        return "mixed"
+    if mixed or (fin and strat):
+        return None
     if fin:
         return "f"
     if strat:
@@ -851,7 +845,7 @@ def build_bidder_type(r: RawRow) -> str | None:
         has_strategic = any(t in {"s", "strategic"} or re.fullmatch(r"\d+s", t) for t in tokens)
         has_mixed     = "mixed" in tokens
         if has_mixed or (has_financial and has_strategic):
-            return "mixed"
+            return None
         if has_financial:
             return "f"
         if has_strategic:
@@ -865,30 +859,27 @@ def build_bidder_type(r: RawRow) -> str | None:
 # ---------------------------------------------------------------------------
 
 def _migrate_bid_note(r: RawRow) -> tuple[str | None, str | None, str | None]:
-    """Apply the §C3 bid-row migration.
+    """Map source-workbook bid-row labels to the current §C3 form.
 
-    Returns `(bid_note, bid_type_inferred, legacy_label)`:
+    Returns `(bid_note, bid_type_inferred, source_label)`:
 
     - `bid_note`: the rulebook-canonical §C1 code. Bid rows always use `"Bid"`.
     - `bid_type_inferred`: `"informal"` / `"formal"` / `None` — the bid_type
-      inferred from the legacy label (when the xlsx used one); `None` if the
+      inferred from the source label (when the xlsx used one); `None` if the
       xlsx had a non-bid event code or a blank.
-    - `legacy_label`: the original xlsx `bid_note` string when it was one of
-      the deprecated bid-row labels (`"Inf"` / `"Formal Bid"` / `"Revised Bid"`),
-      else `None`. Used for a `legacy_bid_note_migrated` provenance flag.
+    - `source_label`: the original xlsx `bid_note` string when it contains
+      bid-row meaning that must become `bid_type`; else `None`.
 
     Handles three cases:
 
-    1. xlsx `bid_note` is one of the deprecated bid-row labels → migrate to
-       `"Bid"` + inferred `bid_type`, record legacy label for provenance.
+    1. xlsx `bid_note` contains bid-row meaning → emit `"Bid"` + inferred
+       `bid_type`, retaining the source label only inside this function.
     2. xlsx `bid_note` is blank / "NA" but xlsx `bid_type` is set (Alex's
        earlier convention) → emit `"Bid"` with the xlsx `bid_type`.
     3. xlsx `bid_note` is any other §C1 code (NDA, IB, etc.) → pass through.
     """
     note = r.get("bid_note")
-    legacy = None
-
-    # Case 1: deprecated bid-row label.
+    # Case 1: source-workbook bid-row label.
     if isinstance(note, str):
         if note == "Inf":
             return ("Bid", "informal", note)
@@ -916,6 +907,95 @@ def _migrate_bid_note(r: RawRow) -> tuple[str | None, str | None, str | None]:
     return (note, None, None)
 
 
+_DEFAULT_TAXONOMY_COLUMNS: dict[str, Any] = {
+    "drop_initiator": None,
+    "drop_reason_class": None,
+    "final_round_announcement": None,
+    "final_round_extension": None,
+    "final_round_informal": None,
+    "press_release_subject": None,
+    "invited_to_formal_round": None,
+    "submitted_formal_bid": None,
+}
+
+_SOURCE_TEXT_REPLACEMENTS = {
+    "Final Round Ann": "final-round announcement",
+    "Final Round Inf Ann": "informal final-round announcement",
+    "Final Round Inf": "informal final-round event",
+    "Final Round Ext Ann": "final-round extension announcement",
+    "Final Round Ext": "final-round extension",
+    "Bid Press Release": "bidder press release",
+    "Sale Press Release": "sale press release",
+    "DropBelowM": "target-initiated below-minimum drop",
+    "DropBelowInf": "target-initiated never-advanced drop",
+    "DropAtInf": "bidder-initiated drop",
+    "DropTarget": "target-initiated drop",
+    "Target Interest": "target-initiated bidder interest",
+}
+
+
+def _scrub_source_text(value: Any) -> Any:
+    if not isinstance(value, str):
+        return value
+    for old, new in _SOURCE_TEXT_REPLACEMENTS.items():
+        value = value.replace(old, new)
+    return value
+
+
+def _apply_taxonomy_redesign(note: str | None) -> tuple[str | None, dict[str, Any], bool]:
+    """Map source-workbook event labels into the current schema.
+
+    Returns `(new_note, modifiers, target_initiated)`. The output JSON carries
+    only the current `bid_note` plus structured modifiers.
+    """
+    modifiers = dict(_DEFAULT_TAXONOMY_COLUMNS)
+    if note is None:
+        return None, modifiers, False
+
+    drop_map = {
+        "Drop": ("unknown", None),
+        "DropBelowM": ("target", "below_minimum"),
+        "DropBelowInf": ("target", "never_advanced"),
+        "DropAtInf": ("bidder", None),
+        "DropTarget": ("target", "target_other"),
+    }
+    if note in drop_map:
+        initiator, reason = drop_map[note]
+        modifiers["drop_initiator"] = initiator
+        modifiers["drop_reason_class"] = reason
+        return "Drop", modifiers, False
+
+    final_round_map = {
+        "Final Round Ann": (True, False, False),
+        "Final Round": (False, False, False),
+        "Final Round Inf Ann": (True, False, True),
+        "Final Round Inf": (False, False, True),
+        "Final Round Ext Ann": (True, True, False),
+        "Final Round Ext": (False, True, False),
+        "Final Round Inf Ext Ann": (True, True, True),
+        "Final Round Inf Ext": (False, True, True),
+    }
+    if note in final_round_map:
+        announcement, extension, informal = final_round_map[note]
+        modifiers["final_round_announcement"] = announcement
+        modifiers["final_round_extension"] = extension
+        modifiers["final_round_informal"] = informal
+        return "Final Round", modifiers, False
+
+    press_map = {
+        "Bid Press Release": "bidder",
+        "Sale Press Release": "sale",
+    }
+    if note in press_map:
+        modifiers["press_release_subject"] = press_map[note]
+        return "Press Release", modifiers, False
+
+    if note == "Target Interest":
+        return "Bidder Interest", modifiers, True
+
+    return note, modifiers, False
+
+
 def _bid_type_canon(v: Any) -> str | None:
     v = _clean(v)
     if v is None:
@@ -931,7 +1011,7 @@ def _bid_type_canon(v: Any) -> str | None:
 def _comments(r: RawRow) -> str | None:
     parts = [r.get(k) for k in ("comments_1", "comments_2", "comments_3")]
     parts = [p for p in parts if p]
-    return " | ".join(str(p) for p in parts) if parts else None
+    return _scrub_source_text(" | ".join(str(p) for p in parts)) if parts else None
 
 
 def _map_bid_value_unit(v: Any) -> str | None:
@@ -951,12 +1031,13 @@ def _map_bid_value_unit(v: Any) -> str | None:
 
 def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
     # §C3 migration: normalize bid-row event type to "Bid" + bid_type.
-    note, inferred_bid_type, legacy_label = _migrate_bid_note(r)
+    note, inferred_bid_type, source_label = _migrate_bid_note(r)
+    note, taxonomy_columns, target_initiated = _apply_taxonomy_redesign(note)
     bid_type = _bid_type_canon(r.get("bid_type")) or inferred_bid_type
 
     # §B2: bid_date_rough is populated IFF the date was inferred. When Alex's
-    # xlsx gives an explicit ISO date in bid_date_precise, the legacy "rough"
-    # mirror in the xlsx is a serialization artifact, not a semantic signal —
+    # xlsx gives an explicit ISO date in bid_date_precise, the workbook "rough"
+    # mirror is a serialization artifact, not a semantic signal —
     # null it out.
     precise = _iso_date(r.get("bid_date_precise"))
     rough_raw = r.get("bid_date_rough")
@@ -973,29 +1054,19 @@ def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
         upper = None
 
     flags: list[dict[str, Any]] = []
-    if legacy_label is not None:
-        flags.append({
-            "code": "legacy_bid_note_migrated",
-            "severity": "info",
-            "reason": (
-                f"xlsx bid_note={legacy_label!r} migrated to bid_note='Bid' + "
-                f"bid_type={bid_type!r} per rules/events.md §C3"
-            ),
-        })
-    if r.xlsx_row in BLANK_BID_NOTE_REPAIRS:
-        _, reason = BLANK_BID_NOTE_REPAIRS[r.xlsx_row]
-        flags.append({
-            "code": "legacy_blank_bid_note_normalized",
-            "severity": "info",
-            "reason": f"{reason}; normalized to bid_note={note!r} per current schema",
-        })
 
-    # Revised Bid provenance: the xlsx distinguished a bidder's subsequent
-    # formal bid with the label 'Revised Bid'. Post-§C3, both bids carry
+    # Revised-bid provenance: the xlsx distinguishes a bidder's subsequent
+    # formal bid with a source label. In current §C3, both bids carry
     # bid_note='Bid' + bid_type='formal'; we annotate the revision so the
     # downstream can reconstruct ordering without a distinct bid_note.
-    additional_note = r.get("additional_note")
-    if legacy_label == "Revised Bid":
+    additional_note = _scrub_source_text(r.get("additional_note"))
+    if target_initiated:
+        marker = "target-initiated"
+        if additional_note is None:
+            additional_note = marker
+        elif marker not in str(additional_note).lower():
+            additional_note = f"{additional_note} | {marker}"
+    if source_label == "Revised Bid":
         marker = "revised"
         if additional_note is None:
             additional_note = marker
@@ -1024,6 +1095,7 @@ def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
         "contingent_per_share":   None,
         "consideration_components": None,
         "aggregate_basis":        None,
+        **taxonomy_columns,
         "exclusivity_days":       None,
         "financing_contingent":   None,
         "highly_confident_letter": False,
@@ -1152,8 +1224,8 @@ def apply_q2_zep(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return out
 
 
-def apply_legacy_exclusivity_events(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Drop legacy exclusivity event rows after moving days onto the bid row."""
+def apply_exclusivity_events(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Drop exclusivity event rows after moving days onto the bid row."""
     out: list[dict[str, Any]] = []
     for ev in events:
         note = ev.get("bid_note")
@@ -1179,32 +1251,23 @@ def apply_legacy_exclusivity_events(events: list[dict[str, Any]]) -> list[dict[s
         )
         if target is None:
             raise ValueError(
-                f"xlsx row {ev.get('_xlsx_row')}: cannot attach legacy bid_note={note!r}; "
+                f"xlsx row {ev.get('_xlsx_row')}: cannot attach bid_note={note!r}; "
                 "no preceding bid row for the same bidder"
             )
 
         existing = target.get("exclusivity_days")
         if existing is not None and existing != days:
             raise ValueError(
-                f"xlsx row {ev.get('_xlsx_row')}: legacy bid_note={note!r} conflicts with "
+                f"xlsx row {ev.get('_xlsx_row')}: bid_note={note!r} conflicts with "
                 f"existing exclusivity_days={existing!r} on xlsx row {target.get('_xlsx_row')}"
             )
 
         target["exclusivity_days"] = days
-        target.setdefault("flags", []).append({
-            "code": "legacy_exclusivity_event_migrated",
-            "severity": "info",
-            "reason": (
-                f"xlsx row {ev.get('_xlsx_row')} bid_note={note!r} dropped; "
-                f"set exclusivity_days={days} on xlsx row {target.get('_xlsx_row')} "
-                "per rules/events.md §C1 and rules/bids.md §O1"
-            ),
-        })
     return out
 
 
 def validate_current_schema_events(events: list[dict[str, Any]]) -> None:
-    """Fail loudly if stale legacy event codes survived converter cleanup."""
+    """Fail loudly if stale event codes survived converter cleanup."""
     for ev in events:
         note = ev.get("bid_note")
         if note is None:
@@ -1335,7 +1398,7 @@ def build_deal(slug: str) -> dict[str, Any]:
     if slug == "medivation":
         events = apply_q5_medivation(events)
     events = apply_q7_executed_atomization(slug, events)
-    events = apply_legacy_exclusivity_events(events)
+    events = apply_exclusivity_events(events)
     validate_current_schema_events(events)
 
     flagged_rows = _load_flagged_xlsx_rows().get(slug, set())

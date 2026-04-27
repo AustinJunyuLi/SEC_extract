@@ -67,24 +67,22 @@ def test_update_progress_records_per_deal_rulebook_version(minimal_state_repo):
     ]
 
 
-def test_update_progress_drops_legacy_top_level_rulebook_version(minimal_state_repo):
-    """A progress.json from an older pipeline still carries state["rulebook_version"].
-    The new code must drop it on the next write, not preserve it."""
+def test_update_progress_rejects_stale_top_level_rulebook_version(minimal_state_repo):
+    """No compatibility cleanup: stale progress state fails loudly."""
     env = minimal_state_repo
     prog = json.loads(env.progress.read_text())
-    prog["rulebook_version"] = "legacy_hash_from_old_pipeline"
+    prog["rulebook_version"] = "stale_hash_from_prior_schema"
     env.progress.write_text(json.dumps(prog, indent=2))
     env.seed_deal("synthetic")
-    pipeline.update_progress(
-        "synthetic",
-        status="passed_clean",
-        flag_count=0,
-        notes="",
-        current_rulebook_version="new_hash",
-        last_run="2026-04-24T12:00:00Z",
-    )
-    state = json.loads(env.progress.read_text())
-    assert "rulebook_version" not in state
+    with pytest.raises(ValueError, match="stale top-level rulebook_version"):
+        pipeline.update_progress(
+            "synthetic",
+            status="passed_clean",
+            flag_count=0,
+            notes="",
+            current_rulebook_version="new_hash",
+            last_run="2026-04-24T12:00:00Z",
+        )
 
 
 def test_update_progress_auto_creates_missing_slug(minimal_state_repo):

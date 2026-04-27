@@ -82,14 +82,20 @@ judgment calls.
 
 ### §P-R6 — `bidder_type` scalar value constraint
 - **Check.** For every event row where `bidder_type` is present (not absent /
-  not `null`), `bidder_type` must be a scalar string in `{"s", "f", "mixed"}`.
-  Any other type (including a nested object regression to the pre-2026-04-27
-  `{base, non_us, public}` schema) or any unknown string value fails.
+  not `null`), `bidder_type` must be a scalar string in `{"s", "f"}`.
+  Any other type or any unknown string value fails.
 - **Fail action.** Flag `bidder_type_invalid_value`. Hard.
 - **Why hard.** The 2026-04-27 schema flatten made `bidder_type` a scalar.
-  A nested object or an out-of-set value means the extractor regressed to
-  the old schema or invented a value; either breaks downstream analysis.
+  A nested object or an out-of-set value breaks downstream analysis.
   `null` is the correct representation of "no bidder type recorded".
+
+### §P-R7 — CA ambiguity is hard
+- **Check.** Any row carrying a `ca_type_ambiguous` flag must carry it at
+  hard severity.
+- **Fail action.** Flag `ca_type_ambiguous`. Hard.
+- **Why hard.** Ambiguous CA type changes whether a row is an auction-funnel
+  NDA, a bidder-side consortium CA, or a skipped rollover side agreement.
+  Production runs showed soft flags were too easy to ignore.
 
 ---
 
@@ -128,15 +134,13 @@ comparable across deals.
   §A2.
 
 ### §P-D5 — Drop rows require prior engagement in the same phase
-- **Check.** For every row with `bid_note` starting with `"Drop"` (the
-  current §C1 Drop-family labels — see `rules/events.md` §I1 and §K1),
+- **Check.** For every row with `bid_note == "Drop"` (not `DropSilent`),
   with non-null `bidder_name` and `process_phase >= 1`, there exists at
   least one other row in the same `process_phase` with the same
   `bidder_name` and `bid_note ∈ {NDA, Bidder Interest, IB,
-  <any Drop-family row>}`. Position within phase is not enforced —
-  §A2/§A3 canonicalization has already ordered rows. The Drop-family
-  branch covers §I2 re-engagement cases where a bidder re-enters after
-  an earlier drop.
+  Drop}`. Position within phase is not enforced — §A2/§A3 canonicalization
+  has already ordered rows. The prior Drop branch covers §I2 re-engagement
+  cases where a bidder re-enters after an earlier drop.
 - **Fail action.** Flag `drop_without_prior_engagement`. Hard.
 - **Why hard.** A drop row without prior engagement means the extractor
   invented a dropout or missed the engagement row that named the
@@ -157,6 +161,24 @@ comparable across deals.
 - **References.** `rules/events.md` §I1 (drop vocabulary), §I2
   (re-engagement), §D1 (engagement vocabulary), §D1.a
   (unsolicited-first-contact exemption).
+
+### §P-D7 — Drop reason matrix
+- **Check.** Every `Drop` row obeys the §I1 matrix:
+  `drop_initiator = "target"` requires a non-null target-side reason class;
+  `drop_initiator = "bidder"` permits only `null`, `"no_response"`, or
+  `"scope_mismatch"`; `drop_initiator = "unknown"` requires
+  `drop_reason_class = null`.
+- **Fail action.** Flag `drop_reason_class_inconsistent`. Soft.
+
+### §P-D8 — Formal-stage status consistency
+- **Check.**
+  1. `submitted_formal_bid = true` on an informal `Bid` requires a formal
+     `Bid` row for the same bidder and phase.
+  2. `submitted_formal_bid = false` on an informal `Bid` must not coexist
+     with a formal `Bid` row for the same bidder and phase.
+  3. A `Drop` row with `drop_reason_class = "never_advanced"` requires
+     `invited_to_formal_round = false`.
+- **Fail action.** Flag `formal_round_status_inconsistent`. Soft.
 
 ### §P-D6 — Named-Bid rows require an in-phase NDA for the same bidder
 - **Check.** For every row with `bid_note = "Bid"`, non-null
@@ -195,8 +217,8 @@ comparable across deals.
 
 ## §P-S — Semantic process invariants (🟩 RESOLVED, 2026-04-18)
 
-One soft (§P-S1), three hard. These check that the extracted event
-graph tells a coherent M&A-process story.
+These checks ensure the extracted event graph tells a coherent M&A-process
+story; severities are listed per invariant.
 
 ### §P-S1 — NDA-only signer must have DropSilent (SOFT)
 - **Check.** For every row with `bid_note = NDA` and `role = "bidder"`
@@ -290,14 +312,17 @@ graph tells a coherent M&A-process story.
   `bid_value_upper` populated, numeric, and `bid_value_lower <
   bid_value_upper` (§G1 informal structural signal), or (2) the row
   carries a non-empty `bid_type_inference_note: str` of ≤300 chars
-  justifying the classification. §G1 trigger tables are *classification
-  guidance for the extractor*, NOT a validator satisfier path: a
-  trigger phrase alone does not pass §P-G2.
+  justifying the classification, or (3) a paired/fallback `Final Round`
+  row in the same phase supplies `final_round_informal` consistent with
+  the bid's `bid_type`. §G1 trigger tables are *classification guidance
+  for the extractor*, NOT a validator satisfier path: a trigger phrase
+  alone does not pass §P-G2.
   
   **Additional hard requirement (per 2026-04-27 directive).** When (1)
   is true (the row is a true range bid), `bid_type` MUST equal
   `"informal"`. Otherwise emit hard `bid_range_must_be_informal`.
-- **Fail action.** Flag `bid_type_unsupported` (no range, no note).
+- **Fail action.** Flag `bid_type_unsupported` (no range, no note, no
+  matching paired/fallback final-round classification).
   Inverted ranges (`lower >= upper`) flag `bid_range_inverted`. Range
   with `bid_type != "informal"` flags `bid_range_must_be_informal`.
   All hard.
@@ -313,6 +338,12 @@ graph tells a coherent M&A-process story.
   the reference sample and forced inference-note duplication on rows
   that already cited filing language.
 
+### §P-G3 — Final-round announcement needs submission/deadline pair
+- **Check.** A `Final Round` row with `final_round_announcement = true`
+  followed by one or more `Bid` rows in the same `process_phase` must have a
+  paired non-announcement `Final Round` row for those bids.
+- **Fail action.** Flag `final_round_missing_non_announcement_pair`. Hard.
+
 ---
 
 ## Invariants that tie to specific rule files
@@ -325,15 +356,19 @@ graph tells a coherent M&A-process story.
 | §P-R4 | `rules/bids.md` §M3 |
 | §P-R5 | `rules/bidders.md` §E3 |
 | §P-R6 | `rules/bidders.md` §F1 |
+| §P-R7 | `rules/events.md` §I3 |
 | §P-D1 | `rules/dates.md` §B1/§B2 |
 | §P-D2 | `rules/dates.md` §B2/§B3/§B4 |
 | §P-D3 | `rules/dates.md` §A4 |
 | §P-D5 | `rules/events.md` §I1 + §I2 + §D1 |
 | §P-D6 | `rules/events.md` §D1.a + `rules/bids.md` §C4 + `rules/bidders.md` §E3 |
+| §P-D7 | `rules/events.md` §I1 |
+| §P-D8 | `rules/events.md` §I1 + `rules/schema.md` §R1 |
 | §P-H5 | `rules/bids.md` §H5 |
 | §P-L1 | `rules/events.md` §L2 |
 | §P-L2 | `rules/events.md` §L2 |
 | §P-G2 | `rules/bids.md` §G1/§G2 |
+| §P-G3 | `rules/events.md` §K1 |
 | §P-S1 | `rules/events.md` §I1 + `rules/bids.md` §M3 |
 | §P-S2 | `rules/schema.md` §Scope-1 |
 | §P-S3 | `rules/events.md` §K1/§L2 + `rules/bids.md` §M4 |

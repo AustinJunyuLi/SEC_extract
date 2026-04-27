@@ -24,7 +24,7 @@ Deal slugs (match `seeds.csv`):
 ## How the JSON files are produced
 
 `scripts/build_reference.py` reads the relevant row ranges from
-`../deal_details_Alex_2026.xlsx`, maps legacy columns to the resolved
+`../deal_details_Alex_2026.xlsx`, maps source workbook columns to the resolved
 pipeline schema, and writes JSON here.
 
 Current behavior:
@@ -58,7 +58,7 @@ python scripts/build_reference.py --slug medivation --dump
 
 ## Diff contract — NOT a scoring contract
 
-`scoring/diff.py` reads every file in this folder that matches a deal slug and joins against `../../output/extractions/{slug}.json`. Its output is a **diff report for human review**, not a pass/fail grade. Every divergence gets a verdict from Austin after re-reading the filing:
+`scoring/diff.py` reads every file in this folder that matches a deal slug and joins against `../../output/extractions/{slug}.json`. Its output is a **diff for human review**, not a pass/fail grade. The default mode prints to stdout; use `--write` only when a temporary markdown/JSON artifact is explicitly needed. Every divergence gets a verdict from Austin after re-reading the filing:
 
 1. **AI right, Alex wrong** — update `alex_flagged_rows.json` with the corrected rule (optional) and move on.
 2. **AI wrong, Alex right** — strengthen the relevant rule in `rules/` and re-run the Extractor.

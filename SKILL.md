@@ -216,7 +216,7 @@ Full list in `rules/schema.md` §Scope-3. In summary:
 - Re-derive EDGAR metadata: `DateFiled`, `FormType`, `URL`, `CIK`, `accession`. Fetcher (`manifest.json`) owns these.
 - Assign `DealNumber`. Pipeline keys on `slug`; downstream joins if needed.
 - Fetch any external data (news, COMPUSTAT, other filings). Only reads the filing already downloaded under `data/filings/{slug}/`.
-- Fix legacy Chicago-collected rows or overwrite `reference/deal_details_Alex_2026.xlsx`.
+- Fix Chicago-collected source workbook rows or overwrite `reference/deal_details_Alex_2026.xlsx`.
 - Cross-deal bidder canonicalization (is this deal's "Sponsor A" the same as that deal's "Sponsor A"?). Explicit non-goal.
 - Re-classify the form type. The fetcher already classified it from the EDGAR index; AI copies it through unchanged.
 

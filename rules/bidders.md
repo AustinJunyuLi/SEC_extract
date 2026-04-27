@@ -17,7 +17,6 @@ constituent. The pre-2026-04-27 Executed-row collapse is deleted.
 - Each atomized row receives its own unique event-sequence `BidderID`.
 - `bidder_alias` is the filing label for the constituent on that row.
 - `bidder_name` is that constituent's canonical id per §E3.
-- `joint_bidder_members` is null on atomized constituent rows.
 - If the filing does not provide either a numeric count or identifiable
   constituent members, fail loud. Do not invent members, and do not collapse
   to a single consortium-label row as a fallback.
@@ -179,7 +178,7 @@ minimum of 3; vaguer plurals should not be over-atomized.
 
 ### §F1 — Bidder type canonical format (🟩 RESOLVED, 2026-04-18; rewritten 2026-04-27 per Alex directive)
 
-**Decision.** `bidder_type` is a **scalar string** (not an object) holding one of three values: `"s"`, `"f"`, `"mixed"`, or `null`.
+**Decision.** `bidder_type` is a **scalar string** (not an object) holding one of two values: `"s"`, `"f"`, or `null`.
 
 ```json
 "bidder_type": "s"
@@ -188,7 +187,6 @@ minimum of 3; vaguer plurals should not be over-atomized.
 **Values.**
 - `"s"` — strategic. Filing names a corporate operating buyer (active in target's industry or adjacent).
 - `"f"` — financial. Filing names a private-equity firm, buyout fund, sovereign-wealth fund, family office, pension fund, or SPAC.
-- `"mixed"` — consortium with both strategic and financial members.
 - `null` — filing does not classify.
 
 **Why scalar, not structured object.** The pre-2026-04-27 schema carried a nested object for base type, geography, and listing status. Per Alex's 2026-04-27 directive we no longer record geography or capital structure of the bidding firm. With one axis remaining, the object shape is dead weight; the scalar is direct.
@@ -201,10 +199,14 @@ minimum of 3; vaguer plurals should not be over-atomized.
 | 2 | Filing names a **publicly traded operating company** as the bidder | `"s"` |
 | 3 | Point of contact is a **CEO or named corporate executive**; letterhead / counsel is corporate | `"s"` |
 | 4 | Point of contact is a **partner / managing director / principal at a fund**; letterhead is fund | `"f"` |
-| 5 | Consortium explicitly described as including **both** PE and strategic members | `"mixed"` |
-| 6 | **Sovereign-wealth fund, pension fund, or family office** acting alone | `"f"` |
-| 7 | **SPAC** (special-purpose acquisition company) | `"f"` |
-| 8 | Genuinely ambiguous → default | `"f"` + `bidder_type_ambiguous` (soft flag) |
+| 5 | **Sovereign-wealth fund, pension fund, or family office** acting alone | `"f"` |
+| 6 | **SPAC** (special-purpose acquisition company) | `"f"` |
+| 7 | Genuinely ambiguous → default | `"f"` + `bidder_type_ambiguous` (soft flag) |
+
+Consortium mixedness is not a row-level `bidder_type` value. Under §E2.b,
+identifiable consortium constituents are atomized and each constituent row
+gets `"s"` or `"f"` as applicable. A deal-level mixed-consortium property is
+recoverable downstream by grouping the atomized winner or bidder rows.
 
 **Why default `"f"` on ambiguity.** Anecdotally, when filings are coy about bidder identity, it's usually because the bidder is a PE sponsor. Operating companies have less competitive reason to hide their name.
 
@@ -220,10 +222,8 @@ minimum of 3; vaguer plurals should not be over-atomized.
 
 ### §F3 — Consortium type classification (🟩 RESOLVED, 2026-04-18)
 
-**Decision.** Fully absorbed by §F1. A consortium row carries
-`bidder_type = "mixed"` when its members span both strategic and
-financial types. Non-mixed consortiums (all-strategic or all-financial)
-take their uniform `base` value.
+**Decision.** Fully absorbed by §F1 and §E2.b. Consortium rows are atomized
+per identifiable constituent; no row-level mixed value exists.
 
 See `rules/bidders.md` §F1 for the scalar format.
 
@@ -233,10 +233,10 @@ See `rules/bidders.md` §F1 for the scalar format.
 
 **Decision.** Events are **atomized** — one row per event. A single bidder
 appears on many rows (once for NDA, once per bid, once for drop, once for
-execution if winner). This matches Alex's legacy format.
+execution if winner).
 
 **Rule.**
-- Atomization is **unconditional**. There are no exceptions — NDA, Bid, Drop*, Restarted, Terminated, AND Executed all atomize one row per bidder.
+- Atomization is **unconditional**. There are no exceptions — NDA, Bid, Drop, DropSilent, Restarted, Terminated, AND Executed all atomize one row per bidder.
 - No aggregated per-bidder rows. No aggregated per-group rows.
 - Each atomized row carries its own `source_quote` for the specific event.
 - Anonymous bidders get placeholder names per §E3.

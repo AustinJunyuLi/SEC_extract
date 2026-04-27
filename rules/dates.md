@@ -91,7 +91,8 @@ gain.
 - **Always populate rough with filing phrasing** — duplicates data; loses
   the "inferred-ness" signal.
 - **Single `event_date` + boolean `date_is_approximate`** — functionally
-  equivalent but breaks legacy column compatibility.
+  equivalent but creates an unnecessary translation layer for the workbook
+  comparison workflow.
 
 **Cross-references.**
 - `rules/dates.md` §B1 (inference rules).
@@ -216,8 +217,8 @@ re-derive from the JSON alone.
 
 ### §A1 — Keep `BidderID` (🟩 RESOLVED, 2026-04-18)
 
-**Decision.** Keep the column name `BidderID` for legacy-join
-compatibility with Alex's workbook, but **redefine the semantics**:
+**Decision.** Keep the column name `BidderID` for Alex-workbook comparison,
+but **define the current semantics**:
 - Strict integer sequence `1..N` per deal.
 - Monotone in the ordering chosen by §A2/§A3.
 - **No decimals.** The decimal-wedge convention (`0.3`, `1.5`) in
@@ -238,12 +239,11 @@ a fresh, complete sequence. A clean `1..N` is simpler for downstream
 code and removes a source of sort ambiguity.
 
 **Rejected alternatives.**
-- **Drop entirely** — breaks legacy-join; removes a cheap per-deal
-  ordinal key.
-- **Keep + replicate decimal-wedge logic** — maximum backward-compat,
-  maximum confusion; we're building fresh data, not patching.
-- **Rename to `event_seq`** — semantically cleaner but breaks
-  legacy-join; not worth it.
+- **Drop entirely** — removes a cheap per-deal ordinal key.
+- **Keep + replicate decimal-wedge logic** — maximum confusion; we're
+  building fresh data, not patching.
+- **Rename to `event_seq`** — semantically cleaner but adds translation
+  friction for the comparison workflow.
 
 **Cross-references.**
 - `rules/dates.md` §A2 (what determines the ordering).
@@ -307,19 +307,19 @@ ordering** first, then filing narrative order as secondary tie-break.
 
 | Rank | Event class | Event codes |
 |---|---|---|
-| 1 | Process announcements | `Bid Press Release`, `Sale Press Release`, `Target Sale Public`, `Final Round Ann`, `Final Round Inf Ann`, `Final Round Ext Ann`, `Final Round Inf Ext Ann`, `Bidder Sale`, `Activist Sale` |
-| 2 | Process start/restart | `Target Sale`, `Target Interest`, `Terminated`, `Restarted` |
+| 1 | Process announcements | `Press Release`, `Target Sale Public`, `Final Round` with `final_round_announcement = true`, `Bidder Sale`, `Activist Sale` |
+| 2 | Process start/restart | `Target Sale`, `Terminated`, `Restarted` |
 | 3 | Advisor/IB changes | `IB`, `IB Terminated` |
 | 4 | Bidder first-contact | `Bidder Interest` |
 | 5 | NDA executions | `NDA` |
 | 6 | Informal bids | `Bid` **with** `bid_type = "informal"` (per §C3) |
 | 7 | Formal bids | `Bid` **with** `bid_type = "formal"` (per §C3) |
-| 8 | Dropouts (mid-round) | `Drop`, `DropBelowInf`, `DropAtInf`, `DropBelowM`, `DropTarget`, implicit drops |
-| 9 | Final-round deadlines | `Final Round`, `Final Round Inf`, `Final Round Ext`, `Final Round Inf Ext`, `Auction Closed` |
+| 8 | Dropouts (mid-round) | `Drop`, `DropSilent` |
+| 9 | Final-round deadlines | `Final Round` with `final_round_announcement = false`, `Auction Closed` |
 | 10 | Post-deadline activity | Late bids after `Final Round`, winner confirmation |
 | 11 | Signing | `Executed` |
 
-**Bid row rank disambiguation (§C3 migration).** All bid rows carry
+**Bid row rank disambiguation.** All bid rows carry
 `bid_note = "Bid"` per `rules/events.md` §C1/§C3. Within a same-date
 cluster, bid rows are ranked 6 or 7 based on `bid_type`:
 
@@ -327,9 +327,11 @@ cluster, bid rows are ranked 6 or 7 based on `bid_type`:
 - `bid_type = "formal"` → rank 7
 - `bid_type = null` (ambiguous per `rules/bids.md` §G1) → rank 6 (conservative)
 
-The prior convention — ranking bid rows by distinct `bid_note` codes
-(`Inf`, `Formal Bid`, `Revised Bid`) — is deprecated; see `rules/events.md`
-§C3. The validator (`pipeline.py _rank()`) implements the `bid_type` lookup.
+The validator (`pipeline.py _rank()`) implements the `bid_type` lookup.
+
+**Final-round row rank disambiguation.** `Final Round` announcement rows
+rank 1; non-announcement deadline/submission rows rank 9. The validator
+uses `final_round_announcement` to choose between those ranks.
 
 **Within-rank tie-break.** Filing narrative order (top-to-bottom as
 events appear in the Background section).
@@ -341,10 +343,12 @@ events appear in the Background section).
 - `BidderID` increments 1 per row across the 12 NDAs.
 
 **Example — Providence 7/20/2016.**
-- Filing has 4 informal bids + `Final Round Inf` on same date.
-- Informal bids (rank 6) come before `Final Round Inf` (rank 9).
+- Filing has 4 informal bids + a non-announcement `Final Round` row on
+  the same date.
+- Informal bids (rank 6) come before the non-announcement `Final Round`
+  row (rank 9).
 - Within the 4 informal bids, filing narrative order.
-- Final result: 4 informal-bid rows, then 1 Final Round Inf row.
+- Final result: 4 informal-bid rows, then 1 final-round row.
 
 **Why logical ordering.** Reflects actual process flow: announcements
 precede the NDAs they trigger; NDAs precede the bids they enable; bids

@@ -52,7 +52,7 @@ def rulebook_version() -> str:
     This is intentionally a content hash rather than a git lookup: it fails
     less mysteriously in uncommitted development states and changes whenever
     any current `rules/*.md` content changes. Git history is still the record
-    for older rulebooks; the live pipeline does not support old schemas.
+    for prior rulebooks; the live pipeline supports only the current schema.
     """
     h = hashlib.sha256()
     rule_files = sorted(RULES_DIR.glob("*.md"))
@@ -86,32 +86,25 @@ RULEBOOK_HISTORY_CAP = 10  # Per-deal rulebook_version_history tail length.
 # vocabularies. The rulebook markdown is the source of truth; when those
 # files change, update the mirrors here in the same commit.
 
-# Mirror of rules/events.md §C1 — the §C3-migrated closed vocabulary.
+# Mirror of rules/events.md §C1 — the taxonomy-redesign closed vocabulary.
 # Bid rows all carry bid_note="Bid"; bid_type ("informal"/"formal") is the
-# only distinguisher. The legacy labels "Inf" / "Formal Bid" / "Revised Bid"
-# are deprecated and should never appear on a properly-built reference or a
-# current AI extraction. scripts/build_reference.py migrates xlsx labels on
-# ingestion; the extractor prompt instructs the subagent to emit §C3.
+# only bid-row formal/informal distinguisher. Final-round, drop, and press
+# release subtypes live in structured columns, not cross-product event labels.
 EVENT_VOCABULARY: frozenset[str] = frozenset({
     # Start-of-process
-    "Bidder Interest", "Bidder Sale", "Target Interest", "Target Sale",
+    "Bidder Interest", "Bidder Sale", "Target Sale",
     "Target Sale Public", "Activist Sale",
     # Publicity
-    "Bid Press Release", "Sale Press Release",
+    "Press Release",
     # Advisors
     "IB", "IB Terminated",
     # Counterparty events
     "NDA", "ConsortiumCA",
-    "Drop", "DropBelowM", "DropBelowInf", "DropAtInf", "DropTarget",
-    "DropSilent",
+    "Drop", "DropSilent",
     # Bid rows — §C3 unified; bid_type disambiguates formal/informal
     "Bid",
     # Round structure (§K1)
-    "Final Round Ann", "Final Round",
-    "Final Round Inf Ann", "Final Round Inf",
-    "Final Round Ext Ann", "Final Round Ext",
-    "Final Round Inf Ext Ann", "Final Round Inf Ext",
-    "Auction Closed",
+    "Final Round", "Auction Closed",
     # Closing
     "Executed",
     # Prior-process
@@ -124,8 +117,8 @@ ROLE_VOCABULARY: frozenset[str] = frozenset({
 })
 
 # Mirror of rules/bidders.md §F1 — scalar bidder_type after the 2026-04-27
-# flatten dropped the `non_us` and `public` dimensions. Enforced by §P-R6.
-BIDDER_TYPE_VOCABULARY: frozenset[str] = frozenset({"s", "f", "mixed"})
+# flatten dropped `mixed`, `non_us`, and `public`. Enforced by §P-R6.
+BIDDER_TYPE_VOCABULARY: frozenset[str] = frozenset({"s", "f"})
 
 # Mirror of rules/invariants.md §P-S3 — the only legitimate phase enders.
 PHASE_TERMINATORS: frozenset[str] = frozenset({
@@ -139,11 +132,8 @@ PHASE_TERMINATORS: frozenset[str] = frozenset({
 # activity.
 BID_NOTE_FOLLOWUPS: frozenset[str] = frozenset({
     "Bid",
-    "Drop", "DropBelowM", "DropBelowInf", "DropAtInf", "DropTarget",
-    "DropSilent",
+    "Drop", "DropSilent",
     "Executed",
-    "Final Round", "Final Round Inf",
-    "Final Round Ext", "Final Round Inf Ext",
 })
 
 # Flag codes that legitimize a non-null bid_date_rough per §B2/§B3/§B4.
@@ -163,18 +153,12 @@ def _row_flag_codes(ev: dict) -> set[str]:
 # and formal bids rank 7 — the comparator consults bid_type.
 EVENT_RANK: dict[str, int] = {
     # Rank 1 — process announcements / public events
-    "Bid Press Release": 1,
-    "Sale Press Release": 1,
+    "Press Release": 1,
     "Target Sale Public": 1,
-    "Final Round Ann": 1,
-    "Final Round Inf Ann": 1,
-    "Final Round Ext Ann": 1,
-    "Final Round Inf Ext Ann": 1,
     "Bidder Sale": 1,
     "Activist Sale": 1,
     # Rank 2 — process start / restart
     "Target Sale": 2,
-    "Target Interest": 2,
     "Terminated": 2,
     "Restarted": 2,
     # Rank 3 — advisor / IB events
@@ -189,16 +173,9 @@ EVENT_RANK: dict[str, int] = {
     "Bid": 6,
     # Rank 8 — dropouts
     "Drop": 8,
-    "DropBelowInf": 8,
-    "DropAtInf": 8,
-    "DropBelowM": 8,
-    "DropTarget": 8,
     "DropSilent": 8,
     # Rank 9 — final-round deadlines / auction closed
     "Final Round": 9,
-    "Final Round Inf": 9,
-    "Final Round Ext": 9,
-    "Final Round Inf Ext": 9,
     "Auction Closed": 9,
     # Rank 11 — closing
     "Executed": 11,
@@ -275,7 +252,7 @@ Read these files in full (absolute paths; use your Read tool):
 
   Rulebook (all resolved; if you see 🟥 OPEN anywhere, halt and emit the blocked form):
     {RULES_DIR}/schema.md      (output shape §R1, evidence §R3)
-    {RULES_DIR}/events.md      (bid_note closed vocabulary §C1, 31 values)
+    {RULES_DIR}/events.md      (bid_note closed vocabulary §C1, 18 values)
     {RULES_DIR}/bidders.md     (canonical IDs §E3, bidder_type §F1)
     {RULES_DIR}/bids.md        (formal/informal §G1, skip rules §M)
     {RULES_DIR}/dates.md       (date mapping §B, BidderID sequence §A1–§A4)
@@ -331,12 +308,16 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
     row_flags.extend(_invariant_p_r4(events))
     row_flags.extend(_invariant_p_r5(events, deal))
     row_flags.extend(_invariant_p_r6(events))
+    row_flags.extend(_invariant_p_r7(events))
     row_flags.extend(_invariant_p_d1(events))
     row_flags.extend(_invariant_p_d2(events))
     row_flags.extend(_invariant_p_d5(events))
     row_flags.extend(_invariant_p_d6(events))
+    row_flags.extend(_invariant_p_d7(events))
+    row_flags.extend(_invariant_p_d8(events))
     row_flags.extend(_invariant_p_h5(events))
     row_flags.extend(_invariant_p_g2(events))
+    row_flags.extend(_invariant_p_g3(events))
 
     # §P-D3 returns a mix (structural are deal-level; ordering violations are
     # row-level). Route by presence of row_index.
@@ -570,9 +551,8 @@ def _invariant_p_r5(events: list[dict], deal: dict) -> list[dict]:
 
 def _invariant_p_r6(events: list[dict]) -> list[dict]:
     """§P-R6 — `bidder_type`, when present, must be a scalar string in
-    {"s", "f", "mixed"} or null. Any other type (including a nested-object
-    regression to the pre-2026-04-27 {base, non_us, public} schema) or an
-    unknown string value fails hard."""
+    {"s", "f"} or null. Any non-scalar type or unknown string value fails
+    hard."""
     flags: list[dict[str, Any]] = []
     for i, ev in enumerate(events):
         bt = ev.get("bidder_type")
@@ -586,10 +566,37 @@ def _invariant_p_r6(events: list[dict]) -> list[dict]:
             "severity": "hard",
             "reason": (
                 f"§P-R6: bidder_type={bt!r} (type {type(bt).__name__!r}) is not a "
-                f"scalar in {{\"s\", \"f\", \"mixed\"}} or null. "
-                f"Nested objects indicate a pre-2026-04-27 schema regression."
+                f"scalar in {{\"s\", \"f\"}} or null."
             ),
         })
+    return flags
+
+
+def _invariant_p_r7(events: list[dict]) -> list[dict]:
+    """§P-R7 — `ca_type_ambiguous` is a hard flag after the taxonomy redesign.
+
+    The extractor may still attach the ambiguity flag while classifying a
+    CA, but ambiguity over whether a CA is target-bidder, bidder-bidder, or
+    rollover is no longer allowed to pass as soft noise.
+    """
+    flags: list[dict[str, Any]] = []
+    for i, ev in enumerate(events):
+        for flag in ev.get("flags") or []:
+            if not isinstance(flag, dict):
+                continue
+            if flag.get("code") != "ca_type_ambiguous":
+                continue
+            if flag.get("severity") == "hard":
+                continue
+            flags.append({
+                "row_index": i,
+                "code": "ca_type_ambiguous",
+                "severity": "hard",
+                "reason": (
+                    "§P-R7: ca_type_ambiguous is hard after the taxonomy "
+                    "redesign; ambiguous CA type requires adjudication."
+                ),
+            })
     return flags
 
 
@@ -612,18 +619,20 @@ def _invariant_p_d1(events: list[dict]) -> list[dict]:
 
 
 def _invariant_p_d5(events: list[dict]) -> list[dict]:
-    """§P-D5 — every Drop-family row's bidder has a prior engagement row
+    """§P-D5 — every explicit `Drop` row's bidder has a prior engagement row
     (NDA, Bidder Interest, IB, or prior Drop) in the same process_phase.
 
     Closes the dangling-drop gap where an AI emits a Drop row for a bidder
     that was never shown engaging with the process (no NDA, no expression
     of interest, no IB kickoff). Matches the current §C1 Drop-family
-    labels via `startswith("Drop")`. Existence-only check via set membership over
+    DropSilent is explicitly excluded: it is inferred from filing silence and
+    is backed by the matching NDA row under §I1 / §P-S1, not by a narrated
+    dropout agency event. Existence-only check via set membership over
     per-(phase, bidder) engagement rows: canonicalization (§A2/§A3) has
-    already ordered events, so "earlier row" reduces to "any engagement
-    row for this (name, phase)" in practice. The prior-Drop carve-out
-    covers §I2 re-engagement edge cases where an extractor emits Drop→Drop
-    without an intervening NDA.
+    already ordered events, so "earlier row" reduces to "any engagement row
+    for this (name, phase)" in practice. The prior-Drop carve-out covers §I2
+    re-engagement edge cases where an extractor emits Drop→Drop without an
+    intervening NDA.
 
     Skips:
       - Unnamed (bidder_name=null) Drop rows — §E3 placeholders are not
@@ -655,13 +664,13 @@ def _invariant_p_d5(events: list[dict]) -> list[dict]:
         if "unsolicited_first_contact" in _row_flag_codes(ev):
             unsolicited_keys.add((name, phase))
         note = ev.get("bid_note", "") or ""
-        if note not in engagement_notes and not note.startswith("Drop"):
+        if note not in engagement_notes and note != "Drop":
             continue
         engagement_rows.setdefault((name, phase), set()).add(j)
 
     for i, ev in enumerate(events):
         note = ev.get("bid_note", "") or ""
-        if not note.startswith("Drop"):
+        if note != "Drop":
             continue
         name = ev.get("bidder_name")
         if not name:
@@ -750,6 +759,107 @@ def _invariant_p_d6(events: list[dict]) -> list[dict]:
     return flags
 
 
+TARGET_DROP_REASON_CLASSES = frozenset({
+    "below_market",
+    "below_minimum",
+    "target_other",
+    "never_advanced",
+    "scope_mismatch",
+})
+BIDDER_DROP_REASON_CLASSES = frozenset({None, "no_response", "scope_mismatch"})
+DROP_INITIATORS = frozenset({"bidder", "target", "unknown"})
+
+
+def _invariant_p_d7(events: list[dict]) -> list[dict]:
+    """§P-D7 — `Drop` rows use the redesigned initiator/reason matrix."""
+    flags: list[dict[str, Any]] = []
+    for i, ev in enumerate(events):
+        if ev.get("bid_note") != "Drop":
+            continue
+        initiator = ev.get("drop_initiator")
+        reason = ev.get("drop_reason_class")
+        problem: str | None = None
+        if initiator not in DROP_INITIATORS:
+            problem = (
+                f"drop_initiator={initiator!r} must be one of "
+                "{'bidder', 'target', 'unknown'} on Drop rows"
+            )
+        elif initiator == "target" and reason not in TARGET_DROP_REASON_CLASSES:
+            problem = (
+                f"drop_initiator='target' requires drop_reason_class in "
+                f"{sorted(TARGET_DROP_REASON_CLASSES)!r}; got {reason!r}"
+            )
+        elif initiator == "bidder" and reason not in BIDDER_DROP_REASON_CLASSES:
+            problem = (
+                "drop_initiator='bidder' permits only null, 'no_response', "
+                f"or 'scope_mismatch'; got {reason!r}"
+            )
+        elif initiator == "unknown" and reason is not None:
+            problem = (
+                f"drop_initiator='unknown' requires drop_reason_class=null; "
+                f"got {reason!r}"
+            )
+        if problem is None:
+            continue
+        flags.append({
+            "row_index": i,
+            "code": "drop_reason_class_inconsistent",
+            "severity": "soft",
+            "reason": f"§P-D7: {problem}",
+        })
+    return flags
+
+
+def _invariant_p_d8(events: list[dict]) -> list[dict]:
+    """§P-D8 — informal-bid formal-stage status matches same-phase rows."""
+    flags: list[dict[str, Any]] = []
+    formal_bid_keys = {
+        (ev.get("bidder_name"), _phase(ev))
+        for ev in events
+        if ev.get("bid_note") == "Bid"
+        and ev.get("bid_type") == "formal"
+        and ev.get("bidder_name")
+    }
+    for i, ev in enumerate(events):
+        note = ev.get("bid_note")
+        if note == "Bid" and ev.get("bid_type") == "informal" and _phase(ev) >= 1:
+            key = (ev.get("bidder_name"), _phase(ev))
+            has_formal_bid = key in formal_bid_keys
+            submitted = ev.get("submitted_formal_bid")
+            if submitted is True and not has_formal_bid:
+                flags.append({
+                    "row_index": i,
+                    "code": "formal_round_status_inconsistent",
+                    "severity": "soft",
+                    "reason": (
+                        "§P-D8: submitted_formal_bid=true but no formal Bid "
+                        "row exists for the same bidder and process_phase."
+                    ),
+                })
+            elif submitted is False and has_formal_bid:
+                flags.append({
+                    "row_index": i,
+                    "code": "formal_round_status_inconsistent",
+                    "severity": "soft",
+                    "reason": (
+                        "§P-D8: submitted_formal_bid=false but a formal Bid "
+                        "row exists for the same bidder and process_phase."
+                    ),
+                })
+        if note == "Drop" and ev.get("drop_reason_class") == "never_advanced":
+            if ev.get("invited_to_formal_round") is not False:
+                flags.append({
+                    "row_index": i,
+                    "code": "formal_round_status_inconsistent",
+                    "severity": "soft",
+                    "reason": (
+                        "§P-D8: Drop with drop_reason_class='never_advanced' "
+                        "requires invited_to_formal_round=false."
+                    ),
+                })
+    return flags
+
+
 def _invariant_p_h5(events: list[dict]) -> list[dict]:
     """§P-H5 — multi-bid sequences should be date-sorted per bidder."""
     by_name: dict[str, list[tuple[int, str]]] = {}
@@ -784,7 +894,7 @@ def _invariant_p_h5(events: list[dict]) -> list[dict]:
 def _invariant_p_d2(events: list[dict]) -> list[dict]:
     """§P-D2 — bid_date_rough ≠ null IFF the row carries a date-inference
     flag (date_inferred_from_rough / date_inferred_from_context /
-    date_range_collapsed). Strict XOR; no legacy-fixture carve-out."""
+    date_range_collapsed). Strict XOR; no fixture carve-out."""
     flags: list[dict[str, Any]] = []
     for i, ev in enumerate(events):
         rough = ev.get("bid_date_rough")
@@ -806,13 +916,78 @@ def _invariant_p_d2(events: list[dict]) -> list[dict]:
     return flags
 
 
+def _event_date_leq(left: dict, right: dict) -> bool:
+    """Return whether left's precise date is <= right's when both exist.
+
+    If either date is missing, use row order elsewhere as the fallback rather
+    than treating the missing date as disqualifying.
+    """
+    left_date = left.get("bid_date_precise")
+    right_date = right.get("bid_date_precise")
+    if left_date and right_date:
+        return left_date <= right_date
+    return True
+
+
+def _paired_final_round(
+    events: list[dict],
+    bid_index: int,
+    *,
+    require_non_announcement: bool = False,
+    after_index: int | None = None,
+) -> tuple[int, dict] | None:
+    """Find the final-round row that supplies §G1 process-position context.
+
+    Preference follows the taxonomy spec: most recent non-announcement
+    Final Round in the same phase with date <= bid date; if none exists and
+    `require_non_announcement` is false, fall back to the most recent
+    applicable Final Round regardless of announcement status.
+    """
+    if bid_index < 0 or bid_index >= len(events):
+        return None
+    bid = events[bid_index]
+    if bid.get("bid_note") != "Bid":
+        return None
+    phase = _phase(bid)
+
+    def candidates(non_announcement_only: bool) -> list[tuple[int, dict]]:
+        out: list[tuple[int, dict]] = []
+        for i, ev in enumerate(events):
+            if i >= bid_index:
+                continue
+            if after_index is not None and i <= after_index:
+                continue
+            if ev.get("bid_note") != "Final Round":
+                continue
+            if _phase(ev) != phase:
+                continue
+            if non_announcement_only and ev.get("final_round_announcement") is not False:
+                continue
+            if not _event_date_leq(ev, bid):
+                continue
+            out.append((i, ev))
+        return out
+
+    non_ann = candidates(non_announcement_only=True)
+    if non_ann:
+        return max(non_ann, key=lambda item: (item[1].get("bid_date_precise") or "", item[0]))
+    if require_non_announcement:
+        return None
+    any_round = candidates(non_announcement_only=False)
+    if any_round:
+        return max(any_round, key=lambda item: (item[1].get("bid_date_precise") or "", item[0]))
+    return None
+
+
 def _invariant_p_g2(events: list[dict]) -> list[dict]:
     """§P-G2 — every row with non-null bid_type satisfies one of:
     (1) the row is a true range bid (both `bid_value_lower` and
     `bid_value_upper` numeric with `lower < upper`, a §G1 informal
     structural signal), or (2) the row carries a non-empty
     `bid_type_inference_note: str` of ≤300 chars. §G1 trigger tables are
-    classification guidance for the extractor, not a validator satisfier.
+    classification guidance for the extractor. The redesigned process-
+    position fallback may also be evidenced by a paired/fallback
+    `Final Round.final_round_informal` value.
 
     Additional hard rule (per Alex 2026-04-27): when (1) is true, the row
     MUST have `bid_type = "informal"`. A range with bid_type="formal" is
@@ -858,21 +1033,83 @@ def _invariant_p_g2(events: list[dict]) -> list[dict]:
         if isinstance(note, str) and 0 < len(note.strip()) <= 300:
             continue
 
+        paired_round = _paired_final_round(events, i)
+        if paired_round is not None:
+            _, final_round = paired_round
+            final_round_informal = final_round.get("final_round_informal")
+            expected = (
+                "informal" if final_round_informal is True
+                else "formal" if final_round_informal is False
+                else None
+            )
+            if expected == bid_type:
+                continue
+
         flags.append({
             "row_index": i, "code": "bid_type_unsupported", "severity": "hard",
             "reason": (
                 f"§P-G2: bid_type={bid_type!r} lacks both a true range "
-                f"(lower<upper) and a non-empty ≤300-char "
-                f"bid_type_inference_note."
+                f"(lower<upper), a non-empty ≤300-char "
+                f"bid_type_inference_note, and matching paired/fallback "
+                f"Final Round.final_round_informal evidence."
             ),
         })
     return flags
 
 
-def _rank(bid_note: str | None, bid_type: str | None = None) -> int:
+def _invariant_p_g3(events: list[dict]) -> list[dict]:
+    """§P-G3 — Final Round announcements with subsequent bids need a paired
+    non-announcement Final Round row in the same phase."""
+    flags: list[dict[str, Any]] = []
+    for i, ev in enumerate(events):
+        if ev.get("bid_note") != "Final Round":
+            continue
+        if ev.get("final_round_announcement") is not True:
+            continue
+        phase = _phase(ev)
+        subsequent_bid_indices = [
+            j for j, later in enumerate(events)
+            if j > i
+            and later.get("bid_note") == "Bid"
+            and _phase(later) == phase
+            and _event_date_leq(ev, later)
+        ]
+        if not subsequent_bid_indices:
+            continue
+        has_non_announcement_pair = any(
+            _paired_final_round(
+                events,
+                bid_index,
+                require_non_announcement=True,
+                after_index=i,
+            ) is not None
+            for bid_index in subsequent_bid_indices
+        )
+        if has_non_announcement_pair:
+            continue
+        flags.append({
+            "row_index": i,
+            "code": "final_round_missing_non_announcement_pair",
+            "severity": "hard",
+            "reason": (
+                "§P-G3: Final Round announcement has subsequent bids "
+                "but no paired non-announcement Final Round row — check "
+                "for missing row."
+            ),
+        })
+    return flags
+
+
+def _rank(
+    bid_note: str | None,
+    bid_type: str | None = None,
+    final_round_announcement: bool | None = None,
+) -> int:
     """§A3 same-date logical rank. Formal bids bump to 7."""
     if bid_note is None:
         return 99
+    if bid_note == "Final Round" and final_round_announcement is True:
+        return 1
     r = EVENT_RANK.get(bid_note, 99)
     if bid_note == "Bid" and bid_type == "formal":
         return 7
@@ -936,8 +1173,16 @@ def _invariant_p_d3(events: list[dict]) -> list[dict]:
         d_a, d_b = dates[k], dates[k + 1]
         if d_a and d_b and d_a == d_b:
             ev_a, ev_b = events[k], events[k + 1]
-            rank_a = _rank(ev_a.get("bid_note"), ev_a.get("bid_type"))
-            rank_b = _rank(ev_b.get("bid_note"), ev_b.get("bid_type"))
+            rank_a = _rank(
+                ev_a.get("bid_note"),
+                ev_a.get("bid_type"),
+                ev_a.get("final_round_announcement"),
+            )
+            rank_b = _rank(
+                ev_b.get("bid_note"),
+                ev_b.get("bid_type"),
+                ev_b.get("final_round_announcement"),
+            )
             if rank_a > rank_b:
                 flags.append({
                     "row_index": k + 1, "code": "bidder_id_same_date_rank_violation", "severity": "hard",
@@ -1314,14 +1559,17 @@ def update_progress(
     on `rulebook_version_history` (capped at `RULEBOOK_HISTORY_CAP`) so the
     "3 consecutive unchanged-rulebook clean runs" gate can be audited per-deal.
     No top-level `rulebook_version`; that key raced between concurrent deal
-    finalizes and had no history. If an older progress.json still carries it,
-    we drop it on this write.
+    finalizes and had no history. Stale state fails loudly instead of being
+    cleaned in-place.
     """
     if not PROGRESS_PATH.exists():
         raise FileNotFoundError(f"{PROGRESS_PATH} does not exist; run scripts/build_seeds.py first")
     state = json.loads(PROGRESS_PATH.read_text())
-    # Drop legacy top-level key on any write (plan §2.1: no backward compat).
-    state.pop("rulebook_version", None)
+    if "rulebook_version" in state:
+        raise ValueError(
+            "state/progress.json contains stale top-level rulebook_version; "
+            "regenerate state/progress.json under the current schema"
+        )
     deals = state.setdefault("deals", {})
     if slug not in deals:
         deals[slug] = {
@@ -1506,7 +1754,11 @@ def _canonicalize_order(raw_extraction: dict[str, Any]) -> None:
 
     def sort_key(ev: dict) -> tuple:
         date = ev.get("bid_date_precise") or "9999-12-31"
-        rank = _rank(ev.get("bid_note"), ev.get("bid_type"))
+        rank = _rank(
+            ev.get("bid_note"),
+            ev.get("bid_type"),
+            ev.get("final_round_announcement"),
+        )
         return (date, rank, ev["_narrative_index"])
 
     events.sort(key=sort_key)

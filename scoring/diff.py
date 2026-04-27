@@ -1,7 +1,7 @@
 """scoring/diff.py — Diff reporter: AI extractions vs Alex's reference.
 
 Compares `output/extractions/{slug}.json` against `reference/alex/{slug}.json`
-and emits a human-review report. NOT a grader. Every divergence eventually
+and prints a human-review report by default. NOT a grader. Every divergence eventually
 gets one of four verdicts from Austin (see `reference/alex/README.md`):
 
     1. AI right, Alex wrong       3. Both defensible
@@ -11,6 +11,7 @@ USAGE
 -----
     python scoring/diff.py --slug medivation
     python scoring/diff.py --all-reference
+    python scoring/diff.py --slug medivation --write
 """
 
 from __future__ import annotations
@@ -33,6 +34,14 @@ RESULTS_DIR = REPO_ROOT / "scoring" / "results"
 COMPARE_EVENT_FIELDS = [
     "bid_type",
     "bidder_type",
+    "drop_initiator",
+    "drop_reason_class",
+    "final_round_announcement",
+    "final_round_extension",
+    "final_round_informal",
+    "press_release_subject",
+    "invited_to_formal_round",
+    "submitted_formal_bid",
     "bid_value_pershare",
     "bid_value_lower",
     "bid_value_upper",
@@ -547,8 +556,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--slug", help="Single deal slug (e.g. medivation).")
     parser.add_argument("--all-reference", action="store_true")
-    parser.add_argument("--no-write", action="store_true",
-                        help="Skip writing scoring/results/*; print to stdout only.")
+    parser.add_argument("--write", action="store_true",
+                        help="Also write markdown/json reports under scoring/results/.")
     args = parser.parse_args()
 
     if args.all_reference:
@@ -558,7 +567,7 @@ def main() -> None:
             return
         for r in reports:
             print(format_report_txt(r))
-            if not args.no_write and (
+            if args.write and (
                 r.matched_rows
                 + len(r.ai_only_rows)
                 + len(r.alex_only_rows)
@@ -571,7 +580,7 @@ def main() -> None:
     elif args.slug:
         r = diff_deal(args.slug)
         print(format_report_txt(r))
-        if not args.no_write and (
+        if args.write and (
             r.matched_rows
             + len(r.ai_only_rows)
             + len(r.alex_only_rows)

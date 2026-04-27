@@ -234,14 +234,28 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
   per `rules/bidders.md` §E3. Stable across all rows for the same entity.
 - `bidder_alias` — string. Filing's verbatim label for this bidder on this
   row (`"Party A"`, `"Pfizer Inc."`, `"Strategic 1"`). Per `rules/bidders.md` §E3.
-- `bidder_type` — string OR null. One of `"s"` / `"f"` / `"mixed"` per `rules/bidders.md` §F1 (rewritten 2026-04-27). Geography and listing status are NOT recorded — Alex's 2026-04-27 directive dropped both dimensions entirely.
-- `joint_bidder_members` — `list[str]` OR null. Legacy escape hatch for
-  a consortium label when the filing names no constituent and gives no
-  count. Under the 2026-04-27 universal-atomization rule (§E1 / §E2.b),
-  identifiable constituents get their own rows and this field is null /
-  absent on those rows.
+- `bidder_type` — string OR null. One of `"s"` / `"f"` per
+  `rules/bidders.md` §F1 (rewritten 2026-04-27). Geography, listing status,
+  and row-level consortium mixedness are NOT recorded.
 - `bid_note` — string from closed vocabulary (§C1).
 - `bid_type` — `"formal" | "informal" | null` (per §G1).
+- `drop_initiator` — `"bidder" | "target" | "unknown" | null`. Required on
+  `bid_note = "Drop"`; null otherwise, including `DropSilent`.
+- `drop_reason_class` — `"below_market" | "below_minimum" | "target_other" |
+  "no_response" | "never_advanced" | "scope_mismatch" | null`. Required
+  when applicable on `Drop` per `rules/events.md` §I1.
+- `final_round_announcement` — bool OR null. Required on `Final Round`;
+  null otherwise.
+- `final_round_extension` — bool OR null. Required on `Final Round`; null
+  otherwise.
+- `final_round_informal` — bool OR null. Required on `Final Round`; null
+  only when the filing genuinely does not classify the round.
+- `press_release_subject` — `"bidder" | "sale" | "other" | null`. Required
+  on `Press Release`; null otherwise.
+- `invited_to_formal_round` — bool OR null. Required on each informal `Bid`
+  row in a current/restarted process; encodes the target's advancement act.
+- `submitted_formal_bid` — bool OR null. Required on each informal `Bid`
+  row in a current/restarted process; encodes the bidder's submission act.
 - `bid_date_precise` — ISO date OR null.
 - `bid_date_rough` — natural-language phrase OR null.
 - `bid_value` — numeric OR null. Aggregate $ amount when `bid_value_unit = "USD"`; otherwise reserved.

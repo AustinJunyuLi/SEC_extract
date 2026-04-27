@@ -1,10 +1,14 @@
 # Stage 1 Open Questions — Index
 
-**Purpose.** Slim tracker of every 🟥 OPEN question across `rules/*.md`. Resolve them in the order below. When every item shows 🟩 RESOLVED, Stage 1 is done and Stage 2 can begin.
+**Purpose.** Archived tracker of Stage 1 rulebook ratification. Every listed
+item is resolved; current cross-deal policy decisions now live directly in
+`rules/*.md`.
 
-**Scope.** This file tracks **Stage 1 rulebook ratification only.** Cross-deal policy decisions surfaced later in Stage 3 now live in the rulebook itself; dated decision logs were purged before the clean re-extraction pass.
+**Scope.** This file tracks **Stage 1 rulebook ratification only.** Cross-deal policy decisions surfaced later in Stage 3 now live in the rulebook itself; historical decision logs were purged, and git history is the record.
 
-**How to use.** For each open item, open the referenced rule file, read the Context/Options for that section, discuss with Austin (and Alex when needed), and write the answer into the `Decision:` field in that file. When the decision lands, update this file's emoji to 🟩.
+**How to use.** Do not add new Stage 3 decisions here. For new decisions,
+update the relevant `rules/*.md` section directly and use git history as the
+record.
 
 **Status legend:** 🟥 OPEN · 🟨 TENTATIVE · 🟩 RESOLVED
 
@@ -94,9 +98,11 @@ Scope decisions first (they constrain everything), schema next (defines the outp
 | 54 | `scripts/build_reference.py` | §Q5 | Medivation 'Several parties' atomization | 🟩 |
 | 55 | `rules/invariants.md` | §P-R1…§P-S4 | All validator invariants | 🟩 |
 
-**Total open:** 0 🟥 · 0 🟨 · 53 🟩
+**Total open:** 0 🟥 · 0 🟨 · 54 🟩
 
-> 🎉 **Stage 1 complete — 2026-04-18.** All live rule decisions have been ratified and written into `rules/*.md`. Proceed to Stage 2. (Row 20 is an intentional gap: the original §K3 question was retired post-facto, and the rule itself was fully deleted in Stage 3 iter-6.)
+> 🎉 **Stage 1 complete — 2026-04-18.** All live rule decisions were
+> ratified and written into `rules/*.md`. Row 20 is an intentional gap: the
+> original §K3 question was removed when the rulebook was simplified.
 
 Some questions are tightly coupled and will likely be resolved together (e.g., §E1 + §E2 + §Q2 all concern the aggregate-vs-atomize decision). Handle them as bundles where natural.
 
@@ -135,7 +141,6 @@ When a decision requires Alex and he isn't available, leave 🟥 and note the de
 
 ## Exit criteria
 
-This file is done when every row shows 🟩 RESOLVED. At that point:
-- `rules/*.md` contain a complete rulebook.
-- `CLAUDE.md` updates its "current status" to reflect Stage 2 start.
-- Next step: convert the 9 Alex-reference deals to JSON (`scripts/build_reference.py`) and wire up `scoring/diff.py`. The diff is a human-review aid, not a grade — Austin re-reads the SEC filing for every AI-vs-Alex divergence and assigns a verdict (see `reference/alex/README.md`).
+This file is complete and archival. Stage 1 and Stage 2 are done; Stage 3
+status lives in `AGENTS.md`, `CLAUDE.md`, `SKILL.md`, `state/progress.json`,
+and the current output/reference JSONs.

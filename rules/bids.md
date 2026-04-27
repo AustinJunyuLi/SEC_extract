@@ -61,13 +61,6 @@ that signed no NDA AND gave no concrete price AND had no bid intent.
 §C4 covers the opposite pattern: concrete price given, NDA signed
 later.
 
-**Migration note.** An earlier Saks extractor used `Bidder Sale` + a
-`pre_nda_bidder_sale` soft flag for this pattern (Hudson's Bay + Sponsor
-A, April 2013 concrete price indications). That ad-hoc convention is
-deprecated by §C4; current extraction re-encodes those rows as `Bid` +
-`bid_type="informal"` + `pre_nda_informal_bid`. The old
-`pre_nda_bidder_sale` flag is not recognized by the validator.
-
 **Rejected alternatives.**
 - **Use `Bidder Sale`** (saks-extractor ad-hoc convention) — §C1's
   `Bidder Sale` is for first-contact initiation, not for concrete price
@@ -193,10 +186,11 @@ still ambiguous, emit `bid_type = null` + hard flag.
 These trigger tables and fallback heuristics are **classification
 guidance for the extractor** — they tell the extractor how to *pick*
 `informal` vs `formal`. The validator (§G2 / §P-G2) enforces
-*evidence* (range OR ≤300-char `bid_type_inference_note`), not trigger
-presence. A trigger hit in `source_quote` alone does NOT satisfy
-§P-G2; the extractor must still attach the inference note (unless the
-row is a true range bid).
+*evidence* (range, ≤300-char `bid_type_inference_note`, or paired /
+fallback `Final Round.final_round_informal`), not trigger presence. A
+trigger hit in `source_quote` alone does NOT satisfy §P-G2; the
+extractor must still attach the inference note unless the row is a true
+range bid or the final-round row already supplies the classification.
 
 **Formal triggers** (any → `bid_type = "formal"`):
 - *"binding offer"*, *"binding proposal"*, *"binding bid"*
@@ -218,10 +212,10 @@ row is a true range bid).
 - **Structural signal: bid is stated as a true range** (both `bid_value_lower` and `bid_value_upper` populated, numeric, with `lower < upper` per §G2) — **range always wins**. Whenever a true range is present, `bid_type = "informal"` regardless of any formal trigger phrase the filing uses. If a formal trigger coexists with the range, emit soft flag `range_with_formal_trigger_override` to preserve the audit trail; do NOT change `bid_type` based on the trigger. Per Alex 2026-04-27 directive.
 
 **Process-position fallback** (no explicit trigger present):
-- Bid submitted in response to `Final Round Ann` / `Final Round Inf Ann`
-  (§C1) → matches the announcing phase:
-  - `Final Round Ann` → `formal`
-  - `Final Round Inf Ann` → `informal`
+- Bid submitted in response to a paired or fallback `Final Round` row (§K1)
+  inherits that row's `final_round_informal` value:
+  - `final_round_informal = false` → `formal`
+  - `final_round_informal = true` → `informal`
 - Bid submitted **before** any round structure is established (initial
   approach, pre-NDA or pre-process-letter) → `informal`.
 - Topping bid submitted post-`Executed` under go-shop provisions → `formal`
@@ -259,17 +253,23 @@ satisfy at least one of:
    cite §G1 guidance (trigger phrase it matches, process-position
    fallback rule, or structural signal); it MUST be grounded in the
    filing.
+3. A paired/fallback `Final Round` row in the same phase supplies
+   `final_round_informal` consistent with the bid's `bid_type` (§K1 /
+   §K2). This covers process-position classifications where the
+   final-round row already stores the informal/formal call.
 
 **§G1 triggers are classification guidance, not a validator
 satisfier.** The extractor uses §G1's formal/informal trigger tables
 and process-position fallback to *pick* `bid_type`. But §P-G2
-validates on range-OR-note only; a trigger match alone does not pass.
+validates on range, note, or paired/fallback final-round evidence; a
+trigger match alone does not pass.
 Rationale: at 392-deal scale, a closed trigger list overfits the
 9-deal reference corpus. Empirical 9-deal distribution (2026-04-20):
 30% of 92 bids relied on trigger hits, 29% on range, 55% on
 inference_note; providence-worcester (22 bids) and penford (8 bids)
-had 0% trigger coverage. The note-on-every-non-range rule holds
-regardless of filing language.
+had 0% trigger coverage. Absent a paired/fallback final-round
+classification, the note-on-every-non-range rule holds regardless of
+filing language.
 
 **Cap rationale.** 300 chars ≈ 2–3 sentences, enough for
 `"<classification> per §G1 <rule>: <filing evidence>"`. The prior
@@ -278,7 +278,7 @@ regardless of filing language.
 inviting essays.
 
 **Validator.** `pipeline._invariant_p_g2`: hard flag
-`bid_type_unsupported` if neither satisfier holds; hard flag
+`bid_type_unsupported` if no satisfier holds; hard flag
 `bid_range_inverted` if `lower >= upper`; hard flag
 `bid_range_must_be_informal` if a true range carries any non-informal
 `bid_type`.
@@ -775,7 +775,7 @@ shareholder-rollover purpose explicit:
 language could plausibly describe either a consortium-formation CA
 (Type B) or a rollover CA (Type C), prefer Type B (emit
 `ConsortiumCA`) and attach `{"code": "ca_type_ambiguous", "severity":
-"soft", "reason": "<summary including the specific Type B vs Type C
+"hard", "reason": "<summary including the specific Type B vs Type C
 ambiguity>"}`. Austin adjudicates against the filing.
 
 **Why skip.** Rollover CAs are not auction-process events; they
@@ -828,12 +828,6 @@ populate neither but still emit a row with a flag.
 **Aggregate-dollar bids** (*"$1.2 billion enterprise value"*) — handled
 separately in §H4, which uses `bid_value` + `bid_value_unit` instead of
 the per-share fields.
-
-**Legacy migration.** Alex's workbook practice varies: sometimes
-`bid_value_pershare` is set to the lower bound on range bids, sometimes
-to the midpoint, sometimes left as `NA`. During xlsx → JSON conversion,
-relabel per the table above and flag any divergent legacy rows as
-`legacy_bid_value_reinterpreted` (info).
 
 **Rejected alternatives.**
 - **Populate midpoint in `bid_value_pershare` on ranges** — loses the

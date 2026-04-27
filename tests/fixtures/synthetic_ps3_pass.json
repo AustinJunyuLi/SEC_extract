@@ -6,7 +6,8 @@
       "process_phase": 1
     },
     {
-      "bid_note": "Bid Press Release",
+      "bid_note": "Press Release",
+      "press_release_subject": "bidder",
       "process_phase": 1
     }
   ],
