@@ -79,24 +79,13 @@ Without §Q5 atomization the AI's correctly-atomized output would diff as
 several `ai_only` rows against the aggregated reference, drowning out
 real extraction defects.
 
-§Q6 — Acquirer / Acquirer_legal override per §N4 (sponsor-backed deals)
-    Per `rules/schema.md` §N4 (Decision #3, 2026-04-26), `Acquirer` is
-    the operating acquirer and `Acquirer_legal` is the Delaware shell
-    when it differs. Alex's xlsx Acquirer column has the operating
-    name for some sponsor-backed deals and the consortium list for
-    petsmart. The override sets:
-      - petsmart-inc → operating=`BC Partners, Inc.` (lead),
-        legal=`Argos Holdings Inc.`
-      - mac-gray → operating=`CSC ServiceWorks, Inc.`,
-        legal=`Spin Holdco Inc.`
-      - zep → operating=`New Mountain Capital`,
-        legal=`NM Z Parent Inc.`
-      - saks → operating=`Hudson's Bay Company`,
-        legal=`Harry Acquisition Inc.`
-    Records `acquirer_overridden_per_q6` deal_flag with the original
-    xlsx string for provenance. The other 5 reference deals
-    (medivation, imprivata, providence-worcester, penford, stec) have
-    no separate legal shell and `Acquirer_legal = null`.
+§Q6 — Acquirer rewrite for sponsor-backed deals
+    Per Alex's 2026-04-27 directive, only the operating acquirer is
+    recorded. Alex's xlsx Acquirer column has the operating name for
+    some sponsor-backed deals and the consortium list or shell name for
+    others. The converter rewrites the 4 sponsor-backed reference deals
+    to the operating-acquirer string and records `acquirer_normalized`
+    as an info flag with the original xlsx value for provenance.
 """
 
 from __future__ import annotations
@@ -137,72 +126,38 @@ DEAL_ROWS: dict[str, tuple[int, int]] = {
 # §Q1 — Saks rows Alex said to delete.
 SAKS_DELETE_ROWS = {7013, 7015}
 
-# §Q6 — Acquirer / Acquirer_legal override per rules/schema.md §N4.
-# Sponsor-backed reference deals where Alex's xlsx Acquirer column does not
-# match the §N4 operating-acquirer rule. The override applies to the deal
-# object's Acquirer + Acquirer_legal fields; original xlsx text is preserved
-# in the deal_flag's reason so the provenance is auditable.
-Q6_ACQUIRER_OVERRIDES: dict[str, dict[str, Any]] = {
-    "petsmart-inc": {
-        "operating": "BC Partners, Inc.",
-        "legal":     "Argos Holdings Inc.",
-        "note": (
-            "PE consortium / club deal: Buyer Group = BC Partners, "
-            "La Caisse, GIC, StepStone, Longview. Per §N4 rule 5 the "
-            "operating Acquirer is the lead sponsor (BC Partners)."
-        ),
-    },
-    "mac-gray": {
-        "operating": "CSC ServiceWorks, Inc.",
-        "legal":     "Spin Holdco Inc.",
-        "note": (
-            "Sponsor-backed corporate buyer: CSC ServiceWorks operates "
-            "the laundry business; Pamplona Capital Partners is the "
-            "funding sponsor (documented on the Executed row's "
-            "additional_note per §N4 rule 4)."
-        ),
-    },
-    "zep": {
-        "operating": "New Mountain Capital",
-        "legal":     "NM Z Parent Inc.",
-        "note": (
-            "PE sponsor as operating acquirer: New Mountain Capital "
-            "(fund) is also the operating buyer; merger executed via "
-            "the NM Z Parent shell. Per §N4 rule 3."
-        ),
-    },
-    "saks": {
-        "operating": "Hudson's Bay Company",
-        "legal":     "Harry Acquisition Inc.",
-        "note": (
-            "Operating company is also the ultimate buyer: Hudson's "
-            "Bay Company; merger executed via the Harry Acquisition "
-            "shell. Per §N4 rule 2."
-        ),
-    },
+# §Q6 — Acquirer rewrite for the 4 sponsor-backed reference deals.
+# Per Alex 2026-04-27 directive, only the operating acquirer is recorded;
+# the legal shell is NOT preserved as a separate field. Alex's xlsx
+# Acquirer column for these 4 deals contains the consortium label or shell
+# name; the converter overwrites it with the operating-acquirer string.
+# Operational acquirer values are sourced from each filing's signature block.
+Q6_ACQUIRER_REWRITE: dict[str, str] = {
+    "petsmart-inc": "BC Partners, Inc.",
+    "mac-gray":     "CSC ServiceWorks, Inc.",
+    "zep":          "New Mountain Capital",
+    "saks":         "Hudson's Bay Company",
 }
 
 
-def apply_q6_acquirer_override(slug: str, deal: dict[str, Any]) -> None:
-    """§Q6 — apply per-deal Acquirer / Acquirer_legal override per §N4.
-
-    Mutates `deal` in place. Records the original xlsx Acquirer string
-    in the appended deal_flag so reviewers can see what Alex's workbook
-    had vs what §N4 says it should be.
+def apply_q6_acquirer_rewrite(slug: str, deal: dict[str, Any]) -> None:
+    """§Q6 — overwrite deal['Acquirer'] with the operating acquirer for the
+    4 sponsor-backed reference deals. Mutates `deal` in place. Records the
+    original xlsx string in an `acquirer_normalized` info flag for audit.
     """
-    spec = Q6_ACQUIRER_OVERRIDES.get(slug)
-    if spec is None:
+    new_value = Q6_ACQUIRER_REWRITE.get(slug)
+    if new_value is None:
         return
     original = deal.get("Acquirer")
-    deal["Acquirer"] = spec["operating"]
-    deal["Acquirer_legal"] = spec["legal"]
+    if original == new_value:
+        return
+    deal["Acquirer"] = new_value
     deal["deal_flags"].append({
-        "code": "acquirer_overridden_per_q6",
+        "code": "acquirer_normalized",
         "severity": "info",
         "reason": (
-            f"§Q6 (per §N4): xlsx Acquirer={original!r}; overridden to "
-            f"operating={spec['operating']!r} with legal shell "
-            f"Acquirer_legal={spec['legal']!r}. {spec['note']}"
+            f"§Q6: xlsx Acquirer={original!r} normalized to operating "
+            f"acquirer {new_value!r} per Alex 2026-04-27 directive."
         ),
     })
 
@@ -476,10 +431,6 @@ def build_deal_object(slug: str, rows: list[RawRow]) -> dict[str, Any]:
         "slug": slug,
         "TargetName":        pick("TargetName"),
         "Acquirer":          pick("Acquirer"),
-        # §N4 sidecar; populated by apply_q6_acquirer_override() for the
-        # 4 sponsor-backed reference deals (petsmart-inc, mac-gray, zep,
-        # saks). Null for everything else.
-        "Acquirer_legal":    None,
         "DateAnnounced":     date_announced,
         "DateEffective":     date_effective,
         "DateFiled":         date_filed,
@@ -1024,7 +975,7 @@ def apply_q5_medivation(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
 def build_deal(slug: str) -> dict[str, Any]:
     raw = load_raw_rows(slug)
     deal = build_deal_object(slug, raw)
-    apply_q6_acquirer_override(slug, deal)
+    apply_q6_acquirer_rewrite(slug, deal)
 
     if slug == "saks":
         raw = apply_q1_saks(raw, deal)

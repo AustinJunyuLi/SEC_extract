@@ -41,7 +41,7 @@ COMPARE_EVENT_FIELDS = [
 ]
 
 COMPARE_DEAL_FIELDS = [
-    "TargetName", "Acquirer", "Acquirer_legal", "DateAnnounced",
+    "TargetName", "Acquirer", "DateAnnounced",
     "DateEffective", "auction", "all_cash",
 ]
 
