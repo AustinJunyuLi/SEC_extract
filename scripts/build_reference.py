@@ -543,95 +543,48 @@ def canonicalize_bidders(rows: list[RawRow]) -> tuple[dict[int, str], dict[str, 
 # Bidder-type collapse (§F1)
 # ---------------------------------------------------------------------------
 
-def _bidder_type_note_signals(note: Any) -> dict[str, bool | None]:
-    """Parse Alex's type-note column without inventing outside facts.
+def build_bidder_type(r: RawRow) -> str | None:
+    """Return scalar bidder_type per `rules/bidders.md` §F1 (2026-04-27).
 
-    The workbook has no separate public-company boolean. Its note column uses
-    strings like "S", "F", "S/F", "11S, 14F", and "Non-US public S".
+    Reads the four boolean columns from Alex's xlsx (bt_financial,
+    bt_strategic, bt_mixed, bt_nonUS — the last is now ignored) plus the
+    free-text `bidder_type_note`. Returns one of "s" / "f" / "mixed" / None.
 
-    `public` is tri-state per `rules/bidders.md` §F1/§F2 (Decision #2,
-    2026-04-26): `True` only when the note contains the explicit token
-    `"public"`; otherwise `None`. Tokens like `"PE"`, `"sponsor"`, or
-    `"private equity"` describe the fund-vehicle type (a `base = "f"`
-    signal) and do NOT mean the sponsor firm is private — KKR /
-    Blackstone / Apollo / Carlyle / Ares / TPG are all listed sponsor
-    firms. The pre-2026 `False if has_private` branch (which mapped
-    PE/sponsor tokens to `public = False`) was the converter-side
-    equivalent of §F2's removed PE-firm carve-out and is gone.
+    Geography and listing status are no longer recorded per Alex's
+    2026-04-27 directive; this function does not attempt to parse them
+    from the note column.
     """
-    if not isinstance(note, str):
-        return {
-            "financial": None,
-            "strategic": None,
-            "mixed": None,
-            "non_us": None,
-            "public": None,
-        }
-
-    normalized = re.sub(r"non[-\s]?us", "nonus", note.strip().lower())
-    tokens = re.findall(r"[a-z]+|\d+[a-z]+", normalized)
-    has_financial = any(
-        token in {"f", "financial"} or re.fullmatch(r"\d+f", token)
-        for token in tokens
-    )
-    has_strategic = any(
-        token in {"s", "strategic"} or re.fullmatch(r"\d+s", token)
-        for token in tokens
-    )
-    has_mixed = "mixed" in tokens or (has_financial and has_strategic)
-    has_non_us = "nonus" in tokens
-    has_public = "public" in tokens
-
-    return {
-        "financial": has_financial,
-        "strategic": has_strategic,
-        "mixed": has_mixed,
-        "non_us": has_non_us,
-        "public": True if has_public else None,
-    }
-
-
-def build_bidder_type(r: RawRow) -> dict[str, Any] | None:
-    fin  = _bool(r.get("bt_financial"))
+    fin   = _bool(r.get("bt_financial"))
     strat = _bool(r.get("bt_strategic"))
     mixed = _bool(r.get("bt_mixed"))
-    nonus = _bool(r.get("bt_nonUS"))
     note  = r.get("bidder_type_note")
-    note_signals = _bidder_type_note_signals(note)
-    # If none set, no type.
-    if not any([fin, strat, mixed]):
-        if note is None and nonus is None:
-            return None
+
+    # Boolean-column path (Alex's 4-boolean schema).
     if mixed:
-        base = "mixed"
-    elif fin and strat:
-        base = "mixed"
-    elif fin:
-        base = "f"
-    elif strat:
-        base = "s"
-    else:
-        if note_signals["mixed"]:
-            base = "mixed"
-        elif note_signals["financial"] and note_signals["strategic"]:
-            base = "mixed"
-        elif note_signals["financial"]:
-            base = "f"
-        elif note_signals["strategic"]:
-            base = "s"
-        else:
-            base = None
+        return "mixed"
+    if fin and strat:
+        return "mixed"
+    if fin:
+        return "f"
+    if strat:
+        return "s"
 
-    if nonus is not None:
-        non_us_value = bool(nonus)
-    else:
-        non_us_value = bool(note_signals["non_us"])
+    # Note-column fallback when boolean columns are blank but the note has
+    # signal. Tokenize the note and match the F/S/mixed letters.
+    if isinstance(note, str):
+        normalized = re.sub(r"non[-\s]?us", "", note.strip().lower())
+        tokens = re.findall(r"[a-z]+|\d+[a-z]+", normalized)
+        has_financial = any(t in {"f", "financial"} or re.fullmatch(r"\d+f", t) for t in tokens)
+        has_strategic = any(t in {"s", "strategic"} or re.fullmatch(r"\d+s", t) for t in tokens)
+        has_mixed     = "mixed" in tokens
+        if has_mixed or (has_financial and has_strategic):
+            return "mixed"
+        if has_financial:
+            return "f"
+        if has_strategic:
+            return "s"
 
-    return {
-        "base": base,
-        "non_us": non_us_value,
-        "public": note_signals["public"],
-    }
+    return None
 
 
 # ---------------------------------------------------------------------------

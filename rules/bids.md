@@ -673,11 +673,11 @@ now formally:
 `count({row ∈ events : row.bid_note == "NDA" AND row.role == "bidder" AND row.process_phase ≥ 1})`.
 
 **`bidder_type` interaction.** Advisor rows (`role != "bidder"`) have
-`bidder_type = null`. The `bidder_type` classification (§F1/§F2) applies
+`bidder_type = null`. The `bidder_type` classification (§F1) applies
 only to bidders. A validator check catches violations.
 
 **Rejected alternatives.**
-- **Use `bidder_type.base = "advisor"`** — overloads the type field,
+- **Use `bidder_type = "advisor"`** — overloads the type field,
   conflates identity (advisor vs bidder) with classification (strategic
   vs financial).
 - **Skip advisor NDAs entirely** — loses useful retention data that Alex

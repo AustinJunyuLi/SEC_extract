@@ -24,7 +24,7 @@ Scope decisions first (they constrain everything), schema next (defines the outp
 8. `rules/events.md` §K1, §K2 — final-round vocabulary and edge cases.
 9. `rules/events.md` §L1, §L2 — prior-process inclusion.
 10. `rules/bidders.md` §E1, §E2, §E3, §E4 — identity, aggregation, joint bidders, winner retrofit.
-11. `rules/bidders.md` §F1, §F2, §F3 — bidder type canonical format.
+11. `rules/bidders.md` §F1, §F3 — bidder type canonical format.
 12. `rules/bids.md` §G1, §G2 — informal-vs-formal call. **Highest-risk classification.**
 13. `rules/bids.md` §H1, §H2, §H3, §H4, §H5 — bid value structure.
 14. `rules/bids.md` §M1, §M2, §M3, §M4 — skip rules.
@@ -66,7 +66,6 @@ Scope decisions first (they constrain everything), schema next (defines the outp
 | 25 | `rules/bidders.md` | §E3 | Anonymous naming | 🟩 |
 | 26 | `rules/bidders.md` | §E4 | Winner retrofit | 🟩 |
 | 27 | `rules/bidders.md` | §F1 | Bidder type format | 🟩 |
-| 28 | `rules/bidders.md` | §F2 | Type classification rules | 🟩 |
 | 29 | `rules/bidders.md` | §F3 | Consortium type | 🟩 |
 | 30 | `rules/bids.md` | §G1 | Informal-vs-formal rule | 🟩 |
 | 31 | `rules/bids.md` | §G2 | Classification evidence | 🟩 |
@@ -95,9 +94,9 @@ Scope decisions first (they constrain everything), schema next (defines the outp
 | 54 | `scripts/build_reference.py` | §Q5 | Medivation 'Several parties' atomization | 🟩 |
 | 55 | `rules/invariants.md` | §P-R1…§P-S4 | All validator invariants | 🟩 |
 
-**Total open:** 0 🟥 · 0 🟨 · 54 🟩
+**Total open:** 0 🟥 · 0 🟨 · 53 🟩
 
-> 🎉 **Stage 1 complete — 2026-04-18.** All 54 rule decisions have been ratified and written into `rules/*.md`. Proceed to Stage 2. (Row 20 is an intentional gap: the original §K3 question was retired post-facto, and the rule itself was fully deleted in Stage 3 iter-6. §Q5 was added later, bringing the final rulebook count back to 54.)
+> 🎉 **Stage 1 complete — 2026-04-18.** All live rule decisions have been ratified and written into `rules/*.md`. Proceed to Stage 2. (Row 20 is an intentional gap: the original §K3 question was retired post-facto, and the rule itself was fully deleted in Stage 3 iter-6.)
 
 Some questions are tightly coupled and will likely be resolved together (e.g., §E1 + §E2 + §Q2 all concern the aggregate-vs-atomize decision). Handle them as bundles where natural.
 

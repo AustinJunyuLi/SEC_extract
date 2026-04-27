@@ -55,7 +55,7 @@ as `rules/invariants.md` §P-S2.
 
 **Cross-references.**
 - `rules/events.md` §L1 — definition of "stale prior process."
-- `rules/bidders.md` §F2 — `bidder_type` classification needed to exclude
+- `rules/bidders.md` §F1 — `bidder_type` classification needed to exclude
   financial-advisor NDAs from the auction count.
 - `rules/invariants.md` §P-S2 (deal-level auction check).
 
@@ -241,14 +241,7 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
   per `rules/bidders.md` §E3. Stable across all rows for the same entity.
 - `bidder_alias` — string. Filing's verbatim label for this bidder on this
   row (`"Party A"`, `"Pfizer Inc."`, `"Strategic 1"`). Per `rules/bidders.md` §E3.
-- `bidder_type` — **structured object** `{base, non_us, public}` where
-  `base ∈ {"s", "f", "mixed"}`, `non_us: bool`, `public: bool | null`.
-  `public` is **tri-state** per `rules/bidders.md` §F1 / §F2 (rewritten
-  2026-04-26): `true` / `false` only when the filing affirmatively
-  states listing status; `null` when the filing is silent (including
-  named PE-sponsor rows where the sponsor firm's own listing is not
-  addressed). REPLACES Alex's 4 booleans (`bidder_type_financial` /
-  `_strategic` / `_mixed` / `_nonUS`) + `bidder_type_note`.
+- `bidder_type` — string OR null. One of `"s"` / `"f"` / `"mixed"` per `rules/bidders.md` §F1 (rewritten 2026-04-27). Geography and listing status are NOT recorded — Alex's 2026-04-27 directive dropped both dimensions entirely.
 - `joint_bidder_members` — `list[str]` OR null. Canonical `bidder_NN`
   ids of consortium constituents, for rows that represent a joint-bidder
   group event.
@@ -294,7 +287,7 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - 3 new per-row cols: `source_quote`, `source_page`, `flags` (+3).
 
 **Cross-references.**
-- `rules/bidders.md` §F1 — `bidder_type` canonical string format.
+- `rules/bidders.md` §F1 — `bidder_type` canonical scalar format.
 - `rules/schema.md` §R2 — `flags` structure.
 - `rules/schema.md` §R3 — `source_quote` / `source_page` contract.
 - `rules/schema.md` §N1 — `{deal, events}` split rationale.

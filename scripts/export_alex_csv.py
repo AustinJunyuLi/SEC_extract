@@ -93,30 +93,26 @@ COLUMNS: list[str] = [
     "Auction",                  # 12
     "BidderID",                 # 13
     "BidderName",               # 14
-    "bidder_type_financial",    # 15
-    "bidder_type_strategic",    # 16
-    "bidder_type_mixed",        # 17
-    "bidder_type_nonUS",        # 18
-    "bidder_type_note",         # 19
-    "bid_value",                # 20
-    "bid_value_pershare",       # 21
-    "bid_value_lower",          # 22
-    "bid_value_upper",          # 23
-    "bid_value_unit",           # 24
-    "multiplier",               # 25
-    "bid_type",                 # 26
-    "bid_date_precise",         # 27
-    "bid_date_rough",           # 28
-    "bid_note",                 # 29
-    "all_cash",                 # 30
-    "additional_note",          # 31
-    "cshoc",                    # 32
-    "comments_1",               # 33
-    "comments_2",               # 34
-    "comments_3",               # 35
+    "bidder_type",              # 15
+    "bid_value",                # 16
+    "bid_value_pershare",       # 17
+    "bid_value_lower",          # 18
+    "bid_value_upper",          # 19
+    "bid_value_unit",           # 20
+    "multiplier",               # 21
+    "bid_type",                 # 22
+    "bid_date_precise",         # 23
+    "bid_date_rough",           # 24
+    "bid_note",                 # 25
+    "all_cash",                 # 26
+    "additional_note",          # 27
+    "cshoc",                    # 28
+    "comments_1",               # 29
+    "comments_2",               # 30
+    "comments_3",               # 31
     # AI audit trail — not in Alex's xlsx.
-    "source_page",              # 36
-    "source_quote",             # 37
+    "source_page",              # 32
+    "source_quote",             # 33
 ]
 
 
@@ -203,41 +199,14 @@ def _iso_date(v: Any) -> Any:
     return v
 
 
-def _bidder_type_components(bt: dict[str, Any] | None) -> tuple[Any, Any, Any, Any, Any]:
-    """Expand our nested `bidder_type` object to Alex's 5 column form:
-    (financial, strategic, mixed, nonUS, note).
-
-    Our schema: {"base": "f" | "s" | "mixed" | None, "non_us": bool, "public": bool}
-    Alex's workbook: bidder_type_financial (0/1), bidder_type_strategic (0/1),
-    bidder_type_mixed (0/1), bidder_type_nonUS (0/1), bidder_type_note (str).
+def _bidder_type_scalar(bt: str | None) -> str:
+    """Emit bidder_type for CSV export. Per `rules/bidders.md` §F1
+    (2026-04-27) bidder_type is a scalar string in {"s", "f", "mixed"} or
+    null. CSV represents null as "NA".
     """
     if bt is None:
-        return ("NA", "NA", "NA", "NA", "NA")
-    base = bt.get("base")
-    financial = 1 if base == "f" else 0 if base in ("s", "mixed") else "NA"
-    strategic = 1 if base == "s" else 0 if base in ("f", "mixed") else "NA"
-    mixed     = 1 if base == "mixed" else 0 if base in ("f", "s") else "NA"
-    non_us_val = bt.get("non_us")
-    if non_us_val is None:
-        non_us = "NA"
-    else:
-        non_us = 1 if non_us_val else 0
-    # Note synthesis: mirror Alex's workbook style ("S", "public S", "Non-US S",
-    # "Non-US public S", "F", ...). Base letter uppercased; "public" / "Non-US"
-    # prefixes when applicable.
-    parts: list[str] = []
-    if non_us_val:
-        parts.append("Non-US")
-    if bt.get("public"):
-        parts.append("public")
-    if base == "f":
-        parts.append("F")
-    elif base == "s":
-        parts.append("S")
-    elif base == "mixed":
-        parts.append("mixed")
-    note = " ".join(parts) if parts else "NA"
-    return (financial, strategic, mixed, non_us, note)
+        return "NA"
+    return bt
 
 
 def _reverse_c3_bid_note(bid_note: Any, bid_type: Any) -> tuple[Any, Any]:
@@ -263,7 +232,7 @@ def _row_from_event(
     ev: dict[str, Any],
 ) -> list[Any]:
     """Build one CSV row for one event."""
-    bt_fin, bt_strat, bt_mix, bt_nonus, bt_note = _bidder_type_components(ev.get("bidder_type"))
+    bidder_type = _bidder_type_scalar(ev.get("bidder_type"))
     xlsx_bid_note, xlsx_bid_type = _reverse_c3_bid_note(ev.get("bid_note"), ev.get("bid_type"))
 
     # comments_1/2/3: pack our comments / bid_type_inference_note / additional_note
@@ -305,29 +274,25 @@ def _row_from_event(
         _bool_to_10(deal.get("auction")),                 # 12
         _na(ev.get("BidderID")),                          # 13
         _na(ev.get("bidder_alias")),                      # 14
-        bt_fin,                                           # 15
-        bt_strat,                                         # 16
-        bt_mix,                                           # 17
-        bt_nonus,                                         # 18
-        bt_note,                                          # 19
-        _na(ev.get("bid_value")),                         # 20
-        _na(ev.get("bid_value_pershare")),                # 21
-        _na(ev.get("bid_value_lower")),                   # 22
-        _na(ev.get("bid_value_upper")),                   # 23
-        _na(ev.get("bid_value_unit")),                    # 24
-        "NA",                                             # 25 multiplier (not in our schema)
-        xlsx_bid_type,                                    # 26
-        _iso_date(ev.get("bid_date_precise")),            # 27
-        _iso_date(ev.get("bid_date_rough")),              # 28
-        xlsx_bid_note,                                    # 29
-        _bool_to_10(deal.get("all_cash")),                # 30
-        _na(ev.get("additional_note")),                   # 31
-        "NA",                                             # 32 cshoc (not in our schema)
-        comments_1,                                       # 33
-        comments_2,                                       # 34
-        comments_3,                                       # 35
-        _na(sp),                                          # 36 source_page
-        _na(sq),                                          # 37 source_quote
+        bidder_type,                                      # 15
+        _na(ev.get("bid_value")),                         # 16
+        _na(ev.get("bid_value_pershare")),                # 17
+        _na(ev.get("bid_value_lower")),                   # 18
+        _na(ev.get("bid_value_upper")),                   # 19
+        _na(ev.get("bid_value_unit")),                    # 20
+        "NA",                                             # 21 multiplier (not in our schema)
+        xlsx_bid_type,                                    # 22
+        _iso_date(ev.get("bid_date_precise")),            # 23
+        _iso_date(ev.get("bid_date_rough")),              # 24
+        xlsx_bid_note,                                    # 25
+        _bool_to_10(deal.get("all_cash")),                # 26
+        _na(ev.get("additional_note")),                   # 27
+        "NA",                                             # 28 cshoc (not in our schema)
+        comments_1,                                       # 29
+        comments_2,                                       # 30
+        comments_3,                                       # 31
+        _na(sp),                                          # 32 source_page
+        _na(sq),                                          # 33 source_quote
     ]
 
 
