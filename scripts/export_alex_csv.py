@@ -9,10 +9,12 @@ USAGE
 
 COLUMN LAYOUT
 -------------
-The first 35 columns mirror Alex's `deal_details_Alex_2026.xlsx` header row,
-in the same order. Two audit-trail columns are appended at the end
-(`source_page`, `source_quote`) because the pipeline's §R3 non-negotiable is
-that every row carries filing evidence. Those two columns are absent from
+The first 31 columns mirror Alex's `deal_details_Alex_2026.xlsx` schema
+(post-flatten: the legacy four boolean `bidder_type` columns and one note
+column were replaced by a single scalar `bidder_type` column per the
+2026-04-27 §F1 change). Two audit-trail columns are appended at the end
+(`source_page`, `source_quote`) because the pipeline's §R3 non-negotiable
+is that every row carries filing evidence. Those two columns are absent from
 Alex's original workbook; downstream consumers that want pure Alex-format
 can ignore them.
 

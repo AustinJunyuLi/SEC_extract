@@ -2,7 +2,7 @@
 
 One-time conversion. Reads deal row ranges from
 `reference/deal_details_Alex_2026.xlsx` (sheet `deal_details`), applies the
-resolved §Q1–§Q5 overrides, maps to the §R1 schema, emits one JSON per deal
+resolved §Q1–§Q7 overrides, maps to the §R1 schema, emits one JSON per deal
 conformant to `rules/schema.md`.
 
 USAGE
@@ -84,8 +84,22 @@ real extraction defects.
     recorded. Alex's xlsx Acquirer column has the operating name for
     some sponsor-backed deals and the consortium list or shell name for
     others. The converter rewrites the 4 sponsor-backed reference deals
-    to the operating-acquirer string and records `acquirer_normalized`
-    as an info flag with the original xlsx value for provenance.
+    (petsmart-inc, mac-gray, zep, saks) to the operating-acquirer string
+    and records `acquirer_normalized` as an info flag with the original
+    xlsx value for provenance.
+
+§Q7 — Executed-row atomization for consortium deals
+    Per `rules/bidders.md` §E1 + §E2.b (rewritten 2026-04-27): when the
+    merger-agreement counterparty is a consortium, one Executed row is
+    emitted per explicitly identified operational/economic buyer member.
+    Affects petsmart-inc (5 members: BC Partners, La Caisse, GIC Pte Ltd,
+    StepStone Group, Longview Asset Management) and mac-gray (2 members:
+    CSC ServiceWorks, Pamplona Capital Partners). When the xlsx lacks an
+    Executed row entirely (petsmart-inc), a declarative repair in
+    `Q7_MISSING_EXECUTED_REPAIRS` cites filing evidence for both the
+    execution date and the member list; the converter fails loud if that
+    evidence cannot be verified against the local filing pages. Each
+    atomized row carries a `consortium_executed_atomized` provenance flag.
 """
 
 from __future__ import annotations
@@ -572,7 +586,6 @@ COL = {
     "bt_financial":     15,
     "bt_strategic":     16,
     "bt_mixed":         17,
-    "bt_nonUS":         18,
     "bidder_type_note": 19,
     "bid_value":        20,
     "bid_value_pershare": 21,
@@ -805,13 +818,14 @@ def canonicalize_bidders(rows: list[RawRow]) -> tuple[dict[int, str], dict[str, 
 def build_bidder_type(r: RawRow) -> str | None:
     """Return scalar bidder_type per `rules/bidders.md` §F1 (2026-04-27).
 
-    Reads the four boolean columns from Alex's xlsx (bt_financial,
-    bt_strategic, bt_mixed, bt_nonUS — the last is now ignored) plus the
-    free-text `bidder_type_note`. Returns one of "s" / "f" / "mixed" / None.
+    Reads the three boolean columns from Alex's xlsx (bt_financial,
+    bt_strategic, bt_mixed) plus the free-text `bidder_type_note`.
+    Returns one of "s" / "f" / "mixed" / None.
 
-    Geography and listing status are no longer recorded per Alex's
-    2026-04-27 directive; this function does not attempt to parse them
-    from the note column.
+    bt_nonUS is not loaded from the xlsx (removed from COL after the
+    2026-04-27 bidder_type flatten). Geography and listing status are no
+    longer recorded per Alex's 2026-04-27 directive; this function does
+    not attempt to parse them from the note column.
     """
     fin   = _bool(r.get("bt_financial"))
     strat = _bool(r.get("bt_strategic"))
