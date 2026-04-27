@@ -100,6 +100,39 @@ real extraction defects.
     execution date and the member list; the converter fails loud if that
     evidence cannot be verified against the local filing pages. Each
     atomized row carries a `consortium_executed_atomized` provenance flag.
+
+OTHER SUBSTANTIVE TRANSFORMS (NOT NUMBERED §Q*)
+-----------------------------------------------
+
+These transforms also shape the reference JSONs. They predate the §Q
+numbering or fall outside the "specific row repair" pattern §Q* uses, but
+are equally load-bearing for diffability.
+
+* `_apply_taxonomy_redesign` — collapses Alex's 31-value workbook
+  vocabulary into the current 18-value §C1 set (2026-04-27 redesign):
+  retired Final Round labels, Drop labels, Press Release labels, and
+  `Target Interest` map to current values plus structured modifier
+  columns (drop_initiator, drop_reason_class, final_round_*,
+  press_release_subject, etc.).
+* `_migrate_bid_note` — rewrites legacy `Inf` / `Formal Bid` /
+  `Revised Bid` labels into the current `bid_note="Bid"` + `bid_type`
+  unified-bid convention (§C3). `Revised Bid` provenance is preserved as
+  a `"revised"` marker on `additional_note`.
+* `apply_exclusivity_events` — collapses xlsx `Exclusivity N days` event
+  rows into the structured `exclusivity_days` integer attribute on the
+  preceding bid row (Zep 6405 → exclusivity_days=30 on the prior bid).
+* `BLANK_BID_NOTE_REPAIRS` — narrowly hardcoded fix for xlsx rows where
+  `bid_note` is simply blank in Alex's workbook but filing context
+  identifies the event (Providence row 6028: G&W's 2016-04-13 NDA).
+  Each repair attaches a `bid_note_repaired_blank` info flag for
+  provenance.
+* §G1+§G2 range-bid informal coercion — auto-coerces any `lower<upper`
+  row whose `bid_type` was `"formal"` in Alex's workbook to `"informal"`
+  per the 2026-04-27 unconditional-informal-on-range rule. Records a
+  `bid_range_must_be_informal` info flag on the coerced row.
+
+The AI extractor never reads these transforms; they only exist on the
+Alex side to make the diff harness operational.
 """
 
 from __future__ import annotations
@@ -1055,6 +1088,19 @@ def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
 
     flags: list[dict[str, Any]] = []
 
+    # Per-row provenance: blank-bid_note repair (§Q-style narrow override
+    # for xlsx rows where bid_note was simply blank in Alex's workbook).
+    # Without this flag the repair would land silently — every other
+    # converter override (Q1 delete, Q2 expand, Q3 renumber, ...) carries
+    # a flag, this one shouldn't be the lone exception.
+    if r.xlsx_row in BLANK_BID_NOTE_REPAIRS and r.get("bid_note") in (None, "", "nan"):
+        _, repair_reason = BLANK_BID_NOTE_REPAIRS[r.xlsx_row]
+        flags.append({
+            "code": "bid_note_repaired_blank",
+            "severity": "info",
+            "reason": repair_reason,
+        })
+
     # Revised-bid provenance: the xlsx distinguishes a bidder's subsequent
     # formal bid with a source label. In current §C3, both bids carry
     # bid_note='Bid' + bid_type='formal'; we annotate the revision so the
@@ -1196,7 +1242,16 @@ def apply_q1_saks(rows: list[RawRow], deal: dict[str, Any]) -> list[RawRow]:
 
 
 def apply_q2_zep(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Apply §Q2 — expand Zep row 6390 into 5 atomized rows. See module docstring §Q2 for rationale."""
+    """Apply §Q2 — expand Zep row 6390 into 5 atomized rows.
+
+    Each of Party A..E is a structurally distinct bidder per §E1 (atomize
+    aggregated rows). Without fresh canonical ids, all 5 inherit the
+    template's `bidder_name` (e.g. `bidder_04`) and the bidder_registry
+    treats them as one entity — this would cause the diff harness's
+    NDA→Bid→Drop chain joins to false-positive on the 5-party slice. See
+    module docstring §Q2 for rationale; matches the §Q5 medivation pattern
+    and §Q7 petsmart/mac-gray atomization.
+    """
     out = []
     for ev in events:
         if ev["_xlsx_row"] != 6390:
@@ -1210,9 +1265,15 @@ def apply_q2_zep(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
             ("Party D", {"bid_value_pershare": None, "bid_value_lower": 20, "bid_value_upper": 22}),
             ("Party E", {"bid_value_pershare": None, "bid_value_lower": 20, "bid_value_upper": 22}),
         ]
-        for alias, value_overrides in configs:
+        # Allocate one fresh canonical id per atomized party. The set
+        # of "already used" ids is the snapshot of the pre-expansion
+        # event list — we must not collide with the template's id
+        # either (since after the loop the template is dropped).
+        fresh_cids = _next_canonical_ids(events, count=len(configs))
+        for (alias, value_overrides), cid in zip(configs, fresh_cids):
             new_ev = json.loads(json.dumps(template, default=str))
             new_ev["bidder_alias"] = alias
+            new_ev["bidder_name"] = cid
             for k, v in value_overrides.items():
                 new_ev[k] = v
             new_ev["flags"] = list(template["flags"]) + [

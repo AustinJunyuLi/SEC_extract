@@ -1,0 +1,18 @@
+{
+  "events": [
+    {
+      "BidderID": 1,
+      "bidder_name": "bidder_01",
+      "bid_note": "Bid",
+      "process_phase": 1,
+      "flags": [
+        {
+          "code": "unsolicited_first_contact",
+          "severity": "info",
+          "reason": "§D1.a: bidder approached unsolicited and never signed NDA; 'declined to engage further'"
+        }
+      ]
+    }
+  ],
+  "expected_flags": []
+}

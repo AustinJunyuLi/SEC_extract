@@ -1,0 +1,17 @@
+{
+  "events": [
+    {
+      "BidderID": 1,
+      "bidder_name": "bidder_01",
+      "bid_note": "Bid",
+      "process_phase": 1
+    }
+  ],
+  "expected_flags": [
+    {
+      "code": "bid_without_preceding_nda",
+      "severity": "hard",
+      "row_index": 0
+    }
+  ]
+}

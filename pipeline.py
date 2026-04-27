@@ -26,15 +26,19 @@ No Anthropic SDK import. No API keys. Python stays deterministic.
 
 from __future__ import annotations
 
+import contextlib
 import copy
 import datetime as _dt
+import fcntl
 import hashlib
 import json
+import os
 import re
 import unicodedata
+import uuid
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 REPO_ROOT = Path(__file__).resolve().parent
 DATA_DIR = REPO_ROOT / "data" / "filings"
@@ -44,6 +48,56 @@ EXTRACTIONS_DIR = REPO_ROOT / "output" / "extractions"
 STATE_DIR = REPO_ROOT / "state"
 PROGRESS_PATH = STATE_DIR / "progress.json"
 FLAGS_PATH = STATE_DIR / "flags.jsonl"
+PROGRESS_LOCK_PATH = STATE_DIR / "progress.lock"
+
+
+def _atomic_write_text(path: Path, text: str) -> None:
+    """POSIX-atomic write: tmp file + fsync + os.replace.
+
+    Used for state files where a SIGKILL or OOM mid-write must not leave a
+    truncated artifact on disk. The tmp file is in the same directory so
+    `os.replace` is rename-not-copy (atomic at filesystem level). On any
+    Python-level exception the orphan `.tmp` is cleaned up so partial
+    failures don't accumulate.
+    """
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(path.name + ".tmp")
+    try:
+        tmp.write_text(text)
+        fd = os.open(tmp, os.O_RDONLY)
+        try:
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+        os.replace(tmp, path)
+    except BaseException:
+        with contextlib.suppress(FileNotFoundError):
+            tmp.unlink()
+        raise
+
+
+@contextlib.contextmanager
+def _state_file_lock() -> Iterator[None]:
+    """Advisory exclusive lock for state-file mutations (`flock`).
+
+    Serializes concurrent `run.py --slug X` invocations across `update_progress`
+    and `append_flags_log` so the read-modify-write of `progress.json` and the
+    multi-line append to `flags.jsonl` cannot interleave.
+
+    NOT re-entrant within a single process. `flock` on a separately-opened
+    FD in the same PID blocks. Do NOT nest `_state_file_lock()` blocks and
+    do NOT call the public `update_progress` / `append_flags_log` from
+    inside a `_state_file_lock()` block — use `_update_progress_locked` /
+    `_append_flags_log_locked` instead.
+    """
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    fd = os.open(PROGRESS_LOCK_PATH, os.O_RDWR | os.O_CREAT, 0o644)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        yield
+    finally:
+        fcntl.flock(fd, fcntl.LOCK_UN)
+        os.close(fd)
 
 
 def rulebook_version() -> str:
@@ -75,6 +129,17 @@ def _now_iso() -> str:
     equality rather than a timestamp-ordering question.
     """
     return _dt.datetime.now(_dt.timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def _new_run_id() -> str:
+    """Per-run UUID stamped on every flag line and on the deal's progress entry.
+
+    Independent of `last_run` (timestamp): two clean reruns within the same
+    second would otherwise share a `last_run` and be indistinguishable in
+    `flags.jsonl`. The `(deal, run_id)` pair is the audit primary key for the
+    "3 consecutive unchanged-rulebook clean runs" gate.
+    """
+    return uuid.uuid4().hex
 
 
 RULEBOOK_HISTORY_CAP = 10  # Per-deal rulebook_version_history tail length.
@@ -300,7 +365,26 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
         return ValidatorResult(row_flags=row_flags, deal_flags=deal_flags)
 
     deal = raw_extraction.get("deal") or {}
+    if not isinstance(deal, dict):
+        deal_flags.append({
+            "code": "deal_not_a_dict", "severity": "hard",
+            "reason": (
+                f"§P-R0: deal is type {type(deal).__name__!r}, expected dict; "
+                "registry / deal_flags / orchestration fields are all unreachable."
+            ),
+            "deal_level": True,
+        })
+        return ValidatorResult(row_flags=row_flags, deal_flags=deal_flags)
     events = raw_extraction.get("events") or []
+
+    # §P-R0 must run before any other row invariant, since downstream
+    # invariants assume each row is a dict and `process_phase` is int.
+    row_flags.extend(_invariant_p_r0(events))
+    events = [ev for ev in events if isinstance(ev, dict)]
+    if not events:
+        # All rows malformed — skip downstream checks; the §P-R0 hard flags
+        # are sufficient to fail the deal.
+        return ValidatorResult(row_flags=row_flags, deal_flags=deal_flags)
 
     # Row-level invariants.
     row_flags.extend(_invariant_p_r2(events, filing))
@@ -309,6 +393,9 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
     row_flags.extend(_invariant_p_r5(events, deal))
     row_flags.extend(_invariant_p_r6(events))
     row_flags.extend(_invariant_p_r7(events))
+    # §P-R8 returns a mix (row + deal); route by `deal_level` marker.
+    for f in _invariant_p_r8(events, deal):
+        (deal_flags if f.get("deal_level") else row_flags).append(f)
     row_flags.extend(_invariant_p_d1(events))
     row_flags.extend(_invariant_p_d2(events))
     row_flags.extend(_invariant_p_d5(events))
@@ -374,6 +461,53 @@ def _phase(ev: dict) -> int:
     """
     phase = ev.get("process_phase")
     return 1 if phase is None else phase
+
+
+def _invariant_p_r0(events: list) -> list[dict]:
+    """§P-R0 — row shape: events are dicts; process_phase is int>=0 or null;
+    bidder_name / bidder_alias are str or null.
+
+    A single weird row (string where a dict is expected, `"1"` for
+    process_phase) otherwise crashes the validator with an unhandled
+    AttributeError/TypeError; at 392-deal scale the crash is masked behind
+    `mark_failed` and the underlying shape bug stays silent. §P-R0 turns
+    these into explicit hard flags so the rest of the deal still validates.
+
+    Returns row-level flags. Caller must filter `events` to only dict
+    entries before passing to downstream invariants.
+    """
+    flags: list[dict[str, Any]] = []
+    for i, ev in enumerate(events):
+        if not isinstance(ev, dict):
+            flags.append({
+                "row_index": i, "code": "event_not_a_dict", "severity": "hard",
+                "reason": (
+                    f"§P-R0: events[{i}] is type {type(ev).__name__!r}, expected dict; "
+                    "this row is excluded from all downstream invariants."
+                ),
+            })
+            continue
+        phase = ev.get("process_phase")
+        if phase is not None and not (isinstance(phase, int) and not isinstance(phase, bool) and phase >= 0):
+            flags.append({
+                "row_index": i, "code": "process_phase_invalid_type", "severity": "hard",
+                "reason": (
+                    f"§P-R0: process_phase={phase!r} (type {type(phase).__name__!r}) "
+                    "is not int>=0 or null; downstream §P-L1/§P-L2/§P-S2/§P-S4 "
+                    "would crash on the comparison."
+                ),
+            })
+        for field in ("bidder_name", "bidder_alias"):
+            value = ev.get(field)
+            if value is not None and not isinstance(value, str):
+                flags.append({
+                    "row_index": i, "code": "bidder_identity_invalid_type", "severity": "hard",
+                    "reason": (
+                        f"§P-R0: {field}={value!r} (type {type(value).__name__!r}) "
+                        "must be str or null."
+                    ),
+                })
+    return flags
 
 
 def _invariant_p_r1(raw_extraction: dict[str, Any]) -> list[dict]:
@@ -456,9 +590,13 @@ def _invariant_p_r2(events: list[dict], filing: Filing) -> list[dict]:
                     "reason": f"source_quote has {len(q)} chars; cap is 1000",
                 })
             if p not in valid_pages:
+                range_str = (
+                    f"{min(valid_pages)}..{max(valid_pages)}"
+                    if valid_pages else "(no pages — empty filing)"
+                )
                 flags.append({
                     "row_index": i, "code": "source_quote_not_in_page", "severity": "hard",
-                    "reason": f"source_page={p} is not a valid page number for {filing.slug} (range: {min(valid_pages)}..{max(valid_pages)})",
+                    "reason": f"source_page={p} is not a valid page number for {filing.slug} (range: {range_str})",
                 })
                 continue
             page_canon = page_canon_cache.get(p)
@@ -527,7 +665,18 @@ def _invariant_p_r5(events: list[dict], deal: dict) -> list[dict]:
             })
             continue
         entry = registry[name] or {}
-        aliases = set(entry.get("aliases_observed", []) or [])
+        if not isinstance(entry, dict):
+            flags.append({
+                "row_index": i, "code": "bidder_registry_entry_invalid_type", "severity": "hard",
+                "reason": (
+                    f"§P-R5/§E4: bidder_registry[{name!r}] is type "
+                    f"{type(entry).__name__!r}, expected dict."
+                ),
+            })
+            continue
+        # Filter aliases to strings only — sorted() crashes if the list
+        # mixes None/int/str, and a non-string alias is itself a §E4 violation.
+        aliases = {a for a in (entry.get("aliases_observed") or []) if isinstance(a, str)}
         alias = ev.get("bidder_alias")
         if alias is not None and alias not in aliases:
             flags.append({
@@ -596,6 +745,67 @@ def _invariant_p_r7(events: list[dict]) -> list[dict]:
                     "§P-R7: ca_type_ambiguous is hard after the taxonomy "
                     "redesign; ambiguous CA type requires adjudication."
                 ),
+            })
+    return flags
+
+
+_FLAG_SEVERITIES = frozenset({"hard", "soft", "info"})
+
+
+def _check_flag_shape(flag: Any, where: str) -> str | None:
+    """Return a short reason string if `flag` violates §P-R8 shape; else None.
+
+    `where` is a human label like "events[3]" or "deal" used in the reason.
+    """
+    if not isinstance(flag, dict):
+        return f"{where}: flag entry is not a dict (type={type(flag).__name__!r})"
+    code = flag.get("code")
+    if not isinstance(code, str) or not code:
+        return f"{where}: missing or empty 'code' field (got {code!r})"
+    severity = flag.get("severity")
+    if severity not in _FLAG_SEVERITIES:
+        return (
+            f"{where}: severity={severity!r} not in {{hard, soft, info}}; "
+            f"a typo would otherwise be silently demoted to 'hard' by count_flags"
+        )
+    reason = flag.get("reason")
+    if reason is not None and not isinstance(reason, str):
+        return f"{where}: reason must be a string (got type={type(reason).__name__!r})"
+    return None
+
+
+def _invariant_p_r8(events: list[dict], deal: dict) -> list[dict]:
+    """§P-R8 — Extractor-emitted flag objects conform to §R2 shape.
+
+    Validates every flag dict on `events[i].flags` and on `deal.deal_flags`.
+    Without this, a typo like `severity: "Hard"` is silently demoted to
+    `"hard"` by `count_flags`, pinning the deal to `validated` for a typo
+    and breaking the 3-consecutive-clean-runs gate.
+
+    Deal-level violations carry `deal_level: True` (the same sentinel
+    `_invariant_p_r1` and `_invariant_p_d3` use); `validate()` routes by
+    that key so this function preserves the flat-list return shape of the
+    rest of the §P-R series.
+    """
+    flags: list[dict[str, Any]] = []
+    for i, ev in enumerate(events):
+        for j, flag in enumerate(ev.get("flags") or []):
+            problem = _check_flag_shape(flag, where=f"events[{i}].flags[{j}]")
+            if problem:
+                flags.append({
+                    "row_index": i,
+                    "code": "flag_shape_invalid",
+                    "severity": "hard",
+                    "reason": f"§P-R8: {problem}",
+                })
+    for j, flag in enumerate(deal.get("deal_flags") or []):
+        problem = _check_flag_shape(flag, where=f"deal.deal_flags[{j}]")
+        if problem:
+            flags.append({
+                "code": "flag_shape_invalid",
+                "severity": "hard",
+                "reason": f"§P-R8: {problem}",
+                "deal_level": True,
             })
     return flags
 
@@ -1466,8 +1676,13 @@ def merge_flags(
 
 
 def count_flags(final_extraction: dict[str, Any]) -> dict[str, int]:
-    """Count combined extractor + validator flags from the finalized output."""
-    counts = {"hard": 0, "soft": 0, "info": 0}
+    """Count combined extractor + validator flags from the finalized output.
+
+    Tolerates malformed severities by demoting to `"hard"` — `count_flags`
+    is a counter, not a validator. The shape check that catches typos
+    explicitly lives in §P-R8 (`_invariant_p_r8`).
+    """
+    counts = dict.fromkeys(_FLAG_SEVERITIES, 0)
     deal_flags = (final_extraction.get("deal") or {}).get("deal_flags") or []
     event_lists = [
         ev.get("flags") or []
@@ -1510,61 +1725,98 @@ def summarize(final_extraction: dict[str, Any]) -> tuple[str, int, str]:
 
 
 def write_output(slug: str, final_extraction: dict[str, Any]) -> Path:
-    EXTRACTIONS_DIR.mkdir(parents=True, exist_ok=True)
+    """Atomic write of the per-deal extraction JSON.
+
+    Atomicity matters: a SIGKILL mid-write would otherwise leave a truncated
+    JSON the next run reads as "stale-but-valid".
+    """
     out_path = EXTRACTIONS_DIR / f"{slug}.json"
-    out_path.write_text(json.dumps(final_extraction, indent=2, default=str) + "\n")
+    _atomic_write_text(
+        out_path,
+        json.dumps(final_extraction, indent=2, default=str) + "\n",
+    )
     return out_path
 
 
-def append_flags_log(
+def _append_flags_log_locked(
     slug: str,
     final_extraction: dict[str, Any],
     run_ts: str,
+    run_id: str,
 ) -> int:
-    """Append this run's flags to state/flags.jsonl.
+    """Inner half of `append_flags_log`. Caller MUST hold `_state_file_lock`.
 
-    `run_ts` is stamped onto every line's `logged_at`. The caller
-    (`finalize()`) captures it once at the start of the run and passes the
-    same value to `update_progress()` so the documented query
-    `logged_at == last_run` returns exactly this run's flags.
+    Lines are buffered in memory then written under one `with FLAGS_PATH.open`,
+    flushed and fsynced once at end-of-batch — bytes are atomic per-line
+    because the lock serializes writers, not because of per-line fsync.
     """
     STATE_DIR.mkdir(parents=True, exist_ok=True)
     lines: list[str] = []
     deal = final_extraction.get("deal") or {}
     events = final_extraction.get("events") or []
     for f in deal.get("deal_flags") or []:
-        entry = {"deal": slug, "logged_at": run_ts, "deal_level": True, **f}
+        entry = {
+            "deal": slug, "run_id": run_id, "logged_at": run_ts,
+            "deal_level": True, **f,
+        }
         lines.append(json.dumps(entry, default=str))
     for i, ev in enumerate(events):
         for f in ev.get("flags") or []:
-            entry = {"deal": slug, "logged_at": run_ts, "row_index": i, **f}
+            entry = {
+                "deal": slug, "run_id": run_id, "logged_at": run_ts,
+                "row_index": i, **f,
+            }
             lines.append(json.dumps(entry, default=str))
-    if lines:
-        with FLAGS_PATH.open("a") as fh:
-            fh.write("\n".join(lines) + "\n")
+    if not lines:
+        return 0
+    with FLAGS_PATH.open("a") as fh:
+        for line in lines:
+            fh.write(line + "\n")
+        fh.flush()
+        os.fsync(fh.fileno())
     return len(lines)
 
 
-def update_progress(
+def append_flags_log(
+    slug: str,
+    final_extraction: dict[str, Any],
+    run_ts: str,
+    run_id: str,
+) -> int:
+    """Append this run's flags to state/flags.jsonl, lock-serialized.
+
+    `run_ts` and `run_id` are both stamped on every line. `run_id` is the
+    audit primary key (independent of `last_run` even when reruns share a
+    timestamp); `logged_at` remains the documented `last_run`-equality field
+    for back-compat with the existing query pattern.
+    """
+    with _state_file_lock():
+        return _append_flags_log_locked(slug, final_extraction, run_ts, run_id)
+
+
+def _update_progress_locked(
     slug: str,
     status: str,
     flag_count: int,
     notes: str,
     current_rulebook_version: str,
     last_run: str,
+    run_id: str,
 ) -> None:
-    """Write this run's status + flag_count + rulebook pin to state/progress.json.
+    """Inner half of `update_progress`. Caller MUST hold `_state_file_lock`.
 
     Auto-creates a minimal deal entry if `slug` was never seeded. Append-only
     on `rulebook_version_history` (capped at `RULEBOOK_HISTORY_CAP`) so the
     "3 consecutive unchanged-rulebook clean runs" gate can be audited per-deal.
-    No top-level `rulebook_version`; that key raced between concurrent deal
-    finalizes and had no history. Stale state fails loudly instead of being
+    Stale top-level `rulebook_version` fails loudly instead of being
     cleaned in-place.
     """
-    if not PROGRESS_PATH.exists():
-        raise FileNotFoundError(f"{PROGRESS_PATH} does not exist; run scripts/build_seeds.py first")
-    state = json.loads(PROGRESS_PATH.read_text())
+    try:
+        state = json.loads(PROGRESS_PATH.read_text())
+    except FileNotFoundError as e:
+        raise FileNotFoundError(
+            f"{PROGRESS_PATH} does not exist; run scripts/build_seeds.py first"
+        ) from e
     if "rulebook_version" in state:
         raise ValueError(
             "state/progress.json contains stale top-level rulebook_version; "
@@ -1582,18 +1834,42 @@ def update_progress(
             "notes": f"auto-created at {last_run} by update_progress; was not in seeds",
         }
     history = deals[slug].setdefault("rulebook_version_history", [])
-    history.append({"ts": last_run, "version": current_rulebook_version})
+    history.append({"ts": last_run, "run_id": run_id, "version": current_rulebook_version})
     if len(history) > RULEBOOK_HISTORY_CAP:
         deals[slug]["rulebook_version_history"] = history[-RULEBOOK_HISTORY_CAP:]
     deals[slug].update({
         "status": status,
         "flag_count": flag_count,
         "last_run": last_run,
+        "last_run_id": run_id,
         "notes": notes,
         "rulebook_version": current_rulebook_version,
     })
     state["updated"] = last_run
-    PROGRESS_PATH.write_text(json.dumps(state, indent=2, sort_keys=False) + "\n")
+    _atomic_write_text(
+        PROGRESS_PATH,
+        json.dumps(state, indent=2, sort_keys=False) + "\n",
+    )
+
+
+def update_progress(
+    slug: str,
+    status: str,
+    flag_count: int,
+    notes: str,
+    current_rulebook_version: str,
+    last_run: str,
+    run_id: str,
+) -> None:
+    """Lock-serialized public wrapper. See `_update_progress_locked` for
+    the actual contract; this just acquires `_state_file_lock` first so
+    single-deal callers (`mark_failed`, tests) don't need to.
+    """
+    with _state_file_lock():
+        _update_progress_locked(
+            slug, status, flag_count, notes,
+            current_rulebook_version, last_run, run_id,
+        )
 
 
 def mark_failed(slug: str, notes: str) -> None:
@@ -1621,6 +1897,7 @@ def mark_failed(slug: str, notes: str) -> None:
         notes=notes,
         current_rulebook_version=current_version,
         last_run=_now_iso(),
+        run_id=_new_run_id(),
     )
 
 
@@ -1666,7 +1943,8 @@ def _apply_unnamed_nda_promotions(
     deal = raw_extraction.setdefault("deal", {})
     bidder_registry = deal.setdefault("bidder_registry", {})
     by_bidder_id: dict[int, dict] = {
-        ev["BidderID"]: ev for ev in events if isinstance(ev.get("BidderID"), int)
+        ev["BidderID"]: ev for ev in events
+        if isinstance(ev, dict) and isinstance(ev.get("BidderID"), int)
     }
 
     log: list[dict[str, Any]] = []
@@ -1703,6 +1981,13 @@ def _apply_unnamed_nda_promotions(
                 f"bidder_name on target row {target_id}"
             )
             continue
+        if new_name and not isinstance(bidder_registry.get(new_name), dict):
+            fail(
+                f"bidder_registry[{new_name!r}] is type "
+                f"{type(bidder_registry.get(new_name)).__name__!r}, expected dict — "
+                f"§P-R5 will hard-flag this independently; promotion is unsafe."
+            )
+            continue
         if old_name is not None and new_name and old_name != new_name:
             fail(
                 f"target row {target_id} already has bidder_name={old_name!r}; "
@@ -1715,9 +2000,12 @@ def _apply_unnamed_nda_promotions(
             target["bidder_alias"] = new_alias
         if new_name:
             target["bidder_name"] = new_name
-            aliases = bidder_registry[new_name].setdefault("aliases_observed", [])
-            if old_alias and old_alias not in aliases:
-                aliases.append(old_alias)
+            existing_aliases = bidder_registry[new_name].get("aliases_observed")
+            if not isinstance(existing_aliases, list):
+                bidder_registry[new_name]["aliases_observed"] = []
+                existing_aliases = bidder_registry[new_name]["aliases_observed"]
+            if old_alias and old_alias not in existing_aliases:
+                existing_aliases.append(old_alias)
         ev.pop("unnamed_nda_promotion", None)
         log.append({
             "row_index": i,
@@ -1824,6 +2112,7 @@ def finalize(
     before passing raw_extraction in.
     """
     run_ts = _now_iso()
+    run_id = _new_run_id()
     raw_extraction, filing, promotion_log = prepare_for_validate(
         slug, raw_extraction, filing=filing
     )
@@ -1833,20 +2122,32 @@ def finalize(
     deal_obj = final.setdefault("deal", {})
     deal_obj["rulebook_version"] = current_rulebook_version
     deal_obj["last_run"] = run_ts
+    deal_obj["last_run_id"] = run_id
     # Attach promotion log to deal object for audit (pipeline-internal field).
     if promotion_log:
         deal_obj["_unnamed_nda_promotions"] = promotion_log
     status, flag_count, notes = summarize(final)
+    # Order matters: the per-deal extraction JSON is the most-derivable
+    # artifact (rerun reproduces it from raw_extraction); progress.json is
+    # the master ledger; flags.jsonl is append-only audit. Write them in
+    # ledger-first order so a partial failure leaves the ledger consistent
+    # with whatever extraction is on disk.
     out_path = write_output(slug, final)
-    append_flags_log(slug, final, run_ts=run_ts)
-    update_progress(
-        slug,
-        status,
-        flag_count,
-        notes,
-        current_rulebook_version,
-        last_run=run_ts,
-    )
+    # Acquire the state lock once and hold it across both writes: this
+    # makes the (progress.json update, flags.jsonl append) pair atomic
+    # for this deal, so a concurrent `run.py` for a DIFFERENT deal cannot
+    # interleave its progress write between our two updates.
+    with _state_file_lock():
+        _update_progress_locked(
+            slug,
+            status,
+            flag_count,
+            notes,
+            current_rulebook_version,
+            last_run=run_ts,
+            run_id=run_id,
+        )
+        _append_flags_log_locked(slug, final, run_ts=run_ts, run_id=run_id)
     return PipelineResult(
         status=status,
         flag_count=flag_count,

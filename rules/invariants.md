@@ -25,6 +25,20 @@ below are traced to the rule-file decisions that produced them.
 
 ## §P-R — Row-level structural invariants (🟩 RESOLVED, 2026-04-18)
 
+### §P-R0 — Row shape: events are dicts, process_phase is int>=0 or null
+
+- **Check.** Every entry in `events[]` is a dict. When `process_phase` is
+  present on a row, it is `int >= 0` or `null`. When `bidder_name` /
+  `bidder_alias` are present, they are strings or `null`.
+- **Fail action.** Flags `event_not_a_dict`, `process_phase_invalid_type`,
+  or `bidder_identity_invalid_type` (all hard).
+- **Why hard.** Without this check a single weird extractor row (a string
+  where a dict is expected; `process_phase: "1"` instead of `1`) crashes
+  the validator with an unhandled `AttributeError` / `TypeError`. At
+  392-deal scale that gets masked behind `mark_failed` and the underlying
+  shape bug stays silent. §P-R0 turns it into an explicit hard flag and
+  lets the rest of the deal's rows still get validated.
+
 All hard errors. Violations of these are extraction defects, not
 judgment calls.
 
@@ -96,6 +110,17 @@ judgment calls.
 - **Why hard.** Ambiguous CA type changes whether a row is an auction-funnel
   NDA, a bidder-side consortium CA, or a skipped rollover side agreement.
   Production runs showed soft flags were too easy to ignore.
+
+### §P-R8 — Extractor-emitted flag objects conform to §R2 shape
+
+- **Check.** Every flag object on `events[i].flags` and on
+  `deal.deal_flags` must be a dict with: non-empty string `code`,
+  `severity ∈ {"hard", "soft", "info"}`, and a string `reason`.
+- **Fail action.** Flag `flag_shape_invalid`. Hard.
+- **Why hard.** Without this check, a typo like `severity: "Hard"` (capital
+  H) or `"warn"` is silently demoted to `"hard"` by `count_flags`, pinning
+  the deal to `validated` for a typo. The 3-consecutive-clean-runs gate
+  would never close. Cite the offending row index in the `reason`.
 
 ---
 
@@ -357,6 +382,7 @@ story; severities are listed per invariant.
 | §P-R5 | `rules/bidders.md` §E3 |
 | §P-R6 | `rules/bidders.md` §F1 |
 | §P-R7 | `rules/events.md` §I3 |
+| §P-R8 | `rules/schema.md` §R2 |
 | §P-D1 | `rules/dates.md` §B1/§B2 |
 | §P-D2 | `rules/dates.md` §B2/§B3/§B4 |
 | §P-D3 | `rules/dates.md` §A4 |

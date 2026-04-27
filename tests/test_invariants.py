@@ -25,6 +25,7 @@ def _flatten(result: pipeline.ValidatorResult) -> list[dict]:
 
 
 RUNNERS = {
+    "pr0": lambda fixture: pipeline._invariant_p_r0(fixture.get("events", [])),
     "pr1": lambda fixture: pipeline._invariant_p_r1(
         {
             "deal": fixture.get("deal", {}),
@@ -52,6 +53,10 @@ RUNNERS = {
     ),
     "pr6": lambda fixture: pipeline._invariant_p_r6(fixture.get("events", [])),
     "pr7": lambda fixture: pipeline._invariant_p_r7(fixture.get("events", [])),
+    "pr8": lambda fixture: pipeline._invariant_p_r8(
+        fixture.get("events", []),
+        fixture.get("deal", {}),
+    ),
     "pd1": lambda fixture: pipeline._invariant_p_d1(fixture.get("events", [])),
     "pd2": lambda fixture: pipeline._invariant_p_d2(fixture.get("events", [])),
     "pd3": lambda fixture: pipeline._invariant_p_d3(fixture.get("events", [])),
@@ -77,15 +82,68 @@ RUNNERS = {
 
 
 def _assert_fixture(fixture_name: str, runner_key: str) -> None:
+    """Consume-on-match: each expected entry pairs with one distinct actual
+    flag and is removed from the candidate pool. Without this, a single
+    actual flag could spuriously satisfy multiple expected entries with the
+    same `code`. Length parity plus mutual-exclusion together pin the
+    actual flag set exactly.
+    """
     fixture = _load_fixture(fixture_name)
-    actual_flags = RUNNERS[runner_key](fixture)
+    actual_flags = list(RUNNERS[runner_key](fixture))
     expected_flags = fixture.get("expected_flags", [])
-    assert len(actual_flags) == len(expected_flags)
+    assert len(actual_flags) == len(expected_flags), (
+        f"expected {len(expected_flags)} flag(s), got {len(actual_flags)}: "
+        f"{actual_flags}"
+    )
+    remaining = list(actual_flags)
     for expected in expected_flags:
-        assert any(
-            all(flag.get(k) == v for k, v in expected.items())
-            for flag in actual_flags
-        ), actual_flags
+        match = next(
+            (f for f in remaining if all(f.get(k) == v for k, v in expected.items())),
+            None,
+        )
+        assert match is not None, (
+            f"no actual flag matched expected={expected!r}; remaining={remaining!r}"
+        )
+        remaining.remove(match)
+    assert not remaining, f"unmatched actual flags: {remaining}"
+
+
+@pytest.mark.parametrize(
+    "fixture_name",
+    ["synthetic_pr0_pass.json", "synthetic_pr0_fail.json"],
+)
+def test_pr0(fixture_name):
+    _assert_fixture(fixture_name, "pr0")
+
+
+def test_pr0_validate_isolates_malformed_rows_from_downstream_invariants():
+    """A single non-dict row must not crash the whole validator. §P-R0
+    records the shape violation; downstream invariants run over the
+    remaining well-formed rows.
+    """
+    raw = {
+        "deal": {"bidder_registry": {}},
+        "events": [
+            "garbage row 0",
+            {
+                "BidderID": 1,
+                "bid_note": "Executed",
+                "bid_date_precise": "2026-01-01",
+                "process_phase": 1,
+                "source_quote": "merger closed",
+                "source_page": 1,
+            },
+        ],
+    }
+    filing = pipeline.Filing(slug="synthetic", pages=[
+        {"number": 1, "content": "merger closed"},
+    ])
+    result = pipeline.validate(raw, filing)
+    flat = _flatten(result)
+    codes = [f.get("code") for f in flat]
+    assert "event_not_a_dict" in codes
+    # The well-formed Executed row at index 1 still gets validated; no
+    # AttributeError crashed validate() before we got here.
 
 
 @pytest.mark.parametrize(
@@ -220,6 +278,30 @@ def test_pr5_acceptance_fixtures(fixture_name):
 
 @pytest.mark.parametrize(
     "fixture_name",
+    ["synthetic_pr8_pass.json", "synthetic_pr8_fail.json"],
+)
+def test_pr8(fixture_name):
+    _assert_fixture(fixture_name, "pr8")
+
+
+def test_pr8_severity_typo_is_loud_not_silent_demotion():
+    """Without §P-R8 a typo like `severity: "Hard"` is silently demoted to
+    `"hard"` by count_flags, pinning the deal to `validated` for a typo and
+    breaking the 3-consecutive-clean-runs gate. §P-R8 turns this into an
+    explicit `flag_shape_invalid` hard flag.
+    """
+    events = [{"flags": [{"code": "x", "severity": "Hard", "reason": "typo"}]}]
+    deal = {"deal_flags": []}
+    flags = pipeline._invariant_p_r8(events, deal)
+    assert any(
+        f["code"] == "flag_shape_invalid" and not f.get("deal_level")
+        for f in flags
+    )
+    assert not any(f.get("deal_level") for f in flags)
+
+
+@pytest.mark.parametrize(
+    "fixture_name",
     ["synthetic_pd1_pass.json", "synthetic_pd1_fail.json"],
 )
 def test_pd1(fixture_name):
@@ -266,6 +348,31 @@ def test_p_d5_applies_only_to_explicit_drop_not_dropsilent():
     }]
 
     assert pipeline._invariant_p_d5(events) == []
+
+
+# §D1.a unsolicited_first_contact exemption — exhaustive matrix.
+#
+# Rule: when a Bid row carries the `unsolicited_first_contact` info flag,
+# the matching `(bidder_name, process_phase)` slice is exempted from BOTH
+# §P-D5 (Drop-without-prior-engagement) AND §P-D6 (Bid-without-NDA). The
+# pairing must hold symmetrically: flag presence exempts; flag absence
+# fails; flag in a different phase does NOT cross-exempt.
+#
+# Without this matrix, a regression that breaks the exemption (flag-code
+# rename, refactored row-flag lookup, off-by-one on (name, phase) keying)
+# would silently mass-fire false-positive hard flags on every legitimate
+# Class-B unsolicited bidder across the 392 target deals.
+@pytest.mark.parametrize(
+    "fixture_name,runner_key",
+    [
+        ("pd5_drop_unsolicited_exempt.json", "pd5"),
+        ("pd5_drop_unsolicited_wrong_phase_still_flags.json", "pd5"),
+        ("pd6_bid_unsolicited_exempt.json", "pd6"),
+        ("pd6_bid_unsolicited_no_flag_fails.json", "pd6"),
+    ],
+)
+def test_d1a_unsolicited_first_contact_exemption_matrix(fixture_name, runner_key):
+    _assert_fixture(fixture_name, runner_key)
 
 
 @pytest.mark.parametrize(

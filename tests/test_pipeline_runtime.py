@@ -54,6 +54,7 @@ def test_update_progress_records_per_deal_rulebook_version(minimal_state_repo):
         notes="clean",
         current_rulebook_version="abc123",
         last_run="2026-04-24T12:00:00Z",
+        run_id="run-abc",
     )
     state = json.loads(env.progress.read_text())
     assert "rulebook_version" not in state, (
@@ -62,8 +63,9 @@ def test_update_progress_records_per_deal_rulebook_version(minimal_state_repo):
     deal = state["deals"]["synthetic"]
     assert deal["rulebook_version"] == "abc123"
     assert deal["last_run"] == "2026-04-24T12:00:00Z"
+    assert deal["last_run_id"] == "run-abc"
     assert deal["rulebook_version_history"] == [
-        {"ts": "2026-04-24T12:00:00Z", "version": "abc123"},
+        {"ts": "2026-04-24T12:00:00Z", "run_id": "run-abc", "version": "abc123"},
     ]
 
 
@@ -82,6 +84,7 @@ def test_update_progress_rejects_stale_top_level_rulebook_version(minimal_state_
             notes="",
             current_rulebook_version="new_hash",
             last_run="2026-04-24T12:00:00Z",
+            run_id="run-stale",
         )
 
 
@@ -97,6 +100,7 @@ def test_update_progress_auto_creates_missing_slug(minimal_state_repo):
         notes="brand new slug",
         current_rulebook_version="r1",
         last_run="2026-04-24T12:00:00Z",
+        run_id="run-mystery",
     )
     state = json.loads(env.progress.read_text())
     assert "mystery" in state["deals"]
@@ -117,6 +121,7 @@ def test_update_progress_history_caps_at_10(minimal_state_repo):
             notes="",
             current_rulebook_version=f"hash_{i:02d}",
             last_run=f"2026-04-24T12:{i:02d}:00Z",
+            run_id=f"run-{i:02d}",
         )
     state = json.loads(env.progress.read_text())
     history = state["deals"]["synthetic"]["rulebook_version_history"]
@@ -138,6 +143,7 @@ def test_update_progress_raises_when_progress_missing(tmp_path, monkeypatch):
             notes="",
             current_rulebook_version="r",
             last_run="2026-04-24T12:00:00Z",
+            run_id="run-missing",
         )
 
 
@@ -210,9 +216,11 @@ def test_mark_failed_empty_notes_raises(minimal_state_repo):
 # ---------------------------------------------------------------------------
 
 
-def test_append_flags_log_uses_provided_run_ts(minimal_state_repo):
-    """Every line's logged_at is the caller-provided run_ts — no per-line
-    `datetime.now()`. This is what makes `logged_at == last_run` a clean query."""
+def test_append_flags_log_uses_provided_run_ts_and_run_id(minimal_state_repo):
+    """Every line's logged_at is the caller-provided run_ts AND every line
+    carries the same run_id — no per-line `datetime.now()`, no per-line UUID.
+    The (deal, run_id) pair is the audit primary key for the rulebook-stability
+    gate."""
     env = minimal_state_repo
     final = {
         "deal": {"deal_flags": [{"code": "x", "severity": "info"}]},
@@ -221,10 +229,61 @@ def test_append_flags_log_uses_provided_run_ts(minimal_state_repo):
             {"flags": []},
         ],
     }
-    count = pipeline.append_flags_log("synthetic", final, run_ts="2026-04-24T12:00:00Z")
+    count = pipeline.append_flags_log(
+        "synthetic", final,
+        run_ts="2026-04-24T12:00:00Z",
+        run_id="run-flag-test",
+    )
     assert count == 2
     lines = [json.loads(line) for line in env.flags.read_text().splitlines()]
     assert all(line["logged_at"] == "2026-04-24T12:00:00Z" for line in lines)
+    assert all(line["run_id"] == "run-flag-test" for line in lines)
+
+
+def test_append_flags_log_does_not_interleave_under_concurrent_writers(minimal_state_repo):
+    """Two concurrent appenders must produce well-formed JSONL, never
+    half-merged lines. The advisory flock around the per-line writes is what
+    guarantees this; without it, two finalize() calls in parallel would
+    interleave bytes once the buffered write exceeded PIPE_BUF."""
+    import threading
+
+    env = minimal_state_repo
+    # Build two payloads with enough flags that the combined append is
+    # well over PIPE_BUF (4 KiB) even line-by-line.
+    def build_final(prefix: str) -> dict:
+        return {
+            "deal": {"deal_flags": []},
+            "events": [
+                {"flags": [{
+                    "code": f"{prefix}_code_{i}",
+                    "severity": "info",
+                    "reason": "x" * 200,
+                }]} for i in range(60)
+            ],
+        }
+
+    finals = [
+        ("alpha", build_final("alpha"), "run-alpha"),
+        ("beta", build_final("beta"), "run-beta"),
+    ]
+
+    def write(slug, final, run_id):
+        pipeline.append_flags_log(slug, final, run_ts="2026-04-24T12:00:00Z", run_id=run_id)
+
+    threads = [threading.Thread(target=write, args=args) for args in finals]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    text = env.flags.read_text()
+    assert text.endswith("\n"), "every line must terminate with newline"
+    lines = text.splitlines()
+    parsed = [json.loads(line) for line in lines]
+    counts = {"run-alpha": 0, "run-beta": 0}
+    for line in parsed:
+        counts[line["run_id"]] += 1
+    assert counts == {"run-alpha": 60, "run-beta": 60}
 
 
 # ---------------------------------------------------------------------------
@@ -311,9 +370,69 @@ def test_finalize_appends_to_rulebook_version_history(minimal_state_repo):
 
     state = json.loads(env.progress.read_text())
     history = state["deals"]["synthetic"]["rulebook_version_history"]
-    # Both runs same rulebook → two entries, same hash.
+    # Both runs same rulebook → two entries, same hash, distinct run_ids.
     assert len(history) == 2
     assert history[0]["version"] == history[1]["version"]
+    assert history[0]["run_id"] != history[1]["run_id"]
+
+
+def test_finalize_extraction_output_is_byte_idempotent_modulo_run_stamps(minimal_state_repo):
+    """Identical input must produce identical extraction JSON across reruns
+    modulo per-run stamps (last_run, last_run_id). Otherwise the
+    "3 consecutive unchanged-rulebook clean runs" gate is meaningless.
+    """
+    env = minimal_state_repo
+    env.seed_deal("synthetic", is_reference=True)
+    env.seed_filing(
+        "synthetic",
+        pages=[{"number": 1, "content": "the target entered a merger agreement on 2026-04-24"}],
+    )
+
+    def fresh_raw():
+        return {
+            "deal": {"slug": "synthetic", "auction": False, "bidder_registry": {}},
+            "events": [{
+                "BidderID": 1,
+                "bid_note": "Executed",
+                "bid_date_precise": "2026-04-24",
+                "bid_date_rough": None,
+                "bidder_name": None,
+                "bidder_alias": None,
+                "process_phase": 1,
+                "source_quote": "the target entered a merger agreement on 2026-04-24",
+                "source_page": 1,
+            }],
+        }
+
+    pipeline.finalize("synthetic", fresh_raw())
+    out1 = json.loads(env.extractions.joinpath("synthetic.json").read_text())
+    pipeline.finalize("synthetic", fresh_raw())
+    out2 = json.loads(env.extractions.joinpath("synthetic.json").read_text())
+
+    # Strip per-run stamps before comparing.
+    for o in (out1, out2):
+        o["deal"].pop("last_run", None)
+        o["deal"].pop("last_run_id", None)
+    assert out1 == out2, (
+        "extraction output must be byte-identical across reruns on identical "
+        "input modulo per-run stamps; mismatch indicates non-determinism in "
+        "the validator or canonicalizer"
+    )
+
+    # Flag set per run must also be identical (modulo per-line run_id/logged_at).
+    # If the deal passes clean, flags.jsonl never gets written — skip that
+    # half of the assertion. The extraction-JSON parity above is enough.
+    if env.flags.exists():
+        lines = [json.loads(l) for l in env.flags.read_text().splitlines()]
+        by_run: dict[str, list[dict]] = {}
+        for line in lines:
+            by_run.setdefault(line["run_id"], []).append(
+                {k: v for k, v in line.items() if k not in {"run_id", "logged_at", "deal"}}
+            )
+        if by_run:
+            run_ids = list(by_run.keys())
+            assert len(run_ids) == 2
+            assert by_run[run_ids[0]] == by_run[run_ids[1]]
 
 
 # ---------------------------------------------------------------------------

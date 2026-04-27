@@ -160,7 +160,13 @@
       "process_conditions_note": null,
       "additional_note": null,
       "comments": null,
-      "flags": []
+      "flags": [
+        {
+          "code": "bid_note_repaired_blank",
+          "severity": "info",
+          "reason": "xlsx row 6028 has a blank bid_note; the row identifies G&W's 2016-04-13 confidentiality-agreement event"
+        }
+      ]
     },
     {
       "BidderID": 2,

@@ -1,0 +1,14 @@
+{
+  "deal": {"bidder_registry": {}},
+  "events": [
+    {
+      "BidderID": 1,
+      "bid_note": "Executed",
+      "bid_date_precise": "2020-01-01",
+      "process_phase": 1,
+      "bidder_name": null,
+      "bidder_alias": null
+    }
+  ],
+  "expected_flags": []
+}

@@ -38,17 +38,40 @@
         ],
         "first_appearance_row_index": 5
       },
-      "bidder_04": {
-        "resolved_name": "5 parties, 4F and 1S",
+      "bidder_09": {
+        "resolved_name": "Party A",
         "aliases_observed": [
-          "5 parties, 4F and 1S",
-          "Party A",
-          "Party B",
-          "Party C",
-          "Party D",
-          "Party E"
+          "Party A"
         ],
         "first_appearance_row_index": 6
+      },
+      "bidder_10": {
+        "resolved_name": "Party B",
+        "aliases_observed": [
+          "Party B"
+        ],
+        "first_appearance_row_index": 7
+      },
+      "bidder_11": {
+        "resolved_name": "Party C",
+        "aliases_observed": [
+          "Party C"
+        ],
+        "first_appearance_row_index": 8
+      },
+      "bidder_12": {
+        "resolved_name": "Party D",
+        "aliases_observed": [
+          "Party D"
+        ],
+        "first_appearance_row_index": 9
+      },
+      "bidder_13": {
+        "resolved_name": "Party E",
+        "aliases_observed": [
+          "Party E"
+        ],
+        "first_appearance_row_index": 10
       },
       "bidder_05": {
         "resolved_name": "19 parties",
@@ -282,7 +305,7 @@
       "BidderID": 6,
       "process_phase": null,
       "role": "bidder",
-      "bidder_name": "bidder_04",
+      "bidder_name": "bidder_09",
       "bidder_alias": "Party A",
       "bidder_type": null,
       "bid_note": "Bid",
@@ -335,7 +358,7 @@
       "BidderID": 7,
       "process_phase": null,
       "role": "bidder",
-      "bidder_name": "bidder_04",
+      "bidder_name": "bidder_10",
       "bidder_alias": "Party B",
       "bidder_type": null,
       "bid_note": "Bid",
@@ -388,7 +411,7 @@
       "BidderID": 8,
       "process_phase": null,
       "role": "bidder",
-      "bidder_name": "bidder_04",
+      "bidder_name": "bidder_11",
       "bidder_alias": "Party C",
       "bidder_type": null,
       "bid_note": "Bid",
@@ -441,7 +464,7 @@
       "BidderID": 9,
       "process_phase": null,
       "role": "bidder",
-      "bidder_name": "bidder_04",
+      "bidder_name": "bidder_12",
       "bidder_alias": "Party D",
       "bidder_type": null,
       "bid_note": "Bid",
@@ -494,7 +517,7 @@
       "BidderID": 10,
       "process_phase": null,
       "role": "bidder",
-      "bidder_name": "bidder_04",
+      "bidder_name": "bidder_13",
       "bidder_alias": "Party E",
       "bidder_type": null,
       "bid_note": "Bid",
