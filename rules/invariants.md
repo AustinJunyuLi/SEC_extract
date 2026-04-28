@@ -166,16 +166,22 @@ comparable across deals.
 - **Check.** For every row with `bid_note == "Drop"` (not `DropSilent`),
   with non-null `bidder_name` and `process_phase >= 1`, there exists at
   least one other row in the same `process_phase` with the same
-  `bidder_name` and `bid_note ∈ {NDA, Bidder Interest, IB,
-  Drop}`. Position within phase is not enforced — §A2/§A3 canonicalization
-  has already ordered rows. The prior Drop branch covers §I2 re-engagement
-  cases where a bidder re-enters after an earlier drop.
+  `bidder_name` and `bid_note ∈ {NDA, Bidder Interest, IB, Bid,
+  Bidder Sale, Activist Sale, Drop}`. Position within phase is not enforced —
+  §A2/§A3 canonicalization has already ordered rows. `Bidder Sale` and
+  `Activist Sale` count only because they are bidder-specific engagement
+  rows under the current taxonomy; they are not generic sale-process labels.
+  The `Bid` branch covers scenarios where the filing first identifies the
+  party at a bid or execution-stage consortium event, and the prior Drop
+  branch covers §I2 re-engagement cases where a bidder re-enters after an
+  earlier drop.
 - **Fail action.** Flag `drop_without_prior_engagement`. Hard.
 - **Why hard.** A drop row without prior engagement means the extractor
   invented a dropout or missed the engagement row that named the
   bidder. §P-D5 is the structural twin of §P-D6 on the tail-end of the
-  NDA lifecycle: §P-D6 asserts "every Bid has a prior NDA", §P-D5
-  asserts "every Drop has a prior engagement".
+  bidder lifecycle: §P-D6 asserts "every Bid has a prior NDA unless a
+  documented exemption applies", §P-D5 asserts "every Drop has a prior
+  bidder-specific engagement".
 - **Exemptions (row is skipped, no flag emitted).**
   1. `bidder_name` is null — unnamed placeholders are count-bound.
   2. `process_phase = 0` — §M4 stale-prior phase 0 rows do not require

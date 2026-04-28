@@ -160,11 +160,16 @@ def test_commit_and_dry_run_is_rejected(monkeypatch, capsys):
     assert "--commit cannot be used with --dry-run" in capsys.readouterr().err
 
 
-@pytest.mark.parametrize("old_flag", ["--raw-" "extraction", "--print-extractor-" "prompt"])
+@pytest.mark.parametrize(
+    "old_flag",
+    ["--raw-" "extraction", "--print-extractor-" "prompt", "--max-tokens-" "per-deal"],
+)
 def test_old_flags_are_unrecognized(monkeypatch, old_flag, tmp_path, capsys):
     args = ["--slug", "medivation", old_flag]
     if old_flag == "--raw-" "extraction":
         args.append(str(tmp_path / "raw.json"))
+    if old_flag == "--max-tokens-" "per-deal":
+        args.append("200000")
     _set_argv(monkeypatch, *args)
 
     with pytest.raises(SystemExit) as exc:

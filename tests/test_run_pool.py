@@ -45,6 +45,15 @@ def test_force_alias_is_not_supported():
         parser.parse_args(["--filter", "reference", "--force"])
 
 
+def test_per_deal_token_cap_is_not_supported():
+    parser = run_pool.build_parser()
+
+    with pytest.raises(SystemExit):
+        parser.parse_args(["--filter", "reference", "--max-tokens-" "per-deal", "200000"])
+
+    assert not hasattr(run_pool.PoolConfig(), "max_tokens_" "per_deal")
+
+
 def test_reasoning_effort_defaults_to_high(monkeypatch):
     monkeypatch.delenv("EXTRACT_REASONING_EFFORT", raising=False)
     monkeypatch.delenv("ADJUDICATE_REASONING_EFFORT", raising=False)

@@ -3,7 +3,7 @@ import json
 
 from pipeline import core
 from pipeline.llm import adjudicate
-from pipeline.llm.audit import AuditWriter, TokenBudget
+from pipeline.llm.audit import AuditWriter, TokenUsage
 from pipeline.llm.client import CompletionResult
 
 
@@ -24,7 +24,7 @@ class StubClient:
         )
 
 
-class BudgetExhaustingClient:
+class HighUsageClient:
     def __init__(self):
         self.calls = 0
 
@@ -34,12 +34,12 @@ class BudgetExhaustingClient:
             text='{"verdict": "upheld", "reason": "needs review"}',
             model=kwargs["model"],
             parsed_json={"verdict": "upheld", "reason": "needs review"},
-            input_tokens=10,
-            output_tokens=10,
+            input_tokens=150_000,
+            output_tokens=50_000,
         )
 
 
-def test_adjudicate_failure_then_success_is_sequential_and_budgeted(tmp_path):
+def test_adjudicate_failure_then_success_is_sequential_and_tracks_usage(tmp_path):
     raw = {
         "deal": {},
         "events": [
@@ -63,7 +63,7 @@ def test_adjudicate_failure_then_success_is_sequential_and_budgeted(tmp_path):
         {"row_index": 0, "code": "missing_nda_dropsilent", "severity": "soft", "reason": "second"},
     ]
     audit = AuditWriter(tmp_path / "audit", "synthetic")
-    budget = TokenBudget(max_tokens=100)
+    usage = TokenUsage()
     client = StubClient()
 
     annotated = asyncio.run(
@@ -75,7 +75,7 @@ def test_adjudicate_failure_then_success_is_sequential_and_budgeted(tmp_path):
             llm_client=client,
             adjudicate_model="adj-model",
             audit=audit,
-            token_budget=budget,
+            token_usage=usage,
             schema_supported=True,
         )
     )
@@ -83,13 +83,13 @@ def test_adjudicate_failure_then_success_is_sequential_and_budgeted(tmp_path):
     assert client.calls == 2
     assert "adjudicator_unavailable" in annotated[0]["reason"]
     assert "filing is silent" in annotated[1]["reason"]
-    assert budget.used == 7
+    assert usage.used == 7
     calls = [json.loads(line) for line in (audit.root / "calls.jsonl").read_text().splitlines()]
     assert calls[0]["outcome"] == "failed"
     assert calls[1]["outcome"] == "ok"
 
 
-def test_adjudicate_stops_after_token_budget_exhaustion(tmp_path):
+def test_adjudicate_processes_all_flags_without_token_cap(tmp_path):
     raw = {"deal": {}, "events": [{"source_page": 1}]}
     filing = core.Filing(slug="synthetic", pages=[{"number": 1, "content": "page"}])
     flags = [
@@ -97,8 +97,8 @@ def test_adjudicate_stops_after_token_budget_exhaustion(tmp_path):
         {"row_index": 0, "code": "b", "severity": "soft", "reason": "second"},
     ]
     audit = AuditWriter(tmp_path / "audit", "synthetic")
-    budget = TokenBudget(max_tokens=5)
-    client = BudgetExhaustingClient()
+    usage = TokenUsage()
+    client = HighUsageClient()
 
     annotated = asyncio.run(
         adjudicate.adjudicate(
@@ -109,13 +109,14 @@ def test_adjudicate_stops_after_token_budget_exhaustion(tmp_path):
             llm_client=client,
             adjudicate_model="adj-model",
             audit=audit,
-            token_budget=budget,
+            token_usage=usage,
             schema_supported=True,
         )
     )
 
-    assert client.calls == 1
+    assert client.calls == 2
     assert "needs review" in annotated[0]["reason"]
-    assert "adjudicator_skipped: token_budget_exceeded" in annotated[1]["reason"]
+    assert "needs review" in annotated[1]["reason"]
+    assert usage.used == 400_000
     calls = [json.loads(line) for line in (audit.root / "calls.jsonl").read_text().splitlines()]
-    assert [call["outcome"] for call in calls] == ["ok", "skipped"]
+    assert [call["outcome"] for call in calls] == ["ok", "ok"]

@@ -11,13 +11,8 @@ from pipeline.core import _atomic_write_text, _now_iso
 from .client import CompletionResult
 
 
-class TokenBudgetExceeded(RuntimeError):
-    pass
-
-
 @dataclass
-class TokenBudget:
-    max_tokens: int
+class TokenUsage:
     input_used: int = 0
     output_used: int = 0
     reasoning_used: int = 0
@@ -30,10 +25,6 @@ class TokenBudget:
         self.input_used += result.input_tokens
         self.output_used += result.output_tokens
         self.reasoning_used += result.reasoning_tokens
-        if self.used > self.max_tokens:
-            raise TokenBudgetExceeded(
-                f"token_budget_exceeded: used={self.used} cap={self.max_tokens}"
-            )
 
 
 def prompt_hash(system: str, user: str = "") -> str:

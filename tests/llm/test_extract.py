@@ -2,7 +2,7 @@ import asyncio
 import json
 
 from pipeline.llm import extract
-from pipeline.llm.audit import AuditWriter, TokenBudget
+from pipeline.llm.audit import AuditWriter, TokenUsage
 from pipeline.llm.client import CompletionResult
 
 
@@ -120,7 +120,7 @@ class StubClient:
         )
 
 
-def test_extract_deal_writes_audit_and_consumes_budget(minimal_state_repo, monkeypatch):
+def test_extract_deal_writes_audit_and_tracks_token_usage(minimal_state_repo, monkeypatch):
     env = minimal_state_repo
     prompts = env.tmp_path / "prompts"
     prompts.mkdir()
@@ -131,7 +131,7 @@ def test_extract_deal_writes_audit_and_consumes_budget(minimal_state_repo, monke
     monkeypatch.setattr(extract.core, "PROMPTS_DIR", prompts)
 
     audit = AuditWriter(env.tmp_path / "output" / "audit", "synthetic")
-    budget = TokenBudget(max_tokens=100)
+    usage = TokenUsage()
     client = StubClient()
 
     result = asyncio.run(
@@ -140,7 +140,7 @@ def test_extract_deal_writes_audit_and_consumes_budget(minimal_state_repo, monke
             llm_client=client,
             extract_model="test-model",
             audit=audit,
-            token_budget=budget,
+            token_usage=usage,
             rulebook_version="rules-v1",
             schema_supported=True,
             max_output_tokens=123,
@@ -149,7 +149,7 @@ def test_extract_deal_writes_audit_and_consumes_budget(minimal_state_repo, monke
 
     assert result.raw_extraction["deal"]["TargetName"] == "Synthetic Target"
     assert "slug" not in result.raw_extraction["deal"]
-    assert budget.used == 15
+    assert usage.used == 15
     assert client.calls[0]["model"] == "test-model"
     assert client.calls[0]["max_output_tokens"] == 123
     assert (audit.root / "prompts" / "extractor.txt").read_text().startswith("=== SYSTEM ===\nPROMPT")

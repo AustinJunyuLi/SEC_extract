@@ -81,6 +81,12 @@ The empirical Linkflow ceiling for `xhigh` is five concurrent workers. The
 runner rejects `xhigh` with more than `LINKFLOW_XHIGH_MAX_WORKERS` workers
 (default `5`) before making API calls.
 
+There is no per-deal token-budget cap. The runner records input, output, and
+reasoning token usage in audit metadata, but it does not skip adjudication or
+abort a deal because a token total is high. If a soft flag needs adjudication,
+the scoped Adjudicator is allowed to run; cost control belongs in worker
+concurrency and model-effort choices, not hidden per-deal truncation.
+
 If a CLI supports `--commit`, it must commit only current-deal
 output/state/audit paths and leave unrelated worktree changes alone.
 
@@ -231,8 +237,10 @@ Current formal-stage-status doctrine: `invited_to_formal_round` and
 process `Bid` rows. The extractor may set them true/false only when the filing
 supports that bidder-specific advancement or submission status. Otherwise leave
 them null and flag the uncertainty. The comparator suppresses AI bool vs Alex
-null on these fields because Alex's converted reference usually lacks this
-newer structure; non-null disagreements remain review items.
+null on these fields as source-workbook missingness because Alex's converted
+reference usually lacks this newer structure; validator checks, not the
+reference diff, enforce row-scope placement. Non-null disagreements remain
+review items.
 
 Current drop-classification doctrine: filing verb subject controls
 `drop_initiator`; use `"unknown"` only for genuinely ambiguous agency.
@@ -241,8 +249,19 @@ Specific reason classes beat generic classes: target non-advancement is
 `"below_minimum"`, bidder failure to respond/submit/reiterate is
 `"no_response"`, and transaction-scope mismatch is `"scope_mismatch"` with
 initiator from the verb subject. The comparator suppresses Alex
-unknown/null under-specification when AI has supported current-schema detail;
-non-null conflicts remain review items.
+`drop_initiator = "unknown"` and null `drop_reason_class` under-specification
+when AI has supported current-schema detail; null `drop_initiator` remains
+visible as a converter/schema omission, and non-null conflicts remain review
+items.
+
+Current comparison-noise doctrine: `scoring/diff.py` suppresses two known
+source-workbook placement artifacts that are not extraction-quality problems.
+If the current extraction leaves `DateEffective = null` because the filing
+does not state closing/effective date, Alex's non-null legacy effective date is
+ignored in deal-level diffs. If Alex's legacy `bid_value` column contains the
+same per-share amount that the current extraction correctly stores in
+`bid_value_pershare` with `bid_value_unit = "USD_per_share"`, the duplicate
+placement noise is ignored. True numeric bid-value conflicts remain visible.
 
 ## Target-Deal Gate
 

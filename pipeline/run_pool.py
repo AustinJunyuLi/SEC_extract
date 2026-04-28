@@ -17,7 +17,7 @@ from typing import Any, Literal
 
 from pipeline import core
 from pipeline.llm.adjudicate import adjudicate
-from pipeline.llm.audit import AuditWriter, TokenBudget
+from pipeline.llm.audit import AuditWriter, TokenUsage
 from pipeline.llm.client import LLMClient, OpenAICompatibleClient
 from pipeline.llm.extract import extract_deal
 from pipeline.llm.retry import RetryConfig
@@ -40,7 +40,6 @@ class PoolConfig:
     adjudicate_model: str = "gpt-5.5"
     extract_reasoning_effort: str | None = DEFAULT_REASONING_EFFORT
     adjudicate_reasoning_effort: str | None = DEFAULT_REASONING_EFFORT
-    max_tokens_per_deal: int = 200000
     re_validate: bool = False
     re_extract: bool = False
     commit: bool = False
@@ -316,7 +315,7 @@ async def process_deal(
         })
         return DealOutcome(slug=slug, status="skipped", skipped=True, notes=decision.reason, audit_path=audit.root)
 
-    budget = TokenBudget(config.max_tokens_per_deal)
+    token_usage = TokenUsage()
     cached = False
     try:
         if decision.action == "re_validate":
@@ -330,7 +329,7 @@ async def process_deal(
                 llm_client=llm_client,
                 extract_model=config.extract_model,
                 audit=audit,
-                token_budget=budget,
+                token_usage=token_usage,
                 rulebook_version=rulebook_version,
                 schema_supported=schema_supported,
                 reasoning_effort=config.extract_reasoning_effort,
@@ -355,7 +354,7 @@ async def process_deal(
                 llm_client=llm_client,
                 adjudicate_model=config.adjudicate_model,
                 audit=audit,
-                token_budget=budget,
+                token_usage=token_usage,
                 schema_supported=schema_supported,
                 reasoning_effort=config.adjudicate_reasoning_effort,
             )
@@ -376,9 +375,9 @@ async def process_deal(
                 "extract": config.extract_reasoning_effort,
                 "adjudicate": config.adjudicate_reasoning_effort,
             },
-            "total_input_tokens": budget.input_used,
-            "total_output_tokens": budget.output_used,
-            "total_reasoning_tokens": budget.reasoning_used,
+            "total_input_tokens": token_usage.input_used,
+            "total_output_tokens": token_usage.output_used,
+            "total_reasoning_tokens": token_usage.reasoning_used,
             "total_attempts": None,
             "total_seconds": elapsed,
             "watchdog_warnings": _watchdog_warnings(audit),
@@ -419,9 +418,9 @@ async def process_deal(
                 "extract": config.extract_reasoning_effort,
                 "adjudicate": config.adjudicate_reasoning_effort,
             },
-            "total_input_tokens": budget.input_used,
-            "total_output_tokens": budget.output_used,
-            "total_reasoning_tokens": budget.reasoning_used,
+            "total_input_tokens": token_usage.input_used,
+            "total_output_tokens": token_usage.output_used,
+            "total_reasoning_tokens": token_usage.reasoning_used,
             "total_attempts": None,
             "total_seconds": time.monotonic() - started,
             "watchdog_warnings": _watchdog_warnings(audit),
@@ -530,7 +529,6 @@ def build_parser() -> argparse.ArgumentParser:
         choices=["none", "minimal", "low", "medium", "high", "xhigh"],
         help=f"reasoning.effort for adjudicator calls (default: {DEFAULT_REASONING_EFFORT})",
     )
-    parser.add_argument("--max-tokens-per-deal", type=int, default=_int_env("MAX_TOKENS_PER_DEAL", 200000))
     rerun = parser.add_mutually_exclusive_group()
     rerun.add_argument("--re-validate", action="store_true", help="Reuse only a current raw_response.json cache.")
     rerun.add_argument("--re-extract", action="store_true")
@@ -549,7 +547,6 @@ def config_from_args(args: argparse.Namespace) -> PoolConfig:
         adjudicate_model=args.adjudicate_model,
         extract_reasoning_effort=args.extract_reasoning_effort,
         adjudicate_reasoning_effort=args.adjudicate_reasoning_effort,
-        max_tokens_per_deal=args.max_tokens_per_deal,
         re_validate=args.re_validate,
         re_extract=args.re_extract,
         commit=args.commit,

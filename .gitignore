@@ -24,6 +24,5 @@ report/*.html
 # Linkflow API credentials + running logs
 .env*
 !.env.example
-runlog/
 logs/
 *.log

@@ -509,6 +509,26 @@ def test_p_d5_consortium_ca_alone_does_not_replace_prior_engagement():
     assert flags[0]["severity"] == "hard"
 
 
+@pytest.mark.parametrize("prior_note", ["Bid", "Bidder Sale", "Activist Sale"])
+def test_p_d5_accepts_bidder_specific_sale_engagement_before_drop(prior_note):
+    events = [
+        {
+            "bid_note": prior_note,
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Party A",
+            "process_phase": 1,
+        },
+        {
+            "bid_note": "Drop",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Party A",
+            "process_phase": 1,
+        },
+    ]
+
+    assert pipeline._invariant_p_d5(events) == []
+
+
 @pytest.mark.parametrize(
     "fixture_name",
     ["synthetic_pd6_pass.json", "synthetic_pd6_fail.json"],

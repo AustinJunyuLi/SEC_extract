@@ -40,7 +40,7 @@ filtered downstream on `auction == true`.
 **Why Option B, not a pre-gate.**
 1. The auction criterion is an *output* of the extraction (it depends on the
    extracted NDA count), so pre-gating would require a second pass.
-2. Non-auction extractions cost the same per-deal budget and may be useful as
+2. Non-auction extractions use the same extraction path and may be useful as
    negative controls, diagnostics, or for future research questions.
 3. `auction` becomes a validator-checkable deal-level invariant (did the
    classifier see ≥2 qualifying NDAs?) — harder to do if the gate sits

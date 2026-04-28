@@ -10,7 +10,7 @@ from typing import Any
 
 from pipeline import core
 
-from .audit import AuditWriter, TokenBudget
+from .audit import AuditWriter, TokenUsage
 from .client import CompletionResult, LLMClient
 from .response_format import SCHEMA_R1, call_json
 
@@ -239,7 +239,7 @@ async def extract_deal(
     llm_client: LLMClient,
     extract_model: str,
     audit: AuditWriter,
-    token_budget: TokenBudget,
+    token_usage: TokenUsage,
     rulebook_version: str,
     schema_supported: bool,
     max_output_tokens: int | None = None,
@@ -257,7 +257,7 @@ async def extract_deal(
         max_output_tokens=max_output_tokens,
         reasoning_effort=reasoning_effort,
     )
-    token_budget.consume(completion)
+    token_usage.consume(completion)
     parsed = completion.parsed_json or {}
     audit.write_raw_response(
         result=completion,

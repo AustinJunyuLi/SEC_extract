@@ -1,8 +1,6 @@
 import json
 
-import pytest
-
-from pipeline.llm.audit import AuditWriter, TokenBudget, TokenBudgetExceeded, prompt_hash
+from pipeline.llm.audit import AuditWriter, TokenUsage, prompt_hash
 from pipeline.llm.client import CompletionResult
 
 
@@ -11,14 +9,15 @@ def test_prompt_hash_is_stable_sha256():
     assert len(prompt_hash("system", "user")) == 64
 
 
-def test_token_budget_tracks_usage_and_raises_at_limit():
-    budget = TokenBudget(max_tokens=10)
-    budget.consume(CompletionResult(text="", model="m", input_tokens=3, output_tokens=4, reasoning_tokens=2))
+def test_token_usage_tracks_without_cap():
+    usage = TokenUsage()
+    usage.consume(CompletionResult(text="", model="m", input_tokens=3, output_tokens=4, reasoning_tokens=2))
 
-    assert budget.used == 9
+    assert usage.used == 9
 
-    with pytest.raises(TokenBudgetExceeded):
-        budget.consume(CompletionResult(text="", model="m", input_tokens=2))
+    usage.consume(CompletionResult(text="", model="m", input_tokens=200_000))
+
+    assert usage.used == 200_009
 
 
 def test_audit_writer_writes_prompt_call_raw_response_and_manifest(tmp_path):

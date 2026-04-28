@@ -817,7 +817,8 @@ def _invariant_p_d1(events: list[dict]) -> list[dict]:
 
 def _invariant_p_d5(events: list[dict]) -> list[dict]:
     """§P-D5 — every explicit `Drop` row's bidder has a prior engagement row
-    (NDA, Bidder Interest, IB, or prior Drop) in the same process_phase.
+    (NDA, Bidder Interest, IB, Bid, bidder-specific sale-start, or prior
+    Drop) in the same process_phase.
 
     Closes the dangling-drop gap where an AI emits a Drop row for a bidder
     that was never shown engaging with the process (no NDA, no expression
@@ -844,10 +845,18 @@ def _invariant_p_d5(events: list[dict]) -> list[dict]:
     """
     flags: list[dict[str, Any]] = []
     # Build engagement index by (bidder_name, phase). Engagement = NDA,
-    # Bidder Interest, IB, or any Drop (to cover §I2 re-engagement chains
-    # where a second NDA is missing between two Drops). Track row index
-    # so a Drop row cannot satisfy itself as the "engagement" witness.
-    engagement_notes = {"NDA", "Bidder Interest", "IB"}
+    # Bidder Interest, IB, Bid, bidder-specific sale-start, or any Drop
+    # (to cover §I2 re-engagement chains where a second NDA is missing
+    # between two Drops). Track row index so a Drop row cannot satisfy
+    # itself as the "engagement" witness.
+    engagement_notes = {
+        "NDA",
+        "Bidder Interest",
+        "IB",
+        "Bid",
+        "Bidder Sale",
+        "Activist Sale",
+    }
     # Map (name, phase) -> set of row indices contributing engagement.
     engagement_rows: dict[tuple[str, int], set[int]] = {}
     # Map (name, phase) -> True if any row carries unsolicited_first_contact,
@@ -889,9 +898,10 @@ def _invariant_p_d5(events: list[dict]) -> list[dict]:
                 "row_index": i, "code": "drop_without_prior_engagement", "severity": "hard",
                 "reason": (
                     f"§P-D5: Drop row for bidder_name={name!r} in phase={phase} "
-                    f"has no prior NDA/Bidder Interest/IB row. If this is an "
-                    f"extractor error, rerun. If the filing genuinely shows a "
-                    f"drop without prior engagement, investigate."
+                    f"has no prior NDA/Bidder Interest/IB/Bid/Bidder Sale/"
+                    f"Activist Sale row. If this is an extractor error, rerun. "
+                    f"If the filing genuinely shows a drop without prior "
+                    f"engagement, investigate."
                 ),
             })
     return flags

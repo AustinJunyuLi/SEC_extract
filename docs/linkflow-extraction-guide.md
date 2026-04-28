@@ -50,6 +50,8 @@ The audit should show:
   5xx retry loop.
 - Token usage recorded for input, output, and reasoning tokens when the
   provider returns those fields.
+- No per-deal token-budget cap. Token totals are audit facts, not a reason to
+  skip adjudication or abort an otherwise valid run.
 
 ## Why This Works
 
@@ -87,6 +89,8 @@ Avoid these patterns:
   makes table-of-contents hits, cross references, and timeout risk worse.
 - Low `max_output_tokens` caps on extractor calls. Truncated JSON is worse than
   an explicit failure. The extractor path should normally leave the cap unset.
+- Per-deal token-budget caps. They hide the exact soft flags that need
+  adjudication and make high-complexity deals look cleaner than they are.
 - Worker counts above the tested provider ceiling. `xhigh` is capped at five
   concurrent workers by default; the runner rejects larger `xhigh` pools before
   making API calls.
@@ -127,6 +131,12 @@ over-target zone; above 1500 characters is a hard validator flag.
 Fresh runs clear stale `calls.jsonl` and prompt files before writing current
 audit metadata. A failed fresh rerun preserves any prior successful live
 progress state and records the failure in the audit manifest.
+
+`scoring/diff.py` intentionally suppresses known source-workbook placement
+noise: Alex effective dates are ignored when the current filing-grounded
+extraction leaves `DateEffective = null`, and legacy per-share values stored in
+Alex's `bid_value` column are matched against current `bid_value_pershare`.
+True numeric bid-value conflicts still surface.
 
 ## Operator Checklist
 

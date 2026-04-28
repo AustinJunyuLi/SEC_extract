@@ -42,6 +42,8 @@ def test_extractor_prompt_contract_describes_embedded_filing_text():
     assert "page-numbered filing text" in text
     assert "do not fetch from SEC/EDGAR" in text
     assert "`rules/invariants.md` remains validator-facing only" in text
+    assert "the later deadline/submission event is another `Final Round`" in text
+    assert "one list element per contiguous-within-one-page segment" in text
     for stale_phrase in ["Read " "tool", "Read these " "files", "sub" "agent"]:
         assert stale_phrase not in text
 

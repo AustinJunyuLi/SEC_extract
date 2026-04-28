@@ -122,6 +122,12 @@ Responses API when provided. On Linkflow, `xhigh` is capped at
 `LINKFLOW_XHIGH_MAX_WORKERS` concurrent workers (default 5). Use
 `--re-extract` for a fresh model call.
 
+There is no per-deal token-budget cap. Audit metadata records input, output,
+and reasoning token totals, but high token use does not skip adjudication or
+abort a deal. If a soft flag needs adjudication, the orchestrator runs it;
+control provider load with worker count and reasoning effort, not hidden
+per-deal cutoff logic.
+
 ---
 
 ## Scope

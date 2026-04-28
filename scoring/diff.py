@@ -164,14 +164,42 @@ def loose_key(ev: dict[str, Any]) -> tuple[str | None, str | None]:
     return (normalize_bidder(ev.get("bidder_alias")), ev.get("bid_note"))
 
 
-def _same_bidder_for_diagnostic(ai_ev: dict[str, Any], alex_ev: dict[str, Any]) -> bool:
-    ai_alias = normalize_bidder(ai_ev.get("bidder_alias"))
-    alex_alias = normalize_bidder(alex_ev.get("bidder_alias"))
-    if ai_alias is not None and ai_alias == alex_alias:
-        return True
-    ai_name = normalize_bidder(ai_ev.get("bidder_name"))
-    alex_name = normalize_bidder(alex_ev.get("bidder_name"))
-    return ai_name is not None and ai_name == alex_name
+def _diagnostic_bidder_labels(
+    ev: dict[str, Any],
+    registry: dict[str, Any] | None,
+) -> set[str]:
+    labels: set[str] = set()
+    alias = normalize_bidder(ev.get("bidder_alias"))
+    if alias is not None:
+        labels.add(alias)
+
+    bidder_name = ev.get("bidder_name")
+    if not bidder_name or not registry:
+        return labels
+
+    entry = registry.get(bidder_name)
+    if not isinstance(entry, dict):
+        return labels
+
+    resolved_name = normalize_bidder(entry.get("resolved_name"))
+    if resolved_name is not None:
+        labels.add(resolved_name)
+    for observed_alias in entry.get("aliases_observed") or []:
+        observed = normalize_bidder(observed_alias)
+        if observed is not None:
+            labels.add(observed)
+    return labels
+
+
+def _same_bidder_for_diagnostic(
+    ai_ev: dict[str, Any],
+    alex_ev: dict[str, Any],
+    ai_registry: dict[str, Any] | None = None,
+    alex_registry: dict[str, Any] | None = None,
+) -> bool:
+    ai_labels = _diagnostic_bidder_labels(ai_ev, ai_registry)
+    alex_labels = _diagnostic_bidder_labels(alex_ev, alex_registry)
+    return bool(ai_labels & alex_labels)
 
 
 # ---------------------------------------------------------------------------
@@ -205,6 +233,9 @@ def compare_field(name: str, ai_val: Any, alex_val: Any) -> dict[str, Any] | Non
 
 
 def _is_ai_only_formal_stage_enrichment(name: str, ai_val: Any, alex_val: Any) -> bool:
+    # Intentional comparator policy: Alex-null means "source workbook lacks
+    # this newer field." Validator checks, not the reference diff, enforce
+    # whether the AI populated it only on proper informal Bid rows.
     return (
         name in FORMAL_STAGE_STATUS_FIELDS
         and ai_val in (True, False)
@@ -218,9 +249,48 @@ def _is_reference_drop_classification_underspecification(
     alex_val: Any,
 ) -> bool:
     if name == "drop_initiator":
+        # Intentional: suppress only Alex's explicit "unknown" initiator.
+        # A null initiator on a Drop row means the converted reference omitted
+        # a required field and should stay visible in the diff.
         return ai_val in CURRENT_DROP_INITIATORS and alex_val == "unknown"
     if name == "drop_reason_class":
         return ai_val is not None and alex_val is None
+    return False
+
+
+def _is_reference_bid_value_placement_noise(
+    name: str,
+    ai_ev: dict[str, Any],
+    alex_ev: dict[str, Any],
+) -> bool:
+    """Suppress old-workbook per-share placement noise.
+
+    Alex's source workbook often stores a per-share bid value in the legacy
+    aggregate `bid_value` column. Current output stores that value in
+    `bid_value_pershare` with `bid_value_unit="USD_per_share"`. A true numeric
+    mismatch stays visible on `bid_value`; this only removes the duplicate
+    field noise caused by the old column placement.
+    """
+    if ai_ev.get("bid_note") != "Bid":
+        return False
+
+    ai_pershare = ai_ev.get("bid_value_pershare")
+    alex_legacy_value = alex_ev.get("bid_value")
+    if ai_pershare in (None, "") or alex_legacy_value in (None, ""):
+        return False
+
+    if name == "bid_value":
+        return (
+            ai_ev.get("bid_value") in (None, "")
+            and _values_equal(ai_pershare, alex_legacy_value)
+        )
+    if name == "bid_value_pershare":
+        return alex_ev.get("bid_value_pershare") in (None, "")
+    if name == "bid_value_unit":
+        return (
+            ai_ev.get("bid_value_unit") == "USD_per_share"
+            and alex_ev.get("bid_value_unit") in (None, "")
+        )
     return False
 
 
@@ -289,6 +359,7 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
     matched_alex_ids: set[int] = set()
     formal_stage_enrichment_counts: dict[str, int] = {}
     drop_classification_underspecified_counts: dict[str, int] = {}
+    bid_value_placement_counts: dict[str, int] = {}
 
     # Primary pass: exact join.
     for key, ai_bucket in ai_idx.items():
@@ -336,6 +407,11 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
                 ):
                     drop_classification_underspecified_counts[fname] = (
                         drop_classification_underspecified_counts.get(fname, 0) + 1
+                    )
+                    continue
+                if _is_reference_bid_value_placement_noise(fname, ai_ev, alex_ev):
+                    bid_value_placement_counts[fname] = (
+                        bid_value_placement_counts.get(fname, 0) + 1
                     )
                     continue
                 d = compare_field(fname, ai_ev.get(fname), alex_ev.get(fname))
@@ -453,7 +529,17 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
         )
         r.notes.append(
             "Suppressed source-workbook drop classification underspecification "
-            f"where AI has current-schema detail and Alex is unknown/null: {detail}."
+            "where AI has current-schema detail and Alex has unknown initiator "
+            f"or null reason class: {detail}."
+        )
+    if bid_value_placement_counts:
+        detail = ", ".join(
+            f"{field}={count}"
+            for field, count in sorted(bid_value_placement_counts.items())
+        )
+        r.notes.append(
+            "Suppressed source-workbook per-share bid value placement noise "
+            f"from the legacy bid_value column: {detail}."
         )
 
     return r
@@ -462,6 +548,12 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
 def diff_deal_fields(ai_deal: dict[str, Any], alex_deal: dict[str, Any]) -> list[dict[str, Any]]:
     out = []
     for fname in COMPARE_DEAL_FIELDS:
+        if (
+            fname == "DateEffective"
+            and ai_deal.get(fname) is None
+            and alex_deal.get(fname) not in (None, "")
+        ):
+            continue
         d = compare_field(fname, ai_deal.get(fname), alex_deal.get(fname))
         if d is not None:
             out.append(d)
@@ -471,6 +563,8 @@ def diff_deal_fields(ai_deal: dict[str, Any], alex_deal: dict[str, Any]) -> list
 def _drop_silent_vs_explicit_drop_warnings(
     filtered_ai_events: list[dict[str, Any]],
     alex_only_rows: list[dict[str, Any]],
+    ai_registry: dict[str, Any] | None = None,
+    alex_registry: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     alex_drop_rows = [
         ev for ev in alex_only_rows
@@ -485,7 +579,12 @@ def _drop_silent_vs_explicit_drop_warnings(
         for idx, alex_ev in enumerate(alex_drop_rows):
             if idx in used_alex_indexes:
                 continue
-            if not _same_bidder_for_diagnostic(ai_ev, alex_ev):
+            if not _same_bidder_for_diagnostic(
+                ai_ev,
+                alex_ev,
+                ai_registry,
+                alex_registry,
+            ):
                 continue
             used_alex_indexes.add(idx)
             warnings.append({
@@ -537,6 +636,8 @@ def diff_deal(slug: str) -> DiffReport:
     drop_silent_warnings = _drop_silent_vs_explicit_drop_warnings(
         filtered_ai_events,
         r.alex_only_rows,
+        ext.get("deal", {}).get("bidder_registry"),
+        ref.get("deal", {}).get("bidder_registry"),
     )
     if drop_silent_warnings:
         r.divergences.extend(drop_silent_warnings)

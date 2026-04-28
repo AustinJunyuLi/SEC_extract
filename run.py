@@ -57,7 +57,6 @@ def _make_pool_config(args: argparse.Namespace, *, mode: str) -> Any:
             args.adjudicate_reasoning_effort or os.environ.get("ADJUDICATE_REASONING_EFFORT")
             or DEFAULT_REASONING_EFFORT
         ),
-        max_tokens_per_deal=args.max_tokens_per_deal or int(os.environ.get("MAX_TOKENS_PER_DEAL", "200000")),
         commit=False,
         dry_run=args.dry_run,
     )
@@ -189,7 +188,6 @@ def _parser() -> argparse.ArgumentParser:
         choices=["none", "minimal", "low", "medium", "high", "xhigh"],
         help="reasoning.effort for adjudication calls.",
     )
-    parser.add_argument("--max-tokens-per-deal", type=int, help="Per-deal token budget.")
     parser.add_argument("--dry-run", action="store_true", help="Plan the run without requiring an API key.")
     return parser
 
