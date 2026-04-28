@@ -446,11 +446,9 @@ def apply_q7_executed_atomization(
         synthetic["bid_date_rough"] = None
         for key in (
             "bid_value", "bid_value_pershare", "bid_value_lower", "bid_value_upper",
-            "bid_value_unit", "exclusivity_days", "financing_contingent",
-            "process_conditions_note",
+            "bid_value_unit", "exclusivity_days",
         ):
             synthetic[key] = None
-        synthetic["highly_confident_letter"] = False
         synthetic["additional_note"] = None
         synthetic["comments"] = None
         synthetic["_xlsx_row"] = (template.get("_xlsx_row") or 0) + 0.1
@@ -791,10 +789,6 @@ def build_deal_object(slug: str, rows: list[RawRow]) -> dict[str, Any]:
         # Alex-absent fields (AI-only at extraction time).
         "target_legal_counsel":    None,
         "acquirer_legal_counsel":  None,
-        "go_shop_days":            None,
-        "termination_fee":         None,
-        "termination_fee_pct":     None,
-        "reverse_termination_fee": None,
         # Populated below after bidder canonicalization.
         "bidder_registry": {},
         "deal_flags": [],
@@ -1136,16 +1130,9 @@ def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
         "bid_value_lower":    lower,
         "bid_value_upper":    upper,
         "bid_value_unit":     _map_bid_value_unit(r.get("bid_value_unit")),
-        "cash_per_share":         None,
-        "stock_per_share":        None,
-        "contingent_per_share":   None,
         "consideration_components": None,
-        "aggregate_basis":        None,
         **taxonomy_columns,
         "exclusivity_days":       None,
-        "financing_contingent":   None,
-        "highly_confident_letter": False,
-        "process_conditions_note": None,
         "additional_note": additional_note,
         "comments":        _comments(r),
         "_xlsx_row":       r.xlsx_row,            # provenance only; strip at write
