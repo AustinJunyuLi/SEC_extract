@@ -118,7 +118,11 @@ but the extractor does not read or implement `rules/invariants.md` directly.
     "FormType": "…",
     "URL": "…",
     "auction": true,
-    "bidder_registry": {}
+    "all_cash": true,
+    "target_legal_counsel": null,
+    "acquirer_legal_counsel": null,
+    "bidder_registry": {},
+    "deal_flags": []
   },
   "events": [
     {
@@ -130,6 +134,7 @@ but the extractor does not read or implement `rules/invariants.md` directly.
       "bidder_type": null,
       "bid_note": "Target Sale",
       "bid_type": null,
+      "bid_type_inference_note": null,
       "drop_initiator": null,
       "drop_reason_class": null,
       "final_round_announcement": null,
@@ -145,6 +150,8 @@ but the extractor does not read or implement `rules/invariants.md` directly.
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": null,
+      "consideration_components": [],
+      "exclusivity_days": null,
       "additional_note": null,
       "comments": null,
       "source_quote": "On March 14, 2014, the Board of Directors of Medivation convened …",
@@ -166,6 +173,7 @@ The Python validator will hard-flag structural violations (source-quote presence
 - [ ] **Drop fields.** Every `Drop` row has `drop_initiator` and a `drop_reason_class` consistent with §I1. Every `DropSilent` row leaves both null.
 - [ ] **Final-round fields.** Every `Final Round` row has all three final-round columns populated as §K1 requires; every announcement row followed by Bid rows has a paired non-announcement row.
 - [ ] **Formal-stage status.** Every informal current-process `Bid` row has `invited_to_formal_round` and `submitted_formal_bid` set to true/false/null according to §R1 and §P-D8.
+- [ ] **Kept §R1 fields.** Deal-level `all_cash`, `target_legal_counsel`, `acquirer_legal_counsel`, and `deal_flags` are present; each bid row has `consideration_components`, `exclusivity_days`, and any needed `bid_type_inference_note` populated or explicitly null.
 - [ ] **§D1.a vs §C4 distinguishing.** An NDA-less first-contact bid the target declines → `unsolicited_first_contact` §D1.a flag on the Bid row (exempts BOTH §P-D6 Bid-without-NDA AND §P-D5 Drop-without-prior-engagement for the same `(bidder_name, process_phase)` slice). A concrete pre-NDA price indication from a bidder who later signs an NDA → `pre_nda_informal_bid` §C4 flag (no exemption; later NDA satisfies §P-D6). Do not conflate — the later-NDA presence is the deciding factor.
 - [ ] **Executed atomization.** Consortium winners get one `Executed` row per explicitly identified operational/economic buyer member. Do not collapse legal-shell signers or consortium labels into one row when the member firms are identifiable elsewhere in the filing.
 - [ ] **§E2.b event granularity.** Group-narrated consortium events atomize per identifiable constituent; numeric counts without names emit count-many placeholders per §E5. If the filing gives neither count nor identifiable constituents, flag the extraction as incomplete rather than guessing.
