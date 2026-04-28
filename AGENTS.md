@@ -29,51 +29,45 @@ An **AI extraction pipeline** that reads the "Background of the Merger" section 
 
 ## Architecture (current MVP)
 
-The live repo now uses a **per-deal Ralph/Codex loop** with **one LLM
-Extractor, a deterministic Python Validator, and an optional scoped
-Adjudicator for soft flags**. This replaced the earlier draft that used an
-Extractor agent plus a separate Validator agent.
+The live repo now uses **code-orchestrated direct SDK calls** with an
+OpenAI-compatible provider configured by `OPENAI_BASE_URL` and
+`OPENAI_API_KEY`. The per-deal path has one Extractor SDK call, deterministic
+Python validation/finalization in `pipeline/core.py`, and an optional scoped
+Adjudicator SDK call for soft flags.
 
 ```
-seeds.csv ──► for each deal ──► fresh Codex session ──────────────┐
-                                                                   │
-                                ┌── rules/ + prompts/ ─────────┐   │
-                                │   rules/*.md                 │   │
-                                │   prompts/extract.md         │──►│ Extractor subagent
-                                └───────────────────────────────┘   │
-                                                                   ▼
-                                                    raw {deal, events} JSON
-                                                                   │
-                                                                   ▼
-                                                     pipeline.validate()
-                                                        (Python only)
-                                                                   │
-                                             row_flags + deal_flags + status
-                                                                   │
-                              if soft flags only: Adjudicator subagent (scoped)
-                                                                   │
-                                                                   ▼
-                                                     pipeline.finalize()
-                                                                   │
+seeds.csv ──► run.py / pipeline.run_pool ──► Extractor SDK call
+                                                   │
+                                                   ▼
+                                      raw {deal, events} JSON + audit cache
+                                                   │
+                                                   ▼
+                                        pipeline.core.validate()
+                                                   │
+                                                   ▼
+                                optional scoped Adjudicator SDK call
+                                                   │
+                                                   ▼
+                                        pipeline.core.finalize()
+                                                   │
                          output/extractions/{deal}.json + state/flags.jsonl
-                                                                   │
-                                                                   ▼
-                                                     state/progress.json
-                                                                   │
-                                                                   ▼
+                                                   │
+                                                   ▼
+                                           state/progress.json
+                                                   │
+                                                   ▼
                                   if deal is reference:
                                     scoring/diff.py vs reference/alex/{deal}.json
                                     → Austin manually reviews the diff
-                                                                   │
-                                                                   ▼
-                                                                 git commit
 ```
 
-The deterministic validator lives in `pipeline.py`. There is no LLM validator
-in the current pipeline.
+Single-deal command: `python run.py --slug X --extract`. Batch command:
+`python -m pipeline.run_pool --filter reference --workers N`.
+Use `--re-validate` to reuse a cached raw response, and `--re-extract` for a
+fresh model call.
 
 **Still deferred.** Planner and Canonicalizer are not part of the current
-pipeline. Add them only if the data shows the Extractor + Python Validator +
+pipeline. Add them only if the data shows this Extractor + Python Validator +
 scoped Adjudicator shape is insufficient.
 
 **Every row carries `source_quote` and `source_page`.** Non-negotiable. No un-cited rows ship. This is also what makes manual verification tractable.
@@ -124,9 +118,10 @@ repo.
   (`skill_open_questions.md` shows 0 🟥 / 54 🟩); all 9
   `reference/alex/*.json` files build under the current schema; and
   `scoring/diff.py` runs end-to-end.
-- **Stage 3 live.** `pipeline.py` (filing loader, extractor prompt builder,
-  deterministic Python validator, finalization helpers) and the `run.py`
-  finalization CLI are live.
+- **Stage 3 live.** `pipeline/core.py` (filing loader, Python validator,
+  finalization helpers), SDK LLM modules under `pipeline/llm/`, `run.py`
+  single-deal CLI, and `pipeline/run_pool.py` batch runner are live on the
+  `api-call` branch.
 - **Taxonomy redesign implemented and hard-cleaned.** The current
   `rules/events.md` §C1 vocabulary has 18 values plus structured columns for
   drop agency, final-round modifiers, publicity subject, and formal-stage
@@ -137,7 +132,7 @@ repo.
   status. Specific counts are moving targets and drift quickly; treat
   the progress ledger as source of truth, not this file.
 - **Rulebook coherence.**
-  - §P-D5 is implemented in `pipeline.py` as the structural twin of §P-D6
+  - §P-D5 is implemented in `pipeline/core.py` as the structural twin of §P-D6
     (both have the §D1.a `unsolicited_first_contact` exemption).
   - §G2 in `rules/bids.md` defines the §P-G2 satisfiers: true range bid
     with `lower < upper`, a ≤300-character `bid_type_inference_note`, or
@@ -170,8 +165,10 @@ repo.
 | `rules/bids.md` | Bid value structure (ranges, composite, aggregate), informal-vs-formal classification, skip rules. |
 | `rules/dates.md` | Rough-date mapping ("mid-July" → calendar date), event sequencing, BidderID. |
 | `rules/invariants.md` | Hard/soft/info checks the Python validator runs. |
-| `prompts/extract.md` | Extractor agent prompt. |
-| `pipeline.py` | Live Python plumbing: filing loader, extractor prompt builder, validator, output writers, state updaters. |
+| `prompts/extract.md` | Extractor SDK prompt included in system messages. |
+| `pipeline/core.py` | Live Python plumbing: filing loader, validator, output writers, state updaters. |
+| `pipeline/llm/` | SDK prompt assembly, provider client, extraction, and adjudication calls. |
+| `pipeline/run_pool.py` | Batch runner: deal selection, cache policy, concurrency, SDK orchestration. |
 | `scoring/diff.py` | AI-vs-Alex diff reporter. Prints human-review diffs by default; `--write` explicitly emits markdown/JSON artifacts. Not a grader. |
 | `state/progress.json` | Per-deal status ledger (`pending`/`validated`/`passed`/`passed_clean`/`verified`/`failed`). |
 | `state/flags.jsonl` | Append-only validator flag log. |
@@ -182,7 +179,7 @@ repo.
 | `reference/alex/alex_flagged_rows.json` | Rows in Alex's workbook that Alex himself has annotated as wrong/unresolved. See the §Q overrides in the `scripts/build_reference.py` module docstring. |
 | `reference/alex/README.md` | How `reference/alex/` is organized. |
 | `seeds.csv` | 401 candidate deals with SEC filing URLs. 9 flagged `is_reference=true` are Alex's hand-corrected set. |
-| `run.py` | CLI shim: validate/finalize a saved raw extraction, write output/state, optionally commit. |
+| `run.py` | Single-deal SDK CLI: `python run.py --slug X --extract`; supports `--re-validate`, `--re-extract`, and `--print-prompt`. |
 
 ## The 9 reference deals
 
@@ -267,7 +264,8 @@ Current handling:
 - **Current truth lives in the live contract files.** Historical
   adjudication, comparison, handoff, session-log, report, and scoring-result
   artifacts were purged on 2026-04-27. Prefer `rules/`, `prompts/`,
-  `pipeline.py`, `run.py`, `state/progress.json`, `output/extractions/`,
+  `pipeline/core.py`, `pipeline/llm/`, `pipeline/run_pool.py`, `run.py`,
+  `state/progress.json`, `output/extractions/`,
   `reference/alex/`, `SKILL.md`, and this file; use git history for old
   reports.
 - **Use the user's folder name ("the folder you selected") when referring to file locations**, not sandbox paths.

@@ -1,51 +1,52 @@
 from pathlib import Path
 
-import pipeline
+import pytest
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_extractor_prompt_contract_uses_local_filing_artifacts_only():
+def test_extractor_messages_embed_sdk_context():
+    extract = pytest.importorskip("pipeline.llm.extract")
+
+    system, user = extract.build_messages("medivation")
+
+    assert "prompts/extract.md" in system
+    for rule_name in [
+        "rules/schema.md",
+        "rules/events.md",
+        "rules/bidders.md",
+        "rules/bids.md",
+        "rules/dates.md",
+    ]:
+        assert rule_name in system
+
+    assert "`rules/invariants.md` remains validator-facing only" in system
+    assert "RULE FILE: rules/invariants.md" not in system
+    assert "slug" in user
+    assert "medivation" in user
+    assert "manifest" in user
+    assert "pages" in user
+    assert '"number"' in user
+    assert '"content"' in user
+
+    combined = "\n".join([system, user])
+    for stale_phrase in ["Read " "tool", "Read these " "files", "sub" "agent"]:
+        assert stale_phrase not in combined
+
+
+def test_extractor_prompt_contract_describes_embedded_filing_text():
     text = (REPO_ROOT / "prompts" / "extract.md").read_text()
 
-    assert "`deal.filing_url`" not in text
-    assert "or fetch it via the provided tool" not in text
-    assert "Use local filing artifacts only" in text
-    assert "Do not fetch from SEC/EDGAR" in text
-    assert "data/filings/{deal.slug}/pages.json" in text
-
-
-def test_invariants_are_validator_facing_not_extractor_read_set():
-    prompt_text = (REPO_ROOT / "prompts" / "extract.md").read_text()
-    skill_text = (REPO_ROOT / "SKILL.md").read_text()
-    built_prompt = pipeline.build_extractor_prompt("medivation")
-
-    assert "`rules/invariants.md` is validator-facing only" in prompt_text
-    assert "**Does not read:** `rules/invariants.md`" in skill_text
-    assert "rules/invariants.md" not in built_prompt
-    assert "rules/*.md" not in built_prompt
-
-    for rule_name in [
-        "schema.md",
-        "events.md",
-        "bidders.md",
-        "bids.md",
-        "dates.md",
-    ]:
-        assert str(pipeline.RULES_DIR / rule_name) in built_prompt
-
-    assert str(pipeline.DATA_DIR / "medivation" / "pages.json") in built_prompt
-    assert str(pipeline.DATA_DIR / "medivation" / "manifest.json") in built_prompt
+    assert "SDK-call role" in text
+    assert "page-numbered filing text" in text
+    assert "do not fetch from SEC/EDGAR" in text
+    assert "`rules/invariants.md` remains validator-facing only" in text
+    for stale_phrase in ["Read " "tool", "Read these " "files", "sub" "agent"]:
+        assert stale_phrase not in text
 
 
 def test_dependency_manifest_pins_current_project_dependencies():
-    """Assert each dependency has a pinned version, not a specific pin value.
-
-    The previous form hard-coded exact versions; any dependency bump required
-    a test edit. This form catches "pin is missing" and "pin was replaced by
-    a floating >=" while surviving routine version bumps.
-    """
     lines = [
         line.split("#", 1)[0].strip()
         for line in (REPO_ROOT / "requirements.txt").read_text().splitlines()
@@ -56,6 +57,9 @@ def test_dependency_manifest_pins_current_project_dependencies():
         "pytest==",
         "matplotlib==",
         "numpy==",
+        "openai==",
+        "httpx==",
+        "python-dotenv==",
     ]:
         assert any(line.startswith(prefix) for line in lines), (
             f"requirements.txt must pin {prefix!r} with ==; "

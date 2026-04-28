@@ -2,64 +2,68 @@
 
 **Purpose.** Given one SEC merger filing (DEFM14A / PREM14A / SC-TO-T / S-4), extract the "Background of the Merger" section into a structured row-per-event JSON matching Alex Gorbenko's auction schema.
 
-**You are one iteration of the per-deal extraction loop.** The outer
-orchestration conversation (or Ralph wrapper) hands you one deal, usually in
-a fresh context. `run.py` is only the CLI shim that finalizes a saved raw
-extraction; it is **not** the live orchestrator. Do not read other deals.
-Do not carry state across invocations.
+**You are one iteration of the per-deal extraction loop.** The code
+orchestrator hands the SDK one deal at a time. `run.py --slug X --extract`
+is the single-deal wrapper; `python -m pipeline.run_pool --filter reference
+--workers N` is the batch runner. Do not carry state across deals.
 
 ---
 
 ## Invocation contract
 
 **Input** (from the orchestrator): a single `slug` (short identifier, e.g.
-`medivation`). Full filing text + deal metadata live on disk under
-`data/filings/{slug}/` (`pages.json`, `manifest.json`); the extractor
-subagent reads those local artifacts directly and does not fetch from SEC,
-EDGAR, the web, or other filings during extraction. `state/progress.json`
-carries the `is_reference` flag used downstream by `scoring/diff.py`.
+`medivation`). `pipeline.llm.extract.build_messages(slug)` assembles SDK
+messages: the system message contains `prompts/extract.md` plus
+`rules/schema.md`, `rules/events.md`, `rules/bidders.md`, `rules/bids.md`,
+and `rules/dates.md`; the user message contains the slug, `manifest.json`,
+and page-numbered filing text from `pages.json`. Extraction does not fetch
+from SEC, EDGAR, the web, or local files during the model call.
+`state/progress.json` carries the `is_reference` flag used downstream by
+`scoring/diff.py`.
 
-**Output** (written by `pipeline.finalize()` / `run.py` after validation):
+**Output** (written by `pipeline.core.finalize()` after validation):
 - `output/extractions/{slug}.json` — the extracted rows + deal-level fields.
 - Append to `state/flags.jsonl` — any ambiguities flagged during validation.
 - Update `state/progress.json` — set the deal's status.
 
 ---
 
-## Pipeline (Extractor LLM + Python Validator + scoped Adjudicator)
+## Pipeline (Extractor SDK Call + Python Validator + Scoped Adjudicator)
 
-**Architecture (current Stage 3 MVP):** the Extractor and Adjudicator run as
-clean-slate subagents administered by the outer conversation. The Validator
-is **pure Python** in `pipeline.py`. No model SDK calls from Python.
+**Architecture (current Stage 3 MVP):** `pipeline.run_pool` and `run.py`
+make direct SDK calls through an OpenAI-compatible provider configured by
+`OPENAI_BASE_URL` / `OPENAI_API_KEY`. The Extractor and optional Adjudicator
+are model calls; validation/finalization remain Python code in
+`pipeline/core.py`.
 
 **Why this shape, not "two LLM agents in series" as originally drafted.**
 Every invariant in `rules/invariants.md` (§P-R, §P-D, §P-G, §P-S) is
 mechanically checkable — substring, regex, set membership, graph
 traversal. An LLM Validator would just re-derive the same checks
-non-deterministically and cost money. The Python Validator is
-deterministic, free, and instant. The Adjudicator is still an LLM call,
-but scoped to the one judgment call Python cannot make: "this soft flag
+non-deterministically and cost money. The Python Validator is deterministic,
+free, and instant. The Adjudicator is still scoped to the one judgment call
+Python cannot make: "this soft flag
 says the filing seems to stop mentioning this bidder mid-process — is
 that a real extraction miss or is the filing genuinely silent?"
 
-### 1. Extractor — subagent (LLM)
-- **Spawned by:** the outer conversation, one subagent per deal, fresh
-  context, no cross-deal knowledge.
-- **Reads (from disk, via the subagent's Read tool):**
-  `prompts/extract.md`, the operative extractor rules
-  (`rules/schema.md`, `rules/events.md`, `rules/bidders.md`,
-  `rules/bids.md`, `rules/dates.md`), `data/filings/{slug}/pages.json`,
-  and `data/filings/{slug}/manifest.json`.
-- **Does not read:** `rules/invariants.md`. That file is validator-facing
-  only; extractor prompts may name validator check codes only as fail-loud
-  guidance for the JSON they emit.
+### 1. Extractor — SDK call
+- **Called by:** `pipeline.run_pool` or `run.py`, one deal per call, no
+  cross-deal state.
+- **Receives:** a system message containing `prompts/extract.md` and the
+  operative extractor rules (`rules/schema.md`, `rules/events.md`,
+  `rules/bidders.md`, `rules/bids.md`, `rules/dates.md`), plus a user
+  message containing the slug, `manifest.json`, and page-numbered filing
+  text from `pages.json`.
+- **Does not receive:** `rules/invariants.md`. That file is
+  validator-facing only; extractor prompts may name validator check codes
+  only as fail-loud guidance for the JSON they emit.
 - **Emits:** a single JSON payload `{deal: {...}, events: [...]}` conforming
   to `rules/schema.md` §R1. Every event row carries `source_quote` (NFKC
   substring of the cited page) and `source_page` (integer matching
   `pages.json[i].number`).
-- **Prompt builder:** `pipeline.build_extractor_prompt(slug)`.
+- **Prompt builder:** `pipeline.llm.extract.build_messages(slug)`.
 
-### 2. Validator — Python (`pipeline.py`)
+### 2. Validator — Python (`pipeline/core.py`)
 - **Entry:** `pipeline.validate(raw_extraction, filing) -> ValidatorResult`.
 - **Runs:** every invariant in `rules/invariants.md` — §P-R1..5 (structural
   row checks), §P-D1..3 (date/BidderID integrity), §P-G2 (bid-type
@@ -69,31 +73,28 @@ that a real extraction miss or is the filing genuinely silent?"
 - **Never rewrites the extraction.** Flag-only discipline preserves the
   Extractor's output as the single source of what was extracted.
 
-### 3. Adjudicator — subagent (LLM), scoped
+### 3. Adjudicator — SDK call, scoped
 - **Fires when:** the Python Validator raises a soft flag (MVP: §P-S1
   `missing_nda_dropsilent`). No-op when zero soft flags.
-- **Reads:** the flagged row + same-bidder context rows + a small window
+- **Receives:** the flagged row + same-bidder context rows + a small window
   of filing pages.
 - **Emits:** `{verdict: "upheld" | "dismissed", reason: str}` appended to
   the flag's `reason` field. Severity is NOT flipped in MVP — human review
   stays explicit.
-- **Execution model:** this is an orchestrator-side LLM call only. There is
-  no Python `adjudicate()` entrypoint. The orchestrator reads validator
-  output, spawns the Adjudicator, mutates `raw_extraction`, and only then
-  calls `pipeline.finalize()`.
+- **Execution model:** this is an SDK call inside the code orchestrator. The
+  orchestrator reads validator output, calls the Adjudicator when needed,
+  mutates `raw_extraction`, and only then calls `pipeline.core.finalize()`.
 
-### Orchestration (this conversation drives, not Python)
+### Orchestration
 
 ```
-  orchestrator:
-    1. spawn Extractor subagent → raw_extraction JSON (written to disk)
-    2. filing = pipeline.load_filing(slug)
-    3. result = pipeline.validate(raw_extraction, filing)
+  run.py / pipeline.run_pool:
+    1. call Extractor SDK → raw_extraction JSON + audit cache
+    2. filing = pipeline.core.load_filing(slug)
+    3. result = pipeline.core.validate(raw_extraction, filing)
     4. if any(flag["severity"] == "soft" for flag in result.row_flags + result.deal_flags):
-         for each soft flag, spawn Adjudicator subagent, annotate it
-         on raw_extraction before finalize (orchestrator-only — no
-         Python entrypoint in MVP; see pipeline.finalize() docstring)
-    5. pipeline.finalize(slug, raw_extraction)
+         call Adjudicator SDK and annotate raw_extraction before finalize
+    5. pipeline.core.finalize(slug, raw_extraction)
          → output/extractions/{slug}.json
          → state/flags.jsonl (append)
          → state/progress.json (update)
@@ -101,8 +102,17 @@ that a real extraction miss or is the filing genuinely silent?"
     7. git commit
 ```
 
-`run.py` is a thin CLI shim for step 5 when driving from a saved
-raw-extraction file (`python run.py --slug X --raw-extraction path.json`).
+`run.py` is the single-deal CLI wrapper:
+
+```
+python run.py --slug X --extract
+python run.py --slug X --re-validate
+python run.py --slug X --re-extract
+python run.py --slug X --print-prompt
+```
+
+`--re-validate` uses the cached raw response when valid for the current
+rulebook. `--re-extract` forces a fresh model call.
 
 ---
 
