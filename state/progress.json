@@ -1,7 +1,7 @@
 {
   "schema_version": "v1",
   "created": "2026-04-18T12:29:42.084187Z",
-  "updated": "2026-04-28T00:00:00Z",
+  "updated": "2026-04-28T12:08:56.512301Z",
   "deal_count_total": 401,
   "deal_count_reference": 9,
   "deals": {
@@ -3607,17 +3607,26 @@
       "notes": ""
     },
     "medivation": {
-      "status": "pending",
+      "status": "failed",
       "is_reference": true,
       "target_name": "MEDIVATION INC",
       "acquirer": "PFIZER INC",
       "date_announced": "2016-08-22",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1011835/0001193125-16-696889-index.htm",
       "flag_count": 0,
-      "last_run": null,
+      "last_run": "2026-04-28T12:08:56.512301Z",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": ""
+      "notes": "missing_raw_extraction: /private/var/folders/k6/9_x_d2bs3ys13c2m1tdq1vt40000gn/T/pytest-of-austinli/pytest-57/test_old_flags_are_unrecognize0/raw.json",
+      "rulebook_version_history": [
+        {
+          "ts": "2026-04-28T12:08:56.512301Z",
+          "run_id": "a394ef41880a4ec796ac012f34a5ffc9",
+          "version": "7052b692b637d40df03c98c368891ce9a087d7ab69ab50b000745d886c12468c"
+        }
+      ],
+      "last_run_id": "a394ef41880a4ec796ac012f34a5ffc9",
+      "rulebook_version": "7052b692b637d40df03c98c368891ce9a087d7ab69ab50b000745d886c12468c"
     },
     "imprivata": {
       "status": "pending",
