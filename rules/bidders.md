@@ -252,8 +252,8 @@ execution if winner).
 4. Allows the validator to check per-event invariants (`NDA before bid`,
    monotone dates, etc.) without disaggregating on the fly.
 
-**Migration note.** Providence row 6027 (25 NDAs aggregated) and Zep row
-6390 (5 parties aggregated) are expanded during Stage 2 conversion.
+**Reference conversion note.** Providence row 6027 (25 NDAs aggregated) and
+Zep row 6390 (5 parties aggregated) are expanded during reference conversion.
 Placeholder names follow §E3; see `reference/alex/README.md` for
 the expansion procedure.
 

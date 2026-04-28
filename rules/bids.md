@@ -389,7 +389,7 @@ so the pattern is auditable.
 → Do NOT emit a bid row. Emit a deal-level flag
 `{"code": "partial_bid_ambiguous", "severity": "soft", "reason": "<description>", "source_quote": "<quote>"}`
 requiring manual adjudication. Austin reads the filing and decides
-whether to add the bid row manually in Stage 3 verification.
+whether to add the bid row during manual verification.
 
 **Rationale for skip-not-flag on clean segments.** Segment bids are
 explicitly out of scope per Alex's instructions; surfacing every one as

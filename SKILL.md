@@ -21,7 +21,8 @@ from SEC, EDGAR, the web, or local files during the model call.
 `state/progress.json` carries the `is_reference` flag used downstream by
 `scoring/diff.py`.
 
-**Output** (written by `pipeline.core.finalize()` after validation):
+**Output** (written by `pipeline.core.finalize_prepared()` or
+`pipeline.core.finalize()` after validation):
 - `output/extractions/{slug}.json` — the extracted rows + deal-level fields.
 - Append to `state/flags.jsonl` — any ambiguities flagged during validation.
 - Update `state/progress.json` — set the deal's status.
@@ -30,19 +31,18 @@ from SEC, EDGAR, the web, or local files during the model call.
 
 ## Pipeline (Extractor SDK Call + Python Validator + Scoped Adjudicator)
 
-**Architecture (current Stage 3 MVP):** `pipeline.run_pool` and `run.py`
-make direct SDK calls through an OpenAI-compatible provider configured by
-`OPENAI_BASE_URL` / `OPENAI_API_KEY`. The Extractor and optional Adjudicator
-are model calls; validation/finalization remain Python code in
-`pipeline/core.py`.
+**Architecture:** `pipeline.run_pool` and `run.py` make direct SDK calls
+through an OpenAI-compatible provider configured by `OPENAI_BASE_URL` /
+`OPENAI_API_KEY`. The Extractor and optional Adjudicator are model calls;
+validation/finalization remain Python code in `pipeline/core.py`.
 
-**Why this shape, not "two LLM agents in series" as originally drafted.**
+**Why deterministic validation stays in Python.**
 Every invariant in `rules/invariants.md` (§P-R, §P-D, §P-G, §P-S) is
 mechanically checkable — substring, regex, set membership, graph
-traversal. An LLM Validator would just re-derive the same checks
+traversal. A model-based validator would just re-derive the same checks
 non-deterministically and cost money. The Python Validator is deterministic,
-free, and instant. The Adjudicator is still scoped to the one judgment call
-Python cannot make: "this soft flag
+free, and instant. The Adjudicator is scoped to the judgment call Python
+cannot make: "this soft flag
 says the filing seems to stop mentioning this bidder mid-process — is
 that a real extraction miss or is the filing genuinely silent?"
 
@@ -74,12 +74,12 @@ that a real extraction miss or is the filing genuinely silent?"
   Extractor's output as the single source of what was extracted.
 
 ### 3. Adjudicator — SDK call, scoped
-- **Fires when:** the Python Validator raises a soft flag (MVP: §P-S1
+- **Fires when:** the Python Validator raises a soft flag (currently §P-S1
   `missing_nda_dropsilent`). No-op when zero soft flags.
 - **Receives:** the flagged row + same-bidder context rows + a small window
   of filing pages.
 - **Emits:** `{verdict: "upheld" | "dismissed", reason: str}` appended to
-  the flag's `reason` field. Severity is NOT flipped in MVP — human review
+  the flag's `reason` field. Severity is not flipped — human review
   stays explicit.
 - **Execution model:** this is an SDK call inside the code orchestrator. The
   orchestrator reads validator output, calls the Adjudicator when needed,
@@ -99,7 +99,6 @@ that a real extraction miss or is the filing genuinely silent?"
          → state/flags.jsonl (append)
          → state/progress.json (update)
     6. scoring/diff.py --slug {slug}   (on reference deals)
-    7. git commit
 ```
 
 `run.py` is the single-deal CLI wrapper:
@@ -166,8 +165,9 @@ Notes on the schema:
   global key and never had history anyway. Use `deals[slug].rulebook_version`
   for the current pin and `rulebook_version_history` (last 10 entries) to
   audit the "3 consecutive unchanged-rulebook clean runs" exit gate.
-- `rulebook_version_history` is append-only; `pipeline.RULEBOOK_HISTORY_CAP`
-  (default 10) truncates the oldest entries on overflow.
+- `rulebook_version_history` is append-only;
+  `pipeline.core.RULEBOOK_HISTORY_CAP` (default 10) truncates the oldest
+  entries on overflow.
 - Target deals that have never been finalized have no `rulebook_version` and
   no history — those fields appear on first finalize.
 
@@ -235,8 +235,28 @@ at JSON extraction + validator flags.
 
 ---
 
+## No backward compatibility
+
+This repo supports only the current live schema, prompt contract, state format,
+output format, and direct SDK orchestration path. When any of those change,
+update this file, `AGENTS.md`, `CLAUDE.md`, the rulebook, and tests in the same
+change. Regenerate or delete affected artifacts. Do not add fallback readers,
+deprecated command aliases, old-format loaders, hidden migrations, or docs that
+present old and current behavior as simultaneously supported. Git history is the
+compatibility record.
+
+After a refactor, deep-clean stale code and stale docs immediately. Search for
+retired commands, retired file paths, obsolete architecture prose, stale
+generated reports, and dead tests. Delete or rewrite anything that no longer
+describes the live contract.
+
+---
+
 ## When to change this file
 
 - Never during routine extraction.
-- Only when the architecture itself changes (e.g., adding a Planner or Canonicalizer agent after MVP-phase learnings).
-- Architecture changes are git-committed with a clear rationale that names the assumption the new component encodes.
+- Change it whenever architecture, invocation semantics, schema/state/output
+  contracts, or no-compatibility doctrine changes.
+- Before adding a new model role, orchestration layer, or rule file, name the
+  concrete extraction failure it fixes. If the assumption is unclear, do not
+  add it.

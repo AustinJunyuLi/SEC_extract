@@ -406,7 +406,7 @@ story; severities are listed per invariant.
 
 - **Does not rewrite or correct rows.** Flag-only discipline preserves
   the extractor's output as the single source of what was extracted.
-  Corrections happen in Stage 3 by updating the rulebook/prompts, not
+  Corrections happen by updating the rulebook/prompts, not
   by post-hoc patches.
 - **Does not fetch external data** (EDGAR, COMPUSTAT, etc.). All
   cross-checks use the text already provided in the extractor's
@@ -418,4 +418,4 @@ story; severities are listed per invariant.
   only. The diff is a human-review aid, not a pass/fail grade.
 - **Does not decide verdicts on disagreements.** Austin reads the
   filing and adjudicates each AI-vs-Alex divergence. See
-  `CLAUDE.md` §Ground-truth epistemology.
+  `AGENTS.md` §Source of Truth.

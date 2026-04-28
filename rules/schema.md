@@ -85,8 +85,8 @@ as a **secondary** source for a deal already covered by an `SC TO-T`. The
 target often tells its side of the story in 14D9, complementing the
 acquirer's narrative in the TO-T / Offer to Purchase. When both are present
 for the same deal, extract each into its own `output/extractions/{slug}.json`
-run and reconcile downstream (a future Stage-3+ concern; MVP picks ONE, the
-richer of the two, and flags `paired_filing_not_extracted` on the deal).
+run and reconcile downstream. The current pipeline extracts the richer of the
+two and flags `paired_filing_not_extracted` on the deal.
 
 **Explicitly excluded** (not Background-bearing):
 - `DEFA14A` — definitive additional materials; soliciting content only.
@@ -107,7 +107,7 @@ never silently rewritten.
 **Why these four.** Alex's collection guide §1 explicitly enumerates them.
 The 401 seed URLs in `seeds.csv` were drawn from the legacy Chicago dataset,
 which used the same four. Expanding the form list is a research-design
-decision for Alex — out of scope for MVP.
+decision for Alex and outside the current extraction contract.
 
 **Cross-references.**
 - `scripts/fetch_filings.py` — `PRIMARY_FORM_TYPES` and tender-offer exhibit
@@ -147,7 +147,7 @@ does NOT produce:
 - `rulebook_version` — SHA-256 content hash of the current `rules/*.md` files
   at finalize time. Written by `pipeline.finalize()` into the output's `deal`
   object, not by the AI. Mirrors `state/progress.json[deals][slug].rulebook_version`.
-- `last_run` — ISO8601-Z finalize timestamp. Written by `pipeline.finalize()`
+- `last_run` — ISO8601-Z finalize timestamp. Written by `pipeline.core.finalize()`
   into the output's `deal` object. The same timestamp is used for
   `state/progress.json[deals][slug].last_run` and for every `logged_at`
   appended to `state/flags.jsonl` during that finalize, so downstream queries
@@ -170,7 +170,7 @@ does NOT produce:
    If the filing-read value disagrees with the corresponding field in
    `seeds.csv` / `manifest.json`, emit a flag `deal_identity_mismatch` on the
    deal; the output carries the **filing-read** value (filing is ground
-   truth per `CLAUDE.md`).
+   truth per `AGENTS.md`).
 4. `all_cash` — per §N2 (AI-derived from consideration structure).
 
 **Validator implication.** A row-level check is implied: the deal-level
@@ -184,7 +184,7 @@ a `deal_identity_mismatch` flag.
 - `rules/schema.md` §N2 — `all_cash` derivation.
 - `scripts/fetch_filings.py` — adds `source.date_filed` to `manifest.json`
   (not yet implemented).
-- `CLAUDE.md` — "ground-truth epistemology" section.
+- `AGENTS.md` — source-of-truth section.
 
 ---
 
@@ -423,7 +423,7 @@ SKILL.md "not rewritten, only annotated") but the deal cannot advance past
 
 **Reproducibility.** `source_page` values are stable only within a given sec2md
 version. `data/filings/{slug}/manifest.json` records `sec2md_version`. Pin
-sec2md in `requirements.txt` before shipping Stage 3. Upgrading sec2md
+sec2md in `requirements.txt` before broad target rollout. Upgrading sec2md
 requires re-fetching or accepting page-drift on old extractions.
 
 **Rationale over rejected alternatives:**
@@ -431,7 +431,7 @@ requires re-fetching or accepting page-drift on old extractions.
   pages; and Austin can't programmatically verify a printed page number exists.
 - *Character offsets (start/end positions).* More precise, but brittle under
   whitespace normalization and hard to spot-check by eye.
-- *Paragraph hashes.* Overengineered for MVP; substring check catches both
+- *Paragraph hashes.* Unnecessary at current scale; substring check catches both
   hallucinated and paraphrased quotes.
 
 **Cross-references.**

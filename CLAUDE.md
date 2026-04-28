@@ -1,289 +1,264 @@
-# CLAUDE.md — M&A Takeover Auction Extraction Project
+# CLAUDE.md - M&A Takeover Auction Extraction Project
 
-> Context file for any Claude (or human) picking up this project. Keep it current as the project evolves.
+> Live contract for Claude or any human working in the folder you selected.
+> Keep this file current when the architecture, schema, rulebook, state
+> format, or output contract changes.
 
-## What this project is
+## Purpose
 
-An **AI extraction pipeline** that reads the "Background of the Merger" section of SEC merger filings (DEFM14A, PREM14A, SC-TO-T, S-4) and produces a structured row-per-event spreadsheet matching the schema Alex Gorbenko uses in his M&A auction research.
+This repo extracts the "Background of the Merger" section from SEC merger
+filings (DEFM14A, PREM14A, SC-TO-T, S-4) into one JSON row per auction event
+for Alex Gorbenko's M&A takeover auction research.
 
-**Why.** Alex's research studies informal bidding in corporate takeover auctions. The legacy dataset was collected by Chicago RAs with known inconsistencies. Alex has hand-corrected **9 reference deals**. The goal is to use those 9 deals plus Alex's written rulebook to prompt an AI extractor that processes the remaining ~392 deals at research-grade quality.
+The research target is informal bidding in corporate takeover auctions. Alex's
+legacy workbook is useful calibration data, but it is not ground truth. The SEC
+filing text is ground truth. Austin adjudicates AI-vs-Alex disagreements by
+reading the filing, then updates the rulebook or reference JSONs as needed.
 
-**Who's involved.**
-- **Austin** — building the pipeline.
-- **Alex Gorbenko** — senior collaborator, produced the instructions and reference extractions. Async; Austin relays his decisions.
+## Current Architecture
 
-## Ground-truth epistemology (IMPORTANT)
+The live architecture is code-orchestrated direct SDK calls through an
+OpenAI-compatible provider. Configure it with `OPENAI_BASE_URL` and
+`OPENAI_API_KEY`; model names come from `EXTRACT_MODEL` and
+`ADJUDICATE_MODEL` or CLI overrides.
 
-**The SEC filing is ground truth.** The filing text is the authoritative source of what happened in the deal.
+Per deal:
 
-**Alex's workbook is a reference guideline, not ground truth.** Alex is an expert but he is prone to the same human errors as anyone — transcription mistakes, judgment inconsistencies, ambiguous-case calls he might decide differently on another day, and the specific defects he has already flagged in his own work. His extractions are valuable as a calibration point, not as an oracle.
-
-**Austin verifies correctness.** During the development phase, Austin reads each reference deal's filing himself and adjudicates every disagreement between the AI and Alex's workbook. There are four possible verdicts per disagreement:
-
-1. **AI correct, Alex wrong** — record as an AI-identified correction to the reference dataset. Do not update the prompt/rulebook.
-2. **AI wrong, Alex correct** — update the prompt or rulebook to close the gap.
-3. **Both correct, different interpretations** — flag as a legitimate judgment call; document in the rulebook so the AI and Alex converge in future.
-4. **Both wrong** — update the rulebook against the filing text.
-
-**Implication for scoring.** There is no F1-vs-Alex number that gates shipping. The tool that compares AI output against Alex's extractions (`scoring/diff.py`) produces a diff report for human review. The report is a development aid, not a grade.
-
-## Architecture (current MVP)
-
-The live repo now uses **code-orchestrated direct SDK calls** with an
-OpenAI-compatible provider configured by `OPENAI_BASE_URL` and
-`OPENAI_API_KEY`. The per-deal path has one Extractor SDK call, deterministic
-Python validation/finalization in `pipeline/core.py`, and an optional scoped
-Adjudicator SDK call for soft flags.
-
-```
-seeds.csv ──► run.py / pipeline.run_pool ──► Extractor SDK call
-                                                   │
-                                                   ▼
-                                      raw {deal, events} JSON + audit cache
-                                                   │
-                                                   ▼
-                                        pipeline.core.validate()
-                                                   │
-                                                   ▼
-                                optional scoped Adjudicator SDK call
-                                                   │
-                                                   ▼
-                                        pipeline.core.finalize()
-                                                   │
-                         output/extractions/{deal}.json + state/flags.jsonl
-                                                   │
-                                                   ▼
-                                           state/progress.json
-                                                   │
-                                                   ▼
-                                  if deal is reference:
-                                    scoring/diff.py vs reference/alex/{deal}.json
-                                    → Austin manually reviews the diff
+```text
+seeds.csv / state/progress.json
+  -> run.py or pipeline.run_pool
+  -> Extractor SDK call
+  -> output/audit/{slug}/ raw response, prompts, call metadata
+  -> pipeline.core.prepare_for_validate()
+  -> pipeline.core.validate()
+  -> optional scoped Adjudicator SDK call for soft flags
+  -> pipeline.core.finalize_prepared()
+  -> output/extractions/{slug}.json
+  -> state/flags.jsonl
+  -> state/progress.json
+  -> scoring/diff.py for reference deals
 ```
 
-Single-deal command: `python run.py --slug X --extract`. Batch command:
-`python -m pipeline.run_pool --filter reference --workers N`.
-Use `--re-validate` to reuse a cached raw response, and `--re-extract` for a
-fresh model call.
+There is no active external agent loop, manually routed deal workflow, or
+top-level pipeline script. Add another model call or orchestration layer only
+when current reference-deal evidence shows this direct Extractor + Python
+validator + scoped Adjudicator design is insufficient.
 
-**Still deferred.** Planner and Canonicalizer are not part of the current
-pipeline. Add them only if the data shows this Extractor + Python Validator +
-scoped Adjudicator shape is insufficient.
+## Entrypoints
 
-**Every row carries `source_quote` and `source_page`.** Non-negotiable. No un-cited rows ship. This is also what makes manual verification tractable.
+Single deal:
 
-## Project workflow — three stages
-
-```
-┌────────────────────────────────────────────────┐
-│ Stage 1: Resolve open questions          [DONE]│
-│   Walk through open questions in rules/*.md    │
-│   Record Decision on each open question        │
-│   Output: resolved rulebook                    │
-└────────────────────────────────────────────────┘
-                    │
-                    ▼
-┌────────────────────────────────────────────────┐
-│ Stage 2: Build diff harness + Alex JSONs [DONE]│
-│   Convert 9 reference deals from xlsx → schema │
-│   JSON; these go in reference/alex/.           │
-│   Write scoring/diff.py (AI-vs-Alex diff).     │
-│   reference/alex/alex_flagged_rows.json        │
-│   records Alex's own caveats on his own work.  │
-└────────────────────────────────────────────────┘
-                    │
-                    ▼
-┌────────────────────────────────────────────────┐
-│ Stage 3: Build, iterate, manually verify       │  ◄── WE ARE HERE
-│   MVP: Extractor + Validator, one archetype    │
-│   at a time (Medivation → Imprivata → …)       │
-│   For each reference deal: run pipeline,       │
-│   diff against Alex, Austin reads the filing   │
-│   and adjudicates each divergence.             │
-│   Only crank 392 target deals once Austin has  │
-│   manually verified all 9 reference deals and  │
-│   the rulebook has stabilized across 3         │
-│   consecutive unchanged-rulebook runs.         │
-└────────────────────────────────────────────────┘
+```bash
+python run.py --slug medivation --extract
+python run.py --slug medivation --re-validate
+python run.py --slug medivation --re-extract
+python run.py --slug medivation --print-prompt
 ```
 
-**Critical rule:** Stage 3 was opened only after Stage 1 had no 🟥 OPEN
-questions remaining and Stage 2's diff harness ran end-to-end on at least
-one reference deal. That gate has already been satisfied in the current
-repo.
+Batch:
 
-## Current status
+```bash
+python -m pipeline.run_pool --filter reference --workers 1
+python -m pipeline.run_pool --slugs medivation,imprivata --workers 2
+```
 
-- **Stages 1 & 2 complete.** 54 rule decisions ratified with Alex
-  (`skill_open_questions.md` shows 0 🟥 / 54 🟩); all 9 reference
-  `reference/alex/*.json` files built; `scoring/diff.py` runs
-  end-to-end.
-- **Stage 3 live.** `pipeline/core.py` (filing loader, Python validator,
-  finalization helpers), SDK LLM modules under `pipeline/llm/`, `run.py`
-  single-deal CLI, and `pipeline/run_pool.py` batch runner are live on the
-  `api-call` branch.
-- **Taxonomy redesign implemented and hard-cleaned.** The current
-  `rules/events.md` §C1 vocabulary has 18 values plus structured columns for
-  drop agency, final-round modifiers, publicity subject, and formal-stage
-  status. Retired labels, historical quality reports, generated scoring reports,
-  and one-off migration helpers were purged on 2026-04-27. Git history is
-  the compatibility record.
-- **Reference-set state:** see `state/progress.json` for live per-deal
-  status. Specific counts are moving targets and drift quickly; treat
-  the progress ledger as source of truth, not this file.
-- **Rulebook coherence.**
-  - §P-D5 implemented in `pipeline/core.py` as the structural twin of §P-D6
-    (both have §D1.a `unsolicited_first_contact` exemption). §G2 in
-    `rules/bids.md` defines the §P-G2 satisfiers: true range bid with
-    `lower < upper`, a ≤300-character `bid_type_inference_note`, or
-    paired/fallback `Final Round.final_round_informal` evidence.
-  - §B5 (communication-date directionality) formalized in
-    `rules/dates.md` — previously cited by `prompts/extract.md` but
-    unwritten.
-- **Exit clock:** not met. Gate is 3 consecutive unchanged-rulebook
-  clean runs on all 9 reference deals; any rulebook change resets the
-  clock. See `SKILL.md` for the status taxonomy.
-- **Open adjudication questions (Austin's call):**
-  1. NDA atomization-vs-aggregation on zep / mac-gray / providence /
-     petsmart (AI atomizes 15–27 NDAs; Alex aggregates to 2–3).
-     Current §E2.b says atomize unless filing narrates consortium
-     activity. Decide per deal whether to tighten §E2.b or regenerate
-     Alex's reference.
-- **Target-deal gate remains closed.** Do **not** run on the 392 target
-  deals until all 9 reference deals are manually verified against their
-  filings and the rulebook is stable across 3 consecutive unchanged
-  full reference-set runs.
+Use `--dry-run` to inspect selection without requiring an API key. Use
+`--re-validate` to reuse `output/audit/{slug}/raw_response.json` only when its
+`rulebook_version` matches the current rulebook. Use `--re-extract` or
+`--force` for a fresh SDK extraction.
 
-## Repo layout
+If a CLI supports `--commit`, it must commit only current-deal
+output/state/audit paths and leave unrelated worktree changes alone.
 
-| Path | What it is |
+## Source of Truth
+
+- Filing text in `data/filings/{slug}/pages.json` is factual ground truth.
+- `rules/*.md` is the extraction rulebook. Every durable rule decision belongs
+  there, not in chat or generated reports.
+- `rules/schema.md` is the output schema contract.
+- `rules/events.md`, `rules/bidders.md`, `rules/bids.md`, and
+  `rules/dates.md` are extractor-readable rule files.
+- `rules/invariants.md` is validator-facing. The extractor can be warned about
+  invariant codes, but deterministic checks live in Python.
+- `prompts/extract.md` is the extractor prompt included in SDK system messages.
+- `SKILL.md` is the detailed extraction skill contract. Update it with this file
+  when architecture or invocation semantics change.
+- `state/progress.json` is the live per-deal status ledger.
+- `output/extractions/{slug}.json` is the latest finalized AI extraction.
+- `reference/alex/{slug}.json` is the converted reference comparison target,
+  not an oracle.
+- `scoring/diff.py` is a human-review diff aid, not a grading gate.
+
+Alex's PDF in `reference/CollectionInstructions_Alex_2026.pdf` is
+authoritative on the collection rules. Where the PDF, rulebook, and reference
+JSON disagree, resolve against the filing and document the rule decision in
+`rules/`.
+
+## Evidence Requirements
+
+Every extracted event row must include:
+
+- `source_quote`: a filing-text quote that supports the row.
+- `source_page`: the page number from `pages.json`.
+
+Rows without evidence do not ship. Quotes must support the specific event, date,
+bidder, bid value, and classification being emitted. If the filing is ambiguous,
+emit the supported row and flag the ambiguity; do not invent uncited facts.
+
+Key conventions:
+
+- `BidderID` is a strict event-sequence number, not a persistent bidder entity.
+- Bid rows use the unified current schema: `bid_note = "Bid"` and `bid_type`
+  carries informal/formal classification.
+- `bidder_type` is `"s"`, `"f"`, or `null`.
+- Deal identity fields preserve filing-verbatim casing and punctuation.
+- Communication-date anchoring follows `rules/dates.md`.
+- Post-execution sale press releases are folded into `Executed`.
+- Unnamed parties follow the minimum-supported-count rule in `rules/bidders.md`.
+
+## State and Output Contracts
+
+`state/progress.json` has `schema_version: "v1"` and a `deals` object keyed by
+slug. Status values are:
+
+- `pending`: not yet run.
+- `validated`: finalized with at least one hard flag.
+- `passed`: finalized with only soft/info flags.
+- `passed_clean`: finalized with zero flags.
+- `verified`: Austin manually verified a reference deal against the filing.
+- `failed`: pipeline error.
+
+Per-deal progress entries carry `flag_count`, `last_run`, verification fields,
+`notes`, `rulebook_version`, and bounded `rulebook_version_history`. There is no
+repo-level global rulebook pin.
+
+`state/flags.jsonl` is append-only. Each finalize appends current-run flags with
+the same `logged_at` timestamp used for `deals[slug].last_run`. Older flags stay
+on disk as history.
+
+`output/extractions/{slug}.json` is the authoritative latest extraction for a
+deal. It must conform to `rules/schema.md` and include pipeline-stamped
+`rulebook_version`, `last_run`, row flags, and deal flags.
+
+`output/audit/{slug}/` is the audit cache:
+
+- `raw_response.json`: raw model text, parsed JSON, model, slug, and
+  `rulebook_version`.
+- `prompts/*.txt`: exact SDK prompts.
+- `calls.jsonl`: model-call metadata, token usage, retries, watchdog data.
+- `manifest.json`: run summary and cache outcome.
+
+Audit artifacts exist for reproducibility and re-validation. They are not a
+second source of truth after finalization.
+
+## API Key and Environment Safety
+
+Use `.env` or shell environment variables for secrets. `.env.example` documents
+the required names, but real API keys must not be committed, pasted into docs,
+or copied into reports. `OPENAI_API_KEY` is required for real SDK calls and is
+not required for `--dry-run`.
+
+SDK prompts and audit files may contain filing text and model output; treat them
+as research artifacts. They must never contain API keys. If a log or audit file
+accidentally captures a secret, stop and rotate the key before continuing.
+
+## Reference-Set Gate
+
+The nine reference deals are:
+
+| Deal slug | Target | Rows | Archetype |
+|---|---|---:|---|
+| `providence-worcester` | Providence & Worcester | 6024-6059 | English auction; CVR; rough dates |
+| `medivation` | Medivation | 6060-6075 | Simple bidder sale; press release |
+| `imprivata` | Imprivata | 6076-6104 | Bidder interest to bidder sale; drops |
+| `zep` | Zep | 6385-6407 | Terminated and restarted processes |
+| `petsmart-inc` | Petsmart | 6408-6457 | Activist sale; consortium winner; many NDAs |
+| `penford` | Penford | 6461-6485 | Stale prior attempts; near-single-bidder endgame |
+| `mac-gray` | Mac Gray | 6927-6960 | Banker termination/rehire; target drops high formal bid |
+| `saks` | Saks | 6996-7020 | Alex delete flags; go-shop |
+| `stec` | STec | 7144-7171 | Multiple pre-IB bidder interests; single-bound informals |
+
+Reference-set work is complete only when all nine deals are manually verified
+against the filings, every AI-vs-Alex disagreement is adjudicated, hard
+invariants pass, and the rulebook remains unchanged across three consecutive
+clean full-reference runs. Any rulebook, prompt, schema, state, or output-format
+change resets that clock.
+
+Open current adjudication item: NDA atomization vs aggregation on `zep`,
+`mac-gray`, `providence-worcester`, and `petsmart-inc`. Current `rules/bidders.md`
+atomizes unless the filing narrates consortium activity. Austin must decide per
+deal whether to tighten the rule or regenerate the reference JSON.
+
+## Target-Deal Gate
+
+Do not run extraction on the non-reference target deals until the reference-set
+gate is met. The 392 target deals are closed to batch processing until Austin
+has verified all nine reference deals and the rulebook stability clock is
+satisfied.
+
+Fetching or inspecting target metadata is acceptable only when Austin explicitly
+asks and it does not start extraction.
+
+## Repo Layout
+
+| Path | Contract |
 |---|---|
-| `CLAUDE.md` | This file. Project context for any session. |
-| `SKILL.md` | Live architecture contract for the extraction skill. |
-| `skill_open_questions.md` | Slim Stage 1 tracker. Indexes every 🟥 OPEN question across `rules/`. |
-| `rules/schema.md` | Output schema: columns, types, deal-level vs event-level. |
-| `rules/events.md` | Event vocabulary (closed list): start-of-process, NDA, IB, final rounds, dropouts, closing. |
-| `rules/bidders.md` | Bidder identity, type classification (`"s"`/`"f"`), aggregation, consortium atomization. |
-| `rules/bids.md` | Bid value structure (ranges, composite, aggregate), informal-vs-formal classification, skip rules. |
-| `rules/dates.md` | Rough-date mapping ("mid-July" → calendar date), event sequencing, BidderID. |
-| `rules/invariants.md` | Validator-facing hard/soft/info checks. The Extractor does not read this file directly. |
-| `prompts/extract.md` | Extractor SDK prompt included in system messages. |
-| `pipeline/core.py` | Live Python plumbing: filing loader, validator, output writers, state updaters. |
-| `pipeline/llm/` | SDK prompt assembly, provider client, extraction, and adjudication calls. |
-| `pipeline/run_pool.py` | Batch runner: deal selection, cache policy, concurrency, SDK orchestration. |
-| `scoring/diff.py` | AI-vs-Alex diff reporter. Prints human-review diffs by default; `--write` explicitly emits markdown/JSON artifacts. Not a grader. |
-| `state/progress.json` | Per-deal status ledger (`pending`/`validated`/`passed`/`passed_clean`/`verified`/`failed`). |
-| `state/flags.jsonl` | Append-only validator flag log. |
-| `output/extractions/{deal}.json` | Per-deal extraction output (AI-produced). |
-| `reference/CollectionInstructions_Alex_2026.pdf` | Alex's data-collection rulebook. Black = original Chicago RAs; **bold red = Alex's additions** (most important). |
-| `reference/deal_details_Alex_2026.xlsx` | Legacy dataset. 9,336 rows × 35 columns. Red cells = Alex's corrections. |
-| `reference/alex/{deal}.json` | Alex's extraction of the 9 reference deals, converted to pipeline schema. Built in Stage 2. |
-| `reference/alex/alex_flagged_rows.json` | Rows in Alex's workbook that Alex himself has annotated as wrong/unresolved. See the §Q overrides in `scripts/build_reference.py`'s module docstring. |
-| `reference/alex/README.md` | How `reference/alex/` is organized. |
-| `seeds.csv` | 401 candidate deals with SEC filing URLs. 9 flagged `is_reference=true` are Alex's hand-corrected set. |
-| `run.py` | Single-deal SDK CLI: `python run.py --slug X --extract`; supports `--re-validate`, `--re-extract`, and `--print-prompt`. |
+| `AGENTS.md` | Same live contract for Codex-oriented sessions. |
+| `CLAUDE.md` | This live contract for Claude-oriented sessions. |
+| `SKILL.md` | Detailed extraction skill and invocation contract. |
+| `.env.example` | Environment variable names, never real secrets. |
+| `seeds.csv` | Candidate deals and reference flags. |
+| `data/filings/{slug}/` | Downloaded filing artifacts: `manifest.json`, `pages.json`, `raw.md`, `raw.htm`. |
+| `prompts/extract.md` | Extractor prompt included in SDK system messages. |
+| `rules/*.md` | Schema, event vocabulary, bidder/bid/date rules, invariants. |
+| `pipeline/core.py` | Filing loader, preparation, validator, finalizer, state writers. |
+| `pipeline/llm/` | SDK client, extraction, adjudication, response format, retry, watchdog, audit. |
+| `pipeline/run_pool.py` | Async batch runner, selection, cache policy, SDK orchestration. |
+| `run.py` | Single-deal CLI wrapper over `pipeline.run_pool`. |
+| `scoring/diff.py` | AI-vs-Alex comparison for human review. |
+| `reference/alex/` | Converted reference JSONs and Alex self-flag metadata. |
+| `state/progress.json` | Live status ledger. |
+| `state/flags.jsonl` | Append-only validator/adjudicator flag log. |
+| `output/extractions/` | Finalized per-deal AI extractions. |
+| `output/audit/` | Prompt, raw-response, and call audit cache. |
+| `scripts/fetch_filings.py` | Filing fetcher. |
+| `scripts/build_reference.py` | Reference JSON builder with documented Alex-workbook overrides. |
+| `tests/` | Runtime, prompt, LLM wrapper, converter, diff, and invariant tests. |
 
-## The 9 reference deals
+Generated reports, one-off migration scripts, obsolete working notes, and stale
+logs are not live contracts.
 
-Alex hand-corrected these from the legacy dataset. They are the development / calibration set. Each exercises a different archetype. Rows refer to `reference/deal_details_Alex_2026.xlsx`.
+## No Backward Compatibility Doctrine
 
-| Deal slug | Target | Rows | Archetype it tests |
-|---|---|---|---|
-| `providence-worcester` | Providence & Worcester | 6024–6059 | English-auction; CVR consideration; many rough dates |
-| `medivation` | Medivation | 6060–6075 | Classic `Bidder Sale`; bidder publicity via `Press Release` (simplest) |
-| `imprivata` | Imprivata | 6076–6104 | `Bidder Interest` → `Bidder Sale`; `Drop` agency/reason classification |
-| `zep` | Zep | 6385–6407 | `Terminated` then `Restarted` (two separate auctions) |
-| `petsmart-inc` | Petsmart | 6408–6457 | `Activist Sale`; consortium winner; 15 NDAs same day |
-| `penford` | Penford | 6461–6485 | Two stale prior attempts (2007, 2009); near-single-bidder endgame |
-| `mac-gray` | Mac Gray | 6927–6960 | IB terminated and re-hired; target drops highest formal bid |
-| `saks` | Saks | 6996–7020 | Rows Alex wants *deleted*; go-shop |
-| `stec` | STec | 7144–7171 | Multiple `Bidder Interest` pre-IB; single-bound informals |
+This repo deliberately does not preserve old formats or retired architecture.
+When a schema, prompt contract, rule, state format, output format, file layout,
+or orchestration path changes:
 
-**Rollout order** (simple → complex): Medivation → Imprivata → Zep → Providence → Penford → Mac Gray → Petsmart → STec → Saks.
+- Update the live contract files in the same change.
+- Regenerate affected reference/output/state/audit artifacts or delete them.
+- Delete stale code, stale docs, old reports, old fixtures, and migration
+  helpers once the live format is established.
+- Fail loudly on stale inputs instead of silently reading old formats.
+- Do not add compatibility shims, deprecated aliases, fallback readers, or docs
+  that describe old and current behavior as simultaneously supported.
+- Use git history as the compatibility record.
 
-## Key data conventions
+After every refactor, deep-clean the repo. Search for retired command names,
+retired labels, old paths, obsolete architecture prose, stale generated reports,
+and dead code. If a file no longer represents the current live contract, delete
+it or rewrite it immediately. Do not leave archaeological artifacts in the
+working tree to "help future agents."
 
-- **`BidderID` remains an event-sequence number, not a bidder identifier.**
-  In AI output and regenerated reference JSONs it is a strict integer
-  `1..N` sequence assigned per `rules/dates.md` §A1–§A4. Alex's old
-  decimal insertions do not persist in the generated JSON.
-- **A single bidder appears on many rows** — once for NDA, again for each
-  bid, once for drop, once for execution.
-- **Bid rows now use the §C3 unified form.** `bid_note="Bid"` and
-  `bid_type` carries the informal/formal distinction. Legacy labels like
-  `Inf`, `Formal Bid`, and `Revised Bid` are migration noise and should not
-  appear in current AI output.
-- **AI rows must carry `source_quote` and `source_page`.** Alex's reference
-  JSONs intentionally omit evidence fields; they are a diff target, not a
-  filing-cited extraction.
-- **Reference JSONs are not literal xlsx dumps.** `scripts/build_reference.py`
-  applies the resolved Stage 2/3 overrides and keeps provenance via flags.
-  The rationale for each override (§Q1–§Q7, including Saks delete, Zep
-  expand, Mac-Gray / Medivation renumber, Medivation atomization, Acquirer
-  rewrite, and Executed atomization) lives in that script's module docstring
-  rather than in `rules/dates.md`, because the AI extractor never
-  consults Alex's workbook.
+## Working Rules
 
-## Alex's own flags on his own work
-
-These are rows in Alex's workbook that Alex himself annotated as wrong or unresolved. They live in `reference/alex/alex_flagged_rows.json`. When the AI's extraction disagrees with one of these rows, the disagreement is expected — the AI may well be more correct than Alex here.
-
-- **Saks rows 7013 and 7015** — Alex's own comments say delete.
-- **Zep row 6390** — compresses 5 bidders into one row; Alex flagged for expansion.
-- **Mac Gray row 6960** — `BidderID=21` duplicates row 6957.
-- **Medivation rows 6066 and 6070** — both have `BidderID=5`.
-
-Current handling:
-- `scripts/build_reference.py` fixes the structurally invalid rows in the
-  generated reference JSONs per its own §Q module docstring, while
-  preserving provenance in `alex_flagged_rows.json`.
-- The Medivation converter also atomizes the aggregated "Several
-  parties" rows (§Q5), so the reference side matches the rulebook's
-  atomization stance better than the raw workbook did.
-
-## Conventions for future Claude sessions
-
-- **Do not start target-deal extraction until the reference-set gate is met.**
-  All 9 reference deals must be manually verified against their filings, and
-  the rulebook must remain unchanged across 3 consecutive full
-  reference-set runs.
-- **Every design decision lives in a `rules/*.md` file**, not scattered across chat transcripts. When a decision is made, write it into that file's `Decision:` field and remove the 🟥.
-- **The SEC filing text is ground truth.** Alex's workbook is a reference, not an oracle. Expect the AI and Alex to disagree — that's useful signal, not failure.
-- **During manual verification, Austin reads the filing.** Any diff between AI and Alex is adjudicated against the filing, not by appeal to Alex.
-- **Alex's PDF is authoritative on the RULES** (black = Chicago; **bold red = Alex's additions**). The rulebook encodes these rules. Where the PDF and Alex's own extractions disagree, treat it as a decision item and log it in `rules/99_pdf_overrides.md` (create on first use).
-- **Be skeptical. Cite rows. Check dates.** Austin explicitly asks for accuracy over speed and is happy to be told he's wrong.
-- **Every extracted row must carry `source_quote` and `source_page`.** Rows without evidence are rejected by the validator. This is also what makes manual verification tractable — Austin can confirm each row by reading the cited passage.
-- **Reset context per deal.** No cross-deal state in the model. Everything persists through `rules/`, `state/progress.json`, and `output/`.
-- **Current truth lives in the live contract files.** Historical
-  adjudication, comparison, handoff, session-log, report, and scoring-result
-  artifacts were purged on 2026-04-27. Prefer `rules/`, `prompts/`,
-  `pipeline/core.py`, `pipeline/llm/`, `pipeline/run_pool.py`, `run.py`,
-  `state/progress.json`, `output/extractions/`,
-  `reference/alex/`, `SKILL.md`, and this file; use git history for old
-  reports.
-- **Use the user's folder name ("the folder you selected") when referring to file locations**, not sandbox paths.
-- **Before adding a new agent or rule file, name the assumption it encodes.** If you can't say what the model fails at without it, don't add it.
-- **No backward compatibility.** When a schema, rule, prompt contract, state
-  format, or output format changes, update the live contract, regenerate
-  affected data, and delete stale code/docs. Do not add compatibility shims,
-  old-format readers, hidden migrations, deprecated code paths, or docs that
-  describe old and new behavior as simultaneously supported. Fail loudly on
-  stale inputs instead of falling back. Use git history as the compatibility
-  record; do not restore old behavior from prior commits unless Austin
-  explicitly asks.
-
-## Current Stage 3 follow-ups
-
-- **Adjudicate the NDA atomization-vs-aggregation pattern.** AI
-  atomizes NDAs (often 15–27 rows per deal); Alex aggregates (2–3
-  rows). Current §E2.b says atomize unless filing narrates consortium
-  activity. Austin's call per deal whether to tighten §E2.b or
-  regenerate Alex's reference.
-
-## Exit criteria for each stage
-
-**Stage 1 done when:** every 🟥 in every `rules/*.md` is resolved to 🟩. `skill_open_questions.md` shows zero open items.
-
-**Stage 2 done when:** `reference/alex/*.json` contains all 9 reference deals in schema-conformant form; `scoring/diff.py` runs end-to-end and prints a human-readable diff on one reference deal.
-
-**Stage 3 done when:** Austin has manually verified the AI output against each of the 9 reference deals' filings. Every AI-vs-Alex disagreement has been adjudicated. Hard invariants pass 100%. The rulebook has remained unchanged across 3 consecutive full-reference-set runs. Only then turn the crank on the 392 target deals.
+- Read this file and `SKILL.md` before changing extraction behavior.
+- Edit only files needed for the requested task.
+- Do not revert user edits or unrelated worktree changes.
+- Commit only when the task calls for a finished repo state, branch
+  preservation, or publishing; otherwise leave changes for Austin to review.
+- Use the folder you selected when referring to paths in user-facing prose.
+- Be skeptical: cite rows, check dates, and adjudicate against filing text.
+- Reset model context per deal; persistent state belongs in `rules/`, `state/`,
+  `output/`, `reference/alex/`, and audit files.
+- Before adding a new rule file or model role, state the specific failure it
+  fixes. If that assumption is unclear, do not add it.

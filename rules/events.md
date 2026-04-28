@@ -204,7 +204,7 @@ Schedule 13D…"*).
 **Migration note.** Alex's Petsmart workbook collapsed JANA + Longview
 into 1 Activist Sale row; under this rule the AI emits 2. This is a
 legitimate AI-identified correction per the ground-truth epistemology
-(§CLAUDE.md).
+(see `AGENTS.md`).
 
 **Cross-references.**
 - `rules/events.md` §I1 (how drops interact with initiation).

@@ -203,7 +203,7 @@ informational state; outgoing-sent anchoring reflects the target's
 action.
 
 **Implementation.** Enforced by the extractor per `prompts/extract.md`
-step 6. No deterministic `_invariant_p_b5` in `pipeline.py` —
+step 6. No deterministic `_invariant_p_b5` in `pipeline/core.py` —
 directionality is a per-row semantic judgment the validator cannot
 re-derive from the JSON alone.
 
@@ -327,7 +327,7 @@ cluster, bid rows are ranked 6 or 7 based on `bid_type`:
 - `bid_type = "formal"` → rank 7
 - `bid_type = null` (ambiguous per `rules/bids.md` §G1) → rank 6 (conservative)
 
-The validator (`pipeline.py _rank()`) implements the `bid_type` lookup.
+The validator (`pipeline.core._rank()`) implements the `bid_type` lookup.
 
 **Final-round row rank disambiguation.** `Final Round` announcement rows
 rank 1; non-announcement deadline/submission rows rank 9. The validator
