@@ -42,6 +42,7 @@ COMPARE_EVENT_FIELDS = [
     "press_release_subject",
     "invited_to_formal_round",
     "submitted_formal_bid",
+    "bid_value",
     "bid_value_pershare",
     "bid_value_lower",
     "bid_value_upper",
@@ -58,9 +59,7 @@ COMPARE_DEAL_FIELDS = [
 # appear as divergences.
 AI_ONLY_EVENT_FIELDS = {
     "source_quote", "source_page", "process_phase", "role",
-    "exclusivity_days", "financing_contingent", "highly_confident_letter",
-    "process_conditions_note", "cash_per_share", "stock_per_share",
-    "contingent_per_share", "consideration_components", "aggregate_basis",
+    "exclusivity_days", "consideration_components",
 }
 
 # Bid-notes emitted by the AI as inferred metadata that are not present
@@ -523,9 +522,8 @@ def format_report_txt(r: DiffReport) -> str:
 
 def write_results(r: DiffReport) -> tuple[Path, Path]:
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    ts = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    md = RESULTS_DIR / f"{r.slug}_{ts}.md"
-    js = RESULTS_DIR / f"{r.slug}_{ts}.json"
+    md = RESULTS_DIR / f"{r.slug}.md"
+    js = RESULTS_DIR / f"{r.slug}.json"
     md.write_text(format_report_md(r))
     js.write_text(json.dumps({
         "slug": r.slug,
