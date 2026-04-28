@@ -1,7 +1,11 @@
 ---
 date: 2026-04-28
 branch: api-call
-status: in_progress
+status: completed
+commits:
+  - 6874d15 timeless-ify rulebook prose
+  - d06860c fix rule-doc bug bundle
+  - b6c0eed log: rule-doc cleanup session
 ---
 
 # Session: Code review of recent rule changes + 4-bug fix bundle + stale cleanse
@@ -96,3 +100,54 @@ User's uncommitted polish on AGENTS.md / CLAUDE.md / scoring/diff.py /
 tests/test_diff.py stays untouched. They are independent in-progress work
 on the comparator's bidder-label diagnostic (registry-aware match) and
 matching tests.
+
+## Outcome
+
+Bug-fix agent applied all 7 surgical edits without surprises (one
+residual `lifecycle row` reference at `rules/events.md:408` was surfaced
+and judged correct as-is; it lives in the §I3 Type B description, which
+is the consumer side of the witness relationship — what ConsortiumCA can
+support, not what counts as a co-witness).
+
+Stale-cleanse agent applied ~80 prose edits across schema/events/bidders/
+bids/dates/invariants/extract. Cross-file grep for `🟩 RESOLVED`,
+`Decision #`, `Per Alex 2026-`, `pre-2026`, and dated `rewritten /
+amended / extended / sharpened` suffixes all return zero. The only
+remaining `2026-04-` reference is the schema example timestamp
+`"last_run": "2026-04-28T12:00:00Z"`, which is a placeholder format
+example.
+
+Verifier agent confirmed: 216/216 tests pass, all bug-fix doctrine is
+present, all cross-references resolve, the schema/events/prompt/code
+agreement on `drop_reason_class` enums is intact, and the witness-set
+wording in §P-D6/§I3 matches `pipeline/core.py:236`.
+
+`output/extractions/` does not exist (already deleted before this
+session), so Austin will re-run reference extractions next.
+
+Three commits landed:
+
+- `6874d15 timeless-ify rulebook prose` — pure cleanse on
+  schema/bidders/bids/dates (61 insertions, 63 deletions).
+- `d06860c fix rule-doc bug bundle` — 4 bug fixes plus companion cleanse
+  on events/invariants/extract.md (54 insertions, 49 deletions). Body
+  enumerates the four bugs.
+- `b6c0eed log: rule-doc cleanup session` — this file.
+
+The `git stash --pathspec` split (bug fix only vs cleanse only on the
+three shared files) was attempted but blocked by the harness; pivoting
+to file-level partition kept each file in exactly one commit and
+preserved atomicity at the file level. The bug fix commit's body lists
+the four bugs as the headline change; the cleanse landing in the same
+commit on the same files is acknowledged in the body.
+
+## Open follow-ups
+
+- The user's uncommitted polish on AGENTS.md / CLAUDE.md / scoring/diff.py
+  / tests/test_diff.py is untouched — Austin can land that whenever ready.
+- Reference-set re-extraction is the next step. The 9 reference deals
+  need clean re-runs against the updated rulebook before the
+  three-consecutive-clean-runs reference clock can begin.
+- One residual `lifecycle row` reference at `rules/events.md:408` — kept
+  because it correctly describes ConsortiumCA's downstream support
+  scope. Revisit only if a reader finds it ambiguous.
