@@ -265,18 +265,12 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - `source_page` — int OR list[int] (§R3).
 - `flags` — array of flag objects (§R2).
 
-**Current scope notes:**
-- 7 drops (gvkeyT, gvkeyA, cshoc, DealNumber, and Auction/FormType/URL move
-  to `deal` from row-level).
-- 5 booleans collapsed into 1 `bidder_type` string (net −4 cols).
-- 3 comments cols collapsed into 1 (net −2).
-- 3 new per-row cols: `source_quote`, `source_page`, `flags` (+3).
-- Deal-level counsel, bid classification evidence, consideration component
-  labels, and exclusivity duration remain in scope because they are useful
-  for manual verification and informal-bidding analysis. Other transaction
-  economics and merger-agreement terms are deliberately out of current AI
-  extraction scope; add them back only by expanding §R1 and the extractor
-  skeleton in the same rulebook change.
+**Current scope notes.** Deal-level counsel, bid classification evidence,
+consideration component labels, and exclusivity duration remain in scope
+because they are useful for manual verification and informal-bidding
+analysis. Other transaction economics and merger-agreement terms are
+deliberately out of current AI extraction scope; add them back only by
+expanding §R1 and the extractor skeleton in the same rulebook change.
 
 **Cross-references.**
 - `rules/bidders.md` §F1 — `bidder_type` canonical scalar format.

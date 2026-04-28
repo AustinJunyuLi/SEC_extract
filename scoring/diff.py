@@ -550,6 +550,15 @@ def diff_all_reference() -> list[DiffReport]:
     return reports
 
 
+def _has_content(r: DiffReport) -> bool:
+    return bool(
+        r.matched_rows
+        or r.ai_only_rows
+        or r.alex_only_rows
+        or r.cardinality_mismatches
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--slug", help="Single deal slug (e.g. medivation).")
@@ -565,26 +574,14 @@ def main() -> None:
             return
         for r in reports:
             print(format_report_txt(r))
-            if args.write and (
-                r.matched_rows
-                + len(r.ai_only_rows)
-                + len(r.alex_only_rows)
-                + len(r.cardinality_mismatches)
-                > 0
-            ):
+            if args.write and _has_content(r):
                 md, js = write_results(r)
                 print(f"  -> {md.relative_to(REPO_ROOT)}")
             print()
     elif args.slug:
         r = diff_deal(args.slug)
         print(format_report_txt(r))
-        if args.write and (
-            r.matched_rows
-            + len(r.ai_only_rows)
-            + len(r.alex_only_rows)
-            + len(r.cardinality_mismatches)
-            > 0
-        ):
+        if args.write and _has_content(r):
             md, js = write_results(r)
             print(f"wrote {md.relative_to(REPO_ROOT)}")
             print(f"wrote {js.relative_to(REPO_ROOT)}")
