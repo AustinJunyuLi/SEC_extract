@@ -234,6 +234,16 @@ them null and flag the uncertainty. The comparator suppresses AI bool vs Alex
 null on these fields because Alex's converted reference usually lacks this
 newer structure; non-null disagreements remain review items.
 
+Current drop-classification doctrine: filing verb subject controls
+`drop_initiator`; use `"unknown"` only for genuinely ambiguous agency.
+Specific reason classes beat generic classes: target non-advancement is
+`"never_advanced"`, target threshold/reserve/refusal-to-match is
+`"below_minimum"`, bidder failure to respond/submit/reiterate is
+`"no_response"`, and transaction-scope mismatch is `"scope_mismatch"` with
+initiator from the verb subject. The comparator suppresses Alex
+unknown/null under-specification when AI has supported current-schema detail;
+non-null conflicts remain review items.
+
 ## Target-Deal Gate
 
 Do not run extraction on the non-reference target deals until the reference-set

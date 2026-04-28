@@ -59,6 +59,7 @@ FORMAL_STAGE_STATUS_FIELDS: frozenset[str] = frozenset({
     "invited_to_formal_round",
     "submitted_formal_bid",
 })
+CURRENT_DROP_INITIATORS: frozenset[str] = frozenset({"bidder", "target"})
 
 # AI-only fields whose absence on Alex's side is expected and should NOT
 # appear as divergences.
@@ -211,6 +212,18 @@ def _is_ai_only_formal_stage_enrichment(name: str, ai_val: Any, alex_val: Any) -
     )
 
 
+def _is_legacy_drop_classification_underspecification(
+    name: str,
+    ai_val: Any,
+    alex_val: Any,
+) -> bool:
+    if name == "drop_initiator":
+        return ai_val in CURRENT_DROP_INITIATORS and alex_val == "unknown"
+    if name == "drop_reason_class":
+        return ai_val is not None and alex_val is None
+    return False
+
+
 # ---------------------------------------------------------------------------
 # Diff core
 # ---------------------------------------------------------------------------
@@ -275,6 +288,7 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
     matched_ai_ids: set[int] = set()
     matched_alex_ids: set[int] = set()
     formal_stage_enrichment_counts: dict[str, int] = {}
+    drop_classification_underspecified_counts: dict[str, int] = {}
 
     # Primary pass: exact join.
     for key, ai_bucket in ai_idx.items():
@@ -310,6 +324,18 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
                 ):
                     formal_stage_enrichment_counts[fname] = (
                         formal_stage_enrichment_counts.get(fname, 0) + 1
+                    )
+                    continue
+                if (
+                    ai_ev.get("bid_note") == "Drop"
+                    and _is_legacy_drop_classification_underspecification(
+                        fname,
+                        ai_ev.get(fname),
+                        alex_ev.get(fname),
+                    )
+                ):
+                    drop_classification_underspecified_counts[fname] = (
+                        drop_classification_underspecified_counts.get(fname, 0) + 1
                     )
                     continue
                 d = compare_field(fname, ai_ev.get(fname), alex_ev.get(fname))
@@ -419,6 +445,15 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
         r.notes.append(
             "Suppressed AI-only formal-stage status enrichment field(s) where "
             f"Alex is null: {detail}."
+        )
+    if drop_classification_underspecified_counts:
+        detail = ", ".join(
+            f"{field}={count}"
+            for field, count in sorted(drop_classification_underspecified_counts.items())
+        )
+        r.notes.append(
+            "Suppressed legacy drop classification underspecification where "
+            f"AI has current-schema detail and Alex is unknown/null: {detail}."
         )
 
     return r

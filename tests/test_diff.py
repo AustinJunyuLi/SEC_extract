@@ -273,6 +273,71 @@ def test_diff_events_keeps_non_null_formal_stage_status_disagreements():
     ]
 
 
+def test_diff_events_suppresses_legacy_drop_classification_underspecification():
+    ai_events = [
+        {
+            "BidderID": 1,
+            "bidder_alias": "Party A",
+            "bid_note": "Drop",
+            "bid_date_precise": "2020-01-01",
+            "drop_initiator": "target",
+            "drop_reason_class": "below_minimum",
+        }
+    ]
+    alex_events = [
+        {
+            "BidderID": 7,
+            "bidder_alias": "Party A",
+            "bid_note": "Drop",
+            "bid_date_precise": "2020-01-01",
+            "drop_initiator": "unknown",
+            "drop_reason_class": None,
+            "_xlsx_row": 9999,
+        }
+    ]
+
+    report = scoring_diff.diff_events("penford", ai_events, alex_events)
+
+    assert report.matched_rows == 1
+    assert report.field_disagreements == {}
+    assert report.divergences == []
+    assert any(
+        "legacy drop classification underspecification" in note
+        for note in report.notes
+    )
+
+
+def test_diff_events_keeps_non_null_drop_classification_disagreements():
+    ai_events = [
+        {
+            "BidderID": 1,
+            "bidder_alias": "Party A",
+            "bid_note": "Drop",
+            "bid_date_precise": "2020-01-01",
+            "drop_initiator": "target",
+            "drop_reason_class": "never_advanced",
+        }
+    ]
+    alex_events = [
+        {
+            "BidderID": 7,
+            "bidder_alias": "Party A",
+            "bid_note": "Drop",
+            "bid_date_precise": "2020-01-01",
+            "drop_initiator": "target",
+            "drop_reason_class": "target_other",
+            "_xlsx_row": 9999,
+        }
+    ]
+
+    report = scoring_diff.diff_events("providence-worcester", ai_events, alex_events)
+
+    assert report.field_disagreements == {"drop_reason_class": 1}
+    assert report.divergences[0]["field_divergences"] == [
+        {"field": "drop_reason_class", "ai": "never_advanced", "alex": "target_other"}
+    ]
+
+
 def test_diff_deal_warns_when_filtered_dropsilent_matches_alex_drop(tmp_path, monkeypatch):
     reference_dir = tmp_path / "reference"
     extraction_dir = tmp_path / "extractions"

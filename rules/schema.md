@@ -231,10 +231,13 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - `bid_type` — `"formal" | "informal" | null` (per §G1).
 - `bid_type_inference_note` — string OR null. Required §P-G2 evidence for non-range bid rows with non-null `bid_type`, unless paired/fallback `Final Round.final_round_informal` evidence applies. Max 300 chars. Per `rules/bids.md` §G2.
 - `drop_initiator` — `"bidder" | "target" | "unknown" | null`. Required on
-  `bid_note = "Drop"`; null otherwise, including `DropSilent`.
+  `bid_note = "Drop"`; null otherwise, including `DropSilent`. Use the filing
+  verb subject when clear; reserve `"unknown"` for genuinely ambiguous agency.
 - `drop_reason_class` — `"below_market" | "below_minimum" | "target_other" |
   "no_response" | "never_advanced" | "scope_mismatch" | null`. Required
-  when applicable on `Drop` per `rules/events.md` §I1.
+  when applicable on `Drop` per `rules/events.md` §I1. Target-side non-
+  advancement, below-threshold, and refusal-to-match outcomes should use their
+  specific classes rather than generic `"target_other"`.
 - `final_round_announcement` — bool OR null. Required on `Final Round`;
   null otherwise.
 - `final_round_extension` — bool OR null. Required on `Final Round`; null

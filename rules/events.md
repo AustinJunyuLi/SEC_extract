@@ -226,11 +226,13 @@ against the filing.
 
 **`Drop.drop_initiator` (required on `Drop`).**
 - `"target"` when the filing names the target, board, committee, management,
-  or target-side advisor as the subject of the rejection.
+  or target-side advisor as the subject of the rejection, non-advancement,
+  exclusion, or refusal to continue.
 - `"bidder"` when the filing names the bidder as withdrawing, declining,
   stopping, or failing to respond.
-- `"unknown"` when agency is genuinely ambiguous after reading the source
-  quote. Attach `drop_initiator_ambiguous` (soft) with the unclear language.
+- `"unknown"` only when agency is genuinely ambiguous after reading the
+  source quote. Attach `drop_initiator_ambiguous` (soft) with the unclear
+  language.
 
 **`Drop.drop_reason_class` (required when applicable).**
 
@@ -239,6 +241,22 @@ against the filing.
 | `"target"` | `"below_market"` / `"below_minimum"` / `"target_other"` / `"never_advanced"` / `"scope_mismatch"` |
 | `"bidder"` | `null` by default, or `"no_response"` only when the filing literally narrates non-response, or `"scope_mismatch"` |
 | `"unknown"` | `null` |
+
+Specific classes beat generic classes:
+
+- Use `"never_advanced"` when the target does not advance, invite, select,
+  or continue a bidder into the next/formal/final stage.
+- Use `"below_minimum"` when the target rejects or drops a bidder because the
+  bid is below a stated threshold, reserve, minimum, superior competing bid,
+  or required match price.
+- Use `"below_market"` only when the filing states the proposal is below
+  market or inadequate without identifying a target threshold or required
+  match price.
+- Use `"target_other"` only for target-side reasons not covered by the more
+  specific target classes, such as financing-risk, certainty, antitrust,
+  regulatory, diligence, or board-concern rationales.
+- Use `"no_response"` only when the bidder failed to respond, failed to
+  submit, or did not reiterate after a target/request/advisor prompt.
 
 Use `"scope_mismatch"` when the filing says the bidder's interest ended
 because the assets or transaction scope did not match what the bidder sought.

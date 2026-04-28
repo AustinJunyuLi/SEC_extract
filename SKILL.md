@@ -151,6 +151,10 @@ If any scope rule is 🟥 OPEN, stop and report — do not extract.
    process `Bid` rows, set `invited_to_formal_round` and
    `submitted_formal_bid` true/false only when the filing supports that
    bidder-specific status; otherwise leave them null and flag uncertainty.
+9. **Drop classification is evidence-bound and specific.** Filing verb
+   subject controls `drop_initiator`; use `unknown` only for genuine agency
+   ambiguity. Use the most specific supported `drop_reason_class`, not a
+   generic fallback.
 
 Evidence quote strings target and hard-fail at 1500 characters. There is no
 soft over-target zone; split evidence into the multi-quote form when one
