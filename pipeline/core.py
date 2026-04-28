@@ -1,27 +1,12 @@
-"""Core Python plumbing for the M&A extraction skill.
+"""Core Python plumbing for the M&A extraction pipeline.
 
-The Extractor and Adjudicator agents run as **Claude Code subagents** with
-clean-slate contexts, administered by the orchestrating conversation. Python
-owns validation, canonicalization, and finalization. The LLM orchestrator owns
-Extractor spawning, Adjudicator spawning, and any pre-finalize mutation of
-`raw_extraction`. This module provides the deterministic, non-LLM pieces only:
+SDK orchestration lives in `pipeline.llm` and `pipeline.run_pool`. This module
+provides the shared deterministic pieces:
 
   - Filing loader (data/filings/{slug}/pages.json + manifest.json)
   - Vocabularies mirrored from rules/*.md (source of truth stays in markdown)
   - Python Validator that runs every invariant in rules/invariants.md
   - Output writers, state updaters, status classification
-
-Orchestration flow (Claude Code drives, not Python):
-  1. prompt = build_extractor_prompt(slug); spawn Extractor subagent
-  2. raw_extraction = parse the subagent's JSON
-  3. filing = load_filing(slug)
-  4. result = validate(raw_extraction, filing)
-  5. for soft flag in result.row_flags + result.deal_flags (severity=="soft"):
-         spawn Adjudicator subagent, annotate
-  6. final = merge_flags(raw_extraction, result.row_flags, result.deal_flags)
-  7. write_output(slug, final); append_flags_log(...); update_progress(...)
-
-No Anthropic SDK import. No API keys. Python stays deterministic.
 """
 
 from __future__ import annotations
@@ -292,63 +277,6 @@ def load_filing(slug: str) -> Filing:
             raise FileNotFoundError(f"missing artifact: {p}")
     pages = json.loads(pages_path.read_text())
     return Filing(slug=slug, pages=pages)
-
-
-# ---------------------------------------------------------------------------
-# Extractor subagent prompt builder
-# ---------------------------------------------------------------------------
-
-
-def build_extractor_prompt(slug: str) -> str:
-    """Return the prompt for a Claude Code Extractor subagent.
-
-    The subagent is spawned in a fresh, clean-slate context with Read access.
-    Instead of stuffing the filing into the prompt, we point it at the file
-    paths — the subagent reads what it needs from disk, which keeps the
-    parent conversation's context lean.
-    """
-    return f"""You are the Extractor in the M&A auction extraction pipeline. \
-Run in a fresh context on a single deal and emit one JSON object conforming \
-to rules/schema.md §R1. No prose outside the final JSON block.
-
-Deal slug: **{slug}**
-
-Read these files in full (absolute paths; use your Read tool):
-
-  Operating procedure:
-    {PROMPTS_DIR}/extract.md
-
-  Rulebook (all resolved; if you see 🟥 OPEN anywhere, halt and emit the blocked form):
-    {RULES_DIR}/schema.md      (output shape §R1, evidence §R3)
-    {RULES_DIR}/events.md      (bid_note closed vocabulary §C1, 18 values)
-    {RULES_DIR}/bidders.md     (canonical IDs §E3, bidder_type §F1)
-    {RULES_DIR}/bids.md        (formal/informal §G1, skip rules §M)
-    {RULES_DIR}/dates.md       (date mapping §B, BidderID sequence §A1–§A4)
-
-  Filing (authoritative for every source_quote and source_page):
-    {DATA_DIR}/{slug}/pages.json     (list of {{"number": int, "content": str, ...}})
-    {DATA_DIR}/{slug}/manifest.json  (EDGAR metadata + deal-identity cross-check)
-
-Everything in `prompts/extract.md` and the listed extractor rule files is
-binding. Do not paraphrase, override, or reinterpret — follow the rulebook
-as written. If any listed extractor rule is 🟥 OPEN, halt and emit the
-blocked form (see below).
-
-Output contract:
-  Your FINAL message (and nothing else outside it) is a single fenced block:
-
-    ```json
-    {{"deal": {{ ... }}, "events": [ ... ]}}
-    ```
-
-  If a rule is 🟥 OPEN, emit instead:
-
-    ```json
-    {{"status": "blocked_by_open_rule", "open_rules": ["rules/xxx.md §Y"]}}
-    ```
-
-  Do not wrap the JSON in explanation. Do not emit multiple JSON blocks.
-"""
 
 
 # ---------------------------------------------------------------------------
@@ -2097,49 +2025,36 @@ def prepare_for_validate(
     return raw_extraction, filing, promotion_log
 
 
-def finalize(
+def finalize_prepared(
     slug: str,
     raw_extraction: dict[str, Any],
-    filing: Filing | None = None,
+    filing: Filing,
+    validation_result: ValidatorResult,
+    promotion_log: list[dict[str, Any]] | None = None,
 ) -> PipelineResult:
-    """Run Python validator + merge flags + write output + update state.
+    """Write a prepared extraction using a caller-supplied validation result.
 
-    Pre-validate transforms:
-      1. Apply `unnamed_nda_promotion` hints (Fix 2C)
-      2. Canonicalize row order and BidderIDs (Fix 1 — §A2/§A3 sort)
-
-    Does NOT spawn adjudicator subagents — that's the orchestrator's job,
-    performed BEFORE calling this function. If the caller has adjudicated
-    soft flags, they should mutate raw_extraction['events'][i]['flags']
-    and/or raw_extraction['deal']['deal_flags'] with adjudicator verdicts
-    before passing raw_extraction in.
+    Direct SDK orchestration may adjudicate soft validator flags before
+    writing output. This helper preserves those adjudicator annotations by
+    accepting the already-mutated `validation_result` instead of recomputing
+    validation inside `finalize()`.
     """
     run_ts = _now_iso()
     run_id = _new_run_id()
-    raw_extraction, filing, promotion_log = prepare_for_validate(
-        slug, raw_extraction, filing=filing
+    final = merge_flags(
+        raw_extraction,
+        validation_result.row_flags,
+        validation_result.deal_flags,
     )
-    result = validate(raw_extraction, filing)
-    final = merge_flags(raw_extraction, result.row_flags, result.deal_flags)
     current_rulebook_version = rulebook_version()
     deal_obj = final.setdefault("deal", {})
     deal_obj["rulebook_version"] = current_rulebook_version
     deal_obj["last_run"] = run_ts
     deal_obj["last_run_id"] = run_id
-    # Attach promotion log to deal object for audit (pipeline-internal field).
     if promotion_log:
         deal_obj["_unnamed_nda_promotions"] = promotion_log
     status, flag_count, notes = summarize(final)
-    # Order matters: the per-deal extraction JSON is the most-derivable
-    # artifact (rerun reproduces it from raw_extraction); progress.json is
-    # the master ledger; flags.jsonl is append-only audit. Write them in
-    # ledger-first order so a partial failure leaves the ledger consistent
-    # with whatever extraction is on disk.
     out_path = write_output(slug, final)
-    # Acquire the state lock once and hold it across both writes: this
-    # makes the (progress.json update, flags.jsonl append) pair atomic
-    # for this deal, so a concurrent `run.py` for a DIFFERENT deal cannot
-    # interleave its progress write between our two updates.
     with _state_file_lock():
         _update_progress_locked(
             slug,
@@ -2156,4 +2071,32 @@ def finalize(
         flag_count=flag_count,
         notes=notes,
         output_path=out_path,
+    )
+
+
+def finalize(
+    slug: str,
+    raw_extraction: dict[str, Any],
+    filing: Filing | None = None,
+) -> PipelineResult:
+    """Run Python validator + merge flags + write output + update state.
+
+    Pre-validate transforms:
+      1. Apply `unnamed_nda_promotion` hints (Fix 2C)
+      2. Canonicalize row order and BidderIDs (Fix 1 — §A2/§A3 sort)
+
+    Direct SDK callers that adjudicate soft validator flags should call
+    `finalize_prepared()` with their precomputed `ValidatorResult`, so those
+    adjudicator annotations are preserved.
+    """
+    raw_extraction, filing, promotion_log = prepare_for_validate(
+        slug, raw_extraction, filing=filing
+    )
+    result = validate(raw_extraction, filing)
+    return finalize_prepared(
+        slug,
+        raw_extraction,
+        filing,
+        result,
+        promotion_log=promotion_log,
     )
