@@ -282,8 +282,8 @@ asks and it does not start extraction.
 | `scripts/smoke_linkflow.py` | Optional real-key Linkflow Responses smoke test. |
 | `tests/` | Runtime, prompt, LLM wrapper, converter, diff, and invariant tests. |
 
-Generated reports, one-off migration scripts, obsolete working notes, and stale
-logs are not live contracts.
+Generated reports, one-off conversion helpers, obsolete working notes, and
+stale logs are not live contracts.
 
 ## No Backward Compatibility Doctrine
 
@@ -293,7 +293,7 @@ or orchestration path changes:
 
 - Update the live contract files in the same change.
 - Regenerate affected reference/output/state/audit artifacts or delete them.
-- Delete stale code, stale docs, old reports, old fixtures, and migration
+- Delete stale code, stale docs, old reports, old fixtures, and transition
   helpers once the live format is established.
 - Fail loudly on stale inputs instead of silently reading old formats.
 - Do not add compatibility shims, deprecated aliases, fallback readers, or docs

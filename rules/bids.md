@@ -342,8 +342,8 @@ $61.20"). Use the filing-stated implied value as the headline
 `bid_value_pershare` only when the filing gives one; record the exchange
 ratio in `additional_note` as `exchange_ratio: <float>`.
 
-**Legacy migration.** Alex's `comments_1` entries like "20.02 cash + 1.13
-CVR" are preserved for manual review, with the component labels captured
+**Reference conversion.** Alex's `comments_1` entries like "20.02 cash +
+1.13 CVR" are preserved for manual review, with the component labels captured
 where the current schema supports them.
 
 **Rejected alternatives.**

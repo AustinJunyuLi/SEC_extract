@@ -107,7 +107,7 @@ def test_build_deal_normalizes_providence_blank_bid_note_in_memory():
     assert g_and_w_nda["bid_type"] is None
 
 
-def test_build_deal_migrates_zep_exclusivity_event_in_memory():
+def test_build_deal_converts_zep_exclusivity_event_in_memory():
     events = _events("zep")
 
     assert all(ev["bid_note"] in VALID_BID_NOTES for ev in events)
@@ -222,7 +222,7 @@ def test_mac_gray_executed_atomizes_to_two_rows():
 
 
 def test_range_bid_with_formal_source_label_is_coerced_to_informal():
-    """C4 — true range rows are informal after converter migration."""
+    """C4 — true range rows are informal after reference conversion."""
     for slug in ("medivation", "imprivata", "zep", "providence-worcester",
                  "penford", "mac-gray", "petsmart-inc", "stec", "saks"):
         payload = build_deal(slug)

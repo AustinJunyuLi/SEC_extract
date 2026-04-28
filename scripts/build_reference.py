@@ -114,7 +114,7 @@ are equally load-bearing for diffability.
   `Target Interest` map to current values plus structured modifier
   columns (drop_initiator, drop_reason_class, final_round_*,
   press_release_subject, etc.).
-* `_migrate_bid_note` — rewrites legacy `Inf` / `Formal Bid` /
+* `_convert_bid_note` — rewrites legacy `Inf` / `Formal Bid` /
   `Revised Bid` labels into the current `bid_note="Bid"` + `bid_type`
   unified-bid convention (§C3). `Revised Bid` provenance is preserved as
   a `"revised"` marker on `additional_note`.
@@ -880,7 +880,7 @@ def build_bidder_type(r: RawRow) -> str | None:
 # Event-row assembly
 # ---------------------------------------------------------------------------
 
-def _migrate_bid_note(r: RawRow) -> tuple[str | None, str | None, str | None]:
+def _convert_bid_note(r: RawRow) -> tuple[str | None, str | None, str | None]:
     """Map source-workbook bid-row labels to the current §C3 form.
 
     Returns `(bid_note, bid_type_inferred, source_label)`:
@@ -1052,8 +1052,8 @@ def _map_bid_value_unit(v: Any) -> str | None:
 
 
 def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
-    # §C3 migration: normalize bid-row event type to "Bid" + bid_type.
-    note, inferred_bid_type, source_label = _migrate_bid_note(r)
+    # §C3 reference conversion: normalize bid-row event type to "Bid" + bid_type.
+    note, inferred_bid_type, source_label = _convert_bid_note(r)
     note, taxonomy_columns, target_initiated = _apply_taxonomy_redesign(note)
     bid_type = _bid_type_canon(r.get("bid_type")) or inferred_bid_type
 
@@ -1135,7 +1135,7 @@ def build_event_row(r: RawRow, canonical_id: str) -> dict[str, Any]:
         "flags": flags,
     }
     # §G1+§G2 (2026-04-27): true range bids are unconditionally informal.
-    # Auto-coerce legacy xlsx rows where Alex labeled a range "formal".
+    # Auto-coerce source xlsx rows where Alex labeled a range "formal".
     lower = row.get("bid_value_lower")
     upper = row.get("bid_value_upper")
     try:

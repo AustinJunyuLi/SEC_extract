@@ -33,7 +33,7 @@ Current behavior:
   renumbering, Medivation atomization of aggregated "Several parties"
   rows, Acquirer rewrites for sponsor-backed deals, and Executed-row
   atomization for consortium deals);
-- migrates bid rows to the §C3 form (`bid_note="Bid"` + `bid_type`);
+- converts bid rows to the §C3 form (`bid_note="Bid"` + `bid_type`);
 - reassigns `BidderID` per the resolved `§A1`–`§A3` sequencing rules;
 - preserves provenance by attaching info flags where Alex's workbook had a
   self-flagged or structurally repaired row.

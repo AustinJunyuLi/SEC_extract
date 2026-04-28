@@ -273,7 +273,7 @@ def test_diff_events_keeps_non_null_formal_stage_status_disagreements():
     ]
 
 
-def test_diff_events_suppresses_legacy_drop_classification_underspecification():
+def test_diff_events_suppresses_reference_drop_classification_underspecification():
     ai_events = [
         {
             "BidderID": 1,
@@ -302,7 +302,7 @@ def test_diff_events_suppresses_legacy_drop_classification_underspecification():
     assert report.field_disagreements == {}
     assert report.divergences == []
     assert any(
-        "legacy drop classification underspecification" in note
+        "source-workbook drop classification underspecification" in note
         for note in report.notes
     )
 

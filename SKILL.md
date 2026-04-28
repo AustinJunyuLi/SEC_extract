@@ -270,9 +270,9 @@ This repo supports only the current live schema, prompt contract, state format,
 output format, and direct SDK orchestration path. When any of those change,
 update this file, `AGENTS.md`, `CLAUDE.md`, the rulebook, and tests in the same
 change. Regenerate or delete affected artifacts. Do not add fallback readers,
-deprecated command aliases, old-format loaders, hidden migrations, or docs that
-present old and current behavior as simultaneously supported. Git history is the
-compatibility record.
+retired command aliases, old-format loaders, hidden transition layers, or docs
+that present old and current behavior as simultaneously supported. Git history
+is the compatibility record.
 
 After a refactor, deep-clean stale code and stale docs immediately. Search for
 retired commands, retired file paths, obsolete architecture prose, stale

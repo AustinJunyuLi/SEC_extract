@@ -212,7 +212,7 @@ def _is_ai_only_formal_stage_enrichment(name: str, ai_val: Any, alex_val: Any) -
     )
 
 
-def _is_legacy_drop_classification_underspecification(
+def _is_reference_drop_classification_underspecification(
     name: str,
     ai_val: Any,
     alex_val: Any,
@@ -328,7 +328,7 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
                     continue
                 if (
                     ai_ev.get("bid_note") == "Drop"
-                    and _is_legacy_drop_classification_underspecification(
+                    and _is_reference_drop_classification_underspecification(
                         fname,
                         ai_ev.get(fname),
                         alex_ev.get(fname),
@@ -452,8 +452,8 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
             for field, count in sorted(drop_classification_underspecified_counts.items())
         )
         r.notes.append(
-            "Suppressed legacy drop classification underspecification where "
-            f"AI has current-schema detail and Alex is unknown/null: {detail}."
+            "Suppressed source-workbook drop classification underspecification "
+            f"where AI has current-schema detail and Alex is unknown/null: {detail}."
         )
 
     return r

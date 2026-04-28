@@ -68,7 +68,7 @@ contents/cross-reference pages. This reduces latency, proxy exposure, and quote
 verification noise.
 
 Python validation matters. Linkflow should only do the extraction and scoped
-adjudication. The repo owns schema enforcement, stale-field rejection, source
+adjudication. The repo owns schema enforcement, stale-field quarantine, source
 quote checks, date/BidderID checks, and finalization.
 
 ## What Makes Linkflow Shaky
@@ -99,7 +99,7 @@ Avoid these patterns:
 
 ## Output Contract Discipline
 
-Because Linkflow runs prompt-only JSON, stale fields must be rejected locally.
+Because Linkflow runs prompt-only JSON, stale fields must not ship locally.
 The extractor's `deal` object must contain only current AI-produced fields:
 
 - `TargetName`

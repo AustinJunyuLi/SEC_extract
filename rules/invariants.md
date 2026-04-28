@@ -211,9 +211,9 @@ comparable across deals.
 - **Comparison.** Alex's converted reference often has `drop_initiator =
   "unknown"` or `drop_reason_class = null` where the current taxonomy records
   a supported `bidder`/`target` agency or specific reason class.
-  `scoring/diff.py` suppresses those legacy under-specified fields; non-null
-  conflicts such as `"target_other"` vs `"never_advanced"` still surface for
-  Austin review.
+  `scoring/diff.py` suppresses those source-workbook underspecified fields;
+  non-null conflicts such as `"target_other"` vs `"never_advanced"` still
+  surface for Austin review.
 
 ### §P-D8 — Formal-stage status consistency
 - **Check.**
