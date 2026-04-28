@@ -214,11 +214,15 @@ comparable across deals.
   3. A `Drop` row with `drop_reason_class = "never_advanced"` requires
      `invited_to_formal_round = false`.
 - **Fail action.** Flag `formal_round_status_inconsistent`. Soft.
-- **Extractor guidance.** This is a consistency check, not a mandate to
-  infer unsupported true/false values. If the filing reaches a formal
-  process but bidder-specific advancement or submission status is unclear,
-  leave the field null and attach a soft `formal_round_status_inferred`
-  flag.
+- **Boundary.** This is a consistency check, not a mandate to infer
+  unsupported true/false values. Python should not decide from global process
+  structure alone that a specific bidder was advanced or submitted. If the
+  filing reaches a formal process but bidder-specific advancement or
+  submission status is unclear, leave the field null and attach a soft
+  `formal_round_status_inferred` flag.
+- **Comparison.** Alex's converted reference often has null for these newer
+  fields. `scoring/diff.py` suppresses AI bool vs Alex null as current-schema
+  enrichment; non-null disagreements still surface for Austin review.
 
 ### §P-D6 — Named-Bid rows require an in-phase NDA for the same bidder
 - **Check.** For every row with `bid_note = "Bid"`, non-null

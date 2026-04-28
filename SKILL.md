@@ -147,6 +147,10 @@ If any scope rule is 🟥 OPEN, stop and report — do not extract.
    bidder-specific or group outcomes are explicit `Drop` rows;
    identifiable/countable groups atomize, and vague uncountable groups become
    one placeholder `Drop` with an ambiguity flag.
+8. **Formal-stage status fields are evidence-bound.** On informal current
+   process `Bid` rows, set `invited_to_formal_round` and
+   `submitted_formal_bid` true/false only when the filing supports that
+   bidder-specific status; otherwise leave them null and flag uncertainty.
 
 Evidence quote strings target and hard-fail at 1500 characters. There is no
 soft over-target zone; split evidence into the multi-quote form when one

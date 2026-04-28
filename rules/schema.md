@@ -245,12 +245,18 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
   on `Press Release`; null otherwise.
 - `invited_to_formal_round` — bool OR null. Required on each informal `Bid`
   row in a current/restarted process; encodes the target's advancement act.
-  Use true/false only when the filing supports that bidder-specific status;
-  otherwise leave null and flag the inference.
+  Use `true` only when the filing supports bidder-specific advancement,
+  invitation, or selection into the formal round. Use `false` only when the
+  filing supports bidder-specific non-advancement, withdrawal before
+  invitation, or exclusion from the formal round. Otherwise leave null and
+  flag the uncertainty.
 - `submitted_formal_bid` — bool OR null. Required on each informal `Bid`
   row in a current/restarted process; encodes the bidder's submission act.
-  Use true/false only when a same-phase formal bid row or explicit filing
-  narration supports it; otherwise leave null and flag the inference.
+  Use `true` only when a same-phase formal `Bid` row or explicit filing
+  narration supports a formal submission. Use `false` only when the filing
+  supports bidder-specific non-submission, withdrawal before formal
+  submission, or exclusion from the formal round. Otherwise leave null and
+  flag the uncertainty.
 - `bid_date_precise` — ISO date OR null.
 - `bid_date_rough` — natural-language phrase OR null.
 - `bid_value` — numeric OR null. Aggregate $ amount when `bid_value_unit = "USD"`; otherwise reserved.

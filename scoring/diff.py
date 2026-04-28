@@ -55,6 +55,11 @@ COMPARE_DEAL_FIELDS = [
     "DateEffective", "auction", "all_cash",
 ]
 
+FORMAL_STAGE_STATUS_FIELDS: frozenset[str] = frozenset({
+    "invited_to_formal_round",
+    "submitted_formal_bid",
+})
+
 # AI-only fields whose absence on Alex's side is expected and should NOT
 # appear as divergences.
 AI_ONLY_EVENT_FIELDS = {
@@ -198,6 +203,14 @@ def compare_field(name: str, ai_val: Any, alex_val: Any) -> dict[str, Any] | Non
     return {"field": name, "ai": ai_val, "alex": alex_val}
 
 
+def _is_ai_only_formal_stage_enrichment(name: str, ai_val: Any, alex_val: Any) -> bool:
+    return (
+        name in FORMAL_STAGE_STATUS_FIELDS
+        and ai_val in (True, False)
+        and alex_val is None
+    )
+
+
 # ---------------------------------------------------------------------------
 # Diff core
 # ---------------------------------------------------------------------------
@@ -261,6 +274,7 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
 
     matched_ai_ids: set[int] = set()
     matched_alex_ids: set[int] = set()
+    formal_stage_enrichment_counts: dict[str, int] = {}
 
     # Primary pass: exact join.
     for key, ai_bucket in ai_idx.items():
@@ -289,6 +303,15 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
             r.matched_rows += 1
             divs = []
             for fname in COMPARE_EVENT_FIELDS:
+                if _is_ai_only_formal_stage_enrichment(
+                    fname,
+                    ai_ev.get(fname),
+                    alex_ev.get(fname),
+                ):
+                    formal_stage_enrichment_counts[fname] = (
+                        formal_stage_enrichment_counts.get(fname, 0) + 1
+                    )
+                    continue
                 d = compare_field(fname, ai_ev.get(fname), alex_ev.get(fname))
                 if d is not None:
                     divs.append(d)
@@ -387,6 +410,16 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
                 "bid_note": alex_ev.get("bid_note"),
                 "alex_self_flag": flag_note,
             })
+
+    if formal_stage_enrichment_counts:
+        detail = ", ".join(
+            f"{field}={count}"
+            for field, count in sorted(formal_stage_enrichment_counts.items())
+        )
+        r.notes.append(
+            "Suppressed AI-only formal-stage status enrichment field(s) where "
+            f"Alex is null: {detail}."
+        )
 
     return r
 

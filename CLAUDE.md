@@ -226,6 +226,14 @@ placeholder `Drop` with an ambiguity flag. The comparator filters true
 `DropSilent` rows but reports `drop_silent_vs_explicit_drop` when a filtered
 AI `DropSilent` matches Alex's explicit `Drop` for the same bidder.
 
+Current formal-stage-status doctrine: `invited_to_formal_round` and
+`submitted_formal_bid` are current-schema enrichment fields on informal current
+process `Bid` rows. The extractor may set them true/false only when the filing
+supports that bidder-specific advancement or submission status. Otherwise leave
+them null and flag the uncertainty. The comparator suppresses AI bool vs Alex
+null on these fields because Alex's converted reference usually lacks this
+newer structure; non-null disagreements remain review items.
+
 ## Target-Deal Gate
 
 Do not run extraction on the non-reference target deals until the reference-set

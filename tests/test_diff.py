@@ -200,6 +200,79 @@ def test_diff_events_labels_buyer_group_atomization_mismatch():
     assert mismatch["alex_count"] == 1
 
 
+def test_diff_events_suppresses_ai_only_formal_stage_status_enrichment():
+    ai_events = [
+        {
+            "BidderID": 1,
+            "bidder_alias": "Party A",
+            "bid_note": "Bid",
+            "bid_date_precise": "2020-01-01",
+            "bid_type": "informal",
+            "invited_to_formal_round": True,
+            "submitted_formal_bid": False,
+        }
+    ]
+    alex_events = [
+        {
+            "BidderID": 7,
+            "bidder_alias": "Party A",
+            "bid_note": "Bid",
+            "bid_date_precise": "2020-01-01",
+            "bid_type": "informal",
+            "invited_to_formal_round": None,
+            "submitted_formal_bid": None,
+            "_xlsx_row": 9999,
+        }
+    ]
+
+    report = scoring_diff.diff_events("mac-gray", ai_events, alex_events)
+
+    assert report.matched_rows == 1
+    assert report.field_disagreements == {}
+    assert report.divergences == []
+    assert any(
+        "formal-stage status enrichment" in note
+        for note in report.notes
+    )
+
+
+def test_diff_events_keeps_non_null_formal_stage_status_disagreements():
+    ai_events = [
+        {
+            "BidderID": 1,
+            "bidder_alias": "Party A",
+            "bid_note": "Bid",
+            "bid_date_precise": "2020-01-01",
+            "bid_type": "informal",
+            "invited_to_formal_round": True,
+            "submitted_formal_bid": False,
+        }
+    ]
+    alex_events = [
+        {
+            "BidderID": 7,
+            "bidder_alias": "Party A",
+            "bid_note": "Bid",
+            "bid_date_precise": "2020-01-01",
+            "bid_type": "informal",
+            "invited_to_formal_round": False,
+            "submitted_formal_bid": True,
+            "_xlsx_row": 9999,
+        }
+    ]
+
+    report = scoring_diff.diff_events("mac-gray", ai_events, alex_events)
+
+    assert report.field_disagreements == {
+        "invited_to_formal_round": 1,
+        "submitted_formal_bid": 1,
+    }
+    assert report.divergences[0]["field_divergences"] == [
+        {"field": "invited_to_formal_round", "ai": True, "alex": False},
+        {"field": "submitted_formal_bid", "ai": False, "alex": True},
+    ]
+
+
 def test_diff_deal_warns_when_filtered_dropsilent_matches_alex_drop(tmp_path, monkeypatch):
     reference_dir = tmp_path / "reference"
     extraction_dir = tmp_path / "extractions"
