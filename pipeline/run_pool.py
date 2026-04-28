@@ -28,6 +28,7 @@ DONE_STATUSES = {"validated", "passed", "passed_clean", "verified"}
 VALID_FILTERS = {"pending", "reference", "failed", "all"}
 AUDIT_ROOT = core.REPO_ROOT / "output" / "audit"
 DEFAULT_XHIGH_MAX_WORKERS = 5
+DEFAULT_REASONING_EFFORT = "high"
 
 
 @dataclass
@@ -37,12 +38,11 @@ class PoolConfig:
     workers: int = 1
     extract_model: str = "gpt-5.5"
     adjudicate_model: str = "gpt-5.5"
-    extract_reasoning_effort: str | None = None
-    adjudicate_reasoning_effort: str | None = None
+    extract_reasoning_effort: str | None = DEFAULT_REASONING_EFFORT
+    adjudicate_reasoning_effort: str | None = DEFAULT_REASONING_EFFORT
     max_tokens_per_deal: int = 200000
     re_validate: bool = False
     re_extract: bool = False
-    force: bool = False
     commit: bool = False
     dry_run: bool = False
     api_key: str | None = None
@@ -145,7 +145,7 @@ def _check_cached_raw_response(slug: str, cfg: PoolConfig, current_rulebook_vers
         return CacheCheck(
             None,
             "cached raw_response.json rulebook_version does not match current rulebook; "
-            "use --re-extract or --force for a fresh SDK call",
+            "use --re-extract for a fresh SDK call",
         )
     parsed = payload.get("parsed_json")
     if not isinstance(parsed, dict):
@@ -167,8 +167,8 @@ def decide_skip(
     current_rulebook_version: str,
     state: dict[str, Any] | None = None,
 ) -> SkipDecision:
-    if cfg.force or cfg.re_extract:
-        return SkipDecision("run", "forced fresh extraction")
+    if cfg.re_extract:
+        return SkipDecision("run", "fresh SDK extraction requested")
     if cfg.re_validate:
         cached = _check_cached_raw_response(slug, cfg, current_rulebook_version)
         if cached.valid:
@@ -520,21 +520,20 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--adjudicate-model", default=os.environ.get("ADJUDICATE_MODEL", "gpt-5.5"))
     parser.add_argument(
         "--extract-reasoning-effort",
-        default=os.environ.get("EXTRACT_REASONING_EFFORT"),
+        default=os.environ.get("EXTRACT_REASONING_EFFORT") or DEFAULT_REASONING_EFFORT,
         choices=["none", "minimal", "low", "medium", "high", "xhigh"],
-        help="reasoning.effort for extractor calls (default: model default)",
+        help=f"reasoning.effort for extractor calls (default: {DEFAULT_REASONING_EFFORT})",
     )
     parser.add_argument(
         "--adjudicate-reasoning-effort",
-        default=os.environ.get("ADJUDICATE_REASONING_EFFORT"),
+        default=os.environ.get("ADJUDICATE_REASONING_EFFORT") or DEFAULT_REASONING_EFFORT,
         choices=["none", "minimal", "low", "medium", "high", "xhigh"],
-        help="reasoning.effort for adjudicator calls (default: model default)",
+        help=f"reasoning.effort for adjudicator calls (default: {DEFAULT_REASONING_EFFORT})",
     )
     parser.add_argument("--max-tokens-per-deal", type=int, default=_int_env("MAX_TOKENS_PER_DEAL", 200000))
     rerun = parser.add_mutually_exclusive_group()
     rerun.add_argument("--re-validate", action="store_true", help="Reuse only a current raw_response.json cache.")
     rerun.add_argument("--re-extract", action="store_true")
-    parser.add_argument("--force", action="store_true")
     parser.add_argument("--commit", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     return parser
@@ -553,7 +552,6 @@ def config_from_args(args: argparse.Namespace) -> PoolConfig:
         max_tokens_per_deal=args.max_tokens_per_deal,
         re_validate=args.re_validate,
         re_extract=args.re_extract,
-        force=args.force,
         commit=args.commit,
         dry_run=args.dry_run,
         api_key=os.environ.get("OPENAI_API_KEY"),

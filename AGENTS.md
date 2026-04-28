@@ -67,10 +67,10 @@ python -m pipeline.run_pool --slugs medivation,imprivata --workers 2
 
 Use `--dry-run` to inspect selection without requiring an API key. Use
 `--re-validate` to reuse `output/audit/{slug}/raw_response.json` only when its
-`rulebook_version` matches the current rulebook. Use `--re-extract` or
-`--force` for a fresh SDK extraction.
+`rulebook_version` matches the current rulebook. Use `--re-extract` for a
+fresh SDK extraction.
 
-Reasoning effort is explicit when requested:
+Reasoning effort defaults to `high` for both extractor and adjudicator calls:
 
 ```bash
 python run.py --slug medivation --extract --extract-reasoning-effort high

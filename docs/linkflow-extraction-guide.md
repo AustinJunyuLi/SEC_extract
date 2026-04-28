@@ -23,10 +23,13 @@ Use this environment shape:
 OPENAI_BASE_URL=https://www.linkflow.run/v1
 EXTRACT_MODEL=gpt-5.5
 ADJUDICATE_MODEL=gpt-5.5
+EXTRACT_REASONING_EFFORT=high
+ADJUDICATE_REASONING_EFFORT=high
 LINKFLOW_XHIGH_MAX_WORKERS=5
 ```
 
-Use high reasoning when doing a serious reference-deal run:
+High reasoning is the default extraction setting. Override it only when
+running an explicit model-effort experiment:
 
 ```bash
 python -m pipeline.run_pool \
@@ -87,8 +90,8 @@ Avoid these patterns:
 - Worker counts above the tested provider ceiling. `xhigh` is capped at five
   concurrent workers by default; the runner rejects larger `xhigh` pools before
   making API calls.
-- Exotic reasoning efforts before testing. `high` is the serious-run default
-  for `gpt-5.5`; unset is acceptable for cheap checks. Do not assume every
+- Exotic reasoning efforts before testing. `high` is the default for `gpt-5.5`;
+  do not leave reasoning effort unset for real extraction. Do not assume every
   proxy accepts every OpenAI reasoning-effort value.
 - Stale cached raw responses after prompt, schema, rulebook, or section-slicing
   changes. `--re-validate` is only valid when the cache rulebook version and

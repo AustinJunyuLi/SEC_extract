@@ -18,6 +18,7 @@ from types import SimpleNamespace
 from typing import Any
 
 from pipeline import core
+from pipeline.run_pool import DEFAULT_REASONING_EFFORT
 
 REPO_ROOT = Path(__file__).resolve().parent
 PROGRESS_PATH = REPO_ROOT / "state" / "progress.json"
@@ -47,9 +48,14 @@ def _make_pool_config(args: argparse.Namespace, *, mode: str) -> Any:
         re_extract=mode == "re_extract",
         extract_model=args.extract_model or os.environ.get("EXTRACT_MODEL", "gpt-5.5"),
         adjudicate_model=args.adjudicate_model or os.environ.get("ADJUDICATE_MODEL", "gpt-5.5"),
-        extract_reasoning_effort=args.extract_reasoning_effort or os.environ.get("EXTRACT_REASONING_EFFORT"),
+        extract_reasoning_effort=(
+            args.extract_reasoning_effort
+            or os.environ.get("EXTRACT_REASONING_EFFORT")
+            or DEFAULT_REASONING_EFFORT
+        ),
         adjudicate_reasoning_effort=(
             args.adjudicate_reasoning_effort or os.environ.get("ADJUDICATE_REASONING_EFFORT")
+            or DEFAULT_REASONING_EFFORT
         ),
         max_tokens_per_deal=args.max_tokens_per_deal or int(os.environ.get("MAX_TOKENS_PER_DEAL", "200000")),
         commit=False,

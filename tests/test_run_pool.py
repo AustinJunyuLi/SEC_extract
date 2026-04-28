@@ -38,6 +38,26 @@ def test_mutually_exclusive_args():
         parser.parse_args(["--slugs", "a,b", "--filter", "pending"])
 
 
+def test_force_alias_is_not_supported():
+    parser = run_pool.build_parser()
+
+    with pytest.raises(SystemExit):
+        parser.parse_args(["--filter", "reference", "--force"])
+
+
+def test_reasoning_effort_defaults_to_high(monkeypatch):
+    monkeypatch.delenv("EXTRACT_REASONING_EFFORT", raising=False)
+    monkeypatch.delenv("ADJUDICATE_REASONING_EFFORT", raising=False)
+    parser = run_pool.build_parser()
+
+    cfg = run_pool.config_from_args(parser.parse_args(["--filter", "reference", "--dry-run"]))
+
+    assert cfg.extract_reasoning_effort == "high"
+    assert cfg.adjudicate_reasoning_effort == "high"
+    assert run_pool.PoolConfig().extract_reasoning_effort == "high"
+    assert run_pool.PoolConfig().adjudicate_reasoning_effort == "high"
+
+
 def test_skip_decisions_and_cache_policy(minimal_state_repo):
     env = minimal_state_repo
     cfg = _cfg(audit_root=env.tmp_path / "output" / "audit")
@@ -51,7 +71,6 @@ def test_skip_decisions_and_cache_policy(minimal_state_repo):
     assert run_pool.decide_skip("stale", cfg, current, state).action == "run"
     assert run_pool.decide_skip("failed", cfg, current, state).action == "run"
     assert run_pool.decide_skip("done", _cfg(re_extract=True, audit_root=cfg.audit_root), current, state).action == "run"
-    assert run_pool.decide_skip("done", _cfg(force=True, audit_root=cfg.audit_root), current, state).action == "run"
 
     audit = cfg.audit_root / "done"
     audit.mkdir(parents=True)
