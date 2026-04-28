@@ -200,6 +200,51 @@ def test_diff_events_labels_buyer_group_atomization_mismatch():
     assert mismatch["alex_count"] == 1
 
 
+def test_diff_deal_warns_when_filtered_dropsilent_matches_alex_drop(tmp_path, monkeypatch):
+    reference_dir = tmp_path / "reference"
+    extraction_dir = tmp_path / "extractions"
+    reference_dir.mkdir()
+    extraction_dir.mkdir()
+    monkeypatch.setattr(scoring_diff, "REFERENCE_DIR", reference_dir)
+    monkeypatch.setattr(scoring_diff, "EXTRACTION_DIR", extraction_dir)
+
+    (reference_dir / "synthetic.json").write_text(json.dumps({
+        "deal": {},
+        "events": [
+            {
+                "BidderID": 10,
+                "bidder_alias": "Party A",
+                "bid_note": "Drop",
+                "bid_date_precise": "2020-02-01",
+                "_xlsx_row": 9999,
+            }
+        ],
+    }))
+    (extraction_dir / "synthetic.json").write_text(json.dumps({
+        "deal": {},
+        "events": [
+            {
+                "BidderID": 1,
+                "bidder_alias": "Party A",
+                "bid_note": "DropSilent",
+                "bid_date_precise": None,
+            }
+        ],
+    }))
+
+    report = scoring_diff.diff_deal("synthetic")
+
+    warnings = [
+        div for div in report.divergences
+        if div.get("type") == "drop_silent_vs_explicit_drop"
+    ]
+    assert len(warnings) == 1
+    assert warnings[0]["code"] == "drop_silent_vs_explicit_drop"
+    assert warnings[0]["ai_BidderID"] == 1
+    assert warnings[0]["alex_BidderID"] == 10
+    assert any("DropSilent-vs-Drop" in note for note in report.notes)
+
+
 def test_diff_events_compares_aggregate_bid_value():
     ai_events = [
         {

@@ -66,10 +66,12 @@ AI_ONLY_EVENT_FIELDS = {
 # in Alex's reference. Stripped from the AI side before comparison so they
 # don't appear as spurious "AI-only row" mismatches.
 #
-# DropSilent: per rules/events.md §I1, the AI emits one DropSilent row per
-# silent NDA signer (NDA + no later activity). Alex's reference predates
-# this policy and represents silent signers as bare NDA rows, so the AI's
-# DropSilent rows have no Alex counterpart by design.
+# DropSilent: per rules/events.md §I1, the AI emits one DropSilent row only
+# for true post-NDA filing silence. Alex's reference predates this policy and
+# represents true silent signers as bare NDA rows, so those AI DropSilent rows
+# have no Alex counterpart by design. If a filtered DropSilent matches an
+# Alex-only explicit Drop for the same bidder, diff_deal records a diagnostic
+# because the filing likely narrated a bidder-specific outcome.
 AI_ONLY_BID_NOTES: frozenset[str] = frozenset({"DropSilent"})
 BUYER_GROUP_ATOMIZATION_FLAG_CODES: frozenset[str] = frozenset({
     "buyer_group_constituent",
@@ -154,6 +156,16 @@ def join_key(ev: dict[str, Any]) -> tuple[str | None, str | None, str | None]:
 def loose_key(ev: dict[str, Any]) -> tuple[str | None, str | None]:
     """Fallback key when dates differ: (alias, bid_note)."""
     return (normalize_bidder(ev.get("bidder_alias")), ev.get("bid_note"))
+
+
+def _same_bidder_for_diagnostic(ai_ev: dict[str, Any], alex_ev: dict[str, Any]) -> bool:
+    ai_alias = normalize_bidder(ai_ev.get("bidder_alias"))
+    alex_alias = normalize_bidder(alex_ev.get("bidder_alias"))
+    if ai_alias is not None and ai_alias == alex_alias:
+        return True
+    ai_name = normalize_bidder(ai_ev.get("bidder_name"))
+    alex_name = normalize_bidder(alex_ev.get("bidder_name"))
+    return ai_name is not None and ai_name == alex_name
 
 
 # ---------------------------------------------------------------------------
@@ -388,6 +400,47 @@ def diff_deal_fields(ai_deal: dict[str, Any], alex_deal: dict[str, Any]) -> list
     return out
 
 
+def _drop_silent_vs_explicit_drop_warnings(
+    filtered_ai_events: list[dict[str, Any]],
+    alex_only_rows: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    alex_drop_rows = [
+        ev for ev in alex_only_rows
+        if ev.get("bid_note") == "Drop"
+    ]
+    used_alex_indexes: set[int] = set()
+    warnings = []
+
+    for ai_ev in filtered_ai_events:
+        if ai_ev.get("bid_note") != "DropSilent":
+            continue
+        for idx, alex_ev in enumerate(alex_drop_rows):
+            if idx in used_alex_indexes:
+                continue
+            if not _same_bidder_for_diagnostic(ai_ev, alex_ev):
+                continue
+            used_alex_indexes.add(idx)
+            warnings.append({
+                "type": "drop_silent_vs_explicit_drop",
+                "code": "drop_silent_vs_explicit_drop",
+                "ai_BidderID": ai_ev.get("BidderID"),
+                "alex_BidderID": alex_ev.get("BidderID"),
+                "bidder_alias_ai": ai_ev.get("bidder_alias"),
+                "bidder_alias_alex": alex_ev.get("bidder_alias"),
+                "bidder_name_ai": ai_ev.get("bidder_name"),
+                "bidder_name_alex": alex_ev.get("bidder_name"),
+                "ai_row": ai_ev,
+                "alex_row": alex_ev,
+                "reason": (
+                    "AI emitted DropSilent but Alex has explicit Drop for the "
+                    "same bidder; review the filing for narrated bidder-specific "
+                    "inactivity, withdrawal, rejection, or process exit."
+                ),
+            })
+            break
+    return warnings
+
+
 def diff_deal(slug: str) -> DiffReport:
     reference_path = REFERENCE_DIR / f"{slug}.json"
     extraction_path = EXTRACTION_DIR / f"{slug}.json"
@@ -400,18 +453,35 @@ def diff_deal(slug: str) -> DiffReport:
     ref = json.loads(reference_path.read_text())
     ext = json.loads(extraction_path.read_text())
 
-    # Filter AI-only bid-notes (e.g., DropSilent per §I1) before comparison.
-    # These are inferred metadata not present in Alex's reference; including
-    # them produces spurious "AI-only row" mismatches.
     ai_events_raw = ext.get("events", [])
-    filtered_count = sum(1 for ev in ai_events_raw if ev.get("bid_note") in AI_ONLY_BID_NOTES)
-    ai_events = [ev for ev in ai_events_raw if ev.get("bid_note") not in AI_ONLY_BID_NOTES]
+    filtered_ai_events = [
+        ev for ev in ai_events_raw
+        if ev.get("bid_note") in AI_ONLY_BID_NOTES
+    ]
+    ai_events = [
+        ev for ev in ai_events_raw
+        if ev.get("bid_note") not in AI_ONLY_BID_NOTES
+    ]
 
     r = diff_events(slug, ai_events, ref.get("events", []))
     r.deal_disagreements = diff_deal_fields(ext.get("deal", {}), ref.get("deal", {}))
-    if filtered_count:
+
+    drop_silent_warnings = _drop_silent_vs_explicit_drop_warnings(
+        filtered_ai_events,
+        r.alex_only_rows,
+    )
+    if drop_silent_warnings:
+        r.divergences.extend(drop_silent_warnings)
         r.notes.append(
-            f"Filtered {filtered_count} AI-side row(s) with bid_note in "
+            "DropSilent-vs-Drop warnings: "
+            f"{len(drop_silent_warnings)} filtered AI DropSilent row(s) matched "
+            "Alex explicit Drop rows for the same bidder. Review source text for "
+            "a narrated outcome; narrated outcomes must be explicit Drop."
+        )
+
+    if filtered_ai_events:
+        r.notes.append(
+            f"Filtered {len(filtered_ai_events)} AI-side row(s) with bid_note in "
             f"{sorted(AI_ONLY_BID_NOTES)} per §I1 (inferred metadata not "
             f"present in Alex's reference)."
         )
@@ -446,6 +516,17 @@ def _format_divergence_md(div: dict[str, Any]) -> str:
             f"(AI id {div['ai_BidderID']}, Alex id {div['alex_BidderID']})"
         )
         lines.append("- Verdict: `[ ] ai-right  [ ] alex-right  [ ] both-defensible  [ ] both-wrong`")
+    elif dtype == "drop_silent_vs_explicit_drop":
+        lines.append(
+            "### DropSilent-vs-Drop diagnostic: "
+            f"`{div.get('bidder_alias_ai')}` · `{div.get('bidder_alias_alex')}`"
+        )
+        lines.append(
+            f"- AI DropSilent BidderID {div.get('ai_BidderID')} · "
+            f"Alex Drop BidderID {div.get('alex_BidderID')}"
+        )
+        lines.append(f"- Diagnostic: {div.get('reason')}")
+        lines.append("- Verdict: `[ ] true-silence  [ ] narrated-drop  [ ] both-defensible  [ ] both-wrong`")
     elif dtype == "cardinality_mismatch":
         jk = div["bucket_key"]
         if div.get("match_scope") == "buyer_group_atomization":
@@ -521,7 +602,7 @@ def format_report_md(r: DiffReport) -> str:
             L.append(f"- **{fd['field']}** — ai=`{fd['ai']!r}` · alex=`{fd['alex']!r}`")
         L.append("")
     if r.divergences:
-        L.append("## Matched-row divergences")
+        L.append("## Divergences and diagnostics")
         for div in r.divergences:
             L.append(_format_divergence_md(div))
             L.append("")

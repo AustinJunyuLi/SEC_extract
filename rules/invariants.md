@@ -282,6 +282,13 @@ story; severities are listed per invariant.
   Soft severity allows the orchestrator to surface the miss for review
   without blocking the deal. In a healthy run, this flag count is zero
   across the entire reference set.
+- **Boundary.** This invariant detects missing `DropSilent` rows. It does
+  not prove a `DropSilent` row is semantically correct, because Python cannot
+  reliably know whether the filing later narrated a bidder-specific or
+  group-level outcome. `scoring/diff.py` emits
+  `drop_silent_vs_explicit_drop` diagnostics when a filtered AI `DropSilent`
+  aligns with Alex's explicit `Drop`; Austin adjudicates those against the
+  filing.
 
 ### §P-S2 — `auction` flag matches §Scope-1 classifier
 - **Check.** Deal-level `auction` field IFF

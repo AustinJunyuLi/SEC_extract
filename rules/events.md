@@ -201,10 +201,10 @@ Schedule 13D…"*).
   release calling for a sale"* → **rows for X, Y, and Z** if all three
   constituents are identifiable.
 
-**Migration note.** Alex's Petsmart workbook collapsed JANA + Longview
-into 1 Activist Sale row; under this rule the AI emits 2. This is a
-legitimate AI-identified correction per the ground-truth epistemology
-(see `AGENTS.md`).
+**Reference comparison note.** Alex's Petsmart workbook collapsed JANA +
+Longview into one `Activist Sale` row. Under this rule the AI emits two
+filing-supported rows; Austin reviews that as an AI-vs-Alex disagreement
+against the filing.
 
 **Cross-references.**
 - `rules/events.md` §I1 (how drops interact with initiation).
@@ -280,9 +280,21 @@ in narrative order.
 If the filing narrates later bidder-specific inactivity, withdrawal,
 failure to submit, no-response, target rejection, or process exit, emit an
 explicit `Drop` row instead of `DropSilent`. `DropSilent` is only for true
-filing silence after the NDA. A generic sentence that a named bidder "did not
-submit," "was no longer interested," "declined to continue," "could not
-proceed," or "did not respond" is narrated activity and must be `Drop`.
+filing silence after the NDA. A sentence that a named bidder "did not submit,"
+"was no longer interested," "declined to continue," "could not proceed,"
+"was not advanced," or "did not respond" is narrated activity and must be
+`Drop`.
+
+Group-narrated outcomes follow the same doctrine:
+
+- If the filing says an identifiable or countable cohort did not continue,
+  failed to bid, declined, withdrew, was rejected, or was not advanced, emit
+  atomized `Drop` rows for the supported named parties plus §E5 placeholders
+  for the supported unnamed balance.
+- If the filing gives only a vague uncountable group outcome, emit one
+  placeholder `Drop` row with an ambiguity flag. Do not guess additional
+  rows.
+- Do not use `DropSilent` for any party covered by a narrated group outcome.
 
 - `bid_note = "DropSilent"`
 - `bid_date_precise = null`, `bid_date_rough = null`
@@ -306,12 +318,6 @@ analysis. Re-citing the NDA quote is consistent with §R2 because the row's
 *meaning* (no later activity) is genuinely sourced from that bidder's absence
 from the rest of the filing; the NDA passage is the only concrete anchor the
 filing gives us.
-
-Reverses the earlier "do not fabricate catch-all Drops" stance. The
-earlier rationale — "synthetic Drops would have reused one generic quote
-across all 20 rows" — is addressed by the dedicated `DropSilent` code:
-the row's semantics make explicit that the quote is the NDA passage, not
-a fabricated drop narration.
 
 **Consortium drops — split handling.**
 

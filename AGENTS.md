@@ -217,6 +217,15 @@ threshold, but it can support later atomized buyer-group `Bid` / `Drop` /
 Alex comparison reports should treat AI atomization vs Alex aggregation as a
 taxonomy bucket, not ordinary AI-only/Alex-only noise.
 
+Current DropSilent doctrine: `DropSilent` is only true filing silence after a
+target-side `NDA`. Any bidder-specific narrated inactivity, withdrawal,
+failure to bid, no-response, target rejection, not-advanced outcome, or process
+exit is explicit `Drop`. Identifiable or countable group-narrated outcomes are
+atomized as explicit `Drop` rows; vague uncountable group outcomes become one
+placeholder `Drop` with an ambiguity flag. The comparator filters true
+`DropSilent` rows but reports `drop_silent_vs_explicit_drop` when a filtered
+AI `DropSilent` matches Alex's explicit `Drop` for the same bidder.
+
 ## Target-Deal Gate
 
 Do not run extraction on the non-reference target deals until the reference-set

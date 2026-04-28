@@ -143,6 +143,10 @@ If any scope rule is 🟥 OPEN, stop and report — do not extract.
 4. **Bidder names follow the filing verbatim** until the canonicalization rule in `rules/bidders.md` §E4 triggers.
 5. **Informal-vs-formal classification must be evidenced per `rules/bids.md` §G2**: either a true range bid (both `bid_value_lower` and `bid_value_upper` numeric with `lower < upper`) or a non-empty `bid_type_inference_note` ≤300 chars. The note should cite the §G1 rule applied (trigger phrase, process-position fallback, or structural signal); the validator (§P-G2) enforces evidence, not a specific justification type. Borderline calls are flagged, not forced.
 6. **Skip rules in `rules/bids.md` §M are mandatory.** Do not record unsolicited letters with no NDA, no price, no bid intent.
+7. **`DropSilent` is only true post-NDA filing silence.** Narrated
+   bidder-specific or group outcomes are explicit `Drop` rows;
+   identifiable/countable groups atomize, and vague uncountable groups become
+   one placeholder `Drop` with an ambiguity flag.
 
 Evidence quote strings target and hard-fail at 1500 characters. There is no
 soft over-target zone; split evidence into the multi-quote form when one
