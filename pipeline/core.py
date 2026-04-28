@@ -211,10 +211,47 @@ DATE_INFERENCE_FLAG_CODES: frozenset[str] = frozenset({
     "date_range_collapsed",
 })
 
+BUYER_GROUP_CONSTITUENT_FLAG = "buyer_group_constituent"
+CONSORTIUM_DROP_SPLIT_FLAG = "consortium_drop_split"
+CONSORTIUM_LIFECYCLE_FLAG_CODES: frozenset[str] = frozenset({
+    BUYER_GROUP_CONSTITUENT_FLAG,
+    CONSORTIUM_DROP_SPLIT_FLAG,
+})
+
 def _row_flag_codes(ev: dict) -> set[str]:
     """Return the set of flag codes attached to a row, guarding against
     non-dict entries that may slip through LLM output."""
     return {f.get("code") for f in (ev.get("flags") or []) if isinstance(f, dict)}
+
+
+def _has_buyer_group_constituent_evidence(ev: dict) -> bool:
+    """Return whether a row explicitly documents buyer-group membership."""
+    return BUYER_GROUP_CONSTITUENT_FLAG in _row_flag_codes(ev)
+
+
+def _has_consortium_lifecycle_flag(ev: dict) -> bool:
+    return bool(_row_flag_codes(ev) & CONSORTIUM_LIFECYCLE_FLAG_CODES)
+
+
+def _consortium_lifecycle_evidence_keys(events: list[dict]) -> set[tuple[str, int]]:
+    """Return (bidder_name, phase) pairs with explicit consortium evidence.
+
+    A bare `ConsortiumCA` is not an auction NDA. It is only an evidence
+    witness when a later lifecycle row also marks the bidder as a buyer-group
+    constituent. Drop rows are excluded from this witness set so they cannot
+    satisfy their own prior-engagement requirement.
+    """
+    keys: set[tuple[str, int]] = set()
+    for ev in events:
+        name = ev.get("bidder_name")
+        if not name:
+            continue
+        note = ev.get("bid_note")
+        if note == "ConsortiumCA":
+            keys.add((name, _phase(ev)))
+        elif note in {"Bid", "Executed"} and _has_buyer_group_constituent_evidence(ev):
+            keys.add((name, _phase(ev)))
+    return keys
 
 # §A3 logical ordering rank table (lower rank = earlier within same date).
 # Keys are bid_note values; for Bid rows specifically, informal bids rank 6
@@ -816,6 +853,7 @@ def _invariant_p_d5(events: list[dict]) -> list[dict]:
     # Map (name, phase) -> True if any row carries unsolicited_first_contact,
     # so the §D1.a exemption propagates from the Bid row to the Drop row.
     unsolicited_keys: set[tuple[str, int]] = set()
+    consortium_evidence_keys = _consortium_lifecycle_evidence_keys(events)
     for j, ev in enumerate(events):
         name = ev.get("bidder_name")
         if not name:
@@ -840,6 +878,11 @@ def _invariant_p_d5(events: list[dict]) -> list[dict]:
             continue  # §M4 stale-prior phase 0 — skip
         if (name, phase) in unsolicited_keys:
             continue  # §D1.a — bidder approached unsolicited and withdrew
+        if (
+            _has_consortium_lifecycle_flag(ev)
+            and (name, phase) in consortium_evidence_keys
+        ):
+            continue  # §I3 — atomized buyer-group constituent lifecycle row
         witnesses = engagement_rows.get((name, phase), set()) - {i}
         if not witnesses:
             flags.append({
@@ -882,6 +925,7 @@ def _invariant_p_d6(events: list[dict]) -> list[dict]:
     flags: list[dict[str, Any]] = []
     # Build NDA index by (bidder_name, phase).
     nda_keys: set[tuple[str, int]] = set()
+    consortium_evidence_keys = _consortium_lifecycle_evidence_keys(events)
     for ev in events:
         if ev.get("bid_note") != "NDA":
             continue
@@ -902,12 +946,20 @@ def _invariant_p_d6(events: list[dict]) -> list[dict]:
         # Only §D1.a exempts from §P-D6; §C4 is documentation-only.
         if "unsolicited_first_contact" in _row_flag_codes(ev):
             continue
+        if (
+            _has_buyer_group_constituent_evidence(ev)
+            and (name, phase) in consortium_evidence_keys
+        ):
+            continue
         if (name, phase) not in nda_keys:
             flags.append({
                 "row_index": i, "code": "bid_without_preceding_nda", "severity": "hard",
                 "reason": (
                     f"§P-D6: Bid row for bidder_name={name!r} in phase={phase} "
                     f"has no NDA row under the same bidder_name in that phase. "
+                    f"If this is an atomized buyer-group constituent whose bid is "
+                    f"supported by consortium membership evidence, attach the "
+                    f"`{BUYER_GROUP_CONSTITUENT_FLAG}` flag (§I3). "
                     f"If this bidder's NDA was emitted as an unnamed §E3 placeholder, "
                     f"the extractor should have attached `unnamed_nda_promotion` on this "
                     f"Bid row to promote the placeholder at pipeline-finalize time. "

@@ -41,6 +41,13 @@ same date. If the operational/economic members are not identifiable from the
 filing, treat the extraction as incomplete rather than silently creating a
 shell-only or consortium-label Executed row.
 
+Every atomized buyer-group `Bid`, `Drop`, and `Executed` row carries
+`{"code": "buyer_group_constituent", "severity": "info", "reason": "<short filing-grounded statement identifying this party as a buyer-group constituent>"}`.
+This is the validator-visible evidence that the row is an atomized
+constituent lifecycle event, not an ordinary standalone bidder row. It does
+not make `ConsortiumCA` an auction NDA and does not count toward the auction
+threshold.
+
 **Rationale.** Per Alex 2026-04-27 directive: atomization is unconditional and applies symmetrically to NDA, Bid, Drop, Restarted, Terminated, and Executed. This matches the `DropSilent` convention (§I1) of one row per bidder.
 
 **Cross-references.**

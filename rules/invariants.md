@@ -111,7 +111,9 @@ errors.
 - **Fail action.** Flag `ca_type_ambiguous`. Hard.
 - **Why hard.** Ambiguous CA type changes whether a row is an auction-funnel
   NDA, a bidder-side consortium CA, or a skipped rollover side agreement.
-  Production runs showed soft flags were too easy to ignore.
+  ConsortiumCA can support only explicitly flagged buyer-group lifecycle
+  rows; a CA-type ambiguity would decide whether that narrow doctrine
+  applies. Production runs showed soft flags were too easy to ignore.
 
 ### §P-R8 — Extractor-emitted flag objects conform to §R2 shape
 
@@ -185,9 +187,15 @@ comparable across deals.
      drop row is the withdrawal itself, so requiring a prior
      engagement would defeat the §D1.a exemption. Mirrors §P-D6
      exemption #3.
+  4. Atomized buyer-group constituent drops are exempt only when the row
+     carries `buyer_group_constituent` or `consortium_drop_split` and the
+     same `(bidder_name, process_phase)` has consortium evidence
+     (`ConsortiumCA` or a flagged buyer-group `Bid` / `Executed` row).
+     A bare `ConsortiumCA` plus an unflagged `Drop` still fails.
 - **References.** `rules/events.md` §I1 (drop vocabulary), §I2
   (re-engagement), §D1 (engagement vocabulary), §D1.a
-  (unsolicited-first-contact exemption).
+  (unsolicited-first-contact exemption), §I3 (buyer-group constituent
+  lifecycle doctrine).
 
 ### §P-D7 — Drop reason matrix
 - **Check.** Every `Drop` row obeys the §I1 matrix:
@@ -216,7 +224,11 @@ comparable across deals.
 - **Check.** For every row with `bid_note = "Bid"`, non-null
   `bidder_name`, and `process_phase >= 1`, there exists at least one
   row with `bid_note = "NDA"`, the same `bidder_name`, and the same
-  `process_phase`. Existence-only — not ordering.
+  `process_phase`. Existence-only — not ordering. Narrow consortium
+  exception: an atomized buyer-group constituent `Bid` may pass without
+  target-side NDA only when the `Bid` row carries `buyer_group_constituent`
+  and the same `(bidder_name, process_phase)` has consortium evidence
+  (`ConsortiumCA` or a flagged buyer-group lifecycle row).
 - **Fail action.** Flag `bid_without_preceding_nda`. Hard.
 - **Why hard.** Closes the retroactive-naming gap where an AI emits
   unnamed §E3 NDA placeholders (e.g., Providence Party D/E/F) that
@@ -233,7 +245,11 @@ comparable across deals.
      bidders who approach unsolicited and never sign an NDA (target
      declines or bidder withdraws). The flag's `reason` must contain a
      ≤120-char verbatim snippet showing that language.
-  4. `pre_nda_informal_bid` (§C4) does **NOT** exempt. §C4 requires the
+  4. Row carries `buyer_group_constituent` and has same-phase consortium
+     evidence. This is not a general ConsortiumCA-as-NDA substitution:
+     `ConsortiumCA` never counts toward §Scope-1 and never exempts an
+     unflagged ordinary `Bid`.
+  5. `pre_nda_informal_bid` (§C4) does **NOT** exempt. §C4 requires the
      bidder to sign an NDA later in the same phase, so §P-D6's
      existence check is satisfied naturally by that later NDA row.
 - **Remediation path for unnamed-NDA cases.** When the filing later

@@ -28,7 +28,7 @@ expansion.
 
 **Counterparty events:**
 - `NDA` — **target ↔ bidder** confidentiality agreement (auction NDA, Type A per §I3). Grants the bidder access to MNPI; usually paired with a standstill. This is the auction-funnel signal counted by §Scope-1.
-- `ConsortiumCA` — **bidder ↔ bidder** confidentiality agreement (consortium / inter-bidder, Type B per §I3). Two would-be bidders share proprietary analysis / financing plans / strategic intent under mutual confidentiality. NOT auction-funnel signal; does NOT count toward §Scope-1's auction threshold; does NOT discharge §P-D6 (target-NDA precondition for a Bid).
+- `ConsortiumCA` — **bidder ↔ bidder** confidentiality agreement (consortium / inter-bidder, Type B per §I3). Two would-be bidders share proprietary analysis / financing plans / strategic intent under mutual confidentiality. NOT auction-funnel signal; does NOT count toward §Scope-1's auction threshold; does not by itself discharge §P-D6. A later atomized buyer-group `Bid` may satisfy §P-D6 only when that `Bid` row carries explicit `buyer_group_constituent` evidence.
 - `Drop` — filing-narrated withdrawal / rejection. Structured columns `drop_initiator` and `drop_reason_class` carry the agency and reason class.
 - `DropSilent` — bidder signed NDA but the filing narrates no later activity (no bid, no narrated drop, no execution); inferred withdrawal. Required by §I1; date is null with `date_unknown` info flag; agency is unknowable.
 
@@ -323,8 +323,10 @@ individual NDAs, form a consortium to bid), and that consortium drops:
   citing the consortium drop event.
 - Each row carries the same structured drop fields and `source_quote` (the
   consortium's drop statement).
-- Each row flags `{"code": "consortium_drop_split", "severity": "info",
-  "reason": "consortium <name> dropped; row split per constituent NDA"}`.
+- Each row flags `{"code": "buyer_group_constituent", "severity": "info",
+  "reason": "<short filing-grounded statement that this party is a buyer-group constituent>"}`
+  and `{"code": "consortium_drop_split", "severity": "info",
+  "reason": "consortium <name> dropped; row split per constituent"}`.
 - The consortium's bidding events (bids, final-round participation) follow
   the joint-bidder rule in `rules/bidders.md` §E2.
 
@@ -374,11 +376,12 @@ legally distinct CA types appear:
   §Scope-1; satisfies §P-D6 (NDA-before-Bid precondition); subject to
   §I1 DropSilent rule for silent signers.
 - **Type B** → `bid_note = "ConsortiumCA"` (new event in §C1; rank 5
-  by §A3). NOT counted by §Scope-1; does NOT satisfy §P-D6 (a Type B
-  CA is not target-bidder, so a separate Type A NDA is still required
-  for that bidder's later target-NDA-precondition); does NOT trigger
-  §I1 DropSilent (a silent ConsortiumCA signer is not a silent
-  auction-funnel signer).
+  by §A3). NOT counted by §Scope-1; does NOT by itself satisfy §P-D6
+  (a Type B CA is not target-bidder); does NOT trigger §I1 DropSilent
+  (a silent ConsortiumCA signer is not a silent auction-funnel signer).
+  It can serve as consortium-membership evidence for later atomized
+  buyer-group lifecycle rows only when those later rows carry
+  `buyer_group_constituent`.
 - **Type C** → **skipped.** No row emitted. See `rules/bids.md` §M5.
   Rollover CAs are not auction-process events; they belong to a
   separate research domain (post-merger capital structure).
@@ -416,20 +419,37 @@ Austin adjudicates against the filing.
 - `process_phase` follows the surrounding events (typically phase 1)
 - `role = "bidder"` (still a bidder-side event, just not target-bidder)
 
+**Buyer-group constituent lifecycle flag.**
+
+When a `Bid`, `Drop`, or `Executed` row is atomized because the filing
+identifies the bidder as a buyer-group / consortium constituent, attach:
+
+```json
+{"code": "buyer_group_constituent", "severity": "info",
+ "reason": "<short filing-grounded statement identifying this party as a buyer-group constituent>"}
+```
+
+This flag is required on any atomized buyer-group `Bid` that relies on
+consortium membership rather than a target-side NDA to satisfy §P-D6. It also
+lets the diff reporter label AI atomization vs Alex aggregation as a taxonomy
+bucket instead of ordinary AI-only/Alex-only noise.
+
 **Validator behavior on ConsortiumCA.**
 - §P-S1 (silent NDA → DropSilent) applies only to `bid_note = "NDA"`.
   ConsortiumCA signers without later activity do NOT trigger
   `missing_nda_dropsilent`.
 - §P-S2 (auction count) counts only `bid_note = "NDA"`. ConsortiumCA
   is NOT in the count.
-- §P-D6 (NDA-before-Bid precondition) requires a `bid_note = "NDA"`.
-  ConsortiumCA does NOT discharge §P-D6; a bidder who later submits a
-  Bid still needs a Type A NDA for §P-D6.
-- §P-D5 (drop-without-prior-engagement) — the engagement set
-  (`{"NDA", "Bidder Interest", "IB"}` plus all Drop codes) does NOT
-  include `ConsortiumCA`. A bidder who signed only a ConsortiumCA and
-  then dropped will fire §P-D5; this is intentional (the filing should
-  show how the bidder engaged with the target before withdrawing).
+- §P-D6 (NDA-before-Bid precondition) is still a target-NDA rule for
+  ordinary bidders. It allows an atomized buyer-group `Bid` without a
+  target-side NDA only when the `Bid` row carries `buyer_group_constituent`
+  and the same `(bidder_name, process_phase)` has consortium evidence
+  (`ConsortiumCA` or a flagged buyer-group lifecycle row).
+- §P-D5 (drop-without-prior-engagement) remains hard for ordinary drops.
+  It allows an atomized buyer-group `Drop` when that row carries
+  `buyer_group_constituent` or `consortium_drop_split` and the same
+  `(bidder_name, process_phase)` has consortium evidence. A bare
+  `ConsortiumCA` plus an unflagged `Bid` or `Drop` still fails.
 
 **Why a new event type, not a flag on NDA.**
 - Type A is the auction signal. Mixing types (even with a

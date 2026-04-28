@@ -210,10 +210,12 @@ invariants pass, and the rulebook remains unchanged across three consecutive
 clean full-reference runs. Any rulebook, prompt, schema, state, or output-format
 change resets that clock.
 
-Open current adjudication item: NDA atomization vs aggregation on `zep`,
-`mac-gray`, `providence-worcester`, and `petsmart-inc`. Current `rules/bidders.md`
-atomizes unless the filing narrates consortium activity. Austin must decide per
-deal whether to tighten the rule or regenerate the reference JSON.
+Current consortium doctrine: atomize identifiable buyer-group constituents.
+`ConsortiumCA` remains bidder-side only and never counts toward the auction
+threshold, but it can support later atomized buyer-group `Bid` / `Drop` /
+`Executed` lifecycle rows when those rows carry `buyer_group_constituent`.
+Alex comparison reports should treat AI atomization vs Alex aggregation as a
+taxonomy bucket, not ordinary AI-only/Alex-only noise.
 
 ## Target-Deal Gate
 

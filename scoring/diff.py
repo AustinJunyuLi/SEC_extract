@@ -71,6 +71,10 @@ AI_ONLY_EVENT_FIELDS = {
 # this policy and represents silent signers as bare NDA rows, so the AI's
 # DropSilent rows have no Alex counterpart by design.
 AI_ONLY_BID_NOTES: frozenset[str] = frozenset({"DropSilent"})
+BUYER_GROUP_ATOMIZATION_FLAG_CODES: frozenset[str] = frozenset({
+    "buyer_group_constituent",
+    "consortium_drop_split",
+})
 
 
 @dataclass
@@ -115,6 +119,22 @@ def normalize_bidder(alias: str | None) -> str | None:
         else:
             break
     return " ".join(s.split())
+
+
+def _row_flag_codes(ev: dict[str, Any]) -> set[str]:
+    return {f.get("code") for f in (ev.get("flags") or []) if isinstance(f, dict)}
+
+
+def _is_buyer_group_atomization(
+    ai_bucket: list[dict[str, Any]],
+    alex_bucket: list[dict[str, Any]],
+) -> bool:
+    if not ai_bucket or not alex_bucket or len(ai_bucket) <= len(alex_bucket):
+        return False
+    return any(
+        _row_flag_codes(ev) & BUYER_GROUP_ATOMIZATION_FLAG_CODES
+        for ev in ai_bucket
+    )
 
 
 def join_key(ev: dict[str, Any]) -> tuple[str | None, str | None, str | None]:
@@ -195,6 +215,7 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
     def _record_cardinality_mismatch(
         *,
         scope: str,
+        code: str = "cardinality_mismatch",
         bucket_key: dict[str, Any],
         ai_bucket: list[dict[str, Any]],
         alex_bucket: list[dict[str, Any]],
@@ -205,7 +226,7 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
         matched_alex_ids.update(id(ev) for ev in alex_bucket)
         mismatch = {
             "type": "cardinality_mismatch",
-            "code": "cardinality_mismatch",
+            "code": code,
             "match_scope": scope,
             "bucket_key": bucket_key,
             "ai_count": len(ai_bucket),
@@ -233,8 +254,10 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
     for key, ai_bucket in ai_idx.items():
         alex_bucket = alex_idx.get(key, [])
         if ai_bucket and alex_bucket and len(ai_bucket) != len(alex_bucket):
+            atomized_group = _is_buyer_group_atomization(ai_bucket, alex_bucket)
             _record_cardinality_mismatch(
-                scope="exact_join_key",
+                scope="buyer_group_atomization" if atomized_group else "exact_join_key",
+                code="atomization_vs_aggregation" if atomized_group else "cardinality_mismatch",
                 bucket_key={
                     "bidder_alias_normalized": key[0],
                     "bid_note": key[1],
@@ -296,8 +319,10 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
             continue
         if len(ai_bucket) == len(alex_bucket):
             continue
+        atomized_group = _is_buyer_group_atomization(ai_bucket, alex_bucket)
         _record_cardinality_mismatch(
-            scope="residual_bid_note",
+            scope="buyer_group_atomization" if atomized_group else "residual_bid_note",
+            code="atomization_vs_aggregation" if atomized_group else "cardinality_mismatch",
             bucket_key={
                 "bid_note": bid_note,
                 "ai_dates": sorted({ev.get("bid_date_precise") for ev in ai_bucket}, key=lambda v: (v is None, v or "")),
@@ -423,7 +448,13 @@ def _format_divergence_md(div: dict[str, Any]) -> str:
         lines.append("- Verdict: `[ ] ai-right  [ ] alex-right  [ ] both-defensible  [ ] both-wrong`")
     elif dtype == "cardinality_mismatch":
         jk = div["bucket_key"]
-        if div.get("match_scope") == "exact_join_key":
+        if div.get("match_scope") == "buyer_group_atomization":
+            lines.append(f"### Atomization vs aggregation: `{jk['bid_note']}`")
+            if "bid_date_precise" in jk:
+                lines.append(f"- Date `{jk.get('bid_date_precise')}`")
+            else:
+                lines.append(f"- AI dates `{jk.get('ai_dates')}` · Alex dates `{jk.get('alex_dates')}`")
+        elif div.get("match_scope") == "exact_join_key":
             lines.append(
                 f"### Cardinality mismatch: `{jk['bidder_alias_normalized']}` · `{jk['bid_note']}` · {jk['bid_date_precise']}"
             )
@@ -437,7 +468,9 @@ def _format_divergence_md(div: dict[str, Any]) -> str:
         lines.append(
             f"- Alex BidderIDs `{[ev.get('BidderID') for ev in div['alex_rows']]}`"
         )
-        if div.get("match_scope") == "exact_join_key":
+        if div.get("match_scope") == "buyer_group_atomization":
+            lines.append("- Comparison note: AI atomized identifiable buyer-group constituents; Alex appears aggregated.")
+        elif div.get("match_scope") == "exact_join_key":
             lines.append("- No field-level pairing attempted; counts differ within the exact bucket.")
         else:
             lines.append("- No field-level pairing attempted; counts differ within this residual event-type bucket.")

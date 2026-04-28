@@ -141,6 +141,65 @@ def test_diff_events_collapses_residual_bid_note_mismatch():
     assert mismatch["alex_count"] == 2
 
 
+def test_diff_events_labels_buyer_group_atomization_mismatch():
+    ai_events = [
+        {
+            "BidderID": 1,
+            "bidder_alias": "BC Partners",
+            "bid_note": "Executed",
+            "bid_date_precise": "2014-12-14",
+            "flags": [{
+                "code": "buyer_group_constituent",
+                "severity": "info",
+                "reason": "Filing identifies BC Partners as a buyer-group constituent.",
+            }],
+        },
+        {
+            "BidderID": 2,
+            "bidder_alias": "Caisse",
+            "bid_note": "Executed",
+            "bid_date_precise": "2014-12-14",
+            "flags": [{
+                "code": "buyer_group_constituent",
+                "severity": "info",
+                "reason": "Filing identifies Caisse as a buyer-group constituent.",
+            }],
+        },
+        {
+            "BidderID": 3,
+            "bidder_alias": "GIC",
+            "bid_note": "Executed",
+            "bid_date_precise": "2014-12-14",
+            "flags": [{
+                "code": "buyer_group_constituent",
+                "severity": "info",
+                "reason": "Filing identifies GIC as a buyer-group constituent.",
+            }],
+        },
+    ]
+    alex_events = [
+        {
+            "BidderID": 9,
+            "bidder_alias": "Buyer Group",
+            "bid_note": "Executed",
+            "bid_date_precise": "2014-12-14",
+            "_xlsx_row": 9999,
+        }
+    ]
+
+    report = scoring_diff.diff_events("petsmart-inc", ai_events, alex_events)
+
+    assert report.ai_only_rows == []
+    assert report.alex_only_rows == []
+    assert len(report.cardinality_mismatches) == 1
+    mismatch = report.cardinality_mismatches[0]
+    assert mismatch["code"] == "atomization_vs_aggregation"
+    assert mismatch["match_scope"] == "buyer_group_atomization"
+    assert mismatch["bucket_key"]["bid_note"] == "Executed"
+    assert mismatch["ai_count"] == 3
+    assert mismatch["alex_count"] == 1
+
+
 def test_diff_events_compares_aggregate_bid_value():
     ai_events = [
         {

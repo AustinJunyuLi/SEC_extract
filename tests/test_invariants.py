@@ -404,6 +404,111 @@ def test_d1a_unsolicited_first_contact_exemption_matrix(fixture_name, runner_key
     _assert_fixture(fixture_name, runner_key)
 
 
+def test_p_d6_accepts_buyer_group_constituent_bid_with_consortium_evidence():
+    events = [
+        {
+            "bid_note": "ConsortiumCA",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview and Buyer Group",
+            "process_phase": 1,
+        },
+        {
+            "bid_note": "Bid",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "process_phase": 1,
+            "flags": [{
+                "code": "buyer_group_constituent",
+                "severity": "info",
+                "reason": "Filing identifies Longview as a buyer-group participant in this bid.",
+            }],
+        },
+    ]
+
+    assert pipeline._invariant_p_d6(events) == []
+
+
+def test_p_d6_consortium_ca_alone_does_not_replace_target_nda():
+    events = [
+        {
+            "bid_note": "ConsortiumCA",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview and Buyer Group",
+            "process_phase": 1,
+        },
+        {
+            "bid_note": "Bid",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "process_phase": 1,
+            "flags": [],
+        },
+    ]
+
+    flags = pipeline._invariant_p_d6(events)
+
+    assert [f["code"] for f in flags] == ["bid_without_preceding_nda"]
+    assert flags[0]["severity"] == "hard"
+
+
+def test_p_d5_accepts_buyer_group_constituent_drop_after_consortium_bid():
+    events = [
+        {
+            "bid_note": "ConsortiumCA",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview and Buyer Group",
+            "process_phase": 1,
+        },
+        {
+            "bid_note": "Bid",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "process_phase": 1,
+            "flags": [{
+                "code": "buyer_group_constituent",
+                "severity": "info",
+                "reason": "Filing identifies Longview as a buyer-group participant in this bid.",
+            }],
+        },
+        {
+            "bid_note": "Drop",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "process_phase": 1,
+            "flags": [{
+                "code": "buyer_group_constituent",
+                "severity": "info",
+                "reason": "Filing identifies Longview as a buyer-group participant in the dropped bid.",
+            }],
+        },
+    ]
+
+    assert pipeline._invariant_p_d5(events) == []
+
+
+def test_p_d5_consortium_ca_alone_does_not_replace_prior_engagement():
+    events = [
+        {
+            "bid_note": "ConsortiumCA",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview and Buyer Group",
+            "process_phase": 1,
+        },
+        {
+            "bid_note": "Drop",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "process_phase": 1,
+            "flags": [],
+        },
+    ]
+
+    flags = pipeline._invariant_p_d5(events)
+
+    assert [f["code"] for f in flags] == ["drop_without_prior_engagement"]
+    assert flags[0]["severity"] == "hard"
+
+
 @pytest.mark.parametrize(
     "fixture_name",
     ["synthetic_pd6_pass.json", "synthetic_pd6_fail.json"],
