@@ -304,34 +304,26 @@ flagging would let silent drift accumulate.
 
 ### §H2 — Composite consideration (🟩 RESOLVED, 2026-04-18)
 
-**Decision.** Extend the event schema with **component-level fields** for
-cash, stock, and contingent consideration. Headline `bid_value_pershare`
-is the sum of components valued at the bid date.
+**Decision.** Keep a compact component-label field for mixed-consideration
+structure. Do not decompose the headline price into separate dollar columns
+inside the AI extraction schema.
 
-**New per-row fields:**
-- `cash_per_share: float | null` — cash component.
-- `stock_per_share: float | null` — stock component, valued at the bid date
-  using the acquirer's closing price or the exchange-ratio-implied value
-  stated in the filing.
-- `contingent_per_share: float | null` — CVR, earnout, escrow, or any
-  contingent component.
-- `consideration_components: list[str]` — ordered list of components
-  present. Allowed values: `["cash"]`, `["cash", "stock"]`,
+**Per-row field:**
+- `consideration_components: list[str]` — ordered list of consideration
+  components present. Allowed values: `["cash"]`, `["cash", "stock"]`,
   `["cash", "cvr"]`, `["cash", "earnout"]`, `["cash", "stock", "cvr"]`,
   `["stock"]`, `["stock", "cvr"]`, etc.
 
 **Invariants.**
-- `bid_value_pershare` = `cash_per_share` + `stock_per_share` + `contingent_per_share`
-  (treating nulls as 0). If the filing states a headline that doesn't
-  reconcile, keep the filing's headline in `bid_value_pershare` and flag
-  `composite_reconciliation_mismatch` (soft) with the arithmetic detail.
-- Pure-cash bids: `consideration_components = ["cash"]`;
-  `cash_per_share = bid_value_pershare`; `stock_per_share = null`;
-  `contingent_per_share = null`. (Most reference-deal bids.)
-- Range bids with composite structure: populate `cash_per_share_lower` /
-  `cash_per_share_upper` etc. only IF the filing ranges each component
-  separately; otherwise keep the range in `bid_value_lower` / `upper` and
-  note the composite breakdown in `additional_note`.
+- Pure-cash bids: `consideration_components = ["cash"]`.
+- Mixed-consideration bids: keep the filing-stated headline value in
+  `bid_value_pershare` when one is stated; use `consideration_components`
+  for the structure and `additional_note` for any filing-stated detail that
+  does not fit the current numeric fields.
+- Range bids with composite structure: keep the range in
+  `bid_value_lower` / `bid_value_upper` and note the composite breakdown in
+  `additional_note` unless the filing itself states a single headline
+  value.
 
 **`all_cash` deal-level derivation (§N2 cross-reference).**
 `deal.all_cash = true` iff EVERY bid event row has
@@ -346,18 +338,20 @@ milestones," use `"earnout"`. If the filing is agnostic, default to
 **Stock-per-share valuation.** Filings typically state the exchange ratio
 ("0.25 shares of Acquirer stock per Target share") and the implied value
 at the signing date ("$15.30 based on Acquirer's closing price of
-$61.20"). Use the filing-stated implied value for `stock_per_share`;
-record the exchange ratio in `additional_note` as
-`exchange_ratio: <float>`.
+$61.20"). Use the filing-stated implied value as the headline
+`bid_value_pershare` only when the filing gives one; record the exchange
+ratio in `additional_note` as `exchange_ratio: <float>`.
 
 **Legacy migration.** Alex's `comments_1` entries like "20.02 cash + 1.13
-CVR" are parsed into components during xlsx → JSON conversion.
+CVR" are preserved for manual review, with the component labels captured
+where the current schema supports them.
 
 **Rejected alternatives.**
-- **Single value + structured note string** — still requires downstream
-  parsing; error-prone.
-- **Single value + free text comments** — current practice; makes
-  composite bids unanalyzable without NLP.
+- **Detailed per-component dollar columns in this AI extraction.** Alex does
+  not use them in the reference workbook, and they inflate Austin's manual
+  verification surface for no current research gain.
+- **Only free-text comments.** Loses the quick all-cash / mixed-consideration
+  split that is useful during verification.
 
 **Cross-references.**
 - `rules/schema.md` §R1 (event-level field additions).
@@ -421,16 +415,16 @@ No extraction-time arithmetic from inferred share counts.
 
 **Field semantics.**
 
-| Bid shape | `bid_value` | `bid_value_pershare` | `bid_value_unit` | `aggregate_basis` |
-|---|---|---|---|---|
-| Per-share only (*"$45 per share"*) | null | 45 | `"USD_per_share"` | null |
-| Aggregate only (*"$10 billion"*) | 10_000_000_000 | null | `"USD"` | `"enterprise_value"` / `"equity_value"` / `"purchase_price"` / null |
-| Aggregate + filing-stated per-share (*"$10 billion, or $45 per share"*) | 10_000_000_000 | 45 | `"USD"` | from filing |
-| Non-USD (*"€5 billion"*) | 5_000_000_000 | null | `"EUR"` | from filing |
+| Bid shape | `bid_value` | `bid_value_pershare` | `bid_value_unit` |
+|---|---|---|---|
+| Per-share only (*"$45 per share"*) | null | 45 | `"USD_per_share"` |
+| Aggregate only (*"$10 billion"*) | 10_000_000_000 | null | `"USD"` |
+| Aggregate + filing-stated per-share (*"$10 billion, or $45 per share"*) | 10_000_000_000 | 45 | `"USD"` |
+| Non-USD (*"€5 billion"*) | 5_000_000_000 | null | `"EUR"` |
 
-**New field.** `aggregate_basis: str | null`. Values: `"enterprise_value"`,
-`"equity_value"`, `"purchase_price"`, or `null` if the filing doesn't
-distinguish. Only populated when `bid_value` is aggregate.
+If the filing labels the aggregate value as enterprise value, equity value,
+purchase price, or similar, preserve that label in `additional_note` rather
+than introducing a separate structured column.
 
 **Explicit non-policy.** The extractor does NOT divide aggregate by shares
 outstanding. `cshoc` is out of scope for the AI (§Scope-3); any
@@ -450,7 +444,7 @@ shares, etc.); leave that to downstream processing.
   per-share data.
 
 **Cross-references.**
-- `rules/schema.md` §R1 (new field `aggregate_basis`).
+- `rules/schema.md` §R1 (current value fields).
 - `rules/schema.md` §Scope-3 (`cshoc` out of scope).
 - `rules/bids.md` §H1 (value-field invariants).
 
@@ -494,60 +488,32 @@ with >1 bid row, bids are chronologically ordered by `bid_date_precise`
 
 ---
 
-### §O1 — Process-condition structured columns (🟩 RESOLVED, 2026-04-18)
+### §O1 — Process-condition structured column (🟩 RESOLVED, 2026-04-18)
 
-**Decision.** Promote the most research-relevant process conditions to
-structured columns; keep the long tail in `process_conditions_note` free
-text.
+**Decision.** Keep the one process-condition field that directly affects
+auction dynamics in the current research design: bidder exclusivity. Other
+merger-agreement economics and financing-condition terms are outside the
+current AI extraction scope.
 
-**New deal-level fields (deal object per §R1):**
-
-| Field | Type | Semantics |
-|---|---|---|
-| `go_shop_days` | int \| null | Go-shop duration in days, parsed from the merger agreement. Null if no go-shop. |
-| `termination_fee` | float \| null | Target termination fee in USD. Null if not stated. |
-| `reverse_termination_fee` | float \| null | Acquirer reverse termination fee in USD. Null if not stated. |
-| `termination_fee_pct` | float \| null | Target termination fee as % of deal value, when the filing states it. |
-
-**New event-level fields (on bid rows per §R1):**
+**Event-level field (on bid rows per §R1):**
 
 | Field | Type | Semantics |
 |---|---|---|
 | `exclusivity_days` | int \| null | Exclusivity period granted to this bidder at this bid event, in days. |
-| `financing_contingent` | bool \| null | True iff bid is subject to financing contingency. Null if filing silent. |
-| `highly_confident_letter` | bool | True iff bid includes a "highly confident" letter from a financing bank. Default false. |
-| `process_conditions_note` | str \| null | Free text for conditions not captured above (regulatory, no-solicitation, DD duration, etc.). |
 
 **Extraction rules.**
-- `go_shop_days` and termination fees are extracted from the merger
-  agreement summary section (usually right after the Background). The AI
-  reads both Background and merger-agreement-summary when populating deal-
-  level fields.
 - `exclusivity_days` is only set on the bid row where exclusivity is
   granted; it's implicitly still active on subsequent rows for the same
   bidder until the exclusivity period expires (not re-stated).
-- `financing_contingent` = true when filing says "subject to financing,"
-  "subject to satisfactory financing arrangements," etc. False when
-  filing says "fully financed," "no financing contingency," "executed
-  commitment letters delivered." Null when silent.
-
-**Interaction with §G1.**
-- `financing_contingent = false` + `highly_confident_letter = true` is a
-  common signal for `bid_type = "formal"` (per §G1 trigger table).
-- `highly_confident_letter` alone (without financing commitments) is a
-  weaker formal signal; the §G1 rule reads "fully financed" OR "executed
-  commitment letters" OR the highly-confident-letter pattern.
 
 **Migration note.** Alex's `comments_2` entries like "Exclusivity 30 days"
 are parsed into `exclusivity_days: 30` during xlsx → JSON conversion.
-"Go-shop 30 days" → `go_shop_days: 30`. "No financing condition" →
-`financing_contingent: false`. Residual free text → `process_conditions_note`.
 
 **Rejected alternatives.**
-- **Free text only** — makes these unanalyzable without NLP. Exclusivity
-  and go-shop are core auction-dynamics covariates.
-- **Every condition as a column** — bloats the schema; regulatory
-  requirements and no-solicitation terms are rarely analyzed.
+- **Free text only** — makes exclusivity unanalyzable without NLP.
+- **Broad merger-agreement term capture in this pipeline** — bloats the
+  schema and Austin's verification surface; those terms are better sourced
+  from dedicated M&A databases if a future paper needs them.
 
 **Cross-references.**
 - `rules/schema.md` §R1 (field list).

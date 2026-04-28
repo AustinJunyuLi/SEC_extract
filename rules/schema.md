@@ -202,10 +202,6 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - `target_legal_counsel` — string OR null. Per `rules/events.md` §J2.
 - `acquirer_legal_counsel` — string OR null. Per `rules/events.md` §J2.
 - `bidder_registry` — object. Maps canonical `bidder_NN` → `{resolved_name, aliases_observed, first_appearance_row_index}`. Populated by extractor after events. Per `rules/bidders.md` §E3.
-- `go_shop_days` — int OR null. Per `rules/bids.md` §O1.
-- `termination_fee` — float OR null. USD. Per `rules/bids.md` §O1.
-- `termination_fee_pct` — float OR null. As % of deal value. Per `rules/bids.md` §O1.
-- `reverse_termination_fee` — float OR null. USD. Per `rules/bids.md` §O1.
 
 **`deal` object — orchestration fields (`run.py` writes, not AI):**
 - `slug` — from `seeds.csv`.
@@ -227,9 +223,6 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - `process_phase` — int. `0` = stale prior, `1` = main, `2` = restart (per `rules/events.md` §L2).
 - `role` — string. `"bidder" | "advisor_financial" | "advisor_legal"`. Defaults to `"bidder"`. Auction classifier (§Scope-1) filters `role == "bidder"`. Per `rules/bids.md` §M3.
 - `exclusivity_days` — int OR null. Exclusivity period granted at this bid event. Per `rules/bids.md` §O1.
-- `financing_contingent` — bool OR null. Per `rules/bids.md` §O1.
-- `highly_confident_letter` — bool. Default false. Per `rules/bids.md` §O1.
-- `process_conditions_note` — string OR null. Free text for conditions not structured above. Per `rules/bids.md` §O1.
 - `bidder_name` — string. **Canonical deal-local ID** (`bidder_01`, `bidder_02`, …)
   per `rules/bidders.md` §E3. Stable across all rows for the same entity.
 - `bidder_alias` — string. Filing's verbatim label for this bidder on this
@@ -239,6 +232,7 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
   and row-level consortium mixedness are NOT recorded.
 - `bid_note` — string from closed vocabulary (§C1).
 - `bid_type` — `"formal" | "informal" | null` (per §G1).
+- `bid_type_inference_note` — string OR null. Required §P-G2 evidence for non-range bid rows with non-null `bid_type`, unless paired/fallback `Final Round.final_round_informal` evidence applies. Max 300 chars. Per `rules/bids.md` §G2.
 - `drop_initiator` — `"bidder" | "target" | "unknown" | null`. Required on
   `bid_note = "Drop"`; null otherwise, including `DropSilent`.
 - `drop_reason_class` — `"below_market" | "below_minimum" | "target_other" |
@@ -263,11 +257,7 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - `bid_value_lower` — numeric OR null. Per-share range lower bound. Per `rules/bids.md` §H1.
 - `bid_value_upper` — numeric OR null. Per-share range upper bound. Per `rules/bids.md` §H1.
 - `bid_value_unit` — string. `"USD_per_share"` for per-share bids; `"USD"` for aggregate (§H4); currency codes (e.g., `"EUR"`) for non-USD.
-- `cash_per_share` — numeric OR null. Cash component of composite consideration. Per `rules/bids.md` §H2.
-- `stock_per_share` — numeric OR null. Stock component valued at bid date. Per `rules/bids.md` §H2.
-- `contingent_per_share` — numeric OR null. CVR / earnout component. Per `rules/bids.md` §H2.
 - `consideration_components` — list[str]. Ordered components present (e.g., `["cash", "cvr"]`). Per `rules/bids.md` §H2.
-- `aggregate_basis` — string OR null. `"enterprise_value"` / `"equity_value"` / `"purchase_price"` / `null`. Only populated when `bid_value` is aggregate. Per `rules/bids.md` §H4.
 - `additional_note` — string OR null.
 - `comments` — string OR null. **Collapses** Alex's legacy `comments_1` /
   `comments_2` / `comments_3` into one free-text field.
@@ -275,12 +265,18 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - `source_page` — int OR list[int] (§R3).
 - `flags` — array of flag objects (§R2).
 
-**Net change count from Alex's 35 cols:**
+**Current scope notes:**
 - 7 drops (gvkeyT, gvkeyA, cshoc, DealNumber, and Auction/FormType/URL move
   to `deal` from row-level).
 - 5 booleans collapsed into 1 `bidder_type` string (net −4 cols).
 - 3 comments cols collapsed into 1 (net −2).
 - 3 new per-row cols: `source_quote`, `source_page`, `flags` (+3).
+- Deal-level counsel, bid classification evidence, consideration component
+  labels, and exclusivity duration remain in scope because they are useful
+  for manual verification and informal-bidding analysis. Other transaction
+  economics and merger-agreement terms are deliberately out of current AI
+  extraction scope; add them back only by expanding §R1 and the extractor
+  skeleton in the same rulebook change.
 
 **Cross-references.**
 - `rules/bidders.md` §F1 — `bidder_type` canonical scalar format.
