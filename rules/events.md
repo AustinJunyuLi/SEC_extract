@@ -315,6 +315,8 @@ Group-narrated outcomes follow the same doctrine:
   language>"}`. Do not guess additional rows.
 - Do not use `DropSilent` for any party covered by a narrated group outcome.
 
+Each emitted `DropSilent` row has the following shape:
+
 - `bid_note = "DropSilent"`
 - `bid_date_precise = null`, `bid_date_rough = null`
 - `flags` includes `{"code": "date_unknown", "severity": "info", "reason":
