@@ -23,7 +23,7 @@ below are traced to the rule-file decisions that produced them.
 
 ---
 
-## §P-R — Row-level structural invariants (🟩 RESOLVED, 2026-04-18)
+## §P-R — Row-level structural invariants
 
 ### §P-R0 — Row shape: events are dicts, process_phase is int>=0 or null
 
@@ -101,9 +101,9 @@ errors.
   not `null`), `bidder_type` must be a scalar string in `{"s", "f"}`.
   Any other type or any unknown string value fails.
 - **Fail action.** Flag `bidder_type_invalid_value`. Hard.
-- **Why hard.** The 2026-04-27 schema flatten made `bidder_type` a scalar.
-  A nested object or an out-of-set value breaks downstream analysis.
-  `null` is the correct representation of "no bidder type recorded".
+- **Why hard.** `bidder_type` is a scalar; a nested object or an out-of-set
+  value breaks downstream analysis. `null` is the correct representation of
+  "no bidder type recorded".
 
 ### §P-R7 — CA ambiguity is hard
 - **Check.** Any row carrying a `ca_type_ambiguous` flag must carry it at
@@ -128,7 +128,7 @@ errors.
 
 ---
 
-## §P-D — Date and sequencing invariants (🟩 RESOLVED, 2026-04-18)
+## §P-D — Date and sequencing invariants
 
 All hard errors. Date discipline is what makes the data chronologically
 comparable across deals.
@@ -188,10 +188,12 @@ comparable across deals.
      engagement would defeat the §D1.a exemption. Mirrors §P-D6
      exemption #3.
   4. Atomized buyer-group constituent drops are exempt only when the row
-     carries `buyer_group_constituent` or `consortium_drop_split` and the
-     same `(bidder_name, process_phase)` has consortium evidence
-     (`ConsortiumCA` or a flagged buyer-group `Bid` / `Executed` row).
-     A bare `ConsortiumCA` plus an unflagged `Drop` still fails.
+     carries `buyer_group_constituent` and the same `(bidder_name,
+     process_phase)` has consortium evidence (`ConsortiumCA` or a flagged
+     buyer-group `Bid` or `Executed` row). Consortium-split `Drop` rows
+     additionally carry the `consortium_drop_split` sub-marker per §I1, but
+     the universal `buyer_group_constituent` flag is what gates this
+     exemption. A bare `ConsortiumCA` plus an unflagged `Drop` still fails.
 - **References.** `rules/events.md` §I1 (drop vocabulary), §I2
   (re-engagement), §D1 (engagement vocabulary), §D1.a
   (unsolicited-first-contact exemption), §I3 (buyer-group constituent
@@ -242,7 +244,7 @@ comparable across deals.
   exception: an atomized buyer-group constituent `Bid` may pass without
   target-side NDA only when the `Bid` row carries `buyer_group_constituent`
   and the same `(bidder_name, process_phase)` has consortium evidence
-  (`ConsortiumCA` or a flagged buyer-group lifecycle row).
+  (`ConsortiumCA` or a flagged buyer-group `Bid` or `Executed` row).
 - **Fail action.** Flag `bid_without_preceding_nda`. Hard.
 - **Why hard.** Closes the retroactive-naming gap where an AI emits
   unnamed §E3 NDA placeholders (e.g., Providence Party D/E/F) that
@@ -277,7 +279,7 @@ comparable across deals.
 
 ---
 
-## §P-S — Semantic process invariants (🟩 RESOLVED, 2026-04-18)
+## §P-S — Semantic process invariants
 
 These checks ensure the extracted event graph tells a coherent M&A-process
 story; severities are listed per invariant.
@@ -340,7 +342,7 @@ story; severities are listed per invariant.
 
 ---
 
-## §P-L — Phase-boundary invariants (🟩 RESOLVED, 2026-04-20)
+## §P-L — Phase-boundary invariants
 
 ### §P-L1 — `process_phase = 2` requires an explicit restart boundary
 - **Check.** If any event has `process_phase = 2`, then phase 1 contains
@@ -361,7 +363,7 @@ story; severities are listed per invariant.
 
 ---
 
-## §P-H — Bid-revision chronology invariants (🟩 RESOLVED, 2026-04-20)
+## §P-H — Bid-revision chronology invariants
 
 ### §P-H5 — Multiple bids by the same bidder are chronologically ordered
 - **Check.** For any bidder with more than one `Bid` row carrying
@@ -373,7 +375,7 @@ story; severities are listed per invariant.
 
 ---
 
-## §P-G — Bid classification invariants (🟩 RESOLVED, 2026-04-19)
+## §P-G — Bid classification invariants
 
 ### §P-G2 — `bid_type` evidence requirement
 - **Check.** Every row with non-null `bid_type` satisfies one of:
@@ -387,7 +389,7 @@ story; severities are listed per invariant.
   for the extractor*, NOT a validator satisfier path: a trigger phrase
   alone does not pass §P-G2.
   
-  **Additional hard requirement (per 2026-04-27 directive).** When (1)
+  **Additional hard requirement.** When (1)
   is true (the row is a true range bid), `bid_type` MUST equal
   `"informal"`. Otherwise emit hard `bid_range_must_be_informal`.
 - **Fail action.** Flag `bid_type_unsupported` (no range, no note, no
@@ -399,13 +401,12 @@ story; severities are listed per invariant.
   `rules/bids.md` §G2. At 392-deal scale, requiring an explicit note
   on every non-range row keeps classification auditable and avoids
   brittle dependence on a closed phrase list.
-- **Why note, not trigger list.** Empirical 9-deal analysis
-  (2026-04-20): of 92 rows with non-null `bid_type`, only 30% contained
-  a §G1 trigger phrase; 29% were range bids; 55% relied on
-  `bid_type_inference_note`. Providence (22 bids) and Penford (8 bids)
-  had 0% trigger coverage. The trigger-list satisfier was overfit to
-  the reference sample and forced inference-note duplication on rows
-  that already cited filing language.
+- **Why note, not trigger list.** Across the 9-deal reference corpus only
+  ~30% of rows with non-null `bid_type` contained a §G1 trigger phrase;
+  29% were range bids; 55% relied on `bid_type_inference_note`. Providence
+  (22 bids) and Penford (8 bids) had 0% trigger coverage. A trigger-list-only
+  satisfier would be overfit to the reference sample and would force
+  inference-note duplication on rows that already cite filing language.
 
 ### §P-G3 — Final-round announcement needs submission/deadline pair
 - **Check.** A `Final Round` row with `final_round_announcement = true`

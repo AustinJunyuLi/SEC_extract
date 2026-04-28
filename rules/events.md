@@ -6,7 +6,7 @@
 
 ## Resolved rules
 
-### §C1 — Final `bid_note` vocabulary (🟩 RESOLVED, 2026-04-27)
+### §C1 — Final `bid_note` vocabulary
 
 The `bid_note` field is drawn from a **closed vocabulary**. The extractor
 MUST NOT invent new values; if an event doesn't fit, flag it for rulebook
@@ -60,7 +60,7 @@ exclusivity event row.
 
 ---
 
-### §C3 — `bid_note` on actual bid rows (🟩 RESOLVED, 2026-04-18)
+### §C3 — `bid_note` on actual bid rows
 
 A bid row carries **`bid_note = "Bid"`** (literal string, part of the §C1
 closed vocabulary). The event-type is explicit from `bid_note`; bid-specific
@@ -81,7 +81,7 @@ event labels — see `rules/dates.md` §A3.
 
 ---
 
-### §D1 — Start-of-process classification (🟩 RESOLVED, 2026-04-18; amended 2026-04-19)
+### §D1 — Start-of-process classification
 
 **Decision tree.** In chronological order, the extractor emits start-of-process
 rows as follows:
@@ -134,7 +134,7 @@ When in doubt → `Bidder Interest`. The transition to `Bidder Sale` is
 recorded on a later date when the concrete proposal is made. Do NOT retcon
 the earlier row.
 
-### §D1.a — Unsolicited first-contact Bid exemption from §P-D5 / §P-D6 (🟩 RESOLVED, 2026-04-19)
+### §D1.a — Unsolicited first-contact Bid exemption from §P-D5 / §P-D6
 
 **Non-negotiable.** When an unsolicited bid is itself the first contact
 from a bidder, emit the `Bid` row only; do NOT emit a duplicate
@@ -172,7 +172,7 @@ If the filing language is ambiguous, do NOT attach the flag — let
 is the generalizable safety check; no closed verb list, because
 filings phrase these outcomes many ways.
 
-### §D1.b — Multi-activist atomization (🟩 RESOLVED, 2026-04-19)
+### §D1.b — Multi-activist atomization
 
 **Rule.** When the filing narrates **multiple activists** separately
 pressuring the target in parallel, emit **one `Activist Sale` row per
@@ -215,7 +215,7 @@ against the filing.
 
 ---
 
-### §I1 — Dropout taxonomy (🟩 RESOLVED, 2026-04-27)
+### §I1 — Dropout taxonomy
 
 **The closed dropout vocabulary has two codes.**
 
@@ -310,8 +310,9 @@ Group-narrated outcomes follow the same doctrine:
   atomized `Drop` rows for the supported named parties plus §E5 placeholders
   for the supported unnamed balance.
 - If the filing gives only a vague uncountable group outcome, emit one
-  placeholder `Drop` row with an ambiguity flag. Do not guess additional
-  rows.
+  placeholder `Drop` row carrying `{"code": "drop_group_count_unspecified",
+  "severity": "soft", "reason": "<short summary of the vague filing
+  language>"}`. Do not guess additional rows.
 - Do not use `DropSilent` for any party covered by a narrated group outcome.
 
 - `bid_note = "DropSilent"`
@@ -370,7 +371,7 @@ drop row, so the bidder funnel stays clean: every NDA-signer has a fate.
 
 ---
 
-### §I3 — Confidentiality-agreement scope: target ↔ bidder vs consortium vs rollover (🟩 RESOLVED, 2026-04-26 per Decision #4)
+### §I3 — Confidentiality-agreement scope: target ↔ bidder vs consortium vs rollover
 
 **Problem.** The "Background of the Merger" section often describes
 multiple confidentiality agreements within the deal process. Three
@@ -394,7 +395,7 @@ legally distinct CA types appear:
   the CA covers the negotiation period for that side-deal. Operational;
   not auction-funnel signal. Rare across the 9 reference deals.
 
-**Decision** (2026-04-26):
+**Decision.**
 
 - **Type A** → `bid_note = "NDA"` (the existing event). Counted by
   §Scope-1; satisfies §P-D6 (NDA-before-Bid precondition); subject to
@@ -468,11 +469,14 @@ bucket instead of ordinary AI-only/Alex-only noise.
   ordinary bidders. It allows an atomized buyer-group `Bid` without a
   target-side NDA only when the `Bid` row carries `buyer_group_constituent`
   and the same `(bidder_name, process_phase)` has consortium evidence
-  (`ConsortiumCA` or a flagged buyer-group lifecycle row).
+  (`ConsortiumCA` or a flagged buyer-group `Bid` or `Executed` row).
 - §P-D5 (drop-without-prior-engagement) remains hard for ordinary drops.
   It allows an atomized buyer-group `Drop` when that row carries
-  `buyer_group_constituent` or `consortium_drop_split` and the same
-  `(bidder_name, process_phase)` has consortium evidence. A bare
+  `buyer_group_constituent` and the same `(bidder_name, process_phase)`
+  has consortium evidence (`ConsortiumCA` or a flagged buyer-group
+  `Bid` or `Executed` row). Consortium-split `Drop` rows additionally
+  carry the `consortium_drop_split` sub-marker per §I1, but the universal
+  `buyer_group_constituent` flag is what gates this exemption. A bare
   `ConsortiumCA` plus an unflagged `Bid` or `Drop` still fails.
 
 **Why a new event type, not a flag on NDA.**
@@ -498,7 +502,7 @@ bucket instead of ordinary AI-only/Alex-only noise.
 
 ---
 
-### §I2 — Re-engagement after a drop (🟩 RESOLVED, 2026-04-18)
+### §I2 — Re-engagement after a drop
 
 **No new event code.** When a bidder drops and later re-engages (Providence
 Party D pattern), the extractor DOES NOT emit a `Reengaged` row. The next
@@ -518,7 +522,7 @@ re-engagement's new NDA.
 
 ---
 
-### §J1 — `IB` and `IB Terminated` emission (🟩 RESOLVED, 2026-04-18)
+### §J1 — `IB` and `IB Terminated` emission
 
 **Decision.** Both `IB` and `IB Terminated` are event-row codes in §C1.
 
@@ -534,7 +538,7 @@ row per named advisor:
 - `bid_date_precise` = the **bank's first narrated action** in advisory
   capacity (per the IB date anchor rule below).
 
-**IB date anchor (sharpened 2026-04-26 per Decision #6).** The
+**IB date anchor.** The
 `bid_date_precise` on an IB row is the **earliest narrated date on
 which the bank itself takes an action in advisory capacity** for its
 side. The rule is observability-driven and excludes target-side
@@ -592,7 +596,7 @@ bidders, ran the auction), emit **one** `IB` row for the earliest
 action.
 
 **Why first-narrated-action and not engagement-letter-or-board-approval
-fallback chain.** Per Decision #6 (2026-04-26), the rule is the
+fallback chain.** The rule is the
 single-question one: *"what is the earliest narrated date on which the
 bank acted?"* — instead of a multi-tier priority chain
 (engagement-letter > board-approval > first-action). Engagement-letter
@@ -639,7 +643,7 @@ rules as any other event. The auction-threshold classifier in
 
 ---
 
-### §J2 — Legal counsel structural home (🟩 RESOLVED, 2026-04-18)
+### §J2 — Legal counsel structural home
 
 **Decision.** Legal counsel is **deal-level**, not event-level. Two new
 fields in the `deal` object (per `rules/schema.md` §R1):
@@ -678,7 +682,7 @@ now, treat as a deal-level evidence entry analogous to an event `source_quote`.)
 
 ---
 
-### §K1 — Final-round structure (🟩 RESOLVED, 2026-04-27)
+### §K1 — Final-round structure
 
 **Decision.** The final-round matrix is represented by one event code plus
 three structured columns:
@@ -734,7 +738,7 @@ is not an `Auction Closed` row; fold it into `Executed.additional_note`.
 
 ---
 
-### §K2 — Implicit final rounds (🟩 RESOLVED, 2026-04-18)
+### §K2 — Implicit final rounds
 
 **Decision.** The extractor **infers** a final-round row from subset-invitation
 language, even when the filing does not explicitly say "final round."
@@ -777,7 +781,7 @@ language, even when the filing does not explicitly say "final round."
 
 ---
 
-### §L1 — Prior-process inclusion rule (🟩 RESOLVED, 2026-04-18)
+### §L1 — Prior-process inclusion rule
 
 **Decision.** Prior sale processes are **always included** in the
 extraction as event rows, but they **never count toward the auction
@@ -805,7 +809,7 @@ ignore stale NDAs).
 
 ---
 
-### §L2 — `process_phase` column (🟩 RESOLVED, 2026-04-18)
+### §L2 — `process_phase` column
 
 **Decision.** Every event row carries a new integer field
 **`process_phase: int`** in `events[]`.
@@ -870,7 +874,7 @@ is taken over `{row ∈ events : row.bid_note == "NDA" and row.process_phase ≥
 
 ---
 
-### §C2 — Canonical capitalization (🟩 RESOLVED, 2026-04-18)
+### §C2 — Canonical capitalization
 
 The extractor MUST emit `bid_note` values byte-for-byte matching the strings
 in §C1 (case-sensitive). Variants like `"non-US public S"` vs `"Non-US public S"`
