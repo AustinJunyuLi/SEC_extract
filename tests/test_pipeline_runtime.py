@@ -6,6 +6,19 @@ import pipeline
 
 
 # ---------------------------------------------------------------------------
+# package layout
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_package_reexports_core_api():
+    import pipeline.core as core
+
+    assert pipeline.load_filing is core.load_filing
+    assert pipeline.rulebook_version is core.rulebook_version
+    assert hasattr(core, "_PROCESS_STATE_LOCK")
+
+
+# ---------------------------------------------------------------------------
 # rulebook_version()
 # ---------------------------------------------------------------------------
 

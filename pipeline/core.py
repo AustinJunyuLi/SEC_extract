@@ -1,4 +1,4 @@
-"""pipeline.py — Python plumbing for the M&A extraction skill.
+"""Core Python plumbing for the M&A extraction skill.
 
 The Extractor and Adjudicator agents run as **Claude Code subagents** with
 clean-slate contexts, administered by the orchestrating conversation. Python
@@ -34,13 +34,14 @@ import hashlib
 import json
 import os
 import re
+import threading
 import unicodedata
 import uuid
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterator
 
-REPO_ROOT = Path(__file__).resolve().parent
+REPO_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = REPO_ROOT / "data" / "filings"
 RULES_DIR = REPO_ROOT / "rules"
 PROMPTS_DIR = REPO_ROOT / "prompts"
@@ -49,6 +50,7 @@ STATE_DIR = REPO_ROOT / "state"
 PROGRESS_PATH = STATE_DIR / "progress.json"
 FLAGS_PATH = STATE_DIR / "flags.jsonl"
 PROGRESS_LOCK_PATH = STATE_DIR / "progress.lock"
+_PROCESS_STATE_LOCK = threading.Lock()
 
 
 def _atomic_write_text(path: Path, text: str) -> None:
@@ -91,13 +93,14 @@ def _state_file_lock() -> Iterator[None]:
     `_append_flags_log_locked` instead.
     """
     STATE_DIR.mkdir(parents=True, exist_ok=True)
-    fd = os.open(PROGRESS_LOCK_PATH, os.O_RDWR | os.O_CREAT, 0o644)
-    try:
-        fcntl.flock(fd, fcntl.LOCK_EX)
-        yield
-    finally:
-        fcntl.flock(fd, fcntl.LOCK_UN)
-        os.close(fd)
+    with _PROCESS_STATE_LOCK:
+        fd = os.open(PROGRESS_LOCK_PATH, os.O_RDWR | os.O_CREAT, 0o644)
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX)
+            yield
+        finally:
+            fcntl.flock(fd, fcntl.LOCK_UN)
+            os.close(fd)
 
 
 def rulebook_version() -> str:
