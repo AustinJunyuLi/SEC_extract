@@ -68,7 +68,7 @@ def test_skip_decisions_and_cache_policy(minimal_state_repo):
         "rulebook_version": "old",
         "parsed_json": {"deal": {}, "events": []},
     }))
-    assert run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state).action == "run"
+    assert run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state).action == "blocked"
 
 
 @pytest.mark.parametrize(
@@ -92,8 +92,8 @@ def test_re_validate_rejects_stale_raw_response_shapes(minimal_state_repo, paylo
 
     decision = run_pool.decide_skip("done", cfg, "rules-v1", state)
 
-    assert decision.action == "run"
-    assert decision.reason == "no current cache for re-validate"
+    assert decision.action == "blocked"
+    assert "cached raw_response.json" in decision.reason
 
 
 def test_dry_run_no_api_construction_probe_or_writes(minimal_state_repo, monkeypatch, capsys):
@@ -101,9 +101,6 @@ def test_dry_run_no_api_construction_probe_or_writes(minimal_state_repo, monkeyp
     env.seed_deal("a", status="pending")
     monkeypatch.setattr(run_pool.core, "rulebook_version", lambda: "rules-v1")
     monkeypatch.setattr(run_pool, "_build_client", lambda cfg: pytest.fail("client constructed"))
-    async def fail_probe(*args, **kwargs):
-        pytest.fail("probe called")
-    monkeypatch.setattr(run_pool, "supports_json_schema", fail_probe)
     monkeypatch.setattr(run_pool, "extract_deal", lambda *a, **k: pytest.fail("LLM called"))
 
     summary = asyncio.run(run_pool.run_pool(_cfg(filter="pending", dry_run=True, audit_root=env.tmp_path / "output" / "audit")))
@@ -118,9 +115,6 @@ def test_worker_limit_behavior(minimal_state_repo, monkeypatch):
     for slug in ("a", "b", "c"):
         env.seed_deal(slug, status="pending")
     monkeypatch.setattr(run_pool.core, "rulebook_version", lambda: "rules-v1")
-    async def probe(*args, **kwargs):
-        return True
-    monkeypatch.setattr(run_pool, "supports_json_schema", probe)
     active = 0
     max_active = 0
 
@@ -145,9 +139,6 @@ def test_exceptions_are_summarized_without_cancelling_all(minimal_state_repo, mo
     for slug in ("a", "b"):
         env.seed_deal(slug, status="pending")
     monkeypatch.setattr(run_pool.core, "rulebook_version", lambda: "rules-v1")
-    async def probe(*args, **kwargs):
-        return True
-    monkeypatch.setattr(run_pool, "supports_json_schema", probe)
 
     async def fake_process(slug, **kwargs):
         if slug == "a":
@@ -161,3 +152,93 @@ def test_exceptions_are_summarized_without_cancelling_all(minimal_state_repo, mo
     assert summary.failed == 1
     assert summary.succeeded == 1
     assert {outcome.slug for outcome in summary.outcomes} == {"a", "b"}
+
+
+def test_xhigh_worker_count_is_capped_before_real_run(minimal_state_repo):
+    env = minimal_state_repo
+    env.seed_deal("a", status="pending")
+
+    with pytest.raises(ValueError, match="xhigh.*workers.*5"):
+        asyncio.run(
+            run_pool.run_pool(
+                _cfg(
+                    filter="pending",
+                    workers=6,
+                    extract_reasoning_effort="xhigh",
+                    dry_run=True,
+                ),
+                llm_client=object(),
+            )
+        )
+
+
+def test_main_reports_xhigh_worker_cap_without_traceback(capsys):
+    result = run_pool.main([
+        "--filter",
+        "reference",
+        "--workers",
+        "6",
+        "--extract-reasoning-effort",
+        "xhigh",
+        "--dry-run",
+    ])
+
+    assert result == 2
+    captured = capsys.readouterr()
+    assert "workers <= 5" in captured.err
+    assert "Traceback" not in captured.err
+
+
+def test_failed_rerun_preserves_prior_success_state(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    env.seed_deal(
+        "a",
+        status="passed",
+        flag_count=2,
+        notes="hard=0 soft=2 info=0",
+        rulebook_version="rules-v1",
+        last_run="2026-04-28T10:00:00Z",
+        last_run_id="run-good",
+    )
+    monkeypatch.setattr(run_pool.core, "rulebook_version", lambda: "rules-v1")
+
+    async def fail_extract(*args, **kwargs):
+        raise RuntimeError("provider cut stream")
+
+    monkeypatch.setattr(run_pool, "extract_deal", fail_extract)
+
+    summary = asyncio.run(
+        run_pool.run_pool(
+            _cfg(
+                slugs=("a",),
+                re_extract=True,
+                audit_root=env.tmp_path / "output" / "audit",
+            ),
+            llm_client=object(),
+        )
+    )
+
+    assert summary.failed == 1
+    state = json.loads(env.progress.read_text())
+    assert state["deals"]["a"]["status"] == "passed"
+    assert state["deals"]["a"]["last_run_id"] == "run-good"
+
+
+def test_fresh_run_starts_with_clean_call_log(minimal_state_repo):
+    env = minimal_state_repo
+    env.seed_deal("a", status="pending")
+    audit_dir = env.tmp_path / "output" / "audit" / "a"
+    audit_dir.mkdir(parents=True)
+    (audit_dir / "calls.jsonl").write_text('{"old": true}\n')
+    (audit_dir / "prompts").mkdir()
+    (audit_dir / "prompts" / "extractor.txt").write_text("old prompt")
+
+    audit = run_pool._build_audit_writer(
+        env.tmp_path / "output" / "audit",
+        "a",
+        run_action="run",
+    )
+
+    assert audit.root == audit_dir
+    assert not (audit_dir / "calls.jsonl").exists()
+    assert not (audit_dir / "prompts" / "extractor.txt").exists()

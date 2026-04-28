@@ -1,11 +1,9 @@
 from __future__ import annotations
 
 import json
-import re
 from typing import Any
 
-from openai import BadRequestError
-
+from pipeline.core import EVENT_VOCABULARY
 from pipeline.llm.client import CompletionResult, LLMClient
 
 
@@ -81,7 +79,7 @@ SCHEMA_R1: dict[str, Any] = {
                     "bidder_name": {"type": ["string", "null"]},
                     "bidder_alias": {"type": ["string", "null"]},
                     "bidder_type": {"type": ["string", "null"], "enum": ["s", "f", None]},
-                    "bid_note": {"type": "string"},
+                    "bid_note": {"type": "string", "enum": sorted(EVENT_VOCABULARY)},
                     "bid_type": {"type": ["string", "null"], "enum": ["formal", "informal", None]},
                     "bid_type_inference_note": {"type": ["string", "null"], "maxLength": 300},
                     "drop_initiator": {"type": ["string", "null"], "enum": ["bidder", "target", "unknown", None]},
@@ -113,6 +111,22 @@ SCHEMA_R1: dict[str, Any] = {
                     "consideration_components": {"type": ["array", "null"], "items": {"type": "string"}},
                     "additional_note": {"type": ["string", "null"]},
                     "comments": {"type": ["string", "null"]},
+                    "unnamed_nda_promotion": {
+                        "type": ["object", "null"],
+                        "properties": {
+                            "target_bidder_id": {"type": "integer"},
+                            "promote_to_bidder_alias": {"type": "string"},
+                            "promote_to_bidder_name": {"type": "string"},
+                            "reason": {"type": "string"},
+                        },
+                        "required": [
+                            "target_bidder_id",
+                            "promote_to_bidder_alias",
+                            "promote_to_bidder_name",
+                            "reason",
+                        ],
+                        "additionalProperties": False,
+                    },
                     "source_quote": {"oneOf": [{"type": "string"}, {"type": "array", "items": {"type": "string"}}]},
                     "source_page": {"oneOf": [{"type": "integer"}, {"type": "array", "items": {"type": "integer"}}]},
                     "flags": {"type": "array", "items": FLAG_SCHEMA},
@@ -170,9 +184,6 @@ def json_schema_format(schema: dict[str, Any] = SCHEMA_R1) -> dict[str, Any]:
 
 def parse_json_text(text: str) -> dict[str, Any]:
     candidate = text.strip()
-    match = re.search(r"```(?:json)?\s*(.*?)\s*```", candidate, flags=re.DOTALL | re.IGNORECASE)
-    if match:
-        candidate = match.group(1).strip()
     try:
         parsed = json.loads(candidate)
     except json.JSONDecodeError as exc:
@@ -187,34 +198,6 @@ def _ensure_extraction_shape(parsed: dict[str, Any]) -> None:
         raise MalformedJSONError("expected object with deal and events")
 
 
-async def supports_json_schema(client: LLMClient, *, model: str) -> bool:
-    try:
-        result = await client.complete(
-            model=model,
-            system="Return JSON only.",
-            user='Return {"ok": true}.',
-            text_format={
-                "type": "json_schema",
-                "name": "probe",
-                "schema": {
-                    "type": "object",
-                    "properties": {"ok": {"type": "boolean"}},
-                    "required": ["ok"],
-                    "additionalProperties": False,
-                },
-                "strict": True,
-            },
-            max_output_tokens=100,
-        )
-        parsed = parse_json_text(result.text)
-        return parsed.get("ok") is True
-    except BadRequestError as exc:
-        msg = str(exc).lower()
-        if "json_schema" in msg or "text" in msg or "format" in msg:
-            return False
-        raise
-
-
 async def call_json(
     client: LLMClient,
     *,
@@ -224,6 +207,7 @@ async def call_json(
     schema_supported: bool,
     schema: dict[str, Any] = SCHEMA_R1,
     max_output_tokens: int | None = None,
+    reasoning_effort: str | None = None,
 ) -> CompletionResult:
     result = await client.complete(
         system=system,
@@ -231,31 +215,10 @@ async def call_json(
         model=model,
         text_format=json_schema_format(schema) if schema_supported else None,
         max_output_tokens=max_output_tokens,
+        reasoning_effort=reasoning_effort,
     )
-    try:
-        parsed = parse_json_text(result.text)
-        if schema is SCHEMA_R1:
-            _ensure_extraction_shape(parsed)
-        result.parsed_json = parsed
-        return result
-    except MalformedJSONError as first_error:
-        repair = await client.complete(
-            system="You repair malformed JSON. Output JSON only.",
-            user=(
-                f"Parser error: {first_error}\n\n"
-                f"Original response:\n{result.text}\n\n"
-                "Re-emit valid JSON only."
-            ),
-            model=model,
-            text_format=json_schema_format(schema) if schema_supported else None,
-            max_output_tokens=max_output_tokens,
-        )
-        parsed = parse_json_text(repair.text)
-        if schema is SCHEMA_R1:
-            _ensure_extraction_shape(parsed)
-        repair.parsed_json = parsed
-        repair.input_tokens += result.input_tokens
-        repair.output_tokens += result.output_tokens
-        repair.reasoning_tokens += result.reasoning_tokens
-        repair.attempts += result.attempts
-        return repair
+    parsed = parse_json_text(result.text)
+    if schema is SCHEMA_R1:
+        _ensure_extraction_shape(parsed)
+    result.parsed_json = parsed
+    return result

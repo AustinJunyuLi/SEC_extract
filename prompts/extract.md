@@ -14,7 +14,9 @@ against the SEC filing, which is ground truth.
   `rules/schema.md`, `rules/events.md`, `rules/bidders.md`, `rules/bids.md`,
   and `rules/dates.md`.
 - The **user** message contains the deal slug, the deal's `manifest.json`
-  metadata, and page-numbered filing text derived from `pages.json`.
+  metadata, Background-section bounds, and page-numbered filing text. The
+  filing text is a verbatim Background-section slice from the source
+  `pages.json`, retaining original page numbers.
 
 `rules/invariants.md` remains validator-facing only. You may see validator
 check codes named in this prompt because they describe how Python will flag
@@ -25,7 +27,10 @@ The filing text is already embedded in the user message; do not fetch from SEC/E
 
 ## Your procedure
 
-1. **Locate the section.** Find "Background of the Merger" (or equivalent: "Background of the Transaction", "Background of the Offer"). Record start and end page numbers.
+1. **Confirm the section.** The orchestrator has already isolated "Background
+   of the Merger" (or equivalent: "Background of the Transaction",
+   "Background of the Offer"). Use the embedded `section.start_page` /
+   `section.end_page` bounds as the extraction scope.
 
 2. **Identify bidders.** Scan the section; list every distinct party (named or anonymized as "Party A", "Sponsor B", etc.). Use filing labels verbatim (per `rules/bidders.md` §E3 — follow the decision there when settled).
 
@@ -57,6 +62,8 @@ The filing text is already embedded in the user message; do not fetch from SEC/E
 
 7. **Handle group/joint/aggregate rows.** Apply `rules/bidders.md` §E1 (atomize events — UNCONDITIONALLY, including Executed), §E2 (joint bidders), §E2.b (filing-granularity atomization table), and §E5 (unnamed-party quantifiers: exact counts stay exact; `"several"` = 3 minimum; vaguer plurals emit one placeholder plus ambiguity flag). When the merger agreement uses a legal shell but the filing explicitly identifies the operational/economic buyer consortium, emit one `Executed` row per identified consortium member; do NOT collapse to a single shell or consortium-label Executed row. If the filing gives neither a count nor identifiable members for a consortium event, flag the extraction as incomplete rather than inventing members.
 
+   **Bidder label discipline (§E3).** `bidder_name` is always the canonical deal-local id (`bidder_01`, `bidder_02`, ...). `bidder_alias` is the filing's label on that row. If the filing says `Party A`, use `Party A`; do not rewrite it as `Strategic Buyer 1` or `Financial Buyer 1`. Use typed placeholders like `Strategic 1` / `Financial 1` only for unnamed balances where the filing gives a count but no label. If a later passage reveals that a placeholder is `Party E`, use `unnamed_nda_promotion` to promote the earlier placeholder rather than changing already-supported aliases by guesswork.
+
    **Confidentiality-agreement classification (§I3 / §M5).** The filing may narrate three distinct CA types; classify each per `rules/events.md` §I3 before emitting:
    - **Type A — target ↔ bidder NDA (auction NDA).** `bid_note = "NDA"`. The classic auction signal. Filing language: *"\[Target\] entered into a confidentiality agreement with \[Bidder\]"*, *"\[Bidder\] executed a CA in connection with the auction process"*. This is the only type counted by §Scope-1's auction threshold and the only type that satisfies §P-D6 (NDA-before-Bid precondition).
    - **Type B — bidder ↔ bidder consortium CA.** `bid_note = "ConsortiumCA"`. Two would-be bidders combine forces. Filing language: *"\[Bidder1\] and \[Bidder2\] entered into a confidentiality agreement"*, *"\[Bidder\] joined the buyer group / consortium and executed a CA with \[other-bidder(s)\]"*. NOT auction-funnel; does NOT count toward §Scope-1; does NOT satisfy §P-D6 (a target-NDA is still required for any later Bid by that bidder); does NOT trigger §I1 DropSilent if the signer is later silent.
@@ -64,13 +71,17 @@ The filing text is already embedded in the user message; do not fetch from SEC/E
 
    `ConsortiumCA` requires explicit filing language that a confidentiality agreement was entered into, executed, or signed between bidders. "Permission to work together," "authorization to coordinate," "joint diligence," or "discussions among bidders" is not enough by itself. When the language is ambiguous between Type A and Type B, default to Type A (`NDA`) and attach `{"code": "ca_type_ambiguous", "severity": "hard", "reason": "<summary>"}`. When ambiguous between Type B and Type C, default to Type B (`ConsortiumCA`) with the same hard flag.
 
-   **Silent NDA signers — DropSilent emission (§I1).** For each NDA signer (named or §E5 placeholder) with no later bidder-specific `Bid` / `Drop` / `DropSilent` / `Executed` event in the filing, emit a `DropSilent` row immediately after the matching NDA in narrative order. Per `rules/events.md` §I1: `bid_note = "DropSilent"`, `bid_date_precise = null`, `bid_date_rough = null`, `flags` includes `{"code": "date_unknown", "severity": "info", "reason": "DropSilent: filing narrates no withdrawal date for silent NDA signer"}`, re-cite the NDA's `source_quote` and `source_page`, copy `bidder_name` / `bidder_alias` / `bidder_type` / `process_phase` / `role` from the matching NDA. Validator §P-S1 (soft `missing_nda_dropsilent`) is a backstop; the noise-reduction win comes from emitting the row, not from the flag. **Note:** §I1 / DropSilent is `bid_note = "NDA"` only — `ConsortiumCA` signers without later activity do NOT trigger DropSilent.
+   **Silent NDA signers — DropSilent emission (§I1).** For each NDA signer (named or §E5 placeholder) with no later bidder-specific `Bid` / `Drop` / `DropSilent` / `Executed` event in the filing, emit a `DropSilent` row immediately after the matching NDA in narrative order. Per `rules/events.md` §I1: `bid_note = "DropSilent"`, `bid_date_precise = null`, `bid_date_rough = null`, `flags` includes `{"code": "date_unknown", "severity": "info", "reason": "DropSilent: filing narrates no withdrawal date for silent NDA signer"}`, re-cite the NDA's `source_quote` and `source_page`, copy `bidder_name` / `bidder_alias` / `bidder_type` / `process_phase` / `role` from the matching NDA. If the filing later says the bidder did not submit, declined, withdrew, was no longer interested, could not proceed, was rejected, or did not respond, emit explicit `Drop`, not `DropSilent`. Validator §P-S1 (soft `missing_nda_dropsilent`) is a backstop; the noise-reduction win comes from emitting the row, not from the flag. **Note:** §I1 / DropSilent is `bid_note = "NDA"` only — `ConsortiumCA` signers without later activity do NOT trigger DropSilent.
 
 8. **Classify bids.** Apply `rules/bids.md` §G1 to decide `bid_type ∈ {"informal", "formal"}`. Every bid row emits `bid_note = "Bid"` per `rules/events.md` §C3 (the unified-bid convention); `bid_type` is the ONLY distinguisher between informal and formal. Do NOT emit non-vocabulary bid-row labels — they fail validator check §P-R3. Every non-null `bid_type` SHOULD carry a `bid_type_inference_note: str` (non-empty, ≤300 chars) justifying the classification unless the row is a true range bid or the classification is supplied by the paired/fallback `Final Round.final_round_informal` value. Range bids lock `bid_type = "informal"` per Alex 2026-04-27 — never emit a range-shaped Bid row with `bid_type = "formal"`. If a formal trigger phrase appears alongside a range, attach the soft flag `range_with_formal_trigger_override` (range still wins). Validator §P-G2 enforces range, note, or final-round fallback evidence.
 
    For every informal `Bid` row in `process_phase >= 1`, populate:
    - `invited_to_formal_round`: `true` if the target advanced / invited the bidder to the formal round, `false` if the bidder was not advanced or withdrew before invitation, `null` if the process never reached a formal round.
    - `submitted_formal_bid`: `true` if the bidder later has a formal `Bid` row in the same phase, `false` if not, `null` if the process never reached a formal round.
+   Do not fill either field by mere absence from later narration. If a formal
+   process exists but the filing does not support the bidder-specific status,
+   leave the field `null` and attach a soft `formal_round_status_inferred`
+   flag explaining the uncertainty.
 
    **Same-price reaffirmations (§C5).** When a bidder restates a price they previously submitted (same `bidder_name`, same `process_phase`, same `bid_value*` fields, unchanged structural terms), apply `rules/bids.md` §C5 to decide row-vs-note: emit a **new `Bid` row** ONLY when the filing language describes the reaffirmation as a substantive response to a narrated process step (*"in response to the Board's best-and-final request"*, *"\[Bidder\] confirmed its best and final offer of \$X"*, *"as its formal final-round bid in response to the process letter dated …"*). In all other reaffirmation patterns — verbal *"\[Bidder\] reiterated"* / *"called to confirm \$X stood"*, day-of-signing pre-execution confirmations — append the reaffirmation language to the prior bid row's `additional_note` (or, for pre-signing confirmations, fold into the `Executed` row's `source_quote` / `additional_note`). When the trigger language is ambiguous, default to **note, not row**. No new vocabulary or flag — a reaffirmation `Bid` row IS a regular `Bid` row; the trigger language lives in `source_quote` and `additional_note`.
 
@@ -81,7 +92,7 @@ The filing text is already embedded in the user message; do not fetch from SEC/E
 ## Non-negotiable constraints
 
 - **Every row has `source_quote` and `source_page`.** No exceptions.
-- **`source_quote` is verbatim.** Every `source_quote` is character-for-character contiguous text from `pages.json[source_page - 1].content`. Do not edit capitalization, do not elide middle text with "...", do not paraphrase, do not smooth page-break artifacts. When the quote legitimately spans a page break, use the `list[str]` / `list[int]` multi-quote form per `rules/schema.md` §R3 — one list element per contiguous-within-one-page segment.
+- **`source_quote` is verbatim and capped.** Every `source_quote` is character-for-character contiguous text from the embedded page content for the cited `source_page`, which is a verbatim slice of `pages.json[source_page - 1].content`. Do not edit capitalization, do not elide middle text with "...", do not paraphrase, do not smooth page-break artifacts. Each quote string must be one paragraph at most and ≤1500 characters. Choose the shortest filing sentence(s) that prove the row. When the quote legitimately spans a page break, use the `list[str]` / `list[int]` multi-quote form per `rules/schema.md` §R3 — one list element per contiguous-within-one-page segment, each element ≤1500 characters.
 - **Use only the embedded filing context.** The page-numbered filing text in
   the user message is the sole extraction source. Do not fetch from SEC/EDGAR,
   browse the web, access local files, or consult other filings during
@@ -90,9 +101,10 @@ The filing text is already embedded in the user message; do not fetch from SEC/E
 - **Do not invent bid values, dates, or bidder types.** If the filing is silent, emit `null` and flag.
 - **Do not resolve ambiguity by guessing.** Flag it, let the Python validator or Austin decide.
 - **Do not apply rules outside the extractor contract.** Use this prompt plus `rules/schema.md`, `rules/events.md`, `rules/bidders.md`, `rules/bids.md`, and `rules/dates.md`. If you feel a rule is missing, emit a flag, do not create a new rule.
-- **Bidder names come from the filing verbatim.** Only the winner retrofit (per `rules/bidders.md` §E4) may rename, and only if §E4 is resolved to "retrofit."
+- **Bidder labels are disciplined.** `bidder_alias` comes from the filing verbatim on each row; `bidder_name` is the stable canonical id from `rules/bidders.md` §E3. There is no winner retrofit.
 - **Deal identity fields come from the filing verbatim.** Preserve the filing's casing and punctuation for `TargetName` / `Acquirer`. Leave `DateEffective = null` unless the same filing explicitly states it.
 - **`Acquirer` is the operating acquirer.** Populate `Acquirer` with the entity that actually negotiated and will own the target's assets. Skip Delaware shells / merger-vehicle entities formed solely to execute the transaction (typically named `<Word> Holdings Inc.`, `<Word> Acquisition Inc.`, `<Word> Parent Inc.`, `<Word> Merger Sub`). For PE consortia / club deals, populate `Acquirer` with the **lead sponsor** the filing identifies in the primary position ("BC Partners, together with …"); fall back to the filing's verbatim consortium label (e.g., `"Buyer Group"`) only when no lead is identifiable. For sponsor-backed corporate buyers (operating company funded by a sponsor that is not itself the bidder, e.g., CSC ServiceWorks funded by Pamplona for mac-gray), use the operating company in `Acquirer` and document the funding sponsor in the `Executed` row's `additional_note`. Per Alex 2026-04-27: the legal shell is NOT recorded.
+- **Bid values preserve the filing's shape.** Do not compute midpoints, convert aggregate values into per-share values, or fill missing prices from nearby summaries. Ranges use `bid_value_lower` / `bid_value_upper`; aggregate-dollar values use `bid_value` + `bid_value_unit`; missing prices remain null with the appropriate info flag.
 - **Do not emit a separate post-execution `Press Release` row for signing publicity.** Fold post-signing announcement evidence into the `Executed` row's `source_quote` / `source_page` instead.
 - **Numeric counts are row-count commitments.** When the filing states a numeric count of parties, NDAs, indications of interest, or bids — e.g., *"eleven potential strategic buyers executed confidentiality agreements"*, *"nine written indications of interest"*, *"three bidders submitted final proposals"* — the extraction MUST contain exactly that many atomized rows of the corresponding type. Name the bidders you can identify from the filing; for any unnamed balance, emit placeholder rows per `rules/bidders.md` §E5 (exact-count rule), each citing the enumerating passage as `source_quote`. Under-emitting violates §E1 + §E5 + §P-D6. If a later event names a bidder (Party E submits a Bid) the bidder's NDA row must also exist (§P-D6 NDA-to-drop 1:1 mapping operates within a phase, but the NDA-before-bid precondition is mandatory).
 - **Same-date multi-communication atomization.** When the filing narrates two or more distinct bid communications from the same bidder on the same date — *verbal call then letter; two successive letters; revised offer later the same day* — emit a **separate `Bid` row for each** per §C3 (unified `bid_note="Bid"`), using `additional_note` to distinguish them (`"verbal call"` vs `"letter received"`) and preserving the chronological order inside the day via BidderID sequencing. Do NOT merge into a single row even if the later communication supersedes the earlier one.
@@ -116,13 +128,10 @@ The filing text is already embedded in the user message; do not fetch from SEC/E
 ```json
 {
   "deal": {
-    "slug": "…",
     "TargetName": "…",
     "Acquirer": "…",
     "DateAnnounced": "…",
     "DateEffective": null,
-    "FormType": "…",
-    "URL": "…",
     "auction": true,
     "all_cash": true,
     "target_legal_counsel": null,
@@ -177,7 +186,7 @@ The Python validator will hard-flag structural violations (source-quote presence
 - [ ] **Count audit.** For every numeric count the filing states (*"N strategic parties executed confidentiality agreements"*, *"M written indications of interest"*, *"K bidders submitted final proposals"*), the extraction has exactly N / M / K atomized rows of that type (named where known; §E5 placeholders for unnamed balance).
 - [ ] **NDA-only signers have DropSilent (§I1).** For every NDA row (named or §E5 placeholder) whose bidder has no later `Bid` / `Drop` / `DropSilent` / `Executed` event in this deal, a `DropSilent` row follows it immediately in narrative order, with null dates, `date_unknown` info flag, and re-cited NDA source. Validator §P-S1 will catch misses, but surfacing them in adjudication is wasted work.
 - [ ] **Drop fields.** Every `Drop` row has `drop_initiator` and a `drop_reason_class` consistent with §I1. Every `DropSilent` row leaves both null.
-- [ ] **Final-round fields.** Every `Final Round` row has all three final-round columns populated as §K1 requires; every announcement row followed by Bid rows has a paired non-announcement row.
+- [ ] **Final-round fields.** Every `Final Round` row has all three final-round columns populated as §K1 requires; every announcement row followed by Bid rows has paired submission/deadline evidence. The non-announcement row may appear before or after a same-day Bid row when both cite the same paragraph.
 - [ ] **Formal-stage status.** Every informal current-process `Bid` row has `invited_to_formal_round` and `submitted_formal_bid` set to true/false/null according to §R1 and §P-D8.
 - [ ] **Kept §R1 fields.** Deal-level `all_cash`, `target_legal_counsel`, `acquirer_legal_counsel`, and `deal_flags` are present; each bid row has `consideration_components` and `exclusivity_days` populated or explicitly null.
 - [ ] **§D1.a vs §C4 distinguishing.** An NDA-less first-contact bid the target declines → `unsolicited_first_contact` §D1.a flag on the Bid row (exempts BOTH §P-D6 Bid-without-NDA AND §P-D5 Drop-without-prior-engagement for the same `(bidder_name, process_phase)` slice). A concrete pre-NDA price indication from a bidder who later signs an NDA → `pre_nda_informal_bid` §C4 flag (no exemption; later NDA satisfies §P-D6). Do not conflate — the later-NDA presence is the deciding factor.

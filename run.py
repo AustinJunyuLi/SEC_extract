@@ -2,7 +2,7 @@
 
 `python run.py --slug medivation --extract` runs one deal through the same
 `pipeline.run_pool` interface used by the batch runner. The default mode is
-`--extract`; `--re-validate` reuses a cached raw response when available, and
+`--extract`; `--re-validate` only reuses a current cached raw response, and
 `--re-extract` forces a fresh SDK call.
 """
 
@@ -47,6 +47,10 @@ def _make_pool_config(args: argparse.Namespace, *, mode: str) -> Any:
         re_extract=mode == "re_extract",
         extract_model=args.extract_model or os.environ.get("EXTRACT_MODEL", "gpt-5.5"),
         adjudicate_model=args.adjudicate_model or os.environ.get("ADJUDICATE_MODEL", "gpt-5.5"),
+        extract_reasoning_effort=args.extract_reasoning_effort or os.environ.get("EXTRACT_REASONING_EFFORT"),
+        adjudicate_reasoning_effort=(
+            args.adjudicate_reasoning_effort or os.environ.get("ADJUDICATE_REASONING_EFFORT")
+        ),
         max_tokens_per_deal=args.max_tokens_per_deal or int(os.environ.get("MAX_TOKENS_PER_DEAL", "200000")),
         commit=False,
         dry_run=args.dry_run,
@@ -169,6 +173,16 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--commit", action="store_true", help="Commit only current-deal output/state/audit files.")
     parser.add_argument("--extract-model", help="Model for extraction calls.")
     parser.add_argument("--adjudicate-model", help="Model for adjudication calls.")
+    parser.add_argument(
+        "--extract-reasoning-effort",
+        choices=["none", "minimal", "low", "medium", "high", "xhigh"],
+        help="reasoning.effort for extraction calls.",
+    )
+    parser.add_argument(
+        "--adjudicate-reasoning-effort",
+        choices=["none", "minimal", "low", "medium", "high", "xhigh"],
+        help="reasoning.effort for adjudication calls.",
+    )
     parser.add_argument("--max-tokens-per-deal", type=int, help="Per-deal token budget.")
     parser.add_argument("--dry-run", action="store_true", help="Plan the run without requiring an API key.")
     return parser

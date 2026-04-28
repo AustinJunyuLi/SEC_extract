@@ -1,9 +1,16 @@
 import asyncio
 
 import httpx
+import openai
 import pytest
 
-from pipeline.llm.retry import RetryConfig, RetryExhaustedError, retry_delay, with_retry
+from pipeline.llm.retry import (
+    RetryConfig,
+    RetryExhaustedError,
+    is_retryable_exception,
+    retry_delay,
+    with_retry,
+)
 
 
 def test_retry_delay_uses_bounded_exponential_backoff():
@@ -60,3 +67,10 @@ def test_with_retry_raises_exhausted_with_last_error():
 
     assert isinstance(excinfo.value.last_error, httpx.TimeoutException)
     assert excinfo.value.attempts == 2
+
+
+def test_stream_read_error_api_error_is_retryable():
+    exc = openai.APIError("stream_read_error", request=None, body=None)
+    exc.code = "stream_read_error"
+
+    assert is_retryable_exception(exc) is True

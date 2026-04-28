@@ -38,6 +38,7 @@ class LLMClient(ABC):
         user: str,
         text_format: dict | None = None,
         max_output_tokens: int | None = None,
+        reasoning_effort: str | None = None,
     ) -> CompletionResult:
         raise NotImplementedError
 
@@ -54,7 +55,9 @@ class OpenAICompatibleClient(LLMClient):
         watchdog_cfg: WatchdogConfig | None = None,
         retry_cfg: RetryConfig | None = None,
     ):
-        self._client = openai_client or AsyncOpenAI(api_key=api_key, base_url=base_url)
+        self._client = openai_client or AsyncOpenAI(api_key=api_key, base_url=base_url, max_retries=0)
+        self.endpoint = "responses"
+        self.supports_structured_output = not _is_newapi_base_url(base_url)
         self.watchdog_cfg = watchdog_cfg or WatchdogConfig()
         self.retry_cfg = retry_cfg or RetryConfig()
 
@@ -66,6 +69,7 @@ class OpenAICompatibleClient(LLMClient):
         user: str,
         text_format: dict | None = None,
         max_output_tokens: int | None = None,
+        reasoning_effort: str | None = None,
     ) -> CompletionResult:
         attempts = 0
 
@@ -78,6 +82,7 @@ class OpenAICompatibleClient(LLMClient):
                 user=user,
                 text_format=text_format,
                 max_output_tokens=max_output_tokens,
+                reasoning_effort=reasoning_effort,
                 attempt=attempts,
             )
 
@@ -93,6 +98,7 @@ class OpenAICompatibleClient(LLMClient):
         user: str,
         text_format: dict | None,
         max_output_tokens: int | None,
+        reasoning_effort: str | None,
         attempt: int,
     ) -> CompletionResult:
         kwargs: dict[str, Any] = {
@@ -106,6 +112,8 @@ class OpenAICompatibleClient(LLMClient):
             kwargs["text"] = {"format": text_format}
         if max_output_tokens is not None:
             kwargs["max_output_tokens"] = max_output_tokens
+        if reasoning_effort is not None:
+            kwargs["reasoning"] = {"effort": reasoning_effort}
 
         started = time.monotonic()
         text_parts: list[str] = []
@@ -156,10 +164,22 @@ def _usage_value(usage: Any, name: str) -> int:
     return int(getattr(usage, name, 0) or 0)
 
 
+def _is_newapi_base_url(base_url: str | None) -> bool:
+    if base_url and any(marker in base_url.lower() for marker in ("linkflow.run", "newapi")):
+        return True
+    return False
+
+
+def _response_value(obj: Any, name: str) -> Any:
+    if isinstance(obj, dict):
+        return obj.get(name)
+    return getattr(obj, name, None)
+
+
 def _reasoning_tokens(usage: Any) -> int:
     if usage is None:
         return 0
-    details = usage.get("output_tokens_details") if isinstance(usage, dict) else getattr(usage, "output_tokens_details", None)
+    details = _response_value(usage, "output_tokens_details")
     if isinstance(details, dict):
         return int(details.get("reasoning_tokens") or 0)
     return int(getattr(details, "reasoning_tokens", 0) or 0)
@@ -169,7 +189,7 @@ def _finish_reason(response: Any) -> str | None:
     if response is None:
         return None
     for name in ("finish_reason", "status"):
-        value = getattr(response, name, None)
+        value = _response_value(response, name)
         if value:
             return str(value)
     return None

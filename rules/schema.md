@@ -94,10 +94,9 @@ two and flags `paired_filing_not_extracted` on the deal.
 - `SC 13D` / `SC 13G` — beneficial-ownership filings.
 - Stand-alone `8-K` announcements — event-date only.
 
-**Deal-level `FormType` field.** The extracted deal carries the form type that
-sourced the Background, e.g. `"FormType": "SC TO-T (via EX-99.(A)(1)(A))"` for
-tender offers so the validator and downstream analyst can see which substantive
-document was read.
+**Form provenance.** The fetcher records the source form type and substantive
+document in `data/filings/{slug}/manifest.json`. The extracted `deal` object
+does not carry `FormType`, URL, CIK, accession, or other EDGAR metadata.
 
 **Fail-loud rule.** If `seeds.csv` points to a URL whose form type is NOT in
 the accepted list, the pipeline marks the deal `status: failed` with
@@ -127,18 +126,16 @@ does NOT produce:
 - `gvkey` / `gvkeyT` / `gvkeyA` — COMPUSTAT firm identifiers. Not in filings.
 
 **Category B — EDGAR metadata (fetcher owns):**
-- `DateFiled` — the date the document was filed with the SEC. Available from
-  EDGAR's index HTML. `scripts/fetch_filings.py` will be extended to write
-  this to `data/filings/{slug}/manifest.json` as `source.date_filed`. The AI
-  does not re-derive it.
-- `FormType` — the EDGAR form-type label. Already written by the fetcher as
-  `manifest.source.form_type` (e.g., `"DEFM14A"`, `"EX-99.(A)(1)(A)"`). AI
-  copies it through into the output's deal-level field but does NOT
-  re-classify the document.
-- `URL` / `primary_url` — filing URLs. Copied through from
-  `manifest.source.index_url` and `source.primary_document_url`.
-- `CIK`, `accession` — EDGAR identifiers. Already in `manifest.json`; copied
-  through if needed.
+- `DateFiled` — the date the document was filed with the SEC.
+- `FormType` — the EDGAR form-type label from `manifest.source.form_type`.
+- `URL` / `primary_url` — filing URLs from `manifest.source.index_url` and
+  `manifest.source.primary_document_url`.
+- `CIK`, `accession` — EDGAR identifiers.
+
+These fields may exist in `data/filings/{slug}/manifest.json`, but they are
+not extractor-owned and they are not copied into `output/extractions/{slug}.json`.
+If the model emits them in `deal`, finalization fails loudly as a stale deal
+contract violation.
 
 **Category C — orchestration metadata (pipeline owns, not extraction):**
 - `DealNumber` — Alex's legacy workbook row-group identifier. The pipeline
@@ -152,6 +149,9 @@ does NOT produce:
   `state/progress.json[deals][slug].last_run` and for every `logged_at`
   appended to `state/flags.jsonl` during that finalize, so downstream queries
   can match the three exactly.
+- `last_run_id` — per-finalize UUID. Written by `pipeline.core.finalize()`
+  into the output's `deal` object and `state/progress.json[deals][slug]`;
+  each `state/flags.jsonl` line from that finalize carries the same `run_id`.
 
 **Category D — behaviors the skill does not do:**
 - Fetch external data (SEC EDGAR beyond the filing itself, COMPUSTAT,
@@ -203,15 +203,12 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - `acquirer_legal_counsel` — string OR null. Per `rules/events.md` §J2.
 - `bidder_registry` — object. Maps canonical `bidder_NN` → `{resolved_name, aliases_observed, first_appearance_row_index}`. Populated by extractor after events. Per `rules/bidders.md` §E3.
 
-**`deal` object — orchestration fields (`run.py` writes, not AI):**
-- `slug` — from `seeds.csv`.
-- `FormType` — from `manifest.source.form_type`.
-- `URL` — from `manifest.source.index_url`.
-- `primary_document_url` — from `manifest.source.primary_document_url`.
-- `CIK`, `accession` — from manifest.
-- `DateFiled` — from `manifest.source.date_filed` (pending fetcher addition).
+**`deal` object — orchestration fields (`pipeline.core.finalize()` writes, not AI):**
 - `rulebook_version` — SHA-256 content hash of the current `rules/*.md` files
   at extraction time.
+- `last_run` — ISO8601-Z finalize timestamp.
+- `last_run_id` — per-finalize UUID matching `state/progress.json` and
+  `state/flags.jsonl`.
 
 **Fields DROPPED from Alex's legacy 35-col workbook (per §Scope-3):**
 - `gvkeyT`, `gvkeyA` — COMPUSTAT firm IDs. Downstream merge.
@@ -219,7 +216,7 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - `DealNumber` — legacy Chicago row-group ID. Pipeline keys on `slug`.
 
 **`events[]` — per-row columns (kept from Alex's legacy except as noted):**
-- `BidderID` — int or decimal (per `rules/dates.md` §A).
+- `BidderID` — int (per `rules/dates.md` §A).
 - `process_phase` — int. `0` = stale prior, `1` = main, `2` = restart (per `rules/events.md` §L2).
 - `role` — string. `"bidder" | "advisor_financial" | "advisor_legal"`. Defaults to `"bidder"`. Auction classifier (§Scope-1) filters `role == "bidder"`. Per `rules/bids.md` §M3.
 - `exclusivity_days` — int OR null. Exclusivity period granted at this bid event. Per `rules/bids.md` §O1.
@@ -248,8 +245,12 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
   on `Press Release`; null otherwise.
 - `invited_to_formal_round` — bool OR null. Required on each informal `Bid`
   row in a current/restarted process; encodes the target's advancement act.
+  Use true/false only when the filing supports that bidder-specific status;
+  otherwise leave null and flag the inference.
 - `submitted_formal_bid` — bool OR null. Required on each informal `Bid`
   row in a current/restarted process; encodes the bidder's submission act.
+  Use true/false only when a same-phase formal bid row or explicit filing
+  narration supports it; otherwise leave null and flag the inference.
 - `bid_date_precise` — ISO date OR null.
 - `bid_date_rough` — natural-language phrase OR null.
 - `bid_value` — numeric OR null. Aggregate $ amount when `bid_value_unit = "USD"`; otherwise reserved.
@@ -309,9 +310,10 @@ shape.
 pipeline, with deal slug + row index, for cross-deal analysis. Row-level
 `flags[]` in the JSON output is the in-place copy for human review.
 `state/flags.jsonl` is append-only history, not a current-state snapshot:
-filter by `logged_at >=` the deal's most recent finalize timestamp, or read
-`output/extractions/{slug}.json` `flags[]` plus `state/progress.json` `flag_count`
-for the authoritative current view.
+filter by exact `run_id == state/progress.json[deals][slug].last_run_id`
+or exact `logged_at == state/progress.json[deals][slug].last_run`, or read
+`output/extractions/{slug}.json` `flags[]` plus
+`state/progress.json` `flag_count` for the authoritative current view.
 
 **Rejected: plain-string array.** Loses `severity` and `reason`; reviewer
 has to grep the rulebook to know if a flag is blocking.
@@ -406,20 +408,20 @@ When multi-quote, `source_page` and `source_quote` must be lists of the same
 length; element `i` of `source_quote` must appear on page `source_page[i]`.
 
 **Length constraint.** A single `source_quote` string is one paragraph at most
-— bounded by the blank-line breaks sec2md emits. Hard cap: **1000 characters
-per string**. If more evidence is needed, split into a list rather than
-lengthening a single quote.
+— bounded by the blank-line breaks sec2md emits. Target and hard cap:
+**1500 characters per string**. If more evidence is needed, split into a
+list rather than lengthening a single quote. Above 1500 characters is a hard
+`source_quote_too_long` flag.
 
-**Validator check (hard error).** `rules/invariants.md` §P-R1 enforces:
+**Validator check.** `rules/invariants.md` §P-R2 enforces:
 1. `source_quote` non-empty.
 2. `source_page` is a valid page number for the deal's `pages.json`.
 3. After NFKC normalization, `source_quote` is a substring of
    `pages[source_page - 1].content`.
 4. In multi-quote form, all four lists/elements align.
 
-Violation → flag `source_quote_not_in_page`. The row is still emitted (per
-SKILL.md "not rewritten, only annotated") but the deal cannot advance past
-`status: validated` until resolved.
+Missing evidence, invalid page, non-substring evidence, or >1500-character
+quotes keep the deal at `status: validated` until resolved.
 
 **Reproducibility.** `source_page` values are stable only within a given sec2md
 version. `data/filings/{slug}/manifest.json` records `sec2md_version`. Pin
@@ -448,38 +450,54 @@ Reflects resolved decisions §Scope-1/2/3, §R1, §R2, §R3, §N1, §N2, §N3.
 ```json
 {
   "deal": {
-    "slug": "medivation",
     "TargetName": "Medivation, Inc.",
     "Acquirer": "Pfizer Inc.",
     "DateAnnounced": "2016-08-22",
     "DateEffective": "2016-09-28",
     "auction": true,
     "all_cash": true,
-
-    "FormType": "DEFM14A",
-    "URL": "https://www.sec.gov/Archives/edgar/data/1011835/…",
-    "primary_document_url": "https://www.sec.gov/Archives/edgar/data/…",
-    "CIK": "1011835",
-    "accession": "000119312516696889",
-    "DateFiled": "2016-09-08",
+    "target_legal_counsel": "Cooley LLP",
+    "acquirer_legal_counsel": "Ropes & Gray LLP",
+    "bidder_registry": {
+      "bidder_01": {
+        "resolved_name": "Pfizer Inc.",
+        "aliases_observed": ["Pfizer"],
+        "first_appearance_row_index": 1
+      }
+    },
+    "deal_flags": [],
     "rulebook_version": "<rules-content-sha256>",
-
-    "deal_flags": []
+    "last_run": "2026-04-28T12:00:00Z",
+    "last_run_id": "<run-uuid>"
   },
   "events": [
     {
       "BidderID": 1,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "bidder_name": "bidder_01",
+      "bidder_alias": "Pfizer",
+      "bidder_type": "s",
+      "bid_note": "Target Sale",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "drop_initiator": null,
+      "drop_reason_class": null,
+      "final_round_announcement": null,
+      "final_round_extension": null,
+      "final_round_informal": null,
+      "press_release_subject": null,
+      "invited_to_formal_round": null,
+      "submitted_formal_bid": null,
       "bid_date_precise": "2014-03-14",
       "bid_date_rough": null,
-      "bid_note": "Target Sale",
-      "bidder_name": null,
-      "bidder_type": null,
-      "bid_type": null,
       "bid_value": null,
       "bid_value_pershare": null,
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": null,
+      "consideration_components": null,
       "additional_note": null,
       "comments": null,
       "source_quote": "On March 14, 2014, the Board of Directors convened …",

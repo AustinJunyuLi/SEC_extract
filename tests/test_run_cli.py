@@ -125,6 +125,22 @@ def test_dry_run_does_not_require_api_key(monkeypatch):
     assert calls == [("medivation", True)]
 
 
+def test_reasoning_effort_args_pass_through_to_pool_config():
+    args = run_cli._parser().parse_args([
+        "--slug",
+        "medivation",
+        "--extract-reasoning-effort",
+        "high",
+        "--adjudicate-reasoning-effort",
+        "xhigh",
+    ])
+
+    cfg = run_cli._make_pool_config(args, mode="extract")
+
+    assert cfg.extract_reasoning_effort == "high"
+    assert cfg.adjudicate_reasoning_effort == "xhigh"
+
+
 def test_commit_and_dry_run_is_rejected(monkeypatch, capsys):
     monkeypatch.setattr(run_cli, "_run_single_deal", lambda *a, **k: pytest.fail("run should not start"))
     _set_argv(monkeypatch, "--slug", "medivation", "--dry-run", "--commit")

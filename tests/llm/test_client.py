@@ -46,7 +46,11 @@ class FakeOpenAI:
 def test_openai_compatible_client_uses_responses_text_format_not_chat_response_format():
     fake = FakeOpenAI()
     text_format = {"type": "json_schema", "name": "unit", "schema": {"type": "object"}, "strict": True}
-    client = OpenAICompatibleClient(api_key="secret", base_url="https://example.test/v1", openai_client=fake)
+    client = OpenAICompatibleClient(
+        api_key="secret",
+        base_url="https://example.test/v1",
+        openai_client=fake,
+    )
 
     result = asyncio.run(
         client.complete(
@@ -69,3 +73,34 @@ def test_openai_compatible_client_uses_responses_text_format_not_chat_response_f
     assert result.input_tokens == 11
     assert result.output_tokens == 13
     assert result.reasoning_tokens == 5
+
+
+def test_openai_compatible_client_disables_structured_output_for_linkflow_newapi():
+    fake = FakeOpenAI()
+    client = OpenAICompatibleClient(
+        api_key="secret",
+        base_url="https://www.linkflow.run/v1",
+        openai_client=fake,
+    )
+
+    result = asyncio.run(
+        client.complete(
+            model="gpt-test",
+            system="system prompt",
+            user="user prompt",
+            text_format=None,
+            max_output_tokens=None,
+            reasoning_effort="high",
+        )
+    )
+
+    kwargs = fake.responses.kwargs
+    assert client.endpoint == "responses"
+    assert client.supports_structured_output is False
+    assert kwargs["model"] == "gpt-test"
+    assert kwargs["input"][0]["role"] == "system"
+    assert kwargs["input"][1]["role"] == "user"
+    assert kwargs["reasoning"] == {"effort": "high"}
+    assert "text" not in kwargs
+    assert "max_output_tokens" not in kwargs
+    assert result.text == '{"deal":{},"events":[]}'

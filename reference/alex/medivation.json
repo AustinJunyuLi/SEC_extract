@@ -1,13 +1,9 @@
 {
   "deal": {
-    "slug": "medivation",
     "TargetName": "MEDIVATION INC",
     "Acquirer": "PFIZER INC",
     "DateAnnounced": "2016-08-22",
     "DateEffective": "2016-09-28",
-    "DateFiled": "2016-08-30",
-    "FormType": "SC TO-T",
-    "URL": "https://www.sec.gov/Archives/edgar/data/1011835/0001193125-16-696889-index.htm",
     "auction": true,
     "all_cash": true,
     "target_legal_counsel": null,

@@ -771,19 +771,14 @@ def build_deal_object(slug: str, rows: list[RawRow]) -> dict[str, Any]:
 
     date_announced = _iso_date(pick("DateAnnounced"))
     date_effective = _iso_date(pick("DateEffective"))
-    date_filed     = _iso_date(pick("DateFiled"))
     all_cash       = _bool(pick("all_cash"))
     auction        = _bool(pick("Auction"))
 
     return {
-        "slug": slug,
         "TargetName":        pick("TargetName"),
         "Acquirer":          pick("Acquirer"),
         "DateAnnounced":     date_announced,
         "DateEffective":     date_effective,
-        "DateFiled":         date_filed,
-        "FormType":          pick("FormType"),
-        "URL":               pick("URL"),
         "auction":           auction,
         "all_cash":          all_cash,
         # Alex-absent fields (AI-only at extraction time).

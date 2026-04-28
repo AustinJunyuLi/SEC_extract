@@ -77,6 +77,11 @@ bidders (not observed), extend to 3 digits.
 `"Party A"`, `"Pfizer Inc."`, `"Strategic 1"`, `"Sponsor C"`. For joint
 bids (§E2), each constituent's row has its own alias.
 
+Do not substitute typed placeholders for filing labels. If the filing says
+`"Party A"`, the row's `bidder_alias` is `"Party A"`, not `"Strategic Buyer
+1"` or `"Financial Buyer 1"`. Use typed placeholders only for unnamed exact
+counts where no filing label is available.
+
 **Deal-level registry.** The deal object carries a `bidder_registry` map:
 
 ```json

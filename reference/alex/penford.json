@@ -1,13 +1,9 @@
 {
   "deal": {
-    "slug": "penford",
     "TargetName": "PENFORD CORP",
     "Acquirer": "INGREDION INC",
     "DateAnnounced": "2014-10-15",
     "DateEffective": "2015-03-11",
-    "DateFiled": "2014-12-29",
-    "FormType": "DEFM14A",
-    "URL": "https://www.sec.gov/Archives/edgar/data/739608/0001193125-14-455030-index.htm",
     "auction": true,
     "all_cash": true,
     "target_legal_counsel": null,

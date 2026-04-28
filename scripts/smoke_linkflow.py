@@ -1,8 +1,7 @@
-"""Opt-in real smoke test for the OpenAI-compatible SDK path.
+"""Opt-in real smoke test for the Linkflow-backed Responses SDK path.
 
 This script intentionally requires a real `OPENAI_API_KEY`. Without one it
-fails before importing the project SDK modules, so local no-key checks remain
-clean while Worker B/C modules are still landing.
+fails before importing project SDK modules, so local no-key checks remain clean.
 """
 
 from __future__ import annotations
@@ -32,14 +31,11 @@ async def main() -> int:
         raise SystemExit("OPENAI_API_KEY is required")
 
     from pipeline.llm.client import OpenAICompatibleClient
-    from pipeline.llm.response_format import supports_json_schema
 
     client = OpenAICompatibleClient(
         api_key=api_key,
         base_url=os.environ.get("OPENAI_BASE_URL", "https://www.linkflow.run/v1"),
     )
-    json_schema_supported = await supports_json_schema(client, model=args.model)
-    print(f"json_schema_supported={json_schema_supported}")
 
     result = await client.complete(
         system="Reply with one short sentence.",

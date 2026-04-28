@@ -33,6 +33,8 @@ def retry_delay(attempt: int, cfg: RetryConfig) -> float:
 
 
 def is_retryable_exception(exc: BaseException) -> bool:
+    if getattr(exc, "code", None) == "stream_read_error":
+        return True
     if isinstance(exc, (
         openai.BadRequestError,
         openai.AuthenticationError,

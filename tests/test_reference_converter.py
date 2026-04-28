@@ -45,6 +45,24 @@ def test_reference_converter_emits_redesigned_taxonomy_for_all_deals():
             assert ev.get("bidder_type") in ("s", "f", None)
 
 
+def test_reference_converter_deal_object_uses_current_schema_fields_only():
+    expected = {
+        "TargetName",
+        "Acquirer",
+        "DateAnnounced",
+        "DateEffective",
+        "auction",
+        "all_cash",
+        "target_legal_counsel",
+        "acquirer_legal_counsel",
+        "bidder_registry",
+        "deal_flags",
+    }
+
+    for slug in build_reference.DEAL_ROWS:
+        assert set(build_deal(slug)["deal"]) == expected
+
+
 def test_reference_converter_maps_source_rows_to_structured_modifiers():
     medivation = build_deal("medivation")
     press = next(

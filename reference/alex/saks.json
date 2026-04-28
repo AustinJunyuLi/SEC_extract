@@ -1,13 +1,9 @@
 {
   "deal": {
-    "slug": "saks",
     "TargetName": "SAKS INC",
     "Acquirer": "Hudson's Bay Company",
     "DateAnnounced": "2013-07-29",
     "DateEffective": "2013-11-04",
-    "DateFiled": "2013-10-03",
-    "FormType": "DEFM14A",
-    "URL": "https://www.sec.gov/Archives/edgar/data/812900/0001193125-13-390275-index.htm",
     "auction": true,
     "all_cash": true,
     "target_legal_counsel": null,

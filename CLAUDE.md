@@ -17,10 +17,13 @@ reading the filing, then updates the rulebook or reference JSONs as needed.
 
 ## Current Architecture
 
-The live architecture is code-orchestrated direct SDK calls through an
-OpenAI-compatible provider. Configure it with `OPENAI_BASE_URL` and
-`OPENAI_API_KEY`; model names come from `EXTRACT_MODEL` and
-`ADJUDICATE_MODEL` or CLI overrides.
+The live architecture is code-orchestrated direct `AsyncOpenAI` SDK calls to
+the Responses streaming endpoint (`responses.stream`) through the
+Linkflow/NewAPI-compatible `OPENAI_BASE_URL`. Configure it with
+`OPENAI_BASE_URL` and `OPENAI_API_KEY`; model names come from `EXTRACT_MODEL`
+and `ADJUDICATE_MODEL` or CLI overrides. The default Linkflow path is
+prompt-only JSON (`json_schema_used=false`) because Linkflow structured-output
+support is explicitly disabled in the client.
 
 Per deal:
 
@@ -67,6 +70,17 @@ Use `--dry-run` to inspect selection without requiring an API key. Use
 `rulebook_version` matches the current rulebook. Use `--re-extract` or
 `--force` for a fresh SDK extraction.
 
+Reasoning effort is explicit when requested:
+
+```bash
+python run.py --slug medivation --extract --extract-reasoning-effort high
+python -m pipeline.run_pool --filter reference --workers 5 --extract-reasoning-effort xhigh
+```
+
+The empirical Linkflow ceiling for `xhigh` is five concurrent workers. The
+runner rejects `xhigh` with more than `LINKFLOW_XHIGH_MAX_WORKERS` workers
+(default `5`) before making API calls.
+
 If a CLI supports `--commit`, it must commit only current-deal
 output/state/audit paths and leave unrelated worktree changes alone.
 
@@ -104,6 +118,8 @@ Every extracted event row must include:
 Rows without evidence do not ship. Quotes must support the specific event, date,
 bidder, bid value, and classification being emitted. If the filing is ambiguous,
 emit the supported row and flag the ambiguity; do not invent uncited facts.
+Quote strings target and hard-fail at 1500 characters; there is no soft
+over-target zone.
 
 Key conventions:
 
@@ -126,19 +142,26 @@ slug. Status values are:
 - `passed`: finalized with only soft/info flags.
 - `passed_clean`: finalized with zero flags.
 - `verified`: Austin manually verified a reference deal against the filing.
-- `failed`: pipeline error.
+- `failed`: pipeline error when there is no prior successful live extraction.
+  A failed fresh rerun of a deal already in `validated`, `passed`,
+  `passed_clean`, or `verified` preserves the prior live progress state and
+  records the failed attempt in audit metadata instead of clobbering the last
+  good status.
 
-Per-deal progress entries carry `flag_count`, `last_run`, verification fields,
-`notes`, `rulebook_version`, and bounded `rulebook_version_history`. There is no
+Per-deal progress entries carry `flag_count`, `last_run`, `last_run_id`,
+verification fields, `notes`, `rulebook_version`, and bounded
+`rulebook_version_history` entries of `{ts, run_id, version}`. There is no
 repo-level global rulebook pin.
 
 `state/flags.jsonl` is append-only. Each finalize appends current-run flags with
-the same `logged_at` timestamp used for `deals[slug].last_run`. Older flags stay
-on disk as history.
+the same `logged_at` timestamp used for `deals[slug].last_run` and the same
+`run_id` used for `deals[slug].last_run_id`. Older flags stay on disk as
+history; current-run queries use exact `run_id == last_run_id` or exact
+`logged_at == last_run`, never timestamp ranges.
 
 `output/extractions/{slug}.json` is the authoritative latest extraction for a
 deal. It must conform to `rules/schema.md` and include pipeline-stamped
-`rulebook_version`, `last_run`, row flags, and deal flags.
+`rulebook_version`, `last_run`, `last_run_id`, row flags, and deal flags.
 
 `output/audit/{slug}/` is the audit cache:
 
@@ -146,8 +169,11 @@ deal. It must conform to `rules/schema.md` and include pipeline-stamped
   `rulebook_version`.
 - `prompts/*.txt`: exact SDK prompts.
 - `calls.jsonl`: model-call metadata, token usage, retries, watchdog data.
-- `manifest.json`: run summary and cache outcome.
+- `manifest.json`: run summary, cache outcome, and `api_endpoint: "responses"`.
 
+Fresh `run` and `re_validate` actions clear stale `calls.jsonl` and prompt
+files before writing current-run audit metadata; `raw_response.json` is reused
+only for a valid `--re-validate` cache and overwritten by fresh extraction.
 Audit artifacts exist for reproducibility and re-validation. They are not a
 second source of truth after finalization.
 
@@ -209,6 +235,7 @@ asks and it does not start extraction.
 | `.env.example` | Environment variable names, never real secrets. |
 | `seeds.csv` | Candidate deals and reference flags. |
 | `data/filings/{slug}/` | Downloaded filing artifacts: `manifest.json`, `pages.json`, `raw.md`, `raw.htm`. |
+| `docs/linkflow-extraction-guide.md` | Linkflow-specific extraction operating guide. |
 | `prompts/extract.md` | Extractor prompt included in SDK system messages. |
 | `rules/*.md` | Schema, event vocabulary, bidder/bid/date rules, invariants. |
 | `pipeline/core.py` | Filing loader, preparation, validator, finalizer, state writers. |
@@ -223,6 +250,7 @@ asks and it does not start extraction.
 | `output/audit/` | Prompt, raw-response, and call audit cache. |
 | `scripts/fetch_filings.py` | Filing fetcher. |
 | `scripts/build_reference.py` | Reference JSON builder with documented Alex-workbook overrides. |
+| `scripts/smoke_linkflow.py` | Optional real-key Linkflow Responses smoke test. |
 | `tests/` | Runtime, prompt, LLM wrapper, converter, diff, and invariant tests. |
 
 Generated reports, one-off migration scripts, obsolete working notes, and stale

@@ -1,13 +1,9 @@
 {
   "deal": {
-    "slug": "mac-gray",
     "TargetName": "MAC GRAY CORP",
     "Acquirer": "CSC ServiceWorks, Inc.",
     "DateAnnounced": "2013-10-15",
     "DateEffective": "2014-01-09",
-    "DateFiled": "2013-12-04",
-    "FormType": "DEFM14A",
-    "URL": "https://www.sec.gov/Archives/edgar/data/1038280/0001047469-13-010973-index.htm",
     "auction": true,
     "all_cash": true,
     "target_legal_counsel": null,

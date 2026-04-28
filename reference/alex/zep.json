@@ -1,13 +1,9 @@
 {
   "deal": {
-    "slug": "zep",
     "TargetName": "ZEP INC",
     "Acquirer": "New Mountain Capital",
     "DateAnnounced": "2015-04-08",
     "DateEffective": "2015-06-26",
-    "DateFiled": "2015-05-26",
-    "FormType": "DEFM14A",
-    "URL": "https://www.sec.gov/Archives/edgar/data/1408287/0001047469-15-004989-index.htm",
     "auction": true,
     "all_cash": true,
     "target_legal_counsel": null,

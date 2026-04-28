@@ -39,8 +39,8 @@ below are traced to the rule-file decisions that produced them.
   shape bug stays silent. §P-R0 turns it into an explicit hard flag and
   lets the rest of the deal's rows still get validated.
 
-All hard errors. Violations of these are extraction defects, not
-judgment calls.
+Unless a subsection states otherwise, row-level structural violations are hard
+errors.
 
 ### §P-R1 — `events` array exists and is non-empty
 - **Check.** Top-level JSON has an `events` array with at least one
@@ -58,14 +58,16 @@ judgment calls.
   3. After Unicode NFKC normalization and curly-quote folding (per
      `pipeline._canonicalize_pdf_artifacts`), each `source_quote`
      element is a substring of `pages[source_page - 1].content`.
-  4. Each `source_quote` element ≤ 1000 characters.
+  4. Each `source_quote` element must be ≤1500 characters.
   5. List-length equality when both are lists.
 - **Fail actions.**
   - Missing field → `missing_evidence`.
   - Quote not on cited page → `source_quote_not_in_page`.
-  - Length cap exceeded → `source_quote_too_long`.
+  - 1500-character hard cap exceeded → `source_quote_too_long`.
   - List-length mismatch → `source_quote_page_mismatch`.
-- Severity: **hard** in all cases.
+- Severity: missing, page mismatch, non-substring, and >1500 chars are
+  **hard**. Legitimate one-paragraph multi-event anchors are allowed up to
+  1500 characters.
 
 ### §P-R3 — `bid_note` ∈ closed vocabulary
 - **Check.** `bid_note` ∈ the ratified set from `rules/events.md` §C1,
@@ -204,6 +206,11 @@ comparable across deals.
   3. A `Drop` row with `drop_reason_class = "never_advanced"` requires
      `invited_to_formal_round = false`.
 - **Fail action.** Flag `formal_round_status_inconsistent`. Soft.
+- **Extractor guidance.** This is a consistency check, not a mandate to
+  infer unsupported true/false values. If the filing reaches a formal
+  process but bidder-specific advancement or submission status is unclear,
+  leave the field null and attach a soft `formal_round_status_inferred`
+  flag.
 
 ### §P-D6 — Named-Bid rows require an in-phase NDA for the same bidder
 - **Check.** For every row with `bid_note = "Bid"`, non-null
@@ -366,7 +373,10 @@ story; severities are listed per invariant.
 ### §P-G3 — Final-round announcement needs submission/deadline pair
 - **Check.** A `Final Round` row with `final_round_announcement = true`
   followed by one or more `Bid` rows in the same `process_phase` must have a
-  paired non-announcement `Final Round` row for those bids.
+  paired non-announcement `Final Round` row for those bids. The paired
+  non-announcement row may appear immediately before or after the same-day
+  `Bid` row when both cite the same narrative passage; the invariant is about
+  missing submission/deadline evidence, not row-order formalism.
 - **Fail action.** Flag `final_round_missing_non_announcement_pair`. Hard.
 
 ---

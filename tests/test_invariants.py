@@ -224,6 +224,35 @@ def test_pr2_multi_quote_distinguishes_paraphrase_from_whitespace():
     assert all(f["row_index"] == 0 for f in flags)
 
 
+def test_pr2_allows_quote_at_1500_chars():
+    quote = "a" * 1500
+
+    flags = pipeline._invariant_p_r2(
+        [{"source_quote": quote, "source_page": 1}],
+        pipeline.Filing(slug="synthetic", pages=[{"number": 1, "content": quote}]),
+    )
+
+    assert flags == []
+
+
+def test_pr2_hard_flags_quote_above_1500_chars():
+    quote = "a" * 1501
+
+    flags = pipeline._invariant_p_r2(
+        [{"source_quote": quote, "source_page": 1}],
+        pipeline.Filing(slug="synthetic", pages=[{"number": 1, "content": quote}]),
+    )
+
+    assert flags == [
+        {
+            "row_index": 0,
+            "code": "source_quote_too_long",
+            "severity": "hard",
+            "reason": "source_quote has 1501 chars; hard cap is 1500",
+        }
+    ]
+
+
 @pytest.mark.parametrize(
     "fixture_name",
     ["synthetic_pr3_pass.json", "synthetic_pr3_fail.json"],
@@ -799,6 +828,30 @@ def test_p_g3_accepts_final_round_announcement_with_submission_pair():
             "bid_note": "Bid",
             "process_phase": 1,
             "bid_date_precise": "2026-01-15",
+        },
+    ]
+
+    assert pipeline._invariant_p_g3(events) == []
+
+
+def test_p_g3_accepts_same_day_submission_pair_after_bid_row():
+    events = [
+        {
+            "bid_note": "Final Round",
+            "process_phase": 1,
+            "bid_date_precise": "2026-01-10",
+            "final_round_announcement": True,
+        },
+        {
+            "bid_note": "Bid",
+            "process_phase": 1,
+            "bid_date_precise": "2026-01-10",
+        },
+        {
+            "bid_note": "Final Round",
+            "process_phase": 1,
+            "bid_date_precise": "2026-01-10",
+            "final_round_announcement": False,
         },
     ]
 

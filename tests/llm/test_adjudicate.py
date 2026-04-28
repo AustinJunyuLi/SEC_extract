@@ -24,6 +24,21 @@ class StubClient:
         )
 
 
+class BudgetExhaustingClient:
+    def __init__(self):
+        self.calls = 0
+
+    async def complete(self, **kwargs):
+        self.calls += 1
+        return CompletionResult(
+            text='{"verdict": "upheld", "reason": "needs review"}',
+            model=kwargs["model"],
+            parsed_json={"verdict": "upheld", "reason": "needs review"},
+            input_tokens=10,
+            output_tokens=10,
+        )
+
+
 def test_adjudicate_failure_then_success_is_sequential_and_budgeted(tmp_path):
     raw = {
         "deal": {},
@@ -72,3 +87,35 @@ def test_adjudicate_failure_then_success_is_sequential_and_budgeted(tmp_path):
     calls = [json.loads(line) for line in (audit.root / "calls.jsonl").read_text().splitlines()]
     assert calls[0]["outcome"] == "failed"
     assert calls[1]["outcome"] == "ok"
+
+
+def test_adjudicate_stops_after_token_budget_exhaustion(tmp_path):
+    raw = {"deal": {}, "events": [{"source_page": 1}]}
+    filing = core.Filing(slug="synthetic", pages=[{"number": 1, "content": "page"}])
+    flags = [
+        {"row_index": 0, "code": "a", "severity": "soft", "reason": "first"},
+        {"row_index": 0, "code": "b", "severity": "soft", "reason": "second"},
+    ]
+    audit = AuditWriter(tmp_path / "audit", "synthetic")
+    budget = TokenBudget(max_tokens=5)
+    client = BudgetExhaustingClient()
+
+    annotated = asyncio.run(
+        adjudicate.adjudicate(
+            "synthetic",
+            raw,
+            flags,
+            filing,
+            llm_client=client,
+            adjudicate_model="adj-model",
+            audit=audit,
+            token_budget=budget,
+            schema_supported=True,
+        )
+    )
+
+    assert client.calls == 1
+    assert "needs review" in annotated[0]["reason"]
+    assert "adjudicator_skipped: token_budget_exceeded" in annotated[1]["reason"]
+    calls = [json.loads(line) for line in (audit.root / "calls.jsonl").read_text().splitlines()]
+    assert [call["outcome"] for call in calls] == ["ok", "skipped"]

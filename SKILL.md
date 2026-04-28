@@ -31,9 +31,12 @@ from SEC, EDGAR, the web, or local files during the model call.
 
 ## Pipeline (Extractor SDK Call + Python Validator + Scoped Adjudicator)
 
-**Architecture:** `pipeline.run_pool` and `run.py` make direct SDK calls
-through an OpenAI-compatible provider configured by `OPENAI_BASE_URL` /
-`OPENAI_API_KEY`. The Extractor and optional Adjudicator are model calls;
+**Architecture:** `pipeline.run_pool` and `run.py` make direct `AsyncOpenAI`
+SDK calls to the Responses streaming endpoint (`responses.stream`) through the
+Linkflow/NewAPI-compatible provider configured by `OPENAI_BASE_URL` /
+`OPENAI_API_KEY`. The default Linkflow path uses prompt-only JSON
+(`json_schema_used=false` in audit metadata); structured output is disabled for
+Linkflow in the client. The Extractor and optional Adjudicator are model calls;
 validation/finalization remain Python code in `pipeline/core.py`.
 
 **Why deterministic validation stays in Python.**
@@ -108,10 +111,14 @@ python run.py --slug X --extract
 python run.py --slug X --re-validate
 python run.py --slug X --re-extract
 python run.py --slug X --print-prompt
+python run.py --slug X --extract --extract-reasoning-effort high
 ```
 
 `--re-validate` uses the cached raw response when valid for the current
 rulebook. `--re-extract` forces a fresh model call.
+`pipeline.run_pool` and `run.py` both pass explicit reasoning efforts through
+to the Responses API when provided. On Linkflow, `xhigh` is capped at
+`LINKFLOW_XHIGH_MAX_WORKERS` concurrent workers (default 5).
 
 ---
 
@@ -120,7 +127,7 @@ rulebook. `--re-extract` forces a fresh model call.
 Defined in `rules/schema.md` §Scope:
 - **§Scope-1 🟩** — Research scope is corporate takeover auctions (≥2 non-advisor bidder NDAs in the current process). The pipeline extracts every valid-filing-type deal and emits a deal-level `auction: bool`; downstream filters on `auction == true`. Do NOT pre-gate extraction by auction status.
 - **§Scope-2 🟩** — Accepted primary forms: DEFM14A, PREM14A, SC TO-T, S-4. `/A` amendments when they supersede. `SC 14D9` accepted as secondary companion to SC TO-T. `DEFA14A`, `425`, `8-K`, `13D`, `13G` excluded.
-- **§Scope-3 🟩** — AI excludes COMPUSTAT fields (`cshoc`, `gvkey*`), EDGAR metadata (`DateFiled`, `FormType`, `URL`, `CIK`, `accession`), and orchestration metadata (`DealNumber`, `rulebook_version`). Filing-read deal-identity fields are cross-checked against seeds; filing wins on mismatch.
+- **§Scope-3 🟩** — AI excludes COMPUSTAT fields (`cshoc`, `gvkey*`), EDGAR metadata (`DateFiled`, `FormType`, `URL`, `CIK`, `accession`), and orchestration metadata (`DealNumber`, `rulebook_version`, `last_run`, `last_run_id`). Filing-read deal-identity fields are cross-checked against seeds; filing wins on mismatch.
 
 If any scope rule is 🟥 OPEN, stop and report — do not extract.
 
@@ -135,6 +142,10 @@ If any scope rule is 🟥 OPEN, stop and report — do not extract.
 5. **Informal-vs-formal classification must be evidenced per `rules/bids.md` §G2**: either a true range bid (both `bid_value_lower` and `bid_value_upper` numeric with `lower < upper`) or a non-empty `bid_type_inference_note` ≤300 chars. The note should cite the §G1 rule applied (trigger phrase, process-position fallback, or structural signal); the validator (§P-G2) enforces evidence, not a specific justification type. Borderline calls are flagged, not forced.
 6. **Skip rules in `rules/bids.md` §M are mandatory.** Do not record unsolicited letters with no NDA, no price, no bid intent.
 
+Evidence quote strings target and hard-fail at 1500 characters. There is no
+soft over-target zone; split evidence into the multi-quote form when one
+contiguous paragraph would exceed the cap.
+
 ---
 
 ## State contract
@@ -148,6 +159,7 @@ If any scope rule is 🟥 OPEN, stop and report — do not extract.
       "status": "pending | validated | passed | passed_clean | verified | failed",
       "flag_count": 0,
       "last_run": "ISO8601",
+      "last_run_id": "<run-uuid>",
       "last_verified_by": null,
       "last_verified_at": null,
       "notes": "",
@@ -191,9 +203,9 @@ view without scanning jsonl, read `output/extractions/{slug}.json` `flags[]`
 and deal-level `deal_flags[]`.
 
 **`output/extractions/{deal.slug}.json`** schema conforms to `rules/schema.md`.
-Pipeline-stamped deal-level fields: `rulebook_version`, `last_run` (both
-ISO8601-Z, both populated on every finalize; both equal to the matching
-entries in `state/progress.json`).
+Pipeline-stamped deal-level fields: `rulebook_version`, `last_run`, and
+`last_run_id` (populated on every finalize and matching the entries in
+`state/progress.json`).
 
 **Status semantics:**
 - `pending` — not yet run.
@@ -201,7 +213,10 @@ entries in `state/progress.json`).
 - `passed` — combined extractor + validator flags contain only soft/info flags.
 - `passed_clean` — combined extractor + validator flags are zero.
 - `verified` — Austin manually read the filing and adjudicated any AI-vs-Alex diff. Only set on reference deals, and only by the manual review workflow (not by the pipeline). On target deals this status is never used; they typically stop at `validated`, `passed`, or `passed_clean`.
-- `failed` — pipeline error (fetch, section-location, etc.).
+- `failed` — pipeline error (fetch, section-location, etc.) when no prior
+  successful live extraction exists. If a fresh rerun fails after a deal was
+  already `validated`, `passed`, `passed_clean`, or `verified`, preserve that
+  prior live state and write the failed attempt to audit instead.
 
 `extracted` remains a useful conceptual stage in the orchestration flow, but
 the current repo does not persist it into `state/progress.json`.

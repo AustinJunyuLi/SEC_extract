@@ -6,6 +6,23 @@ import pipeline as pipeline_pkg
 import pipeline.core as pipeline
 
 
+def _current_deal(**overrides):
+    deal = {
+        "TargetName": "Synthetic Target",
+        "Acquirer": "Synthetic Buyer",
+        "DateAnnounced": "2026-04-24",
+        "DateEffective": None,
+        "auction": False,
+        "all_cash": True,
+        "target_legal_counsel": None,
+        "acquirer_legal_counsel": None,
+        "bidder_registry": {},
+        "deal_flags": [],
+    }
+    deal.update(overrides)
+    return deal
+
+
 # ---------------------------------------------------------------------------
 # package layout
 # ---------------------------------------------------------------------------
@@ -315,14 +332,10 @@ def test_finalize_stamps_deal_last_run_and_single_run_ts(minimal_state_repo):
         "synthetic",
         pages=[{"number": 1, "content": "the target entered a merger agreement on 2026-04-24"}],
     )
-    # Minimal schema-conformant extraction: one Executed row so §P-S4 passes
+    # Minimal live-contract extraction: one Executed row so §P-S4 passes
     # and §P-S3 has a phase-1 terminator.
     raw = {
-        "deal": {
-            "slug": "synthetic",
-            "auction": False,
-            "bidder_registry": {},
-        },
+        "deal": _current_deal(),
         "events": [
             {
                 "BidderID": 1,
@@ -365,7 +378,7 @@ def test_finalize_appends_to_rulebook_version_history(minimal_state_repo):
         pages=[{"number": 1, "content": "transaction closed"}],
     )
     raw = {
-        "deal": {"slug": "synthetic", "auction": False, "bidder_registry": {}},
+        "deal": _current_deal(),
         "events": [{
             "BidderID": 1,
             "bid_note": "Executed",
@@ -403,7 +416,7 @@ def test_finalize_extraction_output_is_byte_idempotent_modulo_run_stamps(minimal
 
     def fresh_raw():
         return {
-            "deal": {"slug": "synthetic", "auction": False, "bidder_registry": {}},
+            "deal": _current_deal(),
             "events": [{
                 "BidderID": 1,
                 "bid_note": "Executed",
@@ -455,9 +468,7 @@ def test_finalize_extraction_output_is_byte_idempotent_modulo_run_stamps(minimal
 
 def test_prepare_for_validate_applies_failed_promotion_flag_and_canonicalizes():
     raw = {
-        "deal": {
-            "bidder_registry": {},
-        },
+        "deal": _current_deal(bidder_registry={}),
         "events": [
             {
                 "BidderID": 2,
@@ -493,3 +504,23 @@ def test_prepare_for_validate_applies_failed_promotion_flag_and_canonicalizes():
     assert prepared["events"][0]["BidderID"] == 1
     assert prepared["events"][1]["BidderID"] == 2
     assert prepared["events"][1]["flags"][0]["code"] == "nda_promotion_failed"
+    assert "unnamed_nda_promotion" not in prepared["events"][1]
+
+
+def test_prepare_for_validate_drops_extra_deal_fields_with_info_flag():
+    raw = {
+        "deal": _current_deal(FormType="DEFM14A"),
+        "events": [],
+    }
+    filing = pipeline.Filing(slug="synthetic", pages=[])
+
+    prepared, _, _ = pipeline.prepare_for_validate("synthetic", raw, filing=filing)
+
+    assert "FormType" not in prepared["deal"]
+    assert prepared["deal"]["deal_flags"] == [
+        {
+            "code": "raw_deal_extra_fields_dropped",
+            "severity": "info",
+            "reason": "Dropped non-contract extractor deal field(s): ['FormType']",
+        }
+    ]

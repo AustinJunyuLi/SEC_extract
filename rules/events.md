@@ -275,7 +275,14 @@ bidder to match.
 A bidder may appear on an `NDA` row and never subsequently bid, drop, or
 execute in bidder-specific narration. In that case the extractor MUST emit
 a `DropSilent` row for that bidder, immediately after the matching NDA row
-in narrative order:
+in narrative order.
+
+If the filing narrates later bidder-specific inactivity, withdrawal,
+failure to submit, no-response, target rejection, or process exit, emit an
+explicit `Drop` row instead of `DropSilent`. `DropSilent` is only for true
+filing silence after the NDA. A generic sentence that a named bidder "did not
+submit," "was no longer interested," "declined to continue," "could not
+proceed," or "did not respond" is narrated activity and must be `Drop`.
 
 - `bid_note = "DropSilent"`
 - `bid_date_precise = null`, `bid_date_rough = null`
@@ -654,6 +661,12 @@ when the filing genuinely does not classify the round.
 date. If no non-announcement row exists, fall back to the most recent
 applicable `Final Round` event in the phase. If none exists, the bid is not
 in a final round and §G1's pre-process-letter informal default may apply.
+
+For validator §P-G3, a same-day non-announcement submission/deadline row may
+appear after the `Bid` row when both are extracted from the same paragraph.
+Do not create duplicate rows solely to satisfy order; create the
+non-announcement row when the filing separately supports the submission or
+deadline state.
 
 **Conversion fixtures.**
 

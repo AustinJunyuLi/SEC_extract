@@ -1,13 +1,9 @@
 {
   "deal": {
-    "slug": "stec",
     "TargetName": "S T E C INC",
     "Acquirer": "WESTERN DIGITAL CORP",
     "DateAnnounced": "2013-06-24",
     "DateEffective": "2013-09-12",
-    "DateFiled": "2013-08-08",
-    "FormType": "DEFM14A",
-    "URL": "https://www.sec.gov/Archives/edgar/data/1102741/0001193125-13-325730-index.htm",
     "auction": true,
     "all_cash": true,
     "target_legal_counsel": null,

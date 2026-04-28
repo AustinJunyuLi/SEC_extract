@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import contextlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -18,7 +20,6 @@ from pipeline.llm.adjudicate import adjudicate
 from pipeline.llm.audit import AuditWriter, TokenBudget
 from pipeline.llm.client import LLMClient, OpenAICompatibleClient
 from pipeline.llm.extract import extract_deal
-from pipeline.llm.response_format import supports_json_schema
 from pipeline.llm.retry import RetryConfig
 from pipeline.llm.watchdog import WatchdogConfig
 
@@ -26,6 +27,7 @@ from pipeline.llm.watchdog import WatchdogConfig
 DONE_STATUSES = {"validated", "passed", "passed_clean", "verified"}
 VALID_FILTERS = {"pending", "reference", "failed", "all"}
 AUDIT_ROOT = core.REPO_ROOT / "output" / "audit"
+DEFAULT_XHIGH_MAX_WORKERS = 5
 
 
 @dataclass
@@ -35,6 +37,8 @@ class PoolConfig:
     workers: int = 1
     extract_model: str = "gpt-5.5"
     adjudicate_model: str = "gpt-5.5"
+    extract_reasoning_effort: str | None = None
+    adjudicate_reasoning_effort: str | None = None
     max_tokens_per_deal: int = 200000
     re_validate: bool = False
     re_extract: bool = False
@@ -50,7 +54,7 @@ class PoolConfig:
 
 @dataclass(frozen=True)
 class SkipDecision:
-    action: Literal["skip", "run", "re_validate"]
+    action: Literal["skip", "run", "re_validate", "blocked"]
     reason: str
 
 
@@ -118,25 +122,43 @@ def _cached_raw_response_path(cfg: PoolConfig, slug: str) -> Path:
     return audit_dir(cfg, slug) / "raw_response.json"
 
 
-def _cached_raw_response(slug: str, cfg: PoolConfig, current_rulebook_version: str) -> dict[str, Any] | None:
+@dataclass(frozen=True)
+class CacheCheck:
+    parsed_json: dict[str, Any] | None
+    reason: str
+
+    @property
+    def valid(self) -> bool:
+        return self.parsed_json is not None
+
+
+def _check_cached_raw_response(slug: str, cfg: PoolConfig, current_rulebook_version: str) -> CacheCheck:
     path = _cached_raw_response_path(cfg, slug)
     if not path.exists():
-        return None
+        return CacheCheck(None, "no cached raw_response.json for --re-validate")
     payload = json.loads(path.read_text())
     if payload.get("schema_version") != "v1":
-        return None
+        return CacheCheck(None, "cached raw_response.json schema_version is not v1")
     if payload.get("slug") != slug:
-        return None
+        return CacheCheck(None, f"cached raw_response.json slug={payload.get('slug')!r} does not match {slug!r}")
     if payload.get("rulebook_version") != current_rulebook_version:
-        return None
+        return CacheCheck(
+            None,
+            "cached raw_response.json rulebook_version does not match current rulebook; "
+            "use --re-extract or --force for a fresh SDK call",
+        )
     parsed = payload.get("parsed_json")
     if not isinstance(parsed, dict):
-        return None
+        return CacheCheck(None, "cached raw_response.json parsed_json is not an object")
     if not isinstance(parsed.get("deal"), dict):
-        return None
+        return CacheCheck(None, "cached raw_response.json parsed_json.deal is not an object")
     if not isinstance(parsed.get("events"), list):
-        return None
-    return parsed
+        return CacheCheck(None, "cached raw_response.json parsed_json.events is not a list")
+    return CacheCheck(parsed, "valid cached raw_response.json")
+
+
+def _cached_raw_response(slug: str, cfg: PoolConfig, current_rulebook_version: str) -> dict[str, Any] | None:
+    return _check_cached_raw_response(slug, cfg, current_rulebook_version).parsed_json
 
 
 def decide_skip(
@@ -148,10 +170,10 @@ def decide_skip(
     if cfg.force or cfg.re_extract:
         return SkipDecision("run", "forced fresh extraction")
     if cfg.re_validate:
-        cached = _cached_raw_response(slug, cfg, current_rulebook_version)
-        if cached is not None:
-            return SkipDecision("re_validate", "valid cached raw_response.json")
-        return SkipDecision("run", "no current cache for re-validate")
+        cached = _check_cached_raw_response(slug, cfg, current_rulebook_version)
+        if cached.valid:
+            return SkipDecision("re_validate", cached.reason)
+        return SkipDecision("blocked", cached.reason)
     state = state or _load_progress()
     deal = state.get("deals", {}).get(slug, {})
     status = deal.get("status")
@@ -178,6 +200,39 @@ def _watchdog_warnings(audit: AuditWriter) -> int:
         if isinstance(watchdog, dict):
             total += int(watchdog.get("warnings") or 0)
     return total
+
+
+def _xhigh_max_workers() -> int:
+    return int(os.environ.get("LINKFLOW_XHIGH_MAX_WORKERS", str(DEFAULT_XHIGH_MAX_WORKERS)))
+
+
+def _validate_config(config: PoolConfig) -> None:
+    if config.workers < 1:
+        raise ValueError("--workers must be >= 1")
+    if "xhigh" in {config.extract_reasoning_effort, config.adjudicate_reasoning_effort}:
+        cap = _xhigh_max_workers()
+        if config.workers > cap:
+            raise ValueError(
+                f"Linkflow xhigh reasoning is capped at workers <= {cap}; "
+                f"got workers={config.workers}"
+            )
+
+
+def _build_audit_writer(root: Path, slug: str, *, run_action: str) -> AuditWriter:
+    audit_root = root / slug
+    if run_action in {"run", "re_validate"}:
+        with contextlib.suppress(FileNotFoundError):
+            (audit_root / "calls.jsonl").unlink()
+        shutil.rmtree(audit_root / "prompts", ignore_errors=True)
+    return AuditWriter(root, slug)
+
+
+def _prior_status_is_success(slug: str) -> bool:
+    try:
+        state = _load_progress()
+    except (FileNotFoundError, json.JSONDecodeError):
+        return False
+    return state.get("deals", {}).get(slug, {}).get("status") in DONE_STATUSES
 
 
 def _commit_paths(slug: str, paths: list[Path]) -> None:
@@ -220,12 +275,17 @@ async def process_deal(
     skip_decision: SkipDecision | None = None,
 ) -> DealOutcome:
     decision = skip_decision or decide_skip(slug, config, rulebook_version)
-    audit = AuditWriter(config.audit_root, slug)
+    audit = _build_audit_writer(config.audit_root, slug, run_action=decision.action)
     started = time.monotonic()
     if decision.action == "skip":
         audit.write_manifest({
             "rulebook_version": rulebook_version,
             "models": {"extract": config.extract_model, "adjudicate": config.adjudicate_model},
+            "api_endpoint": getattr(llm_client, "endpoint", None),
+            "reasoning_efforts": {
+                "extract": config.extract_reasoning_effort,
+                "adjudicate": config.adjudicate_reasoning_effort,
+            },
             "total_input_tokens": 0,
             "total_output_tokens": 0,
             "total_reasoning_tokens": 0,
@@ -233,6 +293,25 @@ async def process_deal(
             "total_seconds": 0.0,
             "watchdog_warnings": 0,
             "outcome": "skipped",
+            "reason": decision.reason,
+        })
+        return DealOutcome(slug=slug, status="skipped", skipped=True, notes=decision.reason, audit_path=audit.root)
+    if decision.action == "blocked":
+        audit.write_manifest({
+            "rulebook_version": rulebook_version,
+            "models": {"extract": config.extract_model, "adjudicate": config.adjudicate_model},
+            "api_endpoint": getattr(llm_client, "endpoint", None),
+            "reasoning_efforts": {
+                "extract": config.extract_reasoning_effort,
+                "adjudicate": config.adjudicate_reasoning_effort,
+            },
+            "total_input_tokens": 0,
+            "total_output_tokens": 0,
+            "total_reasoning_tokens": 0,
+            "total_attempts": 0,
+            "total_seconds": 0.0,
+            "watchdog_warnings": 0,
+            "outcome": "blocked",
             "reason": decision.reason,
         })
         return DealOutcome(slug=slug, status="skipped", skipped=True, notes=decision.reason, audit_path=audit.root)
@@ -254,6 +333,7 @@ async def process_deal(
                 token_budget=budget,
                 rulebook_version=rulebook_version,
                 schema_supported=schema_supported,
+                reasoning_effort=config.extract_reasoning_effort,
             )
             raw_extraction = extract_result.raw_extraction
 
@@ -277,6 +357,7 @@ async def process_deal(
                 audit=audit,
                 token_budget=budget,
                 schema_supported=schema_supported,
+                reasoning_effort=config.adjudicate_reasoning_effort,
             )
         result = await asyncio.to_thread(
             core.finalize_prepared,
@@ -290,6 +371,11 @@ async def process_deal(
         audit.write_manifest({
             "rulebook_version": rulebook_version,
             "models": {"extract": config.extract_model, "adjudicate": config.adjudicate_model},
+            "api_endpoint": getattr(llm_client, "endpoint", None),
+            "reasoning_efforts": {
+                "extract": config.extract_reasoning_effort,
+                "adjudicate": config.adjudicate_reasoning_effort,
+            },
             "total_input_tokens": budget.input_used,
             "total_output_tokens": budget.output_used,
             "total_reasoning_tokens": budget.reasoning_used,
@@ -323,10 +409,16 @@ async def process_deal(
         )
     except Exception as exc:  # noqa: BLE001 - per-deal isolation is the pool contract.
         note = f"{type(exc).__name__}: {exc}"[:500]
-        await asyncio.to_thread(core.mark_failed, slug, note)
+        if not _prior_status_is_success(slug):
+            await asyncio.to_thread(core.mark_failed, slug, note)
         audit.write_manifest({
             "rulebook_version": rulebook_version,
             "models": {"extract": config.extract_model, "adjudicate": config.adjudicate_model},
+            "api_endpoint": getattr(llm_client, "endpoint", None),
+            "reasoning_efforts": {
+                "extract": config.extract_reasoning_effort,
+                "adjudicate": config.adjudicate_reasoning_effort,
+            },
             "total_input_tokens": budget.input_used,
             "total_output_tokens": budget.output_used,
             "total_reasoning_tokens": budget.reasoning_used,
@@ -341,6 +433,7 @@ async def process_deal(
 
 
 async def run_pool(config: PoolConfig, *, llm_client: LLMClient | None = None) -> PoolSummary:
+    _validate_config(config)
     state = _load_progress()
     slugs = resolve_selection(config, state)
     current = core.rulebook_version()
@@ -354,7 +447,7 @@ async def run_pool(config: PoolConfig, *, llm_client: LLMClient | None = None) -
         return PoolSummary(outcomes)
 
     client = llm_client or _build_client(config)
-    schema_supported = await supports_json_schema(client, model=config.extract_model)
+    schema_supported = bool(getattr(client, "supports_structured_output", False))
     sem = asyncio.Semaphore(config.workers)
 
     async def gated(slug: str, decision: SkipDecision) -> DealOutcome:
@@ -425,9 +518,21 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument("--extract-model", default=os.environ.get("EXTRACT_MODEL", "gpt-5.5"))
     parser.add_argument("--adjudicate-model", default=os.environ.get("ADJUDICATE_MODEL", "gpt-5.5"))
+    parser.add_argument(
+        "--extract-reasoning-effort",
+        default=os.environ.get("EXTRACT_REASONING_EFFORT"),
+        choices=["none", "minimal", "low", "medium", "high", "xhigh"],
+        help="reasoning.effort for extractor calls (default: model default)",
+    )
+    parser.add_argument(
+        "--adjudicate-reasoning-effort",
+        default=os.environ.get("ADJUDICATE_REASONING_EFFORT"),
+        choices=["none", "minimal", "low", "medium", "high", "xhigh"],
+        help="reasoning.effort for adjudicator calls (default: model default)",
+    )
     parser.add_argument("--max-tokens-per-deal", type=int, default=_int_env("MAX_TOKENS_PER_DEAL", 200000))
     rerun = parser.add_mutually_exclusive_group()
-    rerun.add_argument("--re-validate", action="store_true")
+    rerun.add_argument("--re-validate", action="store_true", help="Reuse only a current raw_response.json cache.")
     rerun.add_argument("--re-extract", action="store_true")
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--commit", action="store_true")
@@ -436,15 +541,15 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def config_from_args(args: argparse.Namespace) -> PoolConfig:
-    if args.workers < 1:
-        raise ValueError("--workers must be >= 1")
     slugs = tuple(slug.strip() for slug in (args.slugs or "").split(",") if slug.strip())
-    return PoolConfig(
+    cfg = PoolConfig(
         slugs=slugs,
         filter=args.filter,
         workers=args.workers,
         extract_model=args.extract_model,
         adjudicate_model=args.adjudicate_model,
+        extract_reasoning_effort=args.extract_reasoning_effort,
+        adjudicate_reasoning_effort=args.adjudicate_reasoning_effort,
         max_tokens_per_deal=args.max_tokens_per_deal,
         re_validate=args.re_validate,
         re_extract=args.re_extract,
@@ -465,13 +570,19 @@ def config_from_args(args: argparse.Namespace) -> PoolConfig:
             backoff_factor=_float_env("LLM_BACKOFF_FACTOR", 3.0),
         ),
     )
+    _validate_config(cfg)
+    return cfg
 
 
 def main(argv: list[str] | None = None) -> int:
     load_dotenv_if_available()
     parser = build_parser()
     args = parser.parse_args(argv)
-    cfg = config_from_args(args)
+    try:
+        cfg = config_from_args(args)
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
     if not cfg.dry_run and not cfg.api_key:
         parser.error("OPENAI_API_KEY is required unless --dry-run")
     summary = asyncio.run(run_pool(cfg))

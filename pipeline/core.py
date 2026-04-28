@@ -131,6 +131,8 @@ def _new_run_id() -> str:
 
 
 RULEBOOK_HISTORY_CAP = 10  # Per-deal rulebook_version_history tail length.
+SOURCE_QUOTE_TARGET_CHARS = 1500
+SOURCE_QUOTE_HARD_CAP_CHARS = SOURCE_QUOTE_TARGET_CHARS
 
 # ---------------------------------------------------------------------------
 # Vocabularies — mirrors of rules/*.md
@@ -162,6 +164,19 @@ EVENT_VOCABULARY: frozenset[str] = frozenset({
     "Executed",
     # Prior-process
     "Terminated", "Restarted",
+})
+
+EXTRACTOR_DEAL_FIELDS: frozenset[str] = frozenset({
+    "TargetName",
+    "Acquirer",
+    "DateAnnounced",
+    "DateEffective",
+    "auction",
+    "all_cash",
+    "target_legal_counsel",
+    "acquirer_legal_counsel",
+    "bidder_registry",
+    "deal_flags",
 })
 
 # Mirror of rules/bids.md §M3.
@@ -456,7 +471,8 @@ def _invariant_p_r1(raw_extraction: dict[str, Any]) -> list[dict]:
 
 def _invariant_p_r2(events: list[dict], filing: Filing) -> list[dict]:
     """§P-R2 — every row has source_quote and source_page; quote is an
-    NFKC-substring of pages[source_page-1].content, ≤ 1000 chars."""
+    NFKC-substring of pages[source_page-1].content. Quotes must stay at
+    or below SOURCE_QUOTE_TARGET_CHARS."""
     flags: list[dict[str, Any]] = []
     valid_pages = filing.page_numbers()
     # Canonicalize each cited page at most once; ~N_pages instead of N_rows.
@@ -515,10 +531,13 @@ def _invariant_p_r2(events: list[dict], filing: Filing) -> list[dict]:
                     "reason": f"source_page element must be int; got {type(p).__name__}",
                 })
                 continue
-            if len(q) > 1000:
+            if len(q) > SOURCE_QUOTE_HARD_CAP_CHARS:
                 flags.append({
                     "row_index": i, "code": "source_quote_too_long", "severity": "hard",
-                    "reason": f"source_quote has {len(q)} chars; cap is 1000",
+                    "reason": (
+                        f"source_quote has {len(q)} chars; "
+                        f"hard cap is {SOURCE_QUOTE_HARD_CAP_CHARS}"
+                    ),
                 })
             if p not in valid_pages:
                 range_str = (
@@ -1199,9 +1218,35 @@ def _invariant_p_g2(events: list[dict]) -> list[dict]:
 
 
 def _invariant_p_g3(events: list[dict]) -> list[dict]:
-    """§P-G3 — Final Round announcements with subsequent bids need a paired
-    non-announcement Final Round row in the same phase."""
+    """§P-G3 — Final Round announcements with subsequent bids need evidence
+    of the related submission/deadline event in the same phase.
+
+    The submission row may appear before or after the bidder-specific Bid
+    row when both cite the same same-day narrative paragraph. This keeps the
+    invariant focused on missing evidence rather than row-order accidents.
+    """
     flags: list[dict[str, Any]] = []
+
+    def has_submission_pair(announcement_index: int, bid_index: int) -> bool:
+        announcement = events[announcement_index]
+        bid = events[bid_index]
+        phase = _phase(announcement)
+        for j, candidate in enumerate(events):
+            if j <= announcement_index:
+                continue
+            if candidate.get("bid_note") != "Final Round":
+                continue
+            if candidate.get("final_round_announcement") is not False:
+                continue
+            if _phase(candidate) != phase:
+                continue
+            if not _event_date_leq(announcement, candidate):
+                continue
+            if not _event_date_leq(candidate, bid):
+                continue
+            return True
+        return False
+
     for i, ev in enumerate(events):
         if ev.get("bid_note") != "Final Round":
             continue
@@ -1218,12 +1263,7 @@ def _invariant_p_g3(events: list[dict]) -> list[dict]:
         if not subsequent_bid_indices:
             continue
         has_non_announcement_pair = any(
-            _paired_final_round(
-                events,
-                bid_index,
-                require_non_announcement=True,
-                after_index=i,
-            ) is not None
+            has_submission_pair(i, bid_index)
             for bid_index in subsequent_bid_indices
         )
         if has_non_announcement_pair:
@@ -1950,7 +1990,7 @@ def _apply_unnamed_nda_promotions(
 
 
 def _canonicalize_order(raw_extraction: dict[str, Any]) -> None:
-    """Python-enforced §A2/§A3 ordering (Fix 1).
+    """Python-enforced §A2/§A3 ordering.
 
     Sort events by (bid_date_precise, §A3 rank, narrative index). Reassign
     BidderID = 1..N strictly monotone. Null-dated rows sort to the end
@@ -2000,6 +2040,40 @@ def _canonicalize_order(raw_extraction: dict[str, Any]) -> None:
             reg_entry["first_appearance_row_index"] = first_seen[name]
 
 
+def _enforce_extractor_deal_contract(raw_extraction: dict[str, Any]) -> None:
+    """Reject missing deal fields and strip non-contract extras.
+
+    Missing fields mean the extractor failed the live schema contract. Extra
+    fields are not accepted as output, but they are stripped with an info flag
+    so a provider/model that adds harmless metadata does not fail a deal.
+    """
+    deal = raw_extraction.get("deal")
+    if not isinstance(deal, dict):
+        raise ValueError(
+            f"raw_deal_schema_violation: deal is {type(deal).__name__}, expected object"
+        )
+    fields = set(deal)
+    unexpected = sorted(fields - EXTRACTOR_DEAL_FIELDS)
+    missing = sorted(EXTRACTOR_DEAL_FIELDS - fields)
+    if missing:
+        raise ValueError(
+            "raw_deal_schema_violation: extractor deal object is missing "
+            f"current AI-produced field(s): {missing}"
+        )
+    if unexpected:
+        for name in unexpected:
+            deal.pop(name, None)
+        flags = deal.get("deal_flags")
+        if not isinstance(flags, list):
+            flags = []
+            deal["deal_flags"] = flags
+        flags.append({
+            "code": "raw_deal_extra_fields_dropped",
+            "severity": "info",
+            "reason": f"Dropped non-contract extractor deal field(s): {unexpected}",
+        })
+
+
 def prepare_for_validate(
     slug: str,
     raw_extraction: dict[str, Any],
@@ -2008,6 +2082,7 @@ def prepare_for_validate(
     """Apply every pre-validate transform without writing output."""
     if filing is None:
         filing = load_filing(slug)
+    _enforce_extractor_deal_contract(raw_extraction)
     promotion_log = _apply_unnamed_nda_promotions(raw_extraction)
     _canonicalize_order(raw_extraction)
     failed_reasons_by_hint_id = {
@@ -2022,6 +2097,7 @@ def prepare_for_validate(
             "code": "nda_promotion_failed", "severity": "hard",
             "reason": failed_reasons_by_hint_id[id(promo)],
         })
+        ev.pop("unnamed_nda_promotion", None)
     return raw_extraction, filing, promotion_log
 
 
@@ -2082,8 +2158,8 @@ def finalize(
     """Run Python validator + merge flags + write output + update state.
 
     Pre-validate transforms:
-      1. Apply `unnamed_nda_promotion` hints (Fix 2C)
-      2. Canonicalize row order and BidderIDs (Fix 1 — §A2/§A3 sort)
+      1. Apply `unnamed_nda_promotion` hints
+      2. Canonicalize row order and BidderIDs (§A2/§A3 sort)
 
     Direct SDK callers that adjudicate soft validator flags should call
     `finalize_prepared()` with their precomputed `ValidatorResult`, so those
