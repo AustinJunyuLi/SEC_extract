@@ -150,7 +150,7 @@ but the extractor does not read or implement `rules/invariants.md` directly.
       "bid_value_lower": null,
       "bid_value_upper": null,
       "bid_value_unit": null,
-      "consideration_components": [],
+      "consideration_components": null,
       "exclusivity_days": null,
       "additional_note": null,
       "comments": null,

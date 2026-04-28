@@ -47,6 +47,46 @@ Dropped fields:
   `aggregate_basis`, `financing_contingent`, `highly_confident_letter`,
   `process_conditions_note`.
 
+## Specification of Dropped Fields (for future re-add reference)
+
+Brief semantics for each removed field, captured here so a future re-add does
+not require git archaeology. To re-introduce any of these, restore it in
+`rules/schema.md` §R1, in `prompts/extract.md`'s output skeleton, and in any
+relevant `rules/bids.md` extraction guidance, then run
+`python scripts/build_reference.py --all`.
+
+Deal-level:
+
+- `go_shop_days` — int. Days post-signing during which the target may
+  actively solicit superior proposals from third parties (set in the merger
+  agreement).
+- `termination_fee` — number (USD). Absolute break-up fee the target pays
+  the acquirer if the target accepts a superior proposal or otherwise
+  terminates.
+- `termination_fee_pct` — number. Same break-up fee expressed as a
+  percentage of target equity value (or sometimes enterprise value).
+- `reverse_termination_fee` — number (USD). Fee the acquirer pays the
+  target if regulatory approval fails or financing falls through.
+
+Event-level (per bid row):
+
+- `cash_per_share` — number. Cash portion of per-share consideration in a
+  mixed bid.
+- `stock_per_share` — number. Stock portion of per-share consideration,
+  valued in USD at signing-date implied share price (not the raw exchange
+  ratio).
+- `contingent_per_share` — number. CVR / earnout portion of per-share
+  consideration, valued in USD.
+- `aggregate_basis` — string. Label for aggregate-dollar bids:
+  `"enterprise"` / `"equity"` / `"unspecified"`. Currently captured as free
+  text in `additional_note` per §H4.
+- `financing_contingent` — bool. Whether the bid is conditioned on the
+  bidder securing committed financing.
+- `highly_confident_letter` — bool. Whether the bid is backed by a
+  "highly confident" letter from a financing source.
+- `process_conditions_note` — string. Free-text capture of other process
+  conditions (waivers, MNPI access, etc.).
+
 ## Implementation Notes
 
 - The live rulebook now describes only supported fields. Historical dropped
