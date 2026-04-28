@@ -6,7 +6,7 @@
 
 ## Resolved rules
 
-### §Scope-1 — Research scope: corporate takeover auctions (🟩 RESOLVED, 2026-04-18)
+### §Scope-1 — Research scope: corporate takeover auctions
 
 The research target is **corporate takeover auctions**, per Alex's collection
 guide (`reference/CollectionInstructions_Alex_2026.pdf`) §1–§2.1:
@@ -61,7 +61,7 @@ as `rules/invariants.md` §P-S2.
 
 ---
 
-### §Scope-2 — Accepted filing types (🟩 RESOLVED, 2026-04-18)
+### §Scope-2 — Accepted filing types
 
 The skill accepts four **primary substantive form types**, per Alex's
 collection guide §1:
@@ -116,7 +116,7 @@ decision for Alex and outside the current extraction contract.
 
 ---
 
-### §Scope-3 — Fields the AI deliberately does NOT produce (🟩 RESOLVED, 2026-04-18)
+### §Scope-3 — Fields the AI deliberately does NOT produce
 
 The AI extractor reads the filing's Background section and nothing else. It
 does NOT produce:
@@ -188,13 +188,13 @@ a `deal_identity_mismatch` flag.
 
 ---
 
-### §R1 — Final column set (🟩 RESOLVED, 2026-04-18)
+### §R1 — Final column set
 
 Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 
 **`deal` object — AI-produced fields (reads from filing):**
 - `TargetName` — string. Filing-read; flag `deal_identity_mismatch` if disagrees with seeds.
-- `Acquirer` — string. The **operating acquirer** — the entity that actually negotiated and will own the target's assets. Skip Delaware shells and merger-vehicle entities formed solely to execute the transaction (typically named `<Word> Holdings Inc.`, `<Word> Acquisition Inc.`, `<Word> Merger Sub`). For consortium / club deals, the **lead sponsor** named in the primary position ("BC Partners, together with [others]"); fall back to the filing's verbatim consortium label only when no lead is identifiable. For sponsor-backed corporate buyers (operating company funded by a sponsor that is not itself the bidder), the operating company; the funding sponsor goes in the `Executed` row's `additional_note`. Per Alex 2026-04-27 directive: the legal shell is NOT recorded separately.
+- `Acquirer` — string. The **operating acquirer** — the entity that actually negotiated and will own the target's assets. Skip Delaware shells and merger-vehicle entities formed solely to execute the transaction (typically named `<Word> Holdings Inc.`, `<Word> Acquisition Inc.`, `<Word> Merger Sub`). For consortium / club deals, the **lead sponsor** named in the primary position ("BC Partners, together with [others]"); fall back to the filing's verbatim consortium label only when no lead is identifiable. For sponsor-backed corporate buyers (operating company funded by a sponsor that is not itself the bidder), the operating company; the funding sponsor goes in the `Executed` row's `additional_note`. The legal shell is NOT recorded separately.
 - `DateAnnounced` — ISO date. Same.
 - `DateEffective` — ISO date OR null. Null if filing predates closing.
 - `auction` — bool. Computed per §Scope-1 from extracted NDA events.
@@ -225,7 +225,7 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - `bidder_alias` — string. Filing's verbatim label for this bidder on this
   row (`"Party A"`, `"Pfizer Inc."`, `"Strategic 1"`). Per `rules/bidders.md` §E3.
 - `bidder_type` — string OR null. One of `"s"` / `"f"` per
-  `rules/bidders.md` §F1 (rewritten 2026-04-27). Geography, listing status,
+  `rules/bidders.md` §F1. Geography, listing status,
   and row-level consortium mixedness are NOT recorded.
 - `bid_note` — string from closed vocabulary (§C1).
 - `bid_type` — `"formal" | "informal" | null` (per §G1).
@@ -291,7 +291,7 @@ expanding §R1 and the extractor skeleton in the same rulebook change.
 
 ---
 
-### §R2 — Flags column format (🟩 RESOLVED, 2026-04-18)
+### §R2 — Flags column format
 
 Each row carries `flags: list[FlagObj]`. `FlagObj` is:
 
@@ -332,7 +332,7 @@ Harder to serialize consistently; structured objects are trivially filterable.
 
 ---
 
-### §N1 — Deal-level vs event-level split (🟩 RESOLVED, 2026-04-18)
+### §N1 — Deal-level vs event-level split
 
 Output is `{deal: {...}, events: [...]}`. Deal-level fields appear **once**
 in the `deal` object, NOT repeated on every row.
@@ -348,7 +348,7 @@ linearly for events).
 
 ---
 
-### §N2 — `all_cash` derivation (🟩 RESOLVED, 2026-04-18)
+### §N2 — `all_cash` derivation
 
 AI derives `all_cash: bool` from the merger-agreement summary paragraph
 (typically on the filing cover or the "Merger" / "Summary Term Sheet"
@@ -374,7 +374,7 @@ composite makes `all_cash = false`.
 
 ---
 
-### §N3 — `cshoc` source (🟩 RESOLVED, 2026-04-18)
+### §N3 — `cshoc` source
 
 **Out of scope.** AI does not produce `cshoc`. Downstream merge on `gvkey`
 against COMPUSTAT. Confirms and formalizes the general rule in §Scope-3.
@@ -386,7 +386,7 @@ were outstanding") can serve as a cross-check but are not emitted as
 
 ---
 
-### §R3 — Evidence column (🟩 RESOLVED, 2026-04-18)
+### §R3 — Evidence column
 
 Every event row carries two mandatory evidence fields that cite the filing text
 it was extracted from. These are the backbone of manual verification and the

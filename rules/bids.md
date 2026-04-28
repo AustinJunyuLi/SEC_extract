@@ -8,7 +8,7 @@
 
 ## Resolved rules
 
-### §C4 — Pre-NDA informal bid classification (🟩 RESOLVED, 2026-04-19)
+### §C4 — Pre-NDA informal bid classification
 
 **Decision.** When a prospective bidder communicates a **concrete price
 indication** (point, range, or "at least $X") to the target BEFORE
@@ -85,7 +85,7 @@ later.
 
 ---
 
-### §C5 — Same-price reaffirmations (🟩 RESOLVED, 2026-04-26 per Decision #5)
+### §C5 — Same-price reaffirmations
 
 **Problem.** A bidder restates a price they previously submitted —
 verbally, in a confirming letter, or in response to a board prompt.
@@ -122,8 +122,7 @@ When all three hold, decide row-vs-note by trigger language:
 | Day-of-signing or pre-signing confirmation: *"on \[signing-day\], \[Bidder\] confirmed it remained at \$X and was prepared to execute"* | **Note on `Executed` row.** Fold into `Executed` row's `source_quote` / `additional_note`; do not emit a separate Bid row. |
 | Anything else (ambiguous, one-off, no clear trigger language) | **Default: note, not row.** When in doubt, append to prior bid. |
 
-**Why a single rule, not four sub-cases.** The 4-case framing in
-Decision #5's discussion was pedagogical; the operational rule is one
+**Why a single rule, not four sub-cases.** The operational rule is one
 filter (was the reaffirmation a substantive response to a narrated
 process step?) with one default (no → note). The reference cases just
 exemplify the boundary.
@@ -135,8 +134,7 @@ a pattern whose trigger language ("best and final" / "in response to
 the board's request") is already preserved verbatim in `source_quote`
 and `additional_note`. Downstream code that wants to count
 reaffirmations across the dataset can grep `additional_note` for the
-trigger phrases. Keeping the rule note-only is the explicit
-"least-overengineered" choice from Decision #5.
+trigger phrases.
 
 **Reference deals affected (3 of 9):**
 
@@ -174,7 +172,7 @@ the filing per case).
 
 ---
 
-### §G1 — Informal-vs-formal bid classification (🟩 RESOLVED, 2026-04-18)
+### §G1 — Informal-vs-formal bid classification
 
 **This is the highest-risk classification in the pipeline.**
 
@@ -209,7 +207,7 @@ range bid or the final-round row already supplies the classification.
 - *"indicative offer"*, *"indicative proposal"*
 - *"subject to due diligence"* (without financing commitments)
 - *"preliminary proposal"*
-- **Structural signal: bid is stated as a true range** (both `bid_value_lower` and `bid_value_upper` populated, numeric, with `lower < upper` per §G2) — **range always wins**. Whenever a true range is present, `bid_type = "informal"` regardless of any formal trigger phrase the filing uses. If a formal trigger coexists with the range, emit soft flag `range_with_formal_trigger_override` to preserve the audit trail; do NOT change `bid_type` based on the trigger. Per Alex 2026-04-27 directive.
+- **Structural signal: bid is stated as a true range** (both `bid_value_lower` and `bid_value_upper` populated, numeric, with `lower < upper` per §G2) — **range always wins**. Whenever a true range is present, `bid_type = "informal"` regardless of any formal trigger phrase the filing uses. If a formal trigger coexists with the range, emit soft flag `range_with_formal_trigger_override` to preserve the audit trail; do NOT change `bid_type` based on the trigger.
 
 **Process-position fallback** (no explicit trigger present):
 - Bid submitted in response to a paired or fallback `Final Round` row (§K1)
@@ -240,7 +238,7 @@ non-null `bid_type`.
 
 ---
 
-### §G2 — Classification evidence requirement (🟩 RESOLVED, 2026-04-20)
+### §G2 — Classification evidence requirement
 
 **Decision.** Hard invariant. Every row with non-null `bid_type` MUST
 satisfy at least one of:
@@ -264,7 +262,7 @@ and process-position fallback to *pick* `bid_type`. But §P-G2
 validates on range, note, or paired/fallback final-round evidence; a
 trigger match alone does not pass.
 Rationale: at 392-deal scale, a closed trigger list overfits the
-9-deal reference corpus. Empirical 9-deal distribution (2026-04-20):
+9-deal reference corpus. The empirical 9-deal distribution:
 30% of 92 bids relied on trigger hits, 29% on range, 55% on
 inference_note; providence-worcester (22 bids) and penford (8 bids)
 had 0% trigger coverage. Absent a paired/fallback final-round
@@ -272,7 +270,7 @@ classification, the note-on-every-non-range rule holds regardless of
 filing language.
 
 **Cap rationale.** 300 chars ≈ 2–3 sentences, enough for
-`"<classification> per §G1 <rule>: <filing evidence>"`. The prior
+`"<classification> per §G1 <rule>: <filing evidence>"`. A tighter
 200-char cap produced truncated reasoning; one observed failure
 (medivation row 16) ran to ~370 chars. 300 leaves headroom without
 inviting essays.
@@ -283,7 +281,7 @@ inviting essays.
 `bid_range_must_be_informal` if a true range carries any non-informal
 `bid_type`.
 
-**Additional hard requirement (per 2026-04-27 directive).** When the row
+**Additional hard requirement.** When the row
 satisfies satisfier (1) — i.e., is a true range bid — `bid_type` MUST
 equal `"informal"`. A range with `bid_type = "formal"` is a structural
 contradiction and the validator (§P-G2) flags it hard as
@@ -302,7 +300,7 @@ flagging would let silent drift accumulate.
 
 ---
 
-### §H2 — Composite consideration (🟩 RESOLVED, 2026-04-18)
+### §H2 — Composite consideration
 
 **Decision.** Keep a compact component-label field for mixed-consideration
 structure. Do not decompose the headline price into separate dollar columns
@@ -361,7 +359,7 @@ where the current schema supports them.
 
 ---
 
-### §H3 — Partial-company bids (🟩 RESOLVED, 2026-04-18)
+### §H3 — Partial-company bids
 
 **Decision.** Clean segment/region/business-unit bids are **silently
 skipped** with an info flag. Ambiguous cases (all-assets, majority-stake,
@@ -406,7 +404,7 @@ soft would drown the flag queue. Info-level is enough for audit.
 
 ---
 
-### §H4 — Aggregate-dollar bids (🟩 RESOLVED, 2026-04-18)
+### §H4 — Aggregate-dollar bids
 
 **Decision.** Emit the aggregate value as-is in `bid_value` +
 `bid_value_unit = "USD"`. Populate `bid_value_pershare` **only if the
@@ -450,7 +448,7 @@ shares, etc.); leave that to downstream processing.
 
 ---
 
-### §H5 — Bid revisions (🟩 RESOLVED, 2026-04-18)
+### §H5 — Bid revisions
 
 **Decision.** Each bid revision is a **separate event row** — same
 `bidder_name` (canonical ID per §E3), new `BidderID` (event sequence),
@@ -488,7 +486,7 @@ with >1 bid row, bids are chronologically ordered by `bid_date_precise`
 
 ---
 
-### §O1 — Process-condition structured column (🟩 RESOLVED, 2026-04-18)
+### §O1 — Process-condition structured column
 
 **Decision.** Keep the one process-condition field that directly affects
 auction dynamics in the current research design: bidder exclusivity. Other
@@ -523,7 +521,7 @@ are parsed into `exclusivity_days: 30` during xlsx → JSON conversion.
 
 ---
 
-### §M1 — Unsolicited-no-NDA skip (🟩 RESOLVED, 2026-04-18)
+### §M1 — Unsolicited-no-NDA skip
 
 **Decision.** Skip any party mentioned in the filing when **all three** of
 the following hold:
@@ -561,7 +559,7 @@ flag preserves the audit trail so Austin can verify the skip was correct.
 
 ---
 
-### §M2 — No-bid-intent skip (🟩 RESOLVED)
+### §M2 — No-bid-intent skip
 
 **Decision.** Folded into §I1's NDA-only rule. No separate skip.
 
@@ -593,7 +591,7 @@ row's meaning comes from the absence of later narration.
 
 ---
 
-### §M3 — Advisor NDA disambiguation (🟩 RESOLVED, 2026-04-18)
+### §M3 — Advisor NDA disambiguation
 
 **Decision.** Every event row carries a new **`role`** field. Default
 value `"bidder"`. Advisor NDAs use `role = "advisor_financial"` or
@@ -641,7 +639,7 @@ only to bidders. A validator check catches violations.
 
 ---
 
-### §M4 — Cross-phase NDA continuity (🟩 RESOLVED, 2026-04-18; extended 2026-04-21)
+### §M4 — Cross-phase NDA continuity
 
 **Decision.** An NDA that carries forward across any phase-change
 transition — phase 0 → phase 1 (stale prior revived) or phase 1 →
@@ -693,7 +691,7 @@ continuation.
 
 ---
 
-### §M5 — Rollover-CA skip (Type C confidentiality agreements) (🟩 RESOLVED, 2026-04-26 per Decision #4)
+### §M5 — Rollover-CA skip (Type C confidentiality agreements)
 
 **Decision.** When the filing narrates a confidentiality agreement
 between a target shareholder and the acquirer / buyer group covering
@@ -731,7 +729,7 @@ ambiguity>"}`. Austin adjudicates against the filing.
 belong to a separate research domain (post-merger capital structure).
 Across the 9 reference deals, only petsmart has any candidate
 narrative for Type C, and even that is ambiguous (Longview's CAs are
-classified as Type B per Decision #4 since Longview joined the BC
+classified as Type B since Longview joined the BC
 Partners-led Buyer Group as a constituent rather than rolling over a
 passive stake).
 
@@ -747,7 +745,7 @@ re-extract with a targeted pass.
 
 ---
 
-### §H1 — Bid value ranges and single-bound bids (🟩 RESOLVED, 2026-04-18)
+### §H1 — Bid value ranges and single-bound bids
 
 **Decision.** Ranges populate `bid_value_lower` and `bid_value_upper`;
 single-bounds populate only the stated side; unspecified-price bids
@@ -764,7 +762,7 @@ populate neither but still emit a row with a flag.
 | Unspecified (*"willing to bid but did not state a price"*) | null | null | null | `bid_value_unspecified` (info) |
 
 **Key invariants.**
-- Exactly one of `{pershare, (lower, upper), (lower only), (upper only), all-null}` is populated per bid row. When the bid is shaped as a range, both `bid_value_lower` and `bid_value_upper` MUST be populated and numeric with `lower < upper`. Per Alex 2026-04-27.
+- Exactly one of `{pershare, (lower, upper), (lower only), (upper only), all-null}` is populated per bid row. When the bid is shaped as a range, both `bid_value_lower` and `bid_value_upper` MUST be populated and numeric with `lower < upper`.
 - Midpoints are NOT computed at extraction time. Downstream analysis can
   derive `(lower + upper) / 2` when needed; the raw range is preserved.
 - Unspecified-price rows still emit — the bid *event* occurred (the bidder

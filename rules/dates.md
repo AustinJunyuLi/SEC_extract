@@ -6,7 +6,7 @@
 
 ## Resolved rules
 
-### §B1 — Natural-language date mapping (🟩 RESOLVED, 2026-04-18)
+### §B1 — Natural-language date mapping
 
 **Decision.** Deterministic mapping table. The extractor MUST apply this
 table mechanically, not creatively. Mapped dates populate `bid_date_precise`;
@@ -67,7 +67,7 @@ the appropriate date? July 1?"* for "Early July 2016." Under this rule,
 
 ---
 
-### §B2 — Precise vs rough date population (🟩 RESOLVED, 2026-04-18)
+### §B2 — Precise vs rough date population
 
 **Decision.** Mutually exclusive population:
 - Filing states an **explicit calendar date** (ISO-resolvable):
@@ -101,7 +101,7 @@ gain.
 
 ---
 
-### §B3 — Undated events (🟩 RESOLVED, 2026-04-18)
+### §B3 — Undated events
 
 **Decision.** Hybrid rule based on temporal anchor language:
 - **Process-relative language present** (e.g., "shortly thereafter,"
@@ -141,7 +141,7 @@ source-quote discipline) or a skipped row (losing information). The
 
 ---
 
-### §B4 — Date-range events (🟩 RESOLVED, 2026-04-18)
+### §B4 — Date-range events
 
 **Decision.** Single event at the **range midpoint**. Populate
 `bid_date_rough` with the verbatim range phrase. Flag
@@ -184,7 +184,7 @@ without schema churn.
 
 ---
 
-### §B5 — Communication-date directionality (🟩 RESOLVED, 2026-04-18)
+### §B5 — Communication-date directionality
 
 **Rule.** When a filing narrates a communication with both an authored
 date ("letter dated May 10, 2016") and a receipt date ("received on
@@ -215,7 +215,7 @@ re-derive from the JSON alone.
 
 ## Event sequencing (§A — `BidderID`) — Resolved rules
 
-### §A1 — Keep `BidderID` (🟩 RESOLVED, 2026-04-18)
+### §A1 — Keep `BidderID`
 
 **Decision.** Keep the column name `BidderID` for Alex-workbook comparison,
 but **define the current semantics**:
@@ -253,7 +253,7 @@ code and removes a source of sort ambiguity.
 
 ---
 
-### §A2 — Strict monotonicity in date (🟩 RESOLVED, 2026-04-18)
+### §A2 — Strict monotonicity in date
 
 **Decision.** `BidderID` is **strictly monotone in `bid_date_precise`**,
 with same-date ties broken by §A3 (logical/semantic order, then filing
@@ -298,7 +298,7 @@ new counterparty) are narrative devices, not timeline events.
 
 ---
 
-### §A3 — Same-date tie-break (🟩 RESOLVED, 2026-04-18)
+### §A3 — Same-date tie-break
 
 **Decision.** Within a same-date block, apply **logical/semantic
 ordering** first, then filing narrative order as secondary tie-break.
@@ -368,7 +368,7 @@ chronologically even at sub-day resolution.
 
 ---
 
-### §A4 — `BidderID` consistency invariants (🟩 RESOLVED, 2026-04-18)
+### §A4 — `BidderID` consistency invariants
 
 **Decision.** Adopt all six invariants as **hard** validator checks, with
 one narrow escape hatch for truly undated rows.

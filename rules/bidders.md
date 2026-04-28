@@ -6,11 +6,11 @@
 
 ## Resolved rules
 
-### §E2 — Joint-bidder rows (🟩 RESOLVED, 2026-04-18; rewritten 2026-04-27 per Alex directive)
+### §E2 — Joint-bidder rows
 
 **Decision.** `BidderID` is an **event-sequence number, not a bidder-
 identity number**. Joint-bidder events are atomized per identifiable
-constituent. The pre-2026-04-27 Executed-row collapse is deleted.
+constituent.
 
 **Rule.**
 - Filing names consortium constituents → emit one row per constituent.
@@ -21,7 +21,7 @@ constituent. The pre-2026-04-27 Executed-row collapse is deleted.
   constituent members, fail loud. Do not invent members, and do not collapse
   to a single consortium-label row as a fallback.
 
-### §E2.b — Group-narrated event atomization (🟩 RESOLVED, 2026-04-27 per Alex directive)
+### §E2.b — Group-narrated event atomization
 
 **Decision.** Filing granularity decides the shape — but every event of every type atomizes per identifiable signer. There is no "consortium-as-1-row" shortcut for any event type, including Executed.
 
@@ -33,13 +33,13 @@ constituent. The pre-2026-04-27 Executed-row collapse is deleted.
 | Numeric count without names (e.g., *"15 financial sponsors executed CAs"*) | **N rows**, where N is the stated count, with `bidder_alias` placeholders (`"Strategic 1"`, `"Financial 1"`, …) per §E5 |
 | Single consortium event with no per-constituent detail and no count (e.g., *"Buyer Group executed a CA on 7/11/2013"*) | **N rows** only when N identifiable consortium constituents are named elsewhere in the filing. If the filing names neither a count nor identifiable constituents, fail loud; do not invent members and do not emit a single consortium-label fallback row. |
 
-The old Executed-row collapse is deleted: when the merger agreement is with
-a legal shell but the filing explicitly identifies the operational/economic
-buyer consortium (e.g., petsmart's BC Partners + Caisse + GIC + StepStone +
-Longview), emit one Executed row per identified constituent, all with the
-same date. If the operational/economic members are not identifiable from the
-filing, treat the extraction as incomplete rather than silently creating a
-shell-only or consortium-label Executed row.
+When the merger agreement is with a legal shell but the filing explicitly
+identifies the operational/economic buyer consortium (e.g., petsmart's
+BC Partners + Caisse + GIC + StepStone + Longview), emit one Executed row
+per identified constituent, all with the same date. If the operational/
+economic members are not identifiable from the filing, treat the extraction
+as incomplete rather than silently creating a shell-only or consortium-label
+Executed row.
 
 Every atomized buyer-group `Bid`, `Drop`, and `Executed` row carries
 `{"code": "buyer_group_constituent", "severity": "info", "reason": "<short filing-grounded statement identifying this party as a buyer-group constituent>"}`.
@@ -48,7 +48,7 @@ constituent lifecycle event, not an ordinary standalone bidder row. It does
 not make `ConsortiumCA` an auction NDA and does not count toward the auction
 threshold.
 
-**Rationale.** Per Alex 2026-04-27 directive: atomization is unconditional and applies symmetrically to NDA, Bid, Drop, Restarted, Terminated, and Executed. This matches the `DropSilent` convention (§I1) of one row per bidder.
+**Rationale.** Atomization is unconditional and applies symmetrically to NDA, Bid, Drop, Restarted, Terminated, and Executed. This matches the `DropSilent` convention (§I1) of one row per bidder.
 
 **Cross-references.**
 - §E1 (universal atomization).
@@ -58,7 +58,7 @@ threshold.
 
 ---
 
-### §E3 — Anonymous bidder naming (🟩 RESOLVED, 2026-04-18)
+### §E3 — Anonymous bidder naming
 
 **Decision.** `bidder_name` holds a **canonical deal-local ID**;
 `bidder_alias` holds the filing's verbatim label for that bidder on that
@@ -132,7 +132,7 @@ counts where no filing label is available.
 
 ---
 
-### §E4 — Winning-bidder name retrofit (🟩 RESOLVED, 2026-04-18)
+### §E4 — Winning-bidder name retrofit
 
 **Decision.** **No retrofit.** `bidder_name` (the canonical ID per §E3) is
 stable from first appearance. `bidder_alias` tracks the filing's usage
@@ -163,7 +163,7 @@ canonical ID `bidder_03` stays the same across all rows.
 
 ---
 
-### §E5 — Unnamed-party quantifier semantics (🟩 RESOLVED, 2026-04-20)
+### §E5 — Unnamed-party quantifier semantics
 
 When the filing uses a quantifier for unnamed parties:
 
@@ -188,7 +188,7 @@ minimum of 3; vaguer plurals should not be over-atomized.
 
 ---
 
-### §F1 — Bidder type canonical format (🟩 RESOLVED, 2026-04-18; rewritten 2026-04-27 per Alex directive)
+### §F1 — Bidder type canonical format
 
 **Decision.** `bidder_type` is a **scalar string** (not an object) holding one of two values: `"s"`, `"f"`, or `null`.
 
@@ -201,7 +201,7 @@ minimum of 3; vaguer plurals should not be over-atomized.
 - `"f"` — financial. Filing names a private-equity firm, buyout fund, sovereign-wealth fund, family office, pension fund, or SPAC.
 - `null` — filing does not classify.
 
-**Why scalar, not structured object.** The pre-2026-04-27 schema carried a nested object for base type, geography, and listing status. Per Alex's 2026-04-27 directive we no longer record geography or capital structure of the bidding firm. With one axis remaining, the object shape is dead weight; the scalar is direct.
+**Why scalar, not structured object.** Geography and capital structure of the bidding firm are not recorded; with one axis remaining, the object shape is dead weight and the scalar is direct.
 
 **Decision rule** (evaluate top-to-bottom; first match wins):
 
@@ -232,7 +232,7 @@ recoverable downstream by grouping the atomized winner or bidder rows.
 
 ---
 
-### §F3 — Consortium type classification (🟩 RESOLVED, 2026-04-18)
+### §F3 — Consortium type classification
 
 **Decision.** Fully absorbed by §F1 and §E2.b. Consortium rows are atomized
 per identifiable constituent; no row-level mixed value exists.
@@ -241,7 +241,7 @@ See `rules/bidders.md` §F1 for the scalar format.
 
 ---
 
-### §E1 — Group rows: aggregate vs atomize (🟩 RESOLVED, 2026-04-18)
+### §E1 — Group rows: aggregate vs atomize
 
 **Decision.** Events are **atomized** — one row per event. A single bidder
 appears on many rows (once for NDA, once per bid, once for drop, once for
