@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-import pipeline
+import pipeline.core as pipeline
 
 
 FIXTURE_DIR = Path(__file__).resolve().parent / "fixtures"

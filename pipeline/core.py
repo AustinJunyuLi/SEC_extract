@@ -1719,7 +1719,7 @@ def append_flags_log(
     `run_ts` and `run_id` are both stamped on every line. `run_id` is the
     audit primary key (independent of `last_run` even when reruns share a
     timestamp); `logged_at` remains the documented `last_run`-equality field
-    for back-compat with the existing query pattern.
+    for current-run flag queries.
     """
     with _state_file_lock():
         return _append_flags_log_locked(slug, final_extraction, run_ts, run_id)

@@ -1,9 +1,9 @@
 """Shared pytest fixtures for the extraction pipeline test suite.
 
-The goal here is to avoid mocking `subprocess.run`, `pipeline.mark_failed`,
-`pipeline.update_progress`, etc. Those mocks pass tests that the real failure
-paths wouldn't. Each fixture sets up a minimal on-disk environment so the
-real functions run end-to-end.
+The goal here is to avoid mocking `subprocess.run`, `pipeline.core.mark_failed`,
+`pipeline.core.update_progress`, etc. Those mocks pass tests that the real
+failure paths wouldn't. Each fixture sets up a minimal on-disk environment so
+the real functions run end-to-end.
 """
 from __future__ import annotations
 
@@ -14,14 +14,14 @@ from pathlib import Path
 
 import pytest
 
-import pipeline
+import pipeline.core as pipeline
 
 
 @dataclass
 class StateRepo:
     """Handle to a tmp_path-backed pipeline environment.
 
-    Attribute paths reflect the monkeypatched `pipeline.*` module constants.
+    Attribute paths reflect the monkeypatched `pipeline.core.*` constants.
     Helper methods seed deals and filings so individual tests don't have to
     replicate dictionary shape.
     """
@@ -109,8 +109,7 @@ def minimal_state_repo(tmp_path, monkeypatch) -> StateRepo:
 
     # run.py carries its own PROGRESS_PATH + REPO_ROOT derived at import time.
     # Tests that go through the CLI need those redirected too; importing here
-    # (rather than top-of-module) keeps pure-pipeline tests that never touch
-    # run.py independent of whether the shim imports cleanly.
+    # keeps pure core tests independent from CLI setup.
     import run as run_cli
     monkeypatch.setattr(run_cli, "REPO_ROOT", tmp_path)
     monkeypatch.setattr(run_cli, "PROGRESS_PATH", progress)

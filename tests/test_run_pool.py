@@ -56,15 +56,44 @@ def test_skip_decisions_and_cache_policy(minimal_state_repo):
     audit = cfg.audit_root / "done"
     audit.mkdir(parents=True)
     (audit / "raw_response.json").write_text(json.dumps({
+        "schema_version": "v1",
+        "slug": "done",
         "rulebook_version": current,
         "parsed_json": {"deal": {}, "events": []},
     }))
     assert run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state).action == "re_validate"
     (audit / "raw_response.json").write_text(json.dumps({
+        "schema_version": "v1",
+        "slug": "done",
         "rulebook_version": "old",
         "parsed_json": {"deal": {}, "events": []},
     }))
     assert run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state).action == "run"
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [
+        {"slug": "done", "rulebook_version": "rules-v1", "parsed_json": {"deal": {}, "events": []}},
+        {"schema_version": "v0", "slug": "done", "rulebook_version": "rules-v1", "parsed_json": {"deal": {}, "events": []}},
+        {"schema_version": "v1", "slug": "other", "rulebook_version": "rules-v1", "parsed_json": {"deal": {}, "events": []}},
+        {"schema_version": "v1", "slug": "done", "rulebook_version": "rules-v1", "parsed_json": {"events": []}},
+        {"schema_version": "v1", "slug": "done", "rulebook_version": "rules-v1", "parsed_json": {"deal": {}, "events": {}}},
+    ],
+)
+def test_re_validate_rejects_stale_raw_response_shapes(minimal_state_repo, payload):
+    env = minimal_state_repo
+    cfg = _cfg(re_validate=True, audit_root=env.tmp_path / "output" / "audit")
+    env.seed_deal("done", status="passed_clean", rulebook_version="rules-v1")
+    audit = cfg.audit_root / "done"
+    audit.mkdir(parents=True)
+    (audit / "raw_response.json").write_text(json.dumps(payload))
+    state = json.loads(env.progress.read_text())
+
+    decision = run_pool.decide_skip("done", cfg, "rules-v1", state)
+
+    assert decision.action == "run"
+    assert decision.reason == "no current cache for re-validate"
 
 
 def test_dry_run_no_api_construction_probe_or_writes(minimal_state_repo, monkeypatch, capsys):

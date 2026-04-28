@@ -2,7 +2,8 @@ import json
 
 import pytest
 
-import pipeline
+import pipeline as pipeline_pkg
+import pipeline.core as pipeline
 
 
 # ---------------------------------------------------------------------------
@@ -11,11 +12,10 @@ import pipeline
 
 
 def test_pipeline_package_reexports_core_api():
-    import pipeline.core as core
-
-    assert pipeline.load_filing is core.load_filing
-    assert pipeline.rulebook_version is core.rulebook_version
-    assert hasattr(core, "_PROCESS_STATE_LOCK")
+    assert pipeline_pkg.load_filing is pipeline.load_filing
+    assert pipeline_pkg.rulebook_version is pipeline.rulebook_version
+    assert not hasattr(pipeline_pkg, "_invariant_p_r0")
+    assert hasattr(pipeline, "_PROCESS_STATE_LOCK")
 
 
 # ---------------------------------------------------------------------------
@@ -429,7 +429,7 @@ def test_finalize_extraction_output_is_byte_idempotent_modulo_run_stamps(minimal
     assert out1 == out2, (
         "extraction output must be byte-identical across reruns on identical "
         "input modulo per-run stamps; mismatch indicates non-determinism in "
-        "the validator or canonicalizer"
+        "the validator or pre-validation ordering"
     )
 
     # Flag set per run must also be identical (modulo per-line run_id/logged_at).

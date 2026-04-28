@@ -17,7 +17,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
 
-import pipeline
+from pipeline import core
 
 REPO_ROOT = Path(__file__).resolve().parent
 PROGRESS_PATH = REPO_ROOT / "state" / "progress.json"
@@ -83,23 +83,10 @@ def _commit_pathspecs(result: Any) -> list[str]:
     if output_path is not None:
         paths.append(output_path)
     paths.append(PROGRESS_PATH)
-    if getattr(pipeline, "FLAGS_PATH", None) and pipeline.FLAGS_PATH.exists():
-        paths.append(pipeline.FLAGS_PATH)
+    if core.FLAGS_PATH.exists():
+        paths.append(core.FLAGS_PATH)
     if audit_path is not None:
         paths.append(audit_path)
-    else:
-        audit_dir = _audit_dir_for_result(result)
-        if audit_dir is not None:
-            for name in [
-                "manifest.json",
-                "raw_response.json",
-                "calls.jsonl",
-                "prompt_system.txt",
-                "prompt_user.json",
-            ]:
-                candidate = audit_dir / name
-                if candidate.exists():
-                    paths.append(candidate)
 
     pathspecs: list[str] = []
     seen: set[str] = set()
@@ -110,18 +97,6 @@ def _commit_pathspecs(result: Any) -> list[str]:
         seen.add(pathspec)
         pathspecs.append(pathspec)
     return pathspecs
-
-
-def _audit_dir_for_result(result: Any) -> Path | None:
-    slug = getattr(result, "slug", None)
-    if not slug:
-        return None
-    try:
-        from pipeline.run_pool import AUDIT_ROOT
-    except Exception:
-        return None
-    path = Path(AUDIT_ROOT) / str(slug)
-    return path if path.exists() else None
 
 
 def _check_no_staged_drift(pathspecs: list[str]) -> None:
@@ -145,6 +120,8 @@ def _check_no_staged_drift(pathspecs: list[str]) -> None:
 
 def commit_deal_outputs(slug: str, result: Any) -> None:
     """Commit only files produced for this deal, excluding unrelated staged files."""
+    if getattr(result, "audit_path", None) is None:
+        raise ValueError("SDK deal outcomes must include audit_path for --commit")
     pathspecs = _commit_pathspecs(result)
     _check_no_staged_drift(pathspecs)
     status = getattr(result, "status", "unknown")
@@ -202,6 +179,9 @@ def main() -> int:
 
     load_dotenv_if_available()
     args = _parser().parse_args()
+    if args.commit and args.dry_run:
+        print("--commit cannot be used with --dry-run", file=sys.stderr)
+        return 2
 
     if args.print_prompt:
         system, user = _build_messages(args.slug)
@@ -224,7 +204,7 @@ def main() -> int:
     if args.commit:
         try:
             commit_deal_outputs(args.slug, outcome)
-        except subprocess.CalledProcessError as e:
+        except (subprocess.CalledProcessError, ValueError) as e:
             print(f"[{args.slug}] git commit failed: {e}", file=sys.stderr)
             return 1
     return 0

@@ -5,10 +5,10 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
-import pipeline
 import run as run_cli
 
 
@@ -125,6 +125,14 @@ def test_dry_run_does_not_require_api_key(monkeypatch):
     assert calls == [("medivation", True)]
 
 
+def test_commit_and_dry_run_is_rejected(monkeypatch, capsys):
+    monkeypatch.setattr(run_cli, "_run_single_deal", lambda *a, **k: pytest.fail("run should not start"))
+    _set_argv(monkeypatch, "--slug", "medivation", "--dry-run", "--commit")
+
+    assert run_cli.main() == 2
+    assert "--commit cannot be used with --dry-run" in capsys.readouterr().err
+
+
 @pytest.mark.parametrize("old_flag", ["--raw-" "extraction", "--print-extractor-" "prompt"])
 def test_old_flags_are_unrecognized(monkeypatch, old_flag, tmp_path, capsys):
     args = ["--slug", "medivation", old_flag]
@@ -144,12 +152,27 @@ def _prep_commit_result(env, slug="medivation"):
     output_path = env.extractions / f"{slug}.json"
     output_path.write_text("{}")
     env.flags.write_text("")
-    return pipeline.PipelineResult(
+    audit_path = env.tmp_path / "output" / "audit" / slug
+    audit_path.mkdir(parents=True)
+    (audit_path / "manifest.json").write_text("{}")
+    (audit_path / "raw_response.json").write_text("{}")
+    return SimpleNamespace(
         status="passed_clean",
         flag_count=0,
         notes="",
         output_path=output_path,
+        audit_path=audit_path,
     )
+
+
+def test_commit_requires_sdk_audit_path(minimal_state_repo):
+    env = minimal_state_repo
+    output_path = env.extractions / "medivation.json"
+    output_path.write_text("{}")
+    result = SimpleNamespace(status="passed_clean", flag_count=0, notes="", output_path=output_path)
+
+    with pytest.raises(ValueError, match="audit_path"):
+        run_cli.commit_deal_outputs("medivation", result)
 
 
 def test_commit_aborts_on_staged_drift(minimal_state_repo, git_repo):

@@ -123,10 +123,20 @@ def _cached_raw_response(slug: str, cfg: PoolConfig, current_rulebook_version: s
     if not path.exists():
         return None
     payload = json.loads(path.read_text())
+    if payload.get("schema_version") != "v1":
+        return None
+    if payload.get("slug") != slug:
+        return None
     if payload.get("rulebook_version") != current_rulebook_version:
         return None
     parsed = payload.get("parsed_json")
-    return parsed if isinstance(parsed, dict) else None
+    if not isinstance(parsed, dict):
+        return None
+    if not isinstance(parsed.get("deal"), dict):
+        return None
+    if not isinstance(parsed.get("events"), list):
+        return None
+    return parsed
 
 
 def decide_skip(
