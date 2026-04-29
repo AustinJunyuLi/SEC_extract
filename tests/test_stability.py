@@ -1,0 +1,323 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import pytest
+
+from pipeline import stability
+
+
+BASE_HASHES = {
+    "prompt_hash": "prompt-v1",
+    "schema_hash": "schema-v1",
+    "rulebook_version": "rules-v1",
+    "extractor_contract_version": "contract-v1",
+}
+
+
+def _event(
+    *,
+    bid_note: str = "Bid",
+    bidder_alias: str = "Party A",
+    bidder_type: str | None = "s",
+    bid_value_lower: float | None = 10.0,
+    bid_value_upper: float | None = 12.0,
+    source_quote: str = "Party A submitted an indication of interest.",
+    source_page: int = 4,
+    flags: list[dict] | None = None,
+) -> dict:
+    return {
+        "process_phase": "Phase 1",
+        "bid_note": bid_note,
+        "bid_date_precise": "2026-01-15",
+        "bid_date_rough": None,
+        "bidder_alias": bidder_alias,
+        "bidder_type": bidder_type,
+        "bid_value_lower": bid_value_lower,
+        "bid_value_upper": bid_value_upper,
+        "bid_type": "informal" if bid_note == "Bid" else None,
+        "source_page": source_page,
+        "source_quote": source_quote,
+        "flags": flags or [],
+    }
+
+
+def _write_run(
+    repo_root: Path,
+    *,
+    slug: str,
+    run_id: str,
+    finished_at: str,
+    events: list[dict] | None = None,
+    row_flags: list[dict] | None = None,
+    deal_flags: list[dict] | None = None,
+    manifest_extra: dict | None = None,
+) -> Path:
+    run_dir = repo_root / "output" / "audit" / slug / "runs" / run_id
+    run_dir.mkdir(parents=True)
+    manifest = {
+        "schema_version": "audit_run_v2",
+        "slug": slug,
+        "run_id": run_id,
+        "outcome": "passed_clean",
+        "cache_eligible": True,
+        "cache_used": False,
+        "started_at": "2026-04-29T00:00:00Z",
+        "finished_at": finished_at,
+        "models": {"extract": "gpt-5.5", "adjudicate": "gpt-5.5"},
+        "reasoning_efforts": {"extract": "xhigh", "adjudicate": "xhigh"},
+        "api_endpoint": "linkflow",
+        "prompt_hashes": {"extract": BASE_HASHES["prompt_hash"]},
+        **BASE_HASHES,
+    }
+    if manifest_extra:
+        manifest.update(manifest_extra)
+    (run_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True))
+    (run_dir / "final_output.json").write_text(json.dumps({
+        "deal": {
+            "TargetName": "Synthetic Target",
+            "auction": True,
+            "deal_flags": deal_flags or [],
+        },
+        "events": events if events is not None else [_event()],
+    }, indent=2, sort_keys=True))
+    (run_dir / "validation.json").write_text(json.dumps({
+        "row_flags": row_flags or [],
+        "deal_flags": deal_flags or [],
+    }, indent=2, sort_keys=True))
+    (run_dir / "raw_response.json").write_text(json.dumps({
+        "schema_version": "raw_response_v2",
+        "slug": slug,
+        "run_id": run_id,
+        "parsed_json": {"deal": {}, "events": []},
+    }, indent=2, sort_keys=True))
+    (run_dir / "calls.jsonl").write_text("")
+    (run_dir / "prompts").mkdir()
+    return run_dir
+
+
+def _write_runs(repo_root: Path, slug: str = "medivation", count: int = 3, **kwargs) -> None:
+    for idx in range(count):
+        _write_run(
+            repo_root,
+            slug=slug,
+            run_id=f"run-{idx + 1}",
+            finished_at=f"2026-04-29T00:0{idx}:00Z",
+            **kwargs,
+        )
+
+
+def test_identical_archived_runs_classify_stable(tmp_path, capsys):
+    _write_runs(tmp_path)
+
+    rc = stability.main([
+        "--repo-root", str(tmp_path),
+        "--slugs", "medivation",
+        "--runs", "3",
+    ])
+
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert "STABLE_FOR_REFERENCE_REVIEW" in out
+    assert "medivation" in out
+
+
+def test_hard_flag_movement_classifies_architecture_unstable(tmp_path, capsys):
+    _write_run(tmp_path, slug="medivation", run_id="run-1", finished_at="2026-04-29T00:00:00Z")
+    _write_run(
+        tmp_path,
+        slug="medivation",
+        run_id="run-2",
+        finished_at="2026-04-29T00:01:00Z",
+        row_flags=[{"code": "missing_quote", "severity": "hard", "row_index": 0, "reason": "missing"}],
+        manifest_extra={"outcome": "validated"},
+    )
+    _write_run(tmp_path, slug="medivation", run_id="run-3", finished_at="2026-04-29T00:02:00Z")
+
+    rc = stability.main(["--repo-root", str(tmp_path), "--slugs", "medivation", "--runs", "3"])
+
+    out = capsys.readouterr().out
+    assert rc == 1
+    assert "UNSTABLE_ARCHITECTURE_ESCALATION_CANDIDATE" in out
+    assert "hard flag identities changed" in out
+
+
+def test_stable_hard_flags_cannot_produce_target_gate_proof(tmp_path, capsys):
+    hard_flag = {"code": "missing_quote", "severity": "hard", "row_index": 0, "reason": "missing"}
+    _write_runs(
+        tmp_path,
+        row_flags=[hard_flag],
+        manifest_extra={"outcome": "validated"},
+    )
+
+    rc = stability.main([
+        "--repo-root", str(tmp_path),
+        "--slugs", "medivation",
+        "--runs", "3",
+        "--json",
+    ])
+
+    payload = json.loads(capsys.readouterr().out)
+    assert rc == 1
+    assert payload["classification"] == "UNSTABLE_RULE_OR_VALIDATOR_FIX_NEEDED"
+    assert "hard flags present" in " ".join(payload["reasons"])
+
+
+def test_row_count_movement_classifies_architecture_unstable(tmp_path, capsys):
+    _write_run(tmp_path, slug="medivation", run_id="run-1", finished_at="2026-04-29T00:00:00Z")
+    _write_run(
+        tmp_path,
+        slug="medivation",
+        run_id="run-2",
+        finished_at="2026-04-29T00:01:00Z",
+        events=[_event(), _event(bid_note="NDA", bid_value_lower=None, bid_value_upper=None)],
+    )
+    _write_run(tmp_path, slug="medivation", run_id="run-3", finished_at="2026-04-29T00:02:00Z")
+
+    rc = stability.main(["--repo-root", str(tmp_path), "--slugs", "medivation", "--runs", "3"])
+
+    out = capsys.readouterr().out
+    assert rc == 1
+    assert "UNSTABLE_ARCHITECTURE_ESCALATION_CANDIDATE" in out
+    assert "row fingerprints changed" in out
+
+
+def test_pure_info_count_increase_does_not_force_unstable(tmp_path, capsys):
+    _write_run(tmp_path, slug="medivation", run_id="run-1", finished_at="2026-04-29T00:00:00Z")
+    _write_run(
+        tmp_path,
+        slug="medivation",
+        run_id="run-2",
+        finished_at="2026-04-29T00:01:00Z",
+        row_flags=[{"code": "quote_near_limit", "severity": "info", "row_index": 0, "reason": "verbose"}],
+        manifest_extra={"outcome": "passed"},
+    )
+    _write_run(tmp_path, slug="medivation", run_id="run-3", finished_at="2026-04-29T00:02:00Z")
+
+    rc = stability.main(["--repo-root", str(tmp_path), "--slugs", "medivation", "--runs", "3"])
+
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert "STABLE_FOR_REFERENCE_REVIEW" in out
+    assert "info-only flag volume changed" in out
+
+
+def test_missing_archived_runs_are_insufficient(tmp_path, capsys):
+    _write_runs(tmp_path, count=2)
+
+    rc = stability.main(["--repo-root", str(tmp_path), "--slugs", "medivation", "--runs", "3"])
+
+    out = capsys.readouterr().out
+    assert rc == 1
+    assert "INSUFFICIENT_ARCHIVED_RUNS" in out
+    assert "medivation has 2 eligible archived runs; need 3" in out
+
+
+def test_report_output_is_deterministic(tmp_path):
+    _write_runs(tmp_path)
+
+    report_one = stability.build_report(
+        stability.analyze(repo_root=tmp_path, slugs=["medivation"], runs=3)
+    )
+    report_two = stability.build_report(
+        stability.analyze(repo_root=tmp_path, slugs=["medivation"], runs=3)
+    )
+
+    assert report_one == report_two
+
+
+def test_json_report_is_target_gate_proof_shape(tmp_path, capsys):
+    _write_runs(tmp_path)
+
+    rc = stability.main([
+        "--repo-root", str(tmp_path),
+        "--slugs", "medivation",
+        "--runs", "3",
+        "--json",
+    ])
+
+    payload = json.loads(capsys.readouterr().out)
+    assert rc == 0
+    assert payload["schema_version"] == "target_gate_proof_v1"
+    assert payload["classification"] == "STABLE_FOR_REFERENCE_REVIEW"
+    assert payload["reference_slugs"] == ["medivation"]
+
+
+def test_model_or_reasoning_drift_classifies_rule_or_validator_needed(tmp_path, capsys):
+    _write_run(tmp_path, slug="medivation", run_id="run-1", finished_at="2026-04-29T00:00:00Z")
+    _write_run(
+        tmp_path,
+        slug="medivation",
+        run_id="run-2",
+        finished_at="2026-04-29T00:01:00Z",
+        manifest_extra={"reasoning_efforts": {"extract": "high", "adjudicate": "xhigh"}},
+    )
+    _write_run(tmp_path, slug="medivation", run_id="run-3", finished_at="2026-04-29T00:02:00Z")
+
+    rc = stability.main(["--repo-root", str(tmp_path), "--slugs", "medivation", "--runs", "3"])
+
+    out = capsys.readouterr().out
+    assert rc == 1
+    assert "UNSTABLE_RULE_OR_VALIDATOR_FIX_NEEDED" in out
+    assert "model/reasoning/provider" in out
+
+
+def test_write_writes_only_requested_path(tmp_path):
+    _write_runs(tmp_path)
+    requested = tmp_path / "quality_reports" / "stability" / "reference-latest.md"
+
+    rc = stability.main([
+        "--repo-root", str(tmp_path),
+        "--slugs", "medivation",
+        "--runs", "3",
+        "--write", str(requested),
+    ])
+
+    assert rc == 0
+    assert requested.exists()
+    written = sorted(p.relative_to(tmp_path) for p in tmp_path.rglob("*") if p.is_file())
+    assert Path("quality_reports/stability/reference-latest.md") in written
+    assert Path("output/extractions/medivation.json") not in written
+
+
+def test_mutable_latest_extraction_is_not_used_for_comparison(tmp_path, capsys):
+    _write_runs(tmp_path)
+    mutable = tmp_path / "output" / "extractions"
+    mutable.mkdir(parents=True)
+    (mutable / "medivation.json").write_text(json.dumps({
+        "deal": {"auction": False},
+        "events": [_event(), _event(bidder_alias="Party B")],
+    }))
+
+    rc = stability.main(["--repo-root", str(tmp_path), "--slugs", "medivation", "--runs", "3"])
+
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert "STABLE_FOR_REFERENCE_REVIEW" in out
+
+
+def test_strict_mode_rejects_legacy_singleton_audit_files(tmp_path, capsys):
+    _write_runs(tmp_path)
+    legacy = tmp_path / "output" / "audit" / "medivation" / "manifest.json"
+    legacy.write_text(json.dumps({"legacy": True}))
+
+    rc = stability.main(["--repo-root", str(tmp_path), "--slugs", "medivation", "--runs", "3"])
+
+    err = capsys.readouterr().err
+    assert rc == 2
+    assert "legacy singleton audit file rejected" in err
+
+
+def test_archived_run_manifest_must_use_live_nested_config_shape(tmp_path, capsys):
+    _write_runs(tmp_path)
+    manifest = tmp_path / "output" / "audit" / "medivation" / "runs" / "run-2" / "manifest.json"
+    payload = json.loads(manifest.read_text())
+    payload.pop("models")
+    payload["extract_model"] = "gpt-5.5"
+    manifest.write_text(json.dumps(payload))
+
+    rc = stability.main(["--repo-root", str(tmp_path), "--slugs", "medivation", "--runs", "3"])
+
+    assert rc == 2
+    assert "manifest missing required models.extract" in capsys.readouterr().err

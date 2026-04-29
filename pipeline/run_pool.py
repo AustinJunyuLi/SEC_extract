@@ -4,29 +4,39 @@ from __future__ import annotations
 
 import argparse
 import asyncio
-import contextlib
 import json
 import os
-import shutil
 import subprocess
 import sys
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Iterator, Literal
 
 from pipeline import core
 from pipeline.llm.adjudicate import adjudicate
-from pipeline.llm.audit import AuditWriter, TokenUsage
+from pipeline.llm.audit import (
+    AUDIT_LATEST_SCHEMA_VERSION,
+    AUDIT_RUN_SCHEMA_VERSION,
+    RAW_RESPONSE_SCHEMA_VERSION,
+    AuditWriter,
+    TokenUsage,
+    audit_run_dir,
+    audit_slug_root,
+)
 from pipeline.llm.client import LLMClient, OpenAICompatibleClient
 from pipeline.llm.extract import extract_deal, extractor_contract_version
+from pipeline.llm.response_format import SCHEMA_R1, schema_hash
 from pipeline.llm.retry import RetryConfig
 from pipeline.llm.watchdog import WatchdogConfig
 
 
-DONE_STATUSES = {"validated", "passed", "passed_clean", "verified"}
+DONE_STATUSES = {"passed", "passed_clean", "verified"}
+FINALIZED_STATUSES = {"validated", "passed", "passed_clean", "verified"}
+REFERENCE_SLUGS = frozenset(core.REFERENCE_SLUGS)
 VALID_FILTERS = {"pending", "reference", "failed", "all"}
 AUDIT_ROOT = core.REPO_ROOT / "output" / "audit"
+TARGET_GATE_PROOF = core.REPO_ROOT / "quality_reports" / "stability" / "target-release-proof.json"
 DEFAULT_XHIGH_MAX_WORKERS = 5
 DEFAULT_REASONING_EFFORT = "xhigh"
 SEMANTIC_ADJUDICATION_SOFT_FLAGS: frozenset[str] = frozenset({
@@ -45,6 +55,9 @@ class PoolConfig:
     adjudicate_reasoning_effort: str | None = DEFAULT_REASONING_EFFORT
     re_validate: bool = False
     re_extract: bool = False
+    audit_run_id: str | None = None
+    release_targets: bool = False
+    target_gate_proof: Path = TARGET_GATE_PROOF
     commit: bool = False
     dry_run: bool = False
     api_key: str | None = None
@@ -71,6 +84,7 @@ class DealOutcome:
     notes: str = ""
     output_path: Path | None = None
     audit_path: Path | None = None
+    latest_path: Path | None = None
 
 
 @dataclass
@@ -85,7 +99,7 @@ class PoolSummary:
     def succeeded(self) -> int:
         return sum(
             1 for outcome in self.outcomes
-            if outcome.status in {"validated", "passed", "passed_clean", "verified"}
+            if outcome.status in DONE_STATUSES
         )
 
     @property
@@ -95,6 +109,29 @@ class PoolSummary:
     @property
     def failed(self) -> int:
         return sum(1 for outcome in self.outcomes if outcome.status == "failed")
+
+
+class TargetGateClosedError(RuntimeError):
+    pass
+
+
+@dataclass(frozen=True)
+class TargetGateStatus:
+    reference_total: int
+    reference_verified: int
+    missing_verified_references: tuple[str, ...]
+    stability_proof_path: Path
+    stability_proof_ok: bool
+    stability_proof_reason: str
+
+    @property
+    def is_open(self) -> bool:
+        return (
+            self.reference_total == len(REFERENCE_SLUGS)
+            and self.reference_verified == len(REFERENCE_SLUGS)
+            and not self.missing_verified_references
+            and self.stability_proof_ok
+        )
 
 
 def _load_progress() -> dict[str, Any]:
@@ -116,31 +153,193 @@ def resolve_selection(cfg: PoolConfig, state: dict[str, Any] | None = None) -> l
     return [slug for slug, deal in deals.items() if deal.get("status") == cfg.filter]
 
 
-def audit_dir(cfg: PoolConfig, slug: str) -> Path:
-    return cfg.audit_root / slug
+def _is_reference_deal(state: dict[str, Any], slug: str) -> bool:
+    return state.get("deals", {}).get(slug, {}).get("is_reference") is True
 
 
-def _cached_raw_response_path(cfg: PoolConfig, slug: str) -> Path:
-    return audit_dir(cfg, slug) / "raw_response.json"
+def _stability_proof_status(path: Path, reference_slugs: set[str]) -> tuple[bool, str]:
+    if not path.exists():
+        return False, f"missing stability proof file: {path}"
+    try:
+        payload = json.loads(path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        return False, f"stability proof is unreadable JSON: {type(exc).__name__}: {exc}"
+    if not isinstance(payload, dict):
+        return False, "stability proof top-level value is not an object"
+    if payload.get("schema_version") != "target_gate_proof_v1":
+        return False, "stability proof schema_version is not target_gate_proof_v1"
+    if payload.get("classification") != "STABLE_FOR_REFERENCE_REVIEW":
+        return False, f"stability proof classification={payload.get('classification')!r}"
+    proof_refs = payload.get("reference_slugs")
+    if not isinstance(proof_refs, list) or set(proof_refs) != reference_slugs:
+        return False, "stability proof reference_slugs do not match the live 9-reference set"
+    requested_runs = payload.get("requested_runs")
+    if not isinstance(requested_runs, int) or requested_runs < 3:
+        return False, "stability proof requested_runs must be at least 3"
+    slug_results = payload.get("slug_results")
+    if not isinstance(slug_results, list):
+        return False, "stability proof slug_results must be a list"
+    results_by_slug = {
+        item.get("slug"): item
+        for item in slug_results
+        if isinstance(item, dict) and isinstance(item.get("slug"), str)
+    }
+    for slug in sorted(reference_slugs):
+        result = results_by_slug.get(slug)
+        if not isinstance(result, dict):
+            return False, f"stability proof missing slug_results entry for {slug}"
+        if result.get("classification") != "STABLE_FOR_REFERENCE_REVIEW":
+            return False, f"stability proof slug {slug} classification={result.get('classification')!r}"
+        eligible = result.get("eligible_archived_runs")
+        if not isinstance(eligible, int) or eligible < requested_runs:
+            return False, f"stability proof slug {slug} has insufficient eligible_archived_runs"
+        selected = result.get("selected_runs")
+        if not isinstance(selected, list) or len(selected) < requested_runs:
+            return False, f"stability proof slug {slug} selected_runs must contain at least {requested_runs} runs"
+        if not all(isinstance(run_id, str) and run_id for run_id in selected):
+            return False, f"stability proof slug {slug} selected_runs contains invalid run IDs"
+    return True, "stability proof accepted"
+
+
+def target_gate_status(
+    state: dict[str, Any],
+    proof_path: Path | None = None,
+) -> TargetGateStatus:
+    deals = state.get("deals", {})
+    reference_slugs = {slug for slug, deal in deals.items() if deal.get("is_reference") is True}
+    verified_count = 0
+    missing_verified: list[str] = []
+    for slug in REFERENCE_SLUGS:
+        if deals.get(slug, {}).get("status") == "verified":
+            verified_count += 1
+        else:
+            missing_verified.append(slug)
+    missing_expected = REFERENCE_SLUGS - reference_slugs
+    if missing_expected:
+        missing_verified = sorted(set(missing_verified) | missing_expected)
+    else:
+        missing_verified.sort()
+    proof = proof_path or TARGET_GATE_PROOF
+    proof_ok, proof_reason = _stability_proof_status(proof, REFERENCE_SLUGS)
+    return TargetGateStatus(
+        reference_total=len(reference_slugs),
+        reference_verified=verified_count,
+        missing_verified_references=tuple(missing_verified),
+        stability_proof_path=proof,
+        stability_proof_ok=proof_ok,
+        stability_proof_reason=proof_reason,
+    )
+
+
+def enforce_target_gate(selected_slugs: list[str], state: dict[str, Any], cfg: PoolConfig) -> None:
+    target_slugs = [slug for slug in selected_slugs if not _is_reference_deal(state, slug)]
+    if not target_slugs:
+        return
+    reference_count = len(selected_slugs) - len(target_slugs)
+    status = target_gate_status(state, cfg.target_gate_proof)
+    blockers: list[str] = []
+    if status.missing_verified_references:
+        blockers.append(
+            "all 9 reference deals must be status=verified; missing "
+            + ", ".join(status.missing_verified_references)
+        )
+    if not status.stability_proof_ok:
+        blockers.append(status.stability_proof_reason)
+    if not cfg.release_targets:
+        blockers.append("operator must pass --release-targets")
+    if cfg.release_targets and status.is_open:
+        return
+    target_preview = ", ".join(target_slugs[:10])
+    if len(target_slugs) > 10:
+        target_preview += f", ... (+{len(target_slugs) - 10} more)"
+    raise TargetGateClosedError(
+        "target gate closed: "
+        f"reference deals selected={reference_count}; target deals selected={len(target_slugs)} "
+        f"({target_preview}). "
+        "Blocked before audit directories, SDK clients, or model calls. "
+        "Conditions: " + "; ".join(blockers)
+    )
 
 
 @dataclass(frozen=True)
 class CacheCheck:
     parsed_json: dict[str, Any] | None
     reason: str
+    raw_payload: dict[str, Any] | None = None
+    source_run_id: str | None = None
+    raw_response_path: Path | None = None
 
     @property
     def valid(self) -> bool:
         return self.parsed_json is not None
 
 
+def _json_file(path: Path, label: str) -> tuple[dict[str, Any] | None, str | None]:
+    try:
+        payload = json.loads(path.read_text())
+    except FileNotFoundError:
+        return None, f"{label} does not exist: {path}"
+    except (OSError, json.JSONDecodeError) as exc:
+        return None, f"{label} is corrupt or unreadable: {type(exc).__name__}: {exc}"
+    if not isinstance(payload, dict):
+        return None, f"{label} top-level value is not an object"
+    return payload, None
+
+
+def _cache_source_from_latest(cfg: PoolConfig, slug: str) -> tuple[str | None, Path | None, str | None]:
+    latest_path = audit_slug_root(cfg.audit_root, slug) / "latest.json"
+    latest, error = _json_file(latest_path, "latest.json")
+    if error:
+        legacy_raw = audit_slug_root(cfg.audit_root, slug) / "raw_response.json"
+        legacy_hint = "; legacy loose audit layout is not accepted" if legacy_raw.exists() else ""
+        return None, None, error + legacy_hint
+    if latest.get("schema_version") != AUDIT_LATEST_SCHEMA_VERSION:
+        return None, None, "latest.json schema_version is not audit_v2"
+    if latest.get("slug") != slug:
+        return None, None, f"latest.json slug={latest.get('slug')!r} does not match {slug!r}"
+    if latest.get("cache_eligible") is not True:
+        return None, None, "latest archived run is not cache-eligible"
+    run_id = latest.get("run_id")
+    if not isinstance(run_id, str) or not run_id:
+        return None, None, "latest.json run_id is missing"
+    manifest_run_id, _manifest_raw_path, manifest_error = _cache_source_from_run_id(cfg, slug, run_id)
+    if manifest_error or manifest_run_id != run_id:
+        return None, None, manifest_error or "latest archived manifest does not match latest.json run_id"
+    raw_rel = latest.get("raw_response_path")
+    if raw_rel != f"runs/{run_id}/raw_response.json":
+        return None, None, "latest.json raw_response_path must point under runs/{run_id}/raw_response.json"
+    return run_id, audit_slug_root(cfg.audit_root, slug) / raw_rel, None
+
+
+def _cache_source_from_run_id(cfg: PoolConfig, slug: str, run_id: str) -> tuple[str | None, Path | None, str | None]:
+    run_dir = audit_run_dir(cfg.audit_root, slug, run_id)
+    manifest, error = _json_file(run_dir / "manifest.json", "archived manifest.json")
+    if error:
+        return None, None, error
+    if manifest.get("schema_version") != AUDIT_RUN_SCHEMA_VERSION:
+        return None, None, "archived manifest.json schema_version is not audit_run_v2"
+    if manifest.get("slug") != slug or manifest.get("run_id") != run_id:
+        return None, None, "archived manifest.json slug/run_id does not match requested cache run"
+    if manifest.get("cache_eligible") is not True:
+        return None, None, "requested archived run is not cache-eligible"
+    return run_id, run_dir / "raw_response.json", None
+
+
 def _check_cached_raw_response(slug: str, cfg: PoolConfig, current_rulebook_version: str) -> CacheCheck:
-    path = _cached_raw_response_path(cfg, slug)
-    if not path.exists():
-        return CacheCheck(None, "no cached raw_response.json for --re-validate")
-    payload = json.loads(path.read_text())
-    if payload.get("schema_version") != "v1":
-        return CacheCheck(None, "cached raw_response.json schema_version is not v1")
+    if cfg.audit_run_id:
+        source_run_id, path, source_error = _cache_source_from_run_id(cfg, slug, cfg.audit_run_id)
+    else:
+        source_run_id, path, source_error = _cache_source_from_latest(cfg, slug)
+    if source_error or path is None or source_run_id is None:
+        return CacheCheck(None, source_error or "no cache source selected")
+    payload, error = _json_file(path, "cached raw_response.json")
+    if error:
+        return CacheCheck(None, error)
+    assert payload is not None
+    if payload.get("schema_version") != RAW_RESPONSE_SCHEMA_VERSION:
+        return CacheCheck(None, "cached raw_response.json schema_version is not raw_response_v2")
+    if payload.get("run_id") != source_run_id:
+        return CacheCheck(None, "cached raw_response.json run_id does not match selected audit run")
     if payload.get("slug") != slug:
         return CacheCheck(None, f"cached raw_response.json slug={payload.get('slug')!r} does not match {slug!r}")
     if payload.get("rulebook_version") != current_rulebook_version:
@@ -162,11 +361,7 @@ def _check_cached_raw_response(slug: str, cfg: PoolConfig, current_rulebook_vers
         return CacheCheck(None, "cached raw_response.json parsed_json.deal is not an object")
     if not isinstance(parsed.get("events"), list):
         return CacheCheck(None, "cached raw_response.json parsed_json.events is not a list")
-    return CacheCheck(parsed, "valid cached raw_response.json")
-
-
-def _cached_raw_response(slug: str, cfg: PoolConfig, current_rulebook_version: str) -> dict[str, Any] | None:
-    return _check_cached_raw_response(slug, cfg, current_rulebook_version).parsed_json
+    return CacheCheck(parsed, "valid archived raw_response.json", payload, source_run_id, path)
 
 
 def decide_skip(
@@ -198,17 +393,37 @@ def _soft_flags(result: core.ValidatorResult) -> list[dict[str, Any]]:
     ]
 
 
-def _watchdog_warnings(audit: AuditWriter) -> int:
+def _iter_calls(audit: AuditWriter) -> Iterator[dict[str, Any]]:
     path = audit.root / "calls.jsonl"
     if not path.exists():
-        return 0
-    total = 0
+        return
     for line in path.read_text().splitlines():
-        entry = json.loads(line)
+        if not line.strip():
+            continue
+        try:
+            yield json.loads(line)
+        except json.JSONDecodeError:
+            continue
+
+
+def _calls_summary(audit: AuditWriter) -> tuple[dict[str, str], int, int]:
+    hashes: dict[str, str] = {}
+    total_attempts = 0
+    watchdog_warnings = 0
+    for entry in _iter_calls(audit):
+        total_attempts += int(entry.get("attempts") or 0)
         watchdog = entry.get("watchdog")
         if isinstance(watchdog, dict):
-            total += int(watchdog.get("warnings") or 0)
-    return total
+            watchdog_warnings += int(watchdog.get("warnings") or 0)
+        prompt_hash = entry.get("prompt_hash")
+        if not isinstance(prompt_hash, str) or not prompt_hash:
+            continue
+        phase = entry.get("phase")
+        if phase == "extract":
+            hashes.setdefault("extract", prompt_hash)
+        elif phase == "adjudicate":
+            hashes.setdefault(f"adjudicate_{entry.get('flag_index')}", prompt_hash)
+    return hashes, total_attempts, watchdog_warnings
 
 
 def _xhigh_max_workers() -> int:
@@ -218,6 +433,8 @@ def _xhigh_max_workers() -> int:
 def _validate_config(config: PoolConfig) -> None:
     if config.workers < 1:
         raise ValueError("--workers must be >= 1")
+    if config.audit_run_id and not config.re_validate:
+        raise ValueError("--audit-run-id is only valid with --re-validate")
     if "xhigh" in {config.extract_reasoning_effort, config.adjudicate_reasoning_effort}:
         cap = _xhigh_max_workers()
         if config.workers > cap:
@@ -227,16 +444,8 @@ def _validate_config(config: PoolConfig) -> None:
             )
 
 
-def _build_audit_writer(root: Path, slug: str, *, run_action: str) -> AuditWriter:
-    audit_root = root / slug
-    if run_action in {"run", "re_validate"}:
-        with contextlib.suppress(FileNotFoundError):
-            (audit_root / "calls.jsonl").unlink()
-        shutil.rmtree(audit_root / "prompts", ignore_errors=True)
-    if run_action == "run":
-        with contextlib.suppress(FileNotFoundError):
-            (audit_root / "raw_response.json").unlink()
-    return AuditWriter(root, slug)
+def _build_audit_writer(root: Path, slug: str, *, run_id: str) -> AuditWriter:
+    return AuditWriter(audit_run_dir(root, slug, run_id), slug=slug, run_id=run_id)
 
 
 def _prior_status_is_success(slug: str) -> bool:
@@ -244,7 +453,7 @@ def _prior_status_is_success(slug: str) -> bool:
         state = _load_progress()
     except (FileNotFoundError, json.JSONDecodeError):
         return False
-    return state.get("deals", {}).get(slug, {}).get("status") in DONE_STATUSES
+    return state.get("deals", {}).get(slug, {}).get("status") in FINALIZED_STATUSES
 
 
 def _commit_paths(slug: str, paths: list[Path]) -> None:
@@ -277,6 +486,77 @@ def _commit_paths(slug: str, paths: list[Path]) -> None:
     )
 
 
+def _validation_payload(
+    *,
+    status: str,
+    flag_count: int,
+    final_output: dict[str, Any] | None,
+    validation: core.ValidatorResult | None,
+    promotion_log: list[dict[str, Any]] | None,
+) -> dict[str, Any]:
+    counts = core.count_flags(final_output or {"deal": {"deal_flags": []}, "events": []})
+    return {
+        "final_status": status,
+        "flag_count": flag_count,
+        "row_flag_count": len(validation.row_flags) if validation else 0,
+        "deal_flag_count": len(validation.deal_flags) if validation else 0,
+        "hard_count": counts["hard"],
+        "soft_count": counts["soft"],
+        "info_count": counts["info"],
+        "promotion_log_count": len(promotion_log or []),
+    }
+
+
+def _extractor_contract_version_or_unavailable() -> str:
+    try:
+        return extractor_contract_version()
+    except (FileNotFoundError, OSError) as exc:
+        return f"unavailable:{type(exc).__name__}"
+
+
+def _manifest_payload(
+    *,
+    audit: AuditWriter,
+    config: PoolConfig,
+    llm_client: LLMClient,
+    rulebook_version: str,
+    token_usage: TokenUsage,
+    started: float,
+    outcome: str,
+    cache_used: bool,
+    cache_eligible: bool,
+    action: str,
+    error: str | None = None,
+    source_audit_run_id: str | None = None,
+) -> dict[str, Any]:
+    prompt_hashes, total_attempts, watchdog_warnings = _calls_summary(audit)
+    return {
+        "action": action,
+        "rulebook_version": rulebook_version,
+        "extractor_contract_version": _extractor_contract_version_or_unavailable(),
+        "schema_hash": schema_hash(SCHEMA_R1),
+        "prompt_hash": prompt_hashes.get("extract"),
+        "prompt_hashes": prompt_hashes,
+        "models": {"extract": config.extract_model, "adjudicate": config.adjudicate_model},
+        "api_endpoint": getattr(llm_client, "endpoint", None),
+        "reasoning_efforts": {
+            "extract": config.extract_reasoning_effort,
+            "adjudicate": config.adjudicate_reasoning_effort,
+        },
+        "total_input_tokens": token_usage.input_used,
+        "total_output_tokens": token_usage.output_used,
+        "total_reasoning_tokens": token_usage.reasoning_used,
+        "total_attempts": total_attempts,
+        "total_seconds": time.monotonic() - started,
+        "watchdog_warnings": watchdog_warnings,
+        "outcome": outcome,
+        "cache_used": cache_used,
+        "cache_eligible": cache_eligible,
+        "source_audit_run_id": source_audit_run_id,
+        "error": error,
+    }
+
+
 async def process_deal(
     slug: str,
     *,
@@ -287,54 +567,28 @@ async def process_deal(
     skip_decision: SkipDecision | None = None,
 ) -> DealOutcome:
     decision = skip_decision or decide_skip(slug, config, rulebook_version)
-    audit = _build_audit_writer(config.audit_root, slug, run_action=decision.action)
-    started = time.monotonic()
     if decision.action == "skip":
-        audit.write_manifest({
-            "rulebook_version": rulebook_version,
-            "models": {"extract": config.extract_model, "adjudicate": config.adjudicate_model},
-            "api_endpoint": getattr(llm_client, "endpoint", None),
-            "reasoning_efforts": {
-                "extract": config.extract_reasoning_effort,
-                "adjudicate": config.adjudicate_reasoning_effort,
-            },
-            "total_input_tokens": 0,
-            "total_output_tokens": 0,
-            "total_reasoning_tokens": 0,
-            "total_attempts": 0,
-            "total_seconds": 0.0,
-            "watchdog_warnings": 0,
-            "outcome": "skipped",
-            "reason": decision.reason,
-        })
-        return DealOutcome(slug=slug, status="skipped", skipped=True, notes=decision.reason, audit_path=audit.root)
+        return DealOutcome(slug=slug, status="skipped", skipped=True, notes=decision.reason)
     if decision.action == "blocked":
-        audit.write_manifest({
-            "rulebook_version": rulebook_version,
-            "models": {"extract": config.extract_model, "adjudicate": config.adjudicate_model},
-            "api_endpoint": getattr(llm_client, "endpoint", None),
-            "reasoning_efforts": {
-                "extract": config.extract_reasoning_effort,
-                "adjudicate": config.adjudicate_reasoning_effort,
-            },
-            "total_input_tokens": 0,
-            "total_output_tokens": 0,
-            "total_reasoning_tokens": 0,
-            "total_attempts": 0,
-            "total_seconds": 0.0,
-            "watchdog_warnings": 0,
-            "outcome": "blocked",
-            "reason": decision.reason,
-        })
-        return DealOutcome(slug=slug, status="skipped", skipped=True, notes=decision.reason, audit_path=audit.root)
+        return DealOutcome(slug=slug, status="failed", error=decision.reason, notes=decision.reason)
 
+    run_id = core._new_run_id()
+    audit = _build_audit_writer(config.audit_root, slug, run_id=run_id)
+    started = time.monotonic()
     token_usage = TokenUsage()
     cached = False
+    source_audit_run_id: str | None = None
     try:
         if decision.action == "re_validate":
-            raw_extraction = _cached_raw_response(slug, config, rulebook_version)
-            if raw_extraction is None:
+            cache_check = _check_cached_raw_response(slug, config, rulebook_version)
+            if not cache_check.valid or cache_check.raw_payload is None:
                 raise RuntimeError("cached raw_response.json disappeared or became stale")
+            audit.write_cached_raw_response(
+                payload=cache_check.raw_payload,
+                source_run_id=cache_check.source_run_id or "unknown",
+            )
+            raw_extraction = cache_check.parsed_json
+            source_audit_run_id = cache_check.source_run_id
             cached = True
         else:
             extract_result = await extract_deal(
@@ -348,6 +602,8 @@ async def process_deal(
                 reasoning_effort=config.extract_reasoning_effort,
             )
             raw_extraction = extract_result.raw_extraction
+        if raw_extraction is None:
+            raise RuntimeError("raw extraction cache yielded no parsed_json")
 
         filing = await asyncio.to_thread(core.load_filing, slug)
         prepared, filing, promotion_log = await asyncio.to_thread(
@@ -378,25 +634,33 @@ async def process_deal(
             filing,
             validation,
             promotion_log,
+            run_id=run_id,
         )
-        elapsed = time.monotonic() - started
-        audit.write_manifest({
-            "rulebook_version": rulebook_version,
-            "models": {"extract": config.extract_model, "adjudicate": config.adjudicate_model},
-            "api_endpoint": getattr(llm_client, "endpoint", None),
-            "reasoning_efforts": {
-                "extract": config.extract_reasoning_effort,
-                "adjudicate": config.adjudicate_reasoning_effort,
-            },
-            "total_input_tokens": token_usage.input_used,
-            "total_output_tokens": token_usage.output_used,
-            "total_reasoning_tokens": token_usage.reasoning_used,
-            "total_attempts": None,
-            "total_seconds": elapsed,
-            "watchdog_warnings": _watchdog_warnings(audit),
-            "outcome": result.status,
-            "cache_used": cached,
-        })
+        final_output = json.loads(result.output_path.read_text())
+        audit.write_validation(
+            _validation_payload(
+                status=result.status,
+                flag_count=result.flag_count,
+                final_output=final_output,
+                validation=validation,
+                promotion_log=promotion_log,
+            )
+        )
+        audit.write_final_output(final_output)
+        audit.write_manifest(_manifest_payload(
+            audit=audit,
+            config=config,
+            llm_client=llm_client,
+            rulebook_version=rulebook_version,
+            token_usage=token_usage,
+            started=started,
+            outcome=result.status,
+            cache_used=cached,
+            cache_eligible=True,
+            action=decision.action,
+            source_audit_run_id=source_audit_run_id,
+        ))
+        audit.write_latest(outcome=result.status, cache_eligible=True)
         if config.commit:
             _commit_paths(
                 slug,
@@ -404,10 +668,8 @@ async def process_deal(
                     result.output_path,
                     core.PROGRESS_PATH,
                     core.FLAGS_PATH,
-                    audit.root / "manifest.json",
-                    audit.root / "raw_response.json",
-                    audit.root / "calls.jsonl",
-                    *list((audit.root / "prompts").glob("*.txt")),
+                    audit.root,
+                    audit.latest_path,
                 ],
             )
         return DealOutcome(
@@ -418,40 +680,54 @@ async def process_deal(
             notes=result.notes,
             output_path=result.output_path,
             audit_path=audit.root,
+            latest_path=audit.latest_path,
         )
     except Exception as exc:  # noqa: BLE001 - per-deal isolation is the pool contract.
         note = f"{type(exc).__name__}: {exc}"[:500]
         if not _prior_status_is_success(slug):
             await asyncio.to_thread(core.mark_failed, slug, note)
-        audit.write_manifest({
-            "rulebook_version": rulebook_version,
-            "models": {"extract": config.extract_model, "adjudicate": config.adjudicate_model},
-            "api_endpoint": getattr(llm_client, "endpoint", None),
-            "reasoning_efforts": {
-                "extract": config.extract_reasoning_effort,
-                "adjudicate": config.adjudicate_reasoning_effort,
-            },
-            "total_input_tokens": token_usage.input_used,
-            "total_output_tokens": token_usage.output_used,
-            "total_reasoning_tokens": token_usage.reasoning_used,
-            "total_attempts": None,
-            "total_seconds": time.monotonic() - started,
-            "watchdog_warnings": _watchdog_warnings(audit),
-            "outcome": "failed",
-            "cache_used": cached,
-            "error": note,
-        })
-        return DealOutcome(slug=slug, status="failed", cached=cached, error=note, audit_path=audit.root)
+        audit.write_manifest(_manifest_payload(
+            audit=audit,
+            config=config,
+            llm_client=llm_client,
+            rulebook_version=rulebook_version,
+            token_usage=token_usage,
+            started=started,
+            outcome="failed",
+            cache_used=cached,
+            cache_eligible=False,
+            action=decision.action,
+            error=note,
+            source_audit_run_id=source_audit_run_id,
+        ))
+        audit.write_latest(outcome="failed", cache_eligible=False)
+        if config.commit:
+            commit_paths = [core.PROGRESS_PATH, core.FLAGS_PATH, audit.root, audit.latest_path]
+            prior_output_path = core.EXTRACTIONS_DIR / f"{slug}.json"
+            if prior_output_path.exists():
+                commit_paths.append(prior_output_path)
+            _commit_paths(slug, commit_paths)
+        return DealOutcome(slug=slug, status="failed", cached=cached, error=note, audit_path=audit.root, latest_path=audit.latest_path)
 
 
 async def run_pool(config: PoolConfig, *, llm_client: LLMClient | None = None) -> PoolSummary:
     _validate_config(config)
     state = _load_progress()
     slugs = resolve_selection(config, state)
+    enforce_target_gate(slugs, state, config)
     current = core.rulebook_version()
     plan = [(slug, decide_skip(slug, config, current, state)) for slug in slugs]
     if config.dry_run:
         print("DRY RUN selected deals:")
+        target_count = sum(1 for slug in slugs if not _is_reference_deal(state, slug))
+        gate = target_gate_status(state, config.target_gate_proof)
+        print(
+            "Target gate: "
+            f"targets_selected={target_count} "
+            f"gate_ready={gate.is_open} "
+            f"release_requested={config.release_targets} "
+            f"proof={gate.stability_proof_reason}"
+        )
         outcomes = []
         for slug, decision in plan:
             print(f"  {slug}: {decision.action} ({decision.reason})")
@@ -543,8 +819,20 @@ def build_parser() -> argparse.ArgumentParser:
         help=f"reasoning.effort for adjudicator calls (default: {DEFAULT_REASONING_EFFORT})",
     )
     rerun = parser.add_mutually_exclusive_group()
-    rerun.add_argument("--re-validate", action="store_true", help="Reuse only a current raw_response.json cache.")
+    rerun.add_argument("--re-validate", action="store_true", help="Reuse only a cache-eligible archived audit v2 run.")
     rerun.add_argument("--re-extract", action="store_true")
+    parser.add_argument("--audit-run-id", help="Archived audit run ID to reuse with --re-validate.")
+    parser.add_argument(
+        "--release-targets",
+        action="store_true",
+        help="Explicitly allow target-deal selection when the reference/stability gate is open.",
+    )
+    parser.add_argument(
+        "--target-gate-proof",
+        type=Path,
+        default=TARGET_GATE_PROOF,
+        help="JSON target-release proof file produced after stable reference runs.",
+    )
     parser.add_argument("--commit", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     return parser
@@ -562,6 +850,9 @@ def config_from_args(args: argparse.Namespace) -> PoolConfig:
         adjudicate_reasoning_effort=args.adjudicate_reasoning_effort,
         re_validate=args.re_validate,
         re_extract=args.re_extract,
+        audit_run_id=args.audit_run_id,
+        release_targets=args.release_targets,
+        target_gate_proof=args.target_gate_proof,
         commit=args.commit,
         dry_run=args.dry_run,
         api_key=os.environ.get("OPENAI_API_KEY"),
@@ -593,7 +884,11 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     if not cfg.dry_run and not cfg.api_key:
         parser.error("OPENAI_API_KEY is required unless --dry-run")
-    summary = asyncio.run(run_pool(cfg))
+    try:
+        summary = asyncio.run(run_pool(cfg))
+    except TargetGateClosedError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
     return 1 if summary.failed else 0
 
 

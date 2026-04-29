@@ -79,7 +79,7 @@ errors.
 
 ### §P-R4 — `role` ∈ canonical set
 - **Check.** `role` ∈ {`bidder`, `advisor_financial`, `advisor_legal`}
-  per `rules/bids.md` §M3.
+  per `rules/bids.md` §M3. `role` is required and non-null.
 - **Fail action.** Flag `invalid_role`. Hard.
 
 ### §P-R5 — `bidder_registry` keys, aliases, and resolved names align
@@ -127,6 +127,29 @@ errors.
   the deal to `validated` for a typo. The 3-consecutive-clean-runs gate
   would never close. Cite the offending row index in the `reason`.
 
+### §P-R9 — Conditional nullable fields match their owning event types
+- **Check.**
+  1. `final_round_announcement`, `final_round_extension`, and
+     `final_round_informal` are null outside `Final Round` rows.
+     `Final Round` rows require non-null boolean
+     `final_round_announcement` and `final_round_extension`; 
+     `final_round_informal` may be null only when the filing genuinely does
+     not classify the round.
+  2. `press_release_subject` is non-null only on `Press Release` rows, and
+     `Press Release` rows require one of `bidder`, `sale`, or `other`.
+  3. `invited_to_formal_round` and `submitted_formal_bid` are null outside
+     current/restarted informal `Bid` rows. On informal `Bid` rows, true or
+     false still requires bidder-specific evidence; unsupported status stays
+     null with a soft extractor flag.
+  4. Bid economics fields (`bid_value`, `bid_value_pershare`,
+     `bid_value_lower`, `bid_value_upper`, `bid_value_unit`,
+     `consideration_components`) are null outside `Bid` rows. A `Bid` row
+     with any stated value requires `bid_value_unit` and non-empty
+     `consideration_components`.
+- **Fail action.** Flag `conditional_field_mismatch`. Hard.
+- **Boundary.** This is a structural conditional-field check. It does not
+  infer formal-stage status from silence or rewrite consideration structure.
+
 ---
 
 ## §P-D — Date and sequencing invariants
@@ -142,8 +165,8 @@ comparable across deals.
 ### §P-D2 — `bid_date_rough` mutual exclusivity
 - **Check.** `bid_date_rough != null` IFF the row carries an
   inference flag (`date_inferred_from_rough`,
-  `date_inferred_from_context`, or `date_range_collapsed`). Per
-  `rules/dates.md` §B2/§B3/§B4.
+  `date_inferred_from_context`, `date_range_collapsed`, or
+  `date_phrase_unmapped`). Per `rules/dates.md` §B2/§B3/§B4.
 - **Fail action.** Flag `rough_date_mismatch_inference`. Hard.
 
 ### §P-D3 — `BidderID` structural + chronological integrity
@@ -461,6 +484,7 @@ story; severities are listed per invariant.
 | §P-R6 | `rules/bidders.md` §F1 |
 | §P-R7 | `rules/events.md` §I3 |
 | §P-R8 | `rules/schema.md` §R2 |
+| §P-R9 | `rules/schema.md` §R1 + `rules/events.md` §K1 |
 | §P-D1 | `rules/dates.md` §B1/§B2 |
 | §P-D2 | `rules/dates.md` §B2/§B3/§B4 |
 | §P-D3 | `rules/dates.md` §A4 |

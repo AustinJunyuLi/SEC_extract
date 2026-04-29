@@ -7,6 +7,10 @@ from pipeline.llm.audit import AuditWriter, TokenUsage
 from pipeline.llm.client import CompletionResult
 
 
+def _audit_writer(tmp_path, run_id="run-adj"):
+    return AuditWriter(tmp_path / "audit" / "synthetic" / "runs" / run_id, slug="synthetic", run_id=run_id)
+
+
 class StubClient:
     def __init__(self):
         self.calls = 0
@@ -39,6 +43,16 @@ class HighUsageClient:
         )
 
 
+class RecordingClient:
+    def __init__(self, text):
+        self.text = text
+        self.calls = []
+
+    async def complete(self, **kwargs):
+        self.calls.append(kwargs)
+        return CompletionResult(text=self.text, model=kwargs["model"], input_tokens=1, output_tokens=1)
+
+
 def test_adjudicate_failure_then_success_is_sequential_and_tracks_usage(tmp_path):
     raw = {
         "deal": {},
@@ -62,7 +76,7 @@ def test_adjudicate_failure_then_success_is_sequential_and_tracks_usage(tmp_path
         {"row_index": 0, "code": "missing_nda_dropsilent", "severity": "soft", "reason": "first"},
         {"row_index": 0, "code": "missing_nda_dropsilent", "severity": "soft", "reason": "second"},
     ]
-    audit = AuditWriter(tmp_path / "audit", "synthetic")
+    audit = _audit_writer(tmp_path)
     usage = TokenUsage()
     client = StubClient()
 
@@ -96,7 +110,7 @@ def test_adjudicate_processes_all_flags_without_token_cap(tmp_path):
         {"row_index": 0, "code": "a", "severity": "soft", "reason": "first"},
         {"row_index": 0, "code": "b", "severity": "soft", "reason": "second"},
     ]
-    audit = AuditWriter(tmp_path / "audit", "synthetic")
+    audit = _audit_writer(tmp_path)
     usage = TokenUsage()
     client = HighUsageClient()
 
@@ -120,3 +134,61 @@ def test_adjudicate_processes_all_flags_without_token_cap(tmp_path):
     assert usage.used == 400_000
     calls = [json.loads(line) for line in (audit.root / "calls.jsonl").read_text().splitlines()]
     assert [call["outcome"] for call in calls] == ["ok", "ok"]
+
+
+def test_adjudicate_locally_rejects_malformed_schema_output_without_repair(tmp_path):
+    raw = {"deal": {}, "events": [{"source_page": 1}]}
+    filing = core.Filing(slug="synthetic", pages=[{"number": 1, "content": "page"}])
+    flags = [{"row_index": 0, "code": "missing_nda_dropsilent", "severity": "soft", "reason": "first"}]
+    audit = _audit_writer(tmp_path)
+    usage = TokenUsage()
+    client = RecordingClient('{"verdict": "maybe", "reason": "bad"}')
+
+    annotated = asyncio.run(
+        adjudicate.adjudicate(
+            "synthetic",
+            raw,
+            flags,
+            filing,
+            llm_client=client,
+            adjudicate_model="adj-model",
+            audit=audit,
+            token_usage=usage,
+            schema_supported=False,
+        )
+    )
+
+    assert len(client.calls) == 1
+    assert client.calls[0]["text_format"] is None
+    assert "adjudicator_unavailable: MalformedJSONError" in annotated[0]["reason"]
+    assert usage.used == 0
+    calls = [json.loads(line) for line in (audit.root / "calls.jsonl").read_text().splitlines()]
+    assert calls[0]["outcome"] == "failed"
+    assert calls[0]["json_schema_used"] is False
+
+
+def test_adjudicate_prompt_only_json_when_schema_unsupported(tmp_path):
+    raw = {"deal": {}, "events": [{"source_page": 1}]}
+    filing = core.Filing(slug="synthetic", pages=[{"number": 1, "content": "page"}])
+    flags = [{"row_index": 0, "code": "missing_nda_dropsilent", "severity": "soft", "reason": "first"}]
+    audit = _audit_writer(tmp_path)
+    usage = TokenUsage()
+    client = RecordingClient('{"verdict": "dismissed", "reason": "silent"}')
+
+    asyncio.run(
+        adjudicate.adjudicate(
+            "synthetic",
+            raw,
+            flags,
+            filing,
+            llm_client=client,
+            adjudicate_model="adj-model",
+            audit=audit,
+            token_usage=usage,
+            schema_supported=False,
+        )
+    )
+
+    assert client.calls[0]["text_format"] is None
+    call = json.loads((audit.root / "calls.jsonl").read_text().strip())
+    assert call["json_schema_used"] is False

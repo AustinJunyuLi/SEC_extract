@@ -6,6 +6,10 @@ from pipeline.llm.audit import AuditWriter, TokenUsage
 from pipeline.llm.client import CompletionResult
 
 
+def _audit_writer(tmp_path, slug="synthetic", run_id="run-extract"):
+    return AuditWriter(tmp_path / "output" / "audit" / slug / "runs" / run_id, slug=slug, run_id=run_id)
+
+
 def background_section_pages(section_text="embedded filing page text"):
     body = (
         "The following chronology summarizes the key meetings and events. "
@@ -120,6 +124,13 @@ class StubClient:
         )
 
 
+class FailingClient:
+    async def complete(self, **kwargs):
+        error = RuntimeError("provider exhausted")
+        error.attempts = 3
+        raise error
+
+
 def test_extract_deal_writes_audit_and_tracks_token_usage(minimal_state_repo, monkeypatch):
     env = minimal_state_repo
     prompts = env.tmp_path / "prompts"
@@ -130,7 +141,7 @@ def test_extract_deal_writes_audit_and_tracks_token_usage(minimal_state_repo, mo
     env.seed_filing("synthetic", pages=background_section_pages("page text"))
     monkeypatch.setattr(extract.core, "PROMPTS_DIR", prompts)
 
-    audit = AuditWriter(env.tmp_path / "output" / "audit", "synthetic")
+    audit = _audit_writer(env.tmp_path)
     usage = TokenUsage()
     client = StubClient()
 
@@ -157,3 +168,68 @@ def test_extract_deal_writes_audit_and_tracks_token_usage(minimal_state_repo, mo
     call_entries = (audit.root / "calls.jsonl").read_text().splitlines()
     assert len(call_entries) == 1
     assert json.loads(call_entries[0])["phase"] == "extract"
+
+
+def test_extract_deal_uses_prompt_only_json_when_schema_unsupported(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    prompts = env.tmp_path / "prompts"
+    prompts.mkdir()
+    (prompts / "extract.md").write_text("PROMPT")
+    for name in extract.EXTRACTOR_RULE_FILES:
+        (env.rules / name).write_text(f"RULE {name}")
+    env.seed_filing("synthetic", pages=background_section_pages("page text"))
+    monkeypatch.setattr(extract.core, "PROMPTS_DIR", prompts)
+
+    audit = _audit_writer(env.tmp_path)
+    usage = TokenUsage()
+    client = StubClient()
+
+    asyncio.run(
+        extract.extract_deal(
+            "synthetic",
+            llm_client=client,
+            extract_model="test-model",
+            audit=audit,
+            token_usage=usage,
+            rulebook_version="rules-v1",
+            schema_supported=False,
+        )
+    )
+
+    assert client.calls[0]["text_format"] is None
+    call_entry = json.loads((audit.root / "calls.jsonl").read_text().strip())
+    assert call_entry["json_schema_used"] is False
+
+
+def test_extract_deal_records_failed_call_attempts(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    prompts = env.tmp_path / "prompts"
+    prompts.mkdir()
+    (prompts / "extract.md").write_text("PROMPT")
+    for name in extract.EXTRACTOR_RULE_FILES:
+        (env.rules / name).write_text(f"RULE {name}")
+    env.seed_filing("synthetic", pages=background_section_pages("page text"))
+    monkeypatch.setattr(extract.core, "PROMPTS_DIR", prompts)
+
+    audit = _audit_writer(env.tmp_path)
+    usage = TokenUsage()
+
+    try:
+        asyncio.run(
+            extract.extract_deal(
+                "synthetic",
+                llm_client=FailingClient(),
+                extract_model="test-model",
+                audit=audit,
+                token_usage=usage,
+                rulebook_version="rules-v1",
+                schema_supported=False,
+            )
+        )
+    except RuntimeError:
+        pass
+
+    call_entry = json.loads((audit.root / "calls.jsonl").read_text().strip())
+    assert call_entry["outcome"] == "failed"
+    assert call_entry["attempts"] == 3
+    assert usage.used == 0

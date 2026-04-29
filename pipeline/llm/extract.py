@@ -263,16 +263,31 @@ async def extract_deal(
 ) -> ExtractResult:
     system, user = build_messages(slug)
     prompt_digest = audit.write_prompt(phase="extractor", system=system, user=user)
-    completion = await call_json(
-        llm_client,
-        system=system,
-        user=user,
-        model=extract_model,
-        schema_supported=schema_supported,
-        schema=SCHEMA_R1,
-        max_output_tokens=max_output_tokens,
-        reasoning_effort=reasoning_effort,
-    )
+    try:
+        completion = await call_json(
+            llm_client,
+            system=system,
+            user=user,
+            model=extract_model,
+            schema_supported=schema_supported,
+            schema=SCHEMA_R1,
+            max_output_tokens=max_output_tokens,
+            reasoning_effort=reasoning_effort,
+        )
+    except Exception as exc:
+        audit.append_call({
+            "ts": core._now_iso(),
+            "phase": "extract",
+            "flag_index": None,
+            "model": extract_model,
+            "reasoning_effort": reasoning_effort,
+            "prompt_hash": prompt_digest,
+            "json_schema_used": schema_supported,
+            "attempts": int(getattr(exc, "attempts", 1) or 1),
+            "outcome": "failed",
+            "error": {"type": type(exc).__name__, "message": str(exc)[:500]},
+        })
+        raise
     token_usage.consume(completion)
     parsed = completion.parsed_json or {}
     audit.write_raw_response(

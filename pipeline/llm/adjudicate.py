@@ -16,7 +16,7 @@ ADJUDICATOR_SCHEMA: dict[str, Any] = {
     "type": "object",
     "properties": {
         "verdict": {"type": "string", "enum": ["upheld", "dismissed"]},
-        "reason": {"type": "string"},
+        "reason": {"type": "string", "maxLength": 500},
     },
     "required": ["verdict", "reason"],
     "additionalProperties": False,
@@ -135,6 +135,7 @@ async def adjudicate(
                 "reasoning_effort": reasoning_effort,
                 "prompt_hash": prompt_digest,
                 "json_schema_used": schema_supported,
+                "attempts": int(getattr(exc, "attempts", 1) or 1),
                 "outcome": "failed",
                 "error": {"type": type(exc).__name__, "message": str(exc)[:500]},
             })

@@ -37,6 +37,18 @@ FLAGS_PATH = STATE_DIR / "flags.jsonl"
 PROGRESS_LOCK_PATH = STATE_DIR / "progress.lock"
 _PROCESS_STATE_LOCK = threading.Lock()
 
+REFERENCE_SLUGS: tuple[str, ...] = (
+    "providence-worcester",
+    "medivation",
+    "imprivata",
+    "zep",
+    "petsmart-inc",
+    "penford",
+    "mac-gray",
+    "saks",
+    "stec",
+)
+
 
 def _atomic_write_text(path: Path, text: str) -> None:
     """POSIX-atomic write: tmp file + fsync + os.replace.
@@ -179,7 +191,8 @@ EXTRACTOR_DEAL_FIELDS: frozenset[str] = frozenset({
     "deal_flags",
 })
 
-# Mirror of rules/bids.md §M3.
+# Mirror of rules/bids.md §M3. `role` is required and non-null in finalized
+# rows; advisor rows use advisor-specific role values instead of being skipped.
 ROLE_VOCABULARY: frozenset[str] = frozenset({
     "bidder", "advisor_financial", "advisor_legal",
 })
@@ -209,6 +222,7 @@ DATE_INFERENCE_FLAG_CODES: frozenset[str] = frozenset({
     "date_inferred_from_rough",
     "date_inferred_from_context",
     "date_range_collapsed",
+    "date_phrase_unmapped",
 })
 
 BUYER_GROUP_CONSTITUENT_FLAG = "buyer_group_constituent"
@@ -378,7 +392,7 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
     events = raw_extraction.get("events") or []
 
     # §P-R0 must run before any other row invariant, since downstream
-    # invariants assume each row is a dict and `process_phase` is int.
+    # invariants assume each row is a dict and `process_phase` is int/null.
     row_flags.extend(_invariant_p_r0(events))
     events = [ev for ev in events if isinstance(ev, dict)]
     if not events:
@@ -396,6 +410,7 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
     # §P-R8 returns a mix (row + deal); route by `deal_level` marker.
     for f in _invariant_p_r8(events, deal):
         (deal_flags if f.get("deal_level") else row_flags).append(f)
+    row_flags.extend(_invariant_p_r9(events))
     row_flags.extend(_invariant_p_d1(events))
     row_flags.extend(_invariant_p_d2(events))
     row_flags.extend(_invariant_p_d5(events))
@@ -655,7 +670,7 @@ def _invariant_p_r4(events: list[dict]) -> list[dict]:
             continue
         flags.append({
             "row_index": i, "code": "invalid_role", "severity": "hard",
-            "reason": f"role={role!r} not in {{bidder, advisor_financial, advisor_legal}}",
+            "reason": f"role={role!r} not in non-null {{bidder, advisor_financial, advisor_legal}}",
         })
     return flags
 
@@ -817,6 +832,74 @@ def _invariant_p_r8(events: list[dict], deal: dict) -> list[dict]:
                 "reason": f"§P-R8: {problem}",
                 "deal_level": True,
             })
+    return flags
+
+
+def _invariant_p_r9(events: list[dict]) -> list[dict]:
+    """§P-R9 — conditional nullable fields match their owning event types."""
+    flags: list[dict[str, Any]] = []
+
+    def add(row_index: int, reason: str) -> None:
+        flags.append({
+            "row_index": row_index,
+            "code": "conditional_field_mismatch",
+            "severity": "hard",
+            "reason": f"§P-R9: {reason}",
+        })
+
+    for i, ev in enumerate(events):
+        note = ev.get("bid_note")
+
+        if note == "Final Round":
+            for field in ("final_round_announcement", "final_round_extension"):
+                if ev.get(field) not in (True, False):
+                    add(i, f"Final Round requires {field} to be true or false.")
+        else:
+            for field in ("final_round_announcement", "final_round_extension", "final_round_informal"):
+                if ev.get(field) is not None:
+                    add(i, f"{field} must be null outside Final Round rows.")
+
+        if note == "Press Release":
+            if ev.get("press_release_subject") not in {"bidder", "sale", "other"}:
+                add(i, "Press Release requires press_release_subject in {'bidder', 'sale', 'other'}.")
+        elif ev.get("press_release_subject") is not None:
+            add(i, "press_release_subject must be null outside Press Release rows.")
+
+        phase = _phase(ev)
+        is_current_informal_bid = (
+            note == "Bid"
+            and ev.get("bid_type") == "informal"
+            and isinstance(phase, int)
+            and not isinstance(phase, bool)
+            and phase >= 1
+        )
+        if not is_current_informal_bid:
+            for field in ("invited_to_formal_round", "submitted_formal_bid"):
+                if ev.get(field) is not None:
+                    add(i, f"{field} must be null outside current-process informal Bid rows.")
+
+        value_fields = ("bid_value", "bid_value_pershare", "bid_value_lower", "bid_value_upper")
+        stated_value_fields = [field for field in value_fields if ev.get(field) is not None]
+        if note == "Bid":
+            if stated_value_fields:
+                if ev.get("bid_value_unit") in (None, "", []):
+                    add(i, "Bid row with a stated value requires bid_value_unit.")
+                components = ev.get("consideration_components")
+                if not (
+                    isinstance(components, list)
+                    and components
+                    and all(isinstance(component, str) and component for component in components)
+                ):
+                    add(i, "Bid row with a stated value requires non-empty consideration_components.")
+            elif ev.get("bid_value_unit") is not None:
+                add(i, "bid_value_unit must be null when a Bid row has no stated value.")
+        else:
+            for field in value_fields + ("bid_value_unit",):
+                if ev.get(field) is not None:
+                    add(i, f"{field} must be null outside Bid rows.")
+            if ev.get("consideration_components") is not None:
+                add(i, "consideration_components must be null outside Bid rows.")
+
     return flags
 
 
@@ -1139,7 +1222,7 @@ def _invariant_p_h5(events: list[dict]) -> list[dict]:
 def _invariant_p_d2(events: list[dict]) -> list[dict]:
     """§P-D2 — bid_date_rough ≠ null IFF the row carries a date-inference
     flag (date_inferred_from_rough / date_inferred_from_context /
-    date_range_collapsed). Strict XOR; no fixture carve-out."""
+    date_range_collapsed / date_phrase_unmapped). Strict XOR."""
     flags: list[dict[str, Any]] = []
     for i, ev in enumerate(events):
         rough = ev.get("bid_date_rough")
@@ -1184,7 +1267,8 @@ def _paired_final_round(
     """Find the final-round row that supplies §G1 process-position context.
 
     Preference follows the taxonomy spec: most recent non-announcement
-    Final Round in the same phase with date <= bid date; if none exists and
+    Final Round in the same phase with date <= bid date, including a
+    same-date milestone that sorts after the bid; if none exists and
     `require_non_announcement` is false, fall back to the most recent
     applicable Final Round regardless of announcement status.
     """
@@ -1199,7 +1283,10 @@ def _paired_final_round(
         out: list[tuple[int, dict]] = []
         for i, ev in enumerate(events):
             if i >= bid_index:
-                continue
+                candidate_date = ev.get("bid_date_precise")
+                bid_date = bid.get("bid_date_precise")
+                if not (candidate_date and bid_date and candidate_date == bid_date):
+                    continue
             if after_index is not None and i <= after_index:
                 continue
             if ev.get("bid_note") != "Final Round":
@@ -2052,6 +2139,8 @@ class PipelineResult:
     flag_count: int
     notes: str
     output_path: Path
+    run_id: str
+    last_run: str
 
 
 def _apply_unnamed_nda_promotions(
@@ -2272,6 +2361,9 @@ def finalize_prepared(
     filing: Filing,
     validation_result: ValidatorResult,
     promotion_log: list[dict[str, Any]] | None = None,
+    *,
+    run_id: str | None = None,
+    run_ts: str | None = None,
 ) -> PipelineResult:
     """Write a prepared extraction using a caller-supplied validation result.
 
@@ -2280,8 +2372,8 @@ def finalize_prepared(
     accepting the already-mutated `validation_result` instead of recomputing
     validation inside `finalize()`.
     """
-    run_ts = _now_iso()
-    run_id = _new_run_id()
+    run_ts = run_ts or _now_iso()
+    run_id = run_id or _new_run_id()
     final = merge_flags(
         raw_extraction,
         validation_result.row_flags,
@@ -2310,6 +2402,8 @@ def finalize_prepared(
         flag_count=flag_count,
         notes=notes,
         output_path=out_path,
+        run_id=run_id,
+        last_run=run_ts,
     )
 
 

@@ -1,0 +1,32 @@
+{
+  "events": [
+    {
+      "BidderID": 1,
+      "bid_note": "Final Round",
+      "process_phase": 1,
+      "bid_date_precise": "2013-08-01",
+      "final_round_announcement": true,
+      "final_round_extension": false,
+      "final_round_informal": true
+    },
+    {
+      "BidderID": 2,
+      "bid_note": "Bid",
+      "bidder_name": "bidder_01",
+      "process_phase": 1,
+      "bid_date_precise": "2013-08-15",
+      "bid_type": "formal",
+      "bid_type_inference_note": null
+    },
+    {
+      "BidderID": 3,
+      "bid_note": "Final Round",
+      "process_phase": 1,
+      "bid_date_precise": "2013-08-15",
+      "final_round_announcement": false,
+      "final_round_extension": false,
+      "final_round_informal": false
+    }
+  ],
+  "expected_flags": []
+}

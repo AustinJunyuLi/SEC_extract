@@ -217,8 +217,13 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 
 **`events[]` — per-row columns (kept from Alex's legacy except as noted):**
 - `BidderID` — int (per `rules/dates.md` §A).
-- `process_phase` — int. `0` = stale prior, `1` = main, `2` = restart (per `rules/events.md` §L2).
-- `role` — string. `"bidder" | "advisor_financial" | "advisor_legal"`. Defaults to `"bidder"`. Auction classifier (§Scope-1) filters `role == "bidder"`. Per `rules/bids.md` §M3.
+- `process_phase` — int OR null. Required field. `0` = stale prior,
+  `1` = main, `2` = restart (per `rules/events.md` §L2). `null` is
+  accepted as a raw nullable value and interpreted as phase 1 by the
+  validator; finalized current rows should normally populate an integer.
+- `role` — string. Required and non-null:
+  `"bidder" | "advisor_financial" | "advisor_legal"`. Auction classifier
+  (§Scope-1) filters `role == "bidder"`. Per `rules/bids.md` §M3.
 - `exclusivity_days` — int OR null. Exclusivity period granted at this bid event. Per `rules/bids.md` §O1.
 - `bidder_name` — string OR null. Named entities use a canonical deal-local ID
   (`bidder_01`, `bidder_02`, …) per `rules/bidders.md` §E3, stable across all
@@ -269,14 +274,20 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - `bid_value_pershare` — numeric OR null. Per-share headline value. Per `rules/bids.md` §H1.
 - `bid_value_lower` — numeric OR null. Per-share range lower bound. Per `rules/bids.md` §H1.
 - `bid_value_upper` — numeric OR null. Per-share range upper bound. Per `rules/bids.md` §H1.
-- `bid_value_unit` — string. `"USD_per_share"` for per-share bids; `"USD"` for aggregate (§H4); currency codes (e.g., `"EUR"`) for non-USD.
-- `consideration_components` — list[str]. Ordered components present (e.g., `["cash", "cvr"]`). Per `rules/bids.md` §H2.
+- `bid_value_unit` — string OR null. `"USD_per_share"` for per-share bids; `"USD"` for aggregate (§H4); currency codes (e.g., `"EUR"`) for non-USD; null when no stated value or non-Bid row.
+- `consideration_components` — list[str] OR null. Ordered components present (e.g., `["cash", "cvr"]`); null when no stated value or non-Bid row. Per `rules/bids.md` §H2.
 - `additional_note` — string OR null.
 - `comments` — string OR null. **Collapses** Alex's legacy `comments_1` /
   `comments_2` / `comments_3` into one free-text field.
 - `source_quote` — str OR list[str] (§R3).
 - `source_page` — int OR list[int] (§R3).
 - `flags` — array of flag objects (§R2).
+
+**Raw-only pre-validation field.** `unnamed_nda_promotion` is accepted by
+the extractor response schema only as a raw hint for
+`pipeline.prepare_for_validate()`. It is stripped before validation output is
+finalized and is not part of the `output/extractions/{slug}.json` event
+schema.
 
 **Current scope notes.** Deal-level counsel, bid classification evidence,
 consideration component labels, and exclusivity duration remain in scope

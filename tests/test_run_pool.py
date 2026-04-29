@@ -13,6 +13,23 @@ def _cfg(**kwargs):
     return base
 
 
+def _write_audit_manifest(
+    run_dir,
+    *,
+    slug: str,
+    run_id: str,
+    outcome: str = "passed_clean",
+    cache_eligible: bool = True,
+):
+    (run_dir / "manifest.json").write_text(json.dumps({
+        "schema_version": "audit_run_v2",
+        "slug": slug,
+        "run_id": run_id,
+        "outcome": outcome,
+        "cache_eligible": cache_eligible,
+    }))
+
+
 def test_selection_filters_and_explicit_slugs(minimal_state_repo):
     env = minimal_state_repo
     env.seed_deal("a", status="pending", is_reference=True)
@@ -24,6 +41,16 @@ def test_selection_filters_and_explicit_slugs(minimal_state_repo):
     assert run_pool.resolve_selection(_cfg(filter="failed"), state) == ["b"]
     assert run_pool.resolve_selection(_cfg(filter="reference"), state) == ["a", "c"]
     assert run_pool.resolve_selection(_cfg(slugs=("c", "a")), state) == ["c", "a"]
+
+
+def test_validated_is_not_a_done_or_success_status():
+    assert "validated" not in run_pool.DONE_STATUSES
+    summary = run_pool.PoolSummary([
+        run_pool.DealOutcome(slug="hard-flagged", status="validated"),
+        run_pool.DealOutcome(slug="clean", status="passed_clean"),
+    ])
+
+    assert summary.succeeded == 1
 
 
 def test_reference_filter_selects_nine_reference_deals():
@@ -74,27 +101,42 @@ def test_skip_decisions_and_cache_policy(minimal_state_repo, monkeypatch):
     monkeypatch.setattr(run_pool, "extractor_contract_version", lambda: "contract-v1")
     contract = run_pool.extractor_contract_version()
     env.seed_deal("done", status="passed_clean", rulebook_version=current)
+    env.seed_deal("hard_flagged", status="validated", rulebook_version=current)
     env.seed_deal("stale", status="passed_clean", rulebook_version="old")
     env.seed_deal("failed", status="failed", rulebook_version=current)
     state = json.loads(env.progress.read_text())
 
     assert run_pool.decide_skip("done", cfg, current, state).action == "skip"
+    assert run_pool.decide_skip("hard_flagged", cfg, current, state).action == "run"
     assert run_pool.decide_skip("stale", cfg, current, state).action == "run"
     assert run_pool.decide_skip("failed", cfg, current, state).action == "run"
     assert run_pool.decide_skip("done", _cfg(re_extract=True, audit_root=cfg.audit_root), current, state).action == "run"
 
-    audit = cfg.audit_root / "done"
+    run_id = "run-valid"
+    audit = cfg.audit_root / "done" / "runs" / run_id
     audit.mkdir(parents=True)
+    _write_audit_manifest(audit, slug="done", run_id=run_id)
     (audit / "raw_response.json").write_text(json.dumps({
-        "schema_version": "v1",
+        "schema_version": "raw_response_v2",
+        "run_id": run_id,
         "slug": "done",
         "rulebook_version": current,
         "extractor_contract_version": contract,
         "parsed_json": {"deal": {}, "events": []},
     }))
+    (cfg.audit_root / "done" / "latest.json").write_text(json.dumps({
+        "schema_version": "audit_v2",
+        "slug": "done",
+        "run_id": run_id,
+        "outcome": "passed_clean",
+        "cache_eligible": True,
+        "manifest_path": f"runs/{run_id}/manifest.json",
+        "raw_response_path": f"runs/{run_id}/raw_response.json",
+    }))
     assert run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state).action == "re_validate"
     (audit / "raw_response.json").write_text(json.dumps({
-        "schema_version": "v1",
+        "schema_version": "raw_response_v2",
+        "run_id": run_id,
         "slug": "done",
         "rulebook_version": "old",
         "extractor_contract_version": contract,
@@ -102,7 +144,8 @@ def test_skip_decisions_and_cache_policy(minimal_state_repo, monkeypatch):
     }))
     assert run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state).action == "blocked"
     (audit / "raw_response.json").write_text(json.dumps({
-        "schema_version": "v1",
+        "schema_version": "raw_response_v2",
+        "run_id": run_id,
         "slug": "done",
         "rulebook_version": current,
         "extractor_contract_version": "old-contract",
@@ -129,10 +172,13 @@ def test_re_validate_rejects_stale_raw_response_shapes(minimal_state_repo, monke
     cfg = _cfg(re_validate=True, audit_root=env.tmp_path / "output" / "audit")
     env.seed_deal("done", status="passed_clean", rulebook_version="rules-v1")
     monkeypatch.setattr(run_pool, "extractor_contract_version", lambda: "contract-v1")
-    audit = cfg.audit_root / "done"
+    run_id = "run-stale-shape"
+    audit = cfg.audit_root / "done" / "runs" / run_id
     audit.mkdir(parents=True)
+    _write_audit_manifest(audit, slug="done", run_id=run_id)
     payload = {
-        "schema_version": "v1",
+        "schema_version": "raw_response_v2",
+        "run_id": run_id,
         "slug": "done",
         "rulebook_version": "rules-v1",
         "extractor_contract_version": run_pool.extractor_contract_version(),
@@ -140,6 +186,15 @@ def test_re_validate_rejects_stale_raw_response_shapes(minimal_state_repo, monke
         **payload,
     }
     (audit / "raw_response.json").write_text(json.dumps(payload))
+    (cfg.audit_root / "done" / "latest.json").write_text(json.dumps({
+        "schema_version": "audit_v2",
+        "slug": "done",
+        "run_id": run_id,
+        "outcome": "passed_clean",
+        "cache_eligible": True,
+        "manifest_path": f"runs/{run_id}/manifest.json",
+        "raw_response_path": f"runs/{run_id}/raw_response.json",
+    }))
     state = json.loads(env.progress.read_text())
 
     decision = run_pool.decide_skip("done", cfg, "rules-v1", state)
@@ -148,9 +203,244 @@ def test_re_validate_rejects_stale_raw_response_shapes(minimal_state_repo, monke
     assert "cached raw_response.json" in decision.reason
 
 
+def test_re_validate_rejects_legacy_loose_raw_response(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    cfg = _cfg(re_validate=True, audit_root=env.tmp_path / "output" / "audit")
+    env.seed_deal("done", status="passed_clean", rulebook_version="rules-v1")
+    monkeypatch.setattr(run_pool, "extractor_contract_version", lambda: "contract-v1")
+    audit = cfg.audit_root / "done"
+    audit.mkdir(parents=True)
+    (audit / "raw_response.json").write_text(json.dumps({
+        "schema_version": "v1",
+        "slug": "done",
+        "rulebook_version": "rules-v1",
+        "extractor_contract_version": "contract-v1",
+        "parsed_json": {"deal": {}, "events": []},
+    }))
+    state = json.loads(env.progress.read_text())
+
+    decision = run_pool.decide_skip("done", cfg, "rules-v1", state)
+
+    assert decision.action == "blocked"
+    assert "latest.json" in decision.reason
+
+
+def test_run_pool_treats_blocked_revalidate_as_failed(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    cfg = _cfg(
+        slugs=("done",),
+        re_validate=True,
+        audit_root=env.tmp_path / "output" / "audit",
+    )
+    env.seed_deal("done", status="passed_clean", is_reference=True, rulebook_version="rules-v1")
+    monkeypatch.setattr(run_pool.core, "rulebook_version", lambda: "rules-v1")
+    monkeypatch.setattr(run_pool, "extractor_contract_version", lambda: "contract-v1")
+    audit = cfg.audit_root / "done"
+    audit.mkdir(parents=True)
+    (audit / "raw_response.json").write_text(json.dumps({
+        "schema_version": "raw_response_v2",
+        "slug": "done",
+        "run_id": "legacy",
+        "rulebook_version": "rules-v1",
+        "extractor_contract_version": "contract-v1",
+        "parsed_json": {"deal": {}, "events": []},
+    }))
+
+    summary = asyncio.run(run_pool.run_pool(cfg, llm_client=object()))
+
+    assert summary.failed == 1
+    assert summary.skipped == 0
+    assert summary.outcomes[0].status == "failed"
+    assert "latest.json" in (summary.outcomes[0].error or "")
+
+
+def test_re_validate_can_select_exact_archived_run_id(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    cfg = _cfg(
+        re_validate=True,
+        audit_root=env.tmp_path / "output" / "audit",
+        audit_run_id="run-one",
+    )
+    env.seed_deal("done", status="passed_clean", rulebook_version="rules-v1")
+    monkeypatch.setattr(run_pool, "extractor_contract_version", lambda: "contract-v1")
+    for run_id, target in (("run-one", "one"), ("run-two", "two")):
+        run_dir = cfg.audit_root / "done" / "runs" / run_id
+        run_dir.mkdir(parents=True)
+        _write_audit_manifest(run_dir, slug="done", run_id=run_id)
+        (run_dir / "raw_response.json").write_text(json.dumps({
+            "schema_version": "raw_response_v2",
+            "run_id": run_id,
+            "slug": "done",
+            "rulebook_version": "rules-v1",
+            "extractor_contract_version": "contract-v1",
+            "parsed_json": {"deal": {"TargetName": target}, "events": []},
+        }))
+    (cfg.audit_root / "done" / "latest.json").write_text(json.dumps({
+        "schema_version": "audit_v2",
+        "slug": "done",
+        "run_id": "run-two",
+        "outcome": "passed_clean",
+        "cache_eligible": True,
+        "manifest_path": "runs/run-two/manifest.json",
+        "raw_response_path": "runs/run-two/raw_response.json",
+    }))
+
+    cached = run_pool._check_cached_raw_response("done", cfg, "rules-v1").parsed_json
+
+    assert cached == {"deal": {"TargetName": "one"}, "events": []}
+
+
+def test_re_validate_latest_requires_cache_eligible_manifest(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    cfg = _cfg(re_validate=True, audit_root=env.tmp_path / "output" / "audit")
+    env.seed_deal("done", status="passed_clean", rulebook_version="rules-v1")
+    monkeypatch.setattr(run_pool, "extractor_contract_version", lambda: "contract-v1")
+    run_id = "run-failed"
+    run_dir = cfg.audit_root / "done" / "runs" / run_id
+    run_dir.mkdir(parents=True)
+    (run_dir / "manifest.json").write_text(json.dumps({
+        "schema_version": "audit_run_v2",
+        "slug": "done",
+        "run_id": run_id,
+        "outcome": "failed",
+        "cache_eligible": False,
+    }))
+    (run_dir / "raw_response.json").write_text(json.dumps({
+        "schema_version": "raw_response_v2",
+        "run_id": run_id,
+        "slug": "done",
+        "rulebook_version": "rules-v1",
+        "extractor_contract_version": "contract-v1",
+        "parsed_json": {"deal": {}, "events": []},
+    }))
+    (cfg.audit_root / "done" / "latest.json").write_text(json.dumps({
+        "schema_version": "audit_v2",
+        "slug": "done",
+        "run_id": run_id,
+        "outcome": "passed_clean",
+        "cache_eligible": True,
+        "manifest_path": f"runs/{run_id}/manifest.json",
+        "raw_response_path": f"runs/{run_id}/raw_response.json",
+    }))
+    state = json.loads(env.progress.read_text())
+
+    decision = run_pool.decide_skip("done", cfg, "rules-v1", state)
+
+    assert decision.action == "blocked"
+    assert "not cache-eligible" in decision.reason
+
+
+def test_target_gate_blocks_pending_targets_before_client_or_audit(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    env.seed_deal("target", status="pending", is_reference=False)
+    env.seed_deal("ref", status="pending", is_reference=True)
+    monkeypatch.setattr(run_pool.core, "rulebook_version", lambda: "rules-v1")
+    monkeypatch.setattr(run_pool, "_build_client", lambda cfg: pytest.fail("client constructed"))
+
+    with pytest.raises(run_pool.TargetGateClosedError, match="target deals selected=1"):
+        asyncio.run(run_pool.run_pool(_cfg(filter="pending", dry_run=True, audit_root=env.tmp_path / "output" / "audit")))
+
+    assert not (env.tmp_path / "output" / "audit").exists()
+
+
+def test_target_gate_allows_reference_only_selection(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    env.seed_deal("target", status="pending", is_reference=False)
+    env.seed_deal("ref", status="pending", is_reference=True)
+    monkeypatch.setattr(run_pool.core, "rulebook_version", lambda: "rules-v1")
+
+    summary = asyncio.run(
+        run_pool.run_pool(
+            _cfg(filter="reference", dry_run=True, audit_root=env.tmp_path / "output" / "audit"),
+            llm_client=object(),
+        )
+    )
+
+    assert summary.selected == 1
+    assert summary.outcomes[0].slug == "ref"
+
+
+def test_target_gate_requires_verified_references_release_flag_and_stability_proof(minimal_state_repo):
+    env = minimal_state_repo
+    reference_slugs = sorted(run_pool.REFERENCE_SLUGS)
+    for slug in reference_slugs:
+        env.seed_deal(slug, status="verified", is_reference=True)
+    env.seed_deal("target", status="pending", is_reference=False)
+    proof = env.tmp_path / "quality_reports" / "stability" / "target-release-proof.json"
+    proof.parent.mkdir(parents=True)
+    proof.write_text(json.dumps({
+        "schema_version": "target_gate_proof_v1",
+        "classification": "STABLE_FOR_REFERENCE_REVIEW",
+        "reference_slugs": reference_slugs,
+        "requested_runs": 3,
+        "slug_results": [
+            {
+                "slug": slug,
+                "classification": "STABLE_FOR_REFERENCE_REVIEW",
+                "eligible_archived_runs": 3,
+                "selected_runs": [f"{slug}-run-1", f"{slug}-run-2", f"{slug}-run-3"],
+            }
+            for slug in reference_slugs
+        ],
+    }))
+    state = json.loads(env.progress.read_text())
+    cfg = _cfg(
+        slugs=("target",),
+        dry_run=True,
+        release_targets=True,
+        target_gate_proof=proof,
+        audit_root=env.tmp_path / "output" / "audit",
+    )
+
+    status = run_pool.target_gate_status(state, proof)
+
+    assert status.is_open is True
+    run_pool.enforce_target_gate(["target"], state, cfg)
+
+
+def test_target_gate_rejects_proof_with_fewer_than_three_runs(minimal_state_repo):
+    env = minimal_state_repo
+    reference_slugs = sorted(run_pool.REFERENCE_SLUGS)
+    for slug in reference_slugs:
+        env.seed_deal(slug, status="verified", is_reference=True)
+    env.seed_deal("target", status="pending", is_reference=False)
+    proof = env.tmp_path / "quality_reports" / "stability" / "target-release-proof.json"
+    proof.parent.mkdir(parents=True)
+    proof.write_text(json.dumps({
+        "schema_version": "target_gate_proof_v1",
+        "classification": "STABLE_FOR_REFERENCE_REVIEW",
+        "reference_slugs": reference_slugs,
+        "requested_runs": 1,
+        "slug_results": [
+            {
+                "slug": slug,
+                "classification": "STABLE_FOR_REFERENCE_REVIEW",
+                "eligible_archived_runs": 1,
+                "selected_runs": [f"{slug}-run-1"],
+            }
+            for slug in reference_slugs
+        ],
+    }))
+    state = json.loads(env.progress.read_text())
+    cfg = _cfg(
+        slugs=("target",),
+        dry_run=True,
+        release_targets=True,
+        target_gate_proof=proof,
+        audit_root=env.tmp_path / "output" / "audit",
+    )
+
+    status = run_pool.target_gate_status(state, proof)
+
+    assert status.is_open is False
+    assert "requested_runs" in status.stability_proof_reason
+    with pytest.raises(run_pool.TargetGateClosedError, match="requested_runs"):
+        run_pool.enforce_target_gate(["target"], state, cfg)
+
+
 def test_dry_run_no_api_construction_probe_or_writes(minimal_state_repo, monkeypatch, capsys):
     env = minimal_state_repo
-    env.seed_deal("a", status="pending")
+    env.seed_deal("a", status="pending", is_reference=True)
     monkeypatch.setattr(run_pool.core, "rulebook_version", lambda: "rules-v1")
     monkeypatch.setattr(run_pool, "_build_client", lambda cfg: pytest.fail("client constructed"))
     monkeypatch.setattr(run_pool, "extract_deal", lambda *a, **k: pytest.fail("LLM called"))
@@ -165,7 +455,7 @@ def test_dry_run_no_api_construction_probe_or_writes(minimal_state_repo, monkeyp
 def test_worker_limit_behavior(minimal_state_repo, monkeypatch):
     env = minimal_state_repo
     for slug in ("a", "b", "c"):
-        env.seed_deal(slug, status="pending")
+        env.seed_deal(slug, status="pending", is_reference=True)
     monkeypatch.setattr(run_pool.core, "rulebook_version", lambda: "rules-v1")
     active = 0
     max_active = 0
@@ -189,7 +479,7 @@ def test_worker_limit_behavior(minimal_state_repo, monkeypatch):
 def test_exceptions_are_summarized_without_cancelling_all(minimal_state_repo, monkeypatch):
     env = minimal_state_repo
     for slug in ("a", "b"):
-        env.seed_deal(slug, status="pending")
+        env.seed_deal(slug, status="pending", is_reference=True)
     monkeypatch.setattr(run_pool.core, "rulebook_version", lambda: "rules-v1")
 
     async def fake_process(slug, **kwargs):
@@ -208,7 +498,7 @@ def test_exceptions_are_summarized_without_cancelling_all(minimal_state_repo, mo
 
 def test_xhigh_worker_count_is_capped_before_real_run(minimal_state_repo):
     env = minimal_state_repo
-    env.seed_deal("a", status="pending")
+    env.seed_deal("a", status="pending", is_reference=True)
 
     with pytest.raises(ValueError, match="xhigh.*workers.*5"):
         asyncio.run(
@@ -245,6 +535,7 @@ def test_failed_rerun_preserves_prior_success_state(minimal_state_repo, monkeypa
     env = minimal_state_repo
     env.seed_deal(
         "a",
+        is_reference=True,
         status="passed",
         flag_count=2,
         notes="hard=0 soft=2 info=0",
@@ -274,44 +565,91 @@ def test_failed_rerun_preserves_prior_success_state(minimal_state_repo, monkeypa
     state = json.loads(env.progress.read_text())
     assert state["deals"]["a"]["status"] == "passed"
     assert state["deals"]["a"]["last_run_id"] == "run-good"
+    outcome = summary.outcomes[0]
+    assert outcome.audit_path is not None
+    manifest = json.loads((outcome.audit_path / "manifest.json").read_text())
+    latest = json.loads((env.tmp_path / "output" / "audit" / "a" / "latest.json").read_text())
+    assert manifest["schema_version"] == "audit_run_v2"
+    assert manifest["outcome"] == "failed"
+    assert manifest["cache_eligible"] is False
+    assert latest["run_id"] == manifest["run_id"]
+    assert latest["cache_eligible"] is False
+    assert latest["raw_response_path"] is None
 
 
-def test_fresh_run_starts_with_clean_call_log(minimal_state_repo):
+def test_failed_run_with_commit_commits_current_deal_audit_and_state(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    env.seed_deal("a", is_reference=True, status="pending", rulebook_version="rules-v1")
+    monkeypatch.setattr(run_pool.core, "rulebook_version", lambda: "rules-v1")
+    captured: list[tuple[str, list]] = []
+
+    async def fail_extract(*args, **kwargs):
+        raise RuntimeError("provider cut stream")
+
+    def capture_commit(slug, paths):
+        captured.append((slug, list(paths)))
+
+    monkeypatch.setattr(run_pool, "extract_deal", fail_extract)
+    monkeypatch.setattr(run_pool, "_commit_paths", capture_commit)
+
+    summary = asyncio.run(
+        run_pool.run_pool(
+            _cfg(
+                slugs=("a",),
+                re_extract=True,
+                commit=True,
+                audit_root=env.tmp_path / "output" / "audit",
+            ),
+            llm_client=object(),
+        )
+    )
+
+    assert summary.failed == 1
+    assert len(captured) == 1
+    slug, paths = captured[0]
+    assert slug == "a"
+    assert run_pool.core.PROGRESS_PATH in paths
+    assert run_pool.core.FLAGS_PATH in paths
+    assert summary.outcomes[0].audit_path in paths
+    assert env.tmp_path / "output" / "audit" / "a" / "latest.json" in paths
+
+
+def test_build_audit_writer_creates_new_run_without_deleting_legacy_files(minimal_state_repo):
     env = minimal_state_repo
     env.seed_deal("a", status="pending")
-    audit_dir = env.tmp_path / "output" / "audit" / "a"
-    audit_dir.mkdir(parents=True)
-    (audit_dir / "calls.jsonl").write_text('{"old": true}\n')
-    (audit_dir / "raw_response.json").write_text('{"old": true}\n')
-    (audit_dir / "prompts").mkdir()
-    (audit_dir / "prompts" / "extractor.txt").write_text("old prompt")
+    slug_dir = env.tmp_path / "output" / "audit" / "a"
+    old_run = slug_dir / "runs" / "old-run"
+    old_run.mkdir(parents=True)
+    (old_run / "calls.jsonl").write_text('{"old": true}\n')
+    (slug_dir / "raw_response.json").write_text('{"legacy": true}\n')
 
     audit = run_pool._build_audit_writer(
         env.tmp_path / "output" / "audit",
         "a",
-        run_action="run",
+        run_id="new-run",
     )
 
-    assert audit.root == audit_dir
-    assert not (audit_dir / "calls.jsonl").exists()
-    assert not (audit_dir / "raw_response.json").exists()
-    assert not (audit_dir / "prompts" / "extractor.txt").exists()
+    assert audit.root == slug_dir / "runs" / "new-run"
+    assert (old_run / "calls.jsonl").exists()
+    assert (slug_dir / "raw_response.json").exists()
 
 
-def test_re_validate_keeps_raw_response_cache(minimal_state_repo):
+def test_re_validate_source_run_is_not_mutated_by_new_audit_writer(minimal_state_repo):
     env = minimal_state_repo
-    audit_dir = env.tmp_path / "output" / "audit" / "a"
-    audit_dir.mkdir(parents=True)
-    raw_response = audit_dir / "raw_response.json"
+    source_dir = env.tmp_path / "output" / "audit" / "a" / "runs" / "source-run"
+    source_dir.mkdir(parents=True)
+    raw_response = source_dir / "raw_response.json"
     raw_response.write_text('{"keep": true}\n')
 
-    run_pool._build_audit_writer(
+    audit = run_pool._build_audit_writer(
         env.tmp_path / "output" / "audit",
         "a",
-        run_action="re_validate",
+        run_id="new-revalidate-run",
     )
 
     assert raw_response.exists()
+    assert audit.root.name == "new-revalidate-run"
+    assert audit.root != source_dir
 
 
 def test_soft_flags_routes_only_semantic_adjudication_codes():

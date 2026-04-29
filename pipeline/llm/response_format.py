@@ -79,6 +79,13 @@ def _validate_schema_value(schema: dict[str, Any], value: Any, path: str = "$") 
     schema_type = schema.get("type")
     type_names = set(schema_type if isinstance(schema_type, list) else [schema_type])
 
+    if isinstance(value, str) and "maxLength" in schema:
+        limit = int(schema["maxLength"])
+        if len(value) > limit:
+            raise MalformedJSONError(
+                f"{path}: string length {len(value)} exceeds maxLength {limit}"
+            )
+
     if isinstance(value, dict) and (schema_type is None or "object" in type_names):
         properties = schema.get("properties", {})
         required = schema.get("required", [])
@@ -96,6 +103,12 @@ def _validate_schema_value(schema: dict[str, Any], value: Any, path: str = "$") 
         return
 
     if isinstance(value, list) and (schema_type is None or "array" in type_names):
+        if "minItems" in schema:
+            minimum = int(schema["minItems"])
+            if len(value) < minimum:
+                raise MalformedJSONError(
+                    f"{path}: array length {len(value)} below minItems {minimum}"
+                )
         item_schema = schema.get("items")
         if isinstance(item_schema, dict):
             for index, item in enumerate(value):
@@ -164,8 +177,8 @@ SCHEMA_R1: dict[str, Any] = {
                 "type": "object",
                 "properties": {
                     "BidderID": {"type": "integer"},
-                    "process_phase": {"type": "integer"},
-                    "role": {"type": ["string", "null"], "enum": ["bidder", "advisor_financial", "advisor_legal", None]},
+                    "process_phase": {"type": ["integer", "null"]},
+                    "role": {"type": "string", "enum": ["bidder", "advisor_financial", "advisor_legal"]},
                     "exclusivity_days": {"type": ["integer", "null"]},
                     "bidder_name": {"type": ["string", "null"]},
                     "bidder_alias": {"type": ["string", "null"]},
@@ -337,5 +350,7 @@ async def call_json(
     parsed = parse_json_text(result.text)
     if schema is SCHEMA_R1:
         _ensure_extraction_shape(parsed)
+    else:
+        _validate_schema_value(schema, parsed)
     result.parsed_json = parsed
     return result

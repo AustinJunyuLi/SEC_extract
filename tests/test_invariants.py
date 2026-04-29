@@ -57,6 +57,7 @@ RUNNERS = {
         fixture.get("events", []),
         fixture.get("deal", {}),
     ),
+    "pr9": lambda fixture: pipeline._invariant_p_r9(fixture.get("events", [])),
     "pd1": lambda fixture: pipeline._invariant_p_d1(fixture.get("events", [])),
     "pd2": lambda fixture: pipeline._invariant_p_d2(fixture.get("events", [])),
     "pd3": lambda fixture: pipeline._invariant_p_d3(fixture.get("events", [])),
@@ -161,6 +162,59 @@ def test_pr1(fixture_name):
 )
 def test_pr1_validate(fixture_name):
     _assert_fixture(fixture_name, "validate")
+
+
+def test_prepare_for_validate_strips_raw_only_unnamed_nda_promotion():
+    raw = {
+        "deal": {
+            "TargetName": "Target Inc.",
+            "Acquirer": "Buyer Inc.",
+            "DateAnnounced": "2026-01-01",
+            "DateEffective": None,
+            "auction": True,
+            "all_cash": True,
+            "target_legal_counsel": None,
+            "acquirer_legal_counsel": None,
+            "bidder_registry": {
+                "bidder_01": {
+                    "resolved_name": "Party A",
+                    "aliases_observed": ["Party A"],
+                    "first_appearance_row_index": 2,
+                }
+            },
+            "deal_flags": [],
+        },
+        "events": [
+            {
+                "BidderID": 1,
+                "bid_note": "NDA",
+                "bidder_name": None,
+                "bidder_alias": "Strategic 1",
+                "process_phase": 1,
+            },
+            {
+                "BidderID": 2,
+                "bid_note": "Bid",
+                "bidder_name": "bidder_01",
+                "bidder_alias": "Party A",
+                "process_phase": 1,
+                "unnamed_nda_promotion": {
+                    "target_bidder_id": 1,
+                    "promote_to_bidder_alias": "Party A",
+                    "promote_to_bidder_name": "bidder_01",
+                    "reason": "The filing later identifies Strategic 1 as Party A.",
+                },
+            },
+        ],
+    }
+    filing = pipeline.Filing(slug="synthetic", pages=[{"number": 1, "content": ""}])
+
+    prepared, _, promotion_log = pipeline.prepare_for_validate("synthetic", raw, filing)
+
+    assert promotion_log[0]["status"] == "applied"
+    assert prepared["events"][0]["bidder_alias"] == "Party A"
+    assert prepared["events"][0]["bidder_name"] == "bidder_01"
+    assert all("unnamed_nda_promotion" not in ev for ev in prepared["events"])
 
 
 @pytest.mark.parametrize(
@@ -1048,6 +1102,10 @@ def test_p_g2_accepts_final_round_informal_fallback_without_note():
     assert pipeline._invariant_p_g2(events) == []
 
 
+def test_p_g2_accepts_same_day_final_round_fallback_after_bid_row():
+    _assert_fixture("mac_gray_same_day_final_round_pair.json", "pg2")
+
+
 def test_p_g3_flags_final_round_announcement_without_submission_pair():
     events = [
         {
@@ -1157,6 +1215,96 @@ def test_p_g3_accepts_same_day_submission_pair_after_bid_row():
     ]
 
     assert pipeline._invariant_p_g3(events) == []
+
+
+def test_p_d2_accepts_unmapped_rough_date_phrase_as_inference_flag():
+    events = [
+        {
+            "bid_note": "Bidder Interest",
+            "bid_date_precise": "2026-01-01",
+            "bid_date_rough": "early in the first quarter",
+            "flags": [
+                {
+                    "code": "date_phrase_unmapped",
+                    "severity": "soft",
+                    "reason": "phrase: 'early in the first quarter'",
+                }
+            ],
+        }
+    ]
+
+    assert pipeline._invariant_p_d2(events) == []
+
+
+def test_p_r9_enforces_conditional_event_fields():
+    events = [
+        {
+            "bid_note": "Target Sale",
+            "final_round_announcement": True,
+        },
+        {
+            "bid_note": "Final Round",
+            "final_round_announcement": None,
+            "final_round_extension": False,
+            "final_round_informal": False,
+        },
+        {
+            "bid_note": "Press Release",
+            "press_release_subject": None,
+        },
+        {
+            "bid_note": "Bid",
+            "bid_type": "informal",
+            "process_phase": 1,
+            "invited_to_formal_round": None,
+            "submitted_formal_bid": None,
+            "bid_value_pershare": 12.5,
+            "bid_value_unit": None,
+            "consideration_components": None,
+        },
+        {
+            "bid_note": "Drop",
+            "invited_to_formal_round": True,
+            "submitted_formal_bid": False,
+            "bid_value": 100.0,
+            "bid_value_unit": "USD",
+            "consideration_components": ["cash"],
+        },
+    ]
+
+    flags = pipeline._invariant_p_r9(events)
+
+    reasons = [f["reason"] for f in flags]
+    assert len(flags) == 10
+    assert all(f["code"] == "conditional_field_mismatch" for f in flags)
+    assert all(f["severity"] == "hard" for f in flags)
+    for expected in [
+        "final_round_announcement must be null outside Final Round rows",
+        "Final Round requires final_round_announcement to be true or false",
+        "Press Release requires press_release_subject",
+        "Bid row with a stated value requires bid_value_unit",
+        "Bid row with a stated value requires non-empty consideration_components",
+        "invited_to_formal_round must be null outside current-process informal Bid rows",
+        "submitted_formal_bid must be null outside current-process informal Bid rows",
+        "bid_value must be null outside Bid rows",
+        "bid_value_unit must be null outside Bid rows",
+        "consideration_components must be null outside Bid rows",
+    ]:
+        assert any(expected in reason for reason in reasons)
+
+
+def test_p_r9_does_not_crash_on_invalid_process_phase_type():
+    events = [
+        {
+            "bid_note": "Bid",
+            "bid_type": "informal",
+            "process_phase": "1",
+            "invited_to_formal_round": None,
+            "submitted_formal_bid": None,
+        }
+    ]
+
+    assert pipeline._invariant_p_r9(events) == []
 
 
 def test_p_s5_accepts_reused_unnamed_nda_handles_for_lifecycle_rows():

@@ -2,8 +2,8 @@
 
 `python run.py --slug medivation --extract` runs one deal through the same
 `pipeline.run_pool` interface used by the batch runner. The default mode is
-`--extract`; `--re-validate` only reuses a current cached raw response, and
-`--re-extract` forces a fresh SDK call.
+`--extract`; `--re-validate` only reuses a cache-eligible archived audit v2 raw
+response, and `--re-extract` forces a fresh SDK call.
 """
 
 from __future__ import annotations
@@ -18,7 +18,7 @@ from types import SimpleNamespace
 from typing import Any
 
 from pipeline import core
-from pipeline.run_pool import DEFAULT_REASONING_EFFORT
+from pipeline.run_pool import DEFAULT_REASONING_EFFORT, TargetGateClosedError
 
 REPO_ROOT = Path(__file__).resolve().parent
 PROGRESS_PATH = REPO_ROOT / "state" / "progress.json"
@@ -46,6 +46,9 @@ def _make_pool_config(args: argparse.Namespace, *, mode: str) -> Any:
         workers=1,
         re_validate=mode == "re_validate",
         re_extract=mode == "re_extract",
+        audit_run_id=args.audit_run_id,
+        release_targets=args.release_targets,
+        target_gate_proof=args.target_gate_proof,
         extract_model=args.extract_model or os.environ.get("EXTRACT_MODEL", "gpt-5.5"),
         adjudicate_model=args.adjudicate_model or os.environ.get("ADJUDICATE_MODEL", "gpt-5.5"),
         extract_reasoning_effort=(
@@ -89,6 +92,7 @@ def _commit_pathspecs(result: Any) -> list[str]:
     paths: list[Path] = []
     output_path = _maybe_path(getattr(result, "output_path", None))
     audit_path = _maybe_path(getattr(result, "audit_path", None))
+    latest_path = _maybe_path(getattr(result, "latest_path", None))
     if output_path is not None:
         paths.append(output_path)
     paths.append(PROGRESS_PATH)
@@ -96,6 +100,8 @@ def _commit_pathspecs(result: Any) -> list[str]:
         paths.append(core.FLAGS_PATH)
     if audit_path is not None:
         paths.append(audit_path)
+    if latest_path is not None:
+        paths.append(latest_path)
 
     pathspecs: list[str] = []
     seen: set[str] = set()
@@ -176,6 +182,18 @@ def _parser() -> argparse.ArgumentParser:
     modes.add_argument("--re-extract", action="store_true", help="Force a fresh extraction call.")
     modes.add_argument("--print-prompt", action="store_true", help="Print SDK system/user messages and exit.")
     parser.add_argument("--commit", action="store_true", help="Commit only current-deal output/state/audit files.")
+    parser.add_argument("--audit-run-id", help="Archived audit run ID to reuse with --re-validate.")
+    parser.add_argument(
+        "--release-targets",
+        action="store_true",
+        help="Explicitly allow target-deal selection when the reference/stability gate is open.",
+    )
+    parser.add_argument(
+        "--target-gate-proof",
+        type=Path,
+        default=REPO_ROOT / "quality_reports" / "stability" / "target-release-proof.json",
+        help="JSON target-release proof file produced after stable reference runs.",
+    )
     parser.add_argument("--extract-model", help="Model for extraction calls.")
     parser.add_argument("--adjudicate-model", help="Model for adjudication calls.")
     parser.add_argument(
@@ -200,6 +218,9 @@ def main() -> int:
     if args.commit and args.dry_run:
         print("--commit cannot be used with --dry-run", file=sys.stderr)
         return 2
+    if args.audit_run_id and not args.re_validate:
+        print("--audit-run-id is only valid with --re-validate", file=sys.stderr)
+        return 2
 
     if args.print_prompt:
         system, user = _build_messages(args.slug)
@@ -212,6 +233,9 @@ def main() -> int:
     mode = _mode_from_args(args)
     try:
         outcome = _run_single_deal(args.slug, mode=mode, args=args)
+    except TargetGateClosedError as e:
+        print(f"[{args.slug}] failed: TargetGateClosedError: {e}", file=sys.stderr)
+        return 2
     except Exception as e:
         print(f"[{args.slug}] failed: {type(e).__name__}: {e}", file=sys.stderr)
         return 1
@@ -219,13 +243,14 @@ def main() -> int:
     if outcome is None:
         outcome = SimpleNamespace(status="completed", flag_count=None, notes="", output_path=None)
     _print_outcome(args.slug, outcome)
+    exit_code = 1 if getattr(outcome, "status", None) == "failed" else 0
     if args.commit:
         try:
             commit_deal_outputs(args.slug, outcome)
         except (subprocess.CalledProcessError, ValueError) as e:
             print(f"[{args.slug}] git commit failed: {e}", file=sys.stderr)
             return 1
-    return 0
+    return exit_code
 
 
 if __name__ == "__main__":

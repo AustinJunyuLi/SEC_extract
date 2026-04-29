@@ -340,10 +340,12 @@ events appear in the Background section).
 rank, emit them in filing narrative order. `BidderID` increments one per
 event row across the cluster.
 
-**Same-date final-round submissions.** If a filing narrates multiple informal
-bids and a non-announcement `Final Round` milestone on the same date, the
-informal bids (rank 6) sort before the non-announcement `Final Round` row
-(rank 9); within the bid cluster, preserve filing narrative order.
+**Same-date final-round submissions.** If a filing narrates multiple bids and
+a non-announcement `Final Round` milestone on the same date, the bid rows
+(rank 6 or 7) sort before the non-announcement `Final Round` row (rank 9);
+within the bid cluster, preserve filing narrative order. Validator pairing
+therefore searches same-phase, same-date final-round milestones even when the
+canonical row order places the milestone after the bid.
 
 **Why logical ordering.** Reflects actual process flow: announcements
 precede the NDAs they trigger; NDAs precede the bids they enable; bids

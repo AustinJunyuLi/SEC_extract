@@ -141,6 +141,29 @@ def test_reasoning_effort_args_pass_through_to_pool_config():
     assert cfg.adjudicate_reasoning_effort == "xhigh"
 
 
+def test_audit_run_id_passes_through_to_pool_config():
+    args = run_cli._parser().parse_args([
+        "--slug",
+        "medivation",
+        "--re-validate",
+        "--audit-run-id",
+        "run-abc",
+    ])
+
+    cfg = run_cli._make_pool_config(args, mode="re_validate")
+
+    assert cfg.audit_run_id == "run-abc"
+    assert cfg.re_validate is True
+
+
+def test_audit_run_id_requires_re_validate(monkeypatch, capsys):
+    monkeypatch.setattr(run_cli, "_run_single_deal", lambda *a, **k: pytest.fail("run should not start"))
+    _set_argv(monkeypatch, "--slug", "medivation", "--audit-run-id", "run-abc")
+
+    assert run_cli.main() == 2
+    assert "--audit-run-id is only valid with --re-validate" in capsys.readouterr().err
+
+
 def test_reasoning_effort_defaults_to_xhigh(monkeypatch):
     monkeypatch.delenv("EXTRACT_REASONING_EFFORT", raising=False)
     monkeypatch.delenv("ADJUDICATE_REASONING_EFFORT", raising=False)
@@ -158,6 +181,17 @@ def test_commit_and_dry_run_is_rejected(monkeypatch, capsys):
 
     assert run_cli.main() == 2
     assert "--commit cannot be used with --dry-run" in capsys.readouterr().err
+
+
+def test_failed_outcome_returns_nonzero(monkeypatch):
+    monkeypatch.setattr(
+        run_cli,
+        "_run_single_deal",
+        lambda *a, **k: DummyOutcome(status="failed", notes="bad cache"),
+    )
+    _set_argv(monkeypatch, "--slug", "medivation", "--re-validate")
+
+    assert run_cli.main() == 1
 
 
 @pytest.mark.parametrize(
@@ -184,16 +218,19 @@ def _prep_commit_result(env, slug="medivation"):
     output_path = env.extractions / f"{slug}.json"
     output_path.write_text("{}")
     env.flags.write_text("")
-    audit_path = env.tmp_path / "output" / "audit" / slug
+    audit_path = env.tmp_path / "output" / "audit" / slug / "runs" / "run-commit"
     audit_path.mkdir(parents=True)
     (audit_path / "manifest.json").write_text("{}")
     (audit_path / "raw_response.json").write_text("{}")
+    latest_path = env.tmp_path / "output" / "audit" / slug / "latest.json"
+    latest_path.write_text("{}")
     return SimpleNamespace(
         status="passed_clean",
         flag_count=0,
         notes="",
         output_path=output_path,
         audit_path=audit_path,
+        latest_path=latest_path,
     )
 
 
@@ -233,6 +270,15 @@ def test_commit_proceeds_when_no_staged_drift(minimal_state_repo, git_repo):
         ["git", "log", "--oneline"], cwd=git_repo, capture_output=True, text=True, check=True,
     ).stdout
     assert "deal=medivation" in log
+
+
+def test_commit_pathspecs_include_audit_latest_pointer(minimal_state_repo, git_repo):
+    result = _prep_commit_result(minimal_state_repo)
+
+    pathspecs = run_cli._commit_pathspecs(result)
+
+    assert "output/audit/medivation/runs/run-commit" in pathspecs
+    assert "output/audit/medivation/latest.json" in pathspecs
 
 
 def test_commit_ignores_unrelated_staged_files(minimal_state_repo, git_repo):

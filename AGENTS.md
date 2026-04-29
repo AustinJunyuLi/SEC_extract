@@ -31,7 +31,7 @@ Per deal:
 seeds.csv / state/progress.json
   -> run.py or pipeline.run_pool
   -> Extractor SDK call
-  -> output/audit/{slug}/ raw response, prompts, call metadata
+  -> output/audit/{slug}/runs/{run_id}/ immutable raw response, prompts, call metadata
   -> pipeline.core.prepare_for_validate()
   -> pipeline.core.validate()
   -> optional scoped Adjudicator SDK call for soft flags
@@ -56,6 +56,7 @@ python run.py --slug medivation --extract
 python run.py --slug medivation --re-validate
 python run.py --slug medivation --re-extract
 python run.py --slug medivation --print-prompt
+python run.py --slug medivation --re-validate --audit-run-id <run_id>
 ```
 
 Batch:
@@ -66,10 +67,13 @@ python -m pipeline.run_pool --slugs medivation,imprivata --workers 2
 ```
 
 Use `--dry-run` to inspect selection without requiring an API key. Use
-`--re-validate` to reuse `output/audit/{slug}/raw_response.json` only when its
-`rulebook_version` matches the current rulebook and its
-`extractor_contract_version` matches the current prompt/schema contract. Use
-`--re-extract` for a fresh SDK extraction.
+`--re-validate` to reuse only a cache-eligible archived v2 audit run. By
+default `--re-validate` reads `output/audit/{slug}/latest.json`; use
+`--audit-run-id <run_id>` to revalidate an exact archived run under
+`output/audit/{slug}/runs/{run_id}/`. The archived raw response must match the
+current `rulebook_version` and `extractor_contract_version`. Loose legacy files
+directly under `output/audit/{slug}/` are stale and are not accepted as cache.
+Use `--re-extract` for a fresh SDK extraction.
 
 Reasoning effort defaults to `xhigh` for both extractor and adjudicator calls:
 
@@ -166,6 +170,10 @@ slug. Status values are:
   records the failed attempt in audit metadata instead of clobbering the last
   good status.
 
+`validated` is a finalized status but not a completed/success status. It does
+not count toward the reference exit gate and is not skipped by runner
+freshness logic; hard-flagged deals need rerun or human rule/output work.
+
 Per-deal progress entries carry `flag_count`, `last_run`, `last_run_id`,
 verification fields, `notes`, `rulebook_version`, and bounded
 `rulebook_version_history` entries of `{ts, run_id, version}`. There is no
@@ -181,20 +189,31 @@ history; current-run queries use exact `run_id == last_run_id` or exact
 deal. It must conform to `rules/schema.md` and include pipeline-stamped
 `rulebook_version`, `last_run`, `last_run_id`, row flags, and deal flags.
 
-`output/audit/{slug}/` is the audit cache:
+`output/audit/{slug}/` is the audit archive. The only mutable file is
+`latest.json`; every extraction or re-validation attempt writes a new immutable
+run directory:
 
-- `raw_response.json`: raw model text, parsed JSON, model, slug,
-  `rulebook_version`, and `extractor_contract_version`.
-- `prompts/*.txt`: exact SDK prompts.
-- `calls.jsonl`: model-call metadata, token usage, retries, watchdog data.
-- `manifest.json`: run summary, cache outcome, and `api_endpoint: "responses"`.
+```text
+output/audit/{slug}/runs/{run_id}/
+  manifest.json
+  calls.jsonl
+  raw_response.json
+  validation.json
+  final_output.json
+  prompts/
+    extractor.txt
+    adjudicator_{n}.txt
 
-Fresh `run` and `re_validate` actions clear stale `calls.jsonl` and prompt
-files before writing current-run audit metadata; fresh `run` also deletes any
-old `raw_response.json` before the SDK call. `raw_response.json` is reused only
-for a valid `--re-validate` cache and overwritten by fresh extraction.
-Audit artifacts exist for reproducibility and re-validation. They are not a
-second source of truth after finalization.
+output/audit/{slug}/latest.json
+```
+
+Fresh runs never delete or overwrite older run directories. Failed fresh runs
+still write a run manifest and update `latest.json` with
+`cache_eligible=false`. Re-validation copies the selected archived raw response
+into the new run directory and records `cache_used=true` /
+`source_audit_run_id`. `final_output.json` is the immutable per-run finalized
+snapshot used by stability tooling; `output/extractions/{slug}.json` remains
+the authoritative latest extraction.
 
 ## API Key and Environment Safety
 
@@ -225,9 +244,10 @@ The nine reference deals are:
 
 Reference-set work is complete only when all nine deals are manually verified
 against the filings, every AI-vs-Alex disagreement is adjudicated, hard
-invariants pass, and the rulebook remains unchanged across three consecutive
-clean full-reference runs. Any rulebook, prompt, schema, state, or output-format
-change resets that clock.
+invariants pass, and the stability harness produces a `target_gate_proof_v1`
+classifying the archive as `STABLE_FOR_REFERENCE_REVIEW` across at least three
+archived reference runs per slug under unchanged prompt/schema/rulebook hashes.
+Any rulebook, prompt, schema, state, or output-format change resets that clock.
 
 Behavior-specific extraction doctrine lives in `rules/*.md`, with validator
 checks in `rules/invariants.md` and `pipeline/core.py`. AI-vs-Alex comparison
@@ -238,12 +258,24 @@ section instead.
 ## Target-Deal Gate
 
 Do not run extraction on the non-reference target deals until the reference-set
-gate is met. The 392 target deals are closed to batch processing until Austin
-has verified all nine reference deals and the rulebook stability clock is
-satisfied.
+gate is met. The runner enforces this fail-closed: any selection containing a
+target deal fails before audit directories, SDK clients, or model calls unless
+all nine reference deals are `verified`, a `target_gate_proof_v1` stability
+proof classifies the reference archive as `STABLE_FOR_REFERENCE_REVIEW`,
+records `requested_runs >= 3`, and includes at least three selected immutable
+run IDs for every reference slug, and the operator supplies
+`--release-targets`. The 392 target deals are closed to batch processing until
+Austin has verified all nine reference deals and the rulebook stability clock
+is satisfied.
 
 Fetching or inspecting target metadata is acceptable only when Austin explicitly
 asks and it does not start extraction.
+
+The proof file is produced by `python -m pipeline.stability --scope reference
+--runs 3 --json --write quality_reports/stability/target-release-proof.json`.
+Archive consistency is checked by `python -m pipeline.reconcile --scope
+reference --strict`. Both are read-only. The full operator protocol lives in
+`docs/linkflow-extraction-guide.md`.
 
 ## Repo Layout
 
@@ -261,13 +293,15 @@ asks and it does not start extraction.
 | `pipeline/core.py` | Filing loader, preparation, validator, finalizer, state writers. |
 | `pipeline/llm/` | SDK client, extraction, adjudication, response format, retry, watchdog, audit. |
 | `pipeline/run_pool.py` | Async batch runner, selection, cache policy, SDK orchestration. |
+| `pipeline/reconcile.py` | Read-only progress / output / flags / audit reconciliation. |
+| `pipeline/stability.py` | Read-only stability harness producing `target_gate_proof_v1`. |
 | `run.py` | Single-deal CLI wrapper over `pipeline.run_pool`. |
 | `scoring/diff.py` | AI-vs-Alex comparison for human review. |
 | `reference/alex/` | Converted reference JSONs and Alex self-flag metadata. |
 | `state/progress.json` | Live status ledger. |
 | `state/flags.jsonl` | Append-only validator/adjudicator flag log. |
 | `output/extractions/` | Finalized per-deal AI extractions. |
-| `output/audit/` | Prompt, raw-response, and call audit cache. |
+| `output/audit/` | Immutable audit v2 run archive plus mutable latest pointer. |
 | `scripts/fetch_filings.py` | Filing fetcher. |
 | `scripts/build_reference.py` | Reference JSON builder with documented Alex-workbook overrides. |
 | `scripts/render_review_csv.py` | Pure projection from finalized extraction JSON to Alex-facing review CSV. |

@@ -52,6 +52,9 @@ def test_extractor_prompt_contract_describes_embedded_filing_text():
     assert "`rules/invariants.md` remains validator-facing only" in text
     assert "the later deadline/submission event is another `Final Round`" in text
     assert "one list element per contiguous-within-one-page segment" in text
+    assert "Advisor NDA rows are not skip rows" in text
+    assert "role = \"advisor_financial\" or `role = \"advisor_legal\"`" in text
+    assert "§M3 (legal advisor NDA)" not in text
     for stale_phrase in ["Read " "tool", "Read these " "files", "sub" "agent"]:
         assert stale_phrase not in text
 

@@ -26,6 +26,8 @@ from SEC, EDGAR, the web, or local files during the model call.
 - `output/extractions/{slug}.json` — the extracted rows + deal-level fields.
 - Append to `state/flags.jsonl` — any ambiguities flagged during validation.
 - Update `state/progress.json` — set the deal's status.
+- `output/audit/{slug}/runs/{run_id}/` — immutable run audit artifacts, with
+  `output/audit/{slug}/latest.json` as the only mutable audit pointer.
 
 ---
 
@@ -40,7 +42,7 @@ Linkflow in the client. The Extractor and optional Adjudicator are model calls;
 validation/finalization remain Python code in `pipeline/core.py`.
 
 **Why deterministic validation stays in Python.**
-Every invariant in `rules/invariants.md` (§P-R, §P-D, §P-G, §P-S) is
+Every invariant in `rules/invariants.md` (§P-R, §P-D, §P-G, §P-H, §P-L, §P-S) is
 mechanically checkable — substring, regex, set membership, graph
 traversal. A model-based validator would just re-derive the same checks
 non-deterministically and cost money. The Python Validator is deterministic,
@@ -68,9 +70,11 @@ that a real extraction miss or is the filing genuinely silent?"
 
 ### 2. Validator — Python (`pipeline/core.py`)
 - **Entry:** `pipeline.validate(raw_extraction, filing) -> ValidatorResult`.
-- **Runs:** every invariant in `rules/invariants.md` — §P-R1..5 (structural
-  row checks), §P-D1..3 (date/BidderID integrity), §P-G2 (bid-type
-  evidence), §P-S1..4 (semantic process checks).
+- **Runs:** every invariant in `rules/invariants.md` — §P-R0..9 (structural
+  row checks and conditional fields), §P-D1..3 + §P-D5..8 (date/BidderID
+  integrity), §P-G2..3 (bid-type and final-round pairing), §P-H5
+  (cross-row consistency), §P-L1..2 (lifecycle integrity), §P-S1..5
+  (semantic process checks).
 - **Returns:** `row_flags` and `deal_flags` lists of
   `{code, severity, reason, [row_index|deal_level]}` dicts.
 - **Never rewrites the extraction.** Flag-only discipline preserves the
@@ -86,7 +90,8 @@ that a real extraction miss or is the filing genuinely silent?"
   stays explicit.
 - **Execution model:** this is an SDK call inside the code orchestrator. The
   orchestrator reads validator output, calls the Adjudicator when needed,
-  mutates `raw_extraction`, and only then calls `pipeline.core.finalize()`.
+  mutates `raw_extraction`, and only then calls
+  `pipeline.core.finalize_prepared()`.
 
 ### Orchestration
 
@@ -97,8 +102,9 @@ that a real extraction miss or is the filing genuinely silent?"
     3. result = pipeline.core.validate(raw_extraction, filing)
     4. if any(flag["severity"] == "soft" for flag in result.row_flags + result.deal_flags):
          call Adjudicator SDK and annotate raw_extraction before finalize
-    5. pipeline.core.finalize(slug, raw_extraction)
+    5. pipeline.core.finalize_prepared(slug, prepared, filing, validation, promotion_log, run_id=run_id)
          → output/extractions/{slug}.json
+         → output/audit/{slug}/runs/{run_id}/final_output.json (immutable snapshot)
          → state/flags.jsonl (append)
          → state/progress.json (update)
     6. scoring/diff.py --slug {slug}   (on reference deals)
@@ -109,19 +115,30 @@ that a real extraction miss or is the filing genuinely silent?"
 ```
 python run.py --slug X --extract
 python run.py --slug X --re-validate
+python run.py --slug X --re-validate --audit-run-id <run_id>
 python run.py --slug X --re-extract
 python run.py --slug X --print-prompt
 python run.py --slug X --extract --extract-reasoning-effort xhigh
 ```
 
-`--re-validate` uses the cached raw response only when valid for the current
-rulebook and current prompt/schema contract. `--re-extract` forces a fresh model
-call and clears stale raw-response cache before the attempt.
+`--re-validate` uses only a cache-eligible archived audit v2 run. Without
+`--audit-run-id`, it reads `output/audit/{slug}/latest.json`; with
+`--audit-run-id`, it reads `output/audit/{slug}/runs/{run_id}/raw_response.json`.
+Loose legacy raw-response files directly under `output/audit/{slug}/` are not
+accepted. `--re-extract` forces a fresh model call and writes a new immutable
+audit run directory.
 `pipeline.run_pool` and `run.py` default both extractor and adjudicator
 reasoning effort to `xhigh`, and pass explicit overrides through to the
 Responses API when provided. On Linkflow, `xhigh` is capped at
 `LINKFLOW_XHIGH_MAX_WORKERS` concurrent workers (default 5). Use
 `--re-extract` for a fresh model call.
+
+Target-deal extraction is fail-closed. Any selection containing non-reference
+target deals stops before audit directories, SDK clients, or model calls unless
+all nine reference deals are `verified`, the explicit `target_gate_proof_v1`
+classifies the reference archive as `STABLE_FOR_REFERENCE_REVIEW`, the proof
+records `requested_runs >= 3` with at least three selected immutable run IDs for
+every reference slug, and the operator supplies `--release-targets`.
 
 There is no per-deal token-budget cap. Audit metadata records input, output,
 and reasoning token totals, but high token use does not skip adjudication or
@@ -190,7 +207,7 @@ lists may cite separated snippets on the same page.
       "notes": "",
       "rulebook_version": "<sha256 hash at time of last finalize>",
       "rulebook_version_history": [
-        {"ts": "ISO8601", "version": "<sha256>"}
+        {"ts": "ISO8601", "run_id": "<run-uuid>", "version": "<sha256>"}
       ]
     }
   }
@@ -245,6 +262,46 @@ Pipeline-stamped deal-level fields: `rulebook_version`, `last_run`, and
 
 `extracted` remains a useful conceptual stage in the orchestration flow, but
 the current repo does not persist it into `state/progress.json`.
+
+`validated` is finalized but blocked. It is not a success/completed status for
+runner skip logic or the reference gate.
+
+**Audit v2 archive:**
+```text
+output/audit/{slug}/runs/{run_id}/
+  manifest.json
+  calls.jsonl
+  raw_response.json
+  validation.json
+  final_output.json
+  prompts/
+    extractor.txt
+    adjudicator_{n}.txt
+
+output/audit/{slug}/latest.json
+```
+
+Fresh attempts never delete or overwrite prior run directories. Failed attempts
+write a run manifest and `latest.json` with `cache_eligible=false`. Re-validation
+copies the selected archived raw response into a new run directory and records
+`cache_used=true` plus `source_audit_run_id`. `final_output.json` is the
+immutable finalized snapshot used by stability checks. Each run-dir JSON file
+carries its own `schema_version` (`audit_run_v2`, `raw_response_v2`,
+`validation_v1`, `final_output_v1`); `latest.json` carries `audit_v2`.
+
+**Reconcile and stability commands.** Two read-only entrypoints close the
+target gate. `python -m pipeline.reconcile --scope reference --strict` checks
+that `state/progress.json`, `output/extractions/{slug}.json`,
+`state/flags.jsonl`, and `output/audit/{slug}/` all agree on the same
+`last_run_id`, flag counts, and rulebook version. `python -m pipeline.stability
+--scope reference --runs 3 --json --write quality_reports/stability/target-release-proof.json`
+walks immutable run archives, computes substantive metrics across at least
+three reference runs per slug, and writes `target_gate_proof_v1` JSON with a
+final classification (`STABLE_FOR_REFERENCE_REVIEW`,
+`UNSTABLE_RULE_OR_VALIDATOR_FIX_NEEDED`,
+`UNSTABLE_ARCHITECTURE_ESCALATION_CANDIDATE`, or `INSUFFICIENT_ARCHIVED_RUNS`).
+The runner consumes that proof; see `docs/linkflow-extraction-guide.md` for the
+full operator protocol.
 
 ---
 

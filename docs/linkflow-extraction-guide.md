@@ -44,8 +44,10 @@ python -m pipeline.run_pool \
 
 The audit should show:
 
-- `api_endpoint: "responses"` in `output/audit/{slug}/manifest.json`.
-- `json_schema_used=false` in `output/audit/{slug}/calls.jsonl` for Linkflow.
+- `api_endpoint: "responses"` in
+  `output/audit/{slug}/runs/{run_id}/manifest.json`.
+- `json_schema_used=false` in
+  `output/audit/{slug}/runs/{run_id}/calls.jsonl` for Linkflow.
 - `finish_reason` equivalent to completed, no timeout error, and no repeated
   5xx retry loop.
 - Token usage recorded for input, output, and reasoning tokens when the
@@ -99,9 +101,10 @@ Avoid these patterns:
   in this repo; do not leave reasoning effort unset for real extraction. Do not assume every
   proxy accepts every OpenAI reasoning-effort value.
 - Stale cached raw responses after prompt, schema, rulebook, or section-slicing
-  changes. `--re-validate` is only valid when the cache `rulebook_version`,
-  `extractor_contract_version`, and raw-response shape are current. Use
-  `--re-extract` otherwise.
+  changes. `--re-validate` is only valid for cache-eligible audit v2 archives
+  whose `rulebook_version`, `extractor_contract_version`, and raw-response
+  shape are current. Use `--audit-run-id <run_id>` to select a specific
+  archived run, and `--re-extract` otherwise.
 
 ## Output Contract Discipline
 
@@ -130,13 +133,19 @@ be verbatim slices from the embedded Background pages, one paragraph at most,
 targeted at no longer than 1500 characters per quote string. There is no soft
 over-target zone; above 1500 characters is a hard validator flag.
 
-Fresh runs clear stale `calls.jsonl`, prompt files, and `raw_response.json`
-before attempting a current extraction. A failed fresh rerun preserves any prior
-successful live progress state and records the failure in the audit manifest,
-but it must not leave an older raw response reusable by `--re-validate`.
-Cached raw responses also carry an `extractor_contract_version` hash covering
-`prompts/extract.md` and the local `SCHEMA_R1` mirror, so prompt/schema-only
-changes fail loudly instead of reusing old model JSON.
+Audit v2 uses immutable run directories. Fresh runs do not clear or overwrite
+older `calls.jsonl`, prompt files, or `raw_response.json`; they write a new
+directory under `output/audit/{slug}/runs/{run_id}/` and update only
+`output/audit/{slug}/latest.json`. A failed fresh rerun preserves any prior
+successful live progress state and records the failure in the new audit
+manifest with `cache_eligible=false`, so an older raw response cannot be
+silently reused. Cached raw responses carry an `extractor_contract_version`
+hash covering `prompts/extract.md` and the local `SCHEMA_R1` mirror, so
+prompt/schema-only changes fail loudly instead of reusing old model JSON.
+
+Loose legacy files directly under `output/audit/{slug}/` are stale artifacts,
+not cache candidates. Delete or archive them after regeneration; do not add
+fallback readers.
 
 Behavioral extraction doctrine lives in `rules/*.md`; comparison behavior lives
 in `scoring/diff.py`. Keep this guide focused on Linkflow transport behavior
@@ -172,15 +181,59 @@ python scoring/diff.py --slug medivation
 
 Then inspect:
 
-- `output/audit/{slug}/manifest.json`
-- `output/audit/{slug}/calls.jsonl`
-- `output/audit/{slug}/raw_response.json`
+- `output/audit/{slug}/latest.json`
+- `output/audit/{slug}/runs/{run_id}/manifest.json`
+- `output/audit/{slug}/runs/{run_id}/calls.jsonl`
+- `output/audit/{slug}/runs/{run_id}/raw_response.json`
+- `output/audit/{slug}/runs/{run_id}/validation.json`
+- `output/audit/{slug}/runs/{run_id}/final_output.json`
 - `output/extractions/{slug}.json`
 - `state/progress.json`
 - `state/flags.jsonl`
 
-Delete and regenerate generated artifacts after any prompt/schema/rulebook
-change. Git history is the compatibility record; stale outputs are not.
+Reference-run protocol after this redesign:
+
+```bash
+python -m pytest -x
+python -m pipeline.run_pool --filter reference --workers 4 --dry-run
+python -m pipeline.run_pool \
+  --filter reference \
+  --workers 4 \
+  --extract-model gpt-5.5 \
+  --adjudicate-model gpt-5.5 \
+  --extract-reasoning-effort xhigh \
+  --adjudicate-reasoning-effort xhigh \
+  --re-extract
+python -m pipeline.reconcile --scope reference --strict
+```
+
+Repeat until three archived full-reference xhigh runs exist under unchanged
+prompt/schema/rulebook hashes, then run:
+
+```bash
+python -m pipeline.stability \
+  --scope reference \
+  --runs 3 \
+  --write quality_reports/stability/reference-xhigh-3run.md
+```
+
+After Austin manually verifies all nine references, write the explicit
+target-gate proof from the same archived runs:
+
+```bash
+python -m pipeline.stability \
+  --scope reference \
+  --runs 3 \
+  --json \
+  --write quality_reports/stability/target-release-proof.json
+```
+
+Only after `STABLE_FOR_REFERENCE_REVIEW`, `requested_runs >= 3`, at least three
+selected immutable run IDs for every reference slug in the proof, Austin's
+manual verification of all nine references, and that explicit
+`target_gate_proof_v1` file should `--release-targets` be considered. Delete
+and regenerate generated artifacts after any prompt/schema/rulebook change. Git
+history is the compatibility record; stale outputs are not.
 
 ## Security
 

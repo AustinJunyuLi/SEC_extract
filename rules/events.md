@@ -674,9 +674,11 @@ when the filing genuinely does not classify the round.
 **Pairing rule.** A `Bid` row is paired first with the most recent
 `Final Round` event in the same `process_phase` whose
 `final_round_announcement = false` and whose date is no later than the bid
-date. If no non-announcement row exists, fall back to the most recent
-applicable `Final Round` event in the phase. If none exists, the bid is not
-in a final round and §G1's pre-process-letter informal default may apply.
+date. Same-day non-announcement milestones also pair when canonical ordering
+places the `Bid` row before the milestone row. If no non-announcement row
+exists, fall back to the most recent applicable `Final Round` event in the
+phase. If none exists, the bid is not in a final round and §G1's
+pre-process-letter informal default may apply.
 
 For validator §P-G3, the non-announcement submission/deadline row is a
 process-level milestone. One row can support multiple same-round `Bid` rows
@@ -769,7 +771,11 @@ toward the current-process auction threshold.
 ### §L2 — `process_phase` column
 
 **Decision.** Every event row carries a new integer field
-**`process_phase: int`** in `events[]`.
+**`process_phase: int | null`** in `events[]`.
+
+The field is required. Use integer values for current extractor output.
+`null` is accepted as a raw nullable value and interpreted as phase 1 by the
+validator so the schema, Python default, and rule text agree.
 
 **Values.**
 - `0` — **stale prior process.** The process narrated here never reached

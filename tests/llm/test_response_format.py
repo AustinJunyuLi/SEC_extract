@@ -41,6 +41,14 @@ def test_schema_r1_requires_prompt_skeleton_event_fields():
     assert SCHEMA_R1["properties"]["events"]["items"]["additionalProperties"] is False
 
 
+def test_schema_r1_nullability_matches_validator_contract():
+    props = SCHEMA_R1["properties"]["events"]["items"]["properties"]
+
+    assert props["process_phase"]["type"] == ["integer", "null"]
+    assert props["role"]["type"] == "string"
+    assert props["role"]["enum"] == ["bidder", "advisor_financial", "advisor_legal"]
+
+
 def test_schema_r1_bid_note_enum_matches_core_vocabulary():
     bid_note = SCHEMA_R1["properties"]["events"]["items"]["properties"]["bid_note"]
 
@@ -191,6 +199,66 @@ def test_call_json_enforces_local_schema_when_provider_schema_is_disabled(mutate
         )
 
     assert client.calls[0]["text_format"] is None
+
+
+def test_call_json_enforces_max_length_locally():
+    payload = _valid_payload()
+    payload["events"][0]["bid_type"] = "informal"
+    payload["events"][0]["bid_type_inference_note"] = "x" * 301
+    client = StubClient([json.dumps(payload)])
+
+    with pytest.raises(MalformedJSONError, match=r"maxLength 300"):
+        asyncio.run(
+            call_json(
+                client,
+                model="gpt-test",
+                system="sys",
+                user="usr",
+                schema_supported=False,
+            )
+        )
+
+
+def test_call_json_validates_custom_schema_without_structured_output():
+    client = StubClient([json.dumps({"reason": "too long"})])
+
+    with pytest.raises(MalformedJSONError, match=r"reason.*maxLength 3"):
+        asyncio.run(
+            call_json(
+                client,
+                model="gpt-test",
+                system="sys",
+                user="usr",
+                schema_supported=False,
+                schema={
+                    "type": "object",
+                    "properties": {"reason": {"type": "string", "maxLength": 3}},
+                    "required": ["reason"],
+                    "additionalProperties": False,
+                },
+            )
+        )
+
+
+def test_call_json_validates_custom_schema_min_items():
+    client = StubClient([json.dumps({"items": []})])
+
+    with pytest.raises(MalformedJSONError, match=r"items.*minItems 1"):
+        asyncio.run(
+            call_json(
+                client,
+                model="gpt-test",
+                system="sys",
+                user="usr",
+                schema_supported=False,
+                schema={
+                    "type": "object",
+                    "properties": {"items": {"type": "array", "minItems": 1}},
+                    "required": ["items"],
+                    "additionalProperties": False,
+                },
+            )
+        )
 
 
 def test_call_json_fails_loudly_without_repair_call():

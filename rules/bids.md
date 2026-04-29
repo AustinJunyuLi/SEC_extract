@@ -557,13 +557,13 @@ row's meaning comes from the absence of later narration.
 
 ### §M3 — Advisor NDA disambiguation
 
-**Decision.** Every event row carries a new **`role`** field. Default
-value `"bidder"`. Advisor NDAs use `role = "advisor_financial"` or
+**Decision.** Every event row carries a required, non-null **`role`**
+field. Advisor NDAs use `role = "advisor_financial"` or
 `role = "advisor_legal"`. The auction classifier (§Scope-1) counts only
 rows with `role == "bidder"`.
 
 **New per-row field.** `role: "bidder" | "advisor_financial" | "advisor_legal"`
-— defaults to `"bidder"` on every event row.
+on every event row.
 
 **Assignment rules.**
 
