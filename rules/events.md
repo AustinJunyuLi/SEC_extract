@@ -667,11 +667,11 @@ fields in the `deal` object (per `rules/schema.md` §R1):
 rows for counsel retention would generate sparse data (date often absent)
 and misrepresent counsel as a bidding-process participant.
 
-**Source quote requirement.** Both fields follow the same evidence rule as
-event rows — the `deal.deal_flags` array will include one
-`legal_counsel_evidence` flag per side with `source_quote` / `source_page`
-citing the passage. (Exact flag schema will be pinned in §R2 revisions; for
-now, treat as a deal-level evidence entry analogous to an event `source_quote`.)
+**Source evidence.** Both fields follow the same evidence discipline as event
+rows, but deal-level flags still obey `rules/schema.md` §R2. If a counsel field
+is populated, add one `legal_counsel_evidence` deal flag per side with
+`code`, `severity`, and `reason`; include the page and a short quote pointer
+inside `reason` rather than adding non-schema fields to the flag object.
 
 **Rejected alternatives.**
 - **Event row `Legal`** — sparse dates, not a bidding-process event.

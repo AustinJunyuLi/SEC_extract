@@ -372,10 +372,9 @@ rather than silently emitted or silently skipped.
 - *"for the [region] assets"*
 - *"for a [percentage <50%] interest"* (minority stake)
 
-→ Do NOT emit a bid row. Emit a deal-level flag (or a "skipped-bid"
-registry entry) `{"code": "partial_bid_skipped", "severity": "info",
-"reason": "<summary>", "source_quote": "<quote>", "source_page": <N>}`
-so the pattern is auditable.
+→ Do NOT emit a bid row. Emit a deal-level flag
+`{"code": "partial_bid_skipped", "severity": "info", "reason": "<summary>; source_page=<N>; quote='<short quote>'"}`
+so the pattern is auditable without adding non-schema fields to the flag object.
 
 **Flag ambiguous cases for review.** Filing language such as:
 - *"for all of the Company's operating assets"* (effectively whole
@@ -385,7 +384,7 @@ so the pattern is auditable.
 - Two-step proposals (*"first for Division X, then for the remainder"*)
 
 → Do NOT emit a bid row. Emit a deal-level flag
-`{"code": "partial_bid_ambiguous", "severity": "soft", "reason": "<description>", "source_quote": "<quote>"}`
+`{"code": "partial_bid_ambiguous", "severity": "soft", "reason": "<description>; source_page=<N>; quote='<short quote>'"}`
 requiring manual adjudication. Austin reads the filing and decides
 whether to add the bid row during manual verification.
 
@@ -533,7 +532,7 @@ the following hold:
 
 No event row emitted. Deal-level flag added:
 `{"code": "unsolicited_letter_skipped", "severity": "info",
-"reason": "<summary>", "source_quote": "<quote>", "source_page": <N>}`.
+"reason": "<summary>; source_page=<N>; quote='<short quote>'"}`.
 
 **Why skip.** Drive-by unsolicited letters are out of scope per Alex's
 instructions; they are not part of the auction process. The deal-level

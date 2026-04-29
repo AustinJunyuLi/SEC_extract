@@ -19,7 +19,7 @@ from pipeline import core
 from pipeline.llm.adjudicate import adjudicate
 from pipeline.llm.audit import AuditWriter, TokenUsage
 from pipeline.llm.client import LLMClient, OpenAICompatibleClient
-from pipeline.llm.extract import extract_deal
+from pipeline.llm.extract import extract_deal, extractor_contract_version
 from pipeline.llm.retry import RetryConfig
 from pipeline.llm.watchdog import WatchdogConfig
 
@@ -29,6 +29,9 @@ VALID_FILTERS = {"pending", "reference", "failed", "all"}
 AUDIT_ROOT = core.REPO_ROOT / "output" / "audit"
 DEFAULT_XHIGH_MAX_WORKERS = 5
 DEFAULT_REASONING_EFFORT = "high"
+SEMANTIC_ADJUDICATION_SOFT_FLAGS: frozenset[str] = frozenset({
+    "missing_nda_dropsilent",
+})
 
 
 @dataclass
@@ -146,6 +149,12 @@ def _check_cached_raw_response(slug: str, cfg: PoolConfig, current_rulebook_vers
             "cached raw_response.json rulebook_version does not match current rulebook; "
             "use --re-extract for a fresh SDK call",
         )
+    if payload.get("extractor_contract_version") != extractor_contract_version():
+        return CacheCheck(
+            None,
+            "cached raw_response.json extractor_contract_version does not match current prompt/schema; "
+            "use --re-extract for a fresh SDK call",
+        )
     parsed = payload.get("parsed_json")
     if not isinstance(parsed, dict):
         return CacheCheck(None, "cached raw_response.json parsed_json is not an object")
@@ -185,6 +194,7 @@ def _soft_flags(result: core.ValidatorResult) -> list[dict[str, Any]]:
     return [
         flag for flag in [*result.row_flags, *result.deal_flags]
         if flag.get("severity") == "soft"
+        and flag.get("code") in SEMANTIC_ADJUDICATION_SOFT_FLAGS
     ]
 
 
@@ -223,6 +233,9 @@ def _build_audit_writer(root: Path, slug: str, *, run_action: str) -> AuditWrite
         with contextlib.suppress(FileNotFoundError):
             (audit_root / "calls.jsonl").unlink()
         shutil.rmtree(audit_root / "prompts", ignore_errors=True)
+    if run_action == "run":
+        with contextlib.suppress(FileNotFoundError):
+            (audit_root / "raw_response.json").unlink()
     return AuditWriter(root, slug)
 
 

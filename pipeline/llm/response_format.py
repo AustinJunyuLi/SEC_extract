@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from typing import Any
 
@@ -9,6 +10,96 @@ from pipeline.llm.client import CompletionResult, LLMClient
 
 class MalformedJSONError(ValueError):
     pass
+
+
+def _path(parent: str, child: str) -> str:
+    if parent == "$":
+        return f"$.{child}"
+    return f"{parent}.{child}"
+
+
+def _array_path(parent: str, index: int) -> str:
+    return f"{parent}[{index}]"
+
+
+def _matches_json_type(value: Any, json_type: str) -> bool:
+    if json_type == "null":
+        return value is None
+    if json_type == "boolean":
+        return isinstance(value, bool)
+    if json_type == "integer":
+        return isinstance(value, int) and not isinstance(value, bool)
+    if json_type == "number":
+        return isinstance(value, (int, float)) and not isinstance(value, bool)
+    if json_type == "string":
+        return isinstance(value, str)
+    if json_type == "array":
+        return isinstance(value, list)
+    if json_type == "object":
+        return isinstance(value, dict)
+    raise MalformedJSONError(f"unsupported schema type {json_type!r}")
+
+
+def _validate_type(schema: dict[str, Any], value: Any, path: str) -> None:
+    expected = schema.get("type")
+    if expected is None:
+        return
+    types = expected if isinstance(expected, list) else [expected]
+    if not any(_matches_json_type(value, json_type) for json_type in types):
+        names = "|".join(str(t) for t in types)
+        raise MalformedJSONError(
+            f"{path}: expected {names}; got {type(value).__name__}"
+        )
+
+
+def _validate_schema_value(schema: dict[str, Any], value: Any, path: str = "$") -> None:
+    if "oneOf" in schema:
+        failures: list[str] = []
+        matched = 0
+        for option in schema["oneOf"]:
+            try:
+                _validate_schema_value(option, value, path)
+            except MalformedJSONError as exc:
+                failures.append(str(exc))
+            else:
+                matched += 1
+        if matched != 1:
+            detail = "; ".join(failures[:2])
+            raise MalformedJSONError(
+                f"{path}: expected exactly one schema match; got {matched}"
+                + (f" ({detail})" if detail else "")
+            )
+        return
+
+    _validate_type(schema, value, path)
+
+    if "enum" in schema and value not in schema["enum"]:
+        raise MalformedJSONError(f"{path}: value {value!r} not in allowed enum")
+
+    schema_type = schema.get("type")
+    type_names = set(schema_type if isinstance(schema_type, list) else [schema_type])
+
+    if isinstance(value, dict) and (schema_type is None or "object" in type_names):
+        properties = schema.get("properties", {})
+        required = schema.get("required", [])
+        for name in required:
+            if name not in value:
+                raise MalformedJSONError(f"{_path(path, name)}: missing required field")
+        additional = schema.get("additionalProperties", True)
+        for name, child in value.items():
+            if name in properties:
+                _validate_schema_value(properties[name], child, _path(path, name))
+            elif additional is False:
+                raise MalformedJSONError(f"{_path(path, name)}: unexpected field {name}")
+            elif isinstance(additional, dict):
+                _validate_schema_value(additional, child, _path(path, name))
+        return
+
+    if isinstance(value, list) and (schema_type is None or "array" in type_names):
+        item_schema = schema.get("items")
+        if isinstance(item_schema, dict):
+            for index, item in enumerate(value):
+                _validate_schema_value(item_schema, item, _array_path(path, index))
 
 
 FLAG_SCHEMA = {
@@ -182,6 +273,11 @@ def json_schema_format(schema: dict[str, Any] = SCHEMA_R1) -> dict[str, Any]:
     }
 
 
+def schema_hash(schema: dict[str, Any] = SCHEMA_R1) -> str:
+    encoded = json.dumps(schema, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
 def parse_json_text(text: str) -> dict[str, Any]:
     candidate = text.strip()
     try:
@@ -193,9 +289,30 @@ def parse_json_text(text: str) -> dict[str, Any]:
     return parsed
 
 
-def _ensure_extraction_shape(parsed: dict[str, Any]) -> None:
+def _ensure_source_quote_page_pairing(parsed: dict[str, Any]) -> None:
+    for index, event in enumerate(parsed.get("events") or []):
+        if not isinstance(event, dict):
+            continue
+        quote = event.get("source_quote")
+        page = event.get("source_page")
+        quote_is_list = isinstance(quote, list)
+        page_is_list = isinstance(page, list)
+        if quote_is_list != page_is_list:
+            raise MalformedJSONError(
+                f"$.events[{index}].source_quote/source_page: multi-quote form "
+                "requires both fields to be lists"
+            )
+        if quote_is_list and len(quote) != len(page):
+            raise MalformedJSONError(
+                f"$.events[{index}].source_quote/source_page: list lengths differ"
+            )
+
+
+def _ensure_extraction_shape(parsed: dict[str, Any], schema: dict[str, Any] = SCHEMA_R1) -> None:
     if "deal" not in parsed or "events" not in parsed:
         raise MalformedJSONError("expected object with deal and events")
+    _validate_schema_value(schema, parsed)
+    _ensure_source_quote_page_pairing(parsed)
 
 
 async def call_json(

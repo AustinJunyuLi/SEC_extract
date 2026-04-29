@@ -36,6 +36,7 @@ def test_audit_writer_writes_prompt_call_raw_response_and_manifest(tmp_path):
         result=result,
         parsed_json={"deal": {}, "events": []},
         rulebook_version="ruleshash",
+        extractor_contract_version="contracthash",
     )
     writer.append_call({
         "phase": "extract",
@@ -57,7 +58,9 @@ def test_audit_writer_writes_prompt_call_raw_response_and_manifest(tmp_path):
     prompt_text = (audit_dir / "prompts" / "extractor.txt").read_text()
     assert "=== SYSTEM ===\nsystem text" in prompt_text
     assert "=== USER ===\nuser text" in prompt_text
-    assert json.loads((audit_dir / "raw_response.json").read_text())["parsed_json"] == {"deal": {}, "events": []}
+    raw_response = json.loads((audit_dir / "raw_response.json").read_text())
+    assert raw_response["parsed_json"] == {"deal": {}, "events": []}
+    assert raw_response["extractor_contract_version"] == "contracthash"
     call = json.loads((audit_dir / "calls.jsonl").read_text().strip())
     assert call["prompt_hash"] == digest
     manifest = json.loads((audit_dir / "manifest.json").read_text())

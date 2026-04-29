@@ -67,10 +67,12 @@ def test_reasoning_effort_defaults_to_high(monkeypatch):
     assert run_pool.PoolConfig().adjudicate_reasoning_effort == "high"
 
 
-def test_skip_decisions_and_cache_policy(minimal_state_repo):
+def test_skip_decisions_and_cache_policy(minimal_state_repo, monkeypatch):
     env = minimal_state_repo
     cfg = _cfg(audit_root=env.tmp_path / "output" / "audit")
     current = "rules-v1"
+    monkeypatch.setattr(run_pool, "extractor_contract_version", lambda: "contract-v1")
+    contract = run_pool.extractor_contract_version()
     env.seed_deal("done", status="passed_clean", rulebook_version=current)
     env.seed_deal("stale", status="passed_clean", rulebook_version="old")
     env.seed_deal("failed", status="failed", rulebook_version=current)
@@ -87,6 +89,7 @@ def test_skip_decisions_and_cache_policy(minimal_state_repo):
         "schema_version": "v1",
         "slug": "done",
         "rulebook_version": current,
+        "extractor_contract_version": contract,
         "parsed_json": {"deal": {}, "events": []},
     }))
     assert run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state).action == "re_validate"
@@ -94,27 +97,48 @@ def test_skip_decisions_and_cache_policy(minimal_state_repo):
         "schema_version": "v1",
         "slug": "done",
         "rulebook_version": "old",
+        "extractor_contract_version": contract,
         "parsed_json": {"deal": {}, "events": []},
     }))
     assert run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state).action == "blocked"
+    (audit / "raw_response.json").write_text(json.dumps({
+        "schema_version": "v1",
+        "slug": "done",
+        "rulebook_version": current,
+        "extractor_contract_version": "old-contract",
+        "parsed_json": {"deal": {}, "events": []},
+    }))
+    decision = run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state)
+    assert decision.action == "blocked"
+    assert "extractor_contract_version" in decision.reason
 
 
 @pytest.mark.parametrize(
     "payload",
     [
-        {"slug": "done", "rulebook_version": "rules-v1", "parsed_json": {"deal": {}, "events": []}},
+        {"schema_version": None},
         {"schema_version": "v0", "slug": "done", "rulebook_version": "rules-v1", "parsed_json": {"deal": {}, "events": []}},
         {"schema_version": "v1", "slug": "other", "rulebook_version": "rules-v1", "parsed_json": {"deal": {}, "events": []}},
+        {"schema_version": "v1", "slug": "done", "rulebook_version": "rules-v1", "extractor_contract_version": None, "parsed_json": {"deal": {}, "events": []}},
         {"schema_version": "v1", "slug": "done", "rulebook_version": "rules-v1", "parsed_json": {"events": []}},
         {"schema_version": "v1", "slug": "done", "rulebook_version": "rules-v1", "parsed_json": {"deal": {}, "events": {}}},
     ],
 )
-def test_re_validate_rejects_stale_raw_response_shapes(minimal_state_repo, payload):
+def test_re_validate_rejects_stale_raw_response_shapes(minimal_state_repo, monkeypatch, payload):
     env = minimal_state_repo
     cfg = _cfg(re_validate=True, audit_root=env.tmp_path / "output" / "audit")
     env.seed_deal("done", status="passed_clean", rulebook_version="rules-v1")
+    monkeypatch.setattr(run_pool, "extractor_contract_version", lambda: "contract-v1")
     audit = cfg.audit_root / "done"
     audit.mkdir(parents=True)
+    payload = {
+        "schema_version": "v1",
+        "slug": "done",
+        "rulebook_version": "rules-v1",
+        "extractor_contract_version": run_pool.extractor_contract_version(),
+        "parsed_json": {"deal": {}, "events": []},
+        **payload,
+    }
     (audit / "raw_response.json").write_text(json.dumps(payload))
     state = json.loads(env.progress.read_text())
 
@@ -258,6 +282,7 @@ def test_fresh_run_starts_with_clean_call_log(minimal_state_repo):
     audit_dir = env.tmp_path / "output" / "audit" / "a"
     audit_dir.mkdir(parents=True)
     (audit_dir / "calls.jsonl").write_text('{"old": true}\n')
+    (audit_dir / "raw_response.json").write_text('{"old": true}\n')
     (audit_dir / "prompts").mkdir()
     (audit_dir / "prompts" / "extractor.txt").write_text("old prompt")
 
@@ -269,4 +294,58 @@ def test_fresh_run_starts_with_clean_call_log(minimal_state_repo):
 
     assert audit.root == audit_dir
     assert not (audit_dir / "calls.jsonl").exists()
+    assert not (audit_dir / "raw_response.json").exists()
     assert not (audit_dir / "prompts" / "extractor.txt").exists()
+
+
+def test_re_validate_keeps_raw_response_cache(minimal_state_repo):
+    env = minimal_state_repo
+    audit_dir = env.tmp_path / "output" / "audit" / "a"
+    audit_dir.mkdir(parents=True)
+    raw_response = audit_dir / "raw_response.json"
+    raw_response.write_text('{"keep": true}\n')
+
+    run_pool._build_audit_writer(
+        env.tmp_path / "output" / "audit",
+        "a",
+        run_action="re_validate",
+    )
+
+    assert raw_response.exists()
+
+
+def test_soft_flags_routes_only_semantic_adjudication_codes():
+    result = run_pool.core.ValidatorResult(
+        row_flags=[
+            {
+                "row_index": 0,
+                "code": "missing_nda_dropsilent",
+                "severity": "soft",
+                "reason": "semantic absence check",
+            },
+            {
+                "row_index": 1,
+                "code": "resolved_name_not_observed",
+                "severity": "soft",
+                "reason": "registry hygiene",
+            },
+            {
+                "row_index": 2,
+                "code": "formal_round_status_inconsistent",
+                "severity": "soft",
+                "reason": "deterministic row-scope issue",
+            },
+        ],
+        deal_flags=[
+            {
+                "code": "deal_level_soft",
+                "severity": "soft",
+                "reason": "not allow-listed",
+                "deal_level": True,
+            }
+        ],
+    )
+
+    routed = run_pool._soft_flags(result)
+
+    assert [flag["code"] for flag in routed] == ["missing_nda_dropsilent"]

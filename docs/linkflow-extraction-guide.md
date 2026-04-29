@@ -99,8 +99,9 @@ Avoid these patterns:
   do not leave reasoning effort unset for real extraction. Do not assume every
   proxy accepts every OpenAI reasoning-effort value.
 - Stale cached raw responses after prompt, schema, rulebook, or section-slicing
-  changes. `--re-validate` is only valid when the cache rulebook version and
-  raw-response shape are current. Use `--re-extract` otherwise.
+  changes. `--re-validate` is only valid when the cache `rulebook_version`,
+  `extractor_contract_version`, and raw-response shape are current. Use
+  `--re-extract` otherwise.
 
 ## Output Contract Discipline
 
@@ -133,6 +134,9 @@ Fresh runs clear stale `calls.jsonl`, prompt files, and `raw_response.json`
 before attempting a current extraction. A failed fresh rerun preserves any prior
 successful live progress state and records the failure in the audit manifest,
 but it must not leave an older raw response reusable by `--re-validate`.
+Cached raw responses also carry an `extractor_contract_version` hash covering
+`prompts/extract.md` and the local `SCHEMA_R1` mirror, so prompt/schema-only
+changes fail loudly instead of reusing old model JSON.
 
 `scoring/diff.py` intentionally suppresses known source-workbook placement
 noise: Alex effective dates are ignored when the current filing-grounded

@@ -220,8 +220,11 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - `process_phase` — int. `0` = stale prior, `1` = main, `2` = restart (per `rules/events.md` §L2).
 - `role` — string. `"bidder" | "advisor_financial" | "advisor_legal"`. Defaults to `"bidder"`. Auction classifier (§Scope-1) filters `role == "bidder"`. Per `rules/bids.md` §M3.
 - `exclusivity_days` — int OR null. Exclusivity period granted at this bid event. Per `rules/bids.md` §O1.
-- `bidder_name` — string. **Canonical deal-local ID** (`bidder_01`, `bidder_02`, …)
-  per `rules/bidders.md` §E3. Stable across all rows for the same entity.
+- `bidder_name` — string OR null. Named entities use a canonical deal-local ID
+  (`bidder_01`, `bidder_02`, …) per `rules/bidders.md` §E3, stable across all
+  rows for the same entity. Exact-count unnamed placeholders under
+  `rules/bidders.md` §E5 use `null` until a later supported promotion names the
+  entity.
 - `bidder_alias` — string. Filing's verbatim label for this bidder on this
   row (`"Party A"`, `"Pfizer Inc."`, `"Strategic 1"`). Per `rules/bidders.md` §E3.
 - `bidder_type` — string OR null. One of `"s"` / `"f"` per
@@ -311,6 +314,9 @@ Each row carries `flags: list[FlagObj]`. `FlagObj` is:
 - `reason` — one-line human-readable string. For extractor-generated flags,
   name the trigger (e.g., `"phrase: 'mid-July 2015'"`). For validator flags,
   name the check that failed (`"source_quote_not_in_page: cited page 34"`).
+- No additional flag-object fields are allowed. If a skipped or deal-level
+  pattern needs evidence, include a compact page/quote pointer inside `reason`
+  rather than adding `source_quote` or `source_page` to the flag object.
 
 **Deal-level flags** live in a parallel `deal.deal_flags[]` array of the same
 shape.

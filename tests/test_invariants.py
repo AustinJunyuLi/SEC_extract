@@ -714,6 +714,52 @@ def test_ps1(fixture_name):
     _assert_fixture(fixture_name, "ps1")
 
 
+def test_ps1_tracks_null_placeholder_nda_by_alias():
+    flags = pipeline._invariant_p_s1([
+        {
+            "bidder_name": None,
+            "bidder_alias": "Financial 1",
+            "bid_note": "NDA",
+            "process_phase": 1,
+            "role": "bidder",
+        }
+    ])
+
+    assert flags == [
+        {
+            "row_index": 0,
+            "code": "missing_nda_dropsilent",
+            "severity": "soft",
+            "reason": (
+                "bidder identity='alias:Financial 1' signed NDA at row 0 "
+                "but no DropSilent (or other follow-up) was emitted; per §I1 "
+                "the extractor must emit DropSilent for silent signers"
+            ),
+        }
+    ]
+
+
+def test_ps1_null_placeholder_dropsilent_satisfies_alias_followup():
+    flags = pipeline._invariant_p_s1([
+        {
+            "bidder_name": None,
+            "bidder_alias": "Financial 1",
+            "bid_note": "NDA",
+            "process_phase": 1,
+            "role": "bidder",
+        },
+        {
+            "bidder_name": None,
+            "bidder_alias": "Financial 1",
+            "bid_note": "DropSilent",
+            "process_phase": 1,
+            "role": "bidder",
+        },
+    ])
+
+    assert flags == []
+
+
 @pytest.mark.parametrize(
     "fixture_name",
     ["synthetic_ps2_pass.json", "synthetic_ps2_fail.json"],

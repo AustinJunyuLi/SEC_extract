@@ -196,7 +196,9 @@ in order:
    atomically.
 2. Regenerate `reference/alex/*.json` from `scripts/build_reference.py` under
    the comparison-reference contract.
-3. Delete stale generated extraction, audit, state, scoring, and review outputs.
+3. Delete stale generated extraction, audit, scoring, and review outputs.
+   Reset state only through an explicit seed-preserving state initializer; do
+   not casually delete durable manual verification/history state.
 4. Re-extract the nine reference deals under the new contract.
 5. Generate AI-vs-Alex diff reports.
 6. Render Alex-facing review CSVs.
@@ -211,8 +213,9 @@ projection is allowed to omit those fields or keep them null as comparator input
 
 `rulebook_version` is not manually bumped. It is the SHA-256 content hash
 computed by `pipeline.core.rulebook_version()` from current `rules/*.md`
-content. Any rule-file change changes the hash and invalidates cached
-`raw_response.json` for `--re-validate`.
+content. The audit cache also records an `extractor_contract_version` hash for
+`prompts/extract.md` plus the local `SCHEMA_R1` mirror. `--re-validate` must
+refuse cached `raw_response.json` when either hash is stale.
 
 Keep:
 
@@ -228,17 +231,18 @@ Delete or regenerate:
 - `reference/alex/*.json` other than `alex_flagged_rows.json`
 - `output/extractions/*.json`
 - `output/audit/*`
-- `state/progress.json`
-- `state/flags.jsonl`
 - `logs/*`
 - `scoring/results/*`
 - `output/review_csv/*`
 
-`--re-validate` must refuse stale audit cache entries whose recorded
-`rulebook_version` does not match the current rulebook. Audit cache invalidation
-after a contract change is mandatory, not optional. Fresh `--re-extract`
-attempts must delete or invalidate any prior `raw_response.json` at attempt
-start, so a failed fresh call cannot leave a reusable old response behind.
+State cleanup is explicit, not a glob delete. Preserve `is_reference` and manual
+verification fields if `state/progress.json` is reset; preserve
+`state/flags.jsonl` unless Austin asks to wipe flag history.
+
+Audit cache invalidation after a contract change is mandatory, not optional.
+Fresh `--re-extract` attempts must delete or invalidate any prior
+`raw_response.json` at attempt start, so a failed fresh call cannot leave a
+reusable old response behind.
 
 ## Minimal Review CSV Contract
 
@@ -407,11 +411,15 @@ Before claiming the implementation complete, run:
 ```bash
 python -m pytest -x
 python -m pipeline.run_pool --filter reference --workers 4 --dry-run
-rg -n "sk-[A-Za-z0-9]{20,}|OPENAI_API_KEY=.*[A-Za-z0-9]{20,}|--raw-extraction|--print-extractor-prompt|build_extractor_prompt|Claude Code subagent|No model SDK calls|Current (consortium|DropSilent|formal-stage-status|drop-classification|comparison-noise) doctrine|agent loop|top-level pipeline script|manually routed" .
 ```
 
-Also run these contract-specific commands after implementing the required
-interfaces:
+Then run the project stale/secret `rg` scan from the active task request or
+operator checklist. Keep that scan out of this spec so it does not self-match
+historical phrases.
+
+Run these contract-specific commands when their inputs exist. `build_reference`
+is local code verification. `render_review_csv` and `scoring/diff.py` become
+post-extraction rollout checks after Austin administers a fresh reference run:
 
 ```bash
 python scripts/build_reference.py --all

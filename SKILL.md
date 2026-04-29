@@ -114,8 +114,9 @@ python run.py --slug X --print-prompt
 python run.py --slug X --extract --extract-reasoning-effort high
 ```
 
-`--re-validate` uses the cached raw response when valid for the current
-rulebook. `--re-extract` forces a fresh model call.
+`--re-validate` uses the cached raw response only when valid for the current
+rulebook and current prompt/schema contract. `--re-extract` forces a fresh model
+call and clears stale raw-response cache before the attempt.
 `pipeline.run_pool` and `run.py` default both extractor and adjudicator
 reasoning effort to `high`, and pass explicit overrides through to the
 Responses API when provided. On Linkflow, `xhigh` is capped at

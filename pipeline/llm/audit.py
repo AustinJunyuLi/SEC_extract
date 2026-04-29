@@ -69,11 +69,13 @@ class AuditWriter:
         result: CompletionResult,
         parsed_json: dict[str, Any],
         rulebook_version: str,
+        extractor_contract_version: str,
     ) -> None:
         payload = {
             "schema_version": "v1",
             "slug": self.slug,
             "rulebook_version": rulebook_version,
+            "extractor_contract_version": extractor_contract_version,
             "model": result.model,
             "raw_text": result.text,
             "parsed_json": parsed_json,

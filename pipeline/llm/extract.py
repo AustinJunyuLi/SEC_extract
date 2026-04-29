@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from copy import deepcopy
@@ -12,12 +13,27 @@ from pipeline import core
 
 from .audit import AuditWriter, TokenUsage
 from .client import CompletionResult, LLMClient
-from .response_format import SCHEMA_R1, call_json
+from .response_format import SCHEMA_R1, call_json, schema_hash
 
 
 EXTRACTOR_RULE_FILES = ("schema.md", "events.md", "bidders.md", "bids.md", "dates.md")
 MAX_BACKGROUND_SECTION_PAGES = 35
 MIN_BACKGROUND_SECTION_CHARS = 1500
+
+
+def extractor_contract_version() -> str:
+    """Hash the static extractor prompt plus local response schema mirror.
+
+    `rulebook_version()` covers `rules/*.md`. This hash covers the two other
+    inputs that make a cached raw response stale even when the rules do not
+    change: `prompts/extract.md` and the Python schema mirror used for local
+    Linkflow validation.
+    """
+    h = hashlib.sha256()
+    h.update((core.REPO_ROOT / "prompts" / "extract.md").read_bytes())
+    h.update(b"\n---SCHEMA_R1---\n")
+    h.update(schema_hash(SCHEMA_R1).encode("ascii"))
+    return h.hexdigest()
 
 BACKGROUND_START_RE = re.compile(
     r"\bBackground\s+of\s+the\s+(?:Merger|Offer|Transaction)\b",
@@ -263,6 +279,7 @@ async def extract_deal(
         result=completion,
         parsed_json=parsed,
         rulebook_version=rulebook_version,
+        extractor_contract_version=extractor_contract_version(),
     )
     audit.append_call({
         "ts": core._now_iso(),

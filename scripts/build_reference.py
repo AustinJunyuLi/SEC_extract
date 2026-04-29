@@ -1,9 +1,11 @@
 """scripts/build_reference.py — Convert Alex's xlsx to reference/alex/{slug}.json.
 
-One-time conversion. Reads deal row ranges from
+Reference conversion. Reads deal row ranges from
 `reference/deal_details_Alex_2026.xlsx` (sheet `deal_details`), applies the
-resolved §Q1–§Q7 overrides, maps to the §R1 schema, emits one JSON per deal
-conformant to `rules/schema.md`.
+resolved §Q1–§Q7 overrides, maps to the current comparison-reference shape, and
+emits one JSON per reference deal. These files are comparator inputs, not full
+live extractor outputs, because Alex's workbook does not contain filing
+`source_quote` / `source_page` evidence.
 
 USAGE
 -----

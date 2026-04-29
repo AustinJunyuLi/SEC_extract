@@ -507,20 +507,160 @@ def test_prepare_for_validate_applies_failed_promotion_flag_and_canonicalizes():
     assert "unnamed_nda_promotion" not in prepared["events"][1]
 
 
-def test_prepare_for_validate_drops_extra_deal_fields_with_info_flag():
+def test_prepare_for_validate_rejects_extra_deal_fields():
     raw = {
         "deal": _current_deal(FormType="DEFM14A"),
         "events": [],
     }
     filing = pipeline.Filing(slug="synthetic", pages=[])
 
-    prepared, _, _ = pipeline.prepare_for_validate("synthetic", raw, filing=filing)
+    with pytest.raises(ValueError, match="unexpected current AI-produced field"):
+        pipeline.prepare_for_validate("synthetic", raw, filing=filing)
 
-    assert "FormType" not in prepared["deal"]
-    assert prepared["deal"]["deal_flags"] == [
-        {
-            "code": "raw_deal_extra_fields_dropped",
-            "severity": "info",
-            "reason": "Dropped non-contract extractor deal field(s): ['FormType']",
-        }
-    ]
+
+def test_successful_unnamed_nda_promotion_leaves_visible_flag(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    env.seed_deal("synthetic")
+    env.seed_filing(
+        "synthetic",
+        pages=[{
+            "number": 1,
+            "content": (
+                "Strategic 1 executed a confidentiality agreement. "
+                "Party E submitted a preliminary indication of interest. "
+                "The parties executed the merger agreement."
+            ),
+        }],
+    )
+    monkeypatch.setattr(pipeline, "rulebook_version", lambda: "rules-v1")
+    raw = {
+        "deal": _current_deal(
+            bidder_registry={
+                "bidder_01": {
+                    "resolved_name": "Party E",
+                    "aliases_observed": ["Party E"],
+                    "first_appearance_row_index": 2,
+                }
+            }
+        ),
+        "events": [
+            {
+                "BidderID": 1,
+                "process_phase": 1,
+                "role": "bidder",
+                "exclusivity_days": None,
+                "bidder_name": None,
+                "bidder_alias": "Strategic 1",
+                "bidder_type": "s",
+                "bid_note": "NDA",
+                "bid_type": None,
+                "bid_type_inference_note": None,
+                "drop_initiator": None,
+                "drop_reason_class": None,
+                "final_round_announcement": None,
+                "final_round_extension": None,
+                "final_round_informal": None,
+                "press_release_subject": None,
+                "invited_to_formal_round": None,
+                "submitted_formal_bid": None,
+                "bid_date_precise": "2020-01-01",
+                "bid_date_rough": None,
+                "bid_value": None,
+                "bid_value_pershare": None,
+                "bid_value_lower": None,
+                "bid_value_upper": None,
+                "bid_value_unit": None,
+                "consideration_components": None,
+                "additional_note": None,
+                "comments": None,
+                "source_quote": "Strategic 1 executed a confidentiality agreement.",
+                "source_page": 1,
+                "flags": [],
+            },
+            {
+                "BidderID": 2,
+                "process_phase": 1,
+                "role": "bidder",
+                "exclusivity_days": None,
+                "bidder_name": "bidder_01",
+                "bidder_alias": "Party E",
+                "bidder_type": "s",
+                "bid_note": "Bid",
+                "bid_type": "informal",
+                "bid_type_inference_note": "preliminary indication of interest before formal round",
+                "drop_initiator": None,
+                "drop_reason_class": None,
+                "final_round_announcement": None,
+                "final_round_extension": None,
+                "final_round_informal": None,
+                "press_release_subject": None,
+                "invited_to_formal_round": None,
+                "submitted_formal_bid": None,
+                "bid_date_precise": "2020-01-02",
+                "bid_date_rough": None,
+                "bid_value": None,
+                "bid_value_pershare": None,
+                "bid_value_lower": None,
+                "bid_value_upper": None,
+                "bid_value_unit": None,
+                "consideration_components": None,
+                "additional_note": None,
+                "comments": None,
+                "unnamed_nda_promotion": {
+                    "target_bidder_id": 1,
+                    "promote_to_bidder_alias": "Party E",
+                    "promote_to_bidder_name": "bidder_01",
+                    "reason": "Party E is the later named Strategic 1 placeholder.",
+                },
+                "source_quote": "Party E submitted a preliminary indication of interest.",
+                "source_page": 1,
+                "flags": [],
+            },
+            {
+                "BidderID": 3,
+                "process_phase": 1,
+                "role": "bidder",
+                "exclusivity_days": None,
+                "bidder_name": "bidder_01",
+                "bidder_alias": "Party E",
+                "bidder_type": "s",
+                "bid_note": "Executed",
+                "bid_type": None,
+                "bid_type_inference_note": None,
+                "drop_initiator": None,
+                "drop_reason_class": None,
+                "final_round_announcement": None,
+                "final_round_extension": None,
+                "final_round_informal": None,
+                "press_release_subject": None,
+                "invited_to_formal_round": None,
+                "submitted_formal_bid": None,
+                "bid_date_precise": "2020-01-03",
+                "bid_date_rough": None,
+                "bid_value": None,
+                "bid_value_pershare": None,
+                "bid_value_lower": None,
+                "bid_value_upper": None,
+                "bid_value_unit": None,
+                "consideration_components": None,
+                "additional_note": None,
+                "comments": None,
+                "source_quote": "The parties executed the merger agreement.",
+                "source_page": 1,
+                "flags": [],
+            },
+        ],
+    }
+    filing = pipeline.load_filing("synthetic")
+    prepared, _, promotion_log = pipeline.prepare_for_validate("synthetic", raw, filing=filing)
+    validation = pipeline.validate(prepared, filing)
+
+    pipeline.finalize_prepared("synthetic", prepared, filing, validation, promotion_log)
+    final = json.loads(env.extractions.joinpath("synthetic.json").read_text())
+
+    assert "_unnamed_nda_promotions" not in final["deal"]
+    promoted_nda = final["events"][0]
+    assert promoted_nda["bidder_name"] == "bidder_01"
+    assert promoted_nda["bidder_alias"] == "Party E"
+    assert any(flag["code"] == "nda_promoted_from_placeholder" for flag in promoted_nda["flags"])
+    assert "unnamed_nda_promotion" not in final["events"][1]

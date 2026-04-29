@@ -67,8 +67,9 @@ python -m pipeline.run_pool --slugs medivation,imprivata --workers 2
 
 Use `--dry-run` to inspect selection without requiring an API key. Use
 `--re-validate` to reuse `output/audit/{slug}/raw_response.json` only when its
-`rulebook_version` matches the current rulebook. Use `--re-extract` for a
-fresh SDK extraction.
+`rulebook_version` matches the current rulebook and its
+`extractor_contract_version` matches the current prompt/schema contract. Use
+`--re-extract` for a fresh SDK extraction.
 
 Reasoning effort defaults to `high` for both extractor and adjudicator calls:
 
@@ -171,15 +172,16 @@ deal. It must conform to `rules/schema.md` and include pipeline-stamped
 
 `output/audit/{slug}/` is the audit cache:
 
-- `raw_response.json`: raw model text, parsed JSON, model, slug, and
-  `rulebook_version`.
+- `raw_response.json`: raw model text, parsed JSON, model, slug,
+  `rulebook_version`, and `extractor_contract_version`.
 - `prompts/*.txt`: exact SDK prompts.
 - `calls.jsonl`: model-call metadata, token usage, retries, watchdog data.
 - `manifest.json`: run summary, cache outcome, and `api_endpoint: "responses"`.
 
 Fresh `run` and `re_validate` actions clear stale `calls.jsonl` and prompt
-files before writing current-run audit metadata; `raw_response.json` is reused
-only for a valid `--re-validate` cache and overwritten by fresh extraction.
+files before writing current-run audit metadata; fresh `run` also deletes any
+old `raw_response.json` before the SDK call. `raw_response.json` is reused only
+for a valid `--re-validate` cache and overwritten by fresh extraction.
 Audit artifacts exist for reproducibility and re-validation. They are not a
 second source of truth after finalization.
 
@@ -216,52 +218,11 @@ invariants pass, and the rulebook remains unchanged across three consecutive
 clean full-reference runs. Any rulebook, prompt, schema, state, or output-format
 change resets that clock.
 
-Current consortium doctrine: atomize identifiable buyer-group constituents.
-`ConsortiumCA` remains bidder-side only and never counts toward the auction
-threshold, but it can support later atomized buyer-group `Bid` / `Drop` /
-`Executed` lifecycle rows when those rows carry `buyer_group_constituent`.
-Alex comparison reports should treat AI atomization vs Alex aggregation as a
-taxonomy bucket, not ordinary AI-only/Alex-only noise.
-
-Current DropSilent doctrine: `DropSilent` is only true filing silence after a
-target-side `NDA`. Any bidder-specific narrated inactivity, withdrawal,
-failure to bid, no-response, target rejection, not-advanced outcome, or process
-exit is explicit `Drop`. Identifiable or countable group-narrated outcomes are
-atomized as explicit `Drop` rows; vague uncountable group outcomes become one
-placeholder `Drop` with an ambiguity flag. The comparator filters true
-`DropSilent` rows but reports `drop_silent_vs_explicit_drop` when a filtered
-AI `DropSilent` matches Alex's explicit `Drop` for the same bidder.
-
-Current formal-stage-status doctrine: `invited_to_formal_round` and
-`submitted_formal_bid` are current-schema enrichment fields on informal current
-process `Bid` rows. The extractor may set them true/false only when the filing
-supports that bidder-specific advancement or submission status. Otherwise leave
-them null and flag the uncertainty. The comparator suppresses AI bool vs Alex
-null on these fields as source-workbook missingness because Alex's converted
-reference usually lacks this newer structure; validator checks, not the
-reference diff, enforce row-scope placement. Non-null disagreements remain
-review items.
-
-Current drop-classification doctrine: filing verb subject controls
-`drop_initiator`; use `"unknown"` only for genuinely ambiguous agency.
-Specific reason classes beat generic classes: target non-advancement is
-`"never_advanced"`, target threshold/reserve/refusal-to-match is
-`"below_minimum"`, bidder failure to respond/submit/reiterate is
-`"no_response"`, and transaction-scope mismatch is `"scope_mismatch"` with
-initiator from the verb subject. The comparator suppresses Alex
-`drop_initiator = "unknown"` and null `drop_reason_class` under-specification
-when AI has supported current-schema detail; null `drop_initiator` remains
-visible as a converter/schema omission, and non-null conflicts remain review
-items.
-
-Current comparison-noise doctrine: `scoring/diff.py` suppresses two known
-source-workbook placement artifacts that are not extraction-quality problems.
-If the current extraction leaves `DateEffective = null` because the filing
-does not state closing/effective date, Alex's non-null legacy effective date is
-ignored in deal-level diffs. If Alex's legacy `bid_value` column contains the
-same per-share amount that the current extraction correctly stores in
-`bid_value_pershare` with `bid_value_unit = "USD_per_share"`, the duplicate
-placement noise is ignored. True numeric bid-value conflicts remain visible.
+Behavior-specific extraction doctrine lives in `rules/*.md`, with validator
+checks in `rules/invariants.md` and `pipeline/core.py`. AI-vs-Alex comparison
+suppression lives in `scoring/diff.py`. Do not restate those doctrines in this
+high-level operating file; point future readers to the owning rule or comparator
+section instead.
 
 ## Target-Deal Gate
 
@@ -298,6 +259,7 @@ asks and it does not start extraction.
 | `output/audit/` | Prompt, raw-response, and call audit cache. |
 | `scripts/fetch_filings.py` | Filing fetcher. |
 | `scripts/build_reference.py` | Reference JSON builder with documented Alex-workbook overrides. |
+| `scripts/render_review_csv.py` | Pure projection from finalized extraction JSON to Alex-facing review CSV. |
 | `scripts/smoke_linkflow.py` | Optional real-key Linkflow Responses smoke test. |
 | `tests/` | Runtime, prompt, LLM wrapper, converter, diff, and invariant tests. |
 

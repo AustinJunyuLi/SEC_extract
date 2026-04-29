@@ -117,7 +117,7 @@ The filing text is already embedded in the user message; do not fetch from SEC/E
     }
     ```
 
-    `pipeline.finalize()` applies the promotion deterministically: the target NDA row's `bidder_alias` / `bidder_name` are rewritten, and the hint is stripped from the Bid row before the canonical JSON is written. `promote_to_bidder_name` must already exist as a key in `bidder_registry` (so register it at first bid-time naming). Use this whenever a named `Bid` row's bidder has no earlier `NDA` row under the same `bidder_name` in the same `process_phase` — `§P-D6` (NDA-before-bid precondition) is a Python validator hard flag.
+    `pipeline.prepare_for_validate()` applies the promotion deterministically before validation: the target NDA row's `bidder_alias` / `bidder_name` are rewritten, the promoted NDA row receives an `nda_promoted_from_placeholder` info flag, and the hint is stripped from the Bid row before the canonical JSON is written. `promote_to_bidder_name` must already exist as a key in `bidder_registry` (so register it at first bid-time naming). Use this whenever a named `Bid` row's bidder has no earlier `NDA` row under the same `bidder_name` in the same `process_phase` — `§P-D6` (NDA-before-bid precondition) is a Python validator hard flag.
 - **Stop if any rule is 🟥 OPEN.** Report `"status": "blocked_by_open_rule"` and list the open questions you encountered. Do not improvise.
 
 ## Output format

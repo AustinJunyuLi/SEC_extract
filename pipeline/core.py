@@ -1448,12 +1448,21 @@ def _invariant_p_s1(events: list[dict]) -> list[dict]:
     bidder. This invariant fires only when the extractor failed to emit
     that required DropSilent (or any other follow-up). It is a backstop,
     not an expected-noise channel."""
-    flags: list[dict[str, Any]] = []
-    by_name: dict[str, list[tuple[int, dict]]] = {}
-    for i, ev in enumerate(events):
+    def identity_key(ev: dict) -> str | None:
         name = ev.get("bidder_name")
         if name is not None:
-            by_name.setdefault(name, []).append((i, ev))
+            return f"name:{name}"
+        alias = ev.get("bidder_alias")
+        if alias not in (None, "", []):
+            return f"alias:{alias}"
+        return None
+
+    flags: list[dict[str, Any]] = []
+    by_identity: dict[str, list[tuple[int, dict]]] = {}
+    for i, ev in enumerate(events):
+        key = identity_key(ev)
+        if key is not None:
+            by_identity.setdefault(key, []).append((i, ev))
 
     for i, ev in enumerate(events):
         if ev.get("bid_note") != "NDA":
@@ -1462,15 +1471,15 @@ def _invariant_p_s1(events: list[dict]) -> list[dict]:
             continue
         if _phase(ev) == 0:
             continue  # stale prior NDA — excluded per §L1
-        name = ev.get("bidder_name")
-        if name is None:
-            continue  # anonymous NDA — cannot trace follow-up
-        later = [(j, e) for (j, e) in by_name.get(name, []) if j > i]
+        key = identity_key(ev)
+        if key is None:
+            continue  # anonymous NDA with no alias — cannot trace follow-up
+        later = [(j, e) for (j, e) in by_identity.get(key, []) if j > i]
         has_followup = any(e.get("bid_note") in BID_NOTE_FOLLOWUPS for _, e in later)
         if not has_followup:
             flags.append({
                 "row_index": i, "code": "missing_nda_dropsilent", "severity": "soft",
-                "reason": f"bidder_name={name!r} signed NDA at row {i} but no DropSilent (or other follow-up) was emitted; per §I1 the extractor must emit DropSilent for silent signers",
+                "reason": f"bidder identity={key!r} signed NDA at row {i} but no DropSilent (or other follow-up) was emitted; per §I1 the extractor must emit DropSilent for silent signers",
             })
     return flags
 
@@ -2039,6 +2048,14 @@ def _apply_unnamed_nda_promotions(
                 existing_aliases = bidder_registry[new_name]["aliases_observed"]
             if old_alias and old_alias not in existing_aliases:
                 existing_aliases.append(old_alias)
+        target.setdefault("flags", []).append({
+            "code": "nda_promoted_from_placeholder",
+            "severity": "info",
+            "reason": (
+                f"promoted from placeholder bidder_alias={old_alias!r} "
+                f"via BidderID {target_id}: {promo.get('reason')}"
+            ),
+        })
         ev.pop("unnamed_nda_promotion", None)
         log.append({
             "row_index": i,
@@ -2103,12 +2120,7 @@ def _canonicalize_order(raw_extraction: dict[str, Any]) -> None:
 
 
 def _enforce_extractor_deal_contract(raw_extraction: dict[str, Any]) -> None:
-    """Reject missing deal fields and strip non-contract extras.
-
-    Missing fields mean the extractor failed the live schema contract. Extra
-    fields are not accepted as output, but they are stripped with an info flag
-    so a provider/model that adds harmless metadata does not fail a deal.
-    """
+    """Reject missing or extra deal fields from extractor output."""
     deal = raw_extraction.get("deal")
     if not isinstance(deal, dict):
         raise ValueError(
@@ -2123,17 +2135,10 @@ def _enforce_extractor_deal_contract(raw_extraction: dict[str, Any]) -> None:
             f"current AI-produced field(s): {missing}"
         )
     if unexpected:
-        for name in unexpected:
-            deal.pop(name, None)
-        flags = deal.get("deal_flags")
-        if not isinstance(flags, list):
-            flags = []
-            deal["deal_flags"] = flags
-        flags.append({
-            "code": "raw_deal_extra_fields_dropped",
-            "severity": "info",
-            "reason": f"Dropped non-contract extractor deal field(s): {unexpected}",
-        })
+        raise ValueError(
+            "raw_deal_schema_violation: extractor deal object has unexpected "
+            f"current AI-produced field(s): {unexpected}"
+        )
 
 
 def prepare_for_validate(
@@ -2189,8 +2194,6 @@ def finalize_prepared(
     deal_obj["rulebook_version"] = current_rulebook_version
     deal_obj["last_run"] = run_ts
     deal_obj["last_run_id"] = run_id
-    if promotion_log:
-        deal_obj["_unnamed_nda_promotions"] = promotion_log
     status, flag_count, notes = summarize(final)
     out_path = write_output(slug, final)
     with _state_file_lock():

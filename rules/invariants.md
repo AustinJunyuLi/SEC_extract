@@ -278,10 +278,10 @@ comparable across deals.
   names a bidder whose NDA was emitted as an unnamed §E3 placeholder,
   the extractor attaches an `unnamed_nda_promotion` hint on the named
   Bid row. `pipeline._apply_unnamed_nda_promotions` applies the hint
-  before §P-D6 runs, rewriting the placeholder NDA's `bidder_name` to
-  the promoted value. Successful promotions satisfy §P-D6
-  automatically; failed promotions leave the hint in place and §P-D6
-  fires hard.
+  before §P-D6 runs, rewriting the placeholder NDA's `bidder_name` to the
+  promoted value and adding an `nda_promoted_from_placeholder` info flag on the
+  promoted row. Successful promotions satisfy §P-D6 automatically; failed
+  promotions leave the hint in place and §P-D6 fires hard.
 
 ---
 
@@ -293,8 +293,11 @@ story; severities are listed per invariant.
 ### §P-S1 — NDA-only signer must have DropSilent (SOFT)
 - **Check.** For every row with `bid_note = NDA` and `role = "bidder"`
   in `process_phase >= 1`, there exists a later row with the same
-  `bidder_name` having one of: a bid (informal or formal), any dropout
+  bidder identity having one of: a bid (informal or formal), any dropout
   code (including `DropSilent`), or the `Executed` row (if they won).
+  Named rows match by `bidder_name`. Exact-count unnamed placeholders with
+  `bidder_name = null` match by `bidder_alias`, because §E5 aliases such as
+  `"Financial 1"` are count-bound row handles until promotion.
   Per `rules/events.md` §I1, silent NDA signers are represented by an
   emitted `DropSilent` row immediately following their NDA.
 - **Fail action.** Flag `missing_nda_dropsilent`. **Soft.**

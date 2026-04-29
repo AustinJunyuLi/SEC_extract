@@ -1,12 +1,15 @@
 # reference/alex/
 
-**Purpose.** Alex Gorbenko's hand-corrected extractions of 9 deals, converted from `deal_details_Alex_2026.xlsx` into the pipeline's output JSON schema, plus Alex's own annotations on rows he flagged as problematic.
+**Purpose.** Alex Gorbenko's hand-corrected extractions of 9 deals, converted from `deal_details_Alex_2026.xlsx` into the current comparison-reference JSON shape, plus Alex's own annotations on rows he flagged as problematic.
 
 **Frame.** Alex's workbook is a **reference guideline** for the pipeline — not ground truth. The SEC filing is ground truth. Alex is an expert with decades of context, and his rulebook + corrections are the single best source we have for *how* to extract these filings, but he is human, makes judgment calls, and has flagged some of his own rows as wrong. During development, Austin manually re-reads the filing for every AI-vs-Alex divergence and adjudicates on the merits.
 
 ## What this folder contains
 
-- `{deal-slug}.json` — one file per reference deal, Alex's rows reshaped to conform to `rules/schema.md`.
+- `{deal-slug}.json` — one file per reference deal, Alex's rows reshaped for
+  AI-vs-Alex comparison. These are not full live extractor outputs: Alex's
+  workbook does not contain filing `source_quote` / `source_page` evidence, and
+  the comparator treats them as a reference projection.
 - `alex_flagged_rows.json` — rows Alex himself flagged as wrong or that violate a basic structural invariant. Used to contextualize diffs, not to exclude rows from comparison.
 - `README.md` — this file.
 
@@ -25,7 +28,7 @@ Deal slugs (match `seeds.csv`):
 
 `scripts/build_reference.py` reads the relevant row ranges from
 `../deal_details_Alex_2026.xlsx`, maps source workbook columns to the resolved
-pipeline schema, and writes JSON here.
+comparison-reference schema, and writes JSON here.
 
 Current behavior:
 - applies the §Q overrides defined in the `scripts/build_reference.py`
