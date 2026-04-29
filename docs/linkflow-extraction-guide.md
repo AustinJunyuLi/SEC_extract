@@ -62,7 +62,8 @@ keeps the connection active while the model is working and producing output.
 Prompt-only JSON matters on Linkflow. Linkflow/NewAPI-compatible providers may
 not handle strict OpenAI structured-output payloads the same way OpenAI's native
 endpoint does. The current client therefore disables structured output for
-Linkflow and lets Python enforce the live contract after parsing.
+Linkflow and lets Python enforce the live contract after parsing. This is a
+transport choice, not a relaxed local schema.
 
 Section slicing matters. The extractor should receive the isolated Background
 section with original page numbers, not the full filing and not table-of-
@@ -70,7 +71,7 @@ contents/cross-reference pages. This reduces latency, proxy exposure, and quote
 verification noise.
 
 Python validation matters. Linkflow should only do the extraction and scoped
-adjudication. The repo owns schema enforcement, stale-field quarantine, source
+adjudication. The repo owns schema enforcement, stale-field rejection, source
 quote checks, date/BidderID checks, and finalization.
 
 ## What Makes Linkflow Shaky
@@ -120,17 +121,18 @@ The extractor's `deal` object must contain only current AI-produced fields:
 Do not emit `slug`, `FormType`, `URL`, `DateFiled`, `CIK`, `accession`,
 `rulebook_version`, `last_run`, or `last_run_id`. Those are manifest,
 orchestration, or finalization fields. Missing current deal fields hard-fail.
-Unexpected deal fields are stripped and logged with an info flag so they never
-ship as live output.
+Unexpected deal fields hard-fail locally; they are not stripped, repaired, or
+allowed to ship as live output.
 
 Every event row still needs exact `source_quote` and `source_page`. Quotes must
 be verbatim slices from the embedded Background pages, one paragraph at most,
 targeted at no longer than 1500 characters per quote string. There is no soft
 over-target zone; above 1500 characters is a hard validator flag.
 
-Fresh runs clear stale `calls.jsonl` and prompt files before writing current
-audit metadata. A failed fresh rerun preserves any prior successful live
-progress state and records the failure in the audit manifest.
+Fresh runs clear stale `calls.jsonl`, prompt files, and `raw_response.json`
+before attempting a current extraction. A failed fresh rerun preserves any prior
+successful live progress state and records the failure in the audit manifest,
+but it must not leave an older raw response reusable by `--re-validate`.
 
 `scoring/diff.py` intentionally suppresses known source-workbook placement
 noise: Alex effective dates are ignored when the current filing-grounded

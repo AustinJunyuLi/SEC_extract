@@ -47,9 +47,10 @@ Out of scope:
    invariant enforcement.
 4. **No fallback compatibility.** Stale labels, stale fields, stale artifacts,
    and old placeholder behavior fail or are deleted.
-5. **Reference data is regenerated projection.** Alex's raw workbook and PDF are
-   source artifacts. `reference/alex/*.json` is generated under the current
-   schema and rulebook.
+5. **Reference data is comparison projection.** Alex's raw workbook and PDF are
+   source artifacts. `reference/alex/*.json` is regenerated under the current
+   rulebook as a comparison target, not as live extractor output. It may omit
+   filing evidence fields that Alex's workbook does not contain.
 6. **Review output is display-only.** Alex-facing CSVs help humans review rows;
    they do not introduce new extraction semantics or identities.
 
@@ -121,7 +122,9 @@ extraction JSON.
 `prompts/extract.md` becomes an operating prompt. It keeps instructions needed
 at generation time:
 
-- produce one JSON object with `deal`, `events`, and `bidder_registry`;
+- produce one JSON object with exactly the top-level keys `deal` and `events`;
+- put `bidder_registry` inside `deal.bidder_registry`, never as a top-level
+  sibling;
 - follow the rulebook sections included in the SDK system message;
 - cite every event with `source_quote` and `source_page`;
 - keep quotes within the 1500-character hard cap;
@@ -149,11 +152,15 @@ section rather than become a second canonical tree.
 
 ## Validator and Code Contract
 
-Python becomes the deterministic enforcement layer for the live rulebook.
+Python becomes the deterministic enforcement layer for the live rulebook. This
+does not mean sending strict schema payloads to Linkflow. Linkflow uses
+prompt-only JSON over the wire; Python enforces the strict schema after parsing.
 
 Required enforcement:
 
 - full event schema validation because Linkflow uses prompt-only JSON;
+- exact top-level output shape `{deal, events}` with no top-level
+  `bidder_registry` or other siblings;
 - required fields, allowed enum values, nullability, and unknown-field rejection;
 - closed extractor and validator flag vocabulary, published as an explicit
   table in `rules/invariants.md` or the relevant primary owner sections and
@@ -168,6 +175,8 @@ Required enforcement:
   `rules/bids.md` §G owner;
 - hard failure for canonical IDs on pure exact-count placeholder rows;
 - successful `unnamed_nda_promotion` behavior with visible final-output trace;
+- no private or underscore-prefixed promotion residue in finalized extraction
+  JSON;
 - narrowed adjudicator routing to an explicit allow-list of semantic soft flag
   codes. Registry hygiene, schema failures, and deterministic row-scope issues
   are not adjudicator work.
@@ -185,7 +194,8 @@ in order:
 
 1. Update rules, schema, prompt, validator, reference-converter code, and tests
    atomically.
-2. Regenerate `reference/alex/*.json` from `scripts/build_reference.py`.
+2. Regenerate `reference/alex/*.json` from `scripts/build_reference.py` under
+   the comparison-reference contract.
 3. Delete stale generated extraction, audit, state, scoring, and review outputs.
 4. Re-extract the nine reference deals under the new contract.
 5. Generate AI-vs-Alex diff reports.
@@ -193,6 +203,11 @@ in order:
 
 This order matters. Re-extracting under the new contract while comparing against
 old reference JSONs produces misleading diff output.
+
+`reference/alex/*.json` is intentionally not a full live-extraction artifact:
+Alex's workbook does not contain filing `source_quote` / `source_page` evidence.
+The live AI output must satisfy the evidence requirement; the Alex reference
+projection is allowed to omit those fields or keep them null as comparator input.
 
 `rulebook_version` is not manually bumped. It is the SHA-256 content hash
 computed by `pipeline.core.rulebook_version()` from current `rules/*.md`
@@ -221,7 +236,9 @@ Delete or regenerate:
 
 `--re-validate` must refuse stale audit cache entries whose recorded
 `rulebook_version` does not match the current rulebook. Audit cache invalidation
-after a contract change is mandatory, not optional.
+after a contract change is mandatory, not optional. Fresh `--re-extract`
+attempts must delete or invalidate any prior `raw_response.json` at attempt
+start, so a failed fresh call cannot leave a reusable old response behind.
 
 ## Minimal Review CSV Contract
 
