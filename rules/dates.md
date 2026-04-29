@@ -336,19 +336,14 @@ uses `final_round_announcement` to choose between those ranks.
 **Within-rank tie-break.** Filing narrative order (top-to-bottom as
 events appear in the Background section).
 
-**Example — Petsmart 12 NDAs on 10/07/2014.**
-- All 12 NDAs are rank 5.
-- Within rank 5, emit in filing narrative order (Party A, Party B, ...
-  as they're listed in the filing).
-- `BidderID` increments 1 per row across the 12 NDAs.
+**Same-date count clusters.** When multiple rows share the same date and
+rank, emit them in filing narrative order. `BidderID` increments one per
+event row across the cluster.
 
-**Example — Providence 7/20/2016.**
-- Filing has 4 informal bids + a non-announcement `Final Round` row on
-  the same date.
-- Informal bids (rank 6) come before the non-announcement `Final Round`
-  row (rank 9).
-- Within the 4 informal bids, filing narrative order.
-- Final result: 4 informal-bid rows, then 1 final-round row.
+**Same-date final-round submissions.** If a filing narrates multiple informal
+bids and a non-announcement `Final Round` milestone on the same date, the
+informal bids (rank 6) sort before the non-announcement `Final Round` row
+(rank 9); within the bid cluster, preserve filing narrative order.
 
 **Why logical ordering.** Reflects actual process flow: announcements
 precede the NDAs they trigger; NDAs precede the bids they enable; bids
@@ -398,12 +393,6 @@ per §A2 and carries the `event_sequence_by_narrative` info flag.
 (§A1/§A2/§A3). Any AI violation is a real defect worth catching.
 Soft-flagging would let sloppy extraction slide through.
 
-**Note on Alex's workbook violations.** Mac Gray row 6960 and
-Medivation row 6070 violate rule 3; Medivation row 6067 violates rule 5.
-These are documented in `reference/alex/alex_flagged_rows.json` and
-**fixed** when building `reference/alex/*.json` (see
-`scripts/build_reference.py` module docstring).
-
 **Rejected alternatives.**
 - **All structural hard, date monotonicity soft** — lenient on the
   ordering semantics we worked hard to resolve; the validator would
@@ -418,14 +407,3 @@ These are documented in `reference/alex/alex_flagged_rows.json` and
 - `rules/invariants.md` §P-D* (validator implementation).
 
 ---
-
-## Alex-flagged rows in the reference workbook (§Q)
-
-The per-override rationale for xlsx → `reference/alex/*.json` conversion
-(§Q1 Saks deletions, §Q2 Zep row 6390 expansion, §Q3 Mac Gray duplicate
-renumber, §Q4 Medivation duplicate renumber, §Q5 Medivation "Several
-parties" atomization) now lives in the `scripts/build_reference.py`
-module docstring, co-located with the code that implements it. The
-original flagged xlsx rows remain in
-`reference/alex/alex_flagged_rows.json`. The AI extractor never consults
-Alex's workbook, so these rules no longer belong in the rulebook.

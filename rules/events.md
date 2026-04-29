@@ -24,7 +24,7 @@ expansion.
 
 **Advisors:**
 - `IB` — investment bank retained.
-- `IB Terminated` — investment bank relationship ended (Mac Gray edge case, kept).
+- `IB Terminated` — investment bank relationship ended.
 
 **Counterparty events:**
 - `NDA` — **target ↔ bidder** confidentiality agreement (auction NDA, Type A per §I3). Grants the bidder access to MNPI; usually paired with a standstill. This is the auction-funnel signal counted by §Scope-1.
@@ -43,15 +43,14 @@ expansion.
 - `Executed` — merger agreement signed (one row per signer under §E1 / §E2.b).
 
 **Prior-process:**
-- `Terminated` — prior sale process formally ended (Zep pattern).
-- `Restarted` — new process begins after prior `Terminated` (Zep pattern).
+- `Terminated` — prior sale process formally ended.
+- `Restarted` — new process begins after prior `Terminated`.
 
 **Total: 18 closed-vocabulary values.** Extractor emits exactly these; anything else → flag `unknown_bid_note`.
 
 **Note on exclusivity.** Exclusivity periods are NOT events in this vocabulary.
 They are encoded as an `exclusivity_days: int` attribute on the associated
-bid row (Zep 6405 pattern). The extractor should never emit a separate
-exclusivity event row.
+bid row. The extractor should never emit a separate exclusivity event row.
 
 **Cross-references.**
 - `rules/events.md` §C2 (capitalization).
@@ -95,13 +94,13 @@ rows as follows:
   publicly.
 - **Bidder approaches with no concrete sale proposal** → `Bidder Interest`.
 - **Activist pressure precedes the process** → `Activist Sale` as a
-  separate row BEFORE `Target Sale` (Petsmart pattern). Per §D1.b,
+  separate row BEFORE `Target Sale`. Per §D1.b,
   multiple separately-narrated activists emit **one row per activist**;
   collapse to a single row only when the filing treats them as a
   coordinated group.
 - **Target initiates private discussions with a specific party without a
   board-level sale resolution** → `Bidder Interest` with
-  `additional_note` including `"target-initiated"` (Mac Gray pattern).
+  `additional_note` including `"target-initiated"`.
 
 `Bidder Interest` is for **first-contact initiation only**. A later
 diligence call, negotiation contact, or follow-up meeting with a bidder who
@@ -115,13 +114,12 @@ does not create another `Target Sale` row.
 
 **Concurrent / overlapping initiation patterns:**
 
-- **"Target contemplating + bidder arrived first"** (Providence row 6024):
-  emit **both** rows, ordered by event date. Target-side board activity and
-  bidder-side approach are separate events; the earlier one comes first.
-- **`Bidder Interest` → `Bidder Sale` transition** (Imprivata Thoma Bravo:
-  Interest 1/31 → Sale 3/09): emit **two separate rows**. No time-gap
-  limit; the transition is signaled by the filing's language shift from
-  "discussions" to "proposal to acquire at $X."
+- When target-side board activity and bidder-side approach are separate
+  events, emit both rows and order them by event date.
+- When a bidder first expresses interest and later makes a concrete
+  acquisition proposal, emit both the first-contact row and the later
+  `Bidder Sale` / `Bid` row. No time-gap limit; the transition is signaled
+  by the filing's language shift from discussions to concrete proposal.
 
 **Evidentiary standard: `Bidder Interest` vs `Bidder Sale`.**
 - `Bidder Interest` — filing describes approach, discussions, NDA signing,
@@ -192,19 +190,9 @@ Schedule 13D…"*).
    coordination at some point) → default to per-activist rows; flag
    `multi_activist_coordination_ambiguous` (soft).
 
-**Examples.**
-- Petsmart (2013–2014): JANA and Longview filed separate 13Ds and
-  pressured the target on different dates → **2 `Activist Sale` rows**,
-  not 1.
-- Coordinated-group example (hypothetical): *"An investor consortium
-  led by X, including Y and Z, filed a joint 13D and issued a press
-  release calling for a sale"* → **rows for X, Y, and Z** if all three
-  constituents are identifiable.
-
-**Reference comparison note.** Alex's Petsmart workbook collapsed JANA +
-Longview into one `Activist Sale` row. Under this rule the AI emits two
-filing-supported rows; Austin reviews that as an AI-vs-Alex disagreement
-against the filing.
+Illustrative coordinated-group pattern: *"an investor consortium led by X,
+including Y and Z, filed a joint 13D and issued a press release calling for
+a sale"* → rows for X, Y, and Z if all three constituents are identifiable.
 
 **Cross-references.**
 - `rules/events.md` §I1 (how drops interact with initiation).
@@ -269,25 +257,6 @@ reserve/minimum" as `"below_minimum"`. The target's minimum may be an
 explicit reserve price or the superior competing bid the board required the
 bidder to match.
 
-**Conversion fixtures.**
-
-| Fixture | `drop_initiator` | `drop_reason_class` | Reason note |
-|---|---|---|---|
-| Imprivata Strategic 1: no longer interested | `"bidder"` | `null` | no longer interested |
-| Imprivata Strategic 2: internal priorities | `"bidder"` | `null` | internal corporate priorities |
-| Imprivata Sponsor A: board would not continue at same valuation | `"target"` | `"never_advanced"` | Board declined to advance at June-9 price |
-| Mac Gray Party C: did not submit or reiterate | `"bidder"` | `"no_response"` | null |
-| Mac Gray Party A: below board's stated threshold | `"target"` | `"below_minimum"` | below board's stated minimum |
-| Mac Gray Party B: contingent value and financing risk | `"target"` | `"target_other"` | financing risk |
-| Saks Sponsor A/E: would not improve above lower range | `"target"` | `"below_minimum"` | below board's stated minimum |
-| Petsmart Industry Participant: not invited because of board concerns | `"target"` | `"target_other"` | board concerns |
-| Petsmart Financial 5/6: below advancement threshold | `"target"` | `"never_advanced"` | below threshold for advancement |
-| Providence lower-price parties not advanced | `"target"` | `"never_advanced"` | lower price than advancing parties |
-| Providence final loser would not match superior offer | `"target"` | `"below_minimum"` | would not match superior offer |
-| STec Company E/F limited-assets mismatch | `"bidder"` | `"scope_mismatch"` | limited-assets scope mismatch |
-| STec Company D diligence-timeline incompatibility | `"bidder"` | `null` | diligence-timeline incompatible |
-| Penford stale-prior parties: discussions did not result in offers | `"unknown"` | `null` | discussions did not result in offers |
-
 **NDA-only rows — bidders who signed but have no later narrated activity.**
 
 A bidder may appear on an `NDA` row and never subsequently bid, drop, or
@@ -308,7 +277,9 @@ Group-narrated outcomes follow the same doctrine:
 - If the filing says an identifiable or countable cohort did not continue,
   failed to bid, declined, withdrew, was rejected, or was not advanced, emit
   atomized `Drop` rows for the supported named parties plus §E5 placeholders
-  for the supported unnamed balance.
+  for the supported unnamed balance. When the cohort is an exact-count
+  unnamed NDA cohort already represented by aliases, reuse those aliases
+  per `rules/bidders.md` §E5.
 - If the filing gives only a vague uncountable group outcome, emit one
   placeholder `Drop` row carrying `{"code": "drop_group_count_unspecified",
   "severity": "soft", "reason": "<short summary of the vague filing
@@ -343,8 +314,7 @@ filing gives us.
 **Consortium drops — split handling.**
 
 When bidders who signed NDAs individually later join as a **joint bidder /
-consortium** (Petsmart pattern: multiple sponsors + strategics sign
-individual NDAs, form a consortium to bid), and that consortium drops:
+consortium** and that consortium drops:
 
 - Emit **one `Drop` row per original bidder** (per their individual NDA),
   citing the consortium drop event.
@@ -389,13 +359,11 @@ legally distinct CA types appear:
   would-be bidders sign a mutual CA to share their proprietary
   analysis, financing plans, or strategic intent before forming a
   consortium. Mutual, not asymmetric. Does NOT grant MNPI access; does
-  NOT involve the target as a party. Examples: petsmart's December 2014
-  CAs between Longview (an activist holder) and the BC Partners-led
-  Buyer Group.
+  NOT involve the target as a party.
 - **Type C — Shareholder ↔ acquirer rollover CA.** A major target
   shareholder agrees to roll their equity into the post-merger entity;
   the CA covers the negotiation period for that side-deal. Operational;
-  not auction-funnel signal. Rare across the 9 reference deals.
+  not auction-funnel signal.
 
 **Decision.**
 
@@ -437,9 +405,10 @@ Austin adjudicates against the filing.
 **ConsortiumCA emission rule.**
 - `bid_note = "ConsortiumCA"`
 - `bidder_name` = canonical id of the named CA signer (the bidder side
-  the filing identifies; for the petsmart example, Longview's id)
-- `bidder_alias` = filing's verbatim label for the consortium relationship
-  (e.g., `"Longview and the Buyer Group"`)
+  the filing identifies)
+- `bidder_alias` = filing's label for the actor represented by
+  `bidder_name`, not the consortium relationship phrase. Preserve the
+  relationship phrase in `source_quote` and, if useful, `additional_note`.
 - `bid_date_precise` = the CA execution date as narrated
 - `source_quote` / `source_page` = the filing language describing the
   consortium CA
@@ -479,7 +448,8 @@ bucket instead of ordinary AI-only/Alex-only noise.
   `Bid` or `Executed` row). Consortium-split `Drop` rows additionally
   carry the `consortium_drop_split` sub-marker per §I1, but the universal
   `buyer_group_constituent` flag is what gates this exemption. A bare
-  `ConsortiumCA` plus an unflagged `Bid` or `Drop` still fails.
+  `ConsortiumCA` plus an unflagged `Bid` or `Drop` still fails; a
+  `consortium_drop_split` flag alone also still fails.
 
 **Why a new event type, not a flag on NDA.**
 - Type A is the auction signal. Mixing types (even with a
@@ -489,11 +459,10 @@ bucket instead of ordinary AI-only/Alex-only noise.
   signal-cleanliness benefit applies to every analysis.
 
 **Why skip Type C, not capture it.**
-- Rare (1 ambiguous instance in petsmart across 9 reference deals).
-- Tangential to auction theory.
-- Capture-cost (extraction time, schema bloat) > value.
-- If a future paper needs rollover behavior, re-extract with a
-  targeted pass.
+- Tangential to the auction-process schema.
+- Capture-cost (extraction time, schema bloat) exceeds current value.
+- If a future paper needs rollover behavior, define that schema explicitly
+  and re-extract with a targeted pass.
 
 **Cross-references.**
 - `rules/events.md` §C1 (vocabulary entry for `NDA` / `ConsortiumCA`).
@@ -506,10 +475,9 @@ bucket instead of ordinary AI-only/Alex-only noise.
 
 ### §I2 — Re-engagement after a drop
 
-**No new event code.** When a bidder drops and later re-engages (Providence
-Party D pattern), the extractor DOES NOT emit a `Reengaged` row. The next
-`NDA` / `Bid` / `Bidder Sale` row for that bidder implicitly signals
-re-entry.
+**No new event code.** When a bidder drops and later re-engages, the extractor
+DOES NOT emit a `Reengaged` row. The next `NDA` / `Bid` / `Bidder Sale` row
+for that bidder implicitly signals re-entry.
 
 **Bookkeeping.** The re-engagement row carries a flag:
 `{"code": "bidder_reengagement", "severity": "info", "reason": "bidder <name> previously dropped at row <row_id>"}`.
@@ -612,12 +580,10 @@ reference cases.
 - When a filing describes an investment bank relationship ending, emit an
   `IB Terminated` row with `bidder_name = <bank canonical id>` and the
   termination date (precise or rough per §B).
-- When a subsequent IB is retained — even the *same* bank (Mac Gray: BofA
-  terminated, then BofA re-hired) — emit a new `IB` row following the
-  initial-retention rules above.
+- When a subsequent IB is retained — even the same bank after termination
+  — emit a new `IB` row following the initial-retention rules above.
 
-**Advisors to acquirers are also emitted.** (Example: Medivation's
-Centerview row as Pfizer's advisor.) This keeps the `IB` event count
+**Advisors to acquirers are also emitted.** This keeps the `IB` event count
 complete for downstream research on advisor effects.
 
 **BidderID.** IB events are deal-side, not bidder-side; they follow the
@@ -712,23 +678,14 @@ date. If no non-announcement row exists, fall back to the most recent
 applicable `Final Round` event in the phase. If none exists, the bid is not
 in a final round and §G1's pre-process-letter informal default may apply.
 
-For validator §P-G3, a same-day non-announcement submission/deadline row may
-appear after the `Bid` row when both are extracted from the same paragraph.
-Do not create duplicate rows solely to satisfy order; create the
-non-announcement row when the filing separately supports the submission or
-deadline state.
-
-**Conversion fixtures.**
-
-| Fixture | `final_round_announcement` | `final_round_informal` | `final_round_extension` |
-|---|---|---|---|
-| Imprivata June 24 process letters requesting final bids | `true` | `false` | `false` |
-| Imprivata July 8 only Thoma Bravo submitted | `false` | `false` | `false` |
-| Mac Gray August 27 revised written-proposal request | `true` | `true` | `false` |
-| Mac Gray September 11 final-indications request | `true` | `false` | `false` |
-| STec May 16 final-round process letters | `true` | `false` | `false` |
-| STec May 29 best-and-final request | `true` | `false` | `true` |
-| STec May 30 reaffirmation / additional-time response | `false` | `false` | `true` |
+For validator §P-G3, the non-announcement submission/deadline row is a
+process-level milestone. One row can support multiple same-round `Bid` rows
+when the filing describes one shared deadline, submission event, or outcome.
+Do not create one milestone row per bidder unless the filing narrates
+bidder-specific milestones. A same-day non-announcement row may appear after
+the `Bid` rows when both are extracted from the same paragraph. A `Bid` row
+does not replace the non-announcement `Final Round` milestone when the same
+passage supports both facts.
 
 **Auction Closed.** Use `Auction Closed` only when the target halts the
 auction without an announced deadline. A go-shop expiry with no topping bid
@@ -771,15 +728,15 @@ language, even when the filing does not explicitly say "final round."
   emitting a final-round row.
 
 **Rejected alternatives.**
-- **Only explicit language** — undercounts final rounds (Petsmart, Medivation
-  both have implicit round cuts).
+- **Only explicit language** — undercounts final rounds when the filing
+  narrates a clear subset invitation without using the phrase "final round."
 - **New weaker code `Round Cut`** — balloons vocabulary; the soft `inferred`
   flag handles the audit-trail need.
 
 **Cross-references.**
 - `rules/events.md` §C1 (vocabulary).
 - `rules/events.md` §K1 (final-round structured columns).
-- `rules/bids.md` §G1 (informal vs formal — determines which `Inf` suffix).
+- `rules/bids.md` §G1 (informal vs formal bid classification).
 
 ---
 
@@ -798,12 +755,10 @@ threshold** (§Scope-1).
   (i.e., the current or restarted process). Stale prior NDAs (`process_phase = 0`)
   do not contribute.
 
-**Rationale.** Preserves Penford's 2007 and 2009 historical record for
-downstream research on prior-process effects, while keeping the auction
-classifier clean. Consistent with Zep's `Terminated`/`Restarted` treatment.
-Aligns the rulebook with Alex's actual behavior (he included Penford's
-prior attempts in his workbook even though his written instructions said to
-ignore stale NDAs).
+**Rationale.** Preserves prior-process context for downstream research while
+keeping the auction classifier clean. Explicit `Terminated` / `Restarted`
+markers stay in the chronology; stale priors are included without counting
+toward the current-process auction threshold.
 
 **Cross-references.**
 - `rules/schema.md` §Scope-1 (auction classifier — non-stale NDAs only).
@@ -819,12 +774,12 @@ ignore stale NDAs).
 **Values.**
 - `0` — **stale prior process.** The process narrated here never reached
   close; it was abandoned with no explicit `Restarted` marker connecting it
-  to the current process. Examples: Penford's 2007 and 2009 attempts.
+  to the current process.
 - `1` — **main / first non-stale process.** The default. For deals with no
-  prior activity (Medivation, Imprivata, etc.), all events are phase 1.
+  prior activity, all events are phase 1.
 - `2` — **restarted process.** The process that follows a formal
-  `Terminated` → `Restarted` marker pair. Zep's second auction is phase 2.
-- `3`, `4`, … — further restarts (not observed in the 9 reference deals; reserved).
+  `Terminated` → `Restarted` marker pair.
+- `3`, `4`, … — further restarts.
 
 **Phase-boundary rules (applied in chronological order).**
 
@@ -845,9 +800,8 @@ ignore stale NDAs).
      restart) and the pre-`Terminated` process is **phase 1**.
    - Events separated from the main/restart chain by a ≥ 180-day gap
      (rule 2) with no `Restarted` linking them are **phase 0** (stale prior).
-   - Multiple stale priors (Penford 2007 and 2009) all share `process_phase = 0`.
-     If research ever needs to distinguish them, add `prior_attempt_index`
-     later.
+   - Multiple stale priors all share `process_phase = 0`. If research ever
+     needs to distinguish them, add `prior_attempt_index` later.
 
 **Extractor guidance.** The extractor assigns `process_phase` as part of
 row emission, using the event chronology and markers. The validator
@@ -863,8 +817,9 @@ rechecks:
 is taken over `{row ∈ events : row.bid_note == "NDA" and row.process_phase ≥ 1 and row.bidder_type not in advisor_types}`.
 
 **Rejected alternatives.**
-- **Infer phase from `bid_note` alone** — works for explicit Zep pattern
-  but fails for Penford's pure-gap priors (no `Terminated` marker).
+- **Infer phase from `bid_note` alone** — fails when prior-process context
+  is separated from the current process by a pure time gap with no explicit
+  `Terminated` marker.
 - **Skip the field; reconstruct downstream** — pushes the judgment call
   (180-day rule) into N different analysis scripts. Cleaner to freeze it
   once at extraction time.

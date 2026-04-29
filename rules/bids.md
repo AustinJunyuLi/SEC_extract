@@ -124,8 +124,7 @@ When all three hold, decide row-vs-note by trigger language:
 
 **Why a single rule, not four sub-cases.** The operational rule is one
 filter (was the reaffirmation a substantive response to a narrated
-process step?) with one default (no → note). The reference cases just
-exemplify the boundary.
+process step?) with one default (no → note).
 
 **Why no separate event vocabulary or new flag.** A reaffirmation row
 IS a `Bid` row. Inventing `Bid Confirmation` as a vocabulary entry, or
@@ -136,34 +135,11 @@ and `additional_note`. Downstream code that wants to count
 reaffirmations across the dataset can grep `additional_note` for the
 trigger phrases.
 
-**Reference deals affected (3 of 9):**
-
-- **zep:** New Mountain's April 2015 reiteration of $20.05
-  best-and-final during merger-agreement negotiations is a verbal
-  reaffirmation, not a response to a new process step → **note**, not
-  a new row. AI today emits a row; after re-extraction it becomes a
-  note on the prior best-and-final row.
-- **penford:** Ingredion's October 14, 2014 confirmation of $19.00
-  the day before signing is pre-signing glue → **note** on the
-  `Executed` row (or fold into its `additional_note`). AI today emits
-  a row; after re-extraction it disappears from the events list.
-- **stec:** WDC's May 30, 2013 verbal confirmation of $9.15 was made
-  in direct response to the board's "best and final by May 30"
-  request → **new `Bid` row**, same price, with `additional_note`
-  capturing the trigger language. AI today already emits a row; the
-  change is to ensure the reaffirmation context lives in
-  `additional_note`.
-
 **Validator implications.** None. A reaffirmation `Bid` row is a
 regular bid row and goes through §G1 / §P-G2 normally. The
 `bid_type_inference_note` for Case 3 reaffirmation rows can read
 *"reaffirmation of formal best-and-final from [prior-row date];
 bid_type inherited"* — that satisfies §P-G2.
-
-**Reference data.** Alex's reference is not regenerated. AI-vs-Alex
-disagreements on these 3 deals are real adjudication signal, not noise
-(Alex's coding here was inconsistent and worth re-evaluating against
-the filing per case).
 
 **Cross-references.**
 - `rules/bids.md` §C3 / §C4 / §G1 / §H1 (the surrounding bid-row
@@ -262,18 +238,14 @@ and process-position fallback to *pick* `bid_type`. But §P-G2
 validates on range, note, or paired/fallback final-round evidence; a
 trigger match alone does not pass.
 Rationale: at 392-deal scale, a closed trigger list overfits the
-9-deal reference corpus. The empirical 9-deal distribution:
-30% of 92 bids relied on trigger hits, 29% on range, 55% on
-inference_note; providence-worcester (22 bids) and penford (8 bids)
-had 0% trigger coverage. Absent a paired/fallback final-round
+observed reference set. Absent a paired/fallback final-round
 classification, the note-on-every-non-range rule holds regardless of
 filing language.
 
 **Cap rationale.** 300 chars ≈ 2–3 sentences, enough for
 `"<classification> per §G1 <rule>: <filing evidence>"`. A tighter
-200-char cap produced truncated reasoning; one observed failure
-(medivation row 16) ran to ~370 chars. 300 leaves headroom without
-inviting essays.
+200-char cap proved too tight for filing-grounded reasoning. 300 leaves
+headroom without inviting essays.
 
 **Validator.** `pipeline._invariant_p_g2`: hard flag
 `bid_type_unsupported` if no satisfier holds; hard flag
@@ -340,14 +312,10 @@ $61.20"). Use the filing-stated implied value as the headline
 `bid_value_pershare` only when the filing gives one; record the exchange
 ratio in `additional_note` as `exchange_ratio: <float>`.
 
-**Reference conversion.** Alex's `comments_1` entries like "20.02 cash +
-1.13 CVR" are preserved for manual review, with the component labels captured
-where the current schema supports them.
-
 **Rejected alternatives.**
 - **Detailed per-component dollar columns in this AI extraction.** Alex does
-  not use them in the reference workbook, and they inflate Austin's manual
-  verification surface for no current research gain.
+  not need them for the current extraction contract, and they inflate
+  Austin's manual verification surface for no current research gain.
 - **Only free-text comments.** Loses the quick all-cash / mixed-consideration
   split that is useful during verification.
 
@@ -502,9 +470,6 @@ current AI extraction scope.
 - `exclusivity_days` is only set on the bid row where exclusivity is
   granted; it's implicitly still active on subsequent rows for the same
   bidder until the exclusivity period expires (not re-stated).
-
-**Migration note.** Alex's `comments_2` entries like "Exclusivity 30 days"
-are parsed into `exclusivity_days: 30` during xlsx → JSON conversion.
 
 **Rejected alternatives.**
 - **Free text only** — makes exclusivity unanalyzable without NLP.
@@ -666,9 +631,8 @@ continuation.
   only the later-phase NDA; the old phase's NDA is a separate row.
 
 **Rationale.**
-- Preserves the earlier-phase record (e.g. Penford 2007/2009 stale
-  priors; Zep's first-attempt bidders carrying into phase 2 after
-  Terminated → Restarted).
+- Preserves the earlier-phase record, including stale priors and bidders
+  carrying into a later phase after a `Terminated` → `Restarted` boundary.
 - Auction classifier (§Scope-1) correctly counts the revived bidder as a
   current-phase NDA signer.
 - §P-D6 (NDA-to-Bid existence) operates within a single `process_phase`,
@@ -680,8 +644,7 @@ continuation.
   loses history and forces §P-D6 violations whenever the bidder bids in
   the later phase.
 - **Single NDA in the later phase only** (ignore prior signing) —
-  undercounts earlier-phase NDAs and breaks the Penford stale-prior
-  inclusion.
+  undercounts earlier-phase NDAs and breaks stale-prior inclusion.
 
 **Cross-references.**
 - `rules/events.md` §L1 (prior-process inclusion).
@@ -726,11 +689,6 @@ ambiguity>"}`. Austin adjudicates against the filing.
 
 **Why skip.** Rollover CAs are not auction-process events; they
 belong to a separate research domain (post-merger capital structure).
-Across the 9 reference deals, only petsmart has any candidate
-narrative for Type C, and even that is ambiguous (Longview's CAs are
-classified as Type B since Longview joined the BC
-Partners-led Buyer Group as a constituent rather than rolling over a
-passive stake).
 
 **Why not capture as a separate event type.** Capture-cost (extraction
 attention, schema entry, downstream filtering) > research value at

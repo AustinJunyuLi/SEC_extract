@@ -89,6 +89,14 @@ Do not substitute typed placeholders for filing labels. If the filing says
 1"` or `"Financial Buyer 1"`. Use typed placeholders only for unnamed exact
 counts where no filing label is available.
 
+For consortium or buyer-group relationship rows, `bidder_alias` still names
+the actor represented by `bidder_name`, not the relationship phrase. If the
+filing says "Longview and the Buyer Group entered into a confidentiality
+agreement" and the row represents Longview, use `bidder_alias = "Longview"`.
+Preserve the full relationship language in `source_quote` and, when useful,
+`additional_note`. Do not add relationship phrases to `aliases_observed`
+unless the filing actually uses the phrase as that actor's standalone label.
+
 **Deal-level registry.** The deal object carries a `bidder_registry` map:
 
 ```json
@@ -167,8 +175,9 @@ canonical ID `bidder_03` stays the same across all rows.
 
 When the filing uses a quantifier for unnamed parties:
 
-- **Exact counts:** "three parties" → 3 placeholder rows (`bidder_name`
-  null, `unnamed_count_placeholder=3` info flag on the first).
+- **Exact counts:** "three parties" → 3 placeholder rows with stable
+  deal-local aliases (`bidder_name = null`, `unnamed_count_placeholder=3`
+  info flag on the first).
 - **"Several":** minimum 3. Emit 3 placeholder rows +
   `unnamed_count_placeholder=3` info flag. If a later narrative reveals a
   higher count, Austin may reconcile it during review.
@@ -177,9 +186,27 @@ When the filing uses a quantifier for unnamed parties:
   `vague_plural_unnamed` info flag. Do not guess a count.
 - **"Certain parties", "various parties":** same as vague plurals.
 
+**Stable exact-count handles.** Exact-count unnamed aliases are lifecycle
+handles, not disposable labels. If an NDA passage creates
+`"Other NDA Signer 1"` through `"Other NDA Signer 18"`, later unnamed
+`Bid`, `Drop`, `DropSilent`, or `Executed` rows for that same cohort must
+reuse those aliases. Do not switch to a second alias family such as
+`"Potential Buyer 1"` through `"Potential Buyer 18"` for later events in
+the same cohort.
+
+If a later unnamed subset is countable but still unidentified, allocate the
+subset to the lowest-numbered compatible open placeholders and attach
+`{"code": "anonymous_subset_allocation", "severity": "info", "reason": "<short filing-grounded allocation note>"}`.
+If the filing is genuinely unclear whether the later unnamed group is the
+same cohort or a new cohort, attach `anonymous_cohort_identity_ambiguous`
+with hard or soft severity as warranted. Do not silently invent a second
+alias family while compatible unnamed NDA handles remain available.
+
 **Rationale.** This is the minimum-bias stance at 392-deal scale.
 Exact-count text should be preserved exactly; `"several"` supports a
-minimum of 3; vaguer plurals should not be over-atomized.
+minimum of 3; vaguer plurals should not be over-atomized. Stable handles
+preserve the lifecycle link from NDA to later bidder activity without
+pretending that the filing revealed real identities.
 
 **Cross-references.**
 - `prompts/extract.md` numeric-count and placeholder instructions.
@@ -263,11 +290,6 @@ execution if winner).
    `rules/dates.md` §A).
 4. Allows the validator to check per-event invariants (`NDA before bid`,
    monotone dates, etc.) without disaggregating on the fly.
-
-**Reference conversion note.** Providence row 6027 (25 NDAs aggregated) and
-Zep row 6390 (5 parties aggregated) are expanded during reference conversion.
-Placeholder names follow §E3; see `reference/alex/README.md` for
-the expansion procedure.
 
 **Rejected alternatives.**
 - **Aggregate by bidder** — fewer rows, but makes multi-bid trajectories

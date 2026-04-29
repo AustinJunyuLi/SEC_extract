@@ -63,7 +63,8 @@ errors.
 - **Fail actions.**
   - Missing field → `missing_evidence`.
   - Quote not on cited page → `source_quote_not_in_page`.
-  - 1500-character hard cap exceeded → `source_quote_too_long`.
+  - 1500-character hard cap exceeded → `source_quote_too_long`, with
+    the offending list element identified for multi-quote rows.
   - List-length mismatch → `source_quote_page_mismatch`.
 - Severity: missing, page mismatch, non-substring, and >1500 chars are
   **hard**. Legitimate one-paragraph multi-event anchors are allowed up to
@@ -253,8 +254,8 @@ comparable across deals.
   (`ConsortiumCA` or a flagged buyer-group `Bid` or `Executed` row).
 - **Fail action.** Flag `bid_without_preceding_nda`. Hard.
 - **Why hard.** Closes the retroactive-naming gap where an AI emits
-  unnamed §E3 NDA placeholders (e.g., Providence Party D/E/F) that
-  are never linked to named Bid rows. Silent NDA-registry breakage
+  unnamed §E3 NDA placeholders that are never linked to named Bid rows.
+  Silent NDA-registry breakage
   would corrupt §Scope-1 auction classification and the §P-S NDA→drop
   story downstream.
 - **Exemptions (row is skipped, no flag emitted).**
@@ -316,6 +317,24 @@ story; severities are listed per invariant.
   emits `drop_silent_vs_explicit_drop` diagnostics when a filtered AI
   `DropSilent` aligns with Alex's explicit `Drop`; Austin adjudicates those
   against the filing.
+
+### §P-S5 — Anonymous exact-count cohort handles stay stable
+- **Check.** For exact-count unnamed NDA placeholders in a phase, later
+  unnamed `Bid`, `Drop`, `DropSilent`, or `Executed` rows with compatible
+  `bidder_type` must reuse the prior placeholder aliases. If a later
+  lifecycle row uses a fresh numeric alias family while compatible unnamed
+  NDA handles already exist, the row must carry
+  `anonymous_cohort_identity_ambiguous`.
+- **Fail action.** Flag `anonymous_alias_family_unstable`. Hard.
+- **Why hard.** Exact-count unnamed aliases are the only lifecycle handles
+  available when `bidder_name = null`. Switching from one alias family to
+  another silently severs NDA-to-bid/drop/execution continuity and corrupts
+  the row-count commitments in `rules/bidders.md` §E5.
+- **Permitted explicit ambiguity.** If the filing genuinely does not make
+  clear whether the later unnamed group is the same cohort or a new cohort,
+  the extractor emits `anonymous_cohort_identity_ambiguous` with a short
+  filing-grounded reason. The validator then treats the ambiguity as
+  explicitly surfaced rather than silently invented.
 
 ### §P-S2 — `auction` flag matches §Scope-1 classifier
 - **Check.** Deal-level `auction` field IFF
@@ -412,20 +431,20 @@ story; severities are listed per invariant.
   `rules/bids.md` §G2. At 392-deal scale, requiring an explicit note
   on every non-range row keeps classification auditable and avoids
   brittle dependence on a closed phrase list.
-- **Why note, not trigger list.** Across the 9-deal reference corpus only
-  ~30% of rows with non-null `bid_type` contained a §G1 trigger phrase;
-  29% were range bids; 55% relied on `bid_type_inference_note`. Providence
-  (22 bids) and Penford (8 bids) had 0% trigger coverage. A trigger-list-only
-  satisfier would be overfit to the reference sample and would force
-  inference-note duplication on rows that already cite filing language.
+- **Why note, not trigger list.** A trigger-list-only satisfier would be
+  brittle across filing drafting styles and would force inference-note
+  duplication on rows that already cite filing language.
 
 ### §P-G3 — Final-round announcement needs submission/deadline pair
 - **Check.** A `Final Round` row with `final_round_announcement = true`
   followed by one or more `Bid` rows in the same `process_phase` must have a
-  paired non-announcement `Final Round` row for those bids. The paired
-  non-announcement row may appear immediately before or after the same-day
-  `Bid` row when both cite the same narrative passage; the invariant is about
-  missing submission/deadline evidence, not row-order formalism.
+  paired non-announcement `Final Round` row for the process-level
+  submission/deadline milestone. One non-announcement row can support multiple
+  same-round `Bid` rows when the filing describes one shared deadline,
+  submission event, or outcome. The paired non-announcement row may appear
+  immediately before or after same-day `Bid` rows when both cite the same
+  narrative passage; the invariant is about missing submission/deadline
+  evidence, not row-order formalism.
 - **Fail action.** Flag `final_round_missing_non_announcement_pair`. Hard.
 
 ---
@@ -458,6 +477,7 @@ story; severities are listed per invariant.
 | §P-S2 | `rules/schema.md` §Scope-1 |
 | §P-S3 | `rules/events.md` §K1/§L2 + `rules/bids.md` §M4 |
 | §P-S4 | `rules/schema.md` §Scope-2 |
+| §P-S5 | `rules/bidders.md` §E5 |
 
 ---
 

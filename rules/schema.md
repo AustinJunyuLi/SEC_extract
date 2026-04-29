@@ -421,12 +421,16 @@ agreement):
 
 When multi-quote, `source_page` and `source_quote` must be lists of the same
 length; element `i` of `source_quote` must appear on page `source_page[i]`.
+The lists may cite the same page more than once when separated snippets from
+that page are needed.
 
 **Length constraint.** A single `source_quote` string is one paragraph at most
 — bounded by the blank-line breaks sec2md emits. Target and hard cap:
 **1500 characters per string**. If more evidence is needed, split into a
 list rather than lengthening a single quote. Above 1500 characters is a hard
-`source_quote_too_long` flag.
+`source_quote_too_long` flag. Choose the shortest exact filing substring that
+supports the row, usually one sentence. Do not cite full paragraphs unless
+every part is needed for the row's date, bidder, value, or classification.
 
 **Validator check.** `rules/invariants.md` §P-R2 enforces:
 1. `source_quote` non-empty.
@@ -435,8 +439,10 @@ list rather than lengthening a single quote. Above 1500 characters is a hard
    `pages[source_page - 1].content`.
 4. In multi-quote form, all four lists/elements align.
 
-Missing evidence, invalid page, non-substring evidence, or >1500-character
-quotes keep the deal at `status: validated` until resolved.
+Missing evidence, invalid page, non-substring evidence, list-shape mismatch,
+or >1500-character quote elements keep the deal at `status: validated` until
+resolved. Stale evidence shapes fail loudly; the pipeline does not truncate,
+strip, repair, or silently accept old quote formats.
 
 **Reproducibility.** `source_page` values are stable only within a given sec2md
 version. `data/filings/{slug}/manifest.json` records `sec2md_version`. Pin
