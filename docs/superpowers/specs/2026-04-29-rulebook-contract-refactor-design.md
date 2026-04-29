@@ -36,8 +36,10 @@ Out of scope:
 
 ## Design Principles
 
-1. **One owner per behavior.** Each recurring extraction behavior has one owning
-   rule section. Other files may point to that section but may not restate it.
+1. **Primary owner per behavior.** Each recurring extraction behavior has one
+   primary owning rule section. Some behaviors necessarily cross schema,
+   prompt, validator, and comparator code, but prose authority has one home.
+   Other files may point to that section but may not restate it.
 2. **Prompt is operational.** The extractor prompt tells the model how to
    produce output and where to look. It is not a second rulebook.
 3. **Python enforces structure.** The model owns reading and judgment. Python
@@ -51,9 +53,11 @@ Out of scope:
 6. **Review output is display-only.** Alex-facing CSVs help humans review rows;
    they do not introduce new extraction semantics or identities.
 
-## Rule Owner Map
+## Primary Rule Owner Map
 
-The refactor uses owning sections, not merely owning files:
+The refactor uses primary owning sections, not merely owning files. Supporting
+sections may implement or validate a behavior, but they cross-reference the
+primary owner instead of re-explaining it.
 
 | Pathway | Owner section |
 |---|---|
@@ -63,13 +67,14 @@ The refactor uses owning sections, not merely owning files:
 | Bid classification | `rules/bids.md` §G1 and §G2, consolidated |
 | Drop / DropSilent | `rules/events.md` §I1 |
 | Consortium / unnamed-party identity | `rules/bidders.md` §E2 and §E5 |
-| Final-round status | `rules/events.md` §K1 and §K2 |
+| Final-round row structure | `rules/events.md` §K1 and §K2 |
+| Bid-row formal-stage enrichment (`invited_to_formal_round`, `submitted_formal_bid`) | Add a primary owner under `rules/bids.md` §G |
 | Evidence and citation | `rules/schema.md` §R3 |
 | Validator behavior | `rules/invariants.md` |
 | AI-vs-Alex comparison suppression | `scoring/diff.py` |
 
-Once a behavior has an owner, other docs use cross-references only. They do not
-paraphrase the rule.
+Once a behavior has a primary owner, other docs use cross-references only. They
+do not paraphrase the rule.
 
 ## Core Doctrine Choices
 
@@ -88,6 +93,11 @@ If a later named bidder should inherit an earlier unnamed NDA placeholder, the
 model uses `unnamed_nda_promotion`. Successful promotion leaves visible audit
 residue in the finalized output as an info flag named
 `nda_promoted_from_placeholder`, so Alex can see the linkage.
+
+Python validates the promotion hint shape and applies the mechanical rewrite.
+Whether the filing actually supports the promotion is a semantic judgment for
+the model, adjudicator when routed, and human review; Python should not pretend
+to prove that from row topology alone.
 
 There is no hidden compatibility with old canonical-placeholder behavior. Deals
 that currently over-register exact-count placeholders, such as prior imprivata,
@@ -145,16 +155,22 @@ Required enforcement:
 
 - full event schema validation because Linkflow uses prompt-only JSON;
 - required fields, allowed enum values, nullability, and unknown-field rejection;
-- closed extractor and validator flag vocabulary;
+- closed extractor and validator flag vocabulary, published as an explicit
+  table in `rules/invariants.md` or the relevant primary owner sections and
+  mirrored in code;
 - strict `bid_type` validation;
 - bid-value shape validation;
 - `bid_value_unit` validation;
 - DropSilent row-shape validation;
 - advisor / legal-counsel role validation under the consolidated §J1/§J2
   doctrine;
+- bid-row formal-stage enrichment row-scope validation under the new
+  `rules/bids.md` §G owner;
 - hard failure for canonical IDs on pure exact-count placeholder rows;
 - successful `unnamed_nda_promotion` behavior with visible final-output trace;
-- narrowed adjudicator routing to true semantic soft flags only.
+- narrowed adjudicator routing to an explicit allow-list of semantic soft flag
+  codes. Registry hygiene, schema failures, and deterministic row-scope issues
+  are not adjudicator work.
 
 The validator must not contain AI-vs-Alex comparator behavior. Comparator
 suppression belongs in `scoring/diff.py`.
@@ -167,7 +183,8 @@ old formats fail loudly.
 After contract changes, reference JSONs and generated artifacts must be handled
 in order:
 
-1. Update rules, schema, prompt, validator, and tests atomically.
+1. Update rules, schema, prompt, validator, reference-converter code, and tests
+   atomically.
 2. Regenerate `reference/alex/*.json` from `scripts/build_reference.py`.
 3. Delete stale generated extraction, audit, state, scoring, and review outputs.
 4. Re-extract the nine reference deals under the new contract.
@@ -176,6 +193,11 @@ in order:
 
 This order matters. Re-extracting under the new contract while comparing against
 old reference JSONs produces misleading diff output.
+
+`rulebook_version` is not manually bumped. It is the SHA-256 content hash
+computed by `pipeline.core.rulebook_version()` from current `rules/*.md`
+content. Any rule-file change changes the hash and invalidates cached
+`raw_response.json` for `--re-validate`.
 
 Keep:
 
@@ -225,6 +247,31 @@ output/review_csv/_combined.csv
 The renderer is a pure projection. It does not repair extraction data, infer
 missing facts, or create canonical identities. If required input fields are
 missing or inconsistent, it fails.
+
+CLI surface:
+
+- `--slug SLUG`: render one finalized extraction.
+- `--all`: render every finalized extraction under `output/extractions/`.
+- `--dump`: print CSV to stdout instead of writing files. With `--all`, dump
+  prints the combined CSV.
+
+Exit behavior:
+
+- invalid arguments: argparse error;
+- missing extraction input: non-zero exit;
+- malformed extraction input: non-zero exit;
+- successful render with no rows: zero exit with headers only.
+
+Display rules are deterministic:
+
+- named rows display `resolved_name` from the registry when available, otherwise
+  `bidder_alias`, otherwise `bidder_name`;
+- null-placeholder rows display from `bidder_alias` and `bidder_type`, using
+  labels such as `Unnamed financial sponsor 3`, `Unnamed strategic bidder 2`,
+  or `Unnamed party`;
+- promoted rows append ` - promoted from unnamed placeholder` when they carry
+  `nda_promoted_from_placeholder`;
+- if these rules cannot compute a display label, the renderer fails.
 
 Initial column set:
 
@@ -304,8 +351,8 @@ comments near each suppression helper explaining why that suppression exists.
 Use logical commits:
 
 1. **Contract consolidation**
-   - rules, schema, prompt;
-   - owner sections;
+   - rules, schema, prompt, and `scripts/build_reference.py` converter logic;
+   - primary owner sections;
    - duplicate doctrine deletion;
    - closed flag definitions;
    - null-placeholder doctrine.
@@ -320,7 +367,6 @@ Use logical commits:
    - tests.
 
 3. **Reference regeneration**
-   - `scripts/build_reference.py`;
    - regenerated `reference/alex/*.json`;
    - converter tests/fixtures where needed.
 
@@ -344,7 +390,7 @@ Before claiming the implementation complete, run:
 ```bash
 python -m pytest -x
 python -m pipeline.run_pool --filter reference --workers 4 --dry-run
-rg -n "sk-[A-Za-z0-9]{20,}|OPENAI_API_KEY=.*[A-Za-z0-9]{20,}|--raw-extraction|--print-extractor-prompt|build_extractor_prompt|Claude Code subagent|No model SDK calls" .
+rg -n "sk-[A-Za-z0-9]{20,}|OPENAI_API_KEY=.*[A-Za-z0-9]{20,}|--raw-extraction|--print-extractor-prompt|build_extractor_prompt|Claude Code subagent|No model SDK calls|Current (consortium|DropSilent|formal-stage-status|drop-classification|comparison-noise) doctrine|agent loop|top-level pipeline script|manually routed" .
 ```
 
 Also run these contract-specific commands after implementing the required
@@ -363,3 +409,6 @@ The reference-set gate remains: all nine reference deals must be manually
 verified, hard invariants must pass, and the rulebook must remain unchanged
 across three consecutive clean full-reference runs before target-deal extraction
 begins.
+
+This refactor changes the rulebook/prompt/schema/output contract and resets the
+three-clean-runs stability clock to zero.
