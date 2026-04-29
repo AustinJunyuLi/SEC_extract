@@ -212,11 +212,14 @@ DATE_INFERENCE_FLAG_CODES: frozenset[str] = frozenset({
 })
 
 BUYER_GROUP_CONSTITUENT_FLAG = "buyer_group_constituent"
-CONSORTIUM_DROP_SPLIT_FLAG = "consortium_drop_split"
-CONSORTIUM_LIFECYCLE_FLAG_CODES: frozenset[str] = frozenset({
-    BUYER_GROUP_CONSTITUENT_FLAG,
-    CONSORTIUM_DROP_SPLIT_FLAG,
+ANONYMOUS_COHORT_AMBIGUITY_FLAG = "anonymous_cohort_identity_ambiguous"
+ANONYMOUS_LIFECYCLE_NOTES: frozenset[str] = frozenset({
+    "Bid",
+    "Drop",
+    "DropSilent",
+    "Executed",
 })
+_ANONYMOUS_PLACEHOLDER_RE = re.compile(r"^(?P<family>.+?)\s+(?P<number>\d+)$")
 
 def _row_flag_codes(ev: dict) -> set[str]:
     """Return the set of flag codes attached to a row, guarding against
@@ -229,8 +232,22 @@ def _has_buyer_group_constituent_evidence(ev: dict) -> bool:
     return BUYER_GROUP_CONSTITUENT_FLAG in _row_flag_codes(ev)
 
 
-def _has_consortium_lifecycle_flag(ev: dict) -> bool:
-    return bool(_row_flag_codes(ev) & CONSORTIUM_LIFECYCLE_FLAG_CODES)
+def _anonymous_placeholder(alias: Any) -> tuple[str, int] | None:
+    """Return normalized (family, number) for exact-count unnamed handles."""
+    if not isinstance(alias, str):
+        return None
+    match = _ANONYMOUS_PLACEHOLDER_RE.match(alias.strip())
+    if not match:
+        return None
+    family = " ".join(match.group("family").casefold().split())
+    if not family:
+        return None
+    return family, int(match.group("number"))
+
+
+def _anonymous_types_compatible(left: Any, right: Any) -> bool:
+    """Unknown bidder_type is compatible; otherwise types must match."""
+    return left in (None, "", []) or right in (None, "", []) or left == right
 
 
 def _consortium_lifecycle_evidence_keys(events: list[dict]) -> set[tuple[str, int]]:
@@ -395,6 +412,7 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
         (row_flags if "row_index" in f else deal_flags).append(f)
 
     row_flags.extend(_invariant_p_s1(events))
+    row_flags.extend(_invariant_p_s5(events))
 
     # Deal-level semantic invariants.
     deal_flags.extend(_invariant_p_l1(events))
@@ -549,7 +567,8 @@ def _invariant_p_r2(events: list[dict], filing: Filing) -> list[dict]:
         else:
             pairs = [(quote, page)]
 
-        for q, p in pairs:
+        multi_quote = isinstance(quote, list)
+        for element_index, (q, p) in enumerate(pairs):
             if not isinstance(q, str):
                 flags.append({
                     "row_index": i, "code": "missing_evidence", "severity": "hard",
@@ -569,10 +588,14 @@ def _invariant_p_r2(events: list[dict], filing: Filing) -> list[dict]:
                 })
                 continue
             if len(q) > SOURCE_QUOTE_HARD_CAP_CHARS:
+                quote_label = (
+                    f"source_quote[{element_index}]"
+                    if multi_quote else "source_quote"
+                )
                 flags.append({
                     "row_index": i, "code": "source_quote_too_long", "severity": "hard",
                     "reason": (
-                        f"source_quote has {len(q)} chars; "
+                        f"{quote_label} has {len(q)} chars; "
                         f"hard cap is {SOURCE_QUOTE_HARD_CAP_CHARS}"
                     ),
                 })
@@ -888,7 +911,7 @@ def _invariant_p_d5(events: list[dict]) -> list[dict]:
         if (name, phase) in unsolicited_keys:
             continue  # §D1.a — bidder approached unsolicited and withdrew
         if (
-            _has_consortium_lifecycle_flag(ev)
+            _has_buyer_group_constituent_evidence(ev)
             and (name, phase) in consortium_evidence_keys
         ):
             continue  # §I3 — atomized buyer-group constituent lifecycle row
@@ -1336,8 +1359,9 @@ def _invariant_p_g3(events: list[dict]) -> list[dict]:
             "severity": "hard",
             "reason": (
                 "§P-G3: Final Round announcement has subsequent bids "
-                "but no paired non-announcement Final Round row — check "
-                "for missing row."
+                "but no process-level non-announcement Final Round row "
+                "for the submission/deadline milestone. One such row may "
+                "support multiple same-round bids."
             ),
         })
     return flags
@@ -1481,6 +1505,80 @@ def _invariant_p_s1(events: list[dict]) -> list[dict]:
                 "row_index": i, "code": "missing_nda_dropsilent", "severity": "soft",
                 "reason": f"bidder identity={key!r} signed NDA at row {i} but no DropSilent (or other follow-up) was emitted; per §I1 the extractor must emit DropSilent for silent signers",
             })
+    return flags
+
+
+def _invariant_p_s5(events: list[dict]) -> list[dict]:
+    """§P-S5 — exact-count unnamed NDA cohorts are stable lifecycle handles.
+
+    When an unnamed exact-count NDA row creates placeholders such as
+    "Other NDA Signer 1", later unnamed Bid/Drop/DropSilent/Executed rows in
+    the same phase must reuse those aliases. If a later row invents a fresh
+    numeric alias family while compatible unnamed NDA handles already exist,
+    the extractor either lost identity continuity or needs to mark genuine
+    cohort ambiguity explicitly.
+    """
+    flags: list[dict[str, Any]] = []
+    handles: list[dict[str, Any]] = []
+
+    for i, ev in enumerate(events):
+        alias = ev.get("bidder_alias")
+        placeholder = _anonymous_placeholder(alias)
+        note = ev.get("bid_note")
+        phase = _phase(ev)
+        bidder_type = ev.get("bidder_type")
+
+        if note == "NDA" and ev.get("bidder_name") is None and placeholder:
+            family, number = placeholder
+            handles.append({
+                "alias": alias,
+                "family": family,
+                "number": number,
+                "phase": phase,
+                "bidder_type": bidder_type,
+                "row_index": i,
+            })
+            continue
+
+        if note not in ANONYMOUS_LIFECYCLE_NOTES:
+            continue
+        if ev.get("bidder_name") is not None or placeholder is None:
+            continue
+        if ANONYMOUS_COHORT_AMBIGUITY_FLAG in _row_flag_codes(ev):
+            continue
+
+        family, _number = placeholder
+        compatible_handles = [
+            handle for handle in handles
+            if handle["phase"] == phase
+            and _anonymous_types_compatible(handle["bidder_type"], bidder_type)
+        ]
+        if not compatible_handles:
+            continue
+        known_aliases = {handle["alias"] for handle in compatible_handles}
+        known_families = {handle["family"] for handle in compatible_handles}
+        if alias in known_aliases and family in known_families:
+            continue
+
+        expected_aliases = [
+            handle["alias"]
+            for handle in sorted(
+                compatible_handles,
+                key=lambda h: (h["family"], h["number"], h["row_index"]),
+            )
+        ][:5]
+        flags.append({
+            "row_index": i,
+            "code": "anonymous_alias_family_unstable",
+            "severity": "hard",
+            "reason": (
+                "§P-S5: unnamed lifecycle row uses "
+                f"bidder_alias={alias!r}, but compatible unnamed NDA "
+                f"handle(s) already exist in phase={phase}: {expected_aliases!r}. "
+                f"Reuse those handles, or attach `{ANONYMOUS_COHORT_AMBIGUITY_FLAG}` "
+                "when the filing truly makes cohort identity ambiguous."
+            ),
+        })
     return flags
 
 

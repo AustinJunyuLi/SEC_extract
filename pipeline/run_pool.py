@@ -28,7 +28,7 @@ DONE_STATUSES = {"validated", "passed", "passed_clean", "verified"}
 VALID_FILTERS = {"pending", "reference", "failed", "all"}
 AUDIT_ROOT = core.REPO_ROOT / "output" / "audit"
 DEFAULT_XHIGH_MAX_WORKERS = 5
-DEFAULT_REASONING_EFFORT = "high"
+DEFAULT_REASONING_EFFORT = "xhigh"
 SEMANTIC_ADJUDICATION_SOFT_FLAGS: frozenset[str] = frozenset({
     "missing_nda_dropsilent",
 })

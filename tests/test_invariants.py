@@ -78,6 +78,7 @@ RUNNERS = {
         fixture.get("events", []),
     ),
     "ps4": lambda fixture: pipeline._invariant_p_s4(fixture.get("events", [])),
+    "ps5": lambda fixture: pipeline._invariant_p_s5(fixture.get("events", [])),
 }
 
 
@@ -235,6 +236,18 @@ def test_pr2_allows_quote_at_1500_chars():
     assert flags == []
 
 
+def test_pr2_allows_multi_quote_elements_at_1500_chars():
+    quote_a = "a" * 1500
+    quote_b = "b" * 1500
+
+    flags = pipeline._invariant_p_r2(
+        [{"source_quote": [quote_a, quote_b], "source_page": [1, 1]}],
+        pipeline.Filing(slug="synthetic", pages=[{"number": 1, "content": quote_a + quote_b}]),
+    )
+
+    assert flags == []
+
+
 def test_pr2_hard_flags_quote_above_1500_chars():
     quote = "a" * 1501
 
@@ -249,6 +262,25 @@ def test_pr2_hard_flags_quote_above_1500_chars():
             "code": "source_quote_too_long",
             "severity": "hard",
             "reason": "source_quote has 1501 chars; hard cap is 1500",
+        }
+    ]
+
+
+def test_pr2_hard_flags_overlong_multi_quote_element_with_index():
+    quote_ok = "a" * 1500
+    quote_bad = "b" * 1501
+
+    flags = pipeline._invariant_p_r2(
+        [{"source_quote": [quote_ok, quote_bad], "source_page": [1, 1]}],
+        pipeline.Filing(slug="synthetic", pages=[{"number": 1, "content": quote_ok + quote_bad}]),
+    )
+
+    assert flags == [
+        {
+            "row_index": 0,
+            "code": "source_quote_too_long",
+            "severity": "hard",
+            "reason": "source_quote[1] has 1501 chars; hard cap is 1500",
         }
     ]
 
@@ -409,7 +441,7 @@ def test_p_d6_accepts_buyer_group_constituent_bid_with_consortium_evidence():
         {
             "bid_note": "ConsortiumCA",
             "bidder_name": "bidder_01",
-            "bidder_alias": "Longview and Buyer Group",
+            "bidder_alias": "Longview",
             "process_phase": 1,
         },
         {
@@ -433,7 +465,7 @@ def test_p_d6_consortium_ca_alone_does_not_replace_target_nda():
         {
             "bid_note": "ConsortiumCA",
             "bidder_name": "bidder_01",
-            "bidder_alias": "Longview and Buyer Group",
+            "bidder_alias": "Longview",
             "process_phase": 1,
         },
         {
@@ -456,7 +488,7 @@ def test_p_d5_accepts_buyer_group_constituent_drop_after_consortium_bid():
         {
             "bid_note": "ConsortiumCA",
             "bidder_name": "bidder_01",
-            "bidder_alias": "Longview and Buyer Group",
+            "bidder_alias": "Longview",
             "process_phase": 1,
         },
         {
@@ -491,7 +523,7 @@ def test_p_d5_consortium_ca_alone_does_not_replace_prior_engagement():
         {
             "bid_note": "ConsortiumCA",
             "bidder_name": "bidder_01",
-            "bidder_alias": "Longview and Buyer Group",
+            "bidder_alias": "Longview",
             "process_phase": 1,
         },
         {
@@ -506,6 +538,72 @@ def test_p_d5_consortium_ca_alone_does_not_replace_prior_engagement():
     flags = pipeline._invariant_p_d5(events)
 
     assert [f["code"] for f in flags] == ["drop_without_prior_engagement"]
+    assert flags[0]["severity"] == "hard"
+
+
+def test_p_d5_consortium_drop_split_alone_does_not_replace_buyer_group_constituent():
+    events = [
+        {
+            "bid_note": "ConsortiumCA",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "process_phase": 1,
+        },
+        {
+            "bid_note": "Drop",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "process_phase": 1,
+            "flags": [{
+                "code": "consortium_drop_split",
+                "severity": "info",
+                "reason": "Group drop split across buyer-group members.",
+            }],
+        },
+    ]
+
+    flags = pipeline._invariant_p_d5(events)
+
+    assert [f["code"] for f in flags] == ["drop_without_prior_engagement"]
+    assert flags[0]["severity"] == "hard"
+
+
+def test_p_r5_accepts_consortium_ca_actor_only_alias():
+    deal = {
+        "bidder_registry": {
+            "bidder_01": {
+                "resolved_name": "Longview",
+                "aliases_observed": ["Longview"],
+            }
+        }
+    }
+    events = [{
+        "bid_note": "ConsortiumCA",
+        "bidder_name": "bidder_01",
+        "bidder_alias": "Longview",
+    }]
+
+    assert pipeline._invariant_p_r5(events, deal) == []
+
+
+def test_p_r5_rejects_consortium_ca_relationship_phrase_alias():
+    deal = {
+        "bidder_registry": {
+            "bidder_01": {
+                "resolved_name": "Longview",
+                "aliases_observed": ["Longview"],
+            }
+        }
+    }
+    events = [{
+        "bid_note": "ConsortiumCA",
+        "bidder_name": "bidder_01",
+        "bidder_alias": "Longview and the Buyer Group",
+    }]
+
+    flags = pipeline._invariant_p_r5(events, deal)
+
+    assert [f["code"] for f in flags] == ["bidder_alias_not_observed"]
     assert flags[0]["severity"] == "hard"
 
 
@@ -974,8 +1072,9 @@ def test_p_g3_flags_final_round_announcement_without_submission_pair():
             "severity": "hard",
             "reason": (
                 "§P-G3: Final Round announcement has subsequent bids "
-                "but no paired non-announcement Final Round row — check "
-                "for missing row."
+                "but no process-level non-announcement Final Round row "
+                "for the submission/deadline milestone. One such row may "
+                "support multiple same-round bids."
             ),
         }
     ]
@@ -997,6 +1096,37 @@ def test_p_g3_accepts_final_round_announcement_with_submission_pair():
         },
         {
             "bid_note": "Bid",
+            "process_phase": 1,
+            "bid_date_precise": "2026-01-15",
+        },
+    ]
+
+    assert pipeline._invariant_p_g3(events) == []
+
+
+def test_p_g3_one_submission_milestone_can_pair_with_multiple_same_round_bids():
+    events = [
+        {
+            "bid_note": "Final Round",
+            "process_phase": 1,
+            "bid_date_precise": "2026-01-10",
+            "final_round_announcement": True,
+        },
+        {
+            "bid_note": "Final Round",
+            "process_phase": 1,
+            "bid_date_precise": "2026-01-15",
+            "final_round_announcement": False,
+        },
+        {
+            "bid_note": "Bid",
+            "bidder_name": "bidder_01",
+            "process_phase": 1,
+            "bid_date_precise": "2026-01-15",
+        },
+        {
+            "bid_note": "Bid",
+            "bidder_name": "bidder_02",
             "process_phase": 1,
             "bid_date_precise": "2026-01-15",
         },
@@ -1027,6 +1157,101 @@ def test_p_g3_accepts_same_day_submission_pair_after_bid_row():
     ]
 
     assert pipeline._invariant_p_g3(events) == []
+
+
+def test_p_s5_accepts_reused_unnamed_nda_handles_for_lifecycle_rows():
+    events = [
+        {
+            "bid_note": "NDA",
+            "bidder_name": None,
+            "bidder_alias": "Other NDA Signer 1",
+            "bidder_type": "f",
+            "process_phase": 1,
+        },
+        {
+            "bid_note": "NDA",
+            "bidder_name": None,
+            "bidder_alias": "Other NDA Signer 2",
+            "bidder_type": "f",
+            "process_phase": 1,
+        },
+        {
+            "bid_note": "Drop",
+            "bidder_name": None,
+            "bidder_alias": "Other NDA Signer 1",
+            "bidder_type": "f",
+            "process_phase": 1,
+            "flags": [{
+                "code": "anonymous_subset_allocation",
+                "severity": "info",
+                "reason": "Allocated the narrated one-party subset to the lowest-numbered compatible open placeholder.",
+            }],
+        },
+        {
+            "bid_note": "Bid",
+            "bidder_name": None,
+            "bidder_alias": "Other NDA Signer 2",
+            "bidder_type": "f",
+            "process_phase": 1,
+        },
+    ]
+
+    checker = getattr(pipeline, "_invariant_p_s5", lambda rows: [])
+
+    assert checker(events) == []
+
+
+def test_p_s5_flags_fresh_unnamed_alias_family_when_open_handles_exist():
+    events = [
+        {
+            "bid_note": "NDA",
+            "bidder_name": None,
+            "bidder_alias": "Other NDA Signer 1",
+            "bidder_type": "f",
+            "process_phase": 1,
+        },
+        {
+            "bid_note": "Drop",
+            "bidder_name": None,
+            "bidder_alias": "Potential Buyer 1",
+            "bidder_type": "f",
+            "process_phase": 1,
+        },
+    ]
+
+    checker = getattr(pipeline, "_invariant_p_s5", lambda rows: [])
+    flags = checker(events)
+
+    assert [f["code"] for f in flags] == ["anonymous_alias_family_unstable"]
+    assert flags[0]["severity"] == "hard"
+
+
+def test_p_s5_allows_explicit_ambiguous_unnamed_cohort_flag():
+    events = [
+        {
+            "bid_note": "NDA",
+            "bidder_name": None,
+            "bidder_alias": "Other NDA Signer 1",
+            "bidder_type": "f",
+            "process_phase": 1,
+        },
+        {
+            "bid_note": "Drop",
+            "bidder_name": None,
+            "bidder_alias": "Potential Buyer 1",
+            "bidder_type": "f",
+            "process_phase": 1,
+            "flags": [{
+                "code": "anonymous_cohort_identity_ambiguous",
+                "severity": "soft",
+                "reason": "Filing does not make clear whether this later unnamed group is the NDA cohort.",
+            }],
+        },
+    ]
+
+    checker = getattr(pipeline, "_invariant_p_s5", lambda rows: [])
+
+    assert checker(events) == []
 
 
 @pytest.mark.parametrize(

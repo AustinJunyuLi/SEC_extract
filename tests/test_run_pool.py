@@ -54,17 +54,17 @@ def test_per_deal_token_cap_is_not_supported():
     assert not hasattr(run_pool.PoolConfig(), "max_tokens_" "per_deal")
 
 
-def test_reasoning_effort_defaults_to_high(monkeypatch):
+def test_reasoning_effort_defaults_to_xhigh(monkeypatch):
     monkeypatch.delenv("EXTRACT_REASONING_EFFORT", raising=False)
     monkeypatch.delenv("ADJUDICATE_REASONING_EFFORT", raising=False)
     parser = run_pool.build_parser()
 
     cfg = run_pool.config_from_args(parser.parse_args(["--filter", "reference", "--dry-run"]))
 
-    assert cfg.extract_reasoning_effort == "high"
-    assert cfg.adjudicate_reasoning_effort == "high"
-    assert run_pool.PoolConfig().extract_reasoning_effort == "high"
-    assert run_pool.PoolConfig().adjudicate_reasoning_effort == "high"
+    assert cfg.extract_reasoning_effort == "xhigh"
+    assert cfg.adjudicate_reasoning_effort == "xhigh"
+    assert run_pool.PoolConfig().extract_reasoning_effort == "xhigh"
+    assert run_pool.PoolConfig().adjudicate_reasoning_effort == "xhigh"
 
 
 def test_skip_decisions_and_cache_policy(minimal_state_repo, monkeypatch):

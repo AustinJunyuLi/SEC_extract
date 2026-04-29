@@ -141,15 +141,15 @@ def test_reasoning_effort_args_pass_through_to_pool_config():
     assert cfg.adjudicate_reasoning_effort == "xhigh"
 
 
-def test_reasoning_effort_defaults_to_high(monkeypatch):
+def test_reasoning_effort_defaults_to_xhigh(monkeypatch):
     monkeypatch.delenv("EXTRACT_REASONING_EFFORT", raising=False)
     monkeypatch.delenv("ADJUDICATE_REASONING_EFFORT", raising=False)
     args = run_cli._parser().parse_args(["--slug", "medivation"])
 
     cfg = run_cli._make_pool_config(args, mode="extract")
 
-    assert cfg.extract_reasoning_effort == "high"
-    assert cfg.adjudicate_reasoning_effort == "high"
+    assert cfg.extract_reasoning_effort == "xhigh"
+    assert cfg.adjudicate_reasoning_effort == "xhigh"
 
 
 def test_commit_and_dry_run_is_rejected(monkeypatch, capsys):
