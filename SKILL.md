@@ -111,14 +111,14 @@ python run.py --slug X --extract
 python run.py --slug X --re-validate
 python run.py --slug X --re-extract
 python run.py --slug X --print-prompt
-python run.py --slug X --extract --extract-reasoning-effort high
+python run.py --slug X --extract --extract-reasoning-effort xhigh
 ```
 
 `--re-validate` uses the cached raw response only when valid for the current
 rulebook and current prompt/schema contract. `--re-extract` forces a fresh model
 call and clears stale raw-response cache before the attempt.
 `pipeline.run_pool` and `run.py` default both extractor and adjudicator
-reasoning effort to `high`, and pass explicit overrides through to the
+reasoning effort to `xhigh`, and pass explicit overrides through to the
 Responses API when provided. On Linkflow, `xhigh` is capped at
 `LINKFLOW_XHIGH_MAX_WORKERS` concurrent workers (default 5). Use
 `--re-extract` for a fresh model call.
@@ -147,7 +147,7 @@ If any scope rule is 🟥 OPEN, stop and report — do not extract.
 1. **Every emitted row has `source_quote` and `source_page`.** No exceptions. If you can't cite filing text, don't emit the row.
 2. **The event vocabulary in `rules/events.md` is closed.** Do not invent new `bid_note` values. If an event doesn't fit, flag it.
 3. **Dates follow `rules/dates.md` exactly.** Natural-language dates ("mid-June 2016") must be mapped deterministically, not creatively.
-4. **Bidder names follow the filing verbatim** until the canonicalization rule in `rules/bidders.md` §E4 triggers.
+4. **Bidder names follow the filing verbatim** until the canonicalization rule in `rules/bidders.md` §E4 triggers. Exact-count unnamed NDA placeholders are stable lifecycle handles, and `ConsortiumCA.bidder_alias` names the actor rather than the relationship phrase.
 5. **Informal-vs-formal classification must be evidenced per `rules/bids.md` §G2**: either a true range bid (both `bid_value_lower` and `bid_value_upper` numeric with `lower < upper`) or a non-empty `bid_type_inference_note` ≤300 chars. The note should cite the §G1 rule applied (trigger phrase, process-position fallback, or structural signal); the validator (§P-G2) enforces evidence, not a specific justification type. Borderline calls are flagged, not forced.
 6. **Skip rules in `rules/bids.md` §M are mandatory.** Do not record unsolicited letters with no NDA, no price, no bid intent.
 7. **`DropSilent` is only true post-NDA filing silence.** Narrated
@@ -162,10 +162,14 @@ If any scope rule is 🟥 OPEN, stop and report — do not extract.
    subject controls `drop_initiator`; use `unknown` only for genuine agency
    ambiguity. Use the most specific supported `drop_reason_class`, not a
    generic fallback.
+10. **Final-round milestone rows are process-level.** One non-announcement
+    `Final Round` row can support multiple same-round bids when the filing
+    describes one shared deadline, submission event, or outcome.
 
 Evidence quote strings target and hard-fail at 1500 characters. There is no
-soft over-target zone; split evidence into the multi-quote form when one
-contiguous paragraph would exceed the cap.
+soft over-target zone; split evidence into the multi-quote form when evidence
+is separated or one contiguous paragraph would exceed the cap. Multi-quote
+lists may cite separated snippets on the same page.
 
 ---
 

@@ -1,8 +1,8 @@
 # Linkflow Extraction Guide
 
-This note records the Linkflow-specific lessons from the April 2026 direct SDK
-refactor and Penford test run. It is an operating guide, not a historical
-report. If the Linkflow path changes, update this file in the same change.
+This note records the Linkflow-specific operating contract for the direct SDK
+path. It is a transport/config guide, not a run log or rulebook. If the
+Linkflow path changes, update this file in the same change.
 
 ## Working Shape
 
@@ -23,12 +23,12 @@ Use this environment shape:
 OPENAI_BASE_URL=https://www.linkflow.run/v1
 EXTRACT_MODEL=gpt-5.5
 ADJUDICATE_MODEL=gpt-5.5
-EXTRACT_REASONING_EFFORT=high
-ADJUDICATE_REASONING_EFFORT=high
+EXTRACT_REASONING_EFFORT=xhigh
+ADJUDICATE_REASONING_EFFORT=xhigh
 LINKFLOW_XHIGH_MAX_WORKERS=5
 ```
 
-High reasoning is the default extraction setting. Override it only when
+Xhigh reasoning is the default extraction setting. Override it only when
 running an explicit model-effort experiment:
 
 ```bash
@@ -37,8 +37,8 @@ python -m pipeline.run_pool \
   --workers 1 \
   --extract-model gpt-5.5 \
   --adjudicate-model gpt-5.5 \
-  --extract-reasoning-effort high \
-  --adjudicate-reasoning-effort high \
+  --extract-reasoning-effort xhigh \
+  --adjudicate-reasoning-effort xhigh \
   --re-extract
 ```
 
@@ -95,8 +95,8 @@ Avoid these patterns:
 - Worker counts above the tested provider ceiling. `xhigh` is capped at five
   concurrent workers by default; the runner rejects larger `xhigh` pools before
   making API calls.
-- Exotic reasoning efforts before testing. `high` is the default for `gpt-5.5`;
-  do not leave reasoning effort unset for real extraction. Do not assume every
+- Changing reasoning efforts before testing. `xhigh` is the default for `gpt-5.5`
+  in this repo; do not leave reasoning effort unset for real extraction. Do not assume every
   proxy accepts every OpenAI reasoning-effort value.
 - Stale cached raw responses after prompt, schema, rulebook, or section-slicing
   changes. `--re-validate` is only valid when the cache `rulebook_version`,
@@ -138,11 +138,9 @@ Cached raw responses also carry an `extractor_contract_version` hash covering
 `prompts/extract.md` and the local `SCHEMA_R1` mirror, so prompt/schema-only
 changes fail loudly instead of reusing old model JSON.
 
-`scoring/diff.py` intentionally suppresses known source-workbook placement
-noise: Alex effective dates are ignored when the current filing-grounded
-extraction leaves `DateEffective = null`, and legacy per-share values stored in
-Alex's `bid_value` column are matched against current `bid_value_pershare`.
-True numeric bid-value conflicts still surface.
+Behavioral extraction doctrine lives in `rules/*.md`; comparison behavior lives
+in `scoring/diff.py`. Keep this guide focused on Linkflow transport behavior
+and local contract enforcement.
 
 ## Operator Checklist
 
@@ -161,8 +159,8 @@ python -m pipeline.run_pool \
   --workers 1 \
   --extract-model gpt-5.5 \
   --adjudicate-model gpt-5.5 \
-  --extract-reasoning-effort high \
-  --adjudicate-reasoning-effort high \
+  --extract-reasoning-effort xhigh \
+  --adjudicate-reasoning-effort xhigh \
   --re-extract
 ```
 

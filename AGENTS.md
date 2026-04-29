@@ -71,10 +71,10 @@ Use `--dry-run` to inspect selection without requiring an API key. Use
 `extractor_contract_version` matches the current prompt/schema contract. Use
 `--re-extract` for a fresh SDK extraction.
 
-Reasoning effort defaults to `high` for both extractor and adjudicator calls:
+Reasoning effort defaults to `xhigh` for both extractor and adjudicator calls:
 
 ```bash
-python run.py --slug medivation --extract --extract-reasoning-effort high
+python run.py --slug medivation --extract --extract-reasoning-effort xhigh
 python -m pipeline.run_pool --filter reference --workers 5 --extract-reasoning-effort xhigh
 ```
 
@@ -126,7 +126,8 @@ Rows without evidence do not ship. Quotes must support the specific event, date,
 bidder, bid value, and classification being emitted. If the filing is ambiguous,
 emit the supported row and flag the ambiguity; do not invent uncited facts.
 Quote strings target and hard-fail at 1500 characters; there is no soft
-over-target zone.
+over-target zone. Use `source_quote` / `source_page` lists for separated
+snippets, including separated snippets on the same page.
 
 Key conventions:
 
@@ -138,6 +139,16 @@ Key conventions:
 - Communication-date anchoring follows `rules/dates.md`.
 - Post-execution sale press releases are folded into `Executed`.
 - Unnamed parties follow the minimum-supported-count rule in `rules/bidders.md`.
+- Exact-count unnamed NDA placeholders are deal-local lifecycle handles; later
+  unnamed bids, drops, DropSilent rows, or executions for the same cohort reuse
+  those aliases unless an explicit ambiguity flag explains a genuinely unclear
+  cohort boundary.
+- `ConsortiumCA.bidder_alias` names the actor represented by `bidder_name`, not
+  the buyer-group relationship phrase; relationship language belongs in
+  `source_quote` and, when useful, `additional_note`.
+- A non-announcement `Final Round` row is a process-level milestone. One row
+  may support multiple same-round bids when the filing describes one shared
+  deadline, submission event, or outcome.
 
 ## State and Output Contracts
 
