@@ -1,4 +1,4 @@
-"""Native function-calling tools available to the extractor at draft time."""
+"""Native function-calling tools available for targeted repair."""
 
 from __future__ import annotations
 
@@ -19,7 +19,9 @@ CHECK_ROW_SCHEMA: dict[str, Any] = {
         "rulebook (P-R0/R2/R3/R4/R6/R7/R8/R9, P-D1/D2/D7, P-G2). "
         "Returns ok=true if the row passes all checks, otherwise ok=false "
         "with a violations list naming each broken rule. Registry-dependent "
-        "P-R5 runs in the full validator. Call this before submitting any row."
+        "P-R5 runs in the full validator. In the live pipeline this tool is "
+        "available only during repair 2 and should be used only for hard-flagged, "
+        "revised, or revision-dependent rows."
     ),
     "parameters": {
         "type": "object",
@@ -82,7 +84,7 @@ GET_PAGES_SCHEMA: dict[str, Any] = {
     },
 }
 
-TOOL_DEFINITIONS: list[dict[str, Any]] = [
+TARGETED_REPAIR_TOOL_DEFINITIONS: list[dict[str, Any]] = [
     CHECK_ROW_SCHEMA,
     SEARCH_FILING_SCHEMA,
     GET_PAGES_SCHEMA,
@@ -205,7 +207,7 @@ def get_pages(
 def tools_contract_version() -> str:
     """Return a stable hash for tool definitions and implementations."""
     payload = {
-        "definitions": TOOL_DEFINITIONS,
+        "definitions": TARGETED_REPAIR_TOOL_DEFINITIONS,
         "impl_src": (
             inspect.getsource(check_row)
             + inspect.getsource(search_filing)

@@ -181,7 +181,7 @@ def test_dispatch_accepts_unwrapped_check_row_arguments():
 def test_dispatch_invokes_search_filing():
     result = tools.dispatch(
         name="search_filing",
-        arguments={"query": "page text", "page_range": None, "max_hits": 5},
+        arguments={"query": "Special Committee", "page_range": None, "max_hits": 5},
         filing_pages=_filing_pages(),
     )
 
