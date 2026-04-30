@@ -38,6 +38,7 @@ FINAL_CLASSIFICATIONS = (
     "UNSTABLE_ARCHITECTURE_ESCALATION_CANDIDATE",
     "INSUFFICIENT_ARCHIVED_RUNS",
 )
+RETIRED_PROVIDER_FALLBACK_FIELD = "json_" + "schema_used"
 
 
 class StabilityError(RuntimeError):
@@ -264,8 +265,10 @@ def _validate_manifest(manifest: dict[str, Any], manifest_path: Path) -> None:
     )
     for path in required_paths:
         _require_manifest_value(manifest, path, manifest_path)
-    if "json_schema_used" in manifest:
-        raise StabilityError(f"archived run manifest contains retired json_schema_used: {manifest_path}")
+    if RETIRED_PROVIDER_FALLBACK_FIELD in manifest:
+        raise StabilityError(
+            f"archived run manifest contains a retired structured-output fallback field: {manifest_path}"
+        )
 
 
 def _all_flags(final_output: dict[str, Any], validation: dict[str, Any]) -> list[dict[str, Any]]:

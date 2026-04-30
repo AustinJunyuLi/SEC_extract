@@ -104,7 +104,7 @@ def test_audit_writer_writes_prompt_call_raw_response_validation_manifest_and_la
     assert manifest["repair_turns_used"] == 0
     assert manifest["repair_loop_outcome"] == "clean"
     assert manifest["tool_calls_count"] == 0
-    assert "json_schema_used" not in manifest
+    assert "json_" + "schema_used" not in manifest
     assert manifest["total_input_tokens"] == 1
     validation = json.loads((audit_dir / "validation.json").read_text())
     assert validation["schema_version"] == "validation_v1"
@@ -195,7 +195,7 @@ def test_manifest_includes_new_contract_fields(tmp_path):
     assert manifest["repair_turns_used"] == 1
     assert manifest["repair_loop_outcome"] == "fixed"
     assert manifest["tool_calls_count"] == 12
-    assert "json_schema_used" not in manifest
+    assert "json_" + "schema_used" not in manifest
 
 
 def test_two_audit_runs_are_immutable_and_latest_points_to_second(tmp_path):

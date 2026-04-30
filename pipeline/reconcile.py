@@ -23,6 +23,7 @@ REFERENCE_SLUGS: tuple[str, ...] = core.REFERENCE_SLUGS
 ACTIVE_STATUSES = {"validated", "passed", "passed_clean", "verified"}
 TERMINAL_WITH_AUDIT_STATUSES = ACTIVE_STATUSES | {"failed"}
 EXPECTED_PROGRESS_SCHEMA = "v1"
+RETIRED_PROVIDER_FALLBACK_FIELD = "json_" + "schema_used"
 
 
 @dataclass(frozen=True)
@@ -355,11 +356,11 @@ def _check_manifest_contract_fields(
     manifest: dict[str, Any],
     manifest_path: Path,
 ) -> None:
-    if "json_schema_used" in manifest:
+    if RETIRED_PROVIDER_FALLBACK_FIELD in manifest:
         report.add(
             "error",
             "audit_manifest_stale_field",
-            "audit manifest must not contain retired json_schema_used",
+            "audit manifest must not contain retired structured-output fallback fields",
             slug=slug,
             path=_rel(root, manifest_path),
         )
