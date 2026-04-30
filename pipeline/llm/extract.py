@@ -22,7 +22,7 @@ from .response_format import (
     parse_json_text,
     schema_hash,
 )
-from .tools import TOOL_DEFINITIONS, dispatch
+from .tools import TARGETED_REPAIR_TOOL_DEFINITIONS, dispatch
 
 
 EXTRACTOR_RULE_FILES = ("schema.md", "events.md", "bidders.md", "bids.md", "dates.md")
@@ -268,6 +268,33 @@ def _json_dumps_tool_output(payload: dict[str, Any]) -> str:
     return json.dumps(payload, ensure_ascii=False, default=str)
 
 
+async def _call_prompt_only(
+    *,
+    llm_client: LLMClient,
+    model: str,
+    system: str,
+    user: str,
+    max_output_tokens: int | None,
+    reasoning_effort: str | None,
+) -> tuple[dict[str, Any], CompletionResult, list[CompletionResult], int]:
+    input_items: list[dict[str, Any]] = [
+        {"role": "system", "content": system},
+        {"role": "user", "content": user},
+    ]
+    completion = await llm_client.complete(
+        model=model,
+        input_items=input_items,
+        text_format=json_schema_format(SCHEMA_R1),
+        max_output_tokens=max_output_tokens,
+        reasoning_effort=reasoning_effort,
+        stream=True,
+    )
+    parsed = parse_json_text(completion.text)
+    _ensure_extraction_shape(parsed)
+    completion.parsed_json = parsed
+    return parsed, completion, [completion], 0
+
+
 async def _call_with_tools(
     *,
     llm_client: LLMClient,
@@ -275,6 +302,7 @@ async def _call_with_tools(
     system: str,
     user: str,
     filing_pages: list[dict[str, Any]],
+    tool_definitions: list[dict[str, Any]],
     max_output_tokens: int | None,
     reasoning_effort: str | None,
     audit: AuditWriter | None = None,
@@ -292,7 +320,7 @@ async def _call_with_tools(
             model=model,
             input_items=input_items,
             text_format=json_schema_format(SCHEMA_R1),
-            tools=TOOL_DEFINITIONS,
+            tools=tool_definitions,
             tool_choice="auto",
             max_output_tokens=max_output_tokens,
             reasoning_effort=reasoning_effort,
@@ -456,17 +484,43 @@ async def run_repair_loop(
             system=system,
             user=repair_user,
         )
-        revised, _completion, completions, _tool_calls_count = await _call_with_tools(
-            llm_client=llm_client,
-            model=extract_model,
-            system=system,
-            user=repair_user,
-            filing_pages=filing_pages,
-            max_output_tokens=max_output_tokens,
-            reasoning_effort=reasoning_effort,
-            audit=audit,
-            audit_phase=f"repair_{turn}",
-        )
+        tool_mode = "none" if turn == 1 else "targeted_repair_tools"
+        try:
+            if turn == 1:
+                revised, _completion, completions, _tool_calls_count = await _call_prompt_only(
+                    llm_client=llm_client,
+                    model=extract_model,
+                    system=system,
+                    user=repair_user,
+                    max_output_tokens=max_output_tokens,
+                    reasoning_effort=reasoning_effort,
+                )
+            else:
+                revised, _completion, completions, _tool_calls_count = await _call_with_tools(
+                    llm_client=llm_client,
+                    model=extract_model,
+                    system=system,
+                    user=repair_user,
+                    filing_pages=filing_pages,
+                    tool_definitions=TARGETED_REPAIR_TOOL_DEFINITIONS,
+                    max_output_tokens=max_output_tokens,
+                    reasoning_effort=reasoning_effort,
+                    audit=audit,
+                    audit_phase=f"repair_{turn}",
+                )
+        except Exception as exc:
+            audit.write_repair_turn({
+                "turn": turn,
+                "tool_mode": tool_mode,
+                "validator_report_summary": report,
+                "hard_flags_before": report["hard_count"],
+                "hard_flags_after": None,
+                "tool_calls_count": 0,
+                "completion_turns": 0,
+                "outcome": "failed",
+                "error": {"type": type(exc).__name__, "message": str(exc)[:500]},
+            })
+            raise
         for completion in completions:
             token_usage.consume(completion)
         prepared, filing, promotion_log = core.prepare_for_validate(slug, revised, filing)
@@ -475,6 +529,7 @@ async def run_repair_loop(
         hard_after = len(_hard_flags(current_validation))
         audit.write_repair_turn({
             "turn": turn,
+            "tool_mode": tool_mode,
             "validator_report_summary": report,
             "hard_flags_before": report["hard_count"],
             "hard_flags_after": hard_after,
@@ -500,19 +555,15 @@ async def extract_deal(
     reasoning_effort: str | None = None,
 ) -> ExtractResult:
     system, user = build_messages(slug)
-    filing_pages = _load_tool_pages(slug)
     prompt_digest = audit.write_prompt(phase="extractor", system=system, user=user)
     try:
-        parsed, completion, completions, tool_calls_count = await _call_with_tools(
+        parsed, completion, completions, tool_calls_count = await _call_prompt_only(
             llm_client=llm_client,
-            filing_pages=filing_pages,
             system=system,
             user=user,
             model=extract_model,
             max_output_tokens=max_output_tokens,
             reasoning_effort=reasoning_effort,
-            audit=audit,
-            audit_phase="extract",
         )
     except Exception as exc:
         audit.append_call({
