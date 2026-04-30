@@ -25,6 +25,12 @@ count({row ∈ events :
          AND row.process_phase >= 1}) >= 2
 ```
 
+This is a row-level classifier. When an identifiable buyer group is bound by
+target-side NDA status, each constituent-level `NDA` row counts as one
+bidder NDA. A late joiner to an already-NDA-bound buyer group counts only
+through its own inherited `NDA` row dated to the join date. `ConsortiumCA`
+rows never count.
+
 Exclusions, per Alex:
 - `role == "advisor_financial"` or `"advisor_legal"` rows do NOT count
   toward the threshold (per `rules/bids.md` §M3).

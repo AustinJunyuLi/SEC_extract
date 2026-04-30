@@ -23,7 +23,10 @@ constituent.
 
 ### §E2.b — Group-narrated event atomization
 
-**Decision.** Filing granularity decides the shape — but every event of every type atomizes per identifiable signer. There is no "consortium-as-1-row" shortcut for any event type, including Executed.
+**Decision.** Filing granularity decides the shape — but every buyer-group
+lifecycle event atomizes per identifiable constituent. There is no
+"consortium-as-1-row" shortcut for any event type, including `NDA` and
+`Executed`.
 
 **Rule.**
 
@@ -33,6 +36,13 @@ constituent.
 | Numeric count without names (e.g., *"15 financial sponsors executed CAs"*) | **N rows**, where N is the stated count, with `bidder_alias` placeholders (`"Strategic 1"`, `"Financial 1"`, …) per §E5 |
 | Single consortium event with no per-constituent detail and no count (e.g., *"Buyer Group executed a CA on 7/11/2013"*) | **N rows** only when N identifiable consortium constituents are named elsewhere in the filing. If the filing names neither a count nor identifiable constituents, fail loud; do not invent members and do not emit a single consortium-label fallback row. |
 
+When a target-side `NDA` is narrated at buyer-group level, emit one `NDA`
+row per identifiable buyer-group constituent bound by that group status. If
+a member later joins an already-NDA-bound buyer group, emit that member's
+own `NDA` row dated to the join date. That row records inherited group-NDA
+status; it does not assert that the late member personally signed the
+original earlier agreement.
+
 When the merger agreement is with a legal shell but the filing explicitly
 identifies the operational/economic buyer consortium (e.g., petsmart's
 BC Partners + Caisse + GIC + StepStone + Longview), emit one Executed row
@@ -41,12 +51,14 @@ economic members are not identifiable from the filing, treat the extraction
 as incomplete rather than silently creating a shell-only or consortium-label
 Executed row.
 
-Every atomized buyer-group `Bid`, `Drop`, and `Executed` row carries
+Every atomized buyer-group lifecycle row, including `NDA`, `Bid`, `Drop`,
+`DropSilent`, and `Executed`, carries
 `{"code": "buyer_group_constituent", "severity": "info", "reason": "<short filing-grounded statement identifying this party as a buyer-group constituent>"}`.
 This is the validator-visible evidence that the row is an atomized
-constituent lifecycle event, not an ordinary standalone bidder row. It does
-not make `ConsortiumCA` an auction NDA and does not count toward the auction
-threshold.
+constituent lifecycle event, not an ordinary standalone bidder row. The
+`NDA` row is the auction-funnel row counted by §Scope-1; a `ConsortiumCA`
+row remains only bidder-bidder confidentiality evidence and never counts
+toward the auction threshold.
 
 **Rationale.** Atomization is unconditional and applies symmetrically to NDA, Bid, Drop, Restarted, Terminated, and Executed. This matches the `DropSilent` convention (§I1) of one row per bidder.
 

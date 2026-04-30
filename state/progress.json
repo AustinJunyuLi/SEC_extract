@@ -1,7 +1,7 @@
 {
   "schema_version": "v1",
   "created": "2026-04-18T12:29:42.084187Z",
-  "updated": "2026-04-30T13:47:07.276282Z",
+  "updated": "2026-04-30T20:43:07.287293Z",
   "deal_count_total": 401,
   "deal_count_reference": 9,
   "deals": {
@@ -3600,11 +3600,11 @@
       "acquirer": "GENESEE & WYOMING INC",
       "date_announced": "2016-08-15",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/831968/0001193125-16-713780-index.htm",
-      "flag_count": 106,
-      "last_run": "2026-04-30T13:17:41.947825Z",
+      "flag_count": 121,
+      "last_run": "2026-04-30T15:21:06.538268Z",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=0 soft=45 info=61",
+      "notes": "hard=0 soft=60 info=61",
       "rulebook_version_history": [
         {
           "ts": "2026-04-30T12:59:20.362827Z",
@@ -3615,10 +3615,15 @@
           "ts": "2026-04-30T13:17:41.947825Z",
           "run_id": "b9ae03d1975642c4a9fc16f7c13e6a3a",
           "version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+        },
+        {
+          "ts": "2026-04-30T15:21:06.538268Z",
+          "run_id": "f6f18dcb8b8d45ba87f38d62a1659579",
+          "version": "76db749b3ccc3557a2a1054dea6546ff71aa8d8a8ccca296cc6975781587b8c2"
         }
       ],
-      "last_run_id": "b9ae03d1975642c4a9fc16f7c13e6a3a",
-      "rulebook_version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+      "last_run_id": "f6f18dcb8b8d45ba87f38d62a1659579",
+      "rulebook_version": "76db749b3ccc3557a2a1054dea6546ff71aa8d8a8ccca296cc6975781587b8c2"
     },
     "medivation": {
       "status": "passed",
@@ -3628,7 +3633,7 @@
       "date_announced": "2016-08-22",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1011835/0001193125-16-696889-index.htm",
       "flag_count": 9,
-      "last_run": "2026-04-30T13:14:31.223869Z",
+      "last_run": "2026-04-30T15:09:46.766668Z",
       "last_verified_by": null,
       "last_verified_at": null,
       "notes": "hard=0 soft=0 info=9",
@@ -3642,10 +3647,15 @@
           "ts": "2026-04-30T13:14:31.223869Z",
           "run_id": "f276a82dec844e68be8a495a6ee797fe",
           "version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+        },
+        {
+          "ts": "2026-04-30T15:09:46.766668Z",
+          "run_id": "db297c55f4d44a74a83491e8a523ef87",
+          "version": "76db749b3ccc3557a2a1054dea6546ff71aa8d8a8ccca296cc6975781587b8c2"
         }
       ],
-      "last_run_id": "f276a82dec844e68be8a495a6ee797fe",
-      "rulebook_version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+      "last_run_id": "db297c55f4d44a74a83491e8a523ef87",
+      "rulebook_version": "76db749b3ccc3557a2a1054dea6546ff71aa8d8a8ccca296cc6975781587b8c2"
     },
     "imprivata": {
       "status": "passed",
@@ -3654,11 +3664,11 @@
       "acquirer": "THOMA BRAVO, LLC",
       "date_announced": "2016-07-13",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1328015/0001193125-16-677939-index.htm",
-      "flag_count": 15,
-      "last_run": "2026-04-30T13:12:34.154802Z",
+      "flag_count": 14,
+      "last_run": "2026-04-30T15:15:14.730644Z",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=0 soft=2 info=13",
+      "notes": "hard=0 soft=1 info=13",
       "rulebook_version_history": [
         {
           "ts": "2026-04-30T12:59:20.533075Z",
@@ -3669,10 +3679,15 @@
           "ts": "2026-04-30T13:12:34.154802Z",
           "run_id": "00269ecd85704c28a1bb5b7841613775",
           "version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+        },
+        {
+          "ts": "2026-04-30T15:15:14.730644Z",
+          "run_id": "a8dbad5d63d6424bb39d14ea6bbc7663",
+          "version": "76db749b3ccc3557a2a1054dea6546ff71aa8d8a8ccca296cc6975781587b8c2"
         }
       ],
-      "last_run_id": "00269ecd85704c28a1bb5b7841613775",
-      "rulebook_version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+      "last_run_id": "a8dbad5d63d6424bb39d14ea6bbc7663",
+      "rulebook_version": "76db749b3ccc3557a2a1054dea6546ff71aa8d8a8ccca296cc6975781587b8c2"
     },
     "examworks-group-inc": {
       "status": "pending",
@@ -3883,17 +3898,17 @@
       "notes": ""
     },
     "zep": {
-      "status": "validated",
+      "status": "passed",
       "is_reference": true,
       "target_name": "ZEP INC",
       "acquirer": "NEW MOUNTAIN CAPITAL",
       "date_announced": "2015-04-08",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1408287/0001047469-15-004989-index.htm",
-      "flag_count": 35,
-      "last_run": "2026-04-30T13:44:52.911226Z",
+      "flag_count": 62,
+      "last_run": "2026-04-30T15:16:51.618488Z",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=2 soft=11 info=22",
+      "notes": "hard=0 soft=43 info=19",
       "rulebook_version_history": [
         {
           "ts": "2026-04-30T12:59:20.151381Z",
@@ -3904,23 +3919,28 @@
           "ts": "2026-04-30T13:44:52.911226Z",
           "run_id": "908b9bcbad8d4aa2ba59c303ba6459b0",
           "version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+        },
+        {
+          "ts": "2026-04-30T15:16:51.618488Z",
+          "run_id": "44aaf0bbcf4c4d6a8b1531bcb57b236d",
+          "version": "76db749b3ccc3557a2a1054dea6546ff71aa8d8a8ccca296cc6975781587b8c2"
         }
       ],
-      "last_run_id": "908b9bcbad8d4aa2ba59c303ba6459b0",
-      "rulebook_version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+      "last_run_id": "44aaf0bbcf4c4d6a8b1531bcb57b236d",
+      "rulebook_version": "76db749b3ccc3557a2a1054dea6546ff71aa8d8a8ccca296cc6975781587b8c2"
     },
     "petsmart-inc": {
-      "status": "validated",
+      "status": "passed",
       "is_reference": true,
       "target_name": "PETSMART INC",
       "acquirer": "BC Partners, Inc., La Caisse de d\u00c3\u00a9p\u00c3\u00b4t et placement du Qu\u00c3\u00a9bec, affiliates of GIC Special Investments Pte Ltd, affiliates of StepStone Group LP and Longview Asset Management, LLC",
       "date_announced": "2014-12-14",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/863157/0001571049-15-000695-index.htm",
-      "flag_count": 78,
-      "last_run": "2026-04-30T13:47:07.276282Z",
+      "flag_count": 81,
+      "last_run": "2026-04-30T16:13:53.310620Z",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=9 soft=19 info=50",
+      "notes": "hard=0 soft=2 info=79",
       "rulebook_version_history": [
         {
           "ts": "2026-04-30T12:59:20.312758Z",
@@ -3931,10 +3951,15 @@
           "ts": "2026-04-30T13:47:07.276282Z",
           "run_id": "64b57266a89547dd858824ad6de2f24e",
           "version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+        },
+        {
+          "ts": "2026-04-30T16:13:53.310620Z",
+          "run_id": "f277a2662d7e41db9e83c9668192cdb3",
+          "version": "76db749b3ccc3557a2a1054dea6546ff71aa8d8a8ccca296cc6975781587b8c2"
         }
       ],
-      "last_run_id": "64b57266a89547dd858824ad6de2f24e",
-      "rulebook_version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+      "last_run_id": "f277a2662d7e41db9e83c9668192cdb3",
+      "rulebook_version": "76db749b3ccc3557a2a1054dea6546ff71aa8d8a8ccca296cc6975781587b8c2"
     },
     "penford": {
       "status": "passed",
@@ -3944,10 +3969,10 @@
       "date_announced": "2014-10-15",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/739608/0001193125-14-455030-index.htm",
       "flag_count": 18,
-      "last_run": "2026-04-30T13:30:07.039078Z",
+      "last_run": "2026-04-30T15:24:43.883637Z",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=0 soft=6 info=12",
+      "notes": "hard=0 soft=5 info=13",
       "rulebook_version_history": [
         {
           "ts": "2026-04-30T12:59:41.330426Z",
@@ -3958,10 +3983,15 @@
           "ts": "2026-04-30T13:30:07.039078Z",
           "run_id": "83a68aedb6894288bca791a134480d00",
           "version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+        },
+        {
+          "ts": "2026-04-30T15:24:43.883637Z",
+          "run_id": "0e4480ab005948ec8ea9fb350218f3b5",
+          "version": "76db749b3ccc3557a2a1054dea6546ff71aa8d8a8ccca296cc6975781587b8c2"
         }
       ],
-      "last_run_id": "83a68aedb6894288bca791a134480d00",
-      "rulebook_version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+      "last_run_id": "0e4480ab005948ec8ea9fb350218f3b5",
+      "rulebook_version": "76db749b3ccc3557a2a1054dea6546ff71aa8d8a8ccca296cc6975781587b8c2"
     },
     "pike-corp": {
       "status": "pending",
@@ -4178,11 +4208,11 @@
       "acquirer": "CSC SERVICEWORKS, INC.",
       "date_announced": "2013-10-15",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1038280/0001047469-13-010973-index.htm",
-      "flag_count": 48,
-      "last_run": "2026-04-30T13:28:55.135959Z",
+      "flag_count": 56,
+      "last_run": "2026-04-30T20:43:07.287293Z",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=0 soft=3 info=45",
+      "notes": "hard=0 soft=1 info=55",
       "rulebook_version_history": [
         {
           "ts": "2026-04-30T12:59:41.605154Z",
@@ -4193,10 +4223,20 @@
           "ts": "2026-04-30T13:28:55.135959Z",
           "run_id": "fa11c0f87f5f4703866d14408c1ec997",
           "version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+        },
+        {
+          "ts": "2026-04-30T15:26:42.296745Z",
+          "run_id": "abd62470f7714ac4ad74b27702880244",
+          "version": "76db749b3ccc3557a2a1054dea6546ff71aa8d8a8ccca296cc6975781587b8c2"
+        },
+        {
+          "ts": "2026-04-30T20:43:07.287293Z",
+          "run_id": "552f5068ddfc40ccac410691e1bcc3d1",
+          "version": "a8935db01df18cff727ba7105ce315d627aedbc566a40e9a50f20e2c65f325cc"
         }
       ],
-      "last_run_id": "fa11c0f87f5f4703866d14408c1ec997",
-      "rulebook_version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+      "last_run_id": "552f5068ddfc40ccac410691e1bcc3d1",
+      "rulebook_version": "a8935db01df18cff727ba7105ce315d627aedbc566a40e9a50f20e2c65f325cc"
     },
     "molex-inc": {
       "status": "pending",
@@ -4244,11 +4284,11 @@
       "acquirer": "HUDSON'S BAY COMPANy",
       "date_announced": "2013-07-29",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/812900/0001193125-13-390275-index.htm",
-      "flag_count": 35,
-      "last_run": "2026-04-30T13:31:57.685890Z",
+      "flag_count": 39,
+      "last_run": "2026-04-30T15:30:07.458243Z",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=0 soft=4 info=31",
+      "notes": "hard=0 soft=4 info=35",
       "rulebook_version_history": [
         {
           "ts": "2026-04-30T12:59:41.492620Z",
@@ -4259,10 +4299,15 @@
           "ts": "2026-04-30T13:31:57.685890Z",
           "run_id": "55d0ee0670b34600b1b287d7b0ca09f4",
           "version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+        },
+        {
+          "ts": "2026-04-30T15:30:07.458243Z",
+          "run_id": "ef7d21302ec445b1a32ed6cb97b8e9c4",
+          "version": "76db749b3ccc3557a2a1054dea6546ff71aa8d8a8ccca296cc6975781587b8c2"
         }
       ],
-      "last_run_id": "55d0ee0670b34600b1b287d7b0ca09f4",
-      "rulebook_version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+      "last_run_id": "ef7d21302ec445b1a32ed6cb97b8e9c4",
+      "rulebook_version": "76db749b3ccc3557a2a1054dea6546ff71aa8d8a8ccca296cc6975781587b8c2"
     },
     "theragenics-corp": {
       "status": "pending",
@@ -4336,11 +4381,11 @@
       "acquirer": "WESTERN DIGITAL CORP",
       "date_announced": "2013-06-24",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1102741/0001193125-13-325730-index.htm",
-      "flag_count": 18,
-      "last_run": "2026-04-30T13:43:18.756797Z",
+      "flag_count": 14,
+      "last_run": "2026-04-30T20:25:29.949011Z",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=0 soft=4 info=14",
+      "notes": "hard=0 soft=3 info=11",
       "rulebook_version_history": [
         {
           "ts": "2026-04-30T12:59:41.641862Z",
@@ -4351,10 +4396,15 @@
           "ts": "2026-04-30T13:43:18.756797Z",
           "run_id": "049bb991ddd04429a672186f7854058b",
           "version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+        },
+        {
+          "ts": "2026-04-30T20:25:29.949011Z",
+          "run_id": "68b0335474bf4665a82dbacdd93fb589",
+          "version": "76db749b3ccc3557a2a1054dea6546ff71aa8d8a8ccca296cc6975781587b8c2"
         }
       ],
-      "last_run_id": "049bb991ddd04429a672186f7854058b",
-      "rulebook_version": "05a99b0a6443158a227cfa624f1ba81ddf81132a24e3a31a74edb7c3c3744928"
+      "last_run_id": "68b0335474bf4665a82dbacdd93fb589",
+      "rulebook_version": "76db749b3ccc3557a2a1054dea6546ff71aa8d8a8ccca296cc6975781587b8c2"
     },
     "b-m-c-software-inc": {
       "status": "pending",

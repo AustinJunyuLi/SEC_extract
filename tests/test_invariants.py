@@ -490,13 +490,52 @@ def test_d1a_unsolicited_first_contact_exemption_matrix(fixture_name, runner_key
     _assert_fixture(fixture_name, runner_key)
 
 
-def test_p_d6_accepts_buyer_group_constituent_bid_with_consortium_evidence():
+def test_p_d6_rejects_buyer_group_constituent_bid_without_nda():
     events = [
         {
             "bid_note": "ConsortiumCA",
             "bidder_name": "bidder_01",
             "bidder_alias": "Longview",
             "process_phase": 1,
+        },
+        {
+            "bid_note": "Bid",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "process_phase": 1,
+            "flags": [{
+                "code": "buyer_group_constituent",
+                "severity": "info",
+                "reason": "Filing identifies Longview as a buyer-group participant in this bid.",
+            }],
+        },
+    ]
+
+    flags = pipeline._invariant_p_d6(events)
+
+    assert [f["code"] for f in flags] == ["bid_without_preceding_nda"]
+    assert flags[0]["severity"] == "hard"
+
+
+def test_p_d6_accepts_buyer_group_constituent_bid_after_inherited_nda():
+    events = [
+        {
+            "bid_note": "ConsortiumCA",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "process_phase": 1,
+        },
+        {
+            "bid_note": "NDA",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "process_phase": 1,
+            "role": "bidder",
+            "flags": [{
+                "code": "buyer_group_constituent",
+                "severity": "info",
+                "reason": "Filing identifies Longview as joining an already-NDA-bound buyer group.",
+            }],
         },
         {
             "bid_note": "Bid",
@@ -537,7 +576,7 @@ def test_p_d6_consortium_ca_alone_does_not_replace_target_nda():
     assert flags[0]["severity"] == "hard"
 
 
-def test_p_d5_accepts_buyer_group_constituent_drop_after_consortium_bid():
+def test_p_d5_accepts_buyer_group_constituent_drop_after_constituent_bid():
     events = [
         {
             "bid_note": "ConsortiumCA",
@@ -572,6 +611,42 @@ def test_p_d5_accepts_buyer_group_constituent_drop_after_consortium_bid():
     assert pipeline._invariant_p_d5(events) == []
 
 
+def test_p_d5_accepts_buyer_group_constituent_drop_after_inherited_nda():
+    events = [
+        {
+            "bid_note": "ConsortiumCA",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "process_phase": 1,
+        },
+        {
+            "bid_note": "NDA",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "process_phase": 1,
+            "role": "bidder",
+            "flags": [{
+                "code": "buyer_group_constituent",
+                "severity": "info",
+                "reason": "Filing identifies Longview as joining an already-NDA-bound buyer group.",
+            }],
+        },
+        {
+            "bid_note": "Drop",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "process_phase": 1,
+            "flags": [{
+                "code": "buyer_group_constituent",
+                "severity": "info",
+                "reason": "Filing identifies Longview as a buyer-group participant in the dropped bid.",
+            }],
+        },
+    ]
+
+    assert pipeline._invariant_p_d5(events) == []
+
+
 def test_p_d5_consortium_ca_alone_does_not_replace_prior_engagement():
     events = [
         {
@@ -586,6 +661,33 @@ def test_p_d5_consortium_ca_alone_does_not_replace_prior_engagement():
             "bidder_alias": "Longview",
             "process_phase": 1,
             "flags": [],
+        },
+    ]
+
+    flags = pipeline._invariant_p_d5(events)
+
+    assert [f["code"] for f in flags] == ["drop_without_prior_engagement"]
+    assert flags[0]["severity"] == "hard"
+
+
+def test_p_d5_buyer_group_constituent_flag_does_not_replace_prior_engagement():
+    events = [
+        {
+            "bid_note": "ConsortiumCA",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "process_phase": 1,
+        },
+        {
+            "bid_note": "Drop",
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "process_phase": 1,
+            "flags": [{
+                "code": "buyer_group_constituent",
+                "severity": "info",
+                "reason": "Filing identifies Longview as a buyer-group participant in the dropped bid.",
+            }],
         },
     ]
 
@@ -912,6 +1014,44 @@ def test_ps1_null_placeholder_dropsilent_satisfies_alias_followup():
     assert flags == []
 
 
+def test_ps1_inherited_buyer_group_nda_satisfied_by_executed():
+    flags = pipeline._invariant_p_s1([
+        {
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "bid_note": "ConsortiumCA",
+            "process_phase": 1,
+            "role": "bidder",
+        },
+        {
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "bid_note": "NDA",
+            "process_phase": 1,
+            "role": "bidder",
+            "flags": [{
+                "code": "buyer_group_constituent",
+                "severity": "info",
+                "reason": "Filing identifies Longview as joining an already-NDA-bound buyer group.",
+            }],
+        },
+        {
+            "bidder_name": "bidder_01",
+            "bidder_alias": "Longview",
+            "bid_note": "Executed",
+            "process_phase": 1,
+            "role": "bidder",
+            "flags": [{
+                "code": "buyer_group_constituent",
+                "severity": "info",
+                "reason": "Filing identifies Longview as an executed buyer-group constituent.",
+            }],
+        },
+    ])
+
+    assert flags == []
+
+
 @pytest.mark.parametrize(
     "fixture_name",
     ["synthetic_ps2_pass.json", "synthetic_ps2_fail.json"],
@@ -1041,6 +1181,29 @@ def test_p_r7_promotes_ca_type_ambiguous_to_hard():
             ),
         }
     ]
+
+
+def test_p_r10_flags_unatomized_slash_alias_on_lifecycle_row():
+    events = [{
+        "bid_note": "Bid",
+        "role": "bidder",
+        "bidder_alias": "CSC/Pamplona",
+    }]
+
+    flags = pipeline._invariant_p_r10(events)
+
+    assert [f["code"] for f in flags] == ["aggregate_bidder_alias_unatomized"]
+    assert flags[0]["severity"] == "hard"
+
+
+def test_p_r10_allows_relationship_alias_on_consortium_ca():
+    events = [{
+        "bid_note": "ConsortiumCA",
+        "role": "bidder",
+        "bidder_alias": "Longview and the Buyer Group",
+    }]
+
+    assert pipeline._invariant_p_r10(events) == []
 
 
 def test_p_g2_range_with_formal_bid_type_fails_hard():
