@@ -56,14 +56,16 @@ def test_extractor_prompt_contract_describes_embedded_filing_text():
     assert "page-numbered `pages`" in text
     assert "Do not fetch from SEC/EDGAR" in text
     assert "access local files, run arbitrary code" in text
-    assert "## Tools available to you" in text
-    assert "`check_row(row)`" in text
-    assert "`search_filing(query, page_range, max_hits)`" in text
-    assert "`get_pages(start_page, end_page)`" in text
+    assert "No tools are available during initial extraction" in text
+    assert "`check_row(row)`" not in text
+    assert "`search_filing(query, page_range, max_hits)`" not in text
+    assert "`get_pages(start_page, end_page)`" not in text
     assert "deal.bidder_registry` is schema-empty" in text
     assert "`rules/invariants.md` remains validator-facing only" in text
-    assert "return exactly one raw JSON object" in text
+    assert "Return exactly one raw JSON object" in text
     assert "Do not include prose, markdown fences" in text
+    assert "Always call `check_row`" not in text
+    assert "After tool calls return" not in text
     assert "```" not in text
     assert "Do not emit pipeline-stamped\nfields" in text
     assert "Use `null` for unsupported optional facts" in text
@@ -75,13 +77,27 @@ def test_extractor_prompt_contract_describes_embedded_filing_text():
     assert "Advisor NDA rows are not skip rows" in text
     assert "Exact-count unnamed NDA placeholders are lifecycle handles" in text
     assert "label such as `Buyer Group`" in text
-    assert "Buyer-group constituents/count unsupported by Background or searched filing" in text
+    assert "Atomize buyer-group `NDA`, `Bid`, `Drop`, `DropSilent`, and `Executed`" in text
+    assert "joins an already-NDA-bound buyer group" in text
+    assert "`ConsortiumCA` never substitutes for a same-bidder `NDA`" in text
+    assert "never collapse to a single `Buyer Group` row" in text
+    assert "Slash or relationship labels such as `CSC/Pamplona`" in text
+    assert "Buyer-group constituents/count unsupported by embedded filing evidence" in text
     assert "bid_type` still ambiguous" in text
     assert "status\": \"blocked_by_open_rule\"" not in text
     assert "blocked_by_open_rule" not in text
     assert "§M3 (legal advisor NDA)" not in text
     for stale_phrase in ["Read " "tool", "Read these " "files", "sub" "agent"]:
         assert stale_phrase not in text
+
+
+def test_repair_prompt_documents_staged_tool_modes():
+    text = (REPO_ROOT / "prompts" / "repair.md").read_text()
+
+    assert "Repair turn 1 has no tools" in text
+    assert "Repair turn 2 may use targeted repair tools" in text
+    assert "`check_row` only for hard-flagged rows" in text
+    assert "Do not emit patches or partial output" in text
 
 
 def test_value_bearing_bid_consideration_contract_is_explicit():
