@@ -4,6 +4,8 @@ import json
 import pytest
 
 from pipeline import run_pool
+from pipeline.llm.client import CompletionResult
+from pipeline.llm.extract import ExtractResult
 
 
 def _cfg(**kwargs):
@@ -138,6 +140,15 @@ def test_skip_decisions_and_cache_policy(minimal_state_repo, monkeypatch):
         "raw_response_path": f"runs/{run_id}/raw_response.json",
     }))
     assert run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state).action == "re_validate"
+    manifest = json.loads((audit / "manifest.json").read_text())
+    valid_manifest = dict(manifest)
+    manifest["repair_strategy"] = "prompt_then_filing_tools"
+    (audit / "manifest.json").write_text(json.dumps(manifest))
+    decision = run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state)
+    assert decision.action == "blocked"
+    assert "repair_strategy" in decision.reason
+    (audit / "manifest.json").write_text(json.dumps(valid_manifest))
+
     (audit / "raw_response.json").write_text(json.dumps({
         "schema_version": "raw_response_v2",
         "run_id": run_id,
@@ -158,6 +169,74 @@ def test_skip_decisions_and_cache_policy(minimal_state_repo, monkeypatch):
     decision = run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state)
     assert decision.action == "blocked"
     assert "extractor_contract_version" in decision.reason
+
+
+def test_success_manifest_records_prompt_first_repair_strategy(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    env.seed_deal("a", is_reference=True, status="pending", rulebook_version="rules-v1")
+    monkeypatch.setattr(run_pool.core, "rulebook_version", lambda: "rules-v1")
+
+    async def fake_extract(*args, **kwargs):
+        raw = {
+            "deal": {
+                "TargetName": "A",
+                "Acquirer": "B",
+                "DateAnnounced": None,
+                "DateEffective": None,
+                "auction": False,
+                "all_cash": None,
+                "target_legal_counsel": None,
+                "acquirer_legal_counsel": None,
+                "bidder_registry": {},
+                "deal_flags": [],
+            },
+            "events": [],
+        }
+        return ExtractResult(
+            raw_extraction=raw,
+            completion=CompletionResult(
+                text=json.dumps(raw),
+                model="test-model",
+                input_tokens=1,
+                output_tokens=1,
+            ),
+            rulebook_version="rules-v1",
+            tool_calls_count=0,
+        )
+
+    def fake_prepare(slug, raw, filing):
+        return raw, filing, []
+
+    def fake_validate(prepared, filing):
+        return run_pool.core.ValidatorResult(row_flags=[], deal_flags=[])
+
+    class FinalizeResult:
+        status = "passed_clean"
+        flag_count = 0
+        notes = "hard=0 soft=0 info=0"
+        output_path = env.tmp_path / "output" / "extractions" / "a.json"
+
+    def fake_finalize_prepared(slug, prepared, filing, validation, promotion_log, run_id):
+        FinalizeResult.output_path.parent.mkdir(parents=True, exist_ok=True)
+        FinalizeResult.output_path.write_text(json.dumps(prepared))
+        return FinalizeResult()
+
+    monkeypatch.setattr(run_pool, "extract_deal", fake_extract)
+    monkeypatch.setattr(run_pool.core, "load_filing", lambda slug: run_pool.core.Filing(slug=slug, pages=[]))
+    monkeypatch.setattr(run_pool.core, "prepare_for_validate", fake_prepare)
+    monkeypatch.setattr(run_pool.core, "validate", fake_validate)
+    monkeypatch.setattr(run_pool.core, "finalize_prepared", fake_finalize_prepared)
+
+    summary = asyncio.run(
+        run_pool.run_pool(
+            _cfg(slugs=("a",), audit_root=env.tmp_path / "output" / "audit"),
+            llm_client=object(),
+        )
+    )
+
+    manifest = json.loads((summary.outcomes[0].audit_path / "manifest.json").read_text())
+    assert manifest["extract_tool_mode"] == "none"
+    assert manifest["repair_strategy"] == "prompt_then_targeted_tools"
 
 
 @pytest.mark.parametrize(
