@@ -292,10 +292,7 @@ async def _call_with_tools(
             tool_choice="auto",
             max_output_tokens=max_output_tokens,
             reasoning_effort=reasoning_effort,
-            # Linkflow/SDK streaming currently loses function_call output
-            # items. Use non-streaming while tools are enabled so replay is
-            # based on actual call IDs and arguments.
-            stream=False,
+            stream=True,
         )
         completions.append(completion)
 

@@ -163,7 +163,7 @@ def test_extract_deal_writes_audit_and_tracks_token_usage(minimal_state_repo, mo
     assert client.calls[0]["max_output_tokens"] == 123
     assert client.calls[0]["tools"]
     assert client.calls[0]["tool_choice"] == "auto"
-    assert client.calls[0]["stream"] is False
+    assert client.calls[0]["stream"] is True
     assert (audit.root / "prompts" / "extractor.txt").read_text().startswith("=== SYSTEM ===\nPROMPT")
     assert json.loads((audit.root / "raw_response.json").read_text())["parsed_json"]["deal"]["TargetName"] == "Synthetic Target"
     call_entries = (audit.root / "calls.jsonl").read_text().splitlines()

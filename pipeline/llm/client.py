@@ -163,6 +163,7 @@ class OpenAICompatibleClient(LLMClient):
             )
 
         text_parts: list[str] = []
+        stream_output_items: list[dict[str, Any]] = []
         final_response = None
         async with APICallWatchdog(label=f"responses:{model}:attempt-{attempt}", cfg=self.watchdog_cfg) as watchdog:
             async with self._client.responses.stream(**kwargs) as stream:
@@ -171,6 +172,9 @@ class OpenAICompatibleClient(LLMClient):
                     watchdog.mark_activity(chars=len(delta), phase=getattr(event, "type", "event"))
                     if delta:
                         text_parts.append(delta)
+                    item = _event_output_item(event)
+                    if item is not None:
+                        stream_output_items.append(item)
                 if hasattr(stream, "get_final_response"):
                     final_response = await stream.get_final_response()
         if not text_parts and final_response is not None:
@@ -179,11 +183,12 @@ class OpenAICompatibleClient(LLMClient):
                 text_parts.append(output_text)
 
         usage = getattr(final_response, "usage", None)
+        output_items = _output_items(final_response) or stream_output_items
         return CompletionResult(
             text="".join(text_parts),
             model=model,
-            tool_calls=_tool_calls(final_response),
-            output_items=_output_items(final_response),
+            tool_calls=_tool_calls_from_items(output_items),
+            output_items=output_items,
             input_tokens=_usage_value(usage, "input_tokens"),
             output_tokens=_usage_value(usage, "output_tokens"),
             reasoning_tokens=_reasoning_tokens(usage),
@@ -202,6 +207,21 @@ def _event_delta(event: Any) -> str:
     if isinstance(event, dict) and event.get("type") == "response.output_text.delta":
         return event.get("delta") or ""
     return ""
+
+
+def _event_output_item(event: Any) -> dict[str, Any] | None:
+    event_type = getattr(event, "type", "")
+    if isinstance(event, dict):
+        event_type = event.get("type", "")
+        if event_type == "response.output_item.done" and isinstance(event.get("item"), dict):
+            return dict(event["item"])
+        return None
+    if event_type != "response.output_item.done":
+        return None
+    item = getattr(event, "item", None)
+    if item is None:
+        return None
+    return _model_dump(item)
 
 
 def _usage_value(usage: Any, name: str) -> int:
@@ -256,10 +276,11 @@ def _output_items(response: Any) -> list[dict[str, Any]]:
 
 
 def _tool_calls(response: Any) -> list[dict[str, Any]]:
-    return [
-        item for item in _output_items(response)
-        if item.get("type") == "function_call"
-    ]
+    return _tool_calls_from_items(_output_items(response))
+
+
+def _tool_calls_from_items(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [item for item in items if item.get("type") == "function_call"]
 
 
 def _output_text_from_items(response: Any) -> str:
