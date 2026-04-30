@@ -275,7 +275,7 @@ Output shape: one JSON file per deal, `{deal: {...}, events: [...]}` (see §N1).
 - `bid_value_lower` — numeric OR null. Per-share range lower bound. Per `rules/bids.md` §H1.
 - `bid_value_upper` — numeric OR null. Per-share range upper bound. Per `rules/bids.md` §H1.
 - `bid_value_unit` — string OR null. `"USD_per_share"` for per-share bids; `"USD"` for aggregate (§H4); currency codes (e.g., `"EUR"`) for non-USD; null when no stated value or non-Bid row.
-- `consideration_components` — list[str] OR null. Ordered components present (e.g., `["cash", "cvr"]`); null when no stated value or non-Bid row. Per `rules/bids.md` §H2.
+- `consideration_components` — list[str] OR null. Required and non-empty on every `Bid` row with a stated value. Ordered components present (e.g., `["cash", "cvr"]`); null only when the `Bid` row has no stated value or on non-Bid rows. Per `rules/bids.md` §H2.
 - `additional_note` — string OR null.
 - `comments` — string OR null. **Collapses** Alex's legacy `comments_1` /
   `comments_2` / `comments_3` into one free-text field.

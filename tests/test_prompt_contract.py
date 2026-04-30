@@ -59,6 +59,25 @@ def test_extractor_prompt_contract_describes_embedded_filing_text():
         assert stale_phrase not in text
 
 
+def test_value_bearing_bid_consideration_contract_is_explicit():
+    prompt = (REPO_ROOT / "prompts" / "extract.md").read_text()
+    bids = (REPO_ROOT / "rules" / "bids.md").read_text()
+    schema = (REPO_ROOT / "rules" / "schema.md").read_text()
+
+    assert "A `Bid` row with any stated value must never leave `consideration_components` null" in bids
+    assert "Dollar-denominated per-share acquisition proposals default to `[\"cash\"]`" in bids
+    assert (
+        "`consideration_components` — list[str] OR null. Required and non-empty "
+        "on every `Bid` row with a stated value."
+    ) in schema
+    assert "Never emit a value-bearing `Bid` with `consideration_components: null`" in prompt
+    assert "Dollar-denominated per-share acquisition proposals are `[\"cash\"]`" in prompt
+    assert (
+        "each bid row has `consideration_components` and `exclusivity_days` "
+        "populated or explicitly null"
+    ) not in prompt
+
+
 def test_live_contract_files_do_not_carry_stale_rule_prose():
     banned_substrings = [
         "Final-round fixtures to mirror",

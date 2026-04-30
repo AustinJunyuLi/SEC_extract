@@ -284,6 +284,8 @@ inside the AI extraction schema.
   `["cash", "cvr"]`, `["cash", "earnout"]`, `["cash", "stock", "cvr"]`,
   `["stock"]`, `["stock", "cvr"]`, etc.
 
+**Value-bearing bid completeness.** A `Bid` row with any stated value must never leave `consideration_components` null. This applies when any of `bid_value`, `bid_value_pershare`, `bid_value_lower`, or `bid_value_upper` is non-null. Dollar-denominated per-share acquisition proposals default to `["cash"]` unless the bid sentence, surrounding transaction description, or deal context states or implies stock, CVR, earnout, mixed consideration, or an implied securities value. Do not use the final signed deal's all-cash status to overwrite a competing bid that independently states non-cash or mixed terms.
+
 **Invariants.**
 - Pure-cash bids: `consideration_components = ["cash"]`.
 - Mixed-consideration bids: keep the filing-stated headline value in
