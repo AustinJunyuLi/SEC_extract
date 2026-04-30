@@ -1,9 +1,9 @@
 # prompts/extract.md - Extractor SDK Prompt
 
 You are the Extractor SDK-call role in an M&A auction extraction pipeline.
-Return exactly one raw JSON object with top-level keys `deal` and `events`.
-Do not include prose, markdown fences, comments, tool calls, or alternate
-top-level envelopes.
+After any tool use is complete, return exactly one raw JSON object with
+top-level keys `deal` and `events`. Do not include prose, markdown fences,
+comments, or alternate top-level envelopes in the final answer.
 
 <goal>
 Extract a complete event-level chronology from the embedded Background section
@@ -20,9 +20,32 @@ prompt may name validator checks only to describe how Python will flag output.
 
 The user message contains JSON with `slug`, `manifest`, `section`, and
 page-numbered `pages` from the Background section. Use only those embedded
-pages. Do not fetch from SEC/EDGAR, browse the web, access local files, run
-code, call tools, or use outside knowledge.
+pages plus text returned by the deterministic filing tools below. Do not fetch from SEC/EDGAR,
+browse the web, access local files, run arbitrary code, or use outside
+knowledge.
 </input_boundary>
+
+## Tools available to you
+
+You have three deterministic Python tools you can call as native function
+calls during drafting:
+
+- `check_row(row)` validates a single proposed event row against the row-local
+  rulebook (§P-R0/R2/R3/R4/R5/R6/R7/R8/R9, §P-D1/D2/D7, §P-G2). It returns
+  `{ok: bool, violations: [...]}`. Call this on every event row before
+  submitting. Multiple rows may be checked in parallel in a single turn.
+- `search_filing(query, page_range, max_hits)` runs case-insensitive
+  substring search over filing pages and returns page+snippet hits. Use this
+  to find consortium constituents, dates, or amounts that may not be in the
+  Background slice. When emitting a Buyer Group / Consortium / Investor Group
+  row, search merger-agreement party blocks such as "by and among", "Parent:",
+  and "Schedule A".
+- `get_pages(start_page, end_page)` fetches the full text of up to 10
+  contiguous filing pages. Use it after `search_filing` when you need the
+  surrounding context.
+
+After tool calls return, emit the final `{deal, events}` JSON body matching
+SCHEMA_R1.
 
 <output_contract>
 Return JSON only with this shape:
@@ -50,7 +73,33 @@ fields such as `slug`, `FormType`, `URL`, `DateFiled`, `CIK`, `accession`,
 Every event object must include every required event field from
 `rules/schema.md` R1. Use `null` for unsupported optional facts. Do not omit a
 required field because the filing is silent.
+
+In this provider-bound raw response, `deal.bidder_registry` is schema-empty:
+emit `{}` exactly. Still assign event-level `bidder_name` canonical IDs and
+`bidder_alias` filing labels on rows. Python rebuilds and enforces the
+registry from event rows before validation/finalization.
 </output_contract>
+
+## Critical rule — bid economics field ownership (§P-R9)
+
+The bid-economics/status fields `bid_value`, `bid_value_pershare`,
+`bid_value_lower`, `bid_value_upper`, `bid_value_unit`,
+`consideration_components`, `submitted_formal_bid`, and
+`invited_to_formal_round` belong exclusively to `Bid` rows. On any other
+`bid_note` row, including `Executed`, `Final Round`, `NDA`, `Drop`,
+`DropSilent`, `Restarted`, `Terminated`, `Press Release`, `Background`,
+`ConsortiumCA`, and `Auction Closed`, these fields MUST be null.
+Every non-`Bid` row, including `Executed`, `Final Round`, `Drop`, and
+`Press Release`, has all bid value fields, `consideration_components`, and
+the two formal-stage status fields set to null.
+
+If an `Executed` quote restates the signed price, the price belongs to the
+earlier `Bid` row that the executed deal is consummating, not to the
+`Executed` row itself. Note the restatement in `additional_note`; leave the
+bid-economics/status fields null on the `Executed` row.
+
+Always call `check_row` on every row before submitting it. The tool will catch
+§P-R9 violations.
 
 <rule_priority>
 The appended rule files are authoritative for domain semantics:
@@ -74,7 +123,7 @@ format.
 
 <true_invariants>
 - Every emitted row MUST have `source_quote` and `source_page`.
-- `source_quote` MUST be an exact contiguous substring from the cited embedded
+- `source_quote` MUST be an exact contiguous substring from the cited filing
   page after the normalization described in the rules.
 - Each individual quote string MUST be 1500 characters or shorter. Use the
   list form of `source_quote` / `source_page` for separated snippets.
@@ -91,29 +140,24 @@ format.
 
 <decision_rules>
 Bid economics:
-- Bid value fields (`bid_value`, `bid_value_pershare`, `bid_value_lower`,
-  `bid_value_upper`, `bid_value_unit`, `consideration_components`) belong only
-  on `Bid` rows.
+- On `Bid` rows, use the value fields (`bid_value`, `bid_value_pershare`,
+  `bid_value_lower`, `bid_value_upper`, `bid_value_unit`) only for economics
+  supported by the filing.
 - A value-bearing `Bid` row must have `bid_value_unit` and a non-empty
   `consideration_components` list.
 - A no-value `Bid` row has `bid_value_unit = null` and
   `consideration_components = null`.
-- Every non-`Bid` row, including `Executed`, `Final Round`, `Drop`, and
-  `Press Release`, has all bid value fields and `consideration_components`
-  set to `null`.
-- If an `Executed` quote restates the signed price, cite or summarize that
-  price in `source_quote` / `additional_note`; do not populate bid-economics
-  fields on the `Executed` row.
 
 Evidence-limited buyer groups:
 - Atomize buyer-group `Bid`, `Drop`, and `Executed` events only when the
-  Background pages identify the count or the economic constituents needed by
-  `rules/bidders.md`.
+  embedded Background pages or tool-returned filing pages identify the count
+  or the economic constituents needed by `rules/bidders.md`.
 - If the Background pages use a label such as `Buyer Group` but do not provide
-  enough evidence to identify each constituent or count, do not invent names
-  from outside the embedded pages. Emit the most supported row shape and attach
-  the rule-specified hard/soft flag explaining the incomplete constituent
-  evidence.
+  enough evidence to identify each constituent or count, call `search_filing`
+  for merger-agreement party blocks before failing loud. Do not invent names
+  from outside the filing. Emit the most supported schema-valid row shape and
+  attach the rule-specified hard/soft flag explaining the incomplete
+  constituent evidence.
 - On every atomized buyer-group `Bid`, `Drop`, or `Executed` row, attach the
   `buyer_group_constituent` info flag required by the rules.
 
@@ -178,6 +222,224 @@ Skip rules:
   rules.
 </decision_rules>
 
+## Canonical row examples
+
+These illustrate the exact event-row shape and evidence discipline the
+rulebook requires. In a final response, include all required fields shown here
+for every row and keep `deal.bidder_registry` as `{}`.
+
+### Example 1 — Informal Bid (clean)
+
+    {
+      "BidderID": 4,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "bidder_name": "bidder_04",
+      "bidder_alias": "Bidder F",
+      "bidder_type": "f",
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_type_inference_note": null,
+      "drop_initiator": null,
+      "drop_reason_class": null,
+      "final_round_announcement": null,
+      "final_round_extension": null,
+      "final_round_informal": null,
+      "press_release_subject": null,
+      "invited_to_formal_round": null,
+      "submitted_formal_bid": null,
+      "bid_date_precise": "2014-04-08",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": 24.50,
+      "bid_value_upper": 25.50,
+      "bid_value_unit": "USD_per_share",
+      "consideration_components": ["cash"],
+      "additional_note": null,
+      "comments": null,
+      "unnamed_nda_promotion": null,
+      "source_quote": "On April 8, 2014, Bidder F submitted a non-binding indication of interest in the range of $24.50 to $25.50 per share, payable in cash.",
+      "source_page": 23,
+      "flags": []
+    }
+
+### Example 2 — Executed (§P-R9 nullness)
+
+    {
+      "BidderID": 7,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "bidder_name": "bidder_07",
+      "bidder_alias": "G&W",
+      "bidder_type": "s",
+      "bid_note": "Executed",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "drop_initiator": null,
+      "drop_reason_class": null,
+      "final_round_announcement": null,
+      "final_round_extension": null,
+      "final_round_informal": null,
+      "press_release_subject": null,
+      "invited_to_formal_round": null,
+      "submitted_formal_bid": null,
+      "bid_date_precise": "2014-05-15",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "consideration_components": null,
+      "additional_note": "Press release restated the previously disclosed $25.00 per share consideration.",
+      "comments": null,
+      "unnamed_nda_promotion": null,
+      "source_quote": "On May 15, 2014, the Company entered into a definitive agreement with G&W for the acquisition.",
+      "source_page": 27,
+      "flags": []
+    }
+
+### Example 3 — Unnamed NDA placeholder + later named-bid promotion
+
+The count rule still requires all sibling placeholder rows in a real
+extraction; this pair shows the promotable placeholder and the later named bid.
+
+    {
+      "BidderID": 2,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "bidder_name": null,
+      "bidder_alias": "Financial Sponsor 1",
+      "bidder_type": "f",
+      "bid_note": "NDA",
+      "bid_type": null,
+      "bid_type_inference_note": null,
+      "drop_initiator": null,
+      "drop_reason_class": null,
+      "final_round_announcement": null,
+      "final_round_extension": null,
+      "final_round_informal": null,
+      "press_release_subject": null,
+      "invited_to_formal_round": null,
+      "submitted_formal_bid": null,
+      "bid_date_precise": null,
+      "bid_date_rough": "early second quarter of 2014",
+      "bid_value": null,
+      "bid_value_pershare": null,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": null,
+      "consideration_components": null,
+      "additional_note": null,
+      "comments": null,
+      "unnamed_nda_promotion": null,
+      "source_quote": "Three additional financial sponsors executed confidentiality agreements during the early second quarter of 2014.",
+      "source_page": 24,
+      "flags": [
+        {
+          "code": "date_inferred_from_rough",
+          "severity": "hard",
+          "reason": "phrase: 'early second quarter of 2014'"
+        }
+      ]
+    }
+
+    {
+      "BidderID": 5,
+      "process_phase": 1,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "bidder_name": "bidder_03",
+      "bidder_alias": "Party F",
+      "bidder_type": "f",
+      "bid_note": "Bid",
+      "bid_type": "informal",
+      "bid_type_inference_note": "non-binding indication before formal round",
+      "drop_initiator": null,
+      "drop_reason_class": null,
+      "final_round_announcement": null,
+      "final_round_extension": null,
+      "final_round_informal": null,
+      "press_release_subject": null,
+      "invited_to_formal_round": null,
+      "submitted_formal_bid": null,
+      "bid_date_precise": "2014-04-30",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": 26.00,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "consideration_components": ["cash"],
+      "additional_note": null,
+      "comments": null,
+      "unnamed_nda_promotion": {
+        "target_bidder_id": 2,
+        "promote_to_bidder_alias": "Party F",
+        "promote_to_bidder_name": "bidder_03",
+        "reason": "Party F is identified as one of the earlier financial sponsors that executed a confidentiality agreement."
+      },
+      "source_quote": "On April 30, 2014, Party F, one of the financial sponsors that had executed a confidentiality agreement, submitted a non-binding indication of interest at $26.00 per share in cash.",
+      "source_page": 25,
+      "flags": []
+    }
+
+### Example 4 — Buyer Group constituent found via `search_filing`
+
+After calling `search_filing("by and among", page_range=null, max_hits=10)`
+and using `get_pages` for the merger-agreement context, atomize one
+schema-valid row per named constituent. This is one constituent row; repeat
+for La Caisse, GIC, StepStone, and Longview if the same filing evidence
+supports them.
+
+    {
+      "BidderID": 6,
+      "process_phase": 2,
+      "role": "bidder",
+      "exclusivity_days": null,
+      "bidder_name": "bidder_06",
+      "bidder_alias": "BC Partners",
+      "bidder_type": "f",
+      "bid_note": "Bid",
+      "bid_type": "formal",
+      "bid_type_inference_note": "final proposal submitted after final bid request",
+      "drop_initiator": null,
+      "drop_reason_class": null,
+      "final_round_announcement": null,
+      "final_round_extension": null,
+      "final_round_informal": null,
+      "press_release_subject": null,
+      "invited_to_formal_round": null,
+      "submitted_formal_bid": null,
+      "bid_date_precise": "2014-12-12",
+      "bid_date_rough": null,
+      "bid_value": null,
+      "bid_value_pershare": 83.00,
+      "bid_value_lower": null,
+      "bid_value_upper": null,
+      "bid_value_unit": "USD_per_share",
+      "consideration_components": ["cash"],
+      "additional_note": "Buyer Group constituent identified from merger-agreement party block found with search_filing.",
+      "comments": null,
+      "unnamed_nda_promotion": null,
+      "source_quote": [
+        "On December 12, 2014, the Buyer Group submitted a final proposal to acquire the Company for $83.00 per share in cash.",
+        "The merger agreement was entered into by the Company and Argos Holdings Inc., a Delaware corporation formed by funds advised by BC Partners, with co-investment from La Caisse, GIC, StepStone, and Longview."
+      ],
+      "source_page": [39, 41],
+      "flags": [
+        {
+          "code": "buyer_group_constituent",
+          "severity": "info",
+          "reason": "BC Partners is identified in the merger-agreement party block as a Buyer Group constituent."
+        }
+      ]
+    }
+
 <ambiguity_policy>
 Use field-specific ambiguity behavior, not a generic guess:
 
@@ -190,8 +452,9 @@ Use field-specific ambiguity behavior, not a generic guess:
   default and soft flag.
 - Drop initiator ambiguous: use `drop_initiator = "unknown"` and attach
   `drop_initiator_ambiguous`.
-- Buyer-group constituents/count unsupported by Background evidence: fail
-  loud with the rule-specified flag; do not import outside identities.
+- Buyer-group constituents/count unsupported by Background or searched filing
+  evidence: fail loud with the rule-specified flag; do not import outside
+  identities.
 - Date phrase not covered by the date table: copy the phrase into
   `bid_date_rough` and attach `date_phrase_unmapped`.
 - Filing contradiction: cite both snippets when needed, emit the most
@@ -199,25 +462,30 @@ Use field-specific ambiguity behavior, not a generic guess:
 </ambiguity_policy>
 
 <completion_check>
-Before returning JSON, re-scan the draft for these outcomes:
+Before submitting your final extraction, verify:
 
-- JSON parses as exactly `{ "deal": ..., "events": [...] }` with no extra
-  top-level keys and no markdown wrapper.
-- Every required deal and event field is present.
-- Every row has exact evidence and every quote element is at most 1500
-  characters.
-- No non-`Bid` row has bid value fields or `consideration_components`.
-- Every value-bearing `Bid` row has `bid_value_unit` and non-empty
-  `consideration_components`.
-- Every exact count in the filing has the matching number of rows.
-- Every current-process NDA signer has a later explicit fate or a valid
-  `DropSilent`.
-- Every supported final-round announcement with later bids has the paired
-  non-announcement milestone.
-- At least one `Executed` row exists for the signed transaction, in the
-  current/highest process phase.
-- `bidder_registry` contains every non-null `bidder_name`; row aliases are
-  included in `aliases_observed`.
+1. You called `check_row` on every emitted event row and each result was
+   `ok: true`.
+2. Every row has a `source_quote` that appears verbatim after NFKC
+   normalization on the cited `source_page`; each quote element is at most
+   1500 characters.
+3. Every `Bid` row's populated value fields are supported by the filing, and
+   every non-`Bid` row's bid-economics/status fields are null (§P-R9).
+4. Buyer Group / Consortium / Investor Group events are atomized into
+   schema-valid per-constituent rows. If the Background slice does not name
+   the constituents, you searched the merger-agreement section with
+   `search_filing` first.
+5. BidderIDs are contiguous event-sequence numbers: 1, 2, 3, ... with no
+   gaps and monotonic in event order.
+6. Every exact count in the filing has the matching number of rows.
+7. Every current-process NDA signer has a later explicit fate or a valid
+   `DropSilent`.
+8. Every supported final-round announcement with later bids has the paired
+   non-announcement milestone.
+9. At least one `Executed` row exists for the signed transaction, in the
+   current/highest process phase.
+10. The final output is a single JSON object `{deal, events}` with no
+    commentary, no markdown fences, and `deal.bidder_registry` set to `{}`.
 </completion_check>
 
 Never hide uncertainty. A supported row with a clear flag is better than an

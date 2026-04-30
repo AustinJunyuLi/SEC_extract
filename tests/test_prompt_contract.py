@@ -55,9 +55,14 @@ def test_extractor_prompt_contract_describes_embedded_filing_text():
     assert "SDK-call role" in text
     assert "page-numbered `pages`" in text
     assert "Do not fetch from SEC/EDGAR" in text
-    assert "access local files, run\ncode, call tools" in text
+    assert "access local files, run arbitrary code" in text
+    assert "## Tools available to you" in text
+    assert "`check_row(row)`" in text
+    assert "`search_filing(query, page_range, max_hits)`" in text
+    assert "`get_pages(start_page, end_page)`" in text
+    assert "deal.bidder_registry` is schema-empty" in text
     assert "`rules/invariants.md` remains validator-facing only" in text
-    assert "Return exactly one raw JSON object" in text
+    assert "return exactly one raw JSON object" in text
     assert "Do not include prose, markdown fences" in text
     assert "```" not in text
     assert "Do not emit pipeline-stamped\nfields" in text
@@ -70,7 +75,7 @@ def test_extractor_prompt_contract_describes_embedded_filing_text():
     assert "Advisor NDA rows are not skip rows" in text
     assert "Exact-count unnamed NDA placeholders are lifecycle handles" in text
     assert "label such as `Buyer Group`" in text
-    assert "Buyer-group constituents/count unsupported by Background evidence" in text
+    assert "Buyer-group constituents/count unsupported by Background or searched filing" in text
     assert "bid_type` still ambiguous" in text
     assert "status\": \"blocked_by_open_rule\"" not in text
     assert "blocked_by_open_rule" not in text
