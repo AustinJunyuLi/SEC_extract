@@ -439,6 +439,35 @@ def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
     return ValidatorResult(row_flags=row_flags, deal_flags=deal_flags)
 
 
+def validate_row_local(row: dict[str, Any], filing: Filing) -> list[dict[str, Any]]:
+    """Run row-local validator invariants on one proposed event row.
+
+    This is used by extractor-side tool calls while the full draft is still
+    being assembled. Cross-row and deal-level invariants remain in
+    `validate()`, where the validator has the complete event list and bidder
+    registry.
+    """
+    flags: list[dict[str, Any]] = []
+
+    flags.extend(_invariant_p_r0([row]))
+    if not isinstance(row, dict):
+        return flags
+
+    events = [row]
+    flags.extend(_invariant_p_r2(events, filing))
+    flags.extend(_invariant_p_r3(events))
+    flags.extend(_invariant_p_r4(events))
+    flags.extend(_invariant_p_r6(events))
+    flags.extend(_invariant_p_r7(events))
+    flags.extend(_invariant_p_r8(events, {}))
+    flags.extend(_invariant_p_r9(events))
+    flags.extend(_invariant_p_d1(events))
+    flags.extend(_invariant_p_d2(events))
+    flags.extend(_invariant_p_d7(events))
+    flags.extend(_invariant_p_g2(events))
+    return flags
+
+
 def _nfkc(s: str) -> str:
     return unicodedata.normalize("NFKC", s)
 
