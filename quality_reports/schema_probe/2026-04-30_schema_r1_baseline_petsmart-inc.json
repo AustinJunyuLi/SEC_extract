@@ -1,0 +1,20 @@
+{
+  "slug": "petsmart-inc",
+  "started_utc": "2026-04-30T11:07:53.518890+00:00",
+  "status": "ok",
+  "output_text_chars": 677,
+  "output_text_head": "{\"deal\":{\"Acquirer\":\"Buyer Group\",\"DateAnnounced\":\"2014-12-14\",\"DateEffective\":null,\"TargetName\":\"PetSmart, Inc.\",\"acquirer_legal_counsel\":null,\"all_cash\":true,\"auction\":true,\"bidder_registry\":{},\"deal_flags\":[{\"code\":\"legal_counsel_evidence\",\"reason\":\"target counsel; source_page=28; quote='Wachtell, Lipton, Rosen & Katz (\u201cWachtell Lipton\u201d), its legal advisor'\",\"severity\":\"info\"},{\"code\":\"buyer_gr",
+  "usage": {
+    "input_tokens": 44493,
+    "input_tokens_details": {
+      "cached_tokens": 38144
+    },
+    "output_tokens": 2257,
+    "output_tokens_details": {
+      "reasoning_tokens": 2070
+    },
+    "total_tokens": 46750
+  },
+  "parses": true,
+  "finished_utc": "2026-04-30T11:08:41.581468+00:00"
+}

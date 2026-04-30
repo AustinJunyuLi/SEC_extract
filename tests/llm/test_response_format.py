@@ -55,11 +55,11 @@ def test_schema_r1_bid_note_enum_matches_core_vocabulary():
     assert bid_note["enum"] == sorted(core.EVENT_VOCABULARY)
 
 
-def test_schema_r1_allows_optional_unnamed_nda_promotion_hint():
+def test_schema_r1_requires_unnamed_nda_promotion_hint_slot():
     event_schema = SCHEMA_R1["properties"]["events"]["items"]
     promotion = event_schema["properties"]["unnamed_nda_promotion"]
 
-    assert "unnamed_nda_promotion" not in event_schema["required"]
+    assert "unnamed_nda_promotion" in event_schema["required"]
     assert promotion["additionalProperties"] is False
     assert set(promotion["required"]) == {
         "target_bidder_id",
@@ -134,6 +134,7 @@ def _valid_payload():
                 "consideration_components": None,
                 "additional_note": None,
                 "comments": None,
+                "unnamed_nda_promotion": None,
                 "source_quote": "The target board met to discuss strategic alternatives.",
                 "source_page": 12,
                 "flags": [],

@@ -153,7 +153,14 @@ SCHEMA_R1: dict[str, Any] = {
                 "acquirer_legal_counsel": {"type": ["string", "null"]},
                 "bidder_registry": {
                     "type": "object",
-                    "additionalProperties": REGISTRY_ENTRY_SCHEMA,
+                    # Linkflow currently 502s on dynamic registry objects
+                    # (`additionalProperties` as a schema or true) and on
+                    # fixed canonical bidder keys such as bidder_01. The
+                    # provider schema therefore accepts an empty object here;
+                    # Python rebuilds/enforces the live registry contract
+                    # before validation/finalization.
+                    "properties": {},
+                    "additionalProperties": False,
                 },
                 "deal_flags": {"type": "array", "items": FLAG_SCHEMA},
             },
@@ -211,8 +218,17 @@ SCHEMA_R1: dict[str, Any] = {
                     "bid_value_pershare": {"type": ["number", "null"]},
                     "bid_value_lower": {"type": ["number", "null"]},
                     "bid_value_upper": {"type": ["number", "null"]},
-                    "bid_value_unit": {"type": ["string", "null"]},
-                    "consideration_components": {"type": ["array", "null"], "items": {"type": "string"}},
+                    "bid_value_unit": {
+                        "type": ["string", "null"],
+                        "enum": ["USD_per_share", "USD", "EUR", "GBP", "CAD", None],
+                    },
+                    "consideration_components": {
+                        "type": ["array", "null"],
+                        "items": {
+                            "type": "string",
+                            "enum": ["cash", "stock", "cvr", "earnout", "other"],
+                        },
+                    },
                     "additional_note": {"type": ["string", "null"]},
                     "comments": {"type": ["string", "null"]},
                     "unnamed_nda_promotion": {
@@ -231,8 +247,15 @@ SCHEMA_R1: dict[str, Any] = {
                         ],
                         "additionalProperties": False,
                     },
-                    "source_quote": {"oneOf": [{"type": "string"}, {"type": "array", "items": {"type": "string"}}]},
-                    "source_page": {"oneOf": [{"type": "integer"}, {"type": "array", "items": {"type": "integer"}}]},
+                    "source_quote": {
+                        "type": ["string", "array"],
+                        "maxLength": 1500,
+                        "items": {"type": "string", "maxLength": 1500},
+                    },
+                    "source_page": {
+                        "type": ["integer", "array"],
+                        "items": {"type": "integer"},
+                    },
                     "flags": {"type": "array", "items": FLAG_SCHEMA},
                 },
                 "required": [
@@ -264,6 +287,7 @@ SCHEMA_R1: dict[str, Any] = {
                     "consideration_components",
                     "additional_note",
                     "comments",
+                    "unnamed_nda_promotion",
                     "source_quote",
                     "source_page",
                     "flags",

@@ -1,0 +1,20 @@
+{
+  "slug": "medivation",
+  "started_utc": "2026-04-30T11:02:18.028937+00:00",
+  "status": "ok",
+  "output_text_chars": 28213,
+  "output_text_head": "{\"deal\":{\"Acquirer\":\"Pfizer Inc.\",\"DateAnnounced\":\"2016-08-22\",\"DateEffective\":null,\"TargetName\":\"Medivation\",\"acquirer_legal_counsel\":\"Ropes & Gray LLP\",\"all_cash\":true,\"auction\":true,\"bidder_registry\":{},\"deal_flags\":[{\"code\":\"legal_counsel_evidence\",\"reason\":\"target counsel: source_page=26; quote='Cooley LLP (\u201cCooley\u201d), a legal advisor to Medivation' and source_page=27; quote='Wachtell, Lipton,",
+  "usage": {
+    "input_tokens": 41691,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens": 10199,
+    "output_tokens_details": {
+      "reasoning_tokens": 3164
+    },
+    "total_tokens": 51890
+  },
+  "parses": true,
+  "finished_utc": "2026-04-30T11:04:17.885525+00:00"
+}
