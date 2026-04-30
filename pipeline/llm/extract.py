@@ -322,7 +322,27 @@ async def _call_with_tools(
         completion.parsed_json = parsed
         return parsed, completion, completions, tool_calls_count
 
-    raise RuntimeError(f"extractor exceeded max tool turns ({MAX_TOOL_TURNS})")
+    input_items.append({
+        "role": "user",
+        "content": (
+            f"Tool-call turn limit ({MAX_TOOL_TURNS}) reached. Emit the final "
+            "{deal, events} JSON now. Do not call tools. Any remaining issues "
+            "will be handled by Python validation and repair."
+        ),
+    })
+    completion = await llm_client.complete(
+        model=model,
+        input_items=input_items,
+        text_format=json_schema_format(SCHEMA_R1),
+        max_output_tokens=max_output_tokens,
+        reasoning_effort=reasoning_effort,
+        stream=True,
+    )
+    completions.append(completion)
+    parsed = parse_json_text(completion.text)
+    _ensure_extraction_shape(parsed)
+    completion.parsed_json = parsed
+    return parsed, completion, completions, tool_calls_count
 
 
 async def extract_deal(
