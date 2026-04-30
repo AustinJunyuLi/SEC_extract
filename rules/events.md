@@ -28,7 +28,7 @@ expansion.
 
 **Counterparty events:**
 - `NDA` — **target ↔ bidder** confidentiality agreement (auction NDA, Type A per §I3). Grants the bidder access to MNPI; usually paired with a standstill. This is the auction-funnel signal counted by §Scope-1.
-- `ConsortiumCA` — **bidder ↔ bidder** confidentiality agreement (consortium / inter-bidder, Type B per §I3). Two would-be bidders share proprietary analysis / financing plans / strategic intent under mutual confidentiality. NOT auction-funnel signal; does NOT count toward §Scope-1's auction threshold; does not by itself discharge §P-D6. A later atomized buyer-group `Bid` may satisfy §P-D6 only when that `Bid` row carries explicit `buyer_group_constituent` evidence.
+- `ConsortiumCA` — **bidder ↔ bidder** confidentiality agreement (consortium / inter-bidder, Type B per §I3). Two would-be bidders share proprietary analysis / financing plans / strategic intent under mutual confidentiality. NOT auction-funnel signal; does NOT count toward §Scope-1's auction threshold; does not discharge §P-D6. If it documents a late member joining an already-NDA-bound buyer group, emit a separate inherited `NDA` row for that constituent.
 - `Drop` — filing-narrated withdrawal / rejection. Structured columns `drop_initiator` and `drop_reason_class` carry the agency and reason class.
 - `DropSilent` — bidder signed NDA but the filing narrates no later activity (no bid, no narrated drop, no execution); inferred withdrawal. Required by §I1; date is null with `date_unknown` info flag; agency is unknowable.
 
@@ -327,9 +327,11 @@ consortium** and that consortium drops:
 - The consortium's bidding events (bids, final-round participation) follow
   the joint-bidder rule in `rules/bidders.md` §E2.
 
-If the bidders never signed individual NDAs (consortium formed before any
-NDA), atomize the consortium event per §E2.b using named constituents,
-signature-block constituents, or count placeholders as available.
+If the bidders never signed individual NDAs but the group itself is
+NDA-bound, emit constituent-level `NDA` rows per §E2.b before the `Drop`
+rows. If neither individual nor inherited group-NDA status is supported,
+the `Drop` rows must fail §P-D5 rather than passing through a consortium
+fallback.
 
 **Why split on individual NDAs.** Preserves the 1:1 mapping from NDA to
 drop row, so the bidder funnel stays clean: every NDA-signer has a fate.
@@ -369,14 +371,18 @@ legally distinct CA types appear:
 
 - **Type A** → `bid_note = "NDA"` (the existing event). Counted by
   §Scope-1; satisfies §P-D6 (NDA-before-Bid precondition); subject to
-  §I1 DropSilent rule for silent signers.
+  §I1 DropSilent rule for silent signers. When Type A status belongs to an
+  identifiable buyer group, emit one `NDA` row per constituent covered by
+  that status.
 - **Type B** → `bid_note = "ConsortiumCA"` (new event in §C1; rank 5
   by §A3). NOT counted by §Scope-1; does NOT by itself satisfy §P-D6
   (a Type B CA is not target-bidder); does NOT trigger §I1 DropSilent
   (a silent ConsortiumCA signer is not a silent auction-funnel signer).
-  It can serve as consortium-membership evidence for later atomized
-  buyer-group lifecycle rows only when those later rows carry
-  `buyer_group_constituent`.
+  It can establish membership and join date. If a Type B CA admits a
+  member to an already-NDA-bound buyer group, emit a separate inherited
+  `NDA` row for that member dated to the join date; that inherited `NDA`
+  row, not the `ConsortiumCA`, is what counts under §Scope-1 and satisfies
+  §P-D6.
 - **Type C** → **skipped.** No row emitted. See `rules/bids.md` §M5.
   Rollover CAs are not auction-process events; they belong to a
   separate research domain (post-merger capital structure).
@@ -396,6 +402,11 @@ agreement was entered into, executed, or signed between two or more bidders.
 Phrases such as "permission to work together," "authorized to coordinate,"
 "discussions among bidders," or "joint participation in due diligence" are
 not CA events by themselves.
+
+If the `ConsortiumCA` also documents that a constituent joined an
+already-NDA-bound buyer group, emit both rows: the `ConsortiumCA` row for
+the bidder-bidder agreement and a separate inherited `NDA` row for the
+constituent's auction-funnel status.
 
 **When the language is ambiguous** between A and B (e.g., a CA whose
 parties are not clearly named), default to Type A and attach
@@ -417,18 +428,19 @@ Austin adjudicates against the filing.
 
 **Buyer-group constituent lifecycle flag.**
 
-When a `Bid`, `Drop`, or `Executed` row is atomized because the filing
-identifies the bidder as a buyer-group / consortium constituent, attach:
+When an `NDA`, `Bid`, `Drop`, `DropSilent`, or `Executed` row is atomized
+because the filing identifies the bidder as a buyer-group / consortium
+constituent, attach:
 
 ```json
 {"code": "buyer_group_constituent", "severity": "info",
  "reason": "<short filing-grounded statement identifying this party as a buyer-group constituent>"}
 ```
 
-This flag is required on any atomized buyer-group `Bid` that relies on
-consortium membership rather than a target-side NDA to satisfy §P-D6. It also
-lets the diff reporter label AI atomization vs Alex aggregation as a taxonomy
-bucket instead of ordinary AI-only/Alex-only noise.
+This flag documents constituent-level atomization. It does not substitute
+for an `NDA` row under §P-D6. It also lets the diff reporter label AI
+atomization vs Alex aggregation as a taxonomy bucket instead of ordinary
+AI-only/Alex-only noise.
 
 **Validator behavior on ConsortiumCA.**
 - §P-S1 (silent NDA → DropSilent) applies only to `bid_note = "NDA"`.
@@ -436,20 +448,15 @@ bucket instead of ordinary AI-only/Alex-only noise.
   `missing_nda_dropsilent`.
 - §P-S2 (auction count) counts only `bid_note = "NDA"`. ConsortiumCA
   is NOT in the count.
-- §P-D6 (NDA-before-Bid precondition) is still a target-NDA rule for
-  ordinary bidders. It allows an atomized buyer-group `Bid` without a
-  target-side NDA only when the `Bid` row carries `buyer_group_constituent`
-  and the same `(bidder_name, process_phase)` has consortium evidence
-  (`ConsortiumCA` or a flagged buyer-group `Bid` or `Executed` row).
-- §P-D5 (drop-without-prior-engagement) remains hard for ordinary drops.
-  It allows an atomized buyer-group `Drop` when that row carries
-  `buyer_group_constituent` and the same `(bidder_name, process_phase)`
-  has consortium evidence (`ConsortiumCA` or a flagged buyer-group
-  `Bid` or `Executed` row). Consortium-split `Drop` rows additionally
-  carry the `consortium_drop_split` sub-marker per §I1, but the universal
-  `buyer_group_constituent` flag is what gates this exemption. A bare
-  `ConsortiumCA` plus an unflagged `Bid` or `Drop` still fails; a
-  `consortium_drop_split` flag alone also still fails.
+- §P-D6 (NDA-before-Bid precondition) requires a same-bidder, same-phase
+  `NDA` row. For buyer-group constituents, the required row may be an
+  inherited group-NDA row. `ConsortiumCA` and `buyer_group_constituent`
+  never substitute for that `NDA`.
+- §P-D5 (drop-without-prior-engagement) requires a same-bidder, same-phase
+  engagement row (`NDA`, `Bidder Interest`, `IB`, `Bid`, bidder-specific
+  sale-start, or prior `Drop`). For buyer-group constituents, the ordinary
+  engagement row must exist; `ConsortiumCA`, `buyer_group_constituent`, and
+  `consortium_drop_split` never create a fallback exemption.
 
 **Why a new event type, not a flag on NDA.**
 - Type A is the auction signal. Mixing types (even with a
@@ -808,6 +815,15 @@ validator so the schema, Python default, and rule text agree.
      (rule 2) with no `Restarted` linking them are **phase 0** (stale prior).
    - Multiple stale priors all share `process_phase = 0`. If research ever
      needs to distinguish them, add `prior_attempt_index` later.
+
+**Zep-style abandoned-process example.** If a target runs an abandoned sale
+process in 2014 that terminates on June 26, 2014, then re-engages with the
+eventual acquirer on February 10, 2015, the 229-day gap separates the abandoned
+process from the executed process. The abandoned 2014 process remains
+`process_phase = 0`; the 2015 executed process is `process_phase = 1`. Do not
+split internal stale-side episodes into phase 1 merely because there are
+multiple stale contacts before the executed process. §P-L2 checks the boundary
+between stale-prior activity and the current/main process.
 
 **Extractor guidance.** The extractor assigns `process_phase` as part of
 row emission, using the event chronology and markers. The validator
