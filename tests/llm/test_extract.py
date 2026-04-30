@@ -161,8 +161,8 @@ def test_extract_deal_writes_audit_and_tracks_token_usage(minimal_state_repo, mo
     assert usage.used == 15
     assert client.calls[0]["model"] == "test-model"
     assert client.calls[0]["max_output_tokens"] == 123
-    assert client.calls[0]["tools"]
-    assert client.calls[0]["tool_choice"] == "auto"
+    assert "tools" not in client.calls[0] or client.calls[0]["tools"] is None
+    assert "tool_choice" not in client.calls[0] or client.calls[0]["tool_choice"] is None
     assert client.calls[0]["stream"] is True
     assert (audit.root / "prompts" / "extractor.txt").read_text().startswith("=== SYSTEM ===\nPROMPT")
     assert json.loads((audit.root / "raw_response.json").read_text())["parsed_json"]["deal"]["TargetName"] == "Synthetic Target"
@@ -171,35 +171,42 @@ def test_extract_deal_writes_audit_and_tracks_token_usage(minimal_state_repo, mo
     assert json.loads(call_entries[0])["phase"] == "extract"
 
 
-def test_extract_runs_tool_calls_and_replays_until_final_message(minimal_state_repo, monkeypatch):
+def test_repair_second_turn_runs_targeted_tools_after_prompt_only_repair_fails(minimal_state_repo, monkeypatch):
     env = minimal_state_repo
     prompts = env.tmp_path / "prompts"
     prompts.mkdir()
     (prompts / "extract.md").write_text("PROMPT")
+    (prompts / "repair.md").write_text(
+        "REPORT {validator_report}\nROWS {affected_rows}\nSNIPPETS {filing_snippets}"
+    )
     for name in extract.EXTRACTOR_RULE_FILES:
         (env.rules / name).write_text(f"RULE {name}")
     env.seed_filing("synthetic", pages=background_section_pages("page text"))
     monkeypatch.setattr(extract.core, "PROMPTS_DIR", prompts)
 
-    row = {
-        "BidderID": 1,
-        "process_phase": 1,
-        "role": "bidder",
-        "bidder_alias": "X",
-        "bidder_type": "f",
-        "bid_note": "Bid",
-        "bid_type": "informal",
-        "bid_type_inference_note": "G1 trigger phrase",
-        "source_quote": "page text",
-        "source_page": 22,
-        "flags": [],
-    }
-    fc = {
-        "type": "function_call",
-        "name": "check_row",
-        "call_id": "c1",
-        "arguments": json.dumps(row),
-    }
+    invalid_validation = extract.core.ValidatorResult(
+        row_flags=[
+            {
+                "row_index": 0,
+                "code": "source_quote_not_in_page",
+                "severity": "hard",
+                "reason": "bad quote",
+            }
+        ],
+        deal_flags=[],
+    )
+    fixed_validation = extract.core.ValidatorResult(row_flags=[], deal_flags=[])
+    validations = iter([invalid_validation, fixed_validation])
+
+    def fake_prepare(slug, raw, filing):
+        return raw, filing, []
+
+    def fake_validate(prepared, filing):
+        return next(validations)
+
+    monkeypatch.setattr(extract.core, "prepare_for_validate", fake_prepare)
+    monkeypatch.setattr(extract.core, "validate", fake_validate)
+
     final_payload = {
         "deal": {
             "TargetName": "Synthetic Target",
@@ -215,8 +222,14 @@ def test_extract_runs_tool_calls_and_replays_until_final_message(minimal_state_r
         },
         "events": [],
     }
+    tool_call = {
+        "type": "function_call",
+        "name": "search_filing",
+        "call_id": "call-search",
+        "arguments": json.dumps({"query": "page text", "page_range": None, "max_hits": 5}),
+    }
 
-    class ToolCallingClient:
+    class RepairClient:
         def __init__(self):
             self.calls = []
 
@@ -224,47 +237,111 @@ def test_extract_runs_tool_calls_and_replays_until_final_message(minimal_state_r
             self.calls.append(kwargs)
             if len(self.calls) == 1:
                 return CompletionResult(
-                    text="",
+                    text=json.dumps(final_payload),
                     model=kwargs["model"],
-                    tool_calls=[fc],
-                    output_items=[fc],
                     input_tokens=2,
                     output_tokens=3,
+                )
+            if len(self.calls) == 2:
+                return CompletionResult(
+                    text="",
+                    model=kwargs["model"],
+                    tool_calls=[tool_call],
+                    output_items=[tool_call],
+                    input_tokens=5,
+                    output_tokens=7,
                 )
             return CompletionResult(
                 text=json.dumps(final_payload),
                 model=kwargs["model"],
-                input_tokens=5,
-                output_tokens=7,
+                input_tokens=11,
+                output_tokens=13,
             )
 
     audit = _audit_writer(env.tmp_path)
     usage = TokenUsage()
-    client = ToolCallingClient()
+    client = RepairClient()
+    filing = extract.core.load_filing("synthetic")
 
-    result = asyncio.run(
-        extract.extract_deal(
-            "synthetic",
+    revised, validation, promotion_log, outcome, turns = asyncio.run(
+        extract.run_repair_loop(
+            slug="synthetic",
+            initial_draft=final_payload,
+            filing=filing,
+            validation=invalid_validation,
             llm_client=client,
             extract_model="test-model",
             audit=audit,
             token_usage=usage,
-            rulebook_version="rules-v1",
+            reasoning_effort="high",
         )
     )
 
-    assert result.raw_extraction == final_payload
-    assert result.tool_calls_count == 1
-    assert usage.used == 17
-    assert len(client.calls) == 2
-    replay = client.calls[1]["input_items"]
-    assert fc in replay
-    outputs = [item for item in replay if item.get("type") == "function_call_output"]
-    assert outputs[0]["call_id"] == "c1"
-    assert "ok" in json.loads(outputs[0]["output"])
-    tool_log = (audit.root / "tool_calls.jsonl").read_text().strip().splitlines()
-    assert len(tool_log) == 1
-    assert json.loads(tool_log[0])["name"] == "check_row"
+    assert revised == final_payload
+    assert validation is fixed_validation
+    assert promotion_log == []
+    assert outcome == "fixed"
+    assert turns == 2
+    assert "tools" not in client.calls[0] or client.calls[0]["tools"] is None
+    repair_2_tools = {tool["name"] for tool in client.calls[1]["tools"]}
+    assert repair_2_tools == {"check_row", "search_filing", "get_pages"}
+    assert client.calls[1]["tool_choice"] == "auto"
+    repair_turns = [
+        json.loads(line)
+        for line in (audit.root / "repair_turns.jsonl").read_text().splitlines()
+    ]
+    assert [row["tool_mode"] for row in repair_turns] == ["none", "targeted_repair_tools"]
+    assert repair_turns[-1]["tool_calls_count"] == 1
+
+
+def test_repair_records_failed_turn_before_reraising(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    prompts = env.tmp_path / "prompts"
+    prompts.mkdir()
+    (prompts / "extract.md").write_text("PROMPT")
+    (prompts / "repair.md").write_text(
+        "REPORT {validator_report}\nROWS {affected_rows}\nSNIPPETS {filing_snippets}"
+    )
+    for name in extract.EXTRACTOR_RULE_FILES:
+        (env.rules / name).write_text(f"RULE {name}")
+    env.seed_filing("synthetic", pages=background_section_pages("page text"))
+    monkeypatch.setattr(extract.core, "PROMPTS_DIR", prompts)
+
+    validation = extract.core.ValidatorResult(
+        row_flags=[{"row_index": 0, "code": "bad", "severity": "hard", "reason": "bad"}],
+        deal_flags=[],
+    )
+
+    class FailingRepairClient:
+        async def complete(self, **kwargs):
+            raise RuntimeError("repair provider failed")
+
+    audit = _audit_writer(env.tmp_path)
+    filing = extract.core.load_filing("synthetic")
+
+    try:
+        asyncio.run(
+            extract.run_repair_loop(
+                slug="synthetic",
+                initial_draft={"deal": {}, "events": []},
+                filing=filing,
+                validation=validation,
+                llm_client=FailingRepairClient(),
+                extract_model="test-model",
+                audit=audit,
+                token_usage=TokenUsage(),
+            )
+        )
+    except RuntimeError as exc:
+        assert "repair provider failed" in str(exc)
+    else:
+        raise AssertionError("run_repair_loop should re-raise repair failures")
+
+    repair_record = json.loads((audit.root / "repair_turns.jsonl").read_text().strip())
+    assert repair_record["turn"] == 1
+    assert repair_record["tool_mode"] == "none"
+    assert repair_record["outcome"] == "failed"
+    assert repair_record["error"]["type"] == "RuntimeError"
 
 def test_extract_deal_records_failed_call_attempts(minimal_state_repo, monkeypatch):
     env = minimal_state_repo
