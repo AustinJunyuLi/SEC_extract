@@ -268,6 +268,17 @@ def _json_dumps_tool_output(payload: dict[str, Any]) -> str:
     return json.dumps(payload, ensure_ascii=False, default=str)
 
 
+def _annotate_completion_error(
+    exc: Exception,
+    *,
+    completions: list[CompletionResult],
+    tool_calls_count: int,
+) -> Exception:
+    setattr(exc, "llm_completions", list(completions))
+    setattr(exc, "tool_calls_count", tool_calls_count)
+    return exc
+
+
 async def _call_prompt_only(
     *,
     llm_client: LLMClient,
@@ -289,8 +300,15 @@ async def _call_prompt_only(
         reasoning_effort=reasoning_effort,
         stream=True,
     )
-    parsed = parse_json_text(completion.text)
-    _ensure_extraction_shape(parsed)
+    try:
+        parsed = parse_json_text(completion.text)
+        _ensure_extraction_shape(parsed)
+    except Exception as exc:
+        raise _annotate_completion_error(
+            exc,
+            completions=[completion],
+            tool_calls_count=0,
+        ) from exc
     completion.parsed_json = parsed
     return parsed, completion, [completion], 0
 
@@ -324,7 +342,7 @@ async def _call_with_tools(
             tool_choice="auto",
             max_output_tokens=max_output_tokens,
             reasoning_effort=reasoning_effort,
-            stream=True,
+            stream=turn == 1,
         )
         completions.append(completion)
 
@@ -365,8 +383,15 @@ async def _call_with_tools(
                 })
             continue
 
-        parsed = parse_json_text(completion.text)
-        _ensure_extraction_shape(parsed)
+        try:
+            parsed = parse_json_text(completion.text)
+            _ensure_extraction_shape(parsed)
+        except Exception as exc:
+            raise _annotate_completion_error(
+                exc,
+                completions=completions,
+                tool_calls_count=tool_calls_count,
+            ) from exc
         completion.parsed_json = parsed
         return parsed, completion, completions, tool_calls_count
 
@@ -387,8 +412,15 @@ async def _call_with_tools(
         stream=True,
     )
     completions.append(completion)
-    parsed = parse_json_text(completion.text)
-    _ensure_extraction_shape(parsed)
+    try:
+        parsed = parse_json_text(completion.text)
+        _ensure_extraction_shape(parsed)
+    except Exception as exc:
+        raise _annotate_completion_error(
+            exc,
+            completions=completions,
+            tool_calls_count=tool_calls_count,
+        ) from exc
     completion.parsed_json = parsed
     return parsed, completion, completions, tool_calls_count
 
@@ -509,14 +541,18 @@ async def run_repair_loop(
                     audit_phase=f"repair_{turn}",
                 )
         except Exception as exc:
+            failed_completions = list(getattr(exc, "llm_completions", []) or [])
+            for completion in failed_completions:
+                token_usage.consume(completion)
+            failed_tool_calls_count = int(getattr(exc, "tool_calls_count", 0) or 0)
             audit.write_repair_turn({
                 "turn": turn,
                 "tool_mode": tool_mode,
                 "validator_report_summary": report,
                 "hard_flags_before": report["hard_count"],
                 "hard_flags_after": None,
-                "tool_calls_count": 0,
-                "completion_turns": 0,
+                "tool_calls_count": failed_tool_calls_count,
+                "completion_turns": len(failed_completions),
                 "outcome": "failed",
                 "error": {"type": type(exc).__name__, "message": str(exc)[:500]},
             })

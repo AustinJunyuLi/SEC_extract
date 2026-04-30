@@ -286,6 +286,8 @@ def test_repair_second_turn_runs_targeted_tools_after_prompt_only_repair_fails(m
     repair_2_tools = {tool["name"] for tool in client.calls[1]["tools"]}
     assert repair_2_tools == {"check_row", "search_filing", "get_pages"}
     assert client.calls[1]["tool_choice"] == "auto"
+    assert client.calls[1]["stream"] is True
+    assert client.calls[2]["stream"] is False
     repair_turns = [
         json.loads(line)
         for line in (audit.root / "repair_turns.jsonl").read_text().splitlines()
@@ -342,6 +344,62 @@ def test_repair_records_failed_turn_before_reraising(minimal_state_repo, monkeyp
     assert repair_record["tool_mode"] == "none"
     assert repair_record["outcome"] == "failed"
     assert repair_record["error"]["type"] == "RuntimeError"
+
+
+def test_repair_failed_parse_records_completion_usage_before_reraising(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    prompts = env.tmp_path / "prompts"
+    prompts.mkdir()
+    (prompts / "extract.md").write_text("PROMPT")
+    (prompts / "repair.md").write_text(
+        "REPORT {validator_report}\nROWS {affected_rows}\nSNIPPETS {filing_snippets}"
+    )
+    for name in extract.EXTRACTOR_RULE_FILES:
+        (env.rules / name).write_text(f"RULE {name}")
+    env.seed_filing("synthetic", pages=background_section_pages("page text"))
+    monkeypatch.setattr(extract.core, "PROMPTS_DIR", prompts)
+
+    validation = extract.core.ValidatorResult(
+        row_flags=[{"row_index": 0, "code": "bad", "severity": "hard", "reason": "bad"}],
+        deal_flags=[],
+    )
+
+    class MalformedRepairClient:
+        async def complete(self, **kwargs):
+            return CompletionResult(
+                text="{",
+                model=kwargs["model"],
+                input_tokens=17,
+                output_tokens=19,
+            )
+
+    audit = _audit_writer(env.tmp_path)
+    filing = extract.core.load_filing("synthetic")
+    usage = TokenUsage()
+
+    try:
+        asyncio.run(
+            extract.run_repair_loop(
+                slug="synthetic",
+                initial_draft={"deal": {}, "events": []},
+                filing=filing,
+                validation=validation,
+                llm_client=MalformedRepairClient(),
+                extract_model="test-model",
+                audit=audit,
+                token_usage=usage,
+            )
+        )
+    except Exception as exc:
+        assert "Expecting property name" in str(exc)
+    else:
+        raise AssertionError("run_repair_loop should re-raise malformed repair output")
+
+    repair_record = json.loads((audit.root / "repair_turns.jsonl").read_text().strip())
+    assert repair_record["completion_turns"] == 1
+    assert repair_record["tool_calls_count"] == 0
+    assert usage.used == 36
+
 
 def test_extract_deal_records_failed_call_attempts(minimal_state_repo, monkeypatch):
     env = minimal_state_repo

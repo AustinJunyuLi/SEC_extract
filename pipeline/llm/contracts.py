@@ -12,12 +12,16 @@ MAX_REPAIR_TURNS = 2
 
 _PROMPTS_DIR = Path(__file__).resolve().parents[2] / "prompts"
 _REPAIR_PROMPT_PATH = _PROMPTS_DIR / "repair.md"
-_REPAIR_LOOP_SOURCE = "pipeline.llm.extract.run_repair_loop"
+_REPAIR_SOURCE_NAMES = (
+    "run_repair_loop",
+    "_call_prompt_only",
+    "_call_with_tools",
+)
 
 _REPAIR_LOOP_CONTRACT_INPUTS: dict[str, Any] = {
     "MAX_REPAIR_TURNS": MAX_REPAIR_TURNS,
     "repair_prompt_path": str(_REPAIR_PROMPT_PATH),
-    "repair_loop_source": _REPAIR_LOOP_SOURCE,
+    "repair_sources": _REPAIR_SOURCE_NAMES,
 }
 
 
@@ -35,10 +39,14 @@ def _repair_loop_source_hash() -> str | None:
     try:
         from pipeline.llm import extract
 
-        run_repair_loop = getattr(extract, "run_repair_loop", None)
-        if run_repair_loop is None:
-            return None
-        return _sha256_bytes(inspect.getsource(run_repair_loop).encode("utf-8"))
+        source_parts: list[str] = []
+        for name in _REPAIR_SOURCE_NAMES:
+            obj = getattr(extract, name, None)
+            if obj is None:
+                return None
+            source_parts.append(f"# {name}\n{inspect.getsource(obj)}")
+        source_parts.append(f"MAX_TOOL_TURNS={getattr(extract, 'MAX_TOOL_TURNS', None)!r}")
+        return _sha256_bytes("\n".join(source_parts).encode("utf-8"))
     except Exception:  # pragma: no cover - source may be unavailable in some runners.
         return None
 

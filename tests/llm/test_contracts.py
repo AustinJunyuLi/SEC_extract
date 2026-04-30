@@ -11,6 +11,14 @@ def _repair_loop_two():
     return {"turns": 2}
 
 
+def _helper_one():
+    return {"helper": 1}
+
+
+def _helper_two():
+    return {"helper": 2}
+
+
 def test_repair_loop_contract_version_is_stable():
     a = contracts.repair_loop_contract_version()
     b = contracts.repair_loop_contract_version()
@@ -49,6 +57,15 @@ def test_repair_loop_contract_version_hashes_runner_source(monkeypatch):
     monkeypatch.setattr(extract, "run_repair_loop", _repair_loop_one, raising=False)
     one = contracts.repair_loop_contract_version()
     monkeypatch.setattr(extract, "run_repair_loop", _repair_loop_two, raising=False)
+    two = contracts.repair_loop_contract_version()
+
+    assert one != two
+
+
+def test_repair_loop_contract_version_hashes_helper_source(monkeypatch):
+    monkeypatch.setattr(extract, "_call_with_tools", _helper_one, raising=False)
+    one = contracts.repair_loop_contract_version()
+    monkeypatch.setattr(extract, "_call_with_tools", _helper_two, raising=False)
     two = contracts.repair_loop_contract_version()
 
     assert one != two
