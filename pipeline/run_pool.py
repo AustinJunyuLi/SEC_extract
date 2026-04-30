@@ -802,7 +802,16 @@ async def process_deal(
     except Exception as exc:  # noqa: BLE001 - per-deal isolation is the pool contract.
         note = f"{type(exc).__name__}: {exc}"[:500]
         if not _prior_status_is_success(slug):
-            await asyncio.to_thread(core.mark_failed, slug, note)
+            await asyncio.to_thread(
+                core.update_progress,
+                slug,
+                "failed",
+                0,
+                note,
+                rulebook_version,
+                core._now_iso(),
+                run_id,
+            )
         audit.write_manifest(_manifest_payload(
             audit=audit,
             config=config,

@@ -573,12 +573,43 @@ def test_failed_rerun_preserves_prior_success_state(minimal_state_repo, monkeypa
     assert outcome.audit_path is not None
     manifest = json.loads((outcome.audit_path / "manifest.json").read_text())
     latest = json.loads((env.tmp_path / "output" / "audit" / "a" / "latest.json").read_text())
+    state = json.loads(env.progress.read_text())
     assert manifest["schema_version"] == "audit_run_v2"
     assert manifest["outcome"] == "failed"
     assert manifest["cache_eligible"] is False
     assert latest["run_id"] == manifest["run_id"]
     assert latest["cache_eligible"] is False
     assert latest["raw_response_path"] is None
+
+
+def test_failed_initial_run_records_audit_run_id_in_progress(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    env.seed_deal("a", is_reference=True, status="pending", rulebook_version="rules-v1")
+    monkeypatch.setattr(run_pool.core, "rulebook_version", lambda: "rules-v1")
+
+    async def fail_extract(*args, **kwargs):
+        raise RuntimeError("provider cut stream")
+
+    monkeypatch.setattr(run_pool, "extract_deal", fail_extract)
+
+    summary = asyncio.run(
+        run_pool.run_pool(
+            _cfg(
+                slugs=("a",),
+                re_extract=True,
+                audit_root=env.tmp_path / "output" / "audit",
+            ),
+            llm_client=object(),
+        )
+    )
+
+    assert summary.failed == 1
+    outcome = summary.outcomes[0]
+    assert outcome.audit_path is not None
+    manifest = json.loads((outcome.audit_path / "manifest.json").read_text())
+    state = json.loads(env.progress.read_text())
+    assert state["deals"]["a"]["status"] == "failed"
+    assert state["deals"]["a"]["last_run_id"] == manifest["run_id"]
 
 
 def test_failed_run_with_commit_commits_current_deal_audit_and_state(minimal_state_repo, monkeypatch):
