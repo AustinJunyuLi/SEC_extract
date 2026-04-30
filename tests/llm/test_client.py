@@ -37,6 +37,34 @@ class FakeResponses:
         self.kwargs = kwargs
         return FakeStream()
 
+    async def create(self, **kwargs):
+        self.kwargs = kwargs
+        usage = type("Usage", (), {
+            "input_tokens": 7,
+            "output_tokens": 8,
+            "output_tokens_details": {"reasoning_tokens": 2},
+        })()
+        output = [
+            type("Item", (), {
+                "type": "function_call",
+                "name": "check_row",
+                "call_id": "c1",
+                "arguments": "{}",
+                "model_dump": lambda self: {
+                    "type": "function_call",
+                    "name": "check_row",
+                    "call_id": "c1",
+                    "arguments": "{}",
+                },
+            })()
+        ]
+        return type("Response", (), {
+            "output_text": "",
+            "output": output,
+            "usage": usage,
+            "status": "completed",
+        })()
+
 
 class FakeOpenAI:
     def __init__(self):
@@ -75,7 +103,7 @@ def test_openai_compatible_client_uses_responses_text_format_not_chat_response_f
     assert result.reasoning_tokens == 5
 
 
-def test_openai_compatible_client_disables_structured_output_for_linkflow_newapi():
+def test_openai_compatible_client_keeps_structured_output_for_linkflow_newapi():
     fake = FakeOpenAI()
     client = OpenAICompatibleClient(
         api_key="secret",
@@ -96,7 +124,7 @@ def test_openai_compatible_client_disables_structured_output_for_linkflow_newapi
 
     kwargs = fake.responses.kwargs
     assert client.endpoint == "responses"
-    assert client.supports_structured_output is False
+    assert client.supports_structured_output is True
     assert kwargs["model"] == "gpt-test"
     assert kwargs["input"][0]["role"] == "system"
     assert kwargs["input"][1]["role"] == "user"
@@ -104,3 +132,41 @@ def test_openai_compatible_client_disables_structured_output_for_linkflow_newapi
     assert "text" not in kwargs
     assert "max_output_tokens" not in kwargs
     assert result.text == '{"deal":{},"events":[]}'
+
+
+def test_complete_passes_tools_and_tool_choice_through_non_streaming():
+    fake = FakeOpenAI()
+    client = OpenAICompatibleClient(
+        api_key="secret",
+        base_url="https://www.linkflow.run/v1",
+        openai_client=fake,
+    )
+    tool_defs = [{
+        "type": "function",
+        "name": "check_row",
+        "parameters": {"type": "object", "properties": {}},
+    }]
+
+    result = asyncio.run(
+        client.complete(
+            model="gpt-test",
+            input_items=[{"role": "user", "content": "u"}],
+            tools=tool_defs,
+            tool_choice="auto",
+            stream=False,
+        )
+    )
+
+    kwargs = fake.responses.kwargs
+    assert kwargs["tools"] == tool_defs
+    assert kwargs["tool_choice"] == "auto"
+    assert kwargs["input"] == [{"role": "user", "content": "u"}]
+    assert result.tool_calls == [{
+        "type": "function_call",
+        "name": "check_row",
+        "call_id": "c1",
+        "arguments": "{}",
+    }]
+    assert result.input_tokens == 7
+    assert result.output_tokens == 8
+    assert result.reasoning_tokens == 2

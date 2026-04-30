@@ -16,6 +16,8 @@ class CompletionResult:
     text: str
     model: str
     parsed_json: dict[str, Any] | None = None
+    tool_calls: list[dict[str, Any]] = field(default_factory=list)
+    output_items: list[dict[str, Any]] = field(default_factory=list)
     input_tokens: int = 0
     output_tokens: int = 0
     reasoning_tokens: int = 0
@@ -27,18 +29,22 @@ class CompletionResult:
 
 
 class LLMClient(ABC):
-    supports_structured_output = False
+    supports_structured_output = True
 
     @abstractmethod
     async def complete(
         self,
         *,
         model: str,
-        system: str,
-        user: str,
+        system: str | None = None,
+        user: str | None = None,
+        input_items: list[dict[str, Any]] | None = None,
         text_format: dict | None = None,
+        tools: list[dict[str, Any]] | None = None,
+        tool_choice: str | None = None,
         max_output_tokens: int | None = None,
         reasoning_effort: str | None = None,
+        stream: bool = True,
     ) -> CompletionResult:
         raise NotImplementedError
 
@@ -57,7 +63,7 @@ class OpenAICompatibleClient(LLMClient):
     ):
         self._client = openai_client or AsyncOpenAI(api_key=api_key, base_url=base_url, max_retries=0)
         self.endpoint = "responses"
-        self.supports_structured_output = not _is_newapi_base_url(base_url)
+        self.supports_structured_output = True
         self.watchdog_cfg = watchdog_cfg or WatchdogConfig()
         self.retry_cfg = retry_cfg or RetryConfig()
 
@@ -65,11 +71,15 @@ class OpenAICompatibleClient(LLMClient):
         self,
         *,
         model: str,
-        system: str,
-        user: str,
+        system: str | None = None,
+        user: str | None = None,
+        input_items: list[dict[str, Any]] | None = None,
         text_format: dict | None = None,
+        tools: list[dict[str, Any]] | None = None,
+        tool_choice: str | None = None,
         max_output_tokens: int | None = None,
         reasoning_effort: str | None = None,
+        stream: bool = True,
     ) -> CompletionResult:
         attempts = 0
 
@@ -80,9 +90,13 @@ class OpenAICompatibleClient(LLMClient):
                 model=model,
                 system=system,
                 user=user,
+                input_items=input_items,
                 text_format=text_format,
+                tools=tools,
+                tool_choice=tool_choice,
                 max_output_tokens=max_output_tokens,
                 reasoning_effort=reasoning_effort,
+                stream=stream,
                 attempt=attempts,
             )
 
@@ -94,28 +108,60 @@ class OpenAICompatibleClient(LLMClient):
         self,
         *,
         model: str,
-        system: str,
-        user: str,
+        system: str | None,
+        user: str | None,
+        input_items: list[dict[str, Any]] | None,
         text_format: dict | None,
+        tools: list[dict[str, Any]] | None,
+        tool_choice: str | None,
         max_output_tokens: int | None,
         reasoning_effort: str | None,
+        stream: bool,
         attempt: int,
     ) -> CompletionResult:
-        kwargs: dict[str, Any] = {
-            "model": model,
-            "input": [
+        if input_items is None:
+            if system is None or user is None:
+                raise ValueError("system and user are required when input_items is not provided")
+            input_payload = [
                 {"role": "system", "content": system},
                 {"role": "user", "content": user},
-            ],
+            ]
+        else:
+            input_payload = input_items
+        kwargs: dict[str, Any] = {
+            "model": model,
+            "input": input_payload,
         }
         if text_format is not None:
             kwargs["text"] = {"format": text_format}
+        if tools is not None:
+            kwargs["tools"] = tools
+            if tool_choice is not None:
+                kwargs["tool_choice"] = tool_choice
         if max_output_tokens is not None:
             kwargs["max_output_tokens"] = max_output_tokens
         if reasoning_effort is not None:
             kwargs["reasoning"] = {"effort": reasoning_effort}
 
         started = time.monotonic()
+        if not stream:
+            final_response = await self._client.responses.create(**kwargs)
+            usage = getattr(final_response, "usage", None)
+            text = getattr(final_response, "output_text", None) or _output_text_from_items(final_response)
+            return CompletionResult(
+                text=text,
+                model=model,
+                tool_calls=_tool_calls(final_response),
+                output_items=_output_items(final_response),
+                input_tokens=_usage_value(usage, "input_tokens"),
+                output_tokens=_usage_value(usage, "output_tokens"),
+                reasoning_tokens=_reasoning_tokens(usage),
+                finish_reason=_finish_reason(final_response),
+                latency_seconds=time.monotonic() - started,
+                attempts=attempt,
+                raw_response=final_response,
+            )
+
         text_parts: list[str] = []
         final_response = None
         async with APICallWatchdog(label=f"responses:{model}:attempt-{attempt}", cfg=self.watchdog_cfg) as watchdog:
@@ -136,6 +182,8 @@ class OpenAICompatibleClient(LLMClient):
         return CompletionResult(
             text="".join(text_parts),
             model=model,
+            tool_calls=_tool_calls(final_response),
+            output_items=_output_items(final_response),
             input_tokens=_usage_value(usage, "input_tokens"),
             output_tokens=_usage_value(usage, "output_tokens"),
             reasoning_tokens=_reasoning_tokens(usage),
@@ -164,12 +212,6 @@ def _usage_value(usage: Any, name: str) -> int:
     return int(getattr(usage, name, 0) or 0)
 
 
-def _is_newapi_base_url(base_url: str | None) -> bool:
-    if base_url and any(marker in base_url.lower() for marker in ("linkflow.run", "newapi")):
-        return True
-    return False
-
-
 def _response_value(obj: Any, name: str) -> Any:
     if isinstance(obj, dict):
         return obj.get(name)
@@ -193,3 +235,41 @@ def _finish_reason(response: Any) -> str | None:
         if value:
             return str(value)
     return None
+
+
+def _model_dump(obj: Any) -> dict[str, Any]:
+    if isinstance(obj, dict):
+        return dict(obj)
+    if hasattr(obj, "model_dump"):
+        return obj.model_dump()
+    data: dict[str, Any] = {}
+    for name in ("type", "name", "call_id", "arguments", "id", "status"):
+        value = getattr(obj, name, None)
+        if value is not None:
+            data[name] = value
+    return data
+
+
+def _output_items(response: Any) -> list[dict[str, Any]]:
+    output = _response_value(response, "output") or []
+    return [_model_dump(item) for item in output]
+
+
+def _tool_calls(response: Any) -> list[dict[str, Any]]:
+    return [
+        item for item in _output_items(response)
+        if item.get("type") == "function_call"
+    ]
+
+
+def _output_text_from_items(response: Any) -> str:
+    parts: list[str] = []
+    for item in _output_items(response):
+        if item.get("type") == "message":
+            for content in item.get("content") or []:
+                if isinstance(content, dict) and content.get("type") in {
+                    "output_text",
+                    "text",
+                }:
+                    parts.append(str(content.get("text") or ""))
+    return "".join(parts)
