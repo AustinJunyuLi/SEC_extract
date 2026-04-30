@@ -483,12 +483,12 @@ def test_prepare_for_validate_applies_failed_promotion_flag_and_canonicalizes():
                 "bidder_name": "bidder_99",
                 "bidder_alias": "Party E",
                 "bid_date_precise": "2020-02-01",
-                "unnamed_nda_promotion": {
-                    "target_bidder_id": 2,
-                    "promote_to_bidder_alias": "Party E",
-                    "promote_to_bidder_name": "bidder_99",
-                    "reason": "synthetic",
-                },
+                    "unnamed_nda_promotion": {
+                        "target_bidder_id": 2,
+                        "promote_to_bidder_alias": "Party E",
+                        "promote_to_bidder_name": "bidder_98",
+                        "reason": "synthetic",
+                    },
             },
         ],
     }
@@ -505,6 +505,36 @@ def test_prepare_for_validate_applies_failed_promotion_flag_and_canonicalizes():
     assert prepared["events"][1]["BidderID"] == 2
     assert prepared["events"][1]["flags"][0]["code"] == "nda_promotion_failed"
     assert "unnamed_nda_promotion" not in prepared["events"][1]
+
+
+def test_prepare_for_validate_rebuilds_empty_bidder_registry_from_events():
+    raw = {
+        "deal": _current_deal(bidder_registry={}),
+        "events": [
+            {
+                "BidderID": 2,
+                "bid_note": "Bid",
+                "bidder_name": "bidder_01",
+                "bidder_alias": "Party A",
+                "bid_date_precise": "2020-02-01",
+            },
+            {
+                "BidderID": 1,
+                "bid_note": "NDA",
+                "bidder_name": "bidder_01",
+                "bidder_alias": "Acquirer",
+                "bid_date_precise": "2020-01-01",
+            },
+        ],
+    }
+    filing = pipeline.Filing(slug="synthetic", pages=[{"number": 1, "content": ""}])
+
+    prepared, _, _ = pipeline.prepare_for_validate("synthetic", raw, filing=filing)
+
+    registry = prepared["deal"]["bidder_registry"]
+    assert registry["bidder_01"]["aliases_observed"] == ["Party A", "Acquirer"]
+    assert registry["bidder_01"]["resolved_name"] is None
+    assert registry["bidder_01"]["first_appearance_row_index"] == 1
 
 
 def test_prepare_for_validate_rejects_extra_deal_fields():

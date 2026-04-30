@@ -118,7 +118,6 @@ class StubClient:
         return CompletionResult(
             text=json.dumps(payload),
             model=kwargs["model"],
-            parsed_json=payload,
             input_tokens=10,
             output_tokens=5,
         )
@@ -162,11 +161,107 @@ def test_extract_deal_writes_audit_and_tracks_token_usage(minimal_state_repo, mo
     assert usage.used == 15
     assert client.calls[0]["model"] == "test-model"
     assert client.calls[0]["max_output_tokens"] == 123
+    assert client.calls[0]["tools"]
+    assert client.calls[0]["tool_choice"] == "auto"
+    assert client.calls[0]["stream"] is False
     assert (audit.root / "prompts" / "extractor.txt").read_text().startswith("=== SYSTEM ===\nPROMPT")
     assert json.loads((audit.root / "raw_response.json").read_text())["parsed_json"]["deal"]["TargetName"] == "Synthetic Target"
     call_entries = (audit.root / "calls.jsonl").read_text().splitlines()
     assert len(call_entries) == 1
     assert json.loads(call_entries[0])["phase"] == "extract"
+
+
+def test_extract_runs_tool_calls_and_replays_until_final_message(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    prompts = env.tmp_path / "prompts"
+    prompts.mkdir()
+    (prompts / "extract.md").write_text("PROMPT")
+    for name in extract.EXTRACTOR_RULE_FILES:
+        (env.rules / name).write_text(f"RULE {name}")
+    env.seed_filing("synthetic", pages=background_section_pages("page text"))
+    monkeypatch.setattr(extract.core, "PROMPTS_DIR", prompts)
+
+    row = {
+        "BidderID": 1,
+        "process_phase": 1,
+        "role": "bidder",
+        "bidder_alias": "X",
+        "bidder_type": "f",
+        "bid_note": "Bid",
+        "bid_type": "informal",
+        "bid_type_inference_note": "G1 trigger phrase",
+        "source_quote": "page text",
+        "source_page": 22,
+        "flags": [],
+    }
+    fc = {
+        "type": "function_call",
+        "name": "check_row",
+        "call_id": "c1",
+        "arguments": json.dumps(row),
+    }
+    final_payload = {
+        "deal": {
+            "TargetName": "Synthetic Target",
+            "Acquirer": "Synthetic Buyer",
+            "DateAnnounced": "2026-04-24",
+            "DateEffective": None,
+            "auction": False,
+            "all_cash": True,
+            "target_legal_counsel": None,
+            "acquirer_legal_counsel": None,
+            "bidder_registry": {},
+            "deal_flags": [],
+        },
+        "events": [],
+    }
+
+    class ToolCallingClient:
+        def __init__(self):
+            self.calls = []
+
+        async def complete(self, **kwargs):
+            self.calls.append(kwargs)
+            if len(self.calls) == 1:
+                return CompletionResult(
+                    text="",
+                    model=kwargs["model"],
+                    tool_calls=[fc],
+                    output_items=[fc],
+                    input_tokens=2,
+                    output_tokens=3,
+                )
+            return CompletionResult(
+                text=json.dumps(final_payload),
+                model=kwargs["model"],
+                input_tokens=5,
+                output_tokens=7,
+            )
+
+    audit = _audit_writer(env.tmp_path)
+    usage = TokenUsage()
+    client = ToolCallingClient()
+
+    result = asyncio.run(
+        extract.extract_deal(
+            "synthetic",
+            llm_client=client,
+            extract_model="test-model",
+            audit=audit,
+            token_usage=usage,
+            rulebook_version="rules-v1",
+        )
+    )
+
+    assert result.raw_extraction == final_payload
+    assert result.tool_calls_count == 1
+    assert usage.used == 17
+    assert len(client.calls) == 2
+    replay = client.calls[1]["input_items"]
+    assert fc in replay
+    outputs = [item for item in replay if item.get("type") == "function_call_output"]
+    assert outputs[0]["call_id"] == "c1"
+    assert "ok" in json.loads(outputs[0]["output"])
 
 def test_extract_deal_records_failed_call_attempts(minimal_state_repo, monkeypatch):
     env = minimal_state_repo

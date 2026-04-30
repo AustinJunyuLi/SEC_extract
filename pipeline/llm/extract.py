@@ -13,12 +13,20 @@ from pipeline import core
 
 from .audit import AuditWriter, TokenUsage
 from .client import CompletionResult, LLMClient
-from .response_format import SCHEMA_R1, call_json, schema_hash
+from .response_format import (
+    SCHEMA_R1,
+    _ensure_extraction_shape,
+    json_schema_format,
+    parse_json_text,
+    schema_hash,
+)
+from .tools import TOOL_DEFINITIONS, dispatch
 
 
 EXTRACTOR_RULE_FILES = ("schema.md", "events.md", "bidders.md", "bids.md", "dates.md")
 MAX_BACKGROUND_SECTION_PAGES = 35
 MIN_BACKGROUND_SECTION_CHARS = 1500
+MAX_TOOL_TURNS = 8
 
 
 def extractor_contract_version() -> str:
@@ -101,6 +109,7 @@ class ExtractResult:
     raw_extraction: dict[str, Any]
     completion: CompletionResult
     rulebook_version: str
+    tool_calls_count: int = 0
 
 
 @dataclass(frozen=True)
@@ -249,6 +258,76 @@ def build_messages(slug: str) -> tuple[str, str]:
     return system, user
 
 
+def _load_tool_pages(slug: str) -> list[dict[str, Any]]:
+    return json.loads((core.DATA_DIR / slug / "pages.json").read_text())
+
+
+def _json_dumps_tool_output(payload: dict[str, Any]) -> str:
+    return json.dumps(payload, ensure_ascii=False, default=str)
+
+
+async def _call_with_tools(
+    *,
+    llm_client: LLMClient,
+    model: str,
+    system: str,
+    user: str,
+    filing_pages: list[dict[str, Any]],
+    max_output_tokens: int | None,
+    reasoning_effort: str | None,
+) -> tuple[dict[str, Any], CompletionResult, list[CompletionResult], int]:
+    input_items: list[dict[str, Any]] = [
+        {"role": "system", "content": system},
+        {"role": "user", "content": user},
+    ]
+    completions: list[CompletionResult] = []
+    tool_calls_count = 0
+
+    for _turn in range(1, MAX_TOOL_TURNS + 1):
+        completion = await llm_client.complete(
+            model=model,
+            input_items=input_items,
+            text_format=json_schema_format(SCHEMA_R1),
+            tools=TOOL_DEFINITIONS,
+            tool_choice="auto",
+            max_output_tokens=max_output_tokens,
+            reasoning_effort=reasoning_effort,
+            # Linkflow/SDK streaming currently loses function_call output
+            # items. Use non-streaming while tools are enabled so replay is
+            # based on actual call IDs and arguments.
+            stream=False,
+        )
+        completions.append(completion)
+
+        if completion.tool_calls:
+            input_items.extend(completion.output_items or completion.tool_calls)
+            for tool_call in completion.tool_calls:
+                try:
+                    arguments = json.loads(tool_call.get("arguments") or "{}")
+                    result = dispatch(
+                        name=str(tool_call.get("name")),
+                        arguments=arguments,
+                        filing_pages=filing_pages,
+                    )
+                    output = _json_dumps_tool_output(result)
+                except Exception as exc:  # noqa: BLE001 - return tool errors to model
+                    output = _json_dumps_tool_output({"error": str(exc)})
+                tool_calls_count += 1
+                input_items.append({
+                    "type": "function_call_output",
+                    "call_id": tool_call["call_id"],
+                    "output": output,
+                })
+            continue
+
+        parsed = parse_json_text(completion.text)
+        _ensure_extraction_shape(parsed)
+        completion.parsed_json = parsed
+        return parsed, completion, completions, tool_calls_count
+
+    raise RuntimeError(f"extractor exceeded max tool turns ({MAX_TOOL_TURNS})")
+
+
 async def extract_deal(
     slug: str,
     *,
@@ -261,14 +340,15 @@ async def extract_deal(
     reasoning_effort: str | None = None,
 ) -> ExtractResult:
     system, user = build_messages(slug)
+    filing_pages = _load_tool_pages(slug)
     prompt_digest = audit.write_prompt(phase="extractor", system=system, user=user)
     try:
-        completion = await call_json(
-            llm_client,
+        parsed, completion, completions, tool_calls_count = await _call_with_tools(
+            llm_client=llm_client,
+            filing_pages=filing_pages,
             system=system,
             user=user,
             model=extract_model,
-            schema=SCHEMA_R1,
             max_output_tokens=max_output_tokens,
             reasoning_effort=reasoning_effort,
         )
@@ -285,8 +365,8 @@ async def extract_deal(
             "error": {"type": type(exc).__name__, "message": str(exc)[:500]},
         })
         raise
-    token_usage.consume(completion)
-    parsed = completion.parsed_json or {}
+    for turn_completion in completions:
+        token_usage.consume(turn_completion)
     audit.write_raw_response(
         result=completion,
         parsed_json=parsed,
@@ -305,6 +385,8 @@ async def extract_deal(
         "reasoning_tokens": completion.reasoning_tokens,
         "latency_seconds": completion.latency_seconds,
         "attempts": completion.attempts,
+        "turns": len(completions),
+        "tool_calls_count": tool_calls_count,
         "finish_reason": completion.finish_reason,
         "watchdog": {
             "warnings": completion.watchdog.warnings,
@@ -317,4 +399,5 @@ async def extract_deal(
         raw_extraction=parsed,
         completion=completion,
         rulebook_version=rulebook_version,
+        tool_calls_count=tool_calls_count,
     )

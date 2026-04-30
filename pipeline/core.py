@@ -2284,6 +2284,49 @@ def _apply_unnamed_nda_promotions(
     return log
 
 
+def _rebuild_bidder_registry_from_events(raw_extraction: dict[str, Any]) -> None:
+    """Rebuild the canonical bidder registry from event rows.
+
+    Linkflow strict schema cannot carry dynamic `bidder_registry` keys without
+    provider 502s, so the raw provider-facing schema requires `{}`. The live
+    output contract still needs a registry for §P-R5. Build it deterministically
+    from event-level `bidder_name` and `bidder_alias` before promotions,
+    ordering, validation, and finalization.
+    """
+    deal = raw_extraction.setdefault("deal", {})
+    existing = deal.get("bidder_registry")
+    registry: dict[str, dict[str, Any]] = {}
+    if isinstance(existing, dict):
+        for name, entry in existing.items():
+            if isinstance(name, str) and isinstance(entry, dict):
+                aliases = entry.get("aliases_observed")
+                registry[name] = {
+                    "resolved_name": entry.get("resolved_name"),
+                    "aliases_observed": [
+                        alias for alias in (aliases or [])
+                        if isinstance(alias, str) and alias
+                    ],
+                    "first_appearance_row_index": entry.get("first_appearance_row_index"),
+                }
+
+    for ev in raw_extraction.get("events") or []:
+        if not isinstance(ev, dict):
+            continue
+        name = ev.get("bidder_name")
+        if not isinstance(name, str) or not name:
+            continue
+        entry = registry.setdefault(name, {
+            "resolved_name": None,
+            "aliases_observed": [],
+            "first_appearance_row_index": None,
+        })
+        alias = ev.get("bidder_alias")
+        if isinstance(alias, str) and alias and alias not in entry["aliases_observed"]:
+            entry["aliases_observed"].append(alias)
+
+    deal["bidder_registry"] = registry
+
+
 def _canonicalize_order(raw_extraction: dict[str, Any]) -> None:
     """Python-enforced §A2/§A3 ordering.
 
@@ -2366,6 +2409,7 @@ def prepare_for_validate(
     if filing is None:
         filing = load_filing(slug)
     _enforce_extractor_deal_contract(raw_extraction)
+    _rebuild_bidder_registry_from_events(raw_extraction)
     promotion_log = _apply_unnamed_nda_promotions(raw_extraction)
     _canonicalize_order(raw_extraction)
     failed_reasons_by_hint_id = {
