@@ -582,7 +582,7 @@ way to say whether progress, outputs, flags, and audit archives agree.
 Implement a read-only reconciliation command. Suggested command:
 
 ```bash
-python -m pipeline.reconcile --scope reference --strict
+python -m pipeline.reconcile --scope reference
 ```
 
 It should check:
@@ -621,7 +621,7 @@ This workstream is complete when:
 
 ```bash
 python -m pytest -q tests/test_reconcile.py
-python -m pipeline.reconcile --scope reference --strict
+python -m pipeline.reconcile --scope reference
 ```
 
 runs without modifying repo files. If the live repo is currently inconsistent,
@@ -768,7 +768,7 @@ python -m pipeline.run_pool \
 4. Reconcile:
 
 ```bash
-python -m pipeline.reconcile --scope reference --strict
+python -m pipeline.reconcile --scope reference
 ```
 
 5. Repeat until three archived full-reference xhigh runs exist under the same
@@ -881,7 +881,7 @@ Minimum verification before merging implementation:
 ```bash
 python -m pytest -x
 python -m pipeline.run_pool --filter reference --workers 4 --dry-run
-python -m pipeline.reconcile --scope reference --strict
+python -m pipeline.reconcile --scope reference
 ```
 
 The reconcile command may report existing live artifact problems until the

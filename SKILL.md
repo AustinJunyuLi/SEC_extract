@@ -290,7 +290,7 @@ carries its own `schema_version` (`audit_run_v2`, `raw_response_v2`,
 `validation_v1`, `final_output_v1`); `latest.json` carries `audit_v2`.
 
 **Reconcile and stability commands.** Two read-only entrypoints close the
-target gate. `python -m pipeline.reconcile --scope reference --strict` checks
+target gate. `python -m pipeline.reconcile --scope reference` checks
 that `state/progress.json`, `output/extractions/{slug}.json`,
 `state/flags.jsonl`, and `output/audit/{slug}/` all agree on the same
 `last_run_id`, flag counts, and rulebook version. `python -m pipeline.stability

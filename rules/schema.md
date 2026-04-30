@@ -475,9 +475,12 @@ requires re-fetching or accepting page-drift on old extractions.
 
 ---
 
-## Canonical output schema (resolved)
+## Raw extractor schema example (resolved)
 
 Reflects resolved decisions §Scope-1/2/3, §R1, §R2, §R3, §N1, §N2, §N3.
+This example shows the raw model payload only. `pipeline.core.finalize()` adds
+`rulebook_version`, `last_run`, and `last_run_id` to finalized
+`output/extractions/{slug}.json`; the extractor must not emit those fields.
 
 ```json
 {
@@ -497,10 +500,7 @@ Reflects resolved decisions §Scope-1/2/3, §R1, §R2, §R3, §N1, §N2, §N3.
         "first_appearance_row_index": 1
       }
     },
-    "deal_flags": [],
-    "rulebook_version": "<rules-content-sha256>",
-    "last_run": "2026-04-28T12:00:00Z",
-    "last_run_id": "<run-uuid>"
+    "deal_flags": []
   },
   "events": [
     {

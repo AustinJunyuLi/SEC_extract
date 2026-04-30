@@ -204,7 +204,7 @@ python -m pipeline.run_pool \
   --extract-reasoning-effort xhigh \
   --adjudicate-reasoning-effort xhigh \
   --re-extract
-python -m pipeline.reconcile --scope reference --strict
+python -m pipeline.reconcile --scope reference
 ```
 
 Repeat until three archived full-reference xhigh runs exist under unchanged

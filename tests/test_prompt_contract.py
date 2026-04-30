@@ -12,6 +12,12 @@ LIVE_CONTRACT_PATHS = [
     REPO_ROOT / "prompts" / "extract.md",
     *sorted((REPO_ROOT / "rules").glob("*.md")),
 ]
+DOC_CONTRACT_PATHS = [
+    REPO_ROOT / "AGENTS.md",
+    REPO_ROOT / "CLAUDE.md",
+    REPO_ROOT / "SKILL.md",
+    *sorted((REPO_ROOT / "docs").rglob("*.md")),
+]
 
 
 def test_extractor_messages_embed_sdk_context():
@@ -47,13 +53,27 @@ def test_extractor_prompt_contract_describes_embedded_filing_text():
     text = (REPO_ROOT / "prompts" / "extract.md").read_text()
 
     assert "SDK-call role" in text
-    assert "page-numbered filing text" in text
-    assert "do not fetch from SEC/EDGAR" in text
+    assert "page-numbered `pages`" in text
+    assert "Do not fetch from SEC/EDGAR" in text
+    assert "access local files, run\ncode, call tools" in text
     assert "`rules/invariants.md` remains validator-facing only" in text
-    assert "the later deadline/submission event is another `Final Round`" in text
-    assert "one list element per contiguous-within-one-page segment" in text
+    assert "Return exactly one raw JSON object" in text
+    assert "Do not include prose, markdown fences" in text
+    assert "```" not in text
+    assert "Do not emit pipeline-stamped\nfields" in text
+    assert "Use `null` for unsupported optional facts" in text
+    assert "Every emitted row MUST have `source_quote` and `source_page`" in text
+    assert "Each individual quote string MUST be 1500 characters or shorter" in text
+    assert "Use the\n  list form of `source_quote` / `source_page`" in text
+    assert "A same-day `Bid` row does not replace the process-level non-announcement" in text
+    assert "Emit `DropSilent` only for true post-NDA filing silence" in text
     assert "Advisor NDA rows are not skip rows" in text
-    assert "role = \"advisor_financial\" or `role = \"advisor_legal\"`" in text
+    assert "Exact-count unnamed NDA placeholders are lifecycle handles" in text
+    assert "label such as `Buyer Group`" in text
+    assert "Buyer-group constituents/count unsupported by Background evidence" in text
+    assert "bid_type` still ambiguous" in text
+    assert "status\": \"blocked_by_open_rule\"" not in text
+    assert "blocked_by_open_rule" not in text
     assert "§M3 (legal advisor NDA)" not in text
     for stale_phrase in ["Read " "tool", "Read these " "files", "sub" "agent"]:
         assert stale_phrase not in text
@@ -66,16 +86,59 @@ def test_value_bearing_bid_consideration_contract_is_explicit():
 
     assert "A `Bid` row with any stated value must never leave `consideration_components` null" in bids
     assert "Dollar-denominated per-share acquisition proposals default to `[\"cash\"]`" in bids
+    assert "`deal.all_cash` describes the signed merger-agreement consideration" in bids
+    assert "`deal.all_cash = true` iff EVERY bid event row" not in bids
     assert (
         "`consideration_components` — list[str] OR null. Required and non-empty "
         "on every `Bid` row with a stated value."
     ) in schema
-    assert "Never emit a value-bearing `Bid` with `consideration_components: null`" in prompt
-    assert "Dollar-denominated per-share acquisition proposals are `[\"cash\"]`" in prompt
+    assert "A value-bearing `Bid` row must have `bid_value_unit` and a non-empty" in prompt
+    assert "Every non-`Bid` row, including `Executed`, `Final Round`, `Drop`, and" in prompt
+    assert "If an `Executed` quote restates the signed price" in prompt
     assert (
         "each bid row has `consideration_components` and `exclusivity_days` "
         "populated or explicitly null"
     ) not in prompt
+
+
+def test_prompt_rewrite_keeps_raw_extractor_example_free_of_pipeline_fields():
+    schema = (REPO_ROOT / "rules" / "schema.md").read_text()
+
+    assert "## Raw extractor schema example" in schema
+    assert "the extractor must not emit those fields" in schema
+    example = schema.split("## Raw extractor schema example", 1)[1]
+    example_json = example.split("```json", 1)[1].split("```", 1)[0]
+    assert '"rulebook_version"' not in example_json
+    assert '"last_run"' not in example_json
+    assert '"last_run_id"' not in example_json
+
+
+def test_extractor_contract_version_changes_when_prompt_changes(tmp_path, monkeypatch):
+    extract = pytest.importorskip("pipeline.llm.extract")
+
+    prompts = tmp_path / "prompts"
+    prompts.mkdir()
+    prompt_path = prompts / "extract.md"
+    prompt_path.write_text("prompt version one")
+    monkeypatch.setattr(extract.core, "REPO_ROOT", tmp_path)
+
+    first = extract.extractor_contract_version()
+    prompt_path.write_text("prompt version two")
+    second = extract.extractor_contract_version()
+
+    assert first != second
+
+
+def test_documented_reconcile_command_matches_current_cli():
+    offenders: list[str] = []
+    for path in DOC_CONTRACT_PATHS:
+        text = path.read_text()
+        if "pipeline.reconcile --scope reference --strict" in text:
+            offenders.append(str(path.relative_to(REPO_ROOT)))
+        if "pipeline.reconcile --scope all --strict" in text:
+            offenders.append(str(path.relative_to(REPO_ROOT)))
+
+    assert offenders == []
 
 
 def test_live_contract_files_do_not_carry_stale_rule_prose():

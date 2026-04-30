@@ -274,7 +274,7 @@ asks and it does not start extraction.
 The proof file is produced by `python -m pipeline.stability --scope reference
 --runs 3 --json --write quality_reports/stability/target-release-proof.json`.
 Archive consistency is checked by `python -m pipeline.reconcile --scope
-reference --strict`. Both are read-only. The full operator protocol lives in
+reference`. Both are read-only. The full operator protocol lives in
 `docs/linkflow-extraction-guide.md`.
 
 ## Repo Layout

@@ -298,9 +298,11 @@ inside the AI extraction schema.
   value.
 
 **`all_cash` deal-level derivation (§N2 cross-reference).**
-`deal.all_cash = true` iff EVERY bid event row has
-`consideration_components == ["cash"]`. Any bid with a non-cash component
-→ `all_cash = false`.
+`deal.all_cash` describes the signed merger-agreement consideration, not the
+consideration mix across every historical bid. Derive it from the filing's
+merger-agreement / summary consideration paragraph per `rules/schema.md` §N2.
+Do not let a competing bid's non-cash or mixed terms change the deal-level
+`all_cash` value for an otherwise all-cash signed transaction.
 
 **CVR vs earnout.** If the filing uses "contingent value right" or "CVR,"
 use `"cvr"`. If it uses "earnout" or "contingent consideration based on
