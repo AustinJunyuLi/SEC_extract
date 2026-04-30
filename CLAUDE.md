@@ -21,19 +21,56 @@ The live architecture is code-orchestrated direct `AsyncOpenAI` SDK calls to
 the Responses streaming endpoint (`responses.stream`) through the
 Linkflow/NewAPI-compatible `OPENAI_BASE_URL`. Configure it with
 `OPENAI_BASE_URL` and `OPENAI_API_KEY`; model names come from `EXTRACT_MODEL`
-and `ADJUDICATE_MODEL` or CLI overrides. The default Linkflow path is
-prompt-only JSON (`json_schema_used=false`) because Linkflow structured-output
-support is explicitly disabled in the client.
+and `ADJUDICATE_MODEL` or CLI overrides.
+
+Every extractor call uses **strict `text.format=json_schema`** with the
+hardened `SCHEMA_R1`, plus three native function-calling tools available to
+the model during drafting:
+
+- `check_row(row)` — row-local validator wrapper (§P-R0..R9 + §P-D1/D2/D7 +
+  §P-G2).
+- `search_filing(query, page_range, max_hits)` — substring search over filing
+  pages.
+- `get_pages(start_page, end_page)` — contiguous page fetch (cap = 10 pages
+  per call).
+
+After the model emits its final extraction, Python `pipeline.core.validate()`
+runs. If hard flags remain, an outer **repair loop** (cap = 2 turns) sends the
+validator report back and asks for a complete revised extraction. On cap-hit,
+finalization records a `repair_loop_exhausted` deal-level hard flag and the
+deal status is `validated`.
+
+The scoped Adjudicator stays single-turn, no tools, soft-flag verdicts only.
+
+There is no free-form JSON fallback. There is no provider branch that turns off
+structured output. There is no `previous_response_id` chain (Linkflow returns 400).
+Streaming is used for every full-extraction turn; non-streaming for short
+tool-call turns to avoid the SDK accumulator empty-output bug.
+
+Phase 1 Linkflow probes accepted the live `SCHEMA_R1` only after keeping the
+provider schema strict-but-not-maximalist: no `oneOf` event variants and no
+dynamic `bidder_registry` enforcement in the provider payload. Those remain
+live Python contract duties; the pipeline rebuilds and enforces
+`bidder_registry` before validation/finalization, and the validator/tooling
+enforce conditional row semantics.
 
 Per deal:
 
 ```text
 seeds.csv / state/progress.json
   -> run.py or pipeline.run_pool
-  -> Extractor SDK call
-  -> output/audit/{slug}/runs/{run_id}/ immutable raw response, prompts, call metadata
+  -> Extractor SDK call (strict json_schema + tools)
+       parallel function_call → tool dispatch → function_call_output replay
+       repeat until model emits final {deal, events}
+  -> output/audit/{slug}/runs/{run_id}/ immutable raw response, prompts, tool_calls.jsonl
   -> pipeline.core.prepare_for_validate()
   -> pipeline.core.validate()
+  -> if hard flags: repair turn (≤ 2 iterations)
+       compact validator report + affected rows + filing snippets sent back
+       model emits complete revised extraction
+       Python validates again
+       on cap-hit: finalize latest draft + repair_loop_exhausted flag
+  -> repair_turns.jsonl entry per repair turn
   -> optional scoped Adjudicator SDK call for soft flags
   -> pipeline.core.finalize_prepared()
   -> output/extractions/{slug}.json
@@ -43,9 +80,9 @@ seeds.csv / state/progress.json
 ```
 
 There is no active external agent loop, manually routed deal workflow, or
-top-level pipeline script. Add another model call or orchestration layer only
-when current reference-deal evidence shows this direct Extractor + Python
-validator + scoped Adjudicator design is insufficient.
+top-level pipeline script. Add another model role or orchestration layer only
+when current reference-deal evidence shows this strict Extractor + tools +
+Python validator/repair + scoped Adjudicator design is insufficient.
 
 ## Entrypoints
 
@@ -71,9 +108,10 @@ Use `--dry-run` to inspect selection without requiring an API key. Use
 default `--re-validate` reads `output/audit/{slug}/latest.json`; use
 `--audit-run-id <run_id>` to revalidate an exact archived run under
 `output/audit/{slug}/runs/{run_id}/`. The archived raw response must match the
-current `rulebook_version` and `extractor_contract_version`. Loose legacy files
-directly under `output/audit/{slug}/` are stale and are not accepted as cache.
-Use `--re-extract` for a fresh SDK extraction.
+current `rulebook_version`, `extractor_contract_version`,
+`tools_contract_version`, and `repair_loop_contract_version`. Loose legacy
+files directly under `output/audit/{slug}/` are stale and are not accepted as
+cache. Use `--re-extract` for a fresh SDK extraction.
 
 Reasoning effort defaults to `xhigh` for both extractor and adjudicator calls:
 
@@ -197,6 +235,8 @@ run directory:
 output/audit/{slug}/runs/{run_id}/
   manifest.json
   calls.jsonl
+  tool_calls.jsonl
+  repair_turns.jsonl
   raw_response.json
   validation.json
   final_output.json
@@ -211,9 +251,11 @@ Fresh runs never delete or overwrite older run directories. Failed fresh runs
 still write a run manifest and update `latest.json` with
 `cache_eligible=false`. Re-validation copies the selected archived raw response
 into the new run directory and records `cache_used=true` /
-`source_audit_run_id`. `final_output.json` is the immutable per-run finalized
-snapshot used by stability tooling; `output/extractions/{slug}.json` remains
-the authoritative latest extraction.
+`source_audit_run_id`. Cache eligibility requires the current rulebook pin plus
+extractor, tools, and repair-loop contract versions to match the archived run.
+`final_output.json` is the immutable per-run finalized snapshot used by
+stability tooling; `output/extractions/{slug}.json` remains the authoritative
+latest extraction.
 
 ## API Key and Environment Safety
 
@@ -291,7 +333,7 @@ reference`. Both are read-only. The full operator protocol lives in
 | `prompts/extract.md` | Extractor prompt included in SDK system messages. |
 | `rules/*.md` | Schema, event vocabulary, bidder/bid/date rules, invariants. |
 | `pipeline/core.py` | Filing loader, preparation, validator, finalizer, state writers. |
-| `pipeline/llm/` | SDK client, extraction, adjudication, response format, retry, watchdog, audit. |
+| `pipeline/llm/` | SDK client, extraction, tools, repair loop, adjudication, response format, retry, watchdog, audit. |
 | `pipeline/run_pool.py` | Async batch runner, selection, cache policy, SDK orchestration. |
 | `pipeline/reconcile.py` | Read-only progress / output / flags / audit reconciliation. |
 | `pipeline/stability.py` | Read-only stability harness producing `target_gate_proof_v1`. |

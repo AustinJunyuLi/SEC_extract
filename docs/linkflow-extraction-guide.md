@@ -1,26 +1,17 @@
 # Linkflow Extraction Guide
 
-This note records the Linkflow-specific operating contract for the direct SDK
-path. It is a transport/config guide, not a run log or rulebook. If the
-Linkflow path changes, update this file in the same change.
+This guide is the operator contract for running the M&A extraction pipeline
+through the Linkflow/NewAPI-compatible Responses endpoint. It covers transport,
+tooling, repair-loop behavior, audit expectations, and the reference-to-target
+release gate. Extraction doctrine still lives in `rules/*.md`.
 
-## Working Shape
+## Linkflow Facts
 
-The stable Linkflow shape is:
-
-```text
-one deal
-  -> direct AsyncOpenAI client
-  -> Responses streaming endpoint
-  -> prompt-only JSON
-  -> Background-section slice only
-  -> Python schema/contract checks after the model call
-```
-
-Use this environment shape:
+Use the Responses API through the Linkflow proxy:
 
 ```bash
 OPENAI_BASE_URL=https://www.linkflow.run/v1
+OPENAI_API_KEY=<set in shell or .env, never in docs>
 EXTRACT_MODEL=gpt-5.5
 ADJUDICATE_MODEL=gpt-5.5
 EXTRACT_REASONING_EFFORT=xhigh
@@ -28,130 +19,212 @@ ADJUDICATE_REASONING_EFFORT=xhigh
 LINKFLOW_XHIGH_MAX_WORKERS=5
 ```
 
-Xhigh reasoning is the default extraction setting. Override it only when
-running an explicit model-effort experiment:
+Observed provider constraints:
 
-```bash
-python -m pipeline.run_pool \
-  --slugs penford \
-  --workers 1 \
-  --extract-model gpt-5.5 \
-  --adjudicate-model gpt-5.5 \
-  --extract-reasoning-effort xhigh \
-  --adjudicate-reasoning-effort xhigh \
-  --re-extract
+- `xhigh` reasoning is the default for extractor and adjudicator calls.
+- `xhigh` concurrency is capped at five workers by default; the runner rejects
+  larger pools before model calls.
+- Linkflow has a 300s streaming idle timeout. Full extraction and repair-body
+  turns stream so long-running reasoning keeps the connection alive.
+- `previous_response_id` returns 400. Every extraction, tool-output replay, and
+  repair turn uses full-input replay.
+- Short tool-call/tool-output turns are non-streaming because the SDK streaming
+  accumulator can return empty output under tool use.
+- There is no per-deal token-budget cap. Token totals are audit facts; worker
+  count and reasoning effort are the cost controls.
+
+## Extraction Shape
+
+Every extractor turn that emits a full `{deal, events}` body uses strict
+structured output:
+
+```json
+{
+  "text": {
+    "format": {
+      "type": "json_schema",
+      "strict": true,
+      "schema": "SCHEMA_R1"
+    }
+  }
+}
 ```
 
-The audit should show:
+`SCHEMA_R1` is hardened with `additionalProperties: false`, complete
+`required` lists, tightened enums, exact array shapes, and `maxLength: 1500`
+on quote strings. It is strict as a provider shape, not a replacement for
+Python validation.
 
-- `api_endpoint: "responses"` in
-  `output/audit/{slug}/runs/{run_id}/manifest.json`.
-- `json_schema_used=false` in
-  `output/audit/{slug}/runs/{run_id}/calls.jsonl` for Linkflow.
-- `finish_reason` equivalent to completed, no timeout error, and no repeated
-  5xx retry loop.
-- Token usage recorded for input, output, and reasoning tokens when the
-  provider returns those fields.
-- No per-deal token-budget cap. Token totals are audit facts, not a reason to
-  skip adjudication or abort an otherwise valid run.
+Phase 1 Linkflow probes accepted the live schema only after removing two
+provider-schema ambitions:
 
-## Why This Works
+- no `oneOf` event variants for conditional row ownership/nullness;
+- no dynamic `bidder_registry` enforcement in the provider schema.
 
-Streaming matters. Large SEC extraction prompts plus high reasoning can take
-longer than a proxy's non-streaming read window. The Responses streaming path
-keeps the connection active while the model is working and producing output.
+Those are still live output-contract requirements. Python rebuilds and enforces
+`bidder_registry` before validation/finalization, `check_row` catches row-local
+conditional failures during drafting, and `pipeline.core.validate()` remains
+the authoritative invariant gate.
 
-Prompt-only JSON matters on Linkflow. Linkflow/NewAPI-compatible providers may
-not handle strict OpenAI structured-output payloads the same way OpenAI's native
-endpoint does. The current client therefore disables structured output for
-Linkflow and lets Python enforce the live contract after parsing. This is a
-transport choice, not a relaxed local schema.
+## Extractor Tools
 
-Section slicing matters. The extractor should receive the isolated Background
-section with original page numbers, not the full filing and not table-of-
-contents/cross-reference pages. This reduces latency, proxy exposure, and quote
-verification noise.
+The extractor has exactly three native tools. Keep the catalog small unless
+reference-run evidence proves a specific gap.
 
-Python validation matters. Linkflow should only do the extraction and scoped
-adjudication. The repo owns schema enforcement, stale-field rejection, source
-quote checks, date/BidderID checks, and finalization.
+### `check_row(row)`
 
-## What Makes Linkflow Shaky
+Runs row-local Python checks against a candidate event row and returns:
 
-Avoid these patterns:
+```json
+{"ok": true, "violations": []}
+```
 
-- Non-streaming Chat Completions for large high-reasoning extraction prompts.
-  This is the easiest way to hit proxy timeout behavior.
-- Large Responses calls with strict `json_schema` / `text.format` payloads.
-  This combination was observed to be brittle through Linkflow.
-- Runtime schema probes before the real extraction. They add a paid request and
-  do not prove the full extraction payload will work.
-- JSON repair model calls after malformed output. They hide the real failure,
-  burn tokens, and make the audit harder to reason about.
-- Full-filing prompts. Sending the entire filing increases prompt size and
-  makes table-of-contents hits, cross references, and timeout risk worse.
-- Low `max_output_tokens` caps on extractor calls. Truncated JSON is worse than
-  an explicit failure. The extractor path should normally leave the cap unset.
-- Per-deal token-budget caps. They hide the exact soft flags that need
-  adjudication and make high-complexity deals look cleaner than they are.
-- Worker counts above the tested provider ceiling. `xhigh` is capped at five
-  concurrent workers by default; the runner rejects larger `xhigh` pools before
-  making API calls.
-- Changing reasoning efforts before testing. `xhigh` is the default for `gpt-5.5`
-  in this repo; do not leave reasoning effort unset for real extraction. Do not assume every
-  proxy accepts every OpenAI reasoning-effort value.
-- Stale cached raw responses after prompt, schema, rulebook, or section-slicing
-  changes. `--re-validate` is only valid for cache-eligible audit v2 archives
-  whose `rulebook_version`, `extractor_contract_version`, and raw-response
-  shape are current. Use `--audit-run-id <run_id>` to select a specific
-  archived run, and `--re-extract` otherwise.
+The wrapper covers structural row checks, quote/page substring verification,
+date/BidderID basics, bid-type evidence, and conditional event-field ownership
+such as §P-R9. The model should call it on every row before final submission.
+Parallel calls are expected.
 
-## Output Contract Discipline
+Example use: before submitting a `Bid` row, the model calls `check_row` to
+catch an overlong quote, a quote that is not on the cited page, missing
+`bid_type_inference_note`, or fields that belong only on another event type.
 
-Because Linkflow runs prompt-only JSON, stale fields must not ship locally.
-The extractor's `deal` object must contain only current AI-produced fields:
+### `search_filing(query, page_range, max_hits)`
 
-- `TargetName`
-- `Acquirer`
-- `DateAnnounced`
-- `DateEffective`
-- `auction`
-- `all_cash`
-- `target_legal_counsel`
-- `acquirer_legal_counsel`
-- `bidder_registry`
-- `deal_flags`
+Case-insensitive substring search over `data/filings/{slug}/pages.json`.
+Returns page-numbered snippets, not array offsets.
 
-Do not emit `slug`, `FormType`, `URL`, `DateFiled`, `CIK`, `accession`,
-`rulebook_version`, `last_run`, or `last_run_id`. Those are manifest,
-orchestration, or finalization fields. Missing current deal fields hard-fail.
-Unexpected deal fields hard-fail locally; they are not stripped, repaired, or
-allowed to ship as live output.
+Example use: search for `"by and among"` or `"Schedule A"` to find merger
+agreement party blocks before emitting Buyer Group or Consortium rows.
 
-Every event row still needs exact `source_quote` and `source_page`. Quotes must
-be verbatim slices from the embedded Background pages, one paragraph at most,
-targeted at no longer than 1500 characters per quote string. There is no soft
-over-target zone; above 1500 characters is a hard validator flag.
+### `get_pages(start_page, end_page)`
 
-Audit v2 uses immutable run directories. Fresh runs do not clear or overwrite
-older `calls.jsonl`, prompt files, or `raw_response.json`; they write a new
-directory under `output/audit/{slug}/runs/{run_id}/` and update only
-`output/audit/{slug}/latest.json`. A failed fresh rerun preserves any prior
-successful live progress state and records the failure in the new audit
-manifest with `cache_eligible=false`, so an older raw response cannot be
-silently reused. Cached raw responses carry an `extractor_contract_version`
-hash covering `prompts/extract.md` and the local `SCHEMA_R1` mirror, so
-prompt/schema-only changes fail loudly instead of reusing old model JSON.
+Fetches contiguous filing pages by page number and returns full page text:
 
-Loose legacy files directly under `output/audit/{slug}/` are stale artifacts,
-not cache candidates. Delete or archive them after regeneration; do not add
-fallback readers.
+```json
+{"pages": [{"page": 41, "text": "..."}]}
+```
 
-Behavioral extraction doctrine lives in `rules/*.md`; comparison behavior lives
-in `scoring/diff.py`. Keep this guide focused on Linkflow transport behavior
-and local contract enforcement.
+The range cap is 10 pages per call. Use it after `search_filing` identifies a
+candidate page, or when a row's evidence needs surrounding context.
 
-## Operator Checklist
+## Multi-Turn Loop
+
+Per deal, the extraction harness runs this shape:
+
+```text
+run.py / pipeline.run_pool
+  -> full extractor input with strict json_schema + tools
+       model may emit parallel function_call items
+       harness dispatches tools locally
+       harness replays full input + function_call_output items
+       repeat until final {deal, events}
+  -> prepare_for_validate()
+       Python rebuilds/enforces bidder_registry
+  -> validate()
+  -> repair loop if hard flags remain
+  -> scoped adjudicator for soft flags only
+  -> finalize_prepared()
+```
+
+Do not chain turns with `previous_response_id`; replay the full input. Do not
+switch to partial JSON patches during repair; every full-body model response is
+a complete extraction.
+
+Streaming policy:
+
+- Stream full extraction-body turns, including repair turns.
+- Use non-streaming Responses calls for short tool-call/tool-output turns.
+- Reconstruct final JSON from the model's final message, not from intermediate
+  tool-call output.
+
+## Repair Loop
+
+The repair loop starts only after Python validation sees hard flags in the
+model's final draft.
+
+Repair prompt contents:
+
+- compact validator report with hard flag codes, severity, reason, and affected
+  row index when available;
+- affected event rows verbatim;
+- filing snippets needed to fix the failure.
+
+Repair protocol:
+
+- The model must emit a complete revised `{deal, events}` extraction.
+- The cap is two repair turns.
+- After each repair turn, Python prepares and validates again.
+- If hard flags remain after turn 2, finalization uses the latest draft and
+  appends a deal-level hard `repair_loop_exhausted` flag. The deal status is
+  `validated`.
+- The cap is an infinite-loop guard, not a cost-control mechanism.
+
+The scoped Adjudicator runs after hard-flag repair is closed or exhausted. It
+has no tools, does not rewrite extraction rows, and only appends verdict text to
+soft-flag reasons.
+
+## Audit Contract
+
+Every extraction or re-validation attempt writes a new immutable run directory:
+
+```text
+output/audit/{slug}/runs/{run_id}/
+  manifest.json
+  calls.jsonl
+  tool_calls.jsonl
+  repair_turns.jsonl
+  raw_response.json
+  validation.json
+  final_output.json
+  prompts/
+    extractor.txt
+    adjudicator_{n}.txt
+
+output/audit/{slug}/latest.json
+```
+
+`latest.json` is the only mutable audit pointer. Fresh attempts never overwrite
+older run directories. Failed fresh attempts still write a manifest and update
+`latest.json` with `cache_eligible=false`.
+
+New audit expectations:
+
+- `tool_calls.jsonl`: one row per tool invocation with turn, call ID, name,
+  arguments, result, latency, and any error/truncation marker.
+- `repair_turns.jsonl`: one row per repair turn with a validator summary,
+  hard-flag counts before/after, and latency.
+- `manifest.json` records `tools_contract_version`,
+  `repair_loop_contract_version`, `repair_turns_used`,
+  `repair_loop_outcome`, and `tool_calls_count`.
+
+`repair_loop_outcome` is:
+
+- `clean`: initial validation had no hard flags.
+- `fixed`: at least one repair turn ran and hard flags cleared.
+- `exhausted`: the cap was reached and `repair_loop_exhausted` was finalized.
+
+The former schema-used audit boolean is retired; strict schema is
+unconditional under the live contract.
+
+## Cache Eligibility
+
+`--re-validate` may reuse only cache-eligible audit v2 runs. The archived run
+must match the current:
+
+- `rulebook_version`
+- `extractor_contract_version`
+- `tools_contract_version`
+- `repair_loop_contract_version`
+
+Use `--audit-run-id <run_id>` to select an exact immutable run. Otherwise,
+`--re-validate` reads `output/audit/{slug}/latest.json`. Loose legacy files
+directly under `output/audit/{slug}/` are stale artifacts and are not cache
+candidates.
+
+Use `--re-extract` after any prompt, schema, tools, repair-loop, rulebook, or
+output-contract change.
+
+## Operator Commands
 
 Before a real Linkflow run:
 
@@ -160,7 +233,7 @@ python -m pipeline.run_pool --filter reference --workers 4 --dry-run
 python -m pytest -x
 ```
 
-For a first real run on a reference deal:
+Single reference extraction:
 
 ```bash
 python -m pipeline.run_pool \
@@ -177,13 +250,16 @@ After the run:
 
 ```bash
 python scoring/diff.py --slug medivation
+python -m pipeline.reconcile --scope reference
 ```
 
-Then inspect:
+Inspect:
 
 - `output/audit/{slug}/latest.json`
 - `output/audit/{slug}/runs/{run_id}/manifest.json`
 - `output/audit/{slug}/runs/{run_id}/calls.jsonl`
+- `output/audit/{slug}/runs/{run_id}/tool_calls.jsonl`
+- `output/audit/{slug}/runs/{run_id}/repair_turns.jsonl`
 - `output/audit/{slug}/runs/{run_id}/raw_response.json`
 - `output/audit/{slug}/runs/{run_id}/validation.json`
 - `output/audit/{slug}/runs/{run_id}/final_output.json`
@@ -191,7 +267,7 @@ Then inspect:
 - `state/progress.json`
 - `state/flags.jsonl`
 
-Reference-run protocol after this redesign:
+Full reference-run protocol after the overhaul:
 
 ```bash
 python -m pytest -x
@@ -207,18 +283,12 @@ python -m pipeline.run_pool \
 python -m pipeline.reconcile --scope reference
 ```
 
-Repeat until three archived full-reference xhigh runs exist under unchanged
-prompt/schema/rulebook hashes, then run:
+Repeat until at least three archived full-reference runs exist under unchanged
+rulebook, extractor, tools, and repair-loop contract hashes.
 
-```bash
-python -m pipeline.stability \
-  --scope reference \
-  --runs 3 \
-  --write quality_reports/stability/reference-xhigh-3run.md
-```
+## Stability And Target Release
 
-After Austin manually verifies all nine references, write the explicit
-target-gate proof from the same archived runs:
+Write the reference stability proof from immutable audit runs:
 
 ```bash
 python -m pipeline.stability \
@@ -228,15 +298,22 @@ python -m pipeline.stability \
   --write quality_reports/stability/target-release-proof.json
 ```
 
-Only after `STABLE_FOR_REFERENCE_REVIEW`, `requested_runs >= 3`, at least three
-selected immutable run IDs for every reference slug in the proof, Austin's
-manual verification of all nine references, and that explicit
-`target_gate_proof_v1` file should `--release-targets` be considered. Delete
-and regenerate generated artifacts after any prompt/schema/rulebook change. Git
-history is the compatibility record; stale outputs are not.
+Target extraction remains closed until all of the following are true:
+
+- all nine reference deals are manually marked `verified`;
+- `pipeline.reconcile --scope reference` passes;
+- the `target_gate_proof_v1` file classifies the archive as
+  `STABLE_FOR_REFERENCE_REVIEW`;
+- the proof records `requested_runs >= 3`;
+- the proof includes at least three selected immutable run IDs for every
+  reference slug;
+- the operator explicitly supplies `--release-targets`.
+
+Any prompt, schema, tools, repair-loop, rulebook, state, or output-format change
+resets the stability clock and requires regenerating affected artifacts.
 
 ## Security
 
 Never commit API keys. Use `OPENAI_API_KEY` from the shell or `.env`, and keep
-local credential files ignored. If any prompt, audit file, log, shell history, or
-markdown note captures a real key, stop and rotate the key before continuing.
+local credential files ignored. If any prompt, audit file, log, shell history,
+or markdown note captures a real key, stop and rotate the key before continuing.

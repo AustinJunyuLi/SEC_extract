@@ -27,19 +27,46 @@ from SEC, EDGAR, the web, or local files during the model call.
 - Append to `state/flags.jsonl` — any ambiguities flagged during validation.
 - Update `state/progress.json` — set the deal's status.
 - `output/audit/{slug}/runs/{run_id}/` — immutable run audit artifacts, with
+  `tool_calls.jsonl` and `repair_turns.jsonl` when applicable, and
   `output/audit/{slug}/latest.json` as the only mutable audit pointer.
 
 ---
 
-## Pipeline (Extractor SDK Call + Python Validator + Scoped Adjudicator)
+## Pipeline (Strict Extractor + Tools + Repair + Scoped Adjudicator)
 
 **Architecture:** `pipeline.run_pool` and `run.py` make direct `AsyncOpenAI`
 SDK calls to the Responses streaming endpoint (`responses.stream`) through the
 Linkflow/NewAPI-compatible provider configured by `OPENAI_BASE_URL` /
-`OPENAI_API_KEY`. The default Linkflow path uses prompt-only JSON
-(`json_schema_used=false` in audit metadata); structured output is disabled for
-Linkflow in the client. The Extractor and optional Adjudicator are model calls;
-validation/finalization remain Python code in `pipeline/core.py`.
+`OPENAI_API_KEY`. Every extractor turn that emits a full extraction body uses
+strict `text.format=json_schema` with the hardened `SCHEMA_R1`. The model has
+three native function-calling tools while drafting:
+
+- `check_row(row)` — row-local validator wrapper (§P-R0..R9 + §P-D1/D2/D7 +
+  §P-G2).
+- `search_filing(query, page_range, max_hits)` — substring search over filing
+  pages.
+- `get_pages(start_page, end_page)` — contiguous page fetch (cap = 10 pages
+  per call).
+
+The extractor may emit parallel `function_call` items. The harness runs each
+tool locally against the deal's `pages.json`, appends `function_call_output`
+items, and replays the full input each turn. There is no
+`previous_response_id` chain because Linkflow returns 400. Full extraction and
+repair-body turns stream; short tool-call/output turns are non-streaming to
+avoid the SDK accumulator empty-output bug.
+
+There is no free-form JSON fallback and no provider branch that turns off
+structured output.
+Phase 1 Linkflow probes accepted the live `SCHEMA_R1` only after keeping the
+provider schema strict-but-not-maximalist: no `oneOf` event variants and no
+dynamic `bidder_registry` enforcement in the provider payload. Those remain
+live Python contract duties; the pipeline rebuilds and enforces
+`bidder_registry` before validation/finalization, and the validator/tooling
+enforce conditional row semantics.
+
+The Extractor and optional Adjudicator are model calls; validation,
+bidder-registry rebuilding, repair-loop control, and finalization remain Python
+code in `pipeline/core.py` and the extraction orchestrator.
 
 **Why deterministic validation stays in Python.**
 Every invariant in `rules/invariants.md` (§P-R, §P-D, §P-G, §P-H, §P-L, §P-S) is
@@ -66,6 +93,9 @@ that a real extraction miss or is the filing genuinely silent?"
   to `rules/schema.md` §R1. Every event row carries `source_quote` (NFKC
   substring of the cited page) and `source_page` (integer matching
   `pages.json[i].number`).
+- **Can call:** `check_row`, `search_filing`, and `get_pages` during drafting.
+  The model should call `check_row` on every event row before final submission
+  and use the filing tools to verify quotes, pages, and buyer-group evidence.
 - **Prompt builder:** `pipeline.llm.extract.build_messages(slug)`.
 
 ### 2. Validator — Python (`pipeline/core.py`)
@@ -77,12 +107,26 @@ that a real extraction miss or is the filing genuinely silent?"
   (semantic process checks).
 - **Returns:** `row_flags` and `deal_flags` lists of
   `{code, severity, reason, [row_index|deal_level]}` dicts.
-- **Never rewrites the extraction.** Flag-only discipline preserves the
-  Extractor's output as the single source of what was extracted.
+- **Never rewrites the extraction by itself.** Flag-only discipline preserves
+  the Extractor's output as the single source of what was extracted. Python may
+  rebuild and enforce `bidder_registry` before validation/finalization, but
+  row-level extraction content is repaired only by the model repair loop.
 
-### 3. Adjudicator — SDK call, scoped
+### 3. Repair loop — Python-controlled model turns
+- **Fires when:** the Python Validator raises hard flags after the extractor's
+  final draft.
+- **Receives:** a compact validator report, affected rows, and filing snippets
+  needed to repair the specific failures. The model must return a complete
+  revised `{deal, events}` extraction, not patches.
+- **Cap:** 2 repair turns. If hard flags remain after turn 2, finalization uses
+  the latest draft and appends a deal-level hard `repair_loop_exhausted` flag;
+  status becomes `validated`.
+- **Audit:** one `repair_turns.jsonl` entry per repair turn.
+
+### 4. Adjudicator — SDK call, scoped
 - **Fires when:** the Python Validator raises a soft flag (currently §P-S1
-  `missing_nda_dropsilent`). No-op when zero soft flags.
+  `missing_nda_dropsilent`) after the repair loop has closed or exhausted hard
+  flags. No-op when zero soft flags.
 - **Receives:** the flagged row + same-bidder context rows + a small window
   of filing pages.
 - **Emits:** `{verdict: "upheld" | "dismissed", reason: str}` appended to
@@ -97,17 +141,29 @@ that a real extraction miss or is the filing genuinely silent?"
 
 ```
   run.py / pipeline.run_pool:
-    1. call Extractor SDK → raw_extraction JSON + audit cache
-    2. filing = pipeline.core.load_filing(slug)
-    3. result = pipeline.core.validate(raw_extraction, filing)
-    4. if any(flag["severity"] == "soft" for flag in result.row_flags + result.deal_flags):
+    1. call Extractor SDK with strict json_schema + tools
+         parallel function_call → tool dispatch → function_call_output replay
+         repeat until model emits final {deal, events}
+    2. write audit raw response, prompts, call metadata, and tool_calls.jsonl
+    3. filing = pipeline.core.load_filing(slug)
+    4. prepared = pipeline.core.prepare_for_validate(raw_extraction, filing)
+         includes Python bidder_registry rebuilding/enforcement
+    5. result = pipeline.core.validate(prepared, filing)
+    6. if any hard flags and repair turns used < 2:
+         send compact validator report + affected rows + filing snippets
+         model emits complete revised extraction
+         prepare + validate again
+         record repair_turns.jsonl
+       if hard flags remain after turn 2:
+         append deal-level hard repair_loop_exhausted flag
+    7. if any(flag["severity"] == "soft" for flag in result.row_flags + result.deal_flags):
          call Adjudicator SDK and annotate raw_extraction before finalize
-    5. pipeline.core.finalize_prepared(slug, prepared, filing, validation, promotion_log, run_id=run_id)
+    8. pipeline.core.finalize_prepared(slug, prepared, filing, validation, promotion_log, run_id=run_id)
          → output/extractions/{slug}.json
          → output/audit/{slug}/runs/{run_id}/final_output.json (immutable snapshot)
          → state/flags.jsonl (append)
          → state/progress.json (update)
-    6. scoring/diff.py --slug {slug}   (on reference deals)
+    9. scoring/diff.py --slug {slug}   (on reference deals)
 ```
 
 `run.py` is the single-deal CLI wrapper:
@@ -124,6 +180,9 @@ python run.py --slug X --extract --extract-reasoning-effort xhigh
 `--re-validate` uses only a cache-eligible archived audit v2 run. Without
 `--audit-run-id`, it reads `output/audit/{slug}/latest.json`; with
 `--audit-run-id`, it reads `output/audit/{slug}/runs/{run_id}/raw_response.json`.
+The archived run must match current `rulebook_version`,
+`extractor_contract_version`, `tools_contract_version`, and
+`repair_loop_contract_version`.
 Loose legacy raw-response files directly under `output/audit/{slug}/` are not
 accepted. `--re-extract` forces a fresh model call and writes a new immutable
 audit run directory.
@@ -271,6 +330,8 @@ runner skip logic or the reference gate.
 output/audit/{slug}/runs/{run_id}/
   manifest.json
   calls.jsonl
+  tool_calls.jsonl
+  repair_turns.jsonl
   raw_response.json
   validation.json
   final_output.json
@@ -284,10 +345,12 @@ output/audit/{slug}/latest.json
 Fresh attempts never delete or overwrite prior run directories. Failed attempts
 write a run manifest and `latest.json` with `cache_eligible=false`. Re-validation
 copies the selected archived raw response into a new run directory and records
-`cache_used=true` plus `source_audit_run_id`. `final_output.json` is the
-immutable finalized snapshot used by stability checks. Each run-dir JSON file
-carries its own `schema_version` (`audit_run_v2`, `raw_response_v2`,
-`validation_v1`, `final_output_v1`); `latest.json` carries `audit_v2`.
+`cache_used=true` plus `source_audit_run_id`. Cache eligibility requires the
+current rulebook pin plus extractor, tools, and repair-loop contract versions
+to match the archived run. `final_output.json` is the immutable finalized
+snapshot used by stability checks. Each run-dir JSON file carries its own
+`schema_version` (`audit_run_v2`, `raw_response_v2`, `validation_v1`,
+`final_output_v1`); `latest.json` carries `audit_v2`.
 
 **Reconcile and stability commands.** Two read-only entrypoints close the
 target gate. `python -m pipeline.reconcile --scope reference` checks
