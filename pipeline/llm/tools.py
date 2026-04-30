@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import functools
 import hashlib
 import inspect
 import json
@@ -19,9 +20,8 @@ CHECK_ROW_SCHEMA: dict[str, Any] = {
         "rulebook (P-R0/R2/R3/R4/R6/R7/R8/R9, P-D1/D2/D7, P-G2). "
         "Returns ok=true if the row passes all checks, otherwise ok=false "
         "with a violations list naming each broken rule. Registry-dependent "
-        "P-R5 runs in the full validator. In the live pipeline this tool is "
-        "available only during repair 2 and should be used only for hard-flagged, "
-        "revised, or revision-dependent rows."
+        "P-R5 runs in the full validator. Call only for hard-flagged rows, "
+        "directly revised rows, and rows whose validity depends on those revisions."
     ),
     "parameters": {
         "type": "object",
@@ -204,6 +204,7 @@ def get_pages(
     return {"pages": pages}
 
 
+@functools.cache
 def tools_contract_version() -> str:
     """Return a stable hash for tool definitions and implementations."""
     payload = {

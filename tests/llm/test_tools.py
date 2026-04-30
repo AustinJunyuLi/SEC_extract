@@ -155,7 +155,7 @@ def test_targeted_repair_tool_definitions_include_expected_tools_only():
 
 
 def test_no_generic_extractor_tool_catalog_is_exposed():
-    assert not hasattr(tools, "TOOL_" "DEFINITIONS")
+    assert not hasattr(tools, "TOOL_DEFINITIONS")
 
 
 def test_dispatch_invokes_check_row():
