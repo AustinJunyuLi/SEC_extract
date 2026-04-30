@@ -23,29 +23,25 @@ Linkflow/NewAPI-compatible `OPENAI_BASE_URL`. Configure it with
 `OPENAI_BASE_URL` and `OPENAI_API_KEY`; model names come from `EXTRACT_MODEL`
 and `ADJUDICATE_MODEL` or CLI overrides.
 
-Every extractor call uses **strict `text.format=json_schema`** with the
-hardened `SCHEMA_R1`, plus three native function-calling tools available to
-the model during drafting:
+Every full extraction body uses strict `text.format=json_schema` with the
+hardened `SCHEMA_R1`. The first extraction pass is prompt-only: no native tools
+are supplied to the model. Python `pipeline.core.validate()` is the
+authoritative deterministic validator.
 
-- `check_row(row)` — row-local validator wrapper (§P-R0..R9 + §P-D1/D2/D7 +
-  §P-G2).
-- `search_filing(query, page_range, max_hits)` — substring search over filing
-  pages.
-- `get_pages(start_page, end_page)` — contiguous page fetch (cap = 10 pages
-  per call).
-
-After the model emits its final extraction, Python `pipeline.core.validate()`
-runs. If hard flags remain, an outer **repair loop** (cap = 2 turns) sends the
-validator report back and asks for a complete revised extraction. On cap-hit,
-finalization records a `repair_loop_exhausted` deal-level hard flag and the
-deal status is `validated`.
+If hard flags remain, the repair loop is staged. Repair turn 1 is prompt-only.
+If hard flags still remain, repair turn 2 exposes only targeted repair tools:
+`check_row`, `search_filing`, and `get_pages`. The model must still return a
+complete revised `{deal, events}` extraction, not patches. On cap-hit,
+finalization records `repair_loop_exhausted` and the deal status is
+`validated`.
 
 The scoped Adjudicator stays single-turn, no tools, soft-flag verdicts only.
 
 There is no free-form JSON fallback. There is no provider branch that turns off
 structured output. There is no `previous_response_id` chain (Linkflow returns 400).
-Streaming is used for every full-extraction turn; non-streaming for short
-tool-call turns to avoid the SDK accumulator empty-output bug.
+Streaming is used for every full extraction or repair-body turn; non-streaming
+is reserved for short repair-2 tool-output replay turns to avoid the SDK
+accumulator empty-output bug.
 
 Phase 1 Linkflow probes accepted the live `SCHEMA_R1` only after keeping the
 provider schema strict-but-not-maximalist: no `oneOf` event variants and no
@@ -59,14 +55,14 @@ Per deal:
 ```text
 seeds.csv / state/progress.json
   -> run.py or pipeline.run_pool
-  -> Extractor SDK call (strict json_schema + tools)
-       parallel function_call → tool dispatch → function_call_output replay
-       repeat until model emits final {deal, events}
+  -> Extractor SDK call (strict json_schema, prompt-only)
+       model emits final {deal, events}
   -> output/audit/{slug}/runs/{run_id}/ immutable raw response, prompts, tool_calls.jsonl
   -> pipeline.core.prepare_for_validate()
   -> pipeline.core.validate()
-  -> if hard flags: repair turn (≤ 2 iterations)
-       compact validator report + affected rows + filing snippets sent back
+  -> if hard flags: staged repair (≤ 2 iterations)
+       repair_1 prompt-only
+       repair_2 targeted tools only if hard flags remain
        model emits complete revised extraction
        Python validates again
        on cap-hit: finalize latest draft + repair_loop_exhausted flag
@@ -81,8 +77,8 @@ seeds.csv / state/progress.json
 
 There is no active external agent loop, manually routed deal workflow, or
 top-level pipeline script. Add another model role or orchestration layer only
-when current reference-deal evidence shows this strict Extractor + tools +
-Python validator/repair + scoped Adjudicator design is insufficient.
+when current reference-deal evidence shows this prompt-first Extractor +
+Python validator/staged repair + scoped Adjudicator design is insufficient.
 
 ## Entrypoints
 
@@ -109,9 +105,10 @@ default `--re-validate` reads `output/audit/{slug}/latest.json`; use
 `--audit-run-id <run_id>` to revalidate an exact archived run under
 `output/audit/{slug}/runs/{run_id}/`. The archived raw response must match the
 current `rulebook_version`, `extractor_contract_version`,
-`tools_contract_version`, and `repair_loop_contract_version`. Loose legacy
-files directly under `output/audit/{slug}/` are stale and are not accepted as
-cache. Use `--re-extract` for a fresh SDK extraction.
+`tools_contract_version`, `repair_loop_contract_version`,
+`extract_tool_mode`, and `repair_strategy`. Loose legacy files directly under
+`output/audit/{slug}/` are stale and are not accepted as cache. Use
+`--re-extract` for a fresh SDK extraction.
 
 Reasoning effort defaults to `xhigh` for both extractor and adjudicator calls:
 
@@ -188,6 +185,10 @@ Key conventions:
 - `ConsortiumCA.bidder_alias` names the actor represented by `bidder_name`, not
   the buyer-group relationship phrase; relationship language belongs in
   `source_quote` and, when useful, `additional_note`.
+- Identifiable buyer-group NDA status is row-level: emit constituent `NDA`
+  rows, including inherited `NDA` rows dated to the join date for late
+  members of an already-NDA-bound group. `ConsortiumCA` never substitutes
+  for a same-bidder `NDA`.
 - A non-announcement `Final Round` row is a process-level milestone. One row
   may support multiple same-round bids when the filing describes one shared
   deadline, submission event, or outcome.
@@ -252,7 +253,8 @@ still write a run manifest and update `latest.json` with
 `cache_eligible=false`. Re-validation copies the selected archived raw response
 into the new run directory and records `cache_used=true` /
 `source_audit_run_id`. Cache eligibility requires the current rulebook pin plus
-extractor, tools, and repair-loop contract versions to match the archived run.
+extractor, tools, repair-loop, extract-tool-mode, and repair-strategy contract
+values to match the archived run.
 `final_output.json` is the immutable per-run finalized snapshot used by
 stability tooling; `output/extractions/{slug}.json` remains the authoritative
 latest extraction.

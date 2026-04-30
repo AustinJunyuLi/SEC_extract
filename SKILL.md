@@ -32,28 +32,26 @@ from SEC, EDGAR, the web, or local files during the model call.
 
 ---
 
-## Pipeline (Strict Extractor + Tools + Repair + Scoped Adjudicator)
+## Pipeline (Prompt-First Extractor + Staged Repair + Scoped Adjudicator)
 
 **Architecture:** `pipeline.run_pool` and `run.py` make direct `AsyncOpenAI`
 SDK calls to the Responses streaming endpoint (`responses.stream`) through the
 Linkflow/NewAPI-compatible provider configured by `OPENAI_BASE_URL` /
-`OPENAI_API_KEY`. Every extractor turn that emits a full extraction body uses
-strict `text.format=json_schema` with the hardened `SCHEMA_R1`. The model has
-three native function-calling tools while drafting:
+`OPENAI_API_KEY`. Every full extraction body uses strict
+`text.format=json_schema` with the hardened `SCHEMA_R1`. The first extraction
+pass is prompt-only: no native tools are supplied to the model. Python
+`pipeline.core.validate()` is the authoritative deterministic validator.
 
-- `check_row(row)` — row-local validator wrapper (§P-R0..R9 + §P-D1/D2/D7 +
-  §P-G2).
-- `search_filing(query, page_range, max_hits)` — substring search over filing
-  pages.
-- `get_pages(start_page, end_page)` — contiguous page fetch (cap = 10 pages
-  per call).
+If hard flags remain, the repair loop is staged. Repair turn 1 is prompt-only.
+If hard flags still remain, repair turn 2 exposes only targeted repair tools:
+`check_row`, `search_filing`, and `get_pages`. The model must still return a
+complete revised `{deal, events}` extraction, not patches. On cap-hit,
+finalization records `repair_loop_exhausted` and the deal status is
+`validated`.
 
-The extractor may emit parallel `function_call` items. The harness runs each
-tool locally against the deal's `pages.json`, appends `function_call_output`
-items, and replays the full input each turn. There is no
-`previous_response_id` chain because Linkflow returns 400. Full extraction and
-repair-body turns stream; short tool-call/output turns are non-streaming to
-avoid the SDK accumulator empty-output bug.
+There is no `previous_response_id` chain because Linkflow returns 400. Full
+extraction and repair-body turns stream; short repair-2 tool-output replay
+turns are non-streaming to avoid the SDK accumulator empty-output bug.
 
 There is no free-form JSON fallback and no provider branch that turns off
 structured output.
@@ -93,9 +91,8 @@ that a real extraction miss or is the filing genuinely silent?"
   to `rules/schema.md` §R1. Every event row carries `source_quote` (NFKC
   substring of the cited page) and `source_page` (integer matching
   `pages.json[i].number`).
-- **Can call:** `check_row`, `search_filing`, and `get_pages` during drafting.
-  The model should call `check_row` on every event row before final submission
-  and use the filing tools to verify quotes, pages, and buyer-group evidence.
+- **Cannot call:** native tools during initial extraction. Any needed filing
+  evidence must come from the embedded Background pages in the user message.
 - **Prompt builder:** `pipeline.llm.extract.build_messages(slug)`.
 
 ### 2. Validator — Python (`pipeline/core.py`)
@@ -118,6 +115,9 @@ that a real extraction miss or is the filing genuinely silent?"
 - **Receives:** a compact validator report, affected rows, and filing snippets
   needed to repair the specific failures. The model must return a complete
   revised `{deal, events}` extraction, not patches.
+- **Turn modes:** repair turn 1 has no tools. Repair turn 2, only if hard flags
+  remain, may call `check_row`, `search_filing`, and `get_pages` for targeted
+  repair.
 - **Cap:** 2 repair turns. If hard flags remain after turn 2, finalization uses
   the latest draft and appends a deal-level hard `repair_loop_exhausted` flag;
   status becomes `validated`.
@@ -141,15 +141,16 @@ that a real extraction miss or is the filing genuinely silent?"
 
 ```
   run.py / pipeline.run_pool:
-    1. call Extractor SDK with strict json_schema + tools
-         parallel function_call → tool dispatch → function_call_output replay
-         repeat until model emits final {deal, events}
+    1. call Extractor SDK with strict json_schema, prompt-only
+         model emits final {deal, events}
     2. write audit raw response, prompts, call metadata, and tool_calls.jsonl
     3. filing = pipeline.core.load_filing(slug)
     4. prepared = pipeline.core.prepare_for_validate(raw_extraction, filing)
          includes Python bidder_registry rebuilding/enforcement
     5. result = pipeline.core.validate(prepared, filing)
     6. if any hard flags and repair turns used < 2:
+         repair_1 prompt-only
+         repair_2 targeted tools only if hard flags remain
          send compact validator report + affected rows + filing snippets
          model emits complete revised extraction
          prepare + validate again
@@ -182,7 +183,7 @@ python run.py --slug X --extract --extract-reasoning-effort xhigh
 `--audit-run-id`, it reads `output/audit/{slug}/runs/{run_id}/raw_response.json`.
 The archived run must match current `rulebook_version`,
 `extractor_contract_version`, `tools_contract_version`, and
-`repair_loop_contract_version`.
+`repair_loop_contract_version`, `extract_tool_mode`, and `repair_strategy`.
 Loose legacy raw-response files directly under `output/audit/{slug}/` are not
 accepted. `--re-extract` forces a fresh model call and writes a new immutable
 audit run directory.
@@ -223,7 +224,7 @@ If any scope rule is 🟥 OPEN, stop and report — do not extract.
 1. **Every emitted row has `source_quote` and `source_page`.** No exceptions. If you can't cite filing text, don't emit the row.
 2. **The event vocabulary in `rules/events.md` is closed.** Do not invent new `bid_note` values. If an event doesn't fit, flag it.
 3. **Dates follow `rules/dates.md` exactly.** Natural-language dates ("mid-June 2016") must be mapped deterministically, not creatively.
-4. **Bidder names follow the filing verbatim** until the canonicalization rule in `rules/bidders.md` §E4 triggers. Exact-count unnamed NDA placeholders are stable lifecycle handles, and `ConsortiumCA.bidder_alias` names the actor rather than the relationship phrase.
+4. **Bidder names follow the filing verbatim** until the canonicalization rule in `rules/bidders.md` §E4 triggers. Exact-count unnamed NDA placeholders are stable lifecycle handles. Identifiable buyer-group `NDA` status is row-level, including inherited `NDA` rows for late joiners to already-NDA-bound groups; `ConsortiumCA.bidder_alias` names the actor rather than the relationship phrase and never substitutes for the same-bidder `NDA`.
 5. **Informal-vs-formal classification must be evidenced per `rules/bids.md` §G2**: either a true range bid (both `bid_value_lower` and `bid_value_upper` numeric with `lower < upper`) or a non-empty `bid_type_inference_note` ≤300 chars. The note should cite the §G1 rule applied (trigger phrase, process-position fallback, or structural signal); the validator (§P-G2) enforces evidence, not a specific justification type. Borderline calls are flagged, not forced.
 6. **Skip rules in `rules/bids.md` §M are mandatory.** Do not record unsolicited letters with no NDA, no price, no bid intent.
 7. **`DropSilent` is only true post-NDA filing silence.** Narrated
@@ -346,8 +347,9 @@ Fresh attempts never delete or overwrite prior run directories. Failed attempts
 write a run manifest and `latest.json` with `cache_eligible=false`. Re-validation
 copies the selected archived raw response into a new run directory and records
 `cache_used=true` plus `source_audit_run_id`. Cache eligibility requires the
-current rulebook pin plus extractor, tools, and repair-loop contract versions
-to match the archived run. `final_output.json` is the immutable finalized
+current rulebook pin plus extractor, tools, repair-loop, extract-tool-mode, and
+repair-strategy contract values to match the archived run. `final_output.json`
+is the immutable finalized
 snapshot used by stability checks. Each run-dir JSON file carries its own
 `schema_version` (`audit_run_v2`, `raw_response_v2`, `validation_v1`,
 `final_output_v1`); `latest.json` carries `audit_v2`.

@@ -64,8 +64,8 @@ def test_extractor_prompt_contract_describes_embedded_filing_text():
     assert "`rules/invariants.md` remains validator-facing only" in text
     assert "Return exactly one raw JSON object" in text
     assert "Do not include prose, markdown fences" in text
-    assert "Always call `check_row`" not in text
-    assert "After tool calls return" not in text
+    assert "Always call " "`check_row`" not in text
+    assert "After tool calls " "return" not in text
     assert "```" not in text
     assert "Do not emit pipeline-stamped\nfields" in text
     assert "Use `null` for unsupported optional facts" in text
@@ -174,6 +174,14 @@ def test_live_contract_files_do_not_carry_stale_rule_prose():
         "Ralph",
         "subagent",
         "sub-agent",
+        "strict " "Extractor + tools",
+        "Every extractor call uses **strict `text.format=json_schema`** with "
+        "the hardened `SCHEMA_R1`, plus three native function-calling tools",
+        "The model has three native function-calling " "tools while drafting",
+        "Always call " "`check_row`",
+        "call `check_row` on every event " "row",
+        "first-pass " "tool use",
+        "prompt_then_" "filing_tools",
     ]
     banned_legacy_labels = [
         "Final Round Inf",

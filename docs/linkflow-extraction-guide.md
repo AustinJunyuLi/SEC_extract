@@ -62,14 +62,20 @@ provider-schema ambitions:
 - no dynamic `bidder_registry` enforcement in the provider schema.
 
 Those are still live output-contract requirements. Python rebuilds and enforces
-`bidder_registry` before validation/finalization, `check_row` catches row-local
-conditional failures during drafting, and `pipeline.core.validate()` remains
-the authoritative invariant gate.
+`bidder_registry` before validation/finalization, and
+`pipeline.core.validate()` remains the authoritative invariant gate.
 
-## Extractor Tools
+## Targeted Repair Tools
 
-The extractor has exactly three native tools. Keep the catalog small unless
-reference-run evidence proves a specific gap.
+Initial extraction has no tools. This is intentional: initial tool-output
+replay was too expensive under Linkflow because every replay must resend the
+full input.
+
+Repair turn 1 also has no tools. Repair turn 2, only when hard flags remain,
+exposes `check_row`, `search_filing`, and `get_pages`. `check_row` is targeted
+to hard-flagged, revised, or revision-dependent rows; it is not an initial
+row-by-row checklist. Keep the repair-2 catalog small unless reference-run
+evidence proves a specific gap.
 
 ### `check_row(row)`
 
@@ -81,11 +87,11 @@ Runs row-local Python checks against a candidate event row and returns:
 
 The wrapper covers structural row checks, quote/page substring verification,
 date/BidderID basics, bid-type evidence, and conditional event-field ownership
-such as §P-R9. The model should call it on every row before final submission.
-Parallel calls are expected.
+such as §P-R9. In repair 2, use it for hard-flagged rows, directly revised
+rows, and rows whose validity depends on those revisions.
 
-Example use: before submitting a `Bid` row, the model calls `check_row` to
-catch an overlong quote, a quote that is not on the cited page, missing
+Example use: after revising a hard-flagged `Bid` row, call `check_row` to catch
+an overlong quote, a quote that is not on the cited page, missing
 `bid_type_inference_note`, or fields that belong only on another event type.
 
 ### `search_filing(query, page_range, max_hits)`
@@ -93,8 +99,9 @@ catch an overlong quote, a quote that is not on the cited page, missing
 Case-insensitive substring search over `data/filings/{slug}/pages.json`.
 Returns page-numbered snippets, not array offsets.
 
-Example use: search for `"by and among"` or `"Schedule A"` to find merger
-agreement party blocks before emitting Buyer Group or Consortium rows.
+Example use in repair 2: search for `"by and among"` or `"Schedule A"` to find
+merger agreement party blocks before revising constituent-level Buyer Group or
+Consortium rows, including inherited buyer-group `NDA` rows for late joiners.
 
 ### `get_pages(start_page, end_page)`
 
@@ -104,8 +111,9 @@ Fetches contiguous filing pages by page number and returns full page text:
 {"pages": [{"page": 41, "text": "..."}]}
 ```
 
-The range cap is 10 pages per call. Use it after `search_filing` identifies a
-candidate page, or when a row's evidence needs surrounding context.
+The range cap is 10 pages per call. In repair 2, use it after `search_filing`
+identifies a candidate page, or when a row's evidence needs surrounding
+context.
 
 ## Multi-Turn Loop
 
@@ -113,15 +121,14 @@ Per deal, the extraction harness runs this shape:
 
 ```text
 run.py / pipeline.run_pool
-  -> full extractor input with strict json_schema + tools
-       model may emit parallel function_call items
-       harness dispatches tools locally
-       harness replays full input + function_call_output items
-       repeat until final {deal, events}
+  -> full extractor input with strict json_schema, prompt-only
+       model emits final {deal, events}
   -> prepare_for_validate()
        Python rebuilds/enforces bidder_registry
   -> validate()
-  -> repair loop if hard flags remain
+  -> staged repair loop if hard flags remain
+       repair_1 prompt-only
+       repair_2 targeted tools only if hard flags remain
   -> scoped adjudicator for soft flags only
   -> finalize_prepared()
 ```
@@ -152,6 +159,8 @@ Repair prompt contents:
 Repair protocol:
 
 - The model must emit a complete revised `{deal, events}` extraction.
+- Repair turn 1 has no tools.
+- Repair turn 2, only when hard flags remain, exposes targeted repair tools.
 - The cap is two repair turns.
 - After each repair turn, Python prepares and validates again.
 - If hard flags remain after turn 2, finalization uses the latest draft and
@@ -191,11 +200,11 @@ New audit expectations:
 
 - `tool_calls.jsonl`: one row per tool invocation with turn, call ID, name,
   arguments, result, latency, and any error/truncation marker.
-- `repair_turns.jsonl`: one row per repair turn with a validator summary,
-  hard-flag counts before/after, and latency.
+- `repair_turns.jsonl`: one row per repair turn with `tool_mode`, a validator
+  summary, hard-flag counts before/after, and latency.
 - `manifest.json` records `tools_contract_version`,
-  `repair_loop_contract_version`, `repair_turns_used`,
-  `repair_loop_outcome`, and `tool_calls_count`.
+  `repair_loop_contract_version`, `extract_tool_mode`, `repair_strategy`,
+  `repair_turns_used`, `repair_loop_outcome`, and `tool_calls_count`.
 
 `repair_loop_outcome` is:
 
@@ -215,6 +224,8 @@ must match the current:
 - `extractor_contract_version`
 - `tools_contract_version`
 - `repair_loop_contract_version`
+- `extract_tool_mode`
+- `repair_strategy`
 
 Use `--audit-run-id <run_id>` to select an exact immutable run. Otherwise,
 `--re-validate` reads `output/audit/{slug}/latest.json`. Loose legacy files
