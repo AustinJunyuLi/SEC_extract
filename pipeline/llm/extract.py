@@ -13,6 +13,7 @@ from pipeline import core
 
 from .audit import AuditWriter, TokenUsage
 from .client import CompletionResult, LLMClient
+from .contracts import MAX_REPAIR_TURNS
 from .response_format import (
     SCHEMA_R1,
     _ensure_extraction_shape,
@@ -343,6 +344,125 @@ async def _call_with_tools(
     _ensure_extraction_shape(parsed)
     completion.parsed_json = parsed
     return parsed, completion, completions, tool_calls_count
+
+
+def _hard_flags(validation: core.ValidatorResult) -> list[dict[str, Any]]:
+    return [
+        flag for flag in [*validation.row_flags, *validation.deal_flags]
+        if flag.get("severity") == "hard"
+    ]
+
+
+def _affected_rows(draft: dict[str, Any], row_flags: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    events = draft.get("events") or []
+    rows: list[dict[str, Any]] = []
+    seen: set[int] = set()
+    for flag in row_flags:
+        if flag.get("severity") != "hard":
+            continue
+        index = flag.get("row_index")
+        if not isinstance(index, int) or index in seen:
+            continue
+        if 0 <= index < len(events) and isinstance(events[index], dict):
+            rows.append({"row_index": index, "row": events[index]})
+            seen.add(index)
+    return rows
+
+
+def _filing_snippets(rows: list[dict[str, Any]], filing: core.Filing) -> list[dict[str, Any]]:
+    snippets: list[dict[str, Any]] = []
+    seen: set[tuple[int, int]] = set()
+    for item in rows:
+        row_index = item.get("row_index")
+        row = item.get("row") or {}
+        pages = row.get("source_page")
+        page_numbers = pages if isinstance(pages, list) else [pages]
+        for page_number in page_numbers:
+            if not isinstance(page_number, int):
+                continue
+            key = (int(row_index), page_number)
+            if key in seen:
+                continue
+            seen.add(key)
+            text = filing.page_content(page_number) or ""
+            snippets.append({
+                "row_index": row_index,
+                "page": page_number,
+                "text": text[:2500],
+            })
+    return snippets
+
+
+def _repair_prompt_template() -> str:
+    return (core.PROMPTS_DIR / "repair.md").read_text()
+
+
+async def run_repair_loop(
+    *,
+    slug: str,
+    initial_draft: dict[str, Any],
+    filing: core.Filing,
+    validation: core.ValidatorResult,
+    llm_client: LLMClient,
+    extract_model: str,
+    audit: AuditWriter,
+    token_usage: TokenUsage,
+    reasoning_effort: str | None = None,
+    max_output_tokens: int | None = None,
+) -> tuple[dict[str, Any], core.ValidatorResult, list[dict[str, Any]], str, int]:
+    """Run up to MAX_REPAIR_TURNS complete-revision repair turns."""
+    if not _hard_flags(validation):
+        return initial_draft, validation, [], "clean", 0
+
+    system, _original_user = build_messages(slug)
+    filing_pages = _load_tool_pages(slug)
+    draft = initial_draft
+    current_validation = validation
+    promotion_log: list[dict[str, Any]] = []
+    template = _repair_prompt_template()
+
+    for turn in range(1, MAX_REPAIR_TURNS + 1):
+        report = core.compact_validator_report(
+            current_validation.row_flags,
+            current_validation.deal_flags,
+        )
+        affected = _affected_rows(draft, current_validation.row_flags)
+        repair_user = template.format(
+            validator_report=json.dumps(report, indent=2, default=str),
+            affected_rows=json.dumps(affected, indent=2, default=str),
+            filing_snippets=json.dumps(_filing_snippets(affected, filing), indent=2),
+        )
+        audit.write_prompt(
+            phase=f"repair_{turn}",
+            system=system,
+            user=repair_user,
+        )
+        revised, _completion, completions, _tool_calls_count = await _call_with_tools(
+            llm_client=llm_client,
+            model=extract_model,
+            system=system,
+            user=repair_user,
+            filing_pages=filing_pages,
+            max_output_tokens=max_output_tokens,
+            reasoning_effort=reasoning_effort,
+        )
+        for completion in completions:
+            token_usage.consume(completion)
+        prepared, filing, promotion_log = core.prepare_for_validate(slug, revised, filing)
+        current_validation = core.validate(prepared, filing)
+        draft = prepared
+        hard_after = len(_hard_flags(current_validation))
+        if hasattr(audit, "write_repair_turn"):
+            audit.write_repair_turn({
+                "turn": turn,
+                "validator_report_summary": report,
+                "hard_flags_before": report["hard_count"],
+                "hard_flags_after": hard_after,
+            })
+        if hard_after == 0:
+            return draft, current_validation, promotion_log, "fixed", turn
+
+    return draft, current_validation, promotion_log, "exhausted", MAX_REPAIR_TURNS
 
 
 async def extract_deal(

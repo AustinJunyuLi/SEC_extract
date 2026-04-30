@@ -25,7 +25,7 @@ from pipeline.llm.audit import (
     audit_slug_root,
 )
 from pipeline.llm.client import LLMClient, OpenAICompatibleClient
-from pipeline.llm.extract import extract_deal, extractor_contract_version
+from pipeline.llm.extract import extract_deal, extractor_contract_version, run_repair_loop
 from pipeline.llm.response_format import SCHEMA_R1, schema_hash
 from pipeline.llm.retry import RetryConfig
 from pipeline.llm.watchdog import WatchdogConfig
@@ -611,6 +611,36 @@ async def process_deal(
             filing,
         )
         validation = await asyncio.to_thread(core.validate, prepared, filing)
+        repair_outcome = "clean"
+        repair_turns_used = 0
+        if any(
+            flag.get("severity") == "hard"
+            for flag in [*validation.row_flags, *validation.deal_flags]
+        ):
+            (
+                prepared,
+                validation,
+                promotion_log,
+                repair_outcome,
+                repair_turns_used,
+            ) = await run_repair_loop(
+                slug=slug,
+                initial_draft=prepared,
+                filing=filing,
+                validation=validation,
+                llm_client=llm_client,
+                extract_model=config.extract_model,
+                audit=audit,
+                token_usage=token_usage,
+                reasoning_effort=config.extract_reasoning_effort,
+            )
+            if repair_outcome == "exhausted":
+                validation.deal_flags.append({
+                    "code": "repair_loop_exhausted",
+                    "severity": "hard",
+                    "reason": "Hard validator flags remained after 2 repair turns.",
+                    "deal_level": True,
+                })
         soft_flags = _soft_flags(validation)
         if soft_flags:
             await adjudicate(

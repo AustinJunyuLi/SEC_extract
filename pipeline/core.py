@@ -344,6 +344,34 @@ class ValidatorResult:
     deal_flags: list[dict[str, Any]]
 
 
+def compact_validator_report(
+    row_flags: list[dict[str, Any]],
+    deal_flags: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Return a compact validator summary suitable for model repair turns."""
+
+    def simplify(flag: dict[str, Any]) -> dict[str, Any]:
+        out = {
+            "code": flag.get("code"),
+            "severity": flag.get("severity"),
+            "reason": flag.get("reason"),
+        }
+        if "row_index" in flag:
+            out["row_index"] = flag.get("row_index")
+        if flag.get("deal_level"):
+            out["deal_level"] = True
+        return out
+
+    all_flags = [*row_flags, *deal_flags]
+    return {
+        "row_flags": [simplify(flag) for flag in row_flags],
+        "deal_flags": [simplify(flag) for flag in deal_flags],
+        "hard_count": sum(1 for flag in all_flags if flag.get("severity") == "hard"),
+        "soft_count": sum(1 for flag in all_flags if flag.get("severity") == "soft"),
+        "info_count": sum(1 for flag in all_flags if flag.get("severity") == "info"),
+    }
+
+
 # ---------------------------------------------------------------------------
 # Filing loader
 # ---------------------------------------------------------------------------
