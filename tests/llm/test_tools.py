@@ -148,10 +148,14 @@ def test_get_pages_skips_missing_page_numbers():
     assert {page["page"] for page in result["pages"]} == {22, 24}
 
 
-def test_tool_registry_has_all_three():
-    names = {tool["name"] for tool in tools.TOOL_DEFINITIONS}
+def test_targeted_repair_tool_definitions_include_expected_tools_only():
+    names = {tool["name"] for tool in tools.TARGETED_REPAIR_TOOL_DEFINITIONS}
 
     assert names == {"check_row", "search_filing", "get_pages"}
+
+
+def test_no_generic_extractor_tool_catalog_is_exposed():
+    assert not hasattr(tools, "TOOL_DEFINITIONS")
 
 
 def test_dispatch_invokes_check_row():
@@ -172,6 +176,27 @@ def test_dispatch_accepts_unwrapped_check_row_arguments():
     )
 
     assert result == {"ok": True, "violations": []}
+
+
+def test_dispatch_invokes_search_filing():
+    result = tools.dispatch(
+        name="search_filing",
+        arguments={"query": "page text", "page_range": None, "max_hits": 5},
+        filing_pages=_filing_pages(),
+    )
+
+    assert result["hits"]
+    assert result["hits"][0]["page"] == 22
+
+
+def test_dispatch_invokes_get_pages():
+    result = tools.dispatch(
+        name="get_pages",
+        arguments={"start_page": 22, "end_page": 22},
+        filing_pages=_filing_pages(),
+    )
+
+    assert result["pages"] == [{"page": 22, "text": _filing_pages()[0]["content"]}]
 
 
 def test_tools_contract_version_is_stable_hash():
