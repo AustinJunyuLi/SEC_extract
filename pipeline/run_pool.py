@@ -41,6 +41,8 @@ AUDIT_ROOT = core.REPO_ROOT / "output" / "audit"
 TARGET_GATE_PROOF = core.REPO_ROOT / "quality_reports" / "stability" / "target-release-proof.json"
 DEFAULT_XHIGH_MAX_WORKERS = 5
 DEFAULT_REASONING_EFFORT = "xhigh"
+EXTRACT_TOOL_MODE = "none"
+REPAIR_STRATEGY = "prompt_then_targeted_tools"
 SEMANTIC_ADJUDICATION_SOFT_FLAGS: frozenset[str] = frozenset({
     "missing_nda_dropsilent",
 })
@@ -294,6 +296,8 @@ def _current_contract_values(current_rulebook_version: str) -> dict[str, str]:
         "extractor_contract_version": extractor_contract_version(),
         "tools_contract_version": tools_contract_version(),
         "repair_loop_contract_version": repair_loop_contract_version(),
+        "extract_tool_mode": EXTRACT_TOOL_MODE,
+        "repair_strategy": REPAIR_STRATEGY,
     }
 
 
@@ -622,6 +626,8 @@ def _manifest_payload(
         "prompt_hashes": prompt_hashes,
         "models": {"extract": config.extract_model, "adjudicate": config.adjudicate_model},
         "api_endpoint": getattr(llm_client, "endpoint", None),
+        "extract_tool_mode": EXTRACT_TOOL_MODE,
+        "repair_strategy": REPAIR_STRATEGY,
         "reasoning_efforts": {
             "extract": config.extract_reasoning_effort,
             "adjudicate": config.adjudicate_reasoning_effort,

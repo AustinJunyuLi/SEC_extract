@@ -33,6 +33,8 @@ def _write_audit_manifest(
         "extractor_contract_version": run_pool.extractor_contract_version(),
         "tools_contract_version": run_pool.tools_contract_version(),
         "repair_loop_contract_version": run_pool.repair_loop_contract_version(),
+        "extract_tool_mode": run_pool.EXTRACT_TOOL_MODE,
+        "repair_strategy": run_pool.REPAIR_STRATEGY,
     }))
 
 
