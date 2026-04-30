@@ -75,7 +75,6 @@ async def adjudicate(
     adjudicate_model: str,
     audit: AuditWriter,
     token_usage: TokenUsage,
-    schema_supported: bool,
     reasoning_effort: str | None = None,
 ) -> list[dict[str, Any]]:
     annotated: list[dict[str, Any]] = []
@@ -93,7 +92,6 @@ async def adjudicate(
                 system=system,
                 user=user,
                 model=adjudicate_model,
-                schema_supported=schema_supported,
                 schema=ADJUDICATOR_SCHEMA,
                 max_output_tokens=1000,
                 reasoning_effort=reasoning_effort,
@@ -111,7 +109,6 @@ async def adjudicate(
                 "model": completion.model,
                 "reasoning_effort": reasoning_effort,
                 "prompt_hash": prompt_digest,
-                "json_schema_used": schema_supported,
                 "input_tokens": completion.input_tokens,
                 "output_tokens": completion.output_tokens,
                 "reasoning_tokens": completion.reasoning_tokens,
@@ -134,7 +131,6 @@ async def adjudicate(
                 "model": adjudicate_model,
                 "reasoning_effort": reasoning_effort,
                 "prompt_hash": prompt_digest,
-                "json_schema_used": schema_supported,
                 "attempts": int(getattr(exc, "attempts", 1) or 1),
                 "outcome": "failed",
                 "error": {"type": type(exc).__name__, "message": str(exc)[:500]},

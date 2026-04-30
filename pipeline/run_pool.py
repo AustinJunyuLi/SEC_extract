@@ -562,7 +562,6 @@ async def process_deal(
     *,
     config: PoolConfig,
     llm_client: LLMClient,
-    schema_supported: bool,
     rulebook_version: str,
     skip_decision: SkipDecision | None = None,
 ) -> DealOutcome:
@@ -598,7 +597,6 @@ async def process_deal(
                 audit=audit,
                 token_usage=token_usage,
                 rulebook_version=rulebook_version,
-                schema_supported=schema_supported,
                 reasoning_effort=config.extract_reasoning_effort,
             )
             raw_extraction = extract_result.raw_extraction
@@ -624,7 +622,6 @@ async def process_deal(
                 adjudicate_model=config.adjudicate_model,
                 audit=audit,
                 token_usage=token_usage,
-                schema_supported=schema_supported,
                 reasoning_effort=config.adjudicate_reasoning_effort,
             )
         result = await asyncio.to_thread(
@@ -735,7 +732,6 @@ async def run_pool(config: PoolConfig, *, llm_client: LLMClient | None = None) -
         return PoolSummary(outcomes)
 
     client = llm_client or _build_client(config)
-    schema_supported = bool(getattr(client, "supports_structured_output", False))
     sem = asyncio.Semaphore(config.workers)
 
     async def gated(slug: str, decision: SkipDecision) -> DealOutcome:
@@ -744,7 +740,6 @@ async def run_pool(config: PoolConfig, *, llm_client: LLMClient | None = None) -
                 slug,
                 config=config,
                 llm_client=client,
-                schema_supported=schema_supported,
                 rulebook_version=current,
                 skip_decision=decision,
             )

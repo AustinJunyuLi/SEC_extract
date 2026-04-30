@@ -90,7 +90,6 @@ def test_adjudicate_failure_then_success_is_sequential_and_tracks_usage(tmp_path
             adjudicate_model="adj-model",
             audit=audit,
             token_usage=usage,
-            schema_supported=True,
         )
     )
 
@@ -124,7 +123,6 @@ def test_adjudicate_processes_all_flags_without_token_cap(tmp_path):
             adjudicate_model="adj-model",
             audit=audit,
             token_usage=usage,
-            schema_supported=True,
         )
     )
 
@@ -154,41 +152,12 @@ def test_adjudicate_locally_rejects_malformed_schema_output_without_repair(tmp_p
             adjudicate_model="adj-model",
             audit=audit,
             token_usage=usage,
-            schema_supported=False,
         )
     )
 
     assert len(client.calls) == 1
-    assert client.calls[0]["text_format"] is None
+    assert client.calls[0]["text_format"]["name"] == "extraction_schema_r1"
     assert "adjudicator_unavailable: MalformedJSONError" in annotated[0]["reason"]
     assert usage.used == 0
     calls = [json.loads(line) for line in (audit.root / "calls.jsonl").read_text().splitlines()]
     assert calls[0]["outcome"] == "failed"
-    assert calls[0]["json_schema_used"] is False
-
-
-def test_adjudicate_prompt_only_json_when_schema_unsupported(tmp_path):
-    raw = {"deal": {}, "events": [{"source_page": 1}]}
-    filing = core.Filing(slug="synthetic", pages=[{"number": 1, "content": "page"}])
-    flags = [{"row_index": 0, "code": "missing_nda_dropsilent", "severity": "soft", "reason": "first"}]
-    audit = _audit_writer(tmp_path)
-    usage = TokenUsage()
-    client = RecordingClient('{"verdict": "dismissed", "reason": "silent"}')
-
-    asyncio.run(
-        adjudicate.adjudicate(
-            "synthetic",
-            raw,
-            flags,
-            filing,
-            llm_client=client,
-            adjudicate_model="adj-model",
-            audit=audit,
-            token_usage=usage,
-            schema_supported=False,
-        )
-    )
-
-    assert client.calls[0]["text_format"] is None
-    call = json.loads((audit.root / "calls.jsonl").read_text().strip())
-    assert call["json_schema_used"] is False

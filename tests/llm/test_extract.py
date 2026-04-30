@@ -153,7 +153,6 @@ def test_extract_deal_writes_audit_and_tracks_token_usage(minimal_state_repo, mo
             audit=audit,
             token_usage=usage,
             rulebook_version="rules-v1",
-            schema_supported=True,
             max_output_tokens=123,
         )
     )
@@ -168,38 +167,6 @@ def test_extract_deal_writes_audit_and_tracks_token_usage(minimal_state_repo, mo
     call_entries = (audit.root / "calls.jsonl").read_text().splitlines()
     assert len(call_entries) == 1
     assert json.loads(call_entries[0])["phase"] == "extract"
-
-
-def test_extract_deal_uses_prompt_only_json_when_schema_unsupported(minimal_state_repo, monkeypatch):
-    env = minimal_state_repo
-    prompts = env.tmp_path / "prompts"
-    prompts.mkdir()
-    (prompts / "extract.md").write_text("PROMPT")
-    for name in extract.EXTRACTOR_RULE_FILES:
-        (env.rules / name).write_text(f"RULE {name}")
-    env.seed_filing("synthetic", pages=background_section_pages("page text"))
-    monkeypatch.setattr(extract.core, "PROMPTS_DIR", prompts)
-
-    audit = _audit_writer(env.tmp_path)
-    usage = TokenUsage()
-    client = StubClient()
-
-    asyncio.run(
-        extract.extract_deal(
-            "synthetic",
-            llm_client=client,
-            extract_model="test-model",
-            audit=audit,
-            token_usage=usage,
-            rulebook_version="rules-v1",
-            schema_supported=False,
-        )
-    )
-
-    assert client.calls[0]["text_format"] is None
-    call_entry = json.loads((audit.root / "calls.jsonl").read_text().strip())
-    assert call_entry["json_schema_used"] is False
-
 
 def test_extract_deal_records_failed_call_attempts(minimal_state_repo, monkeypatch):
     env = minimal_state_repo
@@ -223,7 +190,6 @@ def test_extract_deal_records_failed_call_attempts(minimal_state_repo, monkeypat
                 audit=audit,
                 token_usage=usage,
                 rulebook_version="rules-v1",
-                schema_supported=False,
             )
         )
     except RuntimeError:

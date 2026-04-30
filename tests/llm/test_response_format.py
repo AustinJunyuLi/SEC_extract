@@ -152,7 +152,6 @@ def test_call_json_returns_completion_result():
             model="gpt-test",
             system="sys",
             user="usr",
-            schema_supported=True,
         )
     )
 
@@ -183,7 +182,7 @@ def test_call_json_returns_completion_result():
         (lambda p: p["events"][0].update({"source_quote": ["quote"], "source_page": 12}), "source_quote"),
     ],
 )
-def test_call_json_enforces_local_schema_when_provider_schema_is_disabled(mutate, message):
+def test_call_json_enforces_local_schema_after_provider_response(mutate, message):
     payload = _valid_payload()
     mutate(payload)
     client = StubClient([json.dumps(payload)])
@@ -195,11 +194,10 @@ def test_call_json_enforces_local_schema_when_provider_schema_is_disabled(mutate
                 model="gpt-test",
                 system="sys",
                 user="usr",
-                schema_supported=False,
             )
         )
 
-    assert client.calls[0]["text_format"] is None
+    assert client.calls[0]["text_format"]["name"] == "extraction_schema_r1"
 
 
 def test_call_json_enforces_max_length_locally():
@@ -215,12 +213,11 @@ def test_call_json_enforces_max_length_locally():
                 model="gpt-test",
                 system="sys",
                 user="usr",
-                schema_supported=False,
             )
         )
 
 
-def test_call_json_validates_custom_schema_without_structured_output():
+def test_call_json_validates_custom_schema():
     client = StubClient([json.dumps({"reason": "too long"})])
 
     with pytest.raises(MalformedJSONError, match=r"reason.*maxLength 3"):
@@ -230,7 +227,6 @@ def test_call_json_validates_custom_schema_without_structured_output():
                 model="gpt-test",
                 system="sys",
                 user="usr",
-                schema_supported=False,
                 schema={
                     "type": "object",
                     "properties": {"reason": {"type": "string", "maxLength": 3}},
@@ -251,7 +247,6 @@ def test_call_json_validates_custom_schema_min_items():
                 model="gpt-test",
                 system="sys",
                 user="usr",
-                schema_supported=False,
                 schema={
                     "type": "object",
                     "properties": {"items": {"type": "array", "minItems": 1}},
@@ -272,7 +267,6 @@ def test_call_json_fails_loudly_without_repair_call():
                 model="gpt-test",
                 system="sys",
                 user="usr",
-                schema_supported=False,
             )
         )
 

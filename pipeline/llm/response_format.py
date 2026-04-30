@@ -358,7 +358,6 @@ async def call_json(
     system: str,
     user: str,
     model: str,
-    schema_supported: bool,
     schema: dict[str, Any] = SCHEMA_R1,
     max_output_tokens: int | None = None,
     reasoning_effort: str | None = None,
@@ -367,7 +366,7 @@ async def call_json(
         system=system,
         user=user,
         model=model,
-        text_format=json_schema_format(schema) if schema_supported else None,
+        text_format=json_schema_format(schema),
         max_output_tokens=max_output_tokens,
         reasoning_effort=reasoning_effort,
     )
