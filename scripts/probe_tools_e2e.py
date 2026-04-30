@@ -1,6 +1,6 @@
-"""End-to-end probe for Linkflow function-call/tool-output replay.
+"""End-to-end probe for Linkflow targeted-repair tool replay.
 
-Sends a tiny input with the extraction tools, verifies the model emits at
+Sends a tiny input with the repair-2 tool catalog, verifies the model emits at
 least one function_call, dispatches locally, then replays the full input plus
 function_call_output items and expects final text.
 """
@@ -68,7 +68,7 @@ async def main() -> int:
         "model": os.environ.get("EXTRACT_MODEL", "gpt-5.5"),
         "input": initial_input,
         "reasoning": {"effort": "medium"},
-        "tools": tools.TOOL_DEFINITIONS,
+        "tools": tools.TARGETED_REPAIR_TOOL_DEFINITIONS,
         "tool_choice": "auto",
         "max_output_tokens": 4096,
     }

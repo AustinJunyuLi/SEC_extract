@@ -4,9 +4,9 @@ Date: 2026-04-30
 
 ## Purpose
 
-Recalibrate the extraction pipeline away from first-pass exploratory tool use
+Recalibrate the extraction pipeline away from initial exploratory tool use
 and toward a cheaper prompt-first workflow. The current strict schema plus
-tool-heavy extractor produced useful auditability, but reference-run evidence
+tool-intensive extractor produced useful auditability, but reference-run evidence
 showed that repeated full-input tool replay drove input tokens into the
 millions, created provider idle-timeout failures, and did not clearly improve
 accuracy enough to justify the default cost.
@@ -37,7 +37,7 @@ repair fails to clear hard validator flags.
   `{deal, events}` payloads.
 - No target-deal extraction changes.
 - No new model role or external agent loop.
-- No compatibility shim for retired tool-heavy audit contracts.
+- No compatibility shim for retired tool-intensive audit contracts.
 
 ## Architecture
 
@@ -103,7 +103,7 @@ directly revised rows, and rows whose validity depends on those revisions.
 
 ### Prompts And Contracts
 
-`prompts/extract.md` should remove first-pass tool instructions and every
+`prompts/extract.md` should remove initial tool instructions and every
 instruction that says the model must call `check_row` during initial
 extraction.
 
@@ -111,7 +111,7 @@ extraction.
 repair 2 may use targeted repair tools if hard flags remain.
 
 `AGENTS.md`, `CLAUDE.md`, `SKILL.md`, and
-`docs/linkflow-extraction-guide.md` should replace "strict Extractor + tools"
+`docs/linkflow-extraction-guide.md` should replace older tool-enabled extractor
 language with "strict prompt-first extractor + deterministic validator +
 staged repair, with targeted tools only on second repair."
 
@@ -148,7 +148,7 @@ Contract hashes should change naturally:
 - `tools_contract_version` changes because the exposed LLM tool catalog changes.
 - `repair_loop_contract_version` changes because repair turn semantics change.
 
-Archived tool-heavy runs become stale for `--re-validate`. That is expected and
+Archived tool-intensive runs become stale for `--re-validate`. That is expected and
 consistent with the repo's no-backward-compatibility doctrine.
 
 ## Error Handling

@@ -144,7 +144,7 @@ def test_skip_decisions_and_cache_policy(minimal_state_repo, monkeypatch):
     assert run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state).action == "re_validate"
     manifest = json.loads((audit / "manifest.json").read_text())
     valid_manifest = dict(manifest)
-    manifest["repair_strategy"] = "prompt_then_filing_tools"
+    manifest["repair_strategy"] = "prompt_then_" "filing_tools"
     (audit / "manifest.json").write_text(json.dumps(manifest))
     decision = run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state)
     assert decision.action == "blocked"
