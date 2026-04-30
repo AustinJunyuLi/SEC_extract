@@ -347,6 +347,41 @@ def _check_referenced_audit_file(
     return payload
 
 
+def _check_manifest_contract_fields(
+    *,
+    root: Path,
+    report: Report,
+    slug: str,
+    manifest: dict[str, Any],
+    manifest_path: Path,
+) -> None:
+    if "json_schema_used" in manifest:
+        report.add(
+            "error",
+            "audit_manifest_stale_field",
+            "audit manifest must not contain retired json_schema_used",
+            slug=slug,
+            path=_rel(root, manifest_path),
+        )
+    required = (
+        "extractor_contract_version",
+        "tools_contract_version",
+        "repair_loop_contract_version",
+        "repair_turns_used",
+        "repair_loop_outcome",
+        "tool_calls_count",
+    )
+    for key in required:
+        if key not in manifest or manifest.get(key) in (None, ""):
+            report.add(
+                "error",
+                "audit_manifest_contract_missing",
+                f"audit manifest missing required {key}",
+                slug=slug,
+                path=_rel(root, manifest_path),
+            )
+
+
 def _check_audit(
     *,
     root: Path,
@@ -533,13 +568,21 @@ def _check_audit(
                     path=_rel(root, latest_path),
                 )
     if manifest:
+        manifest_path = slug_root / latest["manifest_path"]
+        _check_manifest_contract_fields(
+            root=root,
+            report=report,
+            slug=slug,
+            manifest=manifest,
+            manifest_path=manifest_path,
+        )
         if manifest.get("cache_eligible") != latest.get("cache_eligible"):
             report.add(
                 "error",
                 "audit_cache_eligible_mismatch",
                 "manifest cache_eligible must match latest.json",
                 slug=slug,
-                path=_rel(root, slug_root / latest["manifest_path"]),
+                path=_rel(root, manifest_path),
             )
         expected_rulebook = progress_deal.get("rulebook_version")
         if expected_rulebook and manifest.get("rulebook_version") != expected_rulebook:
@@ -548,7 +591,7 @@ def _check_audit(
                 "rulebook_version_mismatch",
                 "audit manifest rulebook_version must match progress",
                 slug=slug,
-                path=_rel(root, slug_root / latest["manifest_path"]),
+                path=_rel(root, manifest_path),
             )
     if raw:
         expected_rulebook = progress_deal.get("rulebook_version")
@@ -557,6 +600,14 @@ def _check_audit(
                 "error",
                 "rulebook_version_mismatch",
                 "raw_response rulebook_version must match progress",
+                slug=slug,
+                path=_rel(root, slug_root / latest["raw_response_path"]),
+            )
+        if manifest and raw.get("extractor_contract_version") != manifest.get("extractor_contract_version"):
+            report.add(
+                "error",
+                "extractor_contract_version_mismatch",
+                "raw_response extractor_contract_version must match audit manifest",
                 slug=slug,
                 path=_rel(root, slug_root / latest["raw_response_path"]),
             )

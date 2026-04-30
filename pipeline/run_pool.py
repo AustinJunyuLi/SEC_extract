@@ -25,9 +25,11 @@ from pipeline.llm.audit import (
     audit_slug_root,
 )
 from pipeline.llm.client import LLMClient, OpenAICompatibleClient
+from pipeline.llm.contracts import repair_loop_contract_version
 from pipeline.llm.extract import extract_deal, extractor_contract_version, run_repair_loop
 from pipeline.llm.response_format import SCHEMA_R1, schema_hash
 from pipeline.llm.retry import RetryConfig
+from pipeline.llm.tools import tools_contract_version
 from pipeline.llm.watchdog import WatchdogConfig
 
 
@@ -286,7 +288,35 @@ def _json_file(path: Path, label: str) -> tuple[dict[str, Any] | None, str | Non
     return payload, None
 
 
-def _cache_source_from_latest(cfg: PoolConfig, slug: str) -> tuple[str | None, Path | None, str | None]:
+def _current_contract_values(current_rulebook_version: str) -> dict[str, str]:
+    return {
+        "rulebook_version": current_rulebook_version,
+        "extractor_contract_version": extractor_contract_version(),
+        "tools_contract_version": tools_contract_version(),
+        "repair_loop_contract_version": repair_loop_contract_version(),
+    }
+
+
+def _contract_mismatch_reason(
+    payload: dict[str, Any],
+    *,
+    label: str,
+    current_contracts: dict[str, str],
+) -> str | None:
+    for key, expected in current_contracts.items():
+        if payload.get(key) != expected:
+            return (
+                f"{label} {key} does not match current contract; "
+                "use --re-extract for a fresh SDK call"
+            )
+    return None
+
+
+def _cache_source_from_latest(
+    cfg: PoolConfig,
+    slug: str,
+    current_contracts: dict[str, str],
+) -> tuple[str | None, Path | None, str | None]:
     latest_path = audit_slug_root(cfg.audit_root, slug) / "latest.json"
     latest, error = _json_file(latest_path, "latest.json")
     if error:
@@ -302,7 +332,12 @@ def _cache_source_from_latest(cfg: PoolConfig, slug: str) -> tuple[str | None, P
     run_id = latest.get("run_id")
     if not isinstance(run_id, str) or not run_id:
         return None, None, "latest.json run_id is missing"
-    manifest_run_id, _manifest_raw_path, manifest_error = _cache_source_from_run_id(cfg, slug, run_id)
+    manifest_run_id, _manifest_raw_path, manifest_error = _cache_source_from_run_id(
+        cfg,
+        slug,
+        run_id,
+        current_contracts=current_contracts,
+    )
     if manifest_error or manifest_run_id != run_id:
         return None, None, manifest_error or "latest archived manifest does not match latest.json run_id"
     raw_rel = latest.get("raw_response_path")
@@ -311,7 +346,13 @@ def _cache_source_from_latest(cfg: PoolConfig, slug: str) -> tuple[str | None, P
     return run_id, audit_slug_root(cfg.audit_root, slug) / raw_rel, None
 
 
-def _cache_source_from_run_id(cfg: PoolConfig, slug: str, run_id: str) -> tuple[str | None, Path | None, str | None]:
+def _cache_source_from_run_id(
+    cfg: PoolConfig,
+    slug: str,
+    run_id: str,
+    *,
+    current_contracts: dict[str, str] | None = None,
+) -> tuple[str | None, Path | None, str | None]:
     run_dir = audit_run_dir(cfg.audit_root, slug, run_id)
     manifest, error = _json_file(run_dir / "manifest.json", "archived manifest.json")
     if error:
@@ -322,14 +363,32 @@ def _cache_source_from_run_id(cfg: PoolConfig, slug: str, run_id: str) -> tuple[
         return None, None, "archived manifest.json slug/run_id does not match requested cache run"
     if manifest.get("cache_eligible") is not True:
         return None, None, "requested archived run is not cache-eligible"
+    if current_contracts is not None:
+        mismatch = _contract_mismatch_reason(
+            manifest,
+            label="archived manifest.json",
+            current_contracts=current_contracts,
+        )
+        if mismatch:
+            return None, None, mismatch
     return run_id, run_dir / "raw_response.json", None
 
 
 def _check_cached_raw_response(slug: str, cfg: PoolConfig, current_rulebook_version: str) -> CacheCheck:
+    current_contracts = _current_contract_values(current_rulebook_version)
     if cfg.audit_run_id:
-        source_run_id, path, source_error = _cache_source_from_run_id(cfg, slug, cfg.audit_run_id)
+        source_run_id, path, source_error = _cache_source_from_run_id(
+            cfg,
+            slug,
+            cfg.audit_run_id,
+            current_contracts=current_contracts,
+        )
     else:
-        source_run_id, path, source_error = _cache_source_from_latest(cfg, slug)
+        source_run_id, path, source_error = _cache_source_from_latest(
+            cfg,
+            slug,
+            current_contracts,
+        )
     if source_error or path is None or source_run_id is None:
         return CacheCheck(None, source_error or "no cache source selected")
     payload, error = _json_file(path, "cached raw_response.json")
@@ -342,13 +401,13 @@ def _check_cached_raw_response(slug: str, cfg: PoolConfig, current_rulebook_vers
         return CacheCheck(None, "cached raw_response.json run_id does not match selected audit run")
     if payload.get("slug") != slug:
         return CacheCheck(None, f"cached raw_response.json slug={payload.get('slug')!r} does not match {slug!r}")
-    if payload.get("rulebook_version") != current_rulebook_version:
+    if payload.get("rulebook_version") != current_contracts["rulebook_version"]:
         return CacheCheck(
             None,
             "cached raw_response.json rulebook_version does not match current rulebook; "
             "use --re-extract for a fresh SDK call",
         )
-    if payload.get("extractor_contract_version") != extractor_contract_version():
+    if payload.get("extractor_contract_version") != current_contracts["extractor_contract_version"]:
         return CacheCheck(
             None,
             "cached raw_response.json extractor_contract_version does not match current prompt/schema; "
@@ -514,6 +573,26 @@ def _extractor_contract_version_or_unavailable() -> str:
         return f"unavailable:{type(exc).__name__}"
 
 
+def _tools_contract_version_or_unavailable() -> str:
+    try:
+        return tools_contract_version()
+    except (FileNotFoundError, OSError) as exc:
+        return f"unavailable:{type(exc).__name__}"
+
+
+def _repair_loop_contract_version_or_unavailable() -> str:
+    try:
+        return repair_loop_contract_version()
+    except (FileNotFoundError, OSError) as exc:
+        return f"unavailable:{type(exc).__name__}"
+
+
+def _jsonl_count(path: Path) -> int:
+    if not path.exists():
+        return 0
+    return sum(1 for line in path.read_text().splitlines() if line.strip())
+
+
 def _manifest_payload(
     *,
     audit: AuditWriter,
@@ -526,6 +605,8 @@ def _manifest_payload(
     cache_used: bool,
     cache_eligible: bool,
     action: str,
+    repair_turns_used: int,
+    repair_loop_outcome: str,
     error: str | None = None,
     source_audit_run_id: str | None = None,
 ) -> dict[str, Any]:
@@ -534,6 +615,8 @@ def _manifest_payload(
         "action": action,
         "rulebook_version": rulebook_version,
         "extractor_contract_version": _extractor_contract_version_or_unavailable(),
+        "tools_contract_version": _tools_contract_version_or_unavailable(),
+        "repair_loop_contract_version": _repair_loop_contract_version_or_unavailable(),
         "schema_hash": schema_hash(SCHEMA_R1),
         "prompt_hash": prompt_hashes.get("extract"),
         "prompt_hashes": prompt_hashes,
@@ -549,6 +632,9 @@ def _manifest_payload(
         "total_attempts": total_attempts,
         "total_seconds": time.monotonic() - started,
         "watchdog_warnings": watchdog_warnings,
+        "repair_turns_used": repair_turns_used,
+        "repair_loop_outcome": repair_loop_outcome,
+        "tool_calls_count": _jsonl_count(audit.root / "tool_calls.jsonl"),
         "outcome": outcome,
         "cache_used": cache_used,
         "cache_eligible": cache_eligible,
@@ -577,6 +663,8 @@ async def process_deal(
     token_usage = TokenUsage()
     cached = False
     source_audit_run_id: str | None = None
+    repair_outcome = "not_started"
+    repair_turns_used = 0
     try:
         if decision.action == "re_validate":
             cache_check = _check_cached_raw_response(slug, config, rulebook_version)
@@ -685,6 +773,8 @@ async def process_deal(
             cache_used=cached,
             cache_eligible=True,
             action=decision.action,
+            repair_turns_used=repair_turns_used,
+            repair_loop_outcome=repair_outcome,
             source_audit_run_id=source_audit_run_id,
         ))
         audit.write_latest(outcome=result.status, cache_eligible=True)
@@ -724,6 +814,8 @@ async def process_deal(
             cache_used=cached,
             cache_eligible=False,
             action=decision.action,
+            repair_turns_used=repair_turns_used,
+            repair_loop_outcome=repair_outcome,
             error=note,
             source_audit_run_id=source_audit_run_id,
         ))

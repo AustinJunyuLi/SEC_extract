@@ -58,10 +58,16 @@ def test_audit_writer_writes_prompt_call_raw_response_validation_manifest_and_la
     })
     writer.write_manifest({
         "rulebook_version": "ruleshash",
+        "extractor_contract_version": "contracthash",
+        "tools_contract_version": "toolshash",
+        "repair_loop_contract_version": "repairhash",
         "models": {"extract": "gpt-test", "adjudicate": "gpt-test"},
         "total_input_tokens": 1,
         "total_output_tokens": 2,
         "total_reasoning_tokens": 3,
+        "repair_turns_used": 0,
+        "repair_loop_outcome": "clean",
+        "tool_calls_count": 0,
         "outcome": "passed_clean",
         "cache_eligible": True,
     })
@@ -93,6 +99,12 @@ def test_audit_writer_writes_prompt_call_raw_response_validation_manifest_and_la
     assert manifest["run_id"] == "run-1"
     assert manifest["schema_version"] == "audit_run_v2"
     assert manifest["rulebook_version"] == "ruleshash"
+    assert manifest["tools_contract_version"] == "toolshash"
+    assert manifest["repair_loop_contract_version"] == "repairhash"
+    assert manifest["repair_turns_used"] == 0
+    assert manifest["repair_loop_outcome"] == "clean"
+    assert manifest["tool_calls_count"] == 0
+    assert "json_schema_used" not in manifest
     assert manifest["total_input_tokens"] == 1
     validation = json.loads((audit_dir / "validation.json").read_text())
     assert validation["schema_version"] == "validation_v1"
@@ -103,6 +115,87 @@ def test_audit_writer_writes_prompt_call_raw_response_validation_manifest_and_la
     assert latest["run_id"] == "run-1"
     assert latest["manifest_path"] == "runs/run-1/manifest.json"
     assert latest["raw_response_path"] == "runs/run-1/raw_response.json"
+
+
+def test_audit_writer_records_tool_calls(tmp_path):
+    writer = AuditWriter(tmp_path / "deal" / "runs" / "run-1", slug="deal", run_id="run-1")
+
+    writer.write_tool_call({
+        "turn": 1,
+        "call_id": "c1",
+        "name": "check_row",
+        "args": {"row": {"a": 1}},
+        "result": {"ok": True, "violations": []},
+        "latency_ms": 12.4,
+    })
+
+    lines = (tmp_path / "deal" / "runs" / "run-1" / "tool_calls.jsonl").read_text().strip().splitlines()
+    assert len(lines) == 1
+    record = json.loads(lines[0])
+    assert record["slug"] == "deal"
+    assert record["run_id"] == "run-1"
+    assert record["name"] == "check_row"
+    assert record["result_truncated"] is False
+
+
+def test_audit_writer_truncates_large_tool_results(tmp_path):
+    writer = AuditWriter(tmp_path / "deal" / "runs" / "run-1", slug="deal", run_id="run-1")
+
+    writer.write_tool_call({
+        "turn": 1,
+        "call_id": "c1",
+        "name": "get_pages",
+        "args": {"start_page": 1, "end_page": 1},
+        "result": {"pages": [{"page": 1, "text": "x" * 9000}]},
+        "latency_ms": 12.4,
+    })
+
+    record = json.loads((tmp_path / "deal" / "runs" / "run-1" / "tool_calls.jsonl").read_text())
+    assert record["result_truncated"] is True
+    assert len(record["result"]) == 8000
+
+
+def test_audit_writer_records_repair_turns(tmp_path):
+    writer = AuditWriter(tmp_path / "deal" / "runs" / "run-1", slug="deal", run_id="run-1")
+
+    writer.write_repair_turn({
+        "turn": 1,
+        "validator_report_summary": {"hard_count": 3, "soft_count": 2, "info_count": 0},
+        "hard_flags_before": 3,
+        "hard_flags_after": 0,
+        "latency_ms": 18000.5,
+    })
+
+    lines = (tmp_path / "deal" / "runs" / "run-1" / "repair_turns.jsonl").read_text().strip().splitlines()
+    assert len(lines) == 1
+    record = json.loads(lines[0])
+    assert record["turn"] == 1
+    assert record["hard_flags_before"] == 3
+
+
+def test_manifest_includes_new_contract_fields(tmp_path):
+    writer = AuditWriter(tmp_path / "deal" / "runs" / "run-1", slug="deal", run_id="run-1")
+
+    writer.write_manifest(
+        action="extract",
+        rulebook_version="rb1",
+        extractor_contract_version="ec1",
+        tools_contract_version="tc1",
+        repair_loop_contract_version="rlc1",
+        repair_turns_used=1,
+        repair_loop_outcome="fixed",
+        tool_calls_count=12,
+        outcome="passed_clean",
+        cache_eligible=True,
+    )
+
+    manifest = json.loads((tmp_path / "deal" / "runs" / "run-1" / "manifest.json").read_text())
+    assert manifest["tools_contract_version"] == "tc1"
+    assert manifest["repair_loop_contract_version"] == "rlc1"
+    assert manifest["repair_turns_used"] == 1
+    assert manifest["repair_loop_outcome"] == "fixed"
+    assert manifest["tool_calls_count"] == 12
+    assert "json_schema_used" not in manifest
 
 
 def test_two_audit_runs_are_immutable_and_latest_points_to_second(tmp_path):

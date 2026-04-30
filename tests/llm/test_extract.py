@@ -262,6 +262,9 @@ def test_extract_runs_tool_calls_and_replays_until_final_message(minimal_state_r
     outputs = [item for item in replay if item.get("type") == "function_call_output"]
     assert outputs[0]["call_id"] == "c1"
     assert "ok" in json.loads(outputs[0]["output"])
+    tool_log = (audit.root / "tool_calls.jsonl").read_text().strip().splitlines()
+    assert len(tool_log) == 1
+    assert json.loads(tool_log[0])["name"] == "check_row"
 
 def test_extract_deal_records_failed_call_attempts(minimal_state_repo, monkeypatch):
     env = minimal_state_repo

@@ -13,6 +13,8 @@ BASE_HASHES = {
     "schema_hash": "schema-v1",
     "rulebook_version": "rules-v1",
     "extractor_contract_version": "contract-v1",
+    "tools_contract_version": "tools-v1",
+    "repair_loop_contract_version": "repair-v1",
 }
 
 
@@ -69,6 +71,9 @@ def _write_run(
         "reasoning_efforts": {"extract": "xhigh", "adjudicate": "xhigh"},
         "api_endpoint": "linkflow",
         "prompt_hashes": {"extract": BASE_HASHES["prompt_hash"]},
+        "repair_turns_used": 0,
+        "repair_loop_outcome": "clean",
+        "tool_calls_count": 0,
         **BASE_HASHES,
     }
     if manifest_extra:

@@ -119,6 +119,12 @@ def _write_audit(
             "outcome": outcome,
             "cache_eligible": cache_eligible,
             "rulebook_version": rulebook_version,
+            "extractor_contract_version": "extract-contract-v1",
+            "tools_contract_version": "tools-contract-v1",
+            "repair_loop_contract_version": "repair-contract-v1",
+            "repair_turns_used": 0,
+            "repair_loop_outcome": "clean" if outcome != "failed" else "not_started",
+            "tool_calls_count": 0,
         },
     )
     if include_raw:
@@ -129,6 +135,7 @@ def _write_audit(
                 "slug": slug,
                 "run_id": run_id,
                 "rulebook_version": rulebook_version,
+                "extractor_contract_version": "extract-contract-v1",
                 "parsed_json": {"deal": {}, "events": []},
             },
         )

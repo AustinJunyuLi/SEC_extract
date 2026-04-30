@@ -27,6 +27,10 @@ def _write_audit_manifest(
         "run_id": run_id,
         "outcome": outcome,
         "cache_eligible": cache_eligible,
+        "rulebook_version": "rules-v1",
+        "extractor_contract_version": run_pool.extractor_contract_version(),
+        "tools_contract_version": run_pool.tools_contract_version(),
+        "repair_loop_contract_version": run_pool.repair_loop_contract_version(),
     }))
 
 

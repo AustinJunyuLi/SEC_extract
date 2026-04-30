@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import time
 from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any
@@ -276,6 +277,8 @@ async def _call_with_tools(
     filing_pages: list[dict[str, Any]],
     max_output_tokens: int | None,
     reasoning_effort: str | None,
+    audit: AuditWriter | None = None,
+    audit_phase: str = "extract",
 ) -> tuple[dict[str, Any], CompletionResult, list[CompletionResult], int]:
     input_items: list[dict[str, Any]] = [
         {"role": "system", "content": system},
@@ -284,7 +287,7 @@ async def _call_with_tools(
     completions: list[CompletionResult] = []
     tool_calls_count = 0
 
-    for _turn in range(1, MAX_TOOL_TURNS + 1):
+    for turn in range(1, MAX_TOOL_TURNS + 1):
         completion = await llm_client.complete(
             model=model,
             input_items=input_items,
@@ -300,17 +303,33 @@ async def _call_with_tools(
         if completion.tool_calls:
             input_items.extend(completion.output_items or completion.tool_calls)
             for tool_call in completion.tool_calls:
+                name = str(tool_call.get("name"))
+                started = time.monotonic()
+                result: dict[str, Any]
+                arguments: dict[str, Any] = {}
                 try:
                     arguments = json.loads(tool_call.get("arguments") or "{}")
                     result = dispatch(
-                        name=str(tool_call.get("name")),
+                        name=name,
                         arguments=arguments,
                         filing_pages=filing_pages,
                     )
                     output = _json_dumps_tool_output(result)
                 except Exception as exc:  # noqa: BLE001 - return tool errors to model
-                    output = _json_dumps_tool_output({"error": str(exc)})
+                    result = {"error": str(exc)}
+                    output = _json_dumps_tool_output(result)
+                latency_ms = (time.monotonic() - started) * 1000
                 tool_calls_count += 1
+                if audit is not None:
+                    audit.write_tool_call({
+                        "phase": audit_phase,
+                        "turn": turn,
+                        "call_id": tool_call.get("call_id"),
+                        "name": name,
+                        "args": arguments,
+                        "result": result,
+                        "latency_ms": latency_ms,
+                    })
                 input_items.append({
                     "type": "function_call_output",
                     "call_id": tool_call["call_id"],
@@ -445,6 +464,8 @@ async def run_repair_loop(
             filing_pages=filing_pages,
             max_output_tokens=max_output_tokens,
             reasoning_effort=reasoning_effort,
+            audit=audit,
+            audit_phase=f"repair_{turn}",
         )
         for completion in completions:
             token_usage.consume(completion)
@@ -452,13 +473,15 @@ async def run_repair_loop(
         current_validation = core.validate(prepared, filing)
         draft = prepared
         hard_after = len(_hard_flags(current_validation))
-        if hasattr(audit, "write_repair_turn"):
-            audit.write_repair_turn({
-                "turn": turn,
-                "validator_report_summary": report,
-                "hard_flags_before": report["hard_count"],
-                "hard_flags_after": hard_after,
-            })
+        audit.write_repair_turn({
+            "turn": turn,
+            "validator_report_summary": report,
+            "hard_flags_before": report["hard_count"],
+            "hard_flags_after": hard_after,
+            "tool_calls_count": _tool_calls_count,
+            "completion_turns": len(completions),
+            "outcome": "fixed" if hard_after == 0 else "hard_flags_remain",
+        })
         if hard_after == 0:
             return draft, current_validation, promotion_log, "fixed", turn
 
@@ -488,6 +511,8 @@ async def extract_deal(
             model=extract_model,
             max_output_tokens=max_output_tokens,
             reasoning_effort=reasoning_effort,
+            audit=audit,
+            audit_phase="extract",
         )
     except Exception as exc:
         audit.append_call({
