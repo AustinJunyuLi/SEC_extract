@@ -29,6 +29,11 @@ class FakeStream:
         return type("Response", (), {"usage": usage, "status": "completed"})()
 
 
+class MissingCompletedStream(FakeStream):
+    async def get_final_response(self):
+        raise RuntimeError("Didn't receive a `response.completed` event.")
+
+
 class FakeResponses:
     def __init__(self):
         self.kwargs = None
@@ -69,6 +74,17 @@ class FakeResponses:
 class FakeOpenAI:
     def __init__(self):
         self.responses = FakeResponses()
+
+
+class MissingCompletedResponses(FakeResponses):
+    def stream(self, **kwargs):
+        self.kwargs = kwargs
+        return MissingCompletedStream()
+
+
+class MissingCompletedOpenAI:
+    def __init__(self):
+        self.responses = MissingCompletedResponses()
 
 
 def test_openai_compatible_client_uses_responses_text_format_not_chat_response_format():
@@ -132,6 +148,27 @@ def test_openai_compatible_client_keeps_structured_output_for_linkflow_newapi():
     assert "text" not in kwargs
     assert "max_output_tokens" not in kwargs
     assert result.text == '{"deal":{},"events":[]}'
+
+
+def test_streaming_client_salvages_text_when_completed_event_is_missing():
+    fake = MissingCompletedOpenAI()
+    client = OpenAICompatibleClient(
+        api_key="secret",
+        base_url="https://www.linkflow.run/v1",
+        openai_client=fake,
+    )
+
+    result = asyncio.run(
+        client.complete(
+            model="gpt-test",
+            input_items=[{"role": "user", "content": "u"}],
+            stream=True,
+        )
+    )
+
+    assert result.text == '{"deal":{},"events":[]}'
+    assert result.finish_reason == "missing_response_completed"
+    assert result.input_tokens == 0
 
 
 def test_complete_passes_tools_and_tool_choice_through_non_streaming():

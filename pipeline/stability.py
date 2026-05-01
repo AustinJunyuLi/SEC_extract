@@ -70,6 +70,7 @@ class RunMetrics:
     extractor_contract_version: str
     tools_contract_version: str
     repair_loop_contract_version: str
+    obligation_contract_version: str
     row_count: int
     row_fingerprints: tuple[str, ...]
     bid_note_counts: tuple[tuple[str, int], ...]
@@ -85,7 +86,7 @@ class RunMetrics:
     quote_diagnostics: tuple[tuple[str, int], ...]
 
     @property
-    def config_identity(self) -> tuple[str, str, str, str, str, str, str, str, str]:
+    def config_identity(self) -> tuple[str, str, str, str, str, str, str, str, str, str]:
         return (
             self.model,
             self.reasoning_effort,
@@ -96,6 +97,7 @@ class RunMetrics:
             self.extractor_contract_version,
             self.tools_contract_version,
             self.repair_loop_contract_version,
+            self.obligation_contract_version,
         )
 
     @property
@@ -259,6 +261,7 @@ def _validate_manifest(manifest: dict[str, Any], manifest_path: Path) -> None:
         ("extractor_contract_version",),
         ("tools_contract_version",),
         ("repair_loop_contract_version",),
+        ("obligation_contract_version",),
         ("repair_turns_used",),
         ("repair_loop_outcome",),
         ("tool_calls_count",),
@@ -469,6 +472,7 @@ def metrics_for_run(archived: ArchivedRun) -> RunMetrics:
         extractor_contract_version=_manifest_value(archived.manifest, "extractor_contract_version"),
         tools_contract_version=_manifest_value(archived.manifest, "tools_contract_version"),
         repair_loop_contract_version=_manifest_value(archived.manifest, "repair_loop_contract_version"),
+        obligation_contract_version=_manifest_value(archived.manifest, "obligation_contract_version"),
         row_count=len(events),
         row_fingerprints=tuple(sorted(_row_fingerprint(archived.slug, row) for row in events)),
         bid_note_counts=_stable_items(bid_notes),
@@ -689,8 +693,8 @@ def build_report(analysis: StabilityAnalysis) -> str:
         "",
         "## Run Manifest",
         "",
-        "| slug | run_id | outcome | finished_at | model | reasoning | provider | prompt_hash | schema_hash | rulebook_hash | extractor_contract | tools_contract | repair_contract |",
-        "|---|---|---|---|---|---|---|---|---|---|---|---|---|",
+        "| slug | run_id | outcome | finished_at | model | reasoning | provider | prompt_hash | schema_hash | rulebook_hash | extractor_contract | tools_contract | repair_contract | obligation_contract |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for result in analysis.slug_results:
         for run in result.selected_runs:
@@ -710,6 +714,7 @@ def build_report(analysis: StabilityAnalysis) -> str:
                     run.extractor_contract_version,
                     run.tools_contract_version,
                     run.repair_loop_contract_version,
+                    run.obligation_contract_version,
                 ])
                 + " |"
             )

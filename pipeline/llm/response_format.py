@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from copy import deepcopy
 from typing import Any
 
 from pipeline.core import EVENT_VOCABULARY
@@ -301,10 +302,32 @@ SCHEMA_R1: dict[str, Any] = {
 }
 
 
+REPAIR_SCHEMA_R1: dict[str, Any] = deepcopy(SCHEMA_R1)
+REPAIR_SCHEMA_R1["properties"]["obligation_assertions"] = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "obligation_id": {"type": "string"},
+            "status": {
+                "type": "string",
+                "enum": ["satisfied", "unmet", "not_applicable"],
+            },
+            "row_ids": {"type": "array", "items": {"type": "integer"}},
+            "reason": {"type": "string"},
+        },
+        "required": ["obligation_id", "status", "row_ids", "reason"],
+        "additionalProperties": False,
+    },
+}
+REPAIR_SCHEMA_R1["required"] = ["deal", "events", "obligation_assertions"]
+
+
 def json_schema_format(schema: dict[str, Any] = SCHEMA_R1) -> dict[str, Any]:
+    name = "repair_schema_r1" if schema is REPAIR_SCHEMA_R1 else "extraction_schema_r1"
     return {
         "type": "json_schema",
-        "name": "extraction_schema_r1",
+        "name": name,
         "schema": schema,
         "strict": True,
     }
@@ -324,6 +347,15 @@ def parse_json_text(text: str) -> dict[str, Any]:
     if not isinstance(parsed, dict):
         raise MalformedJSONError("expected JSON object")
     return parsed
+
+
+def parse_repair_json_text(text: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    parsed = parse_json_text(text)
+    _validate_schema_value(REPAIR_SCHEMA_R1, parsed)
+    _ensure_source_quote_page_pairing(parsed)
+    obligation_assertions = parsed.pop("obligation_assertions")
+    _ensure_extraction_shape(parsed)
+    return parsed, obligation_assertions
 
 
 def _ensure_source_quote_page_pairing(parsed: dict[str, Any]) -> None:

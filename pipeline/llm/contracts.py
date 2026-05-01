@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-MAX_REPAIR_TURNS = 2
+MAX_REPAIR_TURNS = 1
 
 _PROMPTS_DIR = Path(__file__).resolve().parents[2] / "prompts"
 _REPAIR_PROMPT_PATH = _PROMPTS_DIR / "repair.md"
@@ -52,12 +52,22 @@ def _repair_loop_source_hash() -> str | None:
 
 
 def _repair_loop_payload() -> dict[str, Any]:
+    try:
+        from pipeline import obligations, repair_conservation
+
+        obligation_contract = obligations.obligation_contract_version()
+        conservation_contract = repair_conservation.conservation_contract_version()
+    except Exception:  # pragma: no cover - contract helper must be best-effort.
+        obligation_contract = None
+        conservation_contract = None
     return {
         **_REPAIR_LOOP_CONTRACT_INPUTS,
         "MAX_REPAIR_TURNS": MAX_REPAIR_TURNS,
         "repair_prompt_present": _REPAIR_PROMPT_PATH.exists(),
         "repair_prompt_sha256": _repair_prompt_hash(),
         "repair_loop_source_sha256": _repair_loop_source_hash(),
+        "obligation_contract_version": obligation_contract,
+        "conservation_contract_version": conservation_contract,
     }
 
 

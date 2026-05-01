@@ -126,6 +126,18 @@ class AuditWriter:
     def write_repair_turn(self, record: dict[str, Any]) -> None:
         self._append_jsonl("repair_turns.jsonl", dict(record))
 
+    def write_obligations(self, payload: dict[str, Any]) -> None:
+        _atomic_write_text(
+            self.root / "obligations.json",
+            json.dumps(payload, indent=2, default=str) + "\n",
+        )
+
+    def write_repair_response(self, payload: dict[str, Any]) -> None:
+        _atomic_write_text(
+            self.root / "repair_response.json",
+            json.dumps(payload, indent=2, default=str) + "\n",
+        )
+
     def write_raw_response(
         self,
         *,

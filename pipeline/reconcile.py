@@ -368,6 +368,7 @@ def _check_manifest_contract_fields(
         "extractor_contract_version",
         "tools_contract_version",
         "repair_loop_contract_version",
+        "obligation_contract_version",
         "repair_turns_used",
         "repair_loop_outcome",
         "tool_calls_count",

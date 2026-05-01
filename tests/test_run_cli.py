@@ -164,15 +164,15 @@ def test_audit_run_id_requires_re_validate(monkeypatch, capsys):
     assert "--audit-run-id is only valid with --re-validate" in capsys.readouterr().err
 
 
-def test_reasoning_effort_defaults_to_xhigh(monkeypatch):
+def test_reasoning_effort_defaults_to_high(monkeypatch):
     monkeypatch.delenv("EXTRACT_REASONING_EFFORT", raising=False)
     monkeypatch.delenv("ADJUDICATE_REASONING_EFFORT", raising=False)
     args = run_cli._parser().parse_args(["--slug", "medivation"])
 
     cfg = run_cli._make_pool_config(args, mode="extract")
 
-    assert cfg.extract_reasoning_effort == "xhigh"
-    assert cfg.adjudicate_reasoning_effort == "xhigh"
+    assert cfg.extract_reasoning_effort == "high"
+    assert cfg.adjudicate_reasoning_effort == "high"
 
 
 def test_commit_and_dry_run_is_rejected(monkeypatch, capsys):

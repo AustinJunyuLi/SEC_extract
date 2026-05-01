@@ -91,13 +91,36 @@ def test_extractor_prompt_contract_describes_embedded_filing_text():
         assert stale_phrase not in text
 
 
-def test_repair_prompt_documents_staged_tool_modes():
+def test_repair_prompt_documents_single_obligation_tool_round():
     text = (REPO_ROOT / "prompts" / "repair.md").read_text()
 
-    assert "Repair turn 1 has no tools" in text
-    assert "Repair turn 2 may use targeted repair tools" in text
-    assert "`check_row` only for hard-flagged rows" in text
+    assert "one repair round" in text
+    assert "Repair has access to all four tools" in text
+    assert "`check_obligations(candidate_extraction)`" in text
+    assert "## Previous complete extraction" in text
+    assert "## Deterministic filing pages" in text
+    assert "Call `check_obligations` at most once" in text
+    assert "Do not call it on row subsets" in text
+    assert "Call `check_row` on every revised row" in text
+    assert "Repair turn 1 has no tools" not in text
+    assert "Repair turn 2" not in text
     assert "Do not emit patches or partial output" in text
+
+
+def test_live_repair_prompt_formats_without_unescaped_literal_braces():
+    text = (REPO_ROOT / "prompts" / "repair.md").read_text()
+
+    formatted = text.format(
+        validator_report="{}",
+        obligation_report="{}",
+        conservation_report="{}",
+        previous_extraction="{}",
+        filing_pages="[]",
+        affected_rows="[]",
+        filing_snippets="[]",
+    )
+
+    assert "Previous complete extraction" in formatted
 
 
 def test_value_bearing_bid_consideration_contract_is_explicit():
@@ -192,6 +215,24 @@ def test_live_contract_files_do_not_carry_stale_rule_prose():
     for path in LIVE_CONTRACT_PATHS:
         text = path.read_text()
         for phrase in banned_substrings + banned_legacy_labels:
+            if phrase in text:
+                offenders.append(f"{path.relative_to(REPO_ROOT)}: {phrase}")
+
+    assert offenders == []
+
+
+def test_live_contract_files_do_not_describe_old_staged_repair():
+    banned = [
+        "Repair turn 1",
+        "Repair turn 2",
+        "prompt_then_targeted_tools",
+        "2 repair turns",
+        "repair_loop_exhausted",
+    ]
+    offenders: list[str] = []
+    for path in LIVE_CONTRACT_PATHS:
+        text = path.read_text()
+        for phrase in banned:
             if phrase in text:
                 offenders.append(f"{path.relative_to(REPO_ROOT)}: {phrase}")
 

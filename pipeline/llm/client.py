@@ -165,18 +165,24 @@ class OpenAICompatibleClient(LLMClient):
         text_parts: list[str] = []
         stream_output_items: list[dict[str, Any]] = []
         final_response = None
+        missing_completed_event = False
         async with APICallWatchdog(label=f"responses:{model}:attempt-{attempt}", cfg=self.watchdog_cfg) as watchdog:
-            async with self._client.responses.stream(**kwargs) as stream:
-                async for event in stream:
-                    delta = _event_delta(event)
-                    watchdog.mark_activity(chars=len(delta), phase=getattr(event, "type", "event"))
-                    if delta:
-                        text_parts.append(delta)
-                    item = _event_output_item(event)
-                    if item is not None:
-                        stream_output_items.append(item)
-                if hasattr(stream, "get_final_response"):
-                    final_response = await stream.get_final_response()
+            try:
+                async with self._client.responses.stream(**kwargs) as stream:
+                    async for event in stream:
+                        delta = _event_delta(event)
+                        watchdog.mark_activity(chars=len(delta), phase=getattr(event, "type", "event"))
+                        if delta:
+                            text_parts.append(delta)
+                        item = _event_output_item(event)
+                        if item is not None:
+                            stream_output_items.append(item)
+                    if hasattr(stream, "get_final_response"):
+                        final_response = await stream.get_final_response()
+            except RuntimeError as exc:
+                if not _is_missing_completed_event(exc) or not (text_parts or stream_output_items):
+                    raise
+                missing_completed_event = True
         if not text_parts and final_response is not None:
             output_text = getattr(final_response, "output_text", None)
             if output_text:
@@ -192,7 +198,7 @@ class OpenAICompatibleClient(LLMClient):
             input_tokens=_usage_value(usage, "input_tokens"),
             output_tokens=_usage_value(usage, "output_tokens"),
             reasoning_tokens=_reasoning_tokens(usage),
-            finish_reason=_finish_reason(final_response),
+            finish_reason="missing_response_completed" if missing_completed_event else _finish_reason(final_response),
             latency_seconds=time.monotonic() - started,
             attempts=attempt,
             watchdog=watchdog.stats,
@@ -207,6 +213,10 @@ def _event_delta(event: Any) -> str:
     if isinstance(event, dict) and event.get("type") == "response.output_text.delta":
         return event.get("delta") or ""
     return ""
+
+
+def _is_missing_completed_event(exc: RuntimeError) -> bool:
+    return "response.completed" in str(exc)
 
 
 def _event_output_item(event: Any) -> dict[str, Any] | None:

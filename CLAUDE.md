@@ -26,22 +26,26 @@ and `ADJUDICATE_MODEL` or CLI overrides.
 Every full extraction body uses strict `text.format=json_schema` with the
 hardened `SCHEMA_R1`. The first extraction pass is prompt-only: no native tools
 are supplied to the model. Python `pipeline.core.validate()` is the
-authoritative deterministic validator.
+authoritative deterministic validator, and `pipeline.obligations` derives
+additional filing-text obligations from `data/filings/{slug}/pages.json`.
 
-If hard flags remain, the repair loop is staged. Repair turn 1 is prompt-only.
-If hard flags still remain, repair turn 2 exposes only targeted repair tools:
-`check_row`, `search_filing`, and `get_pages`. The model must still return a
-complete revised `{deal, events}` extraction, not patches. On cap-hit,
-finalization records `repair_loop_exhausted` and the deal status is
-`validated`.
+If hard validator flags or hard unmet obligations remain, the repair path runs
+one tool-enabled repair round with `check_row`, `search_filing`, `get_pages`,
+and `check_obligations`. The model must return a complete revised repair
+response containing `{deal, events, obligation_assertions}`, not patches.
+Python strips `obligation_assertions`, reruns validation and obligation checks,
+and applies row-conservation checks before finalization. Remaining hard
+validator, obligation, or conservation flags finalize the deal as `validated`.
 
 The scoped Adjudicator stays single-turn, no tools, soft-flag verdicts only.
 
 There is no free-form JSON fallback. There is no provider branch that turns off
 structured output. There is no `previous_response_id` chain (Linkflow returns 400).
-Streaming is used for every full extraction or repair-body turn; non-streaming
-is reserved for short repair-2 tool-output replay turns to avoid the SDK
-accumulator empty-output bug.
+Streaming is used for the initial full extraction and every repair-body call,
+including repair calls made after tool outputs. This keeps long complete-body
+responses from hitting proxy read timeouts. If the SDK raises a missing
+`response.completed` event after streaming text or tool items, the client
+salvages the streamed body and still requires normal JSON/schema parsing.
 
 Phase 1 Linkflow probes accepted the live `SCHEMA_R1` only after keeping the
 provider schema strict-but-not-maximalist: no `oneOf` event variants and no
@@ -60,13 +64,12 @@ seeds.csv / state/progress.json
   -> output/audit/{slug}/runs/{run_id}/ immutable raw response, prompts, tool_calls.jsonl
   -> pipeline.core.prepare_for_validate()
   -> pipeline.core.validate()
-  -> if hard flags: staged repair (≤ 2 iterations)
-       repair_1 prompt-only
-       repair_2 targeted tools only if hard flags remain
-       model emits complete revised extraction
-       Python validates again
-       on cap-hit: finalize latest draft + repair_loop_exhausted flag
-  -> repair_turns.jsonl entry per repair turn
+  -> pipeline.obligations.check_obligations()
+  -> if hard validator flags or hard unmet obligations:
+       one repair round with check_row/search_filing/get_pages/check_obligations
+       model emits complete revised repair response
+       Python validates, checks obligations, and checks row conservation again
+  -> repair_turns.jsonl entry for the repair round when it runs
   -> optional scoped Adjudicator SDK call for soft flags
   -> pipeline.core.finalize_prepared()
   -> output/extractions/{slug}.json
@@ -78,7 +81,8 @@ seeds.csv / state/progress.json
 There is no active external agent loop, manually routed deal workflow, or
 top-level pipeline script. Add another model role or orchestration layer only
 when current reference-deal evidence shows this prompt-first Extractor +
-Python validator/staged repair + scoped Adjudicator design is insufficient.
+Python validator/obligation-gated repair + scoped Adjudicator design is
+insufficient.
 
 ## Entrypoints
 
@@ -106,20 +110,22 @@ default `--re-validate` reads `output/audit/{slug}/latest.json`; use
 `output/audit/{slug}/runs/{run_id}/`. The archived raw response must match the
 current `rulebook_version`, `extractor_contract_version`,
 `tools_contract_version`, `repair_loop_contract_version`,
-`extract_tool_mode`, and `repair_strategy`. Loose legacy files directly under
+`obligation_contract_version`, `extract_tool_mode`, and `repair_strategy`.
+Loose legacy files directly under
 `output/audit/{slug}/` are stale and are not accepted as cache. Use
 `--re-extract` for a fresh SDK extraction.
 
-Reasoning effort defaults to `xhigh` for both extractor and adjudicator calls:
+Reasoning effort defaults to `high` for both extractor and adjudicator calls:
 
 ```bash
-python run.py --slug medivation --extract --extract-reasoning-effort xhigh
-python -m pipeline.run_pool --filter reference --workers 5 --extract-reasoning-effort xhigh
+python run.py --slug medivation --extract --extract-reasoning-effort high
+python -m pipeline.run_pool --filter reference --workers 5 --extract-reasoning-effort high
 ```
 
-The empirical Linkflow ceiling for `xhigh` is five concurrent workers. The
-runner rejects `xhigh` with more than `LINKFLOW_XHIGH_MAX_WORKERS` workers
-(default `5`) before making API calls.
+Explicit `xhigh` remains available for one-off runs. The empirical Linkflow
+ceiling for `xhigh` is five concurrent workers, and the runner rejects `xhigh`
+with more than `LINKFLOW_XHIGH_MAX_WORKERS` workers (default `5`) before making
+API calls.
 
 There is no per-deal token-budget cap. The runner records input, output, and
 reasoning token usage in audit metadata, but it does not skip adjudication or
@@ -202,7 +208,13 @@ slug. Status values are:
 - `validated`: finalized with at least one hard flag.
 - `passed`: finalized with only soft/info flags.
 - `passed_clean`: finalized with zero flags.
-- `verified`: Austin manually verified a reference deal against the filing.
+- `verified`: a reference deal verified against filing text. During this
+  reference-stability release process, `verified` may be set by Austin or by
+  agent filing-grounded verification when
+  `quality_reports/reference_verification/{slug}.md` exists, every AI-vs-Alex
+  disagreement is adjudicated against the filing text and rulebook, and the
+  report concludes `VERIFIED`.
+  The agent must not mark a deal verified solely because the model output passes schema validation.
 - `failed`: pipeline error when there is no prior successful live extraction.
   A failed fresh rerun of a deal already in `validated`, `passed`,
   `passed_clean`, or `verified` preserves the prior live progress state and
@@ -212,6 +224,16 @@ slug. Status values are:
 `validated` is a finalized status but not a completed/success status. It does
 not count toward the reference exit gate and is not skipped by runner
 freshness logic; hard-flagged deals need rerun or human rule/output work.
+
+Before an agent marks a reference deal verified, run:
+
+```bash
+python scripts/check_reference_verification.py --slugs <slug>
+python scripts/mark_reference_verified.py <slug> --reviewer "Codex agent"
+```
+
+`mark_reference_verified.py` is allowed only for reference deals with no hard
+extraction flags and a completed verification report.
 
 Per-deal progress entries carry `flag_count`, `last_run`, `last_run_id`,
 verification fields, `notes`, `rulebook_version`, and bounded
@@ -238,6 +260,8 @@ output/audit/{slug}/runs/{run_id}/
   calls.jsonl
   tool_calls.jsonl
   repair_turns.jsonl
+  obligations.json
+  repair_response.json
   raw_response.json
   validation.json
   final_output.json
@@ -253,8 +277,8 @@ still write a run manifest and update `latest.json` with
 `cache_eligible=false`. Re-validation copies the selected archived raw response
 into the new run directory and records `cache_used=true` /
 `source_audit_run_id`. Cache eligibility requires the current rulebook pin plus
-extractor, tools, repair-loop, extract-tool-mode, and repair-strategy contract
-values to match the archived run.
+extractor, tools, repair-loop, obligation, extract-tool-mode, and
+repair-strategy contract values to match the archived run.
 `final_output.json` is the immutable per-run finalized snapshot used by
 stability tooling; `output/extractions/{slug}.json` remains the authoritative
 latest extraction.
@@ -286,11 +310,12 @@ The nine reference deals are:
 | `saks` | Saks | 6996-7020 | Alex delete flags; go-shop |
 | `stec` | STec | 7144-7171 | Multiple pre-IB bidder interests; single-bound informals |
 
-Reference-set work is complete only when all nine deals are manually verified
-against the filings, every AI-vs-Alex disagreement is adjudicated, hard
-invariants pass, and the stability harness produces a `target_gate_proof_v1`
-classifying the archive as `STABLE_FOR_REFERENCE_REVIEW` across at least three
-archived reference runs per slug under unchanged prompt/schema/rulebook hashes.
+Reference-set work is complete only when all nine deals are verified against
+the filings by Austin or by agent filing-grounded verification, every
+AI-vs-Alex disagreement is adjudicated, hard invariants pass, and the stability
+harness produces a `target_gate_proof_v1` classifying the archive as
+`STABLE_FOR_REFERENCE_REVIEW` across at least three archived reference runs per
+slug under unchanged prompt/schema/rulebook hashes.
 Any rulebook, prompt, schema, state, or output-format change resets that clock.
 
 Behavior-specific extraction doctrine lives in `rules/*.md`, with validator
@@ -309,8 +334,8 @@ proof classifies the reference archive as `STABLE_FOR_REFERENCE_REVIEW`,
 records `requested_runs >= 3`, and includes at least three selected immutable
 run IDs for every reference slug, and the operator supplies
 `--release-targets`. The 392 target deals are closed to batch processing until
-Austin has verified all nine reference deals and the rulebook stability clock
-is satisfied.
+all nine reference deals are verified by Austin or agent filing-grounded
+verification and the rulebook stability clock is satisfied.
 
 Fetching or inspecting target metadata is acceptable only when Austin explicitly
 asks and it does not start extraction.

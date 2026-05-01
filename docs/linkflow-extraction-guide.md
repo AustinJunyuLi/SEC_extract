@@ -14,22 +14,27 @@ OPENAI_BASE_URL=https://www.linkflow.run/v1
 OPENAI_API_KEY=<set in shell or .env, never in docs>
 EXTRACT_MODEL=gpt-5.5
 ADJUDICATE_MODEL=gpt-5.5
-EXTRACT_REASONING_EFFORT=xhigh
-ADJUDICATE_REASONING_EFFORT=xhigh
+EXTRACT_REASONING_EFFORT=high
+ADJUDICATE_REASONING_EFFORT=high
 LINKFLOW_XHIGH_MAX_WORKERS=5
 ```
 
 Observed provider constraints:
 
-- `xhigh` reasoning is the default for extractor and adjudicator calls.
-- `xhigh` concurrency is capped at five workers by default; the runner rejects
-  larger pools before model calls.
+- `high` reasoning is the default for extractor and adjudicator calls.
+- Explicit `xhigh` reasoning remains available for one-off runs. `xhigh`
+  concurrency is capped at five workers by default; the runner rejects larger
+  pools before model calls.
 - Linkflow has a 300s streaming idle timeout. Full extraction and repair-body
   turns stream so long-running reasoning keeps the connection alive.
 - `previous_response_id` returns 400. Every extraction, tool-output replay, and
-  repair turn uses full-input replay.
-- Short tool-call/tool-output turns are non-streaming because the SDK streaming
-  accumulator can return empty output under tool use.
+  repair call uses full-input replay.
+- Repair calls stream even after tool outputs, because the model must emit a
+  complete extraction body and non-streaming replay can hit proxy read
+  timeouts on large reference deals.
+- If a repair stream emits text/tool items and then the SDK raises a missing
+  `response.completed` event, the client salvages the streamed body. Normal
+  JSON/schema parsing remains the gate; incomplete bodies still fail.
 - There is no per-deal token-budget cap. Token totals are audit facts; worker
   count and reasoning effort are the cost controls.
 
@@ -71,11 +76,10 @@ Initial extraction has no tools. This is intentional: initial tool-output
 replay was too expensive under Linkflow because every replay must resend the
 full input.
 
-Repair turn 1 also has no tools. Repair turn 2, only when hard flags remain,
-exposes `check_row`, `search_filing`, and `get_pages`. `check_row` is targeted
-to hard-flagged, revised, or revision-dependent rows; it is not an initial
-row-by-row checklist. Keep the repair-2 catalog small unless reference-run
-evidence proves a specific gap.
+Repair is a single obligation-gated round. When hard validator flags or hard
+unmet obligations exist, repair has access to `check_row`, `search_filing`,
+`get_pages`, and `check_obligations`. Keep the catalog small unless
+reference-run evidence proves a specific gap.
 
 ### `check_row(row)`
 
@@ -87,8 +91,8 @@ Runs row-local Python checks against a candidate event row and returns:
 
 The wrapper covers structural row checks, quote/page substring verification,
 date/BidderID basics, bid-type evidence, and conditional event-field ownership
-such as §P-R9. In repair 2, use it for hard-flagged rows, directly revised
-rows, and rows whose validity depends on those revisions.
+such as §P-R9. Use it for hard-flagged rows, directly revised rows, and rows
+whose validity depends on those revisions.
 
 Example use: after revising a hard-flagged `Bid` row, call `check_row` to catch
 an overlong quote, a quote that is not on the cited page, missing
@@ -99,7 +103,7 @@ an overlong quote, a quote that is not on the cited page, missing
 Case-insensitive substring search over `data/filings/{slug}/pages.json`.
 Returns page-numbered snippets, not array offsets.
 
-Example use in repair 2: search for `"by and among"` or `"Schedule A"` to find
+Example use: search for `"by and among"` or `"Schedule A"` to find
 merger agreement party blocks before revising constituent-level Buyer Group or
 Consortium rows, including inherited buyer-group `NDA` rows for late joiners.
 
@@ -111,9 +115,15 @@ Fetches contiguous filing pages by page number and returns full page text:
 {"pages": [{"page": 41, "text": "..."}]}
 ```
 
-The range cap is 10 pages per call. In repair 2, use it after `search_filing`
-identifies a candidate page, or when a row's evidence needs surrounding
-context.
+The range cap is 10 pages per call. Use it after `search_filing` identifies a
+candidate page, or when a row's evidence needs surrounding context.
+
+### `check_obligations(candidate_extraction)`
+
+Runs deterministic filing-derived obligation checks against a complete
+candidate extraction and returns obligation ids, source pages, matched rows,
+statuses, and reasons. This is a repair aid only. The orchestrator reruns the
+same Python code after repair and uses that result as the authority.
 
 ## Multi-Turn Loop
 
@@ -126,9 +136,10 @@ run.py / pipeline.run_pool
   -> prepare_for_validate()
        Python rebuilds/enforces bidder_registry
   -> validate()
-  -> staged repair loop if hard flags remain
-       repair_1 prompt-only
-       repair_2 targeted tools only if hard flags remain
+  -> check_obligations()
+  -> one obligation-gated repair round if hard validator flags or hard obligations remain
+       check_row/search_filing/get_pages/check_obligations available
+       row-conservation anchors protect unaffected chronology
   -> scoped adjudicator for soft flags only
   -> finalize_prepared()
 ```
@@ -139,38 +150,38 @@ a complete extraction.
 
 Streaming policy:
 
-- Stream full extraction-body turns, including repair turns.
-- Use non-streaming Responses calls for short tool-call/tool-output turns.
+- Stream the initial full extraction.
+- Stream every repair-body call, including calls made after tool outputs.
 - Reconstruct final JSON from the model's final message, not from intermediate
   tool-call output.
 
 ## Repair Loop
 
-The repair loop starts only after Python validation sees hard flags in the
-model's final draft.
+The repair loop starts only after Python validation sees hard flags or the
+obligation layer sees hard unmet filing obligations in the model's final draft.
 
 Repair prompt contents:
 
 - compact validator report with hard flag codes, severity, reason, and affected
   row index when available;
-- affected event rows verbatim;
-- filing snippets needed to fix the failure.
+- derived filing obligations and current satisfaction status;
+- protected row-conservation anchors for unaffected pre-repair rows;
+- the previous complete extraction;
+- unique deterministic filing pages from hard flag and obligation sources.
 
 Repair protocol:
 
-- The model must emit a complete revised `{deal, events}` extraction.
-- Repair turn 1 has no tools.
-- Repair turn 2, only when hard flags remain, exposes targeted repair tools.
-- The cap is two repair turns.
-- After each repair turn, Python prepares and validates again.
-- If hard flags remain after turn 2, finalization uses the latest draft and
-  appends a deal-level hard `repair_loop_exhausted` flag. The deal status is
-  `validated`.
-- The cap is an infinite-loop guard, not a cost-control mechanism.
+- The model must emit a complete revised `{deal, events, obligation_assertions}`
+  repair response.
+- The single repair round exposes all targeted repair tools immediately.
+- Python strips `obligation_assertions`, prepares, validates, checks
+  obligations, and checks row conservation again.
+- Any remaining hard validator, obligation, or conservation flags finalize the
+  deal as `validated`.
 
-The scoped Adjudicator runs after hard-flag repair is closed or exhausted. It
-has no tools, does not rewrite extraction rows, and only appends verdict text to
-soft-flag reasons.
+The scoped Adjudicator runs after hard-flag repair is closed. It has no tools,
+does not rewrite extraction rows, and only appends verdict text to soft-flag
+reasons.
 
 ## Audit Contract
 
@@ -182,6 +193,8 @@ output/audit/{slug}/runs/{run_id}/
   calls.jsonl
   tool_calls.jsonl
   repair_turns.jsonl
+  obligations.json
+  repair_response.json
   raw_response.json
   validation.json
   final_output.json
@@ -200,17 +213,24 @@ New audit expectations:
 
 - `tool_calls.jsonl`: one row per tool invocation with turn, call ID, name,
   arguments, result, latency, and any error/truncation marker.
-- `repair_turns.jsonl`: one row per repair turn with `tool_mode`, a validator
-  summary, hard-flag counts before/after, and latency.
+- `repair_turns.jsonl`: one row for the repair round when it runs, with
+  `tool_mode`, validator and obligation counts before/after, row-count delta,
+  conservation failures, and tool-call count.
+- `obligations.json`: derived obligations and satisfaction results before and
+  after repair.
+- `repair_response.json`: raw parsed repair response, including repair-only
+  `obligation_assertions`.
 - `manifest.json` records `tools_contract_version`,
-  `repair_loop_contract_version`, `extract_tool_mode`, `repair_strategy`,
-  `repair_turns_used`, `repair_loop_outcome`, and `tool_calls_count`.
+  `repair_loop_contract_version`, `obligation_contract_version`,
+  `extract_tool_mode`, `repair_strategy`, `repair_turns_used`,
+  `repair_loop_outcome`, and `tool_calls_count`.
 
 `repair_loop_outcome` is:
 
 - `clean`: initial validation had no hard flags.
-- `fixed`: at least one repair turn ran and hard flags cleared.
-- `exhausted`: the cap was reached and `repair_loop_exhausted` was finalized.
+- `fixed`: the repair round ran and hard validator, obligation, and
+  conservation flags cleared.
+- `hard_flags_remain`: the repair round ran and at least one hard issue remains.
 
 The former schema-used audit boolean is retired; strict schema is
 unconditional under the live contract.
@@ -224,6 +244,7 @@ must match the current:
 - `extractor_contract_version`
 - `tools_contract_version`
 - `repair_loop_contract_version`
+- `obligation_contract_version`
 - `extract_tool_mode`
 - `repair_strategy`
 
@@ -311,7 +332,8 @@ python -m pipeline.stability \
 
 Target extraction remains closed until all of the following are true:
 
-- all nine reference deals are manually marked `verified`;
+- all nine reference deals are `verified` through Austin review or agent filing-grounded verification documented at
+  `quality_reports/reference_verification/{slug}.md`;
 - `pipeline.reconcile --scope reference` passes;
 - the `target_gate_proof_v1` file classifies the archive as
   `STABLE_FOR_REFERENCE_REVIEW`;
@@ -319,6 +341,17 @@ Target extraction remains closed until all of the following are true:
 - the proof includes at least three selected immutable run IDs for every
   reference slug;
 - the operator explicitly supplies `--release-targets`.
+
+The agent must not mark a deal verified solely because the model output passes schema validation; every AI-vs-Alex disagreement must be adjudicated against
+filing text before `verified` is set. Before setting agent verification, run:
+
+```bash
+python scripts/check_reference_verification.py --slugs <slug>
+python scripts/mark_reference_verified.py <slug> --reviewer "Codex agent"
+```
+
+`mark_reference_verified.py` is allowed only for reference deals with no hard
+extraction flags and a completed verification report.
 
 Any prompt, schema, tools, repair-loop, rulebook, state, or output-format change
 resets the stability clock and requires regenerating affected artifacts.

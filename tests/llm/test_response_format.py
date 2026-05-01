@@ -257,6 +257,30 @@ def test_call_json_validates_custom_schema_min_items():
         )
 
 
+def test_parse_repair_response_accepts_obligation_assertions_and_strips_them():
+    from pipeline.llm.response_format import parse_repair_json_text
+
+    parsed, assertions = parse_repair_json_text(
+        json.dumps({
+            **_valid_payload(),
+            "obligation_assertions": [{
+                "obligation_id": "obl-001",
+                "status": "satisfied",
+                "row_ids": [1],
+                "reason": "Rows satisfy the obligation.",
+            }],
+        })
+    )
+
+    assert parsed == _valid_payload()
+    assert assertions == [{
+        "obligation_id": "obl-001",
+        "status": "satisfied",
+        "row_ids": [1],
+        "reason": "Rows satisfy the obligation.",
+    }]
+
+
 def test_call_json_fails_loudly_without_repair_call():
     client = StubClient(["not json"])
 

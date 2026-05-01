@@ -14,6 +14,12 @@ from pathlib import Path
 from typing import Any, Iterator, Literal
 
 from pipeline import core
+from pipeline.obligations import (
+    check_obligations,
+    flags_for_unmet,
+    obligation_contract_version,
+    obligation_result_payload,
+)
 from pipeline.llm.adjudicate import adjudicate
 from pipeline.llm.audit import (
     AUDIT_LATEST_SCHEMA_VERSION,
@@ -40,9 +46,9 @@ VALID_FILTERS = {"pending", "reference", "failed", "all"}
 AUDIT_ROOT = core.REPO_ROOT / "output" / "audit"
 TARGET_GATE_PROOF = core.REPO_ROOT / "quality_reports" / "stability" / "target-release-proof.json"
 DEFAULT_XHIGH_MAX_WORKERS = 5
-DEFAULT_REASONING_EFFORT = "xhigh"
+DEFAULT_REASONING_EFFORT = "high"
 EXTRACT_TOOL_MODE = "none"
-REPAIR_STRATEGY = "prompt_then_targeted_tools"
+REPAIR_STRATEGY = "obligation_gated_single_repair"
 SEMANTIC_ADJUDICATION_SOFT_FLAGS: frozenset[str] = frozenset({
     "missing_nda_dropsilent",
 })
@@ -296,6 +302,7 @@ def _current_contract_values(current_rulebook_version: str) -> dict[str, str]:
         "extractor_contract_version": extractor_contract_version(),
         "tools_contract_version": tools_contract_version(),
         "repair_loop_contract_version": repair_loop_contract_version(),
+        "obligation_contract_version": obligation_contract_version(),
         "extract_tool_mode": EXTRACT_TOOL_MODE,
         "repair_strategy": REPAIR_STRATEGY,
     }
@@ -556,9 +563,11 @@ def _validation_payload(
     final_output: dict[str, Any] | None,
     validation: core.ValidatorResult | None,
     promotion_log: list[dict[str, Any]] | None,
+    obligation_result: Any | None = None,
+    conservation_flags: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     counts = core.count_flags(final_output or {"deal": {"deal_flags": []}, "events": []})
-    return {
+    payload = {
         "final_status": status,
         "flag_count": flag_count,
         "row_flag_count": len(validation.row_flags) if validation else 0,
@@ -568,6 +577,12 @@ def _validation_payload(
         "info_count": counts["info"],
         "promotion_log_count": len(promotion_log or []),
     }
+    if obligation_result is not None:
+        payload["obligation_summary"] = obligation_result_payload(obligation_result)
+    if conservation_flags is not None:
+        payload["conservation_flags"] = conservation_flags
+        payload["conservation_failure_count"] = len(conservation_flags)
+    return payload
 
 
 def _extractor_contract_version_or_unavailable() -> str:
@@ -587,6 +602,13 @@ def _tools_contract_version_or_unavailable() -> str:
 def _repair_loop_contract_version_or_unavailable() -> str:
     try:
         return repair_loop_contract_version()
+    except (FileNotFoundError, OSError) as exc:
+        return f"unavailable:{type(exc).__name__}"
+
+
+def _obligation_contract_version_or_unavailable() -> str:
+    try:
+        return obligation_contract_version()
     except (FileNotFoundError, OSError) as exc:
         return f"unavailable:{type(exc).__name__}"
 
@@ -621,6 +643,7 @@ def _manifest_payload(
         "extractor_contract_version": _extractor_contract_version_or_unavailable(),
         "tools_contract_version": _tools_contract_version_or_unavailable(),
         "repair_loop_contract_version": _repair_loop_contract_version_or_unavailable(),
+        "obligation_contract_version": _obligation_contract_version_or_unavailable(),
         "schema_hash": schema_hash(SCHEMA_R1),
         "prompt_hash": prompt_hashes.get("extract"),
         "prompt_hashes": prompt_hashes,
@@ -705,36 +728,43 @@ async def process_deal(
             filing,
         )
         validation = await asyncio.to_thread(core.validate, prepared, filing)
+        initial_obligation_result = await asyncio.to_thread(check_obligations, prepared, filing)
+        obligation_result = initial_obligation_result
+        conservation_flags: list[dict[str, Any]] = []
         repair_outcome = "clean"
         repair_turns_used = 0
-        if any(
+        hard_validator_flags = any(
             flag.get("severity") == "hard"
             for flag in [*validation.row_flags, *validation.deal_flags]
-        ):
+        )
+        if hard_validator_flags or obligation_result.has_hard_unmet:
             (
                 prepared,
                 validation,
                 promotion_log,
                 repair_outcome,
                 repair_turns_used,
+                obligation_result,
+                conservation_flags,
             ) = await run_repair_loop(
                 slug=slug,
                 initial_draft=prepared,
                 filing=filing,
                 validation=validation,
+                obligation_result=obligation_result,
                 llm_client=llm_client,
                 extract_model=config.extract_model,
                 audit=audit,
                 token_usage=token_usage,
                 reasoning_effort=config.extract_reasoning_effort,
             )
-            if repair_outcome == "exhausted":
-                validation.deal_flags.append({
-                    "code": "repair_loop_exhausted",
-                    "severity": "hard",
-                    "reason": "Hard validator flags remained after 2 repair turns.",
-                    "deal_level": True,
-                })
+        validation.deal_flags.extend(flags_for_unmet(obligation_result))
+        validation.deal_flags.extend(conservation_flags)
+        audit.write_obligations({
+            "before_repair": obligation_result_payload(initial_obligation_result),
+            "after_repair": obligation_result_payload(obligation_result),
+            "conservation_flags": conservation_flags,
+        })
         soft_flags = _soft_flags(validation)
         if soft_flags:
             await adjudicate(
@@ -765,6 +795,8 @@ async def process_deal(
                 final_output=final_output,
                 validation=validation,
                 promotion_log=promotion_log,
+                obligation_result=obligation_result,
+                conservation_flags=conservation_flags,
             )
         )
         audit.write_final_output(final_output)

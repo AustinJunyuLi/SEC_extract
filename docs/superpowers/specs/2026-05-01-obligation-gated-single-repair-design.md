@@ -132,9 +132,9 @@ Repair receives:
 - all hard validator flags;
 - all unmet obligations;
 - row-conservation context identifying rows not implicated by hard issues;
-- filing snippets for affected rows and unmet obligations;
-- deterministic companion snippets from non-Background pages when an obligation
-  depends on those pages, such as buyer-group definitions.
+- unique deterministic filing pages from hard flag and obligation sources,
+  including non-Background pages when an obligation depends on those pages,
+  such as buyer-group definitions.
 
 Repair can call:
 

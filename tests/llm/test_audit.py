@@ -155,6 +155,21 @@ def test_audit_writer_truncates_large_tool_results(tmp_path):
     assert len(record["result"]) == 8000
 
 
+def test_audit_writer_records_obligations_and_repair_response(tmp_path):
+    writer = AuditWriter(tmp_path / "deal" / "runs" / "run-1", slug="deal", run_id="run-1")
+
+    writer.write_obligations({
+        "before_repair": {"hard_unmet_count": 1},
+        "after_repair": {"hard_unmet_count": 0},
+    })
+    writer.write_repair_response({"deal": {}, "events": [], "obligation_assertions": []})
+
+    obligations = json.loads((writer.root / "obligations.json").read_text())
+    repair_response = json.loads((writer.root / "repair_response.json").read_text())
+    assert obligations["before_repair"]["hard_unmet_count"] == 1
+    assert repair_response["obligation_assertions"] == []
+
+
 def test_audit_writer_records_repair_turns(tmp_path):
     writer = AuditWriter(tmp_path / "deal" / "runs" / "run-1", slug="deal", run_id="run-1")
 
@@ -182,6 +197,7 @@ def test_manifest_includes_new_contract_fields(tmp_path):
         extractor_contract_version="ec1",
         tools_contract_version="tc1",
         repair_loop_contract_version="rlc1",
+        obligation_contract_version="oc1",
         repair_turns_used=1,
         repair_loop_outcome="fixed",
         tool_calls_count=12,
@@ -192,6 +208,7 @@ def test_manifest_includes_new_contract_fields(tmp_path):
     manifest = json.loads((tmp_path / "deal" / "runs" / "run-1" / "manifest.json").read_text())
     assert manifest["tools_contract_version"] == "tc1"
     assert manifest["repair_loop_contract_version"] == "rlc1"
+    assert manifest["obligation_contract_version"] == "oc1"
     assert manifest["repair_turns_used"] == 1
     assert manifest["repair_loop_outcome"] == "fixed"
     assert manifest["tool_calls_count"] == 12

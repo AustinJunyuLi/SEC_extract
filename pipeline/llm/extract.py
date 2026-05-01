@@ -11,15 +11,19 @@ from dataclasses import dataclass
 from typing import Any
 
 from pipeline import core
+from pipeline import obligations
+from pipeline import repair_conservation
 
 from .audit import AuditWriter, TokenUsage
 from .client import CompletionResult, LLMClient
 from .contracts import MAX_REPAIR_TURNS
 from .response_format import (
+    REPAIR_SCHEMA_R1,
     SCHEMA_R1,
     _ensure_extraction_shape,
     json_schema_format,
     parse_json_text,
+    parse_repair_json_text,
     schema_hash,
 )
 from .tools import TARGETED_REPAIR_TOOL_DEFINITIONS, dispatch
@@ -29,6 +33,13 @@ EXTRACTOR_RULE_FILES = ("schema.md", "events.md", "bidders.md", "bids.md", "date
 MAX_BACKGROUND_SECTION_PAGES = 35
 MIN_BACKGROUND_SECTION_CHARS = 1500
 MAX_TOOL_TURNS = 8
+REPAIR_SYSTEM_PROMPT = (
+    "You repair a complete M&A takeover-auction extraction after deterministic "
+    "Python validation. Return exactly one complete strict repair response with "
+    "`deal`, `events`, and `obligation_assertions`. Preserve rows unless a "
+    "validator, obligation, or conservation report requires a change. Use only "
+    "the supplied filing text and repair tools as evidence; do not invent facts."
+)
 
 
 def extractor_contract_version() -> str:
@@ -325,6 +336,8 @@ async def _call_with_tools(
     reasoning_effort: str | None,
     audit: AuditWriter | None = None,
     audit_phase: str = "extract",
+    response_schema: dict[str, Any] = SCHEMA_R1,
+    repair_response: bool = False,
 ) -> tuple[dict[str, Any], CompletionResult, list[CompletionResult], int]:
     input_items: list[dict[str, Any]] = [
         {"role": "system", "content": system},
@@ -337,12 +350,12 @@ async def _call_with_tools(
         completion = await llm_client.complete(
             model=model,
             input_items=input_items,
-            text_format=json_schema_format(SCHEMA_R1),
+            text_format=json_schema_format(response_schema),
             tools=tool_definitions,
             tool_choice="auto",
             max_output_tokens=max_output_tokens,
             reasoning_effort=reasoning_effort,
-            stream=turn == 1,
+            stream=repair_response or turn == 1,
         )
         completions.append(completion)
 
@@ -384,44 +397,57 @@ async def _call_with_tools(
             continue
 
         try:
-            parsed = parse_json_text(completion.text)
-            _ensure_extraction_shape(parsed)
+            if repair_response:
+                parsed, assertions = parse_repair_json_text(completion.text)
+                completion.parsed_json = {**parsed, "obligation_assertions": assertions}
+                setattr(completion, "obligation_assertions", assertions)
+            else:
+                parsed = parse_json_text(completion.text)
+                _ensure_extraction_shape(parsed)
         except Exception as exc:
             raise _annotate_completion_error(
                 exc,
                 completions=completions,
                 tool_calls_count=tool_calls_count,
             ) from exc
-        completion.parsed_json = parsed
+        if not repair_response:
+            completion.parsed_json = parsed
         return parsed, completion, completions, tool_calls_count
 
+    body_hint = "{deal, events, obligation_assertions}" if repair_response else "{deal, events}"
     input_items.append({
         "role": "user",
         "content": (
             f"Tool-call turn limit ({MAX_TOOL_TURNS}) reached. Emit the final "
-            "{deal, events} JSON now. Do not call tools. Any remaining issues "
-            "will be handled by Python validation and repair."
+            f"{body_hint} JSON now. Do not call tools. Any remaining issues "
+            "will be handled by Python validation, obligations, and finalization."
         ),
     })
     completion = await llm_client.complete(
         model=model,
         input_items=input_items,
-        text_format=json_schema_format(SCHEMA_R1),
+        text_format=json_schema_format(response_schema),
         max_output_tokens=max_output_tokens,
         reasoning_effort=reasoning_effort,
         stream=True,
     )
     completions.append(completion)
     try:
-        parsed = parse_json_text(completion.text)
-        _ensure_extraction_shape(parsed)
+        if repair_response:
+            parsed, assertions = parse_repair_json_text(completion.text)
+            completion.parsed_json = {**parsed, "obligation_assertions": assertions}
+            setattr(completion, "obligation_assertions", assertions)
+        else:
+            parsed = parse_json_text(completion.text)
+            _ensure_extraction_shape(parsed)
     except Exception as exc:
         raise _annotate_completion_error(
             exc,
             completions=completions,
             tool_calls_count=tool_calls_count,
         ) from exc
-    completion.parsed_json = parsed
+    if not repair_response:
+        completion.parsed_json = parsed
     return parsed, completion, completions, tool_calls_count
 
 
@@ -430,6 +456,47 @@ def _hard_flags(validation: core.ValidatorResult) -> list[dict[str, Any]]:
         flag for flag in [*validation.row_flags, *validation.deal_flags]
         if flag.get("severity") == "hard"
     ]
+
+
+def _hard_row_indexes(validation: core.ValidatorResult) -> set[int]:
+    return {
+        int(flag["row_index"])
+        for flag in validation.row_flags
+        if flag.get("severity") == "hard"
+        and isinstance(flag.get("row_index"), int)
+    }
+
+
+def _obligation_row_indexes(
+    draft: dict[str, Any],
+    obligation_result: obligations.ObligationResult,
+) -> set[int]:
+    matched_ids = {
+        row_id
+        for check in obligation_result.checks
+        if check.status == "unmet"
+        for row_id in check.matched_rows
+    }
+    indexes: set[int] = set()
+    for index, event in enumerate(draft.get("events") or []):
+        if not isinstance(event, dict):
+            continue
+        bidder_id = event.get("BidderID")
+        if isinstance(bidder_id, int) and bidder_id in matched_ids:
+            indexes.add(index)
+    return indexes
+
+
+def _has_hard_repair_issue(
+    validation: core.ValidatorResult,
+    obligation_result: obligations.ObligationResult,
+    conservation_flags: list[dict[str, Any]] | None = None,
+) -> bool:
+    return (
+        bool(_hard_flags(validation))
+        or obligation_result.has_hard_unmet
+        or any(flag.get("severity") == "hard" for flag in (conservation_flags or []))
+    )
 
 
 def _affected_rows(draft: dict[str, Any], row_flags: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -472,6 +539,64 @@ def _filing_snippets(rows: list[dict[str, Any]], filing: core.Filing) -> list[di
     return snippets
 
 
+def _source_pages_from_value(value: Any) -> list[int]:
+    values = value if isinstance(value, list) else [value]
+    return [
+        page
+        for page in values
+        if isinstance(page, int) and not isinstance(page, bool)
+    ]
+
+
+def _row_source_pages(draft: dict[str, Any], row_index: int) -> list[int]:
+    events = draft.get("events") or []
+    if not (0 <= row_index < len(events)):
+        return []
+    row = events[row_index]
+    if not isinstance(row, dict):
+        return []
+    return _source_pages_from_value(row.get("source_page"))
+
+
+def _repair_context_pages(
+    *,
+    draft: dict[str, Any],
+    validation: core.ValidatorResult,
+    obligation_result: obligations.ObligationResult,
+    filing: core.Filing,
+) -> list[dict[str, Any]]:
+    pages: dict[int, dict[str, Any]] = {}
+
+    def add_page(page_number: int, reason: str) -> None:
+        if page_number in pages:
+            return
+        text = filing.page_content(page_number)
+        if text is None:
+            return
+        pages[page_number] = {
+            "page": page_number,
+            "reason": reason,
+            "text": text,
+        }
+
+    for check in obligation_result.checks:
+        if check.status != "unmet" or check.obligation.severity != "hard":
+            continue
+        add_page(check.obligation.source_page, "obligation_source")
+
+    for flag in [*validation.row_flags, *validation.deal_flags]:
+        if flag.get("severity") != "hard":
+            continue
+        for page_number in _source_pages_from_value(flag.get("source_page")):
+            add_page(page_number, "hard_flag_source")
+        row_index = flag.get("row_index")
+        if isinstance(row_index, int) and not isinstance(row_index, bool):
+            for page_number in _row_source_pages(draft, row_index):
+                add_page(page_number, "hard_flag_source")
+
+    return [pages[page_number] for page_number in sorted(pages)]
+
+
 def _repair_prompt_template() -> str:
     return (core.PROMPTS_DIR / "repair.md").read_text()
 
@@ -482,101 +607,134 @@ async def run_repair_loop(
     initial_draft: dict[str, Any],
     filing: core.Filing,
     validation: core.ValidatorResult,
+    obligation_result: obligations.ObligationResult,
     llm_client: LLMClient,
     extract_model: str,
     audit: AuditWriter,
     token_usage: TokenUsage,
     reasoning_effort: str | None = None,
     max_output_tokens: int | None = None,
-) -> tuple[dict[str, Any], core.ValidatorResult, list[dict[str, Any]], str, int]:
-    """Run up to MAX_REPAIR_TURNS complete-revision repair turns."""
-    if not _hard_flags(validation):
-        return initial_draft, validation, [], "clean", 0
+) -> tuple[
+    dict[str, Any],
+    core.ValidatorResult,
+    list[dict[str, Any]],
+    str,
+    int,
+    obligations.ObligationResult,
+    list[dict[str, Any]],
+]:
+    """Run the single obligation-gated complete-revision repair turn."""
+    if not _has_hard_repair_issue(validation, obligation_result):
+        return initial_draft, validation, [], "clean", 0, obligation_result, []
 
-    system, _original_user = build_messages(slug)
     filing_pages = _load_tool_pages(slug)
-    draft = initial_draft
-    current_validation = validation
     promotion_log: list[dict[str, Any]] = []
     template = _repair_prompt_template()
-
-    for turn in range(1, MAX_REPAIR_TURNS + 1):
-        report = core.compact_validator_report(
-            current_validation.row_flags,
-            current_validation.deal_flags,
-        )
-        affected = _affected_rows(draft, current_validation.row_flags)
-        repair_user = template.format(
-            validator_report=json.dumps(report, indent=2, default=str),
-            affected_rows=json.dumps(affected, indent=2, default=str),
-            filing_snippets=json.dumps(_filing_snippets(affected, filing), indent=2),
-        )
-        audit.write_prompt(
-            phase=f"repair_{turn}",
-            system=system,
+    report = core.compact_validator_report(validation.row_flags, validation.deal_flags)
+    affected = _affected_rows(initial_draft, validation.row_flags)
+    anchors = repair_conservation.protected_anchors(
+        initial_draft,
+        hard_row_indexes=_hard_row_indexes(validation),
+        obligation_row_indexes=_obligation_row_indexes(initial_draft, obligation_result),
+    )
+    context_pages = _repair_context_pages(
+        draft=initial_draft,
+        validation=validation,
+        obligation_result=obligation_result,
+        filing=filing,
+    )
+    repair_user = template.format(
+        validator_report=json.dumps(report, indent=2, default=str),
+        obligation_report=json.dumps(
+            obligations.obligation_result_payload(obligation_result),
+            indent=2,
+            default=str,
+        ),
+        conservation_report=json.dumps(
+            repair_conservation.anchors_payload(anchors),
+            indent=2,
+            default=str,
+        ),
+        previous_extraction=json.dumps(initial_draft, indent=2, default=str),
+        filing_pages=json.dumps(context_pages, indent=2, default=str),
+        affected_rows=json.dumps(affected, indent=2, default=str),
+        filing_snippets=json.dumps(_filing_snippets(affected, filing), indent=2),
+    )
+    audit.write_prompt(
+        phase="repair_1",
+        system=REPAIR_SYSTEM_PROMPT,
+        user=repair_user,
+    )
+    tool_mode = "obligation_repair_tools"
+    try:
+        revised, completion, completions, tool_calls_count = await _call_with_tools(
+            llm_client=llm_client,
+            model=extract_model,
+            system=REPAIR_SYSTEM_PROMPT,
             user=repair_user,
+            filing_pages=filing_pages,
+            tool_definitions=TARGETED_REPAIR_TOOL_DEFINITIONS,
+            max_output_tokens=max_output_tokens,
+            reasoning_effort=reasoning_effort,
+            audit=audit,
+            audit_phase="repair_1",
+            response_schema=REPAIR_SCHEMA_R1,
+            repair_response=True,
         )
-        tool_mode = "none" if turn == 1 else "targeted_repair_tools"
-        try:
-            if turn == 1:
-                revised, _completion, completions, _tool_calls_count = await _call_prompt_only(
-                    llm_client=llm_client,
-                    model=extract_model,
-                    system=system,
-                    user=repair_user,
-                    max_output_tokens=max_output_tokens,
-                    reasoning_effort=reasoning_effort,
-                )
-            else:
-                revised, _completion, completions, _tool_calls_count = await _call_with_tools(
-                    llm_client=llm_client,
-                    model=extract_model,
-                    system=system,
-                    user=repair_user,
-                    filing_pages=filing_pages,
-                    tool_definitions=TARGETED_REPAIR_TOOL_DEFINITIONS,
-                    max_output_tokens=max_output_tokens,
-                    reasoning_effort=reasoning_effort,
-                    audit=audit,
-                    audit_phase=f"repair_{turn}",
-                )
-        except Exception as exc:
-            failed_completions = list(getattr(exc, "llm_completions", []) or [])
-            for completion in failed_completions:
-                token_usage.consume(completion)
-            failed_tool_calls_count = int(getattr(exc, "tool_calls_count", 0) or 0)
-            audit.write_repair_turn({
-                "turn": turn,
-                "tool_mode": tool_mode,
-                "validator_report_summary": report,
-                "hard_flags_before": report["hard_count"],
-                "hard_flags_after": None,
-                "tool_calls_count": failed_tool_calls_count,
-                "completion_turns": len(failed_completions),
-                "outcome": "failed",
-                "error": {"type": type(exc).__name__, "message": str(exc)[:500]},
-            })
-            raise
-        for completion in completions:
-            token_usage.consume(completion)
-        prepared, filing, promotion_log = core.prepare_for_validate(slug, revised, filing)
-        current_validation = core.validate(prepared, filing)
-        draft = prepared
-        hard_after = len(_hard_flags(current_validation))
+    except Exception as exc:
+        failed_completions = list(getattr(exc, "llm_completions", []) or [])
+        for failed_completion in failed_completions:
+            token_usage.consume(failed_completion)
+        failed_tool_calls_count = int(getattr(exc, "tool_calls_count", 0) or 0)
         audit.write_repair_turn({
-            "turn": turn,
+            "turn": 1,
             "tool_mode": tool_mode,
             "validator_report_summary": report,
             "hard_flags_before": report["hard_count"],
-            "hard_flags_after": hard_after,
-            "tool_calls_count": _tool_calls_count,
-            "completion_turns": len(completions),
-            "outcome": "fixed" if hard_after == 0 else "hard_flags_remain",
+            "hard_obligations_before": obligations.obligation_result_payload(obligation_result)["hard_unmet_count"],
+            "hard_flags_after": None,
+            "hard_obligations_after": None,
+            "conservation_failures": None,
+            "previous_event_count": len(initial_draft.get("events") or []),
+            "revised_event_count": None,
+            "tool_calls_count": failed_tool_calls_count,
+            "completion_turns": len(failed_completions),
+            "outcome": "failed",
+            "error": {"type": type(exc).__name__, "message": str(exc)[:500]},
         })
-        if hard_after == 0:
-            return draft, current_validation, promotion_log, "fixed", turn
+        raise
 
-    return draft, current_validation, promotion_log, "exhausted", MAX_REPAIR_TURNS
+    for turn_completion in completions:
+        token_usage.consume(turn_completion)
+    assertions = list(getattr(completion, "obligation_assertions", []) or [])
+    audit.write_repair_response({**revised, "obligation_assertions": assertions})
+    prepared, filing, promotion_log = core.prepare_for_validate(slug, revised, filing)
+    current_validation = core.validate(prepared, filing)
+    current_obligations = obligations.check_obligations(prepared, filing)
+    conservation_flags = repair_conservation.check_repair_conservation(anchors, prepared)
+    hard_after = len(_hard_flags(current_validation))
+    hard_obligations_after = obligations.obligation_result_payload(current_obligations)["hard_unmet_count"]
+    outcome = (
+        "hard_flags_remain"
+        if _has_hard_repair_issue(current_validation, current_obligations, conservation_flags)
+        else "fixed"
+    )
+    audit.write_repair_turn({
+        "turn": 1,
+        "tool_mode": tool_mode,
+        "validator_report_summary": report,
+        "hard_flags_before": report["hard_count"],
+        "hard_obligations_before": obligations.obligation_result_payload(obligation_result)["hard_unmet_count"],
+        "hard_flags_after": hard_after,
+        "hard_obligations_after": hard_obligations_after,
+        "conservation_failures": len(conservation_flags),
+        "previous_event_count": len(initial_draft.get("events") or []),
+        "revised_event_count": len(prepared.get("events") or []),
+        "tool_calls_count": tool_calls_count,
+        "completion_turns": len(completions),
+        "outcome": outcome,
+    })
+    return prepared, current_validation, promotion_log, outcome, MAX_REPAIR_TURNS, current_obligations, conservation_flags
 
 
 async def extract_deal(

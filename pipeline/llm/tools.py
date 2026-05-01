@@ -10,6 +10,8 @@ import unicodedata
 from typing import Any
 
 from pipeline import core
+from pipeline import obligations
+from pipeline.llm.response_format import _ensure_extraction_shape
 
 
 CHECK_ROW_SCHEMA: dict[str, Any] = {
@@ -84,10 +86,35 @@ GET_PAGES_SCHEMA: dict[str, Any] = {
     },
 }
 
+CHECK_OBLIGATIONS_SCHEMA: dict[str, Any] = {
+    "type": "function",
+    "name": "check_obligations",
+    "description": (
+        "Run deterministic filing-derived obligation checks against a complete "
+        "candidate extraction. Returns obligation statuses, matched rows, source "
+        "pages, and concise reasons. Do not call this on row subsets or partial "
+        "drafts. This is advisory for repair; Python reruns the same checks "
+        "after repair."
+    ),
+    "parameters": {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {
+            "candidate_extraction": {
+                "type": "object",
+                "additionalProperties": True,
+                "description": "Complete proposed {deal, events} extraction.",
+            },
+        },
+        "required": ["candidate_extraction"],
+    },
+}
+
 TARGETED_REPAIR_TOOL_DEFINITIONS: list[dict[str, Any]] = [
     CHECK_ROW_SCHEMA,
     SEARCH_FILING_SCHEMA,
     GET_PAGES_SCHEMA,
+    CHECK_OBLIGATIONS_SCHEMA,
 ]
 
 GET_PAGES_MAX_RANGE = 10
@@ -204,6 +231,20 @@ def get_pages(
     return {"pages": pages}
 
 
+def check_obligations(
+    candidate_extraction: dict[str, Any],
+    *,
+    filing_pages: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Run filing-derived obligation checks on a candidate extraction."""
+    _ensure_extraction_shape(candidate_extraction)
+    result = obligations.check_obligations(
+        candidate_extraction,
+        _filing_from_pages(filing_pages),
+    )
+    return obligations.obligation_result_payload(result)
+
+
 @functools.cache
 def tools_contract_version() -> str:
     """Return a stable hash for tool definitions and implementations."""
@@ -213,6 +254,7 @@ def tools_contract_version() -> str:
             inspect.getsource(check_row)
             + inspect.getsource(search_filing)
             + inspect.getsource(get_pages)
+            + inspect.getsource(check_obligations)
             + inspect.getsource(dispatch)
         ),
     }
@@ -245,6 +287,11 @@ def dispatch(
         return get_pages(
             start_page=arguments["start_page"],
             end_page=arguments["end_page"],
+            filing_pages=filing_pages,
+        )
+    if name == "check_obligations":
+        return check_obligations(
+            arguments["candidate_extraction"],
             filing_pages=filing_pages,
         )
     raise ValueError(f"unknown tool: {name!r}")

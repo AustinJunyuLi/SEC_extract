@@ -18,15 +18,31 @@ def _clean_bid_row():
         "process_phase": 1,
         "role": "bidder",
         "bidder_alias": "Bidder F",
+        "bidder_name": "bidder_f",
         "bidder_type": "f",
         "bid_note": "Bid",
         "bid_type": "informal",
         "bid_type_inference_note": "G1 trigger phrase: preliminary indication of interest.",
+        "exclusivity_days": None,
+        "drop_initiator": None,
+        "drop_reason_class": None,
+        "final_round_announcement": None,
+        "final_round_extension": None,
+        "final_round_informal": None,
+        "press_release_subject": None,
         "invited_to_formal_round": None,
         "submitted_formal_bid": None,
+        "bid_date_precise": "2014-05-15",
+        "bid_date_rough": None,
+        "bid_value": None,
         "bid_value_pershare": 25.0,
+        "bid_value_lower": None,
+        "bid_value_upper": None,
         "bid_value_unit": "USD_per_share",
         "consideration_components": ["cash"],
+        "additional_note": None,
+        "comments": None,
+        "unnamed_nda_promotion": None,
         "source_quote": "On May 15, 2014, the Special Committee met to discuss the offer.",
         "source_page": 22,
         "flags": [],
@@ -151,7 +167,7 @@ def test_get_pages_skips_missing_page_numbers():
 def test_targeted_repair_tool_definitions_include_expected_tools_only():
     names = {tool["name"] for tool in tools.TARGETED_REPAIR_TOOL_DEFINITIONS}
 
-    assert names == {"check_row", "search_filing", "get_pages"}
+    assert names == {"check_row", "search_filing", "get_pages", "check_obligations"}
 
 
 def test_no_generic_extractor_tool_catalog_is_exposed():
@@ -197,6 +213,51 @@ def test_dispatch_invokes_get_pages():
     )
 
     assert result["pages"] == [{"page": 22, "text": _filing_pages()[0]["content"]}]
+
+
+def test_dispatch_invokes_check_obligations():
+    pages = [{
+        "number": 1,
+        "content": (
+            "The Company entered into confidentiality and standstill agreements "
+            "with 2 potentially interested financial buyers."
+        ),
+    }]
+    candidate = {
+        "deal": {
+            "TargetName": "Synthetic Target",
+            "Acquirer": "Synthetic Buyer",
+            "DateAnnounced": None,
+            "DateEffective": None,
+            "auction": True,
+            "all_cash": None,
+            "target_legal_counsel": None,
+            "acquirer_legal_counsel": None,
+            "bidder_registry": {},
+            "deal_flags": [],
+        },
+        "events": [_clean_bid_row()],
+    }
+    candidate["events"][0]["bid_note"] = "NDA"
+    candidate["events"][0]["bid_type"] = None
+    candidate["events"][0]["bidder_type"] = "f"
+
+    result = tools.dispatch(
+        name="check_obligations",
+        arguments={"candidate_extraction": candidate},
+        filing_pages=pages,
+    )
+
+    assert result["hard_unmet_count"] == 1
+    assert result["checks"][0]["obligation"]["kind"] == "exact_count_nda"
+
+
+def test_check_obligations_rejects_partial_candidate_extractions():
+    with pytest.raises(Exception, match="required"):
+        tools.check_obligations(
+            {"deal": {}, "events": []},
+            filing_pages=_filing_pages(),
+        )
 
 
 def test_tools_contract_version_is_stable_hash():

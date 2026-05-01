@@ -478,6 +478,31 @@ story; severities are listed per invariant.
 
 ---
 
+## Obligation and repair-conservation invariants
+
+These hard flags are emitted by the obligation and repair-conservation layers
+after the standard validator runs. They are listed here because they affect
+final status and human review in the same way as validator hard flags.
+
+- `unmet_exact_count_nda`: filing text states an exact current-process bidder
+  NDA count, but the extraction does not emit exactly that many matching rows.
+- `unmet_exact_count_bid`: filing text states an exact indication-of-interest
+  submission count, but the extraction does not emit exactly that many matching
+  `Bid` rows.
+- `unmet_exact_count_final_round`: filing text states an exact final-round
+  advancement count, but the extraction does not account for that count.
+- `unmet_buyer_group_executed_constituents`: filing text identifies Buyer Group
+  constituents, but the extraction does not atomize required constituent
+  `Executed` rows.
+- `unmet_late_member_inherited_nda`: filing text shows a late member joined an
+  already-NDA-bound group, but the extraction lacks the required inherited
+  `NDA` and `ConsortiumCA` coverage.
+- `repair_lost_unaffected_rows`: the repair response deleted or failed to
+  preserve a protected pre-repair row anchor that was not implicated by hard
+  validator flags or unmet obligations.
+
+---
+
 ## Invariants that tie to specific rule files
 
 | Invariant | Rule file origin |

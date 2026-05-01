@@ -9,6 +9,10 @@ def test_normalize_bidder_strips_exact_suffixes():
     assert scoring_diff.normalize_bidder("SomeCo, Inc.") == "someco"
 
 
+def test_normalize_bidder_folds_smart_quotes():
+    assert scoring_diff.normalize_bidder("Hudson\u2019s Bay") == "hudson's bay"
+
+
 def test_diff_events_collapses_bucket_cardinality_mismatch():
     ai_events = [
         {"BidderID": 1, "bidder_alias": "Party A", "bid_note": "NDA", "bid_date_precise": "2020-01-01"},
@@ -139,6 +143,24 @@ def test_diff_events_collapses_residual_bid_note_mismatch():
     assert mismatch["bucket_key"]["bid_note"] == "NDA"
     assert mismatch["ai_count"] == 3
     assert mismatch["alex_count"] == 2
+
+
+def test_diff_report_surfaces_zero_match_cardinality_blocker():
+    ai_events = [
+        {"BidderID": 1, "bidder_alias": "A", "bid_note": "NDA", "bid_date_precise": "2020-01-01"},
+        {"BidderID": 2, "bidder_alias": "B", "bid_note": "NDA", "bid_date_precise": "2020-01-01"},
+    ]
+    alex_events = [
+        {"BidderID": 10, "bidder_alias": "C", "bid_note": "NDA", "bid_date_precise": "2020-01-02"},
+    ]
+
+    report = scoring_diff.diff_events("petsmart-inc", ai_events, alex_events)
+
+    assert report.review_blockers == [{
+        "code": "zero_matched_rows_with_cardinality_mismatch",
+        "severity": "review_blocker",
+        "reason": "Reference diff has zero matched rows and 1 cardinality mismatch bucket(s).",
+    }]
 
 
 def test_diff_events_labels_buyer_group_atomization_mismatch():

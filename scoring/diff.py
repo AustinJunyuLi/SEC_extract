@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import datetime
 import json
+import unicodedata
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -96,6 +97,7 @@ class DiffReport:
     deal_disagreements: list[dict[str, Any]] = field(default_factory=list)
     divergences: list[dict[str, Any]] = field(default_factory=list)
     alex_flagged_hits: list[dict[str, Any]] = field(default_factory=list)
+    review_blockers: list[dict[str, Any]] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
 
 
@@ -113,7 +115,17 @@ def normalize_bidder(alias: str | None) -> str | None:
     """
     if alias is None:
         return None
-    s = alias.strip().lower()
+    s = unicodedata.normalize("NFKC", alias).strip().lower()
+    s = s.translate(str.maketrans({
+        "\u2018": "'",
+        "\u2019": "'",
+        "\u201a": "'",
+        "\u201b": "'",
+        "\u201c": '"',
+        "\u201d": '"',
+        "\u201e": '"',
+        "\u201f": '"',
+    }))
     suffixes = (
         " llc.", " corp.", " inc.", " ltd.", " plc.",
         " llc", " corp", " inc", " ltd", " plc", ",",
@@ -541,6 +553,15 @@ def diff_events(slug: str, ai_events: list[dict[str, Any]],
             "Suppressed source-workbook per-share bid value placement noise "
             f"from the legacy bid_value column: {detail}."
         )
+    if r.matched_rows == 0 and r.cardinality_mismatches:
+        r.review_blockers.append({
+            "code": "zero_matched_rows_with_cardinality_mismatch",
+            "severity": "review_blocker",
+            "reason": (
+                "Reference diff has zero matched rows and "
+                f"{len(r.cardinality_mismatches)} cardinality mismatch bucket(s)."
+            ),
+        })
 
     return r
 
@@ -765,6 +786,10 @@ def format_report_md(r: DiffReport) -> str:
         L.append("## Notes")
         L.extend(f"- {n}" for n in r.notes)
         L.append("")
+    if r.review_blockers:
+        L.append("## Review blockers")
+        L.extend(f"- **{item['code']}**: {item['reason']}" for item in r.review_blockers)
+        L.append("")
     if r.deal_disagreements:
         L.append("## Deal-level disagreements")
         for fd in r.deal_disagreements:
@@ -795,6 +820,7 @@ def format_report_txt(r: DiffReport) -> str:
         f"  AI-only rows:                {len(r.ai_only_rows)}\n"
         f"  Alex-only rows:              {len(r.alex_only_rows)}\n"
         f"  cardinality mismatches:      {len(r.cardinality_mismatches)}\n"
+        f"  review blockers:             {len(r.review_blockers)}\n"
         f"  deal-level disagreements:    {len(r.deal_disagreements)}\n"
         f"  Alex-flagged rows in diff:   {len(r.alex_flagged_hits)}\n"
         f"  field disagreements:         {sum(r.field_disagreements.values())}"
@@ -818,6 +844,7 @@ def write_results(r: DiffReport) -> tuple[Path, Path]:
         "deal_disagreements": r.deal_disagreements,
         "divergences": r.divergences,
         "alex_flagged_hits": r.alex_flagged_hits,
+        "review_blockers": r.review_blockers,
         "notes": r.notes,
     }, indent=2, default=str))
     return md, js

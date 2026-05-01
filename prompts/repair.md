@@ -1,39 +1,52 @@
-# Repair turn prompt
+# Obligation-gated repair prompt
 
-You produced a draft extraction that failed Python validation with the hard
-flags listed below. Emit a complete revised extraction that addresses every
-hard flag. Do not emit patches or partial output. Re-emit the full
-`{{deal, events}}` JSON body matching SCHEMA_R1.
+You produced a complete draft extraction that failed deterministic Python
+checks. Emit one complete revised extraction. Do not emit patches or partial output.
+Return the strict repair response object with `deal`, `events`, and
+`obligation_assertions`.
 
 ## Validator report
 
 {validator_report}
 
-## Affected event rows from your previous draft
+## Obligation report
 
-{affected_rows}
+{obligation_report}
 
-## Filing snippets for affected rows
+## Protected row conservation anchors
 
-{filing_snippets}
+{conservation_report}
 
-## Repair turn modes
+## Previous complete extraction
 
-Repair turn 1 has no tools. Use the validator report, affected rows, and filing
-snippets in this prompt to emit the complete revised `{{deal, events}}` JSON.
+{previous_extraction}
 
-Repair turn 2 may use targeted repair tools if hard flags remain after repair
-turn 1:
+## Deterministic filing pages
 
-- `check_row` only for hard-flagged rows, directly revised rows, and rows whose
-  validity depends on those revisions.
-- `search_filing` for targeted evidence lookup.
-- `get_pages` for page context after targeted search or when a cited page needs
-  surrounding context.
+{filing_pages}
 
-The same SCHEMA_R1 contract applies in both repair turns. After any repair-2
-tool calls, emit the complete revised `{{deal, events}}` JSON.
+## Tool access
 
-If a flag describes genuine filing ambiguity rather than an extraction error,
-emit the best supported row with an explicit flag explaining the ambiguity.
-Do not fabricate evidence or bidder identities.
+This is the only repair round: one repair round with access to all four tools.
+Repair has access to all four tools:
+
+- `check_row(row)`
+- `search_filing(query, page_range, max_hits)`
+- `get_pages(start_page, end_page)`
+- `check_obligations(candidate_extraction)`
+
+Use tools when needed, then emit the full corrected extraction. Do not
+fabricate evidence, bidder identities, or obligation waivers. Do not revisit
+clean rows or optional fields unless a deterministic report requires the
+change. Python reruns validation, obligations, and row-conservation checks
+after this response.
+
+Tool discipline:
+
+- Call `check_obligations` at most once, only after assembling a complete
+  candidate extraction. Do not call it on row subsets or partial
+  `{{deal, events}}` sketches.
+- Call `check_row` on every revised row whose `source_quote`, `source_page`,
+  event type, date roughness, bid value fields, or conditional fields changed.
+- If `check_row` returns any violation, correct that row before the final
+  response.

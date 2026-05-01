@@ -33,6 +33,7 @@ def _write_audit_manifest(
         "extractor_contract_version": run_pool.extractor_contract_version(),
         "tools_contract_version": run_pool.tools_contract_version(),
         "repair_loop_contract_version": run_pool.repair_loop_contract_version(),
+        "obligation_contract_version": run_pool.obligation_contract_version(),
         "extract_tool_mode": run_pool.EXTRACT_TOOL_MODE,
         "repair_strategy": run_pool.REPAIR_STRATEGY,
     }))
@@ -89,17 +90,17 @@ def test_per_deal_token_cap_is_not_supported():
     assert not hasattr(run_pool.PoolConfig(), "max_tokens_" "per_deal")
 
 
-def test_reasoning_effort_defaults_to_xhigh(monkeypatch):
+def test_reasoning_effort_defaults_to_high(monkeypatch):
     monkeypatch.delenv("EXTRACT_REASONING_EFFORT", raising=False)
     monkeypatch.delenv("ADJUDICATE_REASONING_EFFORT", raising=False)
     parser = run_pool.build_parser()
 
     cfg = run_pool.config_from_args(parser.parse_args(["--filter", "reference", "--dry-run"]))
 
-    assert cfg.extract_reasoning_effort == "xhigh"
-    assert cfg.adjudicate_reasoning_effort == "xhigh"
-    assert run_pool.PoolConfig().extract_reasoning_effort == "xhigh"
-    assert run_pool.PoolConfig().adjudicate_reasoning_effort == "xhigh"
+    assert cfg.extract_reasoning_effort == "high"
+    assert cfg.adjudicate_reasoning_effort == "high"
+    assert run_pool.PoolConfig().extract_reasoning_effort == "high"
+    assert run_pool.PoolConfig().adjudicate_reasoning_effort == "high"
 
 
 def test_skip_decisions_and_cache_policy(minimal_state_repo, monkeypatch):
@@ -238,7 +239,56 @@ def test_success_manifest_records_prompt_first_repair_strategy(minimal_state_rep
 
     manifest = json.loads((summary.outcomes[0].audit_path / "manifest.json").read_text())
     assert manifest["extract_tool_mode"] == "none"
-    assert manifest["repair_strategy"] == "prompt_then_targeted_tools"
+    assert manifest["repair_strategy"] == "obligation_gated_single_repair"
+    assert manifest["obligation_contract_version"] == run_pool.obligation_contract_version()
+
+
+def test_cache_rejects_missing_obligation_contract_version(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    cfg = _cfg(re_validate=True, audit_root=env.tmp_path / "output" / "audit")
+    env.seed_deal("done", status="passed_clean", rulebook_version="rules-v1")
+    monkeypatch.setattr(run_pool, "extractor_contract_version", lambda: "contract-v1")
+    monkeypatch.setattr(run_pool, "tools_contract_version", lambda: "tools-v1")
+    monkeypatch.setattr(run_pool, "repair_loop_contract_version", lambda: "repair-v1")
+    monkeypatch.setattr(run_pool, "obligation_contract_version", lambda: "obligation-v1")
+    run_id = "run-old"
+    run_dir = cfg.audit_root / "done" / "runs" / run_id
+    run_dir.mkdir(parents=True)
+    (run_dir / "manifest.json").write_text(json.dumps({
+        "schema_version": "audit_run_v2",
+        "slug": "done",
+        "run_id": run_id,
+        "outcome": "passed_clean",
+        "cache_eligible": True,
+        "rulebook_version": "rules-v1",
+        "extractor_contract_version": "contract-v1",
+        "tools_contract_version": "tools-v1",
+        "repair_loop_contract_version": "repair-v1",
+        "extract_tool_mode": run_pool.EXTRACT_TOOL_MODE,
+        "repair_strategy": run_pool.REPAIR_STRATEGY,
+    }))
+    (run_dir / "raw_response.json").write_text(json.dumps({
+        "schema_version": "raw_response_v2",
+        "run_id": run_id,
+        "slug": "done",
+        "rulebook_version": "rules-v1",
+        "extractor_contract_version": "contract-v1",
+        "parsed_json": {"deal": {}, "events": []},
+    }))
+    (cfg.audit_root / "done" / "latest.json").write_text(json.dumps({
+        "schema_version": "audit_v2",
+        "slug": "done",
+        "run_id": run_id,
+        "outcome": "passed_clean",
+        "cache_eligible": True,
+        "manifest_path": f"runs/{run_id}/manifest.json",
+        "raw_response_path": f"runs/{run_id}/raw_response.json",
+    }))
+
+    decision = run_pool.decide_skip("done", cfg, "rules-v1", json.loads(env.progress.read_text()))
+
+    assert decision.action == "blocked"
+    assert "obligation_contract_version" in decision.reason
 
 
 @pytest.mark.parametrize(

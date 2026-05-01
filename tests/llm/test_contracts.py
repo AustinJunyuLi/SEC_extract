@@ -32,10 +32,10 @@ def test_repair_loop_contract_version_changes_with_cap(monkeypatch):
     src = contracts._REPAIR_LOOP_CONTRACT_INPUTS
     baseline = contracts.repair_loop_contract_version()
 
-    monkeypatch.setattr(contracts, "MAX_REPAIR_TURNS", 3)
+    monkeypatch.setattr(contracts, "MAX_REPAIR_TURNS", 2)
     changed = contracts.repair_loop_contract_version()
 
-    assert src["MAX_REPAIR_TURNS"] == 2
+    assert src["MAX_REPAIR_TURNS"] == 1
     assert baseline != changed
 
 

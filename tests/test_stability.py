@@ -15,6 +15,7 @@ BASE_HASHES = {
     "extractor_contract_version": "contract-v1",
     "tools_contract_version": "tools-v1",
     "repair_loop_contract_version": "repair-v1",
+    "obligation_contract_version": "obligation-v1",
 }
 
 

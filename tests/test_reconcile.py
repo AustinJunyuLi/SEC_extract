@@ -122,6 +122,7 @@ def _write_audit(
             "extractor_contract_version": "extract-contract-v1",
             "tools_contract_version": "tools-contract-v1",
             "repair_loop_contract_version": "repair-contract-v1",
+            "obligation_contract_version": "obligation-contract-v1",
             "repair_turns_used": 0,
             "repair_loop_outcome": "clean" if outcome != "failed" else "not_started",
             "tool_calls_count": 0,
