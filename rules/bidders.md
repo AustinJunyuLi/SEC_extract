@@ -43,6 +43,12 @@ own `NDA` row dated to the join date. That row records inherited group-NDA
 status; it does not assert that the late member personally signed the
 original earlier agreement.
 
+Every buyer-group constituent lifecycle row after NDA status (`Bid`, `Drop`,
+`DropSilent`, or `Executed`) must have a same-`bidder_name`,
+same-`process_phase` `NDA` row. A definition page identifying the Buyer Group,
+another constituent's `NDA`, or a group-level bid row does not satisfy the
+constituent-level target-bidder NDA requirement.
+
 When the merger agreement is with a legal shell but the filing explicitly
 identifies the operational/economic buyer consortium (e.g., petsmart's
 BC Partners + Caisse + GIC + StepStone + Longview), emit one Executed row

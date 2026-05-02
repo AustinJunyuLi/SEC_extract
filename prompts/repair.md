@@ -85,6 +85,13 @@ Anonymous-handle discipline:
   agreement` without naming the agreement's parties. That inherited `NDA`
   records the member's Type A auction-funnel status from the group, not a
   separate ambiguous CA classification.
+- Before final output, audit every buyer-group constituent `Bid`, `Drop`,
+  `DropSilent`, and `Executed` row you emit or preserve. The same
+  `bidder_name` in the same `process_phase` must have an `NDA` row. If repair
+  creates La Caisse, GIC, StepStone, Longview, or any other constituent
+  lifecycle row, repair must also create or preserve that constituent's
+  same-phase `NDA` row instead of relying on BC Partners' `NDA` or the
+  Buyer Group definition page.
 
 Conditional-field discipline:
 

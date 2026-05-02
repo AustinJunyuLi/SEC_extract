@@ -150,6 +150,12 @@ Evidence-limited buyer groups:
   `buyer_group_constituent` info flag required by the rules. Put the longer
   human-readable atomization explanation in `additional_note` only on the
   lead or first constituent row for that event; keep sibling rows terse.
+- Before final output, audit every buyer-group constituent `Bid`, `Drop`,
+  `DropSilent`, and `Executed` row. The same `bidder_name` in the same
+  `process_phase` must have an `NDA` row, including inherited group-NDA status
+  for late or newly identified constituents. Do not rely on another
+  constituent's `NDA`, a consortium definition page, or a group-level bid row
+  to satisfy that constituent's target-bidder `NDA`.
 
 Exact counts and unnamed handles:
 - Numeric counts in the filing are row-count commitments. If the filing states
