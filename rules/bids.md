@@ -691,6 +691,12 @@ language could plausibly describe either a consortium-formation CA
 "hard", "reason": "<summary including the specific Type B vs Type C
 ambiguity>"}`. Austin adjudicates against the filing.
 
+If the filing explicitly says the stockholder or late buyer-group member
+entered a confidentiality agreement with the Buyer Group to exchange bid price,
+bid structure, financing, or other buyer-group diligence information, treat the
+agreement as Type B and do not attach `ca_type_ambiguous` merely because rollover is also discussed. The explicit bidder-bidder information exchange is
+the deciding fact; rollover economics can be noted in `additional_note`.
+
 **Why skip.** Rollover CAs are not auction-process events; they
 belong to a separate research domain (post-merger capital structure).
 

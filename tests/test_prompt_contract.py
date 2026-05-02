@@ -164,6 +164,18 @@ def test_data_room_access_is_not_confidentiality_agreement_by_itself():
     assert "Do not emit `NDA` solely because a bidder received data-room access" in prompt
 
 
+def test_late_stockholder_buyer_group_ca_is_type_b_when_bid_info_exchange_is_explicit():
+    events = (REPO_ROOT / "rules" / "events.md").read_text()
+    bids = (REPO_ROOT / "rules" / "bids.md").read_text()
+
+    required = (
+        "If a stockholder or late buyer-group member enters a confidentiality "
+        "agreement with the Buyer Group to exchange bid price"
+    )
+    assert required in events
+    assert "do not attach `ca_type_ambiguous` merely because rollover is also discussed" in bids
+
+
 def test_prompt_rewrite_keeps_raw_extractor_example_free_of_pipeline_fields():
     schema = (REPO_ROOT / "rules" / "schema.md").read_text()
 
