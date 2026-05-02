@@ -143,6 +143,10 @@ def test_repair_prompt_documents_single_obligation_tool_round():
     assert "split only the offending aggregate" in text
     assert "Do not create an unnamed lifecycle row" in text
     assert "not by itself an extra exact-count `Drop` obligation" in text
+    assert "Conditional-field discipline:" in text
+    assert "On every non-`Bid` row, including `Executed`" in text
+    assert "Do not copy the signed merger price into an `Executed` row" in text
+    assert "scan every revised non-`Bid` row" in text
 
 
 def test_live_repair_prompt_formats_without_unescaped_literal_braces():

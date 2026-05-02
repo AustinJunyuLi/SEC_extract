@@ -62,6 +62,18 @@ Anonymous-handle discipline:
 - Advisor language saying representatives spoke with all parties, including
   non-submitters, is not by itself an extra exact-count `Drop` obligation.
 
+Conditional-field discipline:
+
+- On every non-`Bid` row, including `Executed`, `NDA`, `Drop`, `DropSilent`,
+  `Final Round`, `ConsortiumCA`, `Target Sale`, `Target Sale Public`, and
+  `Press Release`, set `bid_value`, `bid_value_pershare`, `bid_value_lower`,
+  `bid_value_upper`, `bid_value_unit`, and `consideration_components` to
+  `null`.
+- Do not copy the signed merger price into an `Executed` row's bid-economics
+  fields. Preserve the price in `source_quote` or `additional_note` only.
+- Before emitting the final repair JSON, scan every revised non-`Bid` row for
+  these six fields and null them.
+
 Tool discipline:
 
 - Call `check_obligations` at most once, only after assembling a complete
