@@ -50,6 +50,20 @@ Conservation discipline:
   anchors exactly where possible.
 - Do not delete or rewrite an unrelated protected `Bid`, `Drop`, `NDA`,
   `ConsortiumCA`, or `Executed` row while repairing buyer-group atomization.
+- Copy unaffected rows from the previous complete extraction without changing
+  their `source_quote` or `source_page`. Do not shorten, paraphrase, or
+  restitch evidence on clean rows.
+
+Evidence discipline:
+
+- Every `source_quote` string must be one exact contiguous substring from its
+  cited page after NFKC/PDF-artifact normalization.
+- Do not stitch the start of one sentence to a later sentence in a single
+  `source_quote`. If separated snippets are needed, use the list form of
+  `source_quote` and `source_page`, with each quote element appearing on the
+  paired page.
+- If you change any row's `source_quote` or `source_page`, call `check_row` on
+  that exact revised row and fix any violation before final output.
 
 Anonymous-handle discipline:
 

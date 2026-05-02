@@ -168,6 +168,28 @@ def test_exact_count_bid_obligation_matches_only_source_event_page():
     assert result.checks[0].matched_rows == [1, 2, 3, 4, 5, 6]
 
 
+def test_exact_count_bid_obligation_with_stated_month_day_excludes_later_bids_on_same_page():
+    filing = _filing(
+        "On October 30, six of the potentially interested parties submitted indications of interest. "
+        "The same page later described final-round bid context."
+    )
+    october_rows = []
+    for index in range(6):
+        row = _bid(f"October Bidder {index + 1}")
+        row["bid_date_precise"] = "2014-10-30"
+        row["source_page"] = 1
+        october_rows.append(row)
+    december_row = _bid("December Bidder")
+    december_row["bid_date_precise"] = "2014-12-10"
+    december_row["source_page"] = 1
+
+    result = obligations.check_obligations(_raw([*october_rows, december_row]), filing)
+
+    assert result.has_hard_unmet is False
+    assert result.checks[0].obligation.expected == {"count": 6, "month_day": "10-30"}
+    assert result.checks[0].matched_rows == [1, 2, 3, 4, 5, 6]
+
+
 def test_exact_count_nda_collapses_buyer_group_constituents_to_one_party_unit():
     filing = _filing(
         "The Company entered into confidentiality and standstill agreements "

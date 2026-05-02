@@ -141,6 +141,10 @@ def test_repair_prompt_documents_single_obligation_tool_round():
     assert "Do not emit patches or partial output" in text
     assert "Treat every protected row-conservation anchor as a row that must survive" in flat
     assert "split only the offending aggregate" in text
+    assert "Do not shorten, paraphrase, or\n  restitch evidence on clean rows" in text
+    assert "Evidence discipline:" in text
+    assert "one exact contiguous substring" in text
+    assert "Do not stitch the start of one sentence to a later sentence" in text
     assert "Do not create an unnamed lifecycle row" in text
     assert "not by itself an extra exact-count `Drop` obligation" in text
     assert "Conditional-field discipline:" in text

@@ -38,6 +38,21 @@ NUMBER_WORDS: dict[str, int] = {
     "thirty": 30,
 }
 
+MONTH_NUMBERS: dict[str, str] = {
+    "january": "01",
+    "february": "02",
+    "march": "03",
+    "april": "04",
+    "may": "05",
+    "june": "06",
+    "july": "07",
+    "august": "08",
+    "september": "09",
+    "october": "10",
+    "november": "11",
+    "december": "12",
+}
+
 EXACT_NDA_RE = re.compile(
     r"(?P<quote>(?:the\s+company\s+)?(?:entered into|executed|signed)\s+"
     r"(?:confidentiality(?: and standstill)? agreements?|non-disclosure agreements?)\s+"
@@ -57,7 +72,7 @@ EXACT_NDA_PARTIES_RE = re.compile(
 )
 
 EXACT_BID_RE = re.compile(
-    r"(?P<quote>(?:on\s+[A-Z][a-z]+\s+\d{1,2},\s+)?"
+    r"(?P<quote>(?:on\s+(?P<month>[A-Z][a-z]+)\s+(?P<day>\d{1,2}),\s+)?"
     r"(?P<count>\d+|one|two|three|four|five|six|seven|eight|nine|ten|"
     r"eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|"
     r"nineteen|twenty)\s+of\s+the\s+potentially interested parties\s+"
@@ -79,7 +94,7 @@ PETSMART_BUYER_GROUP_NAMES: tuple[str, ...] = (
     "StepStone",
 )
 PETSMART_LATE_MEMBER = "Longview"
-OBLIGATION_CONTRACT_VERSION_INPUTS = {"version": "obligations_v2"}
+OBLIGATION_CONTRACT_VERSION_INPUTS = {"version": "obligations_v3"}
 
 
 @dataclass(frozen=True)
@@ -127,6 +142,15 @@ def _parse_count(token: str) -> int:
     if normalized.isdigit():
         return int(normalized)
     return NUMBER_WORDS[normalized]
+
+
+def _month_day(month: str | None, day: str | None) -> str | None:
+    if not month or not day:
+        return None
+    month_number = MONTH_NUMBERS.get(month.casefold())
+    if month_number is None:
+        return None
+    return f"{month_number}-{int(day):02d}"
 
 
 def _obligation_id(index: int) -> str:
@@ -193,12 +217,16 @@ def _detect_exact_count_obligations(filing: Filing, obligations: list[Obligation
                 reason="Filing states an exact count of current-process bidder confidentiality agreements.",
             )
         for match in EXACT_BID_RE.finditer(text):
+            expected: dict[str, Any] = {"count": _parse_count(match.group("count"))}
+            month_day = _month_day(match.group("month"), match.group("day"))
+            if month_day is not None:
+                expected["month_day"] = month_day
             _append_obligation(
                 obligations,
                 kind="exact_count_bid",
                 source_quote=_clean_quote(match.group("quote")),
                 source_page=page_no,
-                expected={"count": _parse_count(match.group("count"))},
+                expected=expected,
                 reason="Filing states an exact count of parties submitting indications of interest.",
             )
         for match in FINAL_ROUND_RE.finditer(text):
@@ -384,6 +412,14 @@ def _cites_obligation_source(event: dict[str, Any], obligation: Obligation) -> b
     return obligation.source_page in _event_source_pages(event)
 
 
+def _matches_obligation_date(event: dict[str, Any], obligation: Obligation) -> bool:
+    month_day = obligation.expected.get("month_day")
+    if not isinstance(month_day, str):
+        return True
+    precise = event.get("bid_date_precise")
+    return isinstance(precise, str) and precise.endswith(f"-{month_day}")
+
+
 def _matches_name(event: dict[str, Any], name: str, registry: dict[str, Any]) -> bool:
     needle = _normalize(name)
     return any(needle in label or label in needle for label in _event_labels(event, registry))
@@ -416,6 +452,8 @@ def _matched_rows(
             matches.append(_row_id(event, index))
         elif obligation.kind == "exact_count_bid":
             if not _cites_obligation_source(event, obligation):
+                continue
+            if not _matches_obligation_date(event, obligation):
                 continue
             if event.get("role") == "bidder" and event.get("bid_note") == "Bid":
                 unit_key = _exact_count_party_unit_key(obligation, event)
