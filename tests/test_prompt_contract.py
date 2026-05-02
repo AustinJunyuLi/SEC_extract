@@ -91,6 +91,32 @@ def test_extractor_prompt_contract_describes_embedded_filing_text():
         assert stale_phrase not in text
 
 
+def test_date_contract_treats_process_windows_as_unknown_not_unmapped():
+    prompt = (REPO_ROOT / "prompts" / "extract.md").read_text()
+    dates = (REPO_ROOT / "rules" / "dates.md").read_text()
+    combined = "\n".join([prompt, dates])
+    prompt_flat = " ".join(prompt.split())
+
+    assert "Process-window phrases such as `during the go shop process`" in prompt
+    assert 'Process-window phrases such as "during the go shop process"' in dates
+    assert "not rough dates by themselves" in prompt_flat
+    assert "do not copy the process-window phrase into `bid_date_rough`" in prompt_flat
+    assert "do not attach `date_phrase_unmapped`" in combined
+
+
+def test_anonymous_contract_handles_buyer_group_atomization_count_mismatches():
+    prompt = (REPO_ROOT / "prompts" / "extract.md").read_text()
+    bidders = (REPO_ROOT / "rules" / "bidders.md").read_text()
+    combined = "\n".join([prompt, bidders])
+    bidders_flat = " ".join(bidders.split())
+
+    assert "If buyer-group atomization makes the row count diverge" in prompt
+    assert "Buyer-group atomization can make row counts diverge" in bidders
+    assert "Reuse compatible open NDA handles first" in combined
+    assert "`anonymous_cohort_identity_ambiguous`" in combined
+    assert "do not create fresh anonymous aliases merely to make later" in bidders_flat
+
+
 def test_repair_prompt_documents_single_obligation_tool_round():
     text = (REPO_ROOT / "prompts" / "repair.md").read_text()
 

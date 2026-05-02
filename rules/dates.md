@@ -57,6 +57,13 @@ filing gives no mapped date phrase or anchored offset beyond the bare
 sequencing word, leave `bid_date_precise = null`, leave `bid_date_rough =
 null`, and attach `date_unknown` under §B3 while relying on `BidderID` order.
 
+Process-window phrases such as "during the go shop process" are also not
+standalone rough dates. If the row cites a complete bounded range, apply §B4
+to that range. If the row only states that the event occurred sometime during
+a named process window, leave `bid_date_precise = null`, leave
+`bid_date_rough = null`, and attach `date_unknown`; do not copy the process
+window label into `bid_date_rough` and do not attach `date_phrase_unmapped`.
+
 **Flag on every inferred date.**
 `{"code": "date_inferred_from_rough", "severity": "info",
 "reason": "phrase: '<verbatim phrase>'"}`.

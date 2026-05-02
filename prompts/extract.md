@@ -160,6 +160,11 @@ Exact counts and unnamed handles:
 - If it is genuinely unclear whether a later unnamed group is the same cohort,
   attach `anonymous_cohort_identity_ambiguous` instead of silently creating a
   second alias family.
+- If buyer-group atomization makes the row count diverge from the filing's
+  party count, do not create fresh anonymous aliases to force the arithmetic.
+  Reuse compatible open NDA handles first. For any remaining lifecycle row
+  whose cohort identity is genuinely unclear, attach
+  `anonymous_cohort_identity_ambiguous` to that row.
 
 NDA fate and DropSilent:
 - Every bidder-side `NDA` signer in the current process needs a later
@@ -197,6 +202,12 @@ Dates:
   `later`, or `then` into `bid_date_rough`. If the filing gives only that
   sequencing cue and no mapped date phrase or anchored offset, leave both date
   fields null and attach `date_unknown`.
+- Process-window phrases such as `during the go shop process` are not rough
+  dates by themselves. If the event is only located somewhere inside a process
+  window and the row does not cite enough text to compute a §B4 date range,
+  leave both date fields null and attach `date_unknown`; do not copy the
+  process-window phrase into `bid_date_rough` or attach
+  `date_phrase_unmapped`.
 
 Confidentiality agreements:
 - Classify each CA as target-bidder `NDA`, bidder-bidder `ConsortiumCA`, or

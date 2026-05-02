@@ -214,6 +214,16 @@ same cohort or a new cohort, attach `anonymous_cohort_identity_ambiguous`
 with hard or soft severity as warranted. Do not silently invent a second
 alias family while compatible unnamed NDA handles remain available.
 
+Buyer-group atomization can make row counts diverge from filing party counts.
+For example, a filing may count a buyer group as one "party" while the schema
+atomizes some buyer-group constituents into separate rows. In that case, do
+not create fresh anonymous aliases merely to make later "all parties" or
+"non-submitters" arithmetic balance. Reuse compatible open NDA handles first.
+If the remaining lifecycle row is genuinely unclear because the filing's
+party count cannot be reconciled with atomized rows, attach
+`anonymous_cohort_identity_ambiguous` to that row rather than silently
+inventing another anonymous alias family.
+
 **Rationale.** This is the minimum-bias stance at 392-deal scale.
 Exact-count text should be preserved exactly; `"several"` supports a
 minimum of 3; vaguer plurals should not be over-atomized. Stable handles
