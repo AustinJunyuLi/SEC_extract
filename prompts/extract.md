@@ -141,6 +141,11 @@ Evidence-limited buyer groups:
   NDA, emit that member's own `NDA` row dated to the join date. This row
   records inherited group-NDA status, not personal signature of the original
   NDA.
+- Do not attach `ca_type_ambiguous` to that inherited `NDA` solely because the
+  join sentence says `following the execution of a confidentiality agreement`
+  without naming the agreement's parties. If the surrounding filing evidence
+  establishes the already-NDA-bound group and the member's join, the inherited
+  `NDA` is the supported Type A auction-funnel row.
 - On every atomized buyer-group lifecycle row, including `NDA`, attach the
   `buyer_group_constituent` info flag required by the rules. Put the longer
   human-readable atomization explanation in `additional_note` only on the

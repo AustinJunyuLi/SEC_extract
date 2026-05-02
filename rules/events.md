@@ -423,6 +423,14 @@ constituent's auction-funnel status.
 
 If a stockholder or late buyer-group member enters a confidentiality agreement with the Buyer Group to exchange bid price, bid structure, financing, or other buyer-group diligence information for a joint or rollover bid, classify the agreement as Type B `ConsortiumCA`. If the Buyer Group is already target-NDA-bound, also emit the member's inherited Type A `NDA` row. Do not attach `ca_type_ambiguous` solely because the same stockholder is also discussing rollover economics; the explicit bidder-bidder information exchange resolves the CA type.
 
+For the separate inherited `NDA` row, do not attach `ca_type_ambiguous` solely
+because the join sentence uses shorthand such as "following the execution of a
+confidentiality agreement" without naming that agreement's parties. If the
+surrounding filing evidence establishes an already-NDA-bound buyer group and
+the late member's join, the inherited `NDA` records Type A auction-funnel
+status from the group. Reserve `ca_type_ambiguous` for the underlying CA row
+when the row itself is classifying an ambiguous confidentiality agreement.
+
 **When the language is ambiguous** between A and B (e.g., a CA whose
 parties are not clearly named), default to Type A and attach
 `{"code": "ca_type_ambiguous", "severity": "hard", "reason": "<summary>"}`.

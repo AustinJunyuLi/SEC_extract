@@ -125,6 +125,8 @@ def test_anonymous_contract_handles_buyer_group_atomization_count_mismatches():
     assert "lacks a prior same-phase `NDA` handle" in bidders
     assert "including parties that did not submit indications" in prompt
     assert "not by itself an additional exact-count withdrawal" in events
+    assert "Do not attach `ca_type_ambiguous` to that inherited `NDA` solely" in prompt
+    assert "For the separate inherited `NDA` row, do not attach `ca_type_ambiguous`" in events
 
 
 def test_repair_prompt_documents_single_obligation_tool_round():
@@ -151,6 +153,8 @@ def test_repair_prompt_documents_single_obligation_tool_round():
     assert "Do not stitch the start of one sentence to a later sentence" in text
     assert "Do not create an unnamed lifecycle row" in text
     assert "not by itself an extra exact-count `Drop` obligation" in text
+    assert "For a late member inherited `NDA` required" in text
+    assert "do not attach `ca_type_ambiguous` solely" in text
     assert "Conditional-field discipline:" in text
     assert "On every non-`Bid` row, including `Executed`" in text
     assert "Do not copy the signed merger price into an `Executed` row" in text

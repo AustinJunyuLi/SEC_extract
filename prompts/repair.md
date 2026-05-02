@@ -79,6 +79,12 @@ Anonymous-handle discipline:
   omit unsupported extra anonymous lifecycle rows.
 - Advisor language saying representatives spoke with all parties, including
   non-submitters, is not by itself an extra exact-count `Drop` obligation.
+- For a late member inherited `NDA` required because a member joins an
+  already-NDA-bound buyer group, do not attach `ca_type_ambiguous` solely
+  because the join sentence says `following the execution of a confidentiality
+  agreement` without naming the agreement's parties. That inherited `NDA`
+  records the member's Type A auction-funnel status from the group, not a
+  separate ambiguous CA classification.
 
 Conditional-field discipline:
 
