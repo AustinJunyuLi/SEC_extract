@@ -488,14 +488,18 @@ final status and human review in the same way as validator hard flags.
 
 - `unmet_exact_count_nda`: filing text states an exact current-process bidder
   NDA count, but the extraction does not emit exactly that many matching
-  filing-party units. Buyer-group constituent sibling rows that cite the same
-  aggregate event count as one filing-party unit for this obligation.
+  filing-party units. True Buyer Group constituent sibling rows that cite the
+  same aggregate event count as one filing-party unit for this obligation;
+  separate unnamed parties that the filing later groups under a label such as
+  "Bidder 3" still count as separate filing-party units.
 - `unmet_exact_count_bid`: filing text states an exact indication-of-interest
   submission count, but the extraction does not emit exactly that many matching
-  `Bid` filing-party units. Buyer-group constituent sibling rows that cite the
-  same aggregate event count as one filing-party unit for this obligation. If
-  the obligation text states a month/day, only rows on that event date satisfy
-  the obligation even when later bids cite the same filing page for context.
+  `Bid` filing-party units. True Buyer Group constituent sibling rows that
+  cite the same aggregate event count as one filing-party unit for this
+  obligation; later filing labels that collect multiple bidders under one
+  shorthand do not collapse the exact-count party count. If the obligation text
+  states a month/day, only rows on that event date satisfy the obligation even
+  when later bids cite the same filing page for context.
 - `unmet_exact_count_final_round`: filing text states an exact final-round
   advancement count, but the extraction does not account for that count.
 - `unmet_buyer_group_executed_constituents`: filing text identifies Buyer Group

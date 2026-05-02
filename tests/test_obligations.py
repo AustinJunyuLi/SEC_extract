@@ -232,6 +232,28 @@ def test_exact_count_bid_collapses_buyer_group_constituents_to_one_party_unit():
     assert result.checks[0].matched_rows == [1, 5, 6, 7, 8, 9]
 
 
+def test_exact_count_bid_does_not_collapse_non_buyer_group_sibling_bidders():
+    filing = _filing(
+        "Six of the potentially interested parties submitted indications of interest."
+    )
+    sibling_rows = []
+    for alias in ["Bidder 3 Constituent 1", "Bidder 3 Constituent 2"]:
+        row = _bid(alias)
+        row["source_quote"] = "Six of the potentially interested parties submitted indications of interest."
+        row["flags"] = [{
+            "code": "buyer_group_constituent",
+            "severity": "info",
+            "reason": "Filing states two bidders were later referred to together as Bidder 3.",
+        }]
+        sibling_rows.append(row)
+    other_rows = [_bid(f"Financial Buyer {index}") for index in range(1, 5)]
+
+    result = obligations.check_obligations(_raw([*sibling_rows, *other_rows]), filing)
+
+    assert result.has_hard_unmet is False
+    assert result.checks[0].matched_rows == [1, 2, 3, 4, 5, 6]
+
+
 def test_exact_count_nda_obligation_ignores_late_member_nda_on_other_page():
     filing = _filing(
         "The Company entered into confidentiality and standstill agreements "

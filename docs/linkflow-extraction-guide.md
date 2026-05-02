@@ -124,10 +124,12 @@ Runs deterministic filing-derived obligation checks against a complete
 candidate extraction and returns obligation ids, source pages, matched rows,
 statuses, and reasons. This is a repair aid only. The orchestrator reruns the
 same Python code after repair and uses that result as the authority.
-For exact-count NDA and bid obligations, buyer-group constituent sibling rows
-that cite the same aggregate filing event count as one filing-party unit, while
-remaining atomized rows in the extraction. If an exact-count bid obligation
-states a month/day, later bid rows on the same filing page do not satisfy that
+For exact-count NDA and bid obligations, true Buyer Group constituent sibling
+rows that cite the same aggregate filing event count as one filing-party unit,
+while remaining atomized rows in the extraction. Later filing shorthands that
+refer to multiple separate bidders together, such as "Bidder 3", do not
+collapse the exact-count party count. If an exact-count bid obligation states a
+month/day, later bid rows on the same filing page do not satisfy that
 obligation unless their event date matches the stated month/day.
 
 ## Multi-Turn Loop

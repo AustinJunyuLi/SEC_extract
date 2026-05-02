@@ -53,6 +53,10 @@ Conservation discipline:
 - Copy unaffected rows from the previous complete extraction without changing
   their `source_quote` or `source_page`. Do not shorten, paraphrase, or
   restitch evidence on clean rows.
+- Do not degrade an already-satisfied exact-count obligation while fixing a
+  different validator or obligation issue. If `check_obligations` shows a
+  previously satisfied exact-count obligation became unmet, restore the
+  affected count rows before final output.
 
 Evidence discipline:
 

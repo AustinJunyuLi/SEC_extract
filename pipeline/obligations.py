@@ -94,7 +94,7 @@ PETSMART_BUYER_GROUP_NAMES: tuple[str, ...] = (
     "StepStone",
 )
 PETSMART_LATE_MEMBER = "Longview"
-OBLIGATION_CONTRACT_VERSION_INPUTS = {"version": "obligations_v3"}
+OBLIGATION_CONTRACT_VERSION_INPUTS = {"version": "obligations_v4"}
 
 
 @dataclass(frozen=True)
@@ -375,6 +375,22 @@ def _row_flag_codes(event: dict[str, Any]) -> set[str]:
     }
 
 
+def _buyer_group_party_unit_label(event: dict[str, Any]) -> str | None:
+    flag_texts = [
+        _normalize(flag.get("reason", ""))
+        for flag in event.get("flags") or []
+        if isinstance(flag, dict)
+    ]
+    searchable = " ".join([
+        _normalize(event.get("bidder_alias", "")),
+        _normalize(event.get("additional_note", "")),
+        *flag_texts,
+    ])
+    if "buyer group" in searchable:
+        return "buyer group"
+    return None
+
+
 def _quote_for_page(event: dict[str, Any], page: int) -> str:
     quote = event.get("source_quote")
     source_page = event.get("source_page")
@@ -396,8 +412,12 @@ def _exact_count_party_unit_key(
 ) -> tuple[Any, ...] | None:
     if "buyer_group_constituent" not in _row_flag_codes(event):
         return None
+    party_label = _buyer_group_party_unit_label(event)
+    if party_label is None:
+        return None
     return (
         obligation.kind,
+        party_label,
         event.get("bid_note"),
         event.get("process_phase"),
         event.get("bid_date_precise"),

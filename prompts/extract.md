@@ -219,6 +219,10 @@ Dates:
   leave both date fields null and attach `date_unknown`; do not copy the
   process-window phrase into `bid_date_rough` or attach
   `date_phrase_unmapped`.
+- Anchored duration phrases covered by `rules/dates.md`, including `over the
+  next N months`, are mapped date phrases. Compute the anchored offset, put the
+  verbatim phrase in `bid_date_rough`, and attach `date_inferred_from_context`;
+  do not attach `date_phrase_unmapped`.
 
 Confidentiality agreements:
 - Classify each CA as target-bidder `NDA`, bidder-bidder `ConsortiumCA`, or

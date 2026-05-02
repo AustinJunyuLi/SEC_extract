@@ -102,6 +102,9 @@ def test_date_contract_treats_process_windows_as_unknown_not_unmapped():
     assert "not rough dates by themselves" in prompt_flat
     assert "do not copy the process-window phrase into `bid_date_rough`" in prompt_flat
     assert "do not attach `date_phrase_unmapped`" in combined
+    assert "`over the\n  next N months`" in prompt
+    assert '"over the next N months" — anchor + 30*N days.' in dates
+    assert "do not attach `date_phrase_unmapped`" in prompt_flat
 
 
 def test_anonymous_contract_handles_buyer_group_atomization_count_mismatches():
@@ -142,6 +145,7 @@ def test_repair_prompt_documents_single_obligation_tool_round():
     assert "Treat every protected row-conservation anchor as a row that must survive" in flat
     assert "split only the offending aggregate" in text
     assert "Do not shorten, paraphrase, or\n  restitch evidence on clean rows" in text
+    assert "Do not degrade an already-satisfied exact-count obligation" in text
     assert "Evidence discipline:" in text
     assert "one exact contiguous substring" in text
     assert "Do not stitch the start of one sentence to a later sentence" in text
