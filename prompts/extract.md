@@ -201,6 +201,10 @@ Dates:
 Confidentiality agreements:
 - Classify each CA as target-bidder `NDA`, bidder-bidder `ConsortiumCA`, or
   skipped shareholder/acquirer rollover CA per the rules.
+- Do not emit `NDA` solely because a bidder received data-room access,
+  management presentations, or other diligence materials. Data-room access is
+  only an NDA if the filing also states a confidentiality agreement was
+  entered, executed, signed, delivered, or binding.
 - `ConsortiumCA.bidder_alias` names the actor represented by `bidder_name`,
   not the relationship phrase.
 - `ConsortiumCA` never substitutes for a same-bidder `NDA`. For buyer-group

@@ -403,6 +403,13 @@ Phrases such as "permission to work together," "authorized to coordinate,"
 "discussions among bidders," or "joint participation in due diligence" are
 not CA events by themselves.
 
+Data-room access alone is not a confidentiality agreement. If the filing says
+a bidder received access to an electronic data room, management presentation,
+or other due-diligence materials but does not state that the bidder entered
+into, executed, signed, received, or was bound by a confidentiality agreement,
+do not emit `NDA` solely from the data-room access. Emit the supported
+engagement row, such as `Bidder Interest`, when the filing supports it.
+
 If the `ConsortiumCA` also documents that a constituent joined an
 already-NDA-bound buyer group, emit both rows: the `ConsortiumCA` row for
 the bidder-bidder agreement and a separate inherited `NDA` row for the

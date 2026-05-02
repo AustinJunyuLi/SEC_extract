@@ -47,6 +47,8 @@ events):
 - "the next few weeks" — anchor + 21 days.
 - "within N days" — anchor + N days.
 - "over the next month" — anchor + 30 days.
+- "approximately/about/around N weeks later" — anchor + 7*N days.
+- "approximately/about/around N months later" — anchor + 30*N days.
 
 bare sequencing words such as "subsequently", "thereafter", "later", and
 "then" are ordering cues, not date phrases. Do not copy them into

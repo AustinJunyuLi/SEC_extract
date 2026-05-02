@@ -262,8 +262,10 @@ comparable across deals.
      `Bid` row for the same bidder and phase.
   2. `submitted_formal_bid = false` on an informal `Bid` must not coexist
      with a formal `Bid` row for the same bidder and phase.
-  3. A `Drop` row with `drop_reason_class = "never_advanced"` requires
-     `invited_to_formal_round = false`.
+  3. Drop rows must not carry formal-stage status fields. A `Drop` row with
+     `drop_reason_class = "never_advanced"` already records the target-side
+     no-advancement outcome; leave `invited_to_formal_round` and
+     `submitted_formal_bid` null per §P-R9.
 - **Fail action.** Flag `formal_round_status_inconsistent`. Soft.
 - **Boundary.** This is a consistency check, not a mandate to infer
   unsupported true/false values. Python should not decide from global process

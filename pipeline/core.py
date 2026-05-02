@@ -1234,17 +1234,6 @@ def _invariant_p_d8(events: list[dict]) -> list[dict]:
                         "row exists for the same bidder and process_phase."
                     ),
                 })
-        if note == "Drop" and ev.get("drop_reason_class") == "never_advanced":
-            if ev.get("invited_to_formal_round") is not False:
-                flags.append({
-                    "row_index": i,
-                    "code": "formal_round_status_inconsistent",
-                    "severity": "soft",
-                    "reason": (
-                        "§P-D8: Drop with drop_reason_class='never_advanced' "
-                        "requires invited_to_formal_round=false."
-                    ),
-                })
     return flags
 
 

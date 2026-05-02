@@ -151,8 +151,17 @@ def test_date_contract_covers_year_roughness_and_bare_sequence_words():
 
     assert "| `early <Year>` | `<Year>-02-15` |" in dates
     assert "| `late <Year>` | `<Year>-11-15` |" in dates
+    assert "\"approximately/about/around N weeks later\" — anchor + 7*N days" in dates
     assert "bare sequencing words such as \"subsequently\"" in dates
     assert "Do not put bare sequencing words such as `subsequently`" in prompt
+
+
+def test_data_room_access_is_not_confidentiality_agreement_by_itself():
+    prompt = (REPO_ROOT / "prompts" / "extract.md").read_text()
+    events = (REPO_ROOT / "rules" / "events.md").read_text()
+
+    assert "Data-room access alone is not a confidentiality agreement" in events
+    assert "Do not emit `NDA` solely because a bidder received data-room access" in prompt
 
 
 def test_prompt_rewrite_keeps_raw_extractor_example_free_of_pipeline_fields():

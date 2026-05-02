@@ -868,13 +868,13 @@ def test_p_d8_flags_formal_round_status_inconsistencies():
             "bidder_name": "bidder_03",
             "process_phase": 1,
             "drop_reason_class": "never_advanced",
-            "invited_to_formal_round": True,
+            "invited_to_formal_round": None,
         },
     ]
 
     flags = pipeline._invariant_p_d8(events)
 
-    assert [f["row_index"] for f in flags] == [0, 1, 3]
+    assert [f["row_index"] for f in flags] == [0, 1]
     assert {f["code"] for f in flags} == {"formal_round_status_inconsistent"}
     assert all(f["severity"] == "soft" for f in flags)
 
@@ -900,7 +900,7 @@ def test_p_d8_valid_formal_round_status_passes():
             "bidder_name": "bidder_02",
             "process_phase": 1,
             "drop_reason_class": "never_advanced",
-            "invited_to_formal_round": False,
+            "invited_to_formal_round": None,
         },
     ]
 
