@@ -224,6 +224,15 @@ party count cannot be reconciled with atomized rows, attach
 `anonymous_cohort_identity_ambiguous` to that row rather than silently
 inventing another anonymous alias family.
 
+Never emit an unnamed lifecycle row (`Bid`, `Drop`, `DropSilent`, or
+`Executed`) for a numbered alias that lacks a prior same-phase `NDA` handle.
+When a later count appears to exceed the available open NDA handles, emit
+only rows supported by existing handles and attach
+`anonymous_cohort_identity_ambiguous` where the filing-grounded cohort
+boundary is unclear. Do not create aliases such as `"Financial Buyer 13"`
+through `"Financial Buyer 15"` unless those aliases were created by earlier
+same-phase NDA rows.
+
 **Rationale.** This is the minimum-bias stance at 392-deal scale.
 Exact-count text should be preserved exactly; `"several"` supports a
 minimum of 3; vaguer plurals should not be over-atomized. Stable handles

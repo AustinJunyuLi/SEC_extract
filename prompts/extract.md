@@ -165,6 +165,17 @@ Exact counts and unnamed handles:
   Reuse compatible open NDA handles first. For any remaining lifecycle row
   whose cohort identity is genuinely unclear, attach
   `anonymous_cohort_identity_ambiguous` to that row.
+- Never emit an unnamed lifecycle row (`Bid`, `Drop`, `DropSilent`, or
+  `Executed`) for a numbered alias that has no prior same-phase `NDA` handle.
+  If a later narrative seems to require more unnamed lifecycle rows than open
+  NDA handles, stop at the supported open handles and flag the ambiguity; do
+  not invent higher-numbered aliases.
+- A sentence that advisors spoke with all potentially interested parties,
+  including parties that did not submit indications, is not by itself a
+  withdrawal count. Use it as context for existing NDA handles only; do not
+  create extra anonymous `Drop` rows unless the filing states a supported
+  non-submission, elimination, withdrawal, or no-advancement fate for those
+  rows.
 
 NDA fate and DropSilent:
 - Every bidder-side `NDA` signer in the current process needs a later

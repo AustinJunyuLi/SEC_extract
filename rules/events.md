@@ -280,6 +280,12 @@ Group-narrated outcomes follow the same doctrine:
   for the supported unnamed balance. When the cohort is an exact-count
   unnamed NDA cohort already represented by aliases, reuse those aliases
   per `rules/bidders.md` §E5.
+- Advisor process language that representatives spoke with all potentially
+  interested parties, including parties that did not submit indications, to
+  hear rationales is not by itself an additional exact-count withdrawal or
+  drop obligation. Use it only as context for existing NDA handles unless the
+  filing separately states a non-submission, elimination, withdrawal,
+  rejection, or no-advancement fate.
 - If the filing gives only a vague uncountable group outcome, emit one
   placeholder `Drop` row carrying `{"code": "drop_group_count_unspecified",
   "severity": "soft", "reason": "<short summary of the vague filing

@@ -41,6 +41,27 @@ clean rows or optional fields unless a deterministic report requires the
 change. Python reruns validation, obligations, and row-conservation checks
 after this response.
 
+Conservation discipline:
+
+- Treat every protected row-conservation anchor as a row that must survive
+  unless the validator report specifically says that anchored row is invalid.
+- When fixing aggregate buyer-group rows, split only the offending aggregate
+  row(s). Preserve unrelated bidder rows, dates, source pages, and quote
+  anchors exactly where possible.
+- Do not delete or rewrite an unrelated protected `Bid`, `Drop`, `NDA`,
+  `ConsortiumCA`, or `Executed` row while repairing buyer-group atomization.
+
+Anonymous-handle discipline:
+
+- Do not create an unnamed lifecycle row for a numbered alias that lacks a
+  prior same-phase `NDA` handle.
+- If buyer-group atomization or filing party counts make the anonymous balance
+  unclear, reuse compatible open NDA handles first. If any remaining row is
+  genuinely ambiguous, attach `anonymous_cohort_identity_ambiguous`; otherwise
+  omit unsupported extra anonymous lifecycle rows.
+- Advisor language saying representatives spoke with all parties, including
+  non-submitters, is not by itself an extra exact-count `Drop` obligation.
+
 Tool discipline:
 
 - Call `check_obligations` at most once, only after assembling a complete

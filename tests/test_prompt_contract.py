@@ -107,18 +107,26 @@ def test_date_contract_treats_process_windows_as_unknown_not_unmapped():
 def test_anonymous_contract_handles_buyer_group_atomization_count_mismatches():
     prompt = (REPO_ROOT / "prompts" / "extract.md").read_text()
     bidders = (REPO_ROOT / "rules" / "bidders.md").read_text()
+    events = (REPO_ROOT / "rules" / "events.md").read_text()
     combined = "\n".join([prompt, bidders])
     bidders_flat = " ".join(bidders.split())
+    prompt_flat = " ".join(prompt.split())
 
     assert "If buyer-group atomization makes the row count diverge" in prompt
     assert "Buyer-group atomization can make row counts diverge" in bidders
     assert "Reuse compatible open NDA handles first" in combined
     assert "`anonymous_cohort_identity_ambiguous`" in combined
     assert "do not create fresh anonymous aliases merely to make later" in bidders_flat
+    assert "Never emit an unnamed lifecycle row" in prompt
+    assert "no prior same-phase `NDA` handle" in prompt_flat
+    assert "lacks a prior same-phase `NDA` handle" in bidders
+    assert "including parties that did not submit indications" in prompt
+    assert "not by itself an additional exact-count withdrawal" in events
 
 
 def test_repair_prompt_documents_single_obligation_tool_round():
     text = (REPO_ROOT / "prompts" / "repair.md").read_text()
+    flat = " ".join(text.split())
 
     assert "one repair round" in text
     assert "Repair has access to all four tools" in text
@@ -131,6 +139,10 @@ def test_repair_prompt_documents_single_obligation_tool_round():
     assert "Repair turn 1 has no tools" not in text
     assert "Repair turn 2" not in text
     assert "Do not emit patches or partial output" in text
+    assert "Treat every protected row-conservation anchor as a row that must survive" in flat
+    assert "split only the offending aggregate" in text
+    assert "Do not create an unnamed lifecycle row" in text
+    assert "not by itself an extra exact-count `Drop` obligation" in text
 
 
 def test_live_repair_prompt_formats_without_unescaped_literal_braces():
