@@ -145,6 +145,16 @@ def test_value_bearing_bid_consideration_contract_is_explicit():
     ) not in prompt
 
 
+def test_date_contract_covers_year_roughness_and_bare_sequence_words():
+    dates = (REPO_ROOT / "rules" / "dates.md").read_text()
+    prompt = (REPO_ROOT / "prompts" / "extract.md").read_text()
+
+    assert "| `early <Year>` | `<Year>-02-15` |" in dates
+    assert "| `late <Year>` | `<Year>-11-15` |" in dates
+    assert "bare sequencing words such as \"subsequently\"" in dates
+    assert "Do not put bare sequencing words such as `subsequently`" in prompt
+
+
 def test_prompt_rewrite_keeps_raw_extractor_example_free_of_pipeline_fields():
     schema = (REPO_ROOT / "rules" / "schema.md").read_text()
 

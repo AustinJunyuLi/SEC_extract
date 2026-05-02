@@ -193,6 +193,10 @@ Dates:
   date-inference flags: `date_inferred_from_rough`,
   `date_inferred_from_context`, `date_range_collapsed`, or
   `date_phrase_unmapped`.
+- Do not put bare sequencing words such as `subsequently`, `thereafter`,
+  `later`, or `then` into `bid_date_rough`. If the filing gives only that
+  sequencing cue and no mapped date phrase or anchored offset, leave both date
+  fields null and attach `date_unknown`.
 
 Confidentiality agreements:
 - Classify each CA as target-bidder `NDA`, bidder-bidder `ConsortiumCA`, or

@@ -31,6 +31,9 @@ the original phrase goes verbatim into `bid_date_rough`.
 | `early Q<n> <Year>` | first month of quarter, day 15 |
 | `mid-Q<n> <Year>` | middle month of quarter, day 15 |
 | `late Q<n> <Year>` | last month of quarter, day 15 |
+| `early <Year>` | `<Year>-02-15` |
+| `mid-<Year>` / `middle of <Year>` | `<Year>-07-01` |
+| `late <Year>` | `<Year>-11-15` |
 | `<Year>` (year only) | `<Year>-07-01` |
 | `Spring <Year>` | `<Year>-04-15` |
 | `Summer <Year>` | `<Year>-07-15` |
@@ -44,6 +47,13 @@ events):
 - "the next few weeks" — anchor + 21 days.
 - "within N days" — anchor + N days.
 - "over the next month" — anchor + 30 days.
+
+bare sequencing words such as "subsequently", "thereafter", "later", and
+"then" are ordering cues, not date phrases. Do not copy them into
+`bid_date_rough`, and do not attach `date_phrase_unmapped` for them. If the
+filing gives no mapped date phrase or anchored offset beyond the bare
+sequencing word, leave `bid_date_precise = null`, leave `bid_date_rough =
+null`, and attach `date_unknown` under §B3 while relying on `BidderID` order.
 
 **Flag on every inferred date.**
 `{"code": "date_inferred_from_rough", "severity": "info",
