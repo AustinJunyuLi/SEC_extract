@@ -124,6 +124,9 @@ Runs deterministic filing-derived obligation checks against a complete
 candidate extraction and returns obligation ids, source pages, matched rows,
 statuses, and reasons. This is a repair aid only. The orchestrator reruns the
 same Python code after repair and uses that result as the authority.
+For exact-count NDA and bid obligations, buyer-group constituent sibling rows
+that cite the same aggregate filing event count as one filing-party unit, while
+remaining atomized rows in the extraction.
 
 ## Multi-Turn Loop
 

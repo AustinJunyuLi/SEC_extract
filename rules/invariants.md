@@ -487,10 +487,13 @@ after the standard validator runs. They are listed here because they affect
 final status and human review in the same way as validator hard flags.
 
 - `unmet_exact_count_nda`: filing text states an exact current-process bidder
-  NDA count, but the extraction does not emit exactly that many matching rows.
+  NDA count, but the extraction does not emit exactly that many matching
+  filing-party units. Buyer-group constituent sibling rows that cite the same
+  aggregate event count as one filing-party unit for this obligation.
 - `unmet_exact_count_bid`: filing text states an exact indication-of-interest
   submission count, but the extraction does not emit exactly that many matching
-  `Bid` rows.
+  `Bid` filing-party units. Buyer-group constituent sibling rows that cite the
+  same aggregate event count as one filing-party unit for this obligation.
 - `unmet_exact_count_final_round`: filing text states an exact final-round
   advancement count, but the extraction does not account for that count.
 - `unmet_buyer_group_executed_constituents`: filing text identifies Buyer Group

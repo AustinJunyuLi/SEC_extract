@@ -66,6 +66,14 @@ def _bid(alias: str, bidder_type: str = "f") -> dict:
     return row
 
 
+def _buyer_group_flags(alias: str) -> list[dict]:
+    return [{
+        "code": "buyer_group_constituent",
+        "severity": "info",
+        "reason": f"{alias} is a Buyer Group constituent.",
+    }]
+
+
 def _executed(alias: str) -> dict:
     row = _nda(alias)
     row.update({
@@ -158,6 +166,48 @@ def test_exact_count_bid_obligation_matches_only_source_event_page():
 
     assert result.has_hard_unmet is False
     assert result.checks[0].matched_rows == [1, 2, 3, 4, 5, 6]
+
+
+def test_exact_count_nda_collapses_buyer_group_constituents_to_one_party_unit():
+    filing = _filing(
+        "The Company entered into confidentiality and standstill agreements "
+        "with 3 potentially interested financial buyers."
+    )
+    buyer_group_rows = []
+    for alias in ["BC Partners", "La Caisse", "GIC", "StepStone"]:
+        row = _nda(alias)
+        row["source_quote"] = (
+            "The Company entered into confidentiality and standstill agreements "
+            "with 3 potentially interested financial buyers."
+        )
+        row["flags"] = _buyer_group_flags(alias)
+        buyer_group_rows.append(row)
+
+    result = obligations.check_obligations(
+        _raw([*buyer_group_rows, _nda("Financial Buyer 1"), _nda("Financial Buyer 2")]),
+        filing,
+    )
+
+    assert result.has_hard_unmet is False
+    assert result.checks[0].matched_rows == [1, 5, 6]
+
+
+def test_exact_count_bid_collapses_buyer_group_constituents_to_one_party_unit():
+    filing = _filing(
+        "Six of the potentially interested parties submitted indications of interest."
+    )
+    buyer_group_rows = []
+    for alias in ["BC Partners", "La Caisse", "GIC", "StepStone"]:
+        row = _bid(alias)
+        row["source_quote"] = "Six of the potentially interested parties submitted indications of interest."
+        row["flags"] = _buyer_group_flags(alias)
+        buyer_group_rows.append(row)
+    other_rows = [_bid(f"Financial Buyer {index}") for index in range(1, 6)]
+
+    result = obligations.check_obligations(_raw([*buyer_group_rows, *other_rows]), filing)
+
+    assert result.has_hard_unmet is False
+    assert result.checks[0].matched_rows == [1, 5, 6, 7, 8, 9]
 
 
 def test_exact_count_nda_obligation_ignores_late_member_nda_on_other_page():

@@ -79,7 +79,7 @@ PETSMART_BUYER_GROUP_NAMES: tuple[str, ...] = (
     "StepStone",
 )
 PETSMART_LATE_MEMBER = "Longview"
-OBLIGATION_CONTRACT_VERSION_INPUTS = {"version": "obligations_v1"}
+OBLIGATION_CONTRACT_VERSION_INPUTS = {"version": "obligations_v2"}
 
 
 @dataclass(frozen=True)
@@ -336,6 +336,50 @@ def _event_source_pages(event: dict[str, Any]) -> set[int]:
     }
 
 
+def _row_flag_codes(event: dict[str, Any]) -> set[str]:
+    flags = event.get("flags")
+    if not isinstance(flags, list):
+        return set()
+    return {
+        flag.get("code")
+        for flag in flags
+        if isinstance(flag, dict) and isinstance(flag.get("code"), str)
+    }
+
+
+def _quote_for_page(event: dict[str, Any], page: int) -> str:
+    quote = event.get("source_quote")
+    source_page = event.get("source_page")
+    if isinstance(quote, list) and isinstance(source_page, list):
+        parts = [
+            str(item)
+            for item, item_page in zip(quote, source_page)
+            if item_page == page
+        ]
+        return _normalize(" ".join(parts))
+    if source_page == page:
+        return _normalize(quote)
+    return ""
+
+
+def _exact_count_party_unit_key(
+    obligation: Obligation,
+    event: dict[str, Any],
+) -> tuple[Any, ...] | None:
+    if "buyer_group_constituent" not in _row_flag_codes(event):
+        return None
+    return (
+        obligation.kind,
+        event.get("bid_note"),
+        event.get("process_phase"),
+        event.get("bid_date_precise"),
+        event.get("bid_date_rough"),
+        event.get("bid_type"),
+        json.dumps(event.get("bid_value"), sort_keys=True, separators=(",", ":")),
+        _quote_for_page(event, obligation.source_page),
+    )
+
+
 def _cites_obligation_source(event: dict[str, Any], obligation: Obligation) -> bool:
     return obligation.source_page in _event_source_pages(event)
 
@@ -354,6 +398,7 @@ def _matched_rows(
     if not isinstance(registry, dict):
         registry = {}
     matches: list[int] = []
+    exact_count_party_units: set[tuple[Any, ...]] = set()
     for index, event in enumerate(events):
         if obligation.kind == "exact_count_nda":
             if event.get("role") != "bidder" or event.get("bid_note") != "NDA":
@@ -363,11 +408,21 @@ def _matched_rows(
             expected_type = obligation.expected.get("bidder_type")
             if expected_type is not None and event.get("bidder_type") != expected_type:
                 continue
+            unit_key = _exact_count_party_unit_key(obligation, event)
+            if unit_key is not None:
+                if unit_key in exact_count_party_units:
+                    continue
+                exact_count_party_units.add(unit_key)
             matches.append(_row_id(event, index))
         elif obligation.kind == "exact_count_bid":
             if not _cites_obligation_source(event, obligation):
                 continue
             if event.get("role") == "bidder" and event.get("bid_note") == "Bid":
+                unit_key = _exact_count_party_unit_key(obligation, event)
+                if unit_key is not None:
+                    if unit_key in exact_count_party_units:
+                        continue
+                    exact_count_party_units.add(unit_key)
                 matches.append(_row_id(event, index))
         elif obligation.kind == "exact_count_final_round":
             if not _cites_obligation_source(event, obligation):

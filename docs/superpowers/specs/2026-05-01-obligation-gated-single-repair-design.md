@@ -237,6 +237,11 @@ The only mutable audit pointer remains `latest.json`.
 4. returns obligation ids, statuses, matched rows, source pages, and concise
    reasons.
 
+For exact-count NDA and bid obligations, buyer-group constituent sibling rows
+that cite the same aggregate filing event count as one filing-party unit. This
+keeps the obligation layer aligned with the atomized output schema when the
+filing's party count treats a buyer group as one party.
+
 The tool is a repair aid only. The orchestrator reruns the same code after
 repair and uses the post-repair result as the authority.
 
