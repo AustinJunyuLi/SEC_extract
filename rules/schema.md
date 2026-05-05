@@ -29,15 +29,19 @@ Every claim includes:
 - `claim_type`
 - `coverage_obligation_id`
 - `confidence`: `high`, `medium`, or `low`
-- `quote_text`: exact filing substring copied from one `citation_units[].text`
-  value, max 1500 characters
-- `quote_texts`: `null` or an ordered list of exact filing substrings copied
-  from `citation_units[].text`, max 1500 characters each; when present, the
-  first entry must equal `quote_text`
+- `evidence_refs`: one or more source-addressed evidence refs; each ref has
+  `citation_unit_id` and `quote_text`
+
+Each `citation_unit_id` must identify one extractor-input
+`citation_units[].id`. Each `quote_text` must be an exact substring of that
+unit's text and max 1500 characters. Use multiple refs when a claim needs
+separated source support. Provider-level `quote_text` and `quote_texts` are
+retired.
 
 Provider-owned fields are forbidden: canonical ids, source offsets, source
 pages, `BidderID`, bidder registry, `T`, `bI`, `bF`, admitted/dropout
-judgments, coverage results, projection rows, and old row-event scalar fields.
+judgments, coverage results, projection rows, provider-level `quote_text`,
+provider-level `quote_texts`, and old row-event scalar fields.
 
 Target identity is Python-owned manifest/deal metadata. The provider does not
 emit target-only actor claims; target labels appear only when a substantive
@@ -80,6 +84,8 @@ Fields: `process_stage`, `actor_class`, `count_min`, `count_max`,
 `final_round`, `exclusivity`.
 
 `actor_class`: `financial`, `strategic`, `mixed`, `unknown`.
+
+`count_qualifier`: `exact`, `at_least`, `at_most`, `range`, `approximate`.
 
 ## Actor Relation Claims
 

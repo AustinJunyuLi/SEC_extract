@@ -14,13 +14,6 @@ from pathlib import Path
 from typing import Any, Iterator, Literal
 
 from pipeline import core
-from pipeline.obligations import (
-    check_obligations,
-    flags_for_unmet,
-    obligation_contract_version,
-    obligation_result_payload,
-)
-from pipeline.llm.adjudicate import adjudicate
 from pipeline.llm.audit import (
     AUDIT_LATEST_SCHEMA_VERSION,
     AUDIT_RUN_SCHEMA_VERSION,
@@ -31,11 +24,9 @@ from pipeline.llm.audit import (
     audit_slug_root,
 )
 from pipeline.llm.client import LLMClient, OpenAICompatibleClient
-from pipeline.llm.contracts import repair_loop_contract_version
-from pipeline.llm.extract import extract_deal, extractor_contract_version, run_repair_loop
-from pipeline.llm.response_format import SCHEMA_R1, schema_hash
+from pipeline.llm.extract import extract_deal, extractor_contract_version
+from pipeline.llm.response_format import DEAL_GRAPH_CLAIM_SCHEMA, schema_hash
 from pipeline.llm.retry import RetryConfig
-from pipeline.llm.tools import tools_contract_version
 from pipeline.llm.watchdog import WatchdogConfig
 from pipeline.deal_graph.orchestrate import finalize_claim_payload
 
@@ -48,11 +39,6 @@ AUDIT_ROOT = core.REPO_ROOT / "output" / "audit"
 TARGET_GATE_PROOF = core.REPO_ROOT / "quality_reports" / "stability" / "target-release-proof.json"
 DEFAULT_XHIGH_MAX_WORKERS = 5
 DEFAULT_REASONING_EFFORT = "high"
-EXTRACT_TOOL_MODE = "claim_only"
-REPAIR_STRATEGY = "none_deal_graph_v1"
-SEMANTIC_ADJUDICATION_SOFT_FLAGS: frozenset[str] = frozenset({
-    "missing_nda_dropsilent",
-})
 
 
 @dataclass
@@ -61,9 +47,7 @@ class PoolConfig:
     filter: Literal["pending", "reference", "failed", "all"] = "pending"
     workers: int = 1
     extract_model: str = "gpt-5.5"
-    adjudicate_model: str = "gpt-5.5"
     extract_reasoning_effort: str | None = DEFAULT_REASONING_EFFORT
-    adjudicate_reasoning_effort: str | None = DEFAULT_REASONING_EFFORT
     re_validate: bool = False
     re_extract: bool = False
     audit_run_id: str | None = None
@@ -301,11 +285,6 @@ def _current_contract_values(current_rulebook_version: str) -> dict[str, str]:
     return {
         "rulebook_version": current_rulebook_version,
         "extractor_contract_version": extractor_contract_version(),
-        "tools_contract_version": tools_contract_version(),
-        "repair_loop_contract_version": repair_loop_contract_version(),
-        "obligation_contract_version": obligation_contract_version(),
-        "extract_tool_mode": EXTRACT_TOOL_MODE,
-        "repair_strategy": REPAIR_STRATEGY,
     }
 
 
@@ -336,7 +315,7 @@ def _cache_source_from_latest(
         legacy_hint = "; legacy loose audit layout is not accepted" if legacy_raw.exists() else ""
         return None, None, error + legacy_hint
     if latest.get("schema_version") != AUDIT_LATEST_SCHEMA_VERSION:
-        return None, None, "latest.json schema_version is not audit_v2"
+        return None, None, f"latest.json schema_version is not {AUDIT_LATEST_SCHEMA_VERSION}"
     if latest.get("slug") != slug:
         return None, None, f"latest.json slug={latest.get('slug')!r} does not match {slug!r}"
     if latest.get("cache_eligible") is not True:
@@ -370,7 +349,7 @@ def _cache_source_from_run_id(
     if error:
         return None, None, error
     if manifest.get("schema_version") != AUDIT_RUN_SCHEMA_VERSION:
-        return None, None, "archived manifest.json schema_version is not audit_run_v2"
+        return None, None, f"archived manifest.json schema_version is not {AUDIT_RUN_SCHEMA_VERSION}"
     if manifest.get("slug") != slug or manifest.get("run_id") != run_id:
         return None, None, "archived manifest.json slug/run_id does not match requested cache run"
     if manifest.get("cache_eligible") is not True:
@@ -408,7 +387,7 @@ def _check_cached_raw_response(slug: str, cfg: PoolConfig, current_rulebook_vers
         return CacheCheck(None, error)
     assert payload is not None
     if payload.get("schema_version") != RAW_RESPONSE_SCHEMA_VERSION:
-        return CacheCheck(None, "cached raw_response.json schema_version is not raw_response_v2")
+        return CacheCheck(None, f"cached raw_response.json schema_version is not {RAW_RESPONSE_SCHEMA_VERSION}")
     if payload.get("run_id") != source_run_id:
         return CacheCheck(None, "cached raw_response.json run_id does not match selected audit run")
     if payload.get("slug") != slug:
@@ -434,7 +413,7 @@ def _check_cached_raw_response(slug: str, cfg: PoolConfig, current_rulebook_vers
 def _is_claim_payload(value: Any) -> bool:
     if not isinstance(value, dict):
         return False
-    return all(isinstance(value.get(name), list) for name in SCHEMA_R1["required"])
+    return all(isinstance(value.get(name), list) for name in DEAL_GRAPH_CLAIM_SCHEMA["required"])
 
 
 def decide_skip(
@@ -456,14 +435,6 @@ def decide_skip(
     if status in DONE_STATUSES and deal.get("rulebook_version") == current_rulebook_version:
         return SkipDecision("skip", f"status={status} rulebook unchanged")
     return SkipDecision("run", "pending, failed, or stale rulebook")
-
-
-def _soft_flags(result: core.ValidatorResult) -> list[dict[str, Any]]:
-    return [
-        flag for flag in [*result.row_flags, *result.deal_flags]
-        if flag.get("severity") == "soft"
-        and flag.get("code") in SEMANTIC_ADJUDICATION_SOFT_FLAGS
-    ]
 
 
 def _iter_calls(audit: AuditWriter) -> Iterator[dict[str, Any]]:
@@ -494,8 +465,6 @@ def _calls_summary(audit: AuditWriter) -> tuple[dict[str, str], int, int]:
         phase = entry.get("phase")
         if phase == "extract":
             hashes.setdefault("extract", prompt_hash)
-        elif phase == "adjudicate":
-            hashes.setdefault(f"adjudicate_{entry.get('flag_index')}", prompt_hash)
     return hashes, total_attempts, watchdog_warnings
 
 
@@ -508,7 +477,7 @@ def _validate_config(config: PoolConfig) -> None:
         raise ValueError("--workers must be >= 1")
     if config.audit_run_id and not config.re_validate:
         raise ValueError("--audit-run-id is only valid with --re-validate")
-    if "xhigh" in {config.extract_reasoning_effort, config.adjudicate_reasoning_effort}:
+    if config.extract_reasoning_effort == "xhigh":
         cap = _xhigh_max_workers()
         if config.workers > cap:
             raise ValueError(
@@ -559,67 +528,11 @@ def _commit_paths(slug: str, paths: list[Path]) -> None:
     )
 
 
-def _validation_payload(
-    *,
-    status: str,
-    flag_count: int,
-    final_output: dict[str, Any] | None,
-    validation: core.ValidatorResult | None,
-    promotion_log: list[dict[str, Any]] | None,
-    obligation_result: Any | None = None,
-    conservation_flags: list[dict[str, Any]] | None = None,
-) -> dict[str, Any]:
-    counts = core.count_flags(final_output or {"deal": {"deal_flags": []}, "events": []})
-    payload = {
-        "final_status": status,
-        "flag_count": flag_count,
-        "row_flag_count": len(validation.row_flags) if validation else 0,
-        "deal_flag_count": len(validation.deal_flags) if validation else 0,
-        "hard_count": counts["hard"],
-        "soft_count": counts["soft"],
-        "info_count": counts["info"],
-        "promotion_log_count": len(promotion_log or []),
-    }
-    if obligation_result is not None:
-        payload["obligation_summary"] = obligation_result_payload(obligation_result)
-    if conservation_flags is not None:
-        payload["conservation_flags"] = conservation_flags
-        payload["conservation_failure_count"] = len(conservation_flags)
-    return payload
-
-
 def _extractor_contract_version_or_unavailable() -> str:
     try:
         return extractor_contract_version()
     except (FileNotFoundError, OSError) as exc:
         return f"unavailable:{type(exc).__name__}"
-
-
-def _tools_contract_version_or_unavailable() -> str:
-    try:
-        return tools_contract_version()
-    except (FileNotFoundError, OSError) as exc:
-        return f"unavailable:{type(exc).__name__}"
-
-
-def _repair_loop_contract_version_or_unavailable() -> str:
-    try:
-        return repair_loop_contract_version()
-    except (FileNotFoundError, OSError) as exc:
-        return f"unavailable:{type(exc).__name__}"
-
-
-def _obligation_contract_version_or_unavailable() -> str:
-    try:
-        return obligation_contract_version()
-    except (FileNotFoundError, OSError) as exc:
-        return f"unavailable:{type(exc).__name__}"
-
-
-def _jsonl_count(path: Path) -> int:
-    if not path.exists():
-        return 0
-    return sum(1 for line in path.read_text().splitlines() if line.strip())
 
 
 def _manifest_payload(
@@ -634,8 +547,6 @@ def _manifest_payload(
     cache_used: bool,
     cache_eligible: bool,
     action: str,
-    repair_turns_used: int,
-    repair_loop_outcome: str,
     error: str | None = None,
     source_audit_run_id: str | None = None,
 ) -> dict[str, Any]:
@@ -644,19 +555,13 @@ def _manifest_payload(
         "action": action,
         "rulebook_version": rulebook_version,
         "extractor_contract_version": _extractor_contract_version_or_unavailable(),
-        "tools_contract_version": _tools_contract_version_or_unavailable(),
-        "repair_loop_contract_version": _repair_loop_contract_version_or_unavailable(),
-        "obligation_contract_version": _obligation_contract_version_or_unavailable(),
-        "schema_hash": schema_hash(SCHEMA_R1),
+        "schema_hash": schema_hash(DEAL_GRAPH_CLAIM_SCHEMA),
         "prompt_hash": prompt_hashes.get("extract"),
         "prompt_hashes": prompt_hashes,
-        "models": {"extract": config.extract_model, "adjudicate": config.adjudicate_model},
+        "models": {"extract": config.extract_model},
         "api_endpoint": getattr(llm_client, "endpoint", None),
-        "extract_tool_mode": EXTRACT_TOOL_MODE,
-        "repair_strategy": REPAIR_STRATEGY,
         "reasoning_efforts": {
             "extract": config.extract_reasoning_effort,
-            "adjudicate": config.adjudicate_reasoning_effort,
         },
         "total_input_tokens": token_usage.input_used,
         "total_output_tokens": token_usage.output_used,
@@ -664,9 +569,6 @@ def _manifest_payload(
         "total_attempts": total_attempts,
         "total_seconds": time.monotonic() - started,
         "watchdog_warnings": watchdog_warnings,
-        "repair_turns_used": repair_turns_used,
-        "repair_loop_outcome": repair_loop_outcome,
-        "tool_calls_count": _jsonl_count(audit.root / "tool_calls.jsonl"),
         "outcome": outcome,
         "cache_used": cache_used,
         "cache_eligible": cache_eligible,
@@ -695,8 +597,6 @@ async def process_deal(
     token_usage = TokenUsage()
     cached = False
     source_audit_run_id: str | None = None
-    repair_outcome = "not_started"
-    repair_turns_used = 0
     try:
         if decision.action == "re_validate":
             cache_check = _check_cached_raw_response(slug, config, rulebook_version)
@@ -753,8 +653,6 @@ async def process_deal(
             cache_used=cached,
             cache_eligible=True,
             action=decision.action,
-            repair_turns_used=0,
-            repair_loop_outcome="not_applicable",
             source_audit_run_id=source_audit_run_id,
         ))
         audit.write_latest(outcome=result.status, cache_eligible=True)
@@ -803,8 +701,6 @@ async def process_deal(
             cache_used=cached,
             cache_eligible=False,
             action=decision.action,
-            repair_turns_used=repair_turns_used,
-            repair_loop_outcome=repair_outcome,
             error=note,
             source_audit_run_id=source_audit_run_id,
         ))
@@ -911,21 +807,14 @@ def build_parser() -> argparse.ArgumentParser:
     selection.add_argument("--filter", choices=sorted(VALID_FILTERS), default="pending")
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument("--extract-model", default=os.environ.get("EXTRACT_MODEL", "gpt-5.5"))
-    parser.add_argument("--adjudicate-model", default=os.environ.get("ADJUDICATE_MODEL", "gpt-5.5"))
     parser.add_argument(
         "--extract-reasoning-effort",
         default=os.environ.get("EXTRACT_REASONING_EFFORT") or DEFAULT_REASONING_EFFORT,
         choices=["none", "minimal", "low", "medium", "high", "xhigh"],
         help=f"reasoning.effort for extractor calls (default: {DEFAULT_REASONING_EFFORT})",
     )
-    parser.add_argument(
-        "--adjudicate-reasoning-effort",
-        default=os.environ.get("ADJUDICATE_REASONING_EFFORT") or DEFAULT_REASONING_EFFORT,
-        choices=["none", "minimal", "low", "medium", "high", "xhigh"],
-        help=f"reasoning.effort for adjudicator calls (default: {DEFAULT_REASONING_EFFORT})",
-    )
     rerun = parser.add_mutually_exclusive_group()
-    rerun.add_argument("--re-validate", action="store_true", help="Reuse only a cache-eligible archived audit v2 run.")
+    rerun.add_argument("--re-validate", action="store_true", help="Reuse only a cache-eligible archived audit v3 run.")
     rerun.add_argument("--re-extract", action="store_true")
     parser.add_argument("--audit-run-id", help="Archived audit run ID to reuse with --re-validate.")
     parser.add_argument(
@@ -951,9 +840,7 @@ def config_from_args(args: argparse.Namespace) -> PoolConfig:
         filter=args.filter,
         workers=args.workers,
         extract_model=args.extract_model,
-        adjudicate_model=args.adjudicate_model,
         extract_reasoning_effort=args.extract_reasoning_effort,
-        adjudicate_reasoning_effort=args.adjudicate_reasoning_effort,
         re_validate=args.re_validate,
         re_extract=args.re_extract,
         audit_run_id=args.audit_run_id,

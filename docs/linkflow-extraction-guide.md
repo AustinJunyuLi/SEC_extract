@@ -37,11 +37,17 @@ The provider must not emit old row-event output, `BidderID`, `bidder_registry`,
 source offsets/pages, `T`, `bI`, `bF`, admitted/dropout judgments, coverage
 results, review rows, or projection rows.
 
-Each claim must carry exact quote evidence copied from the paragraph-local
-`citation_units` in the extractor input. `quote_texts` is `null` when the
-primary `quote_text` supports the claim; it is an ordered list of exact snippets
-when the filing support is separated across sentences, paragraphs, or page
-breaks.
+Each claim must carry source-addressed evidence copied from the paragraph-local
+`citation_units` in the extractor input:
+
+```json
+{"citation_unit_id": "page_35_paragraph_4", "quote_text": "exact filing substring"}
+```
+
+Python validates the citation-unit id and requires the quote to be an exact
+substring inside that unit before canonicalization. Multiple `evidence_refs`
+represent separated support. Provider-level `quote_text` and `quote_texts` are
+retired and rejected.
 
 The provider does not emit target-only actor claims. Target identity is
 manifest/deal metadata owned by Python.
@@ -52,7 +58,7 @@ manifest/deal metadata owned by Python.
 run.py / pipeline.run_pool
   -> responses.stream with strict deal_graph_v1 claim schema
   -> raw_response.json
-  -> Python quote binding against Background pages
+  -> Python evidence binding against Background citation units
   -> canonical deal graph
   -> graph validation
   -> review and estimation projections when unblocked
@@ -101,7 +107,7 @@ output/projections/estimation_bidder_rows/{slug}.jsonl
 
 ## Validation
 
-Graph validation is Python-owned. Hard flags include quote-binding failures,
+Graph validation is Python-owned. Hard flags include evidence-ref binding failures,
 missing claim evidence, missing current dispositions, missing coverage links,
 canonical rows without evidence, and projections blocked by unresolved review
 flags.

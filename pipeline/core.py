@@ -2460,10 +2460,9 @@ def finalize_prepared(
 ) -> PipelineResult:
     """Write a prepared extraction using a caller-supplied validation result.
 
-    Direct SDK orchestration may adjudicate soft validator flags before
-    writing output. This helper preserves those adjudicator annotations by
-    accepting the already-mutated `validation_result` instead of recomputing
-    validation inside `finalize()`.
+    Direct callers may compute or annotate validation flags before writing
+    output. This helper preserves the supplied `validation_result` instead of
+    recomputing validation inside `finalize()`.
     """
     run_ts = run_ts or _now_iso()
     run_id = run_id or _new_run_id()
@@ -2511,9 +2510,8 @@ def finalize(
       1. Apply `unnamed_nda_promotion` hints
       2. Canonicalize row order and BidderIDs (§A2/§A3 sort)
 
-    Direct SDK callers that adjudicate soft validator flags should call
-    `finalize_prepared()` with their precomputed `ValidatorResult`, so those
-    adjudicator annotations are preserved.
+    Direct callers with a precomputed `ValidatorResult` should call
+    `finalize_prepared()` so supplied annotations are preserved.
     """
     raw_extraction, filing, promotion_log = prepare_for_validate(
         slug, raw_extraction, filing=filing

@@ -52,12 +52,12 @@ class FakeResponses:
         output = [
             type("Item", (), {
                 "type": "function_call",
-                "name": "check_row",
+                "name": "example_function",
                 "call_id": "c1",
                 "arguments": "{}",
                 "model_dump": lambda self: {
                     "type": "function_call",
-                    "name": "check_row",
+                    "name": "example_function",
                     "call_id": "c1",
                     "arguments": "{}",
                 },
@@ -180,7 +180,7 @@ def test_complete_passes_tools_and_tool_choice_through_non_streaming():
     )
     tool_defs = [{
         "type": "function",
-        "name": "check_row",
+        "name": "example_function",
         "parameters": {"type": "object", "properties": {}},
     }]
 
@@ -200,7 +200,7 @@ def test_complete_passes_tools_and_tool_choice_through_non_streaming():
     assert kwargs["input"] == [{"role": "user", "content": "u"}]
     assert result.tool_calls == [{
         "type": "function_call",
-        "name": "check_row",
+        "name": "example_function",
         "call_id": "c1",
         "arguments": "{}",
     }]

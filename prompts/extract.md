@@ -36,33 +36,37 @@ Return this strict claim-only shape:
 ```
 
 Every claim must include `claim_type`, `coverage_obligation_id`, `confidence`,
-`quote_text`, and `quote_texts`. `quote_text` must be an exact contiguous
-substring from the embedded filing pages and 1500 characters or shorter.
-Prefer distinctive sentences or clauses that uniquely support the claim. Do
-not paraphrase quotes. Set `quote_texts` to `null` when the primary
-`quote_text` alone supports the claim. When support is separated across
-sentences, paragraphs, or page breaks, set `quote_texts` to an ordered list of
-exact snippets, with `quote_texts[0]` exactly equal to `quote_text`.
+and source-addressed `evidence_refs`. Each `evidence_refs` item must have
+`citation_unit_id` and `quote_text`:
 
-Receipt copying is literal. Each `quote_text` or `quote_texts` entry must be an
-exact substring of one `citation_units[].text` value and should be long enough
-to be unique across the citation units. Do not delete words from the middle of
-filing text, join non-adjacent fragments into one quote, alter capitalization,
-normalize punctuation, smooth page breaks, include page numbers, include
-`Table of Contents`, include SEC/typesetting metadata, or otherwise clean up the
-receipt. If one citation-unit substring does not support every typed field, use
-multiple short exact snippets in `quote_texts` instead of manufacturing a
-cleaner quote.
+```json
+{"citation_unit_id": "page_35_paragraph_4", "quote_text": "exact filing substring"}
+```
+
+`citation_unit_id` must exactly match one embedded `citation_units[].id`.
+`quote_text` must be an exact contiguous substring of that citation unit's
+`text` and 1500 characters or shorter. Prefer distinctive sentences or clauses
+that uniquely support the claim. Do not paraphrase quotes. Use multiple
+`evidence_refs` when support is separated across sentences, paragraphs, or page
+breaks. Never emit provider-level `quote_text` or `quote_texts`.
+
+Receipt copying is literal. Do not delete words from the middle of filing text,
+join non-adjacent fragments into one quote, alter capitalization, normalize
+punctuation, smooth page breaks, include page numbers, include `Table of
+Contents`, include SEC/typesetting metadata, or otherwise clean up the receipt.
+If one citation-unit substring does not support every typed field, use multiple
+short exact evidence refs instead of manufacturing a cleaner quote.
 
 Use the shortest exact filing snippet that supports the typed fields. Do not
 copy long multi-sentence passages when a clause supports the bidder, date,
 value, or relation. For bids with several values in one paragraph, emit one bid
-claim per bidder and use that bidder's exact value clause; use `quote_texts`
-when the bidder label and value require separated exact clauses.
+claim per bidder and use that bidder's exact value clause; use multiple
+`evidence_refs` when the bidder label and value require separated exact clauses.
 
 Never emit `deal`, `events`, `BidderID`, `bidder_registry`, `source_page`,
 `source_start`, `source_end`, `actor_id`, `event_id`, `T`, `bI`, `bF`,
-`admitted`, `coverage_results`, review rows, or projection rows.
+`admitted`, `coverage_results`, review rows, projection rows, provider-level
+`quote_text`, or provider-level `quote_texts`.
 
 ## Claim Families
 

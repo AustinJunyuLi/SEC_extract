@@ -50,14 +50,13 @@ def test_prompt_is_claim_only_and_tool_free():
     assert "No tools are available during" in text
     assert "extraction." in text
     assert "Never emit `deal`, `events`, `BidderID`" in text
-    assert "`quote_text` must be an exact contiguous" in text
-    assert "`quote_texts` to `null`" in text
+    assert "`evidence_refs`" in text
+    assert "`citation_unit_id`" in text
     assert "not paraphrase quotes" in text
-    assert "Copy" in text
-    assert "receipt text from `citation_units[].text`" in text
-    assert "exact substring of one `citation_units[].text`" in text
-    assert "long enough" in text
-    assert "unique across the citation units" in text
+    assert "must exactly match one embedded `citation_units[].id`" in text
+    assert "exact contiguous substring of that citation unit's" in text
+    assert "source-addressed" in text
+    assert "Never emit provider-level `quote_text` or `quote_texts`" in text
     assert "Do not delete words" in text
     assert "from the middle of" in text
     assert "join non-adjacent fragments into one quote" in text

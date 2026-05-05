@@ -12,6 +12,31 @@ from hashlib import sha256
 from typing import Any
 
 SUPPORTED_DISPOSITIONS = {"supported", "merged_duplicate"}
+CLAIM_FAMILY_ORDER: tuple[tuple[str, str], ...] = (
+    ("actor_claims", "actor"),
+    ("actor_relation_claims", "actor_relation"),
+    ("event_claims", "event"),
+    ("bid_claims", "bid"),
+    ("participation_count_claims", "participation_count"),
+)
+
+
+def iter_provider_claims(payload: dict[str, Any]):
+    sequence = 1
+    for family, claim_type in CLAIM_FAMILY_ORDER:
+        for index, claim in enumerate(payload.get(family, []) or []):
+            yield family, claim_type, index, sequence, claim
+            sequence += 1
+
+
+def claim_id_for_provider_claim(
+    *,
+    deal_slug: str,
+    claim_type: str,
+    sequence: int,
+    claim: dict[str, Any],
+) -> str:
+    return _stable_id("claim", deal_slug, claim_type, sequence, _provider_raw_value(claim))
 
 
 @dataclass
@@ -19,6 +44,7 @@ class Canonicalizer:
     deal_slug: str
     run_id: str
     deal_id: str
+    filing_id: str
     evidence: list[dict[str, Any]] = field(default_factory=list)
     claims: list[dict[str, Any]] = field(default_factory=list)
     claim_evidence: list[dict[str, Any]] = field(default_factory=list)
@@ -33,7 +59,8 @@ class Canonicalizer:
     row_evidence: list[dict[str, Any]] = field(default_factory=list)
     review_flags: list[dict[str, Any]] = field(default_factory=list)
     actor_index: dict[str, dict[str, Any]] = field(default_factory=dict)
-    evidence_index: dict[str, dict[str, Any]] = field(default_factory=dict)
+    bound_evidence_ids_by_claim: dict[str, list[str]] = field(default_factory=dict)
+    claim_failures: dict[str, dict[str, Any]] = field(default_factory=dict)
 
     def actor(
         self,
@@ -74,17 +101,27 @@ class Canonicalizer:
         self.actors.append(row)
         return row
 
-    def add_claim(self, claim_type: str, claim: dict[str, Any], sequence: int) -> tuple[str, str | None]:
-        claim_id = _stable_id("claim", self.deal_slug, claim_type, sequence, claim)
-        quote = claim.get("quote_text")
-        evidence_id = self.evidence_for_quote(quote)
+    def add_claim(self, claim_type: str, claim: dict[str, Any], sequence: int) -> tuple[str, list[str]]:
+        raw_value = _provider_raw_value(claim)
+        claim_id = claim_id_for_provider_claim(
+            deal_slug=self.deal_slug,
+            claim_type=claim_type,
+            sequence=sequence,
+            claim=claim,
+        )
+        quote = _primary_quote(raw_value)
+        evidence_ids = list(self.bound_evidence_ids_by_claim.get(claim_id, []))
+        failure = self.claim_failures.get(claim_id)
         self.claims.append({
             "claim_id": claim_id,
             "run_id": self.run_id,
+            "filing_id": self.filing_id,
             "deal_slug": self.deal_slug,
+            "region_id": None,
+            "provider_source_stage": "extractor_claims",
             "claim_type": claim_type,
             "confidence": claim.get("confidence", "unknown"),
-            "raw_value": deepcopy(claim),
+            "raw_value": raw_value,
             "normalized_value": _normalized_claim_value(claim_type, claim),
             "quote_text": quote,
             "quote_text_hash": _hash_text(quote),
@@ -92,10 +129,14 @@ class Canonicalizer:
             "claim_sequence": sequence,
             "coverage_obligation_id": claim.get("coverage_obligation_id"),
         })
-        if evidence_id:
-            self.claim_evidence.append({"claim_id": claim_id, "evidence_id": evidence_id, "ordinal": 1})
+        for ordinal, evidence_id in enumerate(evidence_ids, start=1):
+            self.claim_evidence.append({
+                "claim_id": claim_id,
+                "evidence_id": evidence_id,
+                "ordinal": ordinal,
+            })
         obligation_id = claim.get("coverage_obligation_id")
-        if obligation_id:
+        if obligation_id and not failure:
             self.claim_coverage_links.append({
                 "claim_id": claim_id,
                 "obligation_id": obligation_id,
@@ -114,55 +155,33 @@ class Canonicalizer:
                 "claim_count": 1,
                 "current": True,
             })
-        disposition = "supported" if evidence_id else "queued_ambiguity"
+        disposition = "rejected_unsupported" if failure else "supported"
+        reason_code = failure.get("reason_code") if failure else "evidence_refs_bound"
+        reason = failure.get("reason") if failure else "All evidence refs bound to citation units."
         self.claim_dispositions.append({
             "disposition_id": _stable_id("disposition", self.run_id, claim_id),
             "claim_id": claim_id,
             "run_id": self.run_id,
             "disposition": disposition,
             "current": True,
-            "reason_code": "quote_present" if evidence_id else "quote_missing",
-            "reason": "Quote text present." if evidence_id else "Missing quote text.",
+            "reason_code": reason_code,
+            "reason": reason,
         })
-        return claim_id, evidence_id
+        return claim_id, evidence_ids
 
-    def evidence_for_quote(self, quote: str | None) -> str | None:
-        if not quote:
-            return None
-        text = " ".join(str(quote).split())
-        if not text:
-            return None
-        key = _hash_text(text)
-        existing = self.evidence_index.get(key)
-        if existing:
-            return existing["evidence_id"]
-        evidence_id = _stable_id("evidence", self.deal_slug, text)
-        row = {
-            "evidence_id": evidence_id,
-            "run_id": self.run_id,
-            "deal_slug": self.deal_slug,
-            "span_basis": "claim_quote",
-            "span_kind": "quote_text",
-            "quote_text": text,
-            "quote_text_hash": key,
-            "evidence_fingerprint": _stable_id("fingerprint", self.deal_slug, key),
-            "source_page": None,
-        }
-        self.evidence_index[key] = row
-        self.evidence.append(row)
-        return evidence_id
-
-    def link_row_evidence(self, row_table: str, row_id: str, evidence_id: str | None) -> None:
-        if evidence_id:
+    def link_row_evidence(self, row_table: str, row_id: str, evidence_ids: list[str]) -> None:
+        for ordinal, evidence_id in enumerate(evidence_ids, start=1):
             self.row_evidence.append({
                 "row_table": row_table,
                 "row_id": row_id,
                 "evidence_id": evidence_id,
-                "ordinal": 1,
+                "ordinal": ordinal,
             })
 
     def canonicalize_actor_claim(self, claim: dict[str, Any], sequence: int) -> None:
-        _claim_id, evidence_id = self.add_claim("actor", claim, sequence)
+        claim_id, evidence_ids = self.add_claim("actor", claim, sequence)
+        if claim_id in self.claim_failures:
+            return
         actor = self.actor(
             claim.get("actor_label"),
             actor_kind=claim.get("actor_kind") or "organization",
@@ -170,10 +189,12 @@ class Canonicalizer:
             bidder_class=_normalize_bidder_class(claim.get("actor_class") or claim.get("bidder_class")),
         )
         if actor:
-            self.link_row_evidence("actors", actor["actor_id"], evidence_id)
+            self.link_row_evidence("actors", actor["actor_id"], evidence_ids)
 
     def canonicalize_actor_relation_claim(self, claim: dict[str, Any], sequence: int) -> None:
-        _claim_id, evidence_id = self.add_claim("actor_relation", claim, sequence)
+        claim_id, evidence_ids = self.add_claim("actor_relation", claim, sequence)
+        if claim_id in self.claim_failures:
+            return
         subject = self.actor(claim.get("subject_label"))
         object_actor = self.actor(
             claim.get("object_label"),
@@ -181,8 +202,8 @@ class Canonicalizer:
         )
         if not subject or not object_actor:
             return
-        self.link_row_evidence("actors", subject["actor_id"], evidence_id)
-        self.link_row_evidence("actors", object_actor["actor_id"], evidence_id)
+        self.link_row_evidence("actors", subject["actor_id"], evidence_ids)
+        self.link_row_evidence("actors", object_actor["actor_id"], evidence_ids)
         relation_id = _stable_id(
             "relation",
             self.deal_slug,
@@ -208,11 +229,13 @@ class Canonicalizer:
             "confidence": claim.get("confidence", "unknown"),
         }
         self.actor_relations.append(relation)
-        self.link_row_evidence("actor_relations", relation_id, evidence_id)
+        self.link_row_evidence("actor_relations", relation_id, evidence_ids)
         _apply_relation_class_signal(subject, object_actor, relation)
 
     def canonicalize_event_claim(self, claim: dict[str, Any], sequence: int) -> None:
-        _claim_id, evidence_id = self.add_claim("event", claim, sequence)
+        claim_id, evidence_ids = self.add_claim("event", claim, sequence)
+        if claim_id in self.claim_failures:
+            return
         actor = self.actor(claim.get("actor_label"))
         event_id = _stable_id("event", self.deal_slug, "event", sequence, claim)
         event = {
@@ -231,9 +254,9 @@ class Canonicalizer:
             "consideration_type": None,
         }
         self.events.append(event)
-        self.link_row_evidence("events", event_id, evidence_id)
+        self.link_row_evidence("events", event_id, evidence_ids)
         if actor:
-            self.link_row_evidence("actors", actor["actor_id"], evidence_id)
+            self.link_row_evidence("actors", actor["actor_id"], evidence_ids)
             self.event_actor_links.append({
                 "link_id": _stable_id("link", event_id, actor["actor_id"], claim.get("actor_role")),
                 "run_id": self.run_id,
@@ -245,7 +268,9 @@ class Canonicalizer:
             })
 
     def canonicalize_bid_claim(self, claim: dict[str, Any], sequence: int) -> None:
-        _claim_id, evidence_id = self.add_claim("bid", claim, sequence)
+        claim_id, evidence_ids = self.add_claim("bid", claim, sequence)
+        if claim_id in self.claim_failures:
+            return
         actor = self.actor(claim.get("bidder_label"), actor_kind="group" if _looks_group(claim.get("bidder_label")) else "organization")
         subtype = "final_round_bid" if claim.get("bid_stage") == "final" else "first_round_bid"
         event_id = _stable_id("event", self.deal_slug, "bid", sequence, claim)
@@ -266,9 +291,9 @@ class Canonicalizer:
             "bid_stage": claim.get("bid_stage") or "unspecified",
         }
         self.events.append(event)
-        self.link_row_evidence("events", event_id, evidence_id)
+        self.link_row_evidence("events", event_id, evidence_ids)
         if actor:
-            self.link_row_evidence("actors", actor["actor_id"], evidence_id)
+            self.link_row_evidence("actors", actor["actor_id"], evidence_ids)
             self.event_actor_links.append({
                 "link_id": _stable_id("link", event_id, actor["actor_id"], "bid_submitter"),
                 "run_id": self.run_id,
@@ -280,7 +305,9 @@ class Canonicalizer:
             })
 
     def canonicalize_participation_count_claim(self, claim: dict[str, Any], sequence: int) -> None:
-        _claim_id, evidence_id = self.add_claim("participation_count", claim, sequence)
+        claim_id, evidence_ids = self.add_claim("participation_count", claim, sequence)
+        if claim_id in self.claim_failures:
+            return
         count_id = _stable_id("participation_count", self.deal_slug, sequence, claim)
         row = {
             "participation_count_id": count_id,
@@ -295,7 +322,7 @@ class Canonicalizer:
             "confidence": claim.get("confidence", "unknown"),
         }
         self.participation_counts.append(row)
-        self.link_row_evidence("participation_counts", count_id, evidence_id)
+        self.link_row_evidence("participation_counts", count_id, evidence_ids)
 
     def snapshot(self) -> dict[str, Any]:
         _propagate_member_class_signals(self.actors, self.actor_relations)
@@ -343,6 +370,7 @@ def canonicalize_claim_payload(
     *,
     deal_slug: str,
     run_id: str = "local",
+    evidence_context: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Convert a claim-only provider payload into a canonical graph snapshot."""
     if payload.get("schema_version") and payload.get("schema_version") != "deal_graph_claims_v1":
@@ -352,27 +380,28 @@ def canonicalize_claim_payload(
     if found:
         raise ValueError(f"provider payload contains Python-owned fields: {sorted(found)}")
 
+    evidence_context = evidence_context or {}
     canonicalizer = Canonicalizer(
         deal_slug=deal_slug,
         run_id=run_id,
         deal_id=_stable_id("deal", deal_slug),
+        filing_id=str(evidence_context.get("filing_id") or _stable_id("filing", deal_slug, run_id)),
+        evidence=list(evidence_context.get("evidence", [])),
+        bound_evidence_ids_by_claim=dict(evidence_context.get("claim_evidence_ids", {})),
+        claim_failures=dict(evidence_context.get("claim_failures", {})),
+        review_flags=list(evidence_context.get("review_flags", [])),
     )
-    sequence = 1
-    for claim in payload.get("actor_claims", []):
-        canonicalizer.canonicalize_actor_claim(claim, sequence)
-        sequence += 1
-    for claim in payload.get("actor_relation_claims", []):
-        canonicalizer.canonicalize_actor_relation_claim(claim, sequence)
-        sequence += 1
-    for claim in payload.get("event_claims", []):
-        canonicalizer.canonicalize_event_claim(claim, sequence)
-        sequence += 1
-    for claim in payload.get("bid_claims", []):
-        canonicalizer.canonicalize_bid_claim(claim, sequence)
-        sequence += 1
-    for claim in payload.get("participation_count_claims", []):
-        canonicalizer.canonicalize_participation_count_claim(claim, sequence)
-        sequence += 1
+    for _family, claim_type, _index, sequence, claim in iter_provider_claims(payload):
+        if claim_type == "actor":
+            canonicalizer.canonicalize_actor_claim(claim, sequence)
+        elif claim_type == "actor_relation":
+            canonicalizer.canonicalize_actor_relation_claim(claim, sequence)
+        elif claim_type == "event":
+            canonicalizer.canonicalize_event_claim(claim, sequence)
+        elif claim_type == "bid":
+            canonicalizer.canonicalize_bid_claim(claim, sequence)
+        elif claim_type == "participation_count":
+            canonicalizer.canonicalize_participation_count_claim(claim, sequence)
     return canonicalizer.snapshot()
 
 
@@ -393,6 +422,23 @@ def _normalized_claim_value(claim_type: str, claim: dict[str, Any]) -> dict[str,
             "bid_stage": claim.get("bid_stage"),
         }
     return dict(claim)
+
+
+def _provider_raw_value(claim: dict[str, Any]) -> dict[str, Any]:
+    return {
+        key: deepcopy(value)
+        for key, value in claim.items()
+        if not str(key).startswith("_")
+    }
+
+
+def _primary_quote(claim: dict[str, Any]) -> str:
+    refs = claim.get("evidence_refs") or []
+    if isinstance(refs, list) and refs and isinstance(refs[0], dict):
+        quote = refs[0].get("quote_text")
+        if isinstance(quote, str):
+            return quote
+    return ""
 
 
 def _apply_relation_class_signal(subject: dict[str, Any], object_actor: dict[str, Any], relation: dict[str, Any]) -> None:

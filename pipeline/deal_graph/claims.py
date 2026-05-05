@@ -61,8 +61,8 @@ def claim_row(
         confidence=claim.confidence,
         raw_value=stable_json(raw_value),
         normalized_value=None,
-        quote_text=claim.quote_text,
-        quote_text_hash=quote_hash(claim.quote_text),
+        quote_text=_primary_quote(claim),
+        quote_text_hash=quote_hash(_primary_quote(claim)),
         status=status,
         claim_sequence=claim_sequence,
     )
@@ -130,7 +130,7 @@ def typed_claim_values(claim_id: str, claim: ClaimBase) -> tuple[str, tuple]:
 
 
 def assert_relation_quote_support(claim: ActorRelationClaim) -> None:
-    quote_lower = claim.quote_text.lower()
+    quote_lower = " ".join(_evidence_ref_quote(ref) for ref in claim.evidence_refs).lower()
     missing = [
         label
         for label in (claim.subject_label, claim.object_label)
@@ -157,3 +157,14 @@ def assert_relation_quote_support(claim: ActorRelationClaim) -> None:
 
 def model_to_params(model: BaseModel) -> tuple:
     return tuple(model.model_dump(mode="json").values())
+
+
+def _primary_quote(claim: ClaimBase) -> str:
+    return claim.evidence_refs[0].quote_text
+
+
+def _evidence_ref_quote(ref: object) -> str:
+    if isinstance(ref, dict):
+        value = ref.get("quote_text")
+        return value if isinstance(value, str) else ""
+    return str(getattr(ref, "quote_text", ""))

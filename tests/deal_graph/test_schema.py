@@ -8,6 +8,10 @@ from pipeline.deal_graph.ids import make_id
 from pipeline.deal_graph.store import artifact_paths, init_store
 
 
+def _evidence_refs(quote: str, unit_id: str = "page_1_paragraph_1") -> list[dict]:
+    return [{"citation_unit_id": unit_id, "quote_text": quote}]
+
+
 def _valid_payload() -> dict:
     return {
         "actor_claims": [
@@ -18,7 +22,9 @@ def _valid_payload() -> dict:
                 "actor_kind": "group",
                 "observability": "named",
                 "confidence": "high",
-                "quote_text": "CSC and Pamplona, who together we refer to as CSC/Pamplona",
+                "evidence_refs": _evidence_refs(
+                    "CSC and Pamplona, who together we refer to as CSC/Pamplona"
+                ),
             }
         ],
         "event_claims": [
@@ -32,7 +38,10 @@ def _valid_payload() -> dict:
                 "actor_label": "CSC/Pamplona",
                 "actor_role": "potential_buyer",
                 "confidence": "high",
-                "quote_text": "CSC/Pamplona entered into a confidentiality agreement",
+                "evidence_refs": _evidence_refs(
+                    "CSC/Pamplona entered into a confidentiality agreement",
+                    "page_1_paragraph_2",
+                ),
             }
         ],
         "bid_claims": [
@@ -48,7 +57,10 @@ def _valid_payload() -> dict:
                 "consideration_type": "cash",
                 "bid_stage": "initial",
                 "confidence": "high",
-                "quote_text": "CSC/Pamplona submitted an indication of interest at $18.50 per share",
+                "evidence_refs": _evidence_refs(
+                    "CSC/Pamplona submitted an indication of interest at $18.50 per share",
+                    "page_1_paragraph_3",
+                ),
             }
         ],
         "participation_count_claims": [
@@ -61,7 +73,10 @@ def _valid_payload() -> dict:
                 "count_max": 20,
                 "count_qualifier": "exact",
                 "confidence": "high",
-                "quote_text": "20 potential bidders entered confidentiality agreements",
+                "evidence_refs": _evidence_refs(
+                    "20 potential bidders entered confidentiality agreements",
+                    "page_1_paragraph_4",
+                ),
             }
         ],
         "actor_relation_claims": [
@@ -74,7 +89,9 @@ def _valid_payload() -> dict:
                 "role_detail": "financing sponsor",
                 "effective_date_first": None,
                 "confidence": "high",
-                "quote_text": "CSC and Pamplona, who together we refer to as CSC/Pamplona",
+                "evidence_refs": _evidence_refs(
+                    "CSC and Pamplona, who together we refer to as CSC/Pamplona"
+                ),
             }
         ],
     }
@@ -88,30 +105,26 @@ def test_provider_payload_accepts_claim_only_shape():
     assert payload.actor_relation_claims[0].relation_type == "member_of"
 
 
-def test_provider_payload_accepts_separated_exact_quote_snippets():
+def test_provider_payload_accepts_separated_exact_evidence_refs():
     payload = _valid_payload()
-    payload["actor_relation_claims"][0]["quote_text"] = "Longview had informed the Company"
-    payload["actor_relation_claims"][0]["quote_texts"] = [
-        "Longview had informed the Company",
-        "remain outstanding as equity in PetSmart",
+    payload["actor_relation_claims"][0]["evidence_refs"] = [
+        {"citation_unit_id": "page_23_paragraph_2", "quote_text": "Longview had informed the Company"},
+        {"citation_unit_id": "page_24_paragraph_1", "quote_text": "remain outstanding as equity in PetSmart"},
     ]
 
     parsed = schema.ProviderPayload.model_validate(payload)
 
-    assert parsed.actor_relation_claims[0].quote_texts == [
-        "Longview had informed the Company",
-        "remain outstanding as equity in PetSmart",
+    assert [ref.citation_unit_id for ref in parsed.actor_relation_claims[0].evidence_refs] == [
+        "page_23_paragraph_2",
+        "page_24_paragraph_1",
     ]
 
 
-def test_provider_payload_rejects_quote_texts_without_primary_first():
+def test_provider_payload_rejects_empty_evidence_refs():
     payload = _valid_payload()
-    payload["actor_claims"][0]["quote_texts"] = [
-        "different exact snippet",
-        payload["actor_claims"][0]["quote_text"],
-    ]
+    payload["actor_claims"][0]["evidence_refs"] = []
 
-    with pytest.raises(ValidationError, match="quote_texts"):
+    with pytest.raises(ValidationError, match="evidence_refs"):
         schema.ProviderPayload.model_validate(payload)
 
 

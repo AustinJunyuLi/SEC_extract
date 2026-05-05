@@ -35,9 +35,9 @@ def prompt_hash(system: str, user: str = "") -> str:
     return h.hexdigest()
 
 
-RAW_RESPONSE_SCHEMA_VERSION = "raw_response_v2"
-AUDIT_RUN_SCHEMA_VERSION = "audit_run_v2"
-AUDIT_LATEST_SCHEMA_VERSION = "audit_v2"
+RAW_RESPONSE_SCHEMA_VERSION = "raw_response_v3"
+AUDIT_RUN_SCHEMA_VERSION = "audit_run_v3"
+AUDIT_LATEST_SCHEMA_VERSION = "audit_v3"
 VALIDATION_SCHEMA_VERSION = "validation_v1"
 
 LEGACY_AUDIT_NAMES: frozenset[str] = frozenset({
@@ -100,43 +100,6 @@ class AuditWriter:
         path = self.root / "calls.jsonl"
         with path.open("a", encoding="utf-8") as f:
             f.write(json.dumps(entry, sort_keys=False, default=str) + "\n")
-
-    def _append_jsonl(self, filename: str, entry: dict[str, Any]) -> None:
-        payload = {
-            "ts": _now_iso(),
-            "slug": self.slug,
-            "run_id": self.run_id,
-        }
-        payload.update(entry)
-        path = self.root / filename
-        with path.open("a", encoding="utf-8") as f:
-            f.write(json.dumps(payload, sort_keys=False, default=str) + "\n")
-
-    def write_tool_call(self, record: dict[str, Any]) -> None:
-        payload = dict(record)
-        result = payload.get("result")
-        result_text = json.dumps(result, sort_keys=True, default=str)
-        if len(result_text) > 8000:
-            payload["result"] = result_text[:8000]
-            payload["result_truncated"] = True
-        else:
-            payload.setdefault("result_truncated", False)
-        self._append_jsonl("tool_calls.jsonl", payload)
-
-    def write_repair_turn(self, record: dict[str, Any]) -> None:
-        self._append_jsonl("repair_turns.jsonl", dict(record))
-
-    def write_obligations(self, payload: dict[str, Any]) -> None:
-        _atomic_write_text(
-            self.root / "obligations.json",
-            json.dumps(payload, indent=2, default=str) + "\n",
-        )
-
-    def write_repair_response(self, payload: dict[str, Any]) -> None:
-        _atomic_write_text(
-            self.root / "repair_response.json",
-            json.dumps(payload, indent=2, default=str) + "\n",
-        )
 
     def write_raw_response(
         self,

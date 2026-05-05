@@ -3,6 +3,11 @@ from pathlib import Path
 
 from pipeline import reconcile
 from pipeline.core import REFERENCE_SLUGS
+from pipeline.llm.audit import (
+    AUDIT_LATEST_SCHEMA_VERSION,
+    AUDIT_RUN_SCHEMA_VERSION,
+    RAW_RESPONSE_SCHEMA_VERSION,
+)
 
 
 def _write_json(path: Path, payload: dict) -> None:
@@ -22,6 +27,31 @@ def _write_progress(root: Path, deals: dict[str, dict]) -> None:
             "deals": deals,
         },
     )
+
+
+def _claim_payload(label: str = "Synthetic Target") -> dict:
+    return {
+        "actor_claims": [
+            {
+                "claim_type": "actor",
+                "coverage_obligation_id": "obl_actor_1",
+                "actor_label": label,
+                "actor_kind": "target",
+                "observability": "named",
+                "confidence": "high",
+                "evidence_refs": [
+                    {
+                        "citation_unit_id": "page_1_paragraph_1",
+                        "quote_text": "Synthetic Target entered into a merger agreement.",
+                    }
+                ],
+            }
+        ],
+        "event_claims": [],
+        "bid_claims": [],
+        "participation_count_claims": [],
+        "actor_relation_claims": [],
+    }
 
 
 def _progress_deal(
@@ -113,31 +143,25 @@ def _write_audit(
     _write_json(
         run_dir / "manifest.json",
         {
-            "schema_version": "audit_run_v2",
+            "schema_version": AUDIT_RUN_SCHEMA_VERSION,
             "slug": slug,
             "run_id": run_id,
             "outcome": outcome,
             "cache_eligible": cache_eligible,
             "rulebook_version": rulebook_version,
             "extractor_contract_version": "extract-contract-v1",
-            "tools_contract_version": "tools-contract-v1",
-            "repair_loop_contract_version": "repair-contract-v1",
-            "obligation_contract_version": "obligation-contract-v1",
-            "repair_turns_used": 0,
-            "repair_loop_outcome": "clean" if outcome != "failed" else "not_started",
-            "tool_calls_count": 0,
         },
     )
     if include_raw:
         _write_json(
             run_dir / "raw_response.json",
             {
-                "schema_version": "raw_response_v2",
+                "schema_version": RAW_RESPONSE_SCHEMA_VERSION,
                 "slug": slug,
                 "run_id": run_id,
                 "rulebook_version": rulebook_version,
                 "extractor_contract_version": "extract-contract-v1",
-                "parsed_json": {"deal": {}, "events": []},
+                "parsed_json": _claim_payload(),
             },
         )
     if include_validation:
@@ -155,7 +179,7 @@ def _write_audit(
     _write_json(
         root / "output" / "audit" / slug / "latest.json",
         {
-            "schema_version": "audit_v2",
+            "schema_version": AUDIT_LATEST_SCHEMA_VERSION,
             "slug": slug,
             "run_id": run_id,
             "outcome": outcome,

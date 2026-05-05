@@ -12,9 +12,10 @@ Key rules:
 - Provider output is claim-only: `actor_claims`, `event_claims`, `bid_claims`,
   `participation_count_claims`, and `actor_relation_claims`.
 - Extractor input includes paragraph-local `citation_units`.
-- Each claim includes exact `quote_text` plus `quote_texts` copied from
-  `citation_units[].text`; `quote_texts` is `null` unless separated exact
-  snippets are needed for source support.
+- Each claim includes `evidence_refs`. Every ref has a `citation_unit_id` from
+  `citation_units[]` and an exact `quote_text` substring from that unit.
+- Provider-level `quote_text` and `quote_texts` are retired and must not be
+  emitted.
 - Target identity comes from the filing manifest and Python-owned deal metadata;
   the provider does not emit a target-only actor claim.
 - The provider must not emit canonical ids, source offsets, `BidderID`,

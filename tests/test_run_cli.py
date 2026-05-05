@@ -131,14 +131,11 @@ def test_reasoning_effort_args_pass_through_to_pool_config():
         "medivation",
         "--extract-reasoning-effort",
         "high",
-        "--adjudicate-reasoning-effort",
-        "xhigh",
     ])
 
     cfg = run_cli._make_pool_config(args, mode="extract")
 
     assert cfg.extract_reasoning_effort == "high"
-    assert cfg.adjudicate_reasoning_effort == "xhigh"
 
 
 def test_audit_run_id_passes_through_to_pool_config():
@@ -166,13 +163,11 @@ def test_audit_run_id_requires_re_validate(monkeypatch, capsys):
 
 def test_reasoning_effort_defaults_to_high(monkeypatch):
     monkeypatch.delenv("EXTRACT_REASONING_EFFORT", raising=False)
-    monkeypatch.delenv("ADJUDICATE_REASONING_EFFORT", raising=False)
     args = run_cli._parser().parse_args(["--slug", "medivation"])
 
     cfg = run_cli._make_pool_config(args, mode="extract")
 
     assert cfg.extract_reasoning_effort == "high"
-    assert cfg.adjudicate_reasoning_effort == "high"
 
 
 def test_commit_and_dry_run_is_rejected(monkeypatch, capsys):
@@ -196,11 +191,17 @@ def test_failed_outcome_returns_nonzero(monkeypatch):
 
 @pytest.mark.parametrize(
     "old_flag",
-    ["--raw-" "extraction", "--print-extractor-" "prompt", "--max-tokens-" "per-deal"],
+    [
+        "--raw-" "extraction",
+        "--print-extractor-" "prompt",
+        "--max-tokens-" "per-deal",
+        "--adjudicate-model",
+        "--adjudicate-reasoning-effort",
+    ],
 )
 def test_old_flags_are_unrecognized(monkeypatch, old_flag, tmp_path, capsys):
     args = ["--slug", "medivation", old_flag]
-    if old_flag == "--raw-" "extraction":
+    if old_flag in {"--raw-" "extraction", "--adjudicate-model", "--adjudicate-reasoning-effort"}:
         args.append(str(tmp_path / "raw.json"))
     if old_flag == "--max-tokens-" "per-deal":
         args.append("200000")

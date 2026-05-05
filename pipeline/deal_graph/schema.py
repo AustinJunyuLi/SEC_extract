@@ -104,6 +104,7 @@ class CountQualifier(StrEnum):
     EXACT = "exact"
     AT_LEAST = "at_least"
     AT_MOST = "at_most"
+    RANGE = "range"
     APPROXIMATE = "approximate"
 
 
@@ -142,39 +143,23 @@ PROVIDER_FORBIDDEN_FIELDS = frozenset({
 })
 
 
-class ClaimBase(StrictModel):
-    claim_type: str
-    coverage_obligation_id: str = Field(min_length=1)
-    confidence: Confidence
+class EvidenceRef(StrictModel):
+    citation_unit_id: str = Field(min_length=1)
     quote_text: str = Field(min_length=1, max_length=1500)
-    quote_texts: list[str] | None = None
 
     @field_validator("quote_text")
     @classmethod
     def quote_must_not_be_blank(cls, value: str) -> str:
         if not value.strip():
-            raise ValueError("quote_text must not be blank")
+            raise ValueError("evidence_refs.quote_text must not be blank")
         return value
 
-    @field_validator("quote_texts")
-    @classmethod
-    def quote_texts_must_be_exact_snippets(cls, value: list[str] | None) -> list[str] | None:
-        if value is None:
-            return None
-        if not value:
-            raise ValueError("quote_texts must be null or a non-empty list")
-        for quote in value:
-            if not quote.strip():
-                raise ValueError("quote_texts entries must not be blank")
-            if len(quote) > 1500:
-                raise ValueError("quote_texts entries cannot exceed 1500 characters")
-        return value
 
-    @model_validator(mode="after")
-    def quote_texts_start_with_primary_quote(self) -> "ClaimBase":
-        if self.quote_texts is not None and self.quote_texts[0] != self.quote_text:
-            raise ValueError("quote_texts[0] must equal quote_text")
-        return self
+class ClaimBase(StrictModel):
+    claim_type: str
+    coverage_obligation_id: str = Field(min_length=1)
+    confidence: Confidence
+    evidence_refs: list[EvidenceRef] = Field(min_length=1)
 
 
 class ActorClaim(ClaimBase):

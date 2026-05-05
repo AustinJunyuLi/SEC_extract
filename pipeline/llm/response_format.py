@@ -2,9 +2,22 @@ from __future__ import annotations
 
 import hashlib
 import json
-from copy import deepcopy
 from typing import Any
 
+from pipeline.deal_graph.schema import (
+    ActorClass,
+    ActorKind,
+    BidStage,
+    BidValueUnit,
+    Confidence,
+    ConsiderationType,
+    CountQualifier,
+    EventSubtype,
+    EventType,
+    Observability,
+    ProcessStage,
+    RelationType,
+)
 from pipeline.llm.client import CompletionResult, LLMClient
 
 
@@ -115,11 +128,28 @@ def _validate_schema_value(schema: dict[str, Any], value: Any, path: str = "$") 
                 _validate_schema_value(item_schema, item, _array_path(path, index))
 
 
-CONFIDENCE_SCHEMA = {"type": "string", "enum": ["high", "medium", "low"]}
+def _enum_values(enum_cls: Any) -> list[str]:
+    return [member.value for member in enum_cls]
+
+
+def _nullable_enum_values(enum_cls: Any) -> list[str | None]:
+    return [*_enum_values(enum_cls), None]
+
+
+CONFIDENCE_SCHEMA = {"type": "string", "enum": _enum_values(Confidence)}
 QUOTE_TEXT_SCHEMA = {"type": "string", "maxLength": 1500}
-QUOTE_TEXTS_SCHEMA = {
-    "type": ["array", "null"],
-    "items": QUOTE_TEXT_SCHEMA,
+EVIDENCE_REF_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "citation_unit_id": {"type": "string"},
+        "quote_text": QUOTE_TEXT_SCHEMA,
+    },
+    "required": ["citation_unit_id", "quote_text"],
+    "additionalProperties": False,
+}
+EVIDENCE_REFS_SCHEMA = {
+    "type": "array",
+    "items": EVIDENCE_REF_SCHEMA,
     "minItems": 1,
 }
 
@@ -131,15 +161,14 @@ ACTOR_CLAIM_SCHEMA = {
         "actor_label": {"type": "string"},
         "actor_kind": {
             "type": "string",
-            "enum": ["organization", "person", "group", "vehicle", "cohort", "committee"],
+            "enum": _enum_values(ActorKind),
         },
         "observability": {
             "type": "string",
-            "enum": ["named", "anonymous_handle", "count_only"],
+            "enum": _enum_values(Observability),
         },
         "confidence": CONFIDENCE_SCHEMA,
-        "quote_text": QUOTE_TEXT_SCHEMA,
-        "quote_texts": QUOTE_TEXTS_SCHEMA,
+        "evidence_refs": EVIDENCE_REFS_SCHEMA,
     },
     "required": [
         "claim_type",
@@ -148,8 +177,7 @@ ACTOR_CLAIM_SCHEMA = {
         "actor_kind",
         "observability",
         "confidence",
-        "quote_text",
-        "quote_texts",
+        "evidence_refs",
     ],
     "additionalProperties": False,
 }
@@ -159,37 +187,17 @@ EVENT_CLAIM_SCHEMA = {
     "properties": {
         "claim_type": {"type": "string", "enum": ["event"]},
         "coverage_obligation_id": {"type": "string"},
-        "event_type": {"type": "string", "enum": ["process", "bid", "transaction"]},
+        "event_type": {"type": "string", "enum": _enum_values(EventType)},
         "event_subtype": {
             "type": "string",
-            "enum": [
-                "contact_initial",
-                "nda_signed",
-                "consortium_ca_signed",
-                "ioi_submitted",
-                "first_round_bid",
-                "final_round_bid",
-                "exclusivity_grant",
-                "merger_agreement_executed",
-                "withdrawn_by_bidder",
-                "excluded_by_target",
-                "non_responsive",
-                "cohort_closure",
-                "advancement_admitted",
-                "advancement_declined",
-                "rollover_executed",
-                "financing_committed",
-                "go_shop_started",
-                "go_shop_ended",
-            ],
+            "enum": _enum_values(EventSubtype),
         },
         "event_date": {"type": ["string", "null"]},
         "description": {"type": "string"},
         "actor_label": {"type": ["string", "null"]},
         "actor_role": {"type": ["string", "null"]},
         "confidence": CONFIDENCE_SCHEMA,
-        "quote_text": QUOTE_TEXT_SCHEMA,
-        "quote_texts": QUOTE_TEXTS_SCHEMA,
+        "evidence_refs": EVIDENCE_REFS_SCHEMA,
     },
     "required": [
         "claim_type",
@@ -201,8 +209,7 @@ EVENT_CLAIM_SCHEMA = {
         "actor_label",
         "actor_role",
         "confidence",
-        "quote_text",
-        "quote_texts",
+        "evidence_refs",
     ],
     "additionalProperties": False,
 }
@@ -219,19 +226,18 @@ BID_CLAIM_SCHEMA = {
         "bid_value_upper": {"type": ["number", "null"]},
         "bid_value_unit": {
             "type": ["string", "null"],
-            "enum": ["per_share", "enterprise_value", "equity_value", "other", None],
+            "enum": _nullable_enum_values(BidValueUnit),
         },
         "consideration_type": {
             "type": ["string", "null"],
-            "enum": ["cash", "stock", "mixed", "other", None],
+            "enum": _nullable_enum_values(ConsiderationType),
         },
         "bid_stage": {
             "type": "string",
-            "enum": ["initial", "revised", "final", "unspecified"],
+            "enum": _enum_values(BidStage),
         },
         "confidence": CONFIDENCE_SCHEMA,
-        "quote_text": QUOTE_TEXT_SCHEMA,
-        "quote_texts": QUOTE_TEXTS_SCHEMA,
+        "evidence_refs": EVIDENCE_REFS_SCHEMA,
     },
     "required": [
         "claim_type",
@@ -245,8 +251,7 @@ BID_CLAIM_SCHEMA = {
         "consideration_type",
         "bid_stage",
         "confidence",
-        "quote_text",
-        "quote_texts",
+        "evidence_refs",
     ],
     "additionalProperties": False,
 }
@@ -258,18 +263,17 @@ PARTICIPATION_COUNT_CLAIM_SCHEMA = {
         "coverage_obligation_id": {"type": "string"},
         "process_stage": {
             "type": "string",
-            "enum": ["contacted", "nda_signed", "ioi_submitted", "first_round", "final_round", "exclusivity"],
+            "enum": _enum_values(ProcessStage),
         },
         "actor_class": {
             "type": "string",
-            "enum": ["financial", "strategic", "mixed", "unknown"],
+            "enum": _enum_values(ActorClass),
         },
         "count_min": {"type": "integer"},
         "count_max": {"type": ["integer", "null"]},
-        "count_qualifier": {"type": "string", "enum": ["exact", "at_least", "at_most", "range", "approximate"]},
+        "count_qualifier": {"type": "string", "enum": _enum_values(CountQualifier)},
         "confidence": CONFIDENCE_SCHEMA,
-        "quote_text": QUOTE_TEXT_SCHEMA,
-        "quote_texts": QUOTE_TEXTS_SCHEMA,
+        "evidence_refs": EVIDENCE_REFS_SCHEMA,
     },
     "required": [
         "claim_type",
@@ -280,8 +284,7 @@ PARTICIPATION_COUNT_CLAIM_SCHEMA = {
         "count_max",
         "count_qualifier",
         "confidence",
-        "quote_text",
-        "quote_texts",
+        "evidence_refs",
     ],
     "additionalProperties": False,
 }
@@ -295,25 +298,12 @@ ACTOR_RELATION_CLAIM_SCHEMA = {
         "object_label": {"type": "string"},
         "relation_type": {
             "type": "string",
-            "enum": [
-                "member_of",
-                "joins_group",
-                "exits_group",
-                "affiliate_of",
-                "controls",
-                "acquisition_vehicle_of",
-                "advises",
-                "finances",
-                "supports",
-                "voting_support_for",
-                "rollover_holder_for",
-            ],
+            "enum": _enum_values(RelationType),
         },
         "role_detail": {"type": ["string", "null"]},
         "effective_date_first": {"type": ["string", "null"]},
         "confidence": CONFIDENCE_SCHEMA,
-        "quote_text": QUOTE_TEXT_SCHEMA,
-        "quote_texts": QUOTE_TEXTS_SCHEMA,
+        "evidence_refs": EVIDENCE_REFS_SCHEMA,
     },
     "required": [
         "claim_type",
@@ -324,8 +314,7 @@ ACTOR_RELATION_CLAIM_SCHEMA = {
         "role_detail",
         "effective_date_first",
         "confidence",
-        "quote_text",
-        "quote_texts",
+        "evidence_refs",
     ],
     "additionalProperties": False,
 }
@@ -352,39 +341,8 @@ DEAL_GRAPH_CLAIM_SCHEMA: dict[str, Any] = {
     "additionalProperties": False,
 }
 
-# Compatibility name for existing callers during the deal_graph_v1 provider
-# contract slice. The schema itself is no longer the retired row/event format.
-SCHEMA_R1: dict[str, Any] = DEAL_GRAPH_CLAIM_SCHEMA
-
-
-REPAIR_SCHEMA_R1: dict[str, Any] = deepcopy(SCHEMA_R1)
-REPAIR_SCHEMA_R1["properties"]["obligation_assertions"] = {
-    "type": "array",
-    "items": {
-        "type": "object",
-        "properties": {
-            "obligation_id": {"type": "string"},
-            "status": {
-                "type": "string",
-                "enum": ["satisfied", "unmet", "not_applicable"],
-            },
-            "claim_indexes": {"type": "array", "items": {"type": "integer"}},
-            "reason": {"type": "string"},
-        },
-        "required": ["obligation_id", "status", "claim_indexes", "reason"],
-        "additionalProperties": False,
-    },
-}
-REPAIR_SCHEMA_R1["required"] = [*SCHEMA_R1["required"], "obligation_assertions"]
-
-
-def json_schema_format(schema: dict[str, Any] = SCHEMA_R1) -> dict[str, Any]:
-    if schema is REPAIR_SCHEMA_R1:
-        name = "deal_graph_v1_repair_claim_schema"
-    elif schema is SCHEMA_R1:
-        name = "deal_graph_v1_claim_schema"
-    else:
-        name = "custom_json_schema"
+def json_schema_format(schema: dict[str, Any] = DEAL_GRAPH_CLAIM_SCHEMA) -> dict[str, Any]:
+    name = "deal_graph_v1_claim_schema" if schema is DEAL_GRAPH_CLAIM_SCHEMA else "custom_json_schema"
     return {
         "type": "json_schema",
         "name": name,
@@ -393,7 +351,7 @@ def json_schema_format(schema: dict[str, Any] = SCHEMA_R1) -> dict[str, Any]:
     }
 
 
-def schema_hash(schema: dict[str, Any] = SCHEMA_R1) -> str:
+def schema_hash(schema: dict[str, Any] = DEAL_GRAPH_CLAIM_SCHEMA) -> str:
     encoded = json.dumps(schema, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
 
@@ -409,34 +367,7 @@ def parse_json_text(text: str) -> dict[str, Any]:
     return parsed
 
 
-def parse_repair_json_text(text: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
-    parsed = parse_json_text(text)
-    _validate_schema_value(REPAIR_SCHEMA_R1, parsed)
-    obligation_assertions = parsed.pop("obligation_assertions")
-    _ensure_extraction_shape(parsed)
-    return parsed, obligation_assertions
-
-
-def _ensure_source_quote_page_pairing(parsed: dict[str, Any]) -> None:
-    for index, event in enumerate(parsed.get("events") or []):
-        if not isinstance(event, dict):
-            continue
-        quote = event.get("source_quote")
-        page = event.get("source_page")
-        quote_is_list = isinstance(quote, list)
-        page_is_list = isinstance(page, list)
-        if quote_is_list != page_is_list:
-            raise MalformedJSONError(
-                f"$.events[{index}].source_quote/source_page: multi-quote form "
-                "requires both fields to be lists"
-            )
-        if quote_is_list and len(quote) != len(page):
-            raise MalformedJSONError(
-                f"$.events[{index}].source_quote/source_page: list lengths differ"
-            )
-
-
-def _ensure_extraction_shape(parsed: dict[str, Any], schema: dict[str, Any] = SCHEMA_R1) -> None:
+def _ensure_extraction_shape(parsed: dict[str, Any], schema: dict[str, Any] = DEAL_GRAPH_CLAIM_SCHEMA) -> None:
     missing = [name for name in schema["required"] if name not in parsed]
     if missing:
         raise MalformedJSONError(
@@ -451,7 +382,7 @@ async def call_json(
     system: str,
     user: str,
     model: str,
-    schema: dict[str, Any] = SCHEMA_R1,
+    schema: dict[str, Any] = DEAL_GRAPH_CLAIM_SCHEMA,
     max_output_tokens: int | None = None,
     reasoning_effort: str | None = None,
 ) -> CompletionResult:
@@ -464,7 +395,7 @@ async def call_json(
         reasoning_effort=reasoning_effort,
     )
     parsed = parse_json_text(result.text)
-    if schema is SCHEMA_R1:
+    if schema is DEAL_GRAPH_CLAIM_SCHEMA:
         _ensure_extraction_shape(parsed)
     else:
         _validate_schema_value(schema, parsed)

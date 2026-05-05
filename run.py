@@ -2,7 +2,7 @@
 
 `python run.py --slug medivation --extract` runs one deal through the same
 `pipeline.run_pool` interface used by the batch runner. The default mode is
-`--extract`; `--re-validate` only reuses a cache-eligible archived audit v2 raw
+`--extract`; `--re-validate` only reuses a cache-eligible archived audit v3 raw
 response, and `--re-extract` forces a fresh SDK call.
 """
 
@@ -50,14 +50,9 @@ def _make_pool_config(args: argparse.Namespace, *, mode: str) -> Any:
         release_targets=args.release_targets,
         target_gate_proof=args.target_gate_proof,
         extract_model=args.extract_model or os.environ.get("EXTRACT_MODEL", "gpt-5.5"),
-        adjudicate_model=args.adjudicate_model or os.environ.get("ADJUDICATE_MODEL", "gpt-5.5"),
         extract_reasoning_effort=(
             args.extract_reasoning_effort
             or os.environ.get("EXTRACT_REASONING_EFFORT")
-            or DEFAULT_REASONING_EFFORT
-        ),
-        adjudicate_reasoning_effort=(
-            args.adjudicate_reasoning_effort or os.environ.get("ADJUDICATE_REASONING_EFFORT")
             or DEFAULT_REASONING_EFFORT
         ),
         commit=False,
@@ -195,16 +190,10 @@ def _parser() -> argparse.ArgumentParser:
         help="JSON target-release proof file produced after stable reference runs.",
     )
     parser.add_argument("--extract-model", help="Model for extraction calls.")
-    parser.add_argument("--adjudicate-model", help="Model for adjudication calls.")
     parser.add_argument(
         "--extract-reasoning-effort",
         choices=["none", "minimal", "low", "medium", "high", "xhigh"],
         help="reasoning.effort for extraction calls.",
-    )
-    parser.add_argument(
-        "--adjudicate-reasoning-effort",
-        choices=["none", "minimal", "low", "medium", "high", "xhigh"],
-        help="reasoning.effort for adjudication calls.",
     )
     parser.add_argument("--dry-run", action="store_true", help="Plan the run without requiring an API key.")
     return parser

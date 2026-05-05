@@ -7,11 +7,33 @@ import pytest
 
 from pipeline.deal_graph import canonicalize_claim_payload
 from pipeline.deal_graph import project as project_cli
+from pipeline.deal_graph.orchestrate import _bind_provider_evidence
 from pipeline.deal_graph.project_estimation import project_estimation_rows
 
 
+def _refs(quote: str) -> list[dict]:
+    return [{"citation_unit_id": "page_1_paragraph_1", "quote_text": quote}]
+
+
+def _graph(payload: dict, *, deal_slug: str = "sample", run_id: str = "run-1") -> dict:
+    quotes = [
+        ref["quote_text"]
+        for family in payload.values()
+        if isinstance(family, list)
+        for claim in family
+        for ref in claim.get("evidence_refs", [])
+    ]
+    pages = [{"number": 1, "content": " ".join(dict.fromkeys(quotes))}]
+    return canonicalize_claim_payload(
+        payload,
+        deal_slug=deal_slug,
+        run_id=run_id,
+        evidence_context=_bind_provider_evidence(payload, slug=deal_slug, run_id=run_id, pages=pages),
+    )
+
+
 def test_estimation_projection_derives_initial_final_and_unknown_type() -> None:
-    graph = canonicalize_claim_payload(
+    graph = _graph(
         {
             "bid_claims": [
                 {
@@ -26,7 +48,7 @@ def test_estimation_projection_derives_initial_final_and_unknown_type() -> None:
                     "consideration_type": "cash",
                     "bid_stage": "initial",
                     "confidence": "high",
-                    "quote_text": "Party B proposed a range of $15.00 to $16.00 per share",
+                    "evidence_refs": _refs("Party B proposed a range of $15.00 to $16.00 per share"),
                 },
                 {
                     "claim_type": "bid",
@@ -40,12 +62,10 @@ def test_estimation_projection_derives_initial_final_and_unknown_type() -> None:
                     "consideration_type": "cash",
                     "bid_stage": "final",
                     "confidence": "high",
-                    "quote_text": "Party B submitted a final proposal of $17.00 per share",
+                    "evidence_refs": _refs("Party B submitted a final proposal of $17.00 per share"),
                 },
             ]
-        },
-        deal_slug="sample",
-        run_id="run-1",
+        }
     )
 
     rows = project_estimation_rows(graph)
@@ -62,7 +82,7 @@ def test_estimation_projection_derives_initial_final_and_unknown_type() -> None:
 
 
 def test_projection_cli_blocks_invalid_snapshot(tmp_path, monkeypatch, capsys) -> None:
-    graph = canonicalize_claim_payload(
+    graph = _graph(
         {
             "bid_claims": [
                 {
@@ -77,12 +97,10 @@ def test_projection_cli_blocks_invalid_snapshot(tmp_path, monkeypatch, capsys) -
                     "consideration_type": "cash",
                     "bid_stage": "initial",
                     "confidence": "high",
-                    "quote_text": "Party B proposed $15.00 per share",
+                    "evidence_refs": _refs("Party B proposed $15.00 per share"),
                 }
             ]
-        },
-        deal_slug="sample",
-        run_id="run-1",
+        }
     )
     graph["claim_evidence"] = []
     snapshot = tmp_path / "deal_graph_v1.json"

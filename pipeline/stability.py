@@ -1,4 +1,4 @@
-"""Read-only stability harness for immutable audit v2 archives."""
+"""Read-only stability harness for immutable audit v3 archives."""
 
 from __future__ import annotations
 
@@ -21,6 +21,7 @@ from pipeline.llm.audit import (
     LEGACY_AUDIT_NAMES,
     RAW_RESPONSE_SCHEMA_VERSION,
 )
+from pipeline.llm.response_format import DEAL_GRAPH_CLAIM_SCHEMA
 
 
 ELIGIBLE_OUTCOMES = frozenset({"validated", "passed", "passed_clean"})
@@ -68,9 +69,6 @@ class RunMetrics:
     schema_hash: str
     rulebook_hash: str
     extractor_contract_version: str
-    tools_contract_version: str
-    repair_loop_contract_version: str
-    obligation_contract_version: str
     row_count: int
     row_fingerprints: tuple[str, ...]
     bid_note_counts: tuple[tuple[str, int], ...]
@@ -86,7 +84,7 @@ class RunMetrics:
     quote_diagnostics: tuple[tuple[str, int], ...]
 
     @property
-    def config_identity(self) -> tuple[str, str, str, str, str, str, str, str, str, str]:
+    def config_identity(self) -> tuple[str, str, str, str, str, str, str]:
         return (
             self.model,
             self.reasoning_effort,
@@ -95,9 +93,6 @@ class RunMetrics:
             self.schema_hash,
             self.rulebook_hash,
             self.extractor_contract_version,
-            self.tools_contract_version,
-            self.repair_loop_contract_version,
-            self.obligation_contract_version,
         )
 
     @property
@@ -230,6 +225,12 @@ def _manifest_nested_value(manifest: dict[str, Any], key: str, subkey: str) -> s
     return "" if nested in (None, "") else str(nested)
 
 
+def _is_claim_payload(value: Any) -> bool:
+    if not isinstance(value, dict):
+        return False
+    return all(isinstance(value.get(name), list) for name in DEAL_GRAPH_CLAIM_SCHEMA["required"])
+
+
 def _require_manifest_value(manifest: dict[str, Any], path: tuple[str, ...], manifest_path: Path) -> None:
     value: Any = manifest
     for part in path:
@@ -244,7 +245,7 @@ def _require_manifest_value(manifest: dict[str, Any], path: tuple[str, ...], man
 
 def _validate_manifest(manifest: dict[str, Any], manifest_path: Path) -> None:
     if manifest.get("schema_version") != AUDIT_RUN_SCHEMA_VERSION:
-        raise StabilityError(f"archived run manifest schema_version is not audit_run_v2: {manifest_path}")
+        raise StabilityError(f"archived run manifest schema_version is not {AUDIT_RUN_SCHEMA_VERSION}: {manifest_path}")
     required_paths = (
         ("slug",),
         ("run_id",),
@@ -259,12 +260,6 @@ def _validate_manifest(manifest: dict[str, Any], manifest_path: Path) -> None:
         ("schema_hash",),
         ("rulebook_version",),
         ("extractor_contract_version",),
-        ("tools_contract_version",),
-        ("repair_loop_contract_version",),
-        ("obligation_contract_version",),
-        ("repair_turns_used",),
-        ("repair_loop_outcome",),
-        ("tool_calls_count",),
     )
     for path in required_paths:
         _require_manifest_value(manifest, path, manifest_path)
@@ -272,6 +267,23 @@ def _validate_manifest(manifest: dict[str, Any], manifest_path: Path) -> None:
         raise StabilityError(
             f"archived run manifest contains a retired structured-output fallback field: {manifest_path}"
         )
+    retired = (
+        "tools_contract_version",
+        "repair_loop_contract_version",
+        "obligation_contract_version",
+        "repair_turns_used",
+        "repair_loop_outcome",
+        "tool_calls_count",
+    )
+    for key in retired:
+        if key in manifest:
+            raise StabilityError(f"archived run manifest contains retired {key}: {manifest_path}")
+    for nested_key in ("models", "reasoning_efforts"):
+        nested = manifest.get(nested_key)
+        if isinstance(nested, dict) and "adjudicate" in nested:
+            raise StabilityError(
+                f"archived run manifest {nested_key} contains retired adjudicate entry: {manifest_path}"
+            )
 
 
 def _all_flags(final_output: dict[str, Any], validation: dict[str, Any]) -> list[dict[str, Any]]:
@@ -470,9 +482,6 @@ def metrics_for_run(archived: ArchivedRun) -> RunMetrics:
         schema_hash=_manifest_value(archived.manifest, "schema_hash"),
         rulebook_hash=_manifest_value(archived.manifest, "rulebook_version"),
         extractor_contract_version=_manifest_value(archived.manifest, "extractor_contract_version"),
-        tools_contract_version=_manifest_value(archived.manifest, "tools_contract_version"),
-        repair_loop_contract_version=_manifest_value(archived.manifest, "repair_loop_contract_version"),
-        obligation_contract_version=_manifest_value(archived.manifest, "obligation_contract_version"),
         row_count=len(events),
         row_fingerprints=tuple(sorted(_row_fingerprint(archived.slug, row) for row in events)),
         bid_note_counts=_stable_items(bid_notes),
@@ -519,7 +528,7 @@ def load_archived_runs(repo_root: Path, slug: str) -> list[ArchivedRun]:
             raise StabilityError(f"archived run missing manifest.json: {run_dir}")
         manifest = _read_json(manifest_path)
         if manifest.get("schema_version") != AUDIT_RUN_SCHEMA_VERSION:
-            raise StabilityError(f"archived run manifest schema_version is not audit_run_v2: {manifest_path}")
+            raise StabilityError(f"archived run manifest schema_version is not {AUDIT_RUN_SCHEMA_VERSION}: {manifest_path}")
         for required_path in (("slug",), ("run_id",), ("outcome",), ("cache_eligible",)):
             _require_manifest_value(manifest, required_path, manifest_path)
         if (
@@ -532,7 +541,13 @@ def load_archived_runs(repo_root: Path, slug: str) -> list[ArchivedRun]:
         _validate_run_artifacts(run_dir)
         raw_response = _read_json(run_dir / "raw_response.json")
         if raw_response.get("schema_version") != RAW_RESPONSE_SCHEMA_VERSION:
-            raise StabilityError(f"archived run raw_response schema_version is not raw_response_v2: {run_dir / 'raw_response.json'}")
+            raise StabilityError(
+                f"archived run raw_response schema_version is not {RAW_RESPONSE_SCHEMA_VERSION}: {run_dir / 'raw_response.json'}"
+            )
+        if not _is_claim_payload(raw_response.get("parsed_json")):
+            raise StabilityError(
+                f"archived run raw_response parsed_json is not the live claim-only provider payload: {run_dir / 'raw_response.json'}"
+            )
         final_output = _read_json(run_dir / "final_output.json")
         validation = _read_json(run_dir / "validation.json")
         run_id = str(manifest.get("run_id") or run_dir.name)
@@ -557,7 +572,7 @@ def _classify_slug(slug: str, runs: tuple[RunMetrics, ...], eligible_count: int,
     reasons: list[str] = []
     config_ids = {run.config_identity for run in runs}
     if len(config_ids) > 1:
-        reasons.append("model/reasoning/provider or prompt/schema/rulebook/tool/repair contract changed")
+        reasons.append("model/reasoning/provider or prompt/schema/rulebook/extractor contract changed")
         return SlugAnalysis(
             slug=slug,
             selected_runs=runs,
@@ -693,8 +708,8 @@ def build_report(analysis: StabilityAnalysis) -> str:
         "",
         "## Run Manifest",
         "",
-        "| slug | run_id | outcome | finished_at | model | reasoning | provider | prompt_hash | schema_hash | rulebook_hash | extractor_contract | tools_contract | repair_contract | obligation_contract |",
-        "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|",
+        "| slug | run_id | outcome | finished_at | model | reasoning | provider | prompt_hash | schema_hash | rulebook_hash | extractor_contract |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for result in analysis.slug_results:
         for run in result.selected_runs:
@@ -712,9 +727,6 @@ def build_report(analysis: StabilityAnalysis) -> str:
                     run.schema_hash,
                     run.rulebook_hash,
                     run.extractor_contract_version,
-                    run.tools_contract_version,
-                    run.repair_loop_contract_version,
-                    run.obligation_contract_version,
                 ])
                 + " |"
             )

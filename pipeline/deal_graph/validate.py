@@ -56,7 +56,11 @@ def validate_graph(graph: dict[str, Any]) -> list[ValidationFlag]:
                 row_table="claims",
                 row_id=claim_id,
             ))
-        if not evidence_by_claim.get(claim_id):
+            disposition = None
+        else:
+            disposition = dispositions[0].get("disposition")
+        requires_support = disposition is None or disposition in {"supported", "merged_duplicate"}
+        if requires_support and not evidence_by_claim.get(claim_id):
             flags.append(ValidationFlag(
                 code="DG_CLAIM_EVIDENCE_MISSING",
                 severity="hard",
@@ -64,7 +68,7 @@ def validate_graph(graph: dict[str, Any]) -> list[ValidationFlag]:
                 row_table="claims",
                 row_id=claim_id,
             ))
-        if claim.get("coverage_obligation_id") and not coverage_by_claim.get(claim_id):
+        if requires_support and claim.get("coverage_obligation_id") and not coverage_by_claim.get(claim_id):
             flags.append(ValidationFlag(
                 code="DG_CLAIM_COVERAGE_LINK_MISSING",
                 severity="hard",
@@ -79,9 +83,14 @@ def validate_graph(graph: dict[str, Any]) -> list[ValidationFlag]:
         for row in graph.get("coverage_obligations", [])
         if row.get("current", True) and row.get("applicability", "applicable") == "applicable"
     }
-    obligation_ids.update(
-        claim.get("coverage_obligation_id") for claim in claims.values() if claim.get("coverage_obligation_id")
-    )
+    for claim_id, claim in claims.items():
+        dispositions = dispositions_by_claim.get(claim_id, [])
+        disposition = dispositions[0].get("disposition") if len(dispositions) == 1 else None
+        if (
+            disposition in {"supported", "merged_duplicate"}
+            and claim.get("coverage_obligation_id")
+        ):
+            obligation_ids.add(claim.get("coverage_obligation_id"))
     for obligation_id in sorted(obligation_ids):
         if len(coverage_results.get(obligation_id, [])) != 1:
             flags.append(ValidationFlag(

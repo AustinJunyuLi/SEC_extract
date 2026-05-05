@@ -3,10 +3,38 @@ from __future__ import annotations
 import pytest
 
 from pipeline.deal_graph import canonicalize_claim_payload, validate_graph
+from pipeline.deal_graph.orchestrate import _bind_provider_evidence
+
+
+def _refs(quote: str) -> list[dict]:
+    return [{"citation_unit_id": "page_1_paragraph_1", "quote_text": quote}]
+
+
+def _graph(payload: dict, *, deal_slug: str = "mac-gray", run_id: str = "run-1") -> dict:
+    quotes: list[str] = []
+    for family in (
+        "actor_claims",
+        "actor_relation_claims",
+        "event_claims",
+        "bid_claims",
+        "participation_count_claims",
+    ):
+        for claim in payload.get(family, []) or []:
+            for ref in claim.get("evidence_refs", []) or []:
+                quote = ref["quote_text"]
+                if quote not in quotes:
+                    quotes.append(quote)
+    pages = [{"number": 1, "content": " ".join(quotes)}]
+    return canonicalize_claim_payload(
+        payload,
+        deal_slug=deal_slug,
+        run_id=run_id,
+        evidence_context=_bind_provider_evidence(payload, slug=deal_slug, run_id=run_id, pages=pages),
+    )
 
 
 def test_canonicalization_builds_group_relation_event_and_evidence() -> None:
-    graph = canonicalize_claim_payload(_mac_gray_payload(), deal_slug="mac-gray", run_id="run-1")
+    graph = _graph(_mac_gray_payload())
 
     actors = {row["actor_label"]: row for row in graph["actors"]}
     assert actors["CSC/Pamplona"]["actor_kind"] == "group"
@@ -39,7 +67,7 @@ def test_portfolio_company_member_signal_projects_group_as_strategic() -> None:
                 "actor_kind": "group",
                 "observability": "named",
                 "confidence": "high",
-                "quote_text": "CSC and Pamplona, who together we refer to as CSC/Pamplona",
+                "evidence_refs": _refs("CSC and Pamplona, who together we refer to as CSC/Pamplona"),
             }
         ],
         "actor_relation_claims": [
@@ -52,7 +80,7 @@ def test_portfolio_company_member_signal_projects_group_as_strategic() -> None:
                 "role_detail": None,
                 "effective_date_first": None,
                 "confidence": "high",
-                "quote_text": "CSC and Pamplona, who together we refer to as CSC/Pamplona",
+                "evidence_refs": _refs("CSC and Pamplona, who together we refer to as CSC/Pamplona"),
             },
             {
                 "claim_type": "actor_relation",
@@ -63,7 +91,7 @@ def test_portfolio_company_member_signal_projects_group_as_strategic() -> None:
                 "role_detail": None,
                 "effective_date_first": None,
                 "confidence": "high",
-                "quote_text": "CSC and Pamplona, who together we refer to as CSC/Pamplona",
+                "evidence_refs": _refs("CSC and Pamplona, who together we refer to as CSC/Pamplona"),
             },
             {
                 "claim_type": "actor_relation",
@@ -74,7 +102,7 @@ def test_portfolio_company_member_signal_projects_group_as_strategic() -> None:
                 "role_detail": "portfolio company",
                 "effective_date_first": None,
                 "confidence": "high",
-                "quote_text": "acquisition of Mac-Gray by its portfolio company, CSC",
+                "evidence_refs": _refs("acquisition of Mac-Gray by its portfolio company, CSC"),
             },
             {
                 "claim_type": "actor_relation",
@@ -85,12 +113,12 @@ def test_portfolio_company_member_signal_projects_group_as_strategic() -> None:
                 "role_detail": "committed financing capital",
                 "effective_date_first": None,
                 "confidence": "high",
-                "quote_text": "Pamplona was committed to provide 100% of the capital",
+                "evidence_refs": _refs("Pamplona was committed to provide 100% of the capital"),
             },
         ],
     }
 
-    graph = canonicalize_claim_payload(payload, deal_slug="mac-gray", run_id="run-1")
+    graph = _graph(payload)
     actors = {row["actor_label"]: row for row in graph["actors"]}
 
     assert actors["CSC"]["bidder_class"] == "strategic"
@@ -107,7 +135,7 @@ def test_rejects_provider_owned_projection_and_old_fields() -> None:
 
 
 def test_validation_flags_missing_disposition_evidence_and_coverage() -> None:
-    graph = canonicalize_claim_payload(_mac_gray_payload(), deal_slug="mac-gray", run_id="run-1")
+    graph = _graph(_mac_gray_payload())
     first_claim = graph["claims"][0]["claim_id"]
     graph["claim_dispositions"] = [row for row in graph["claim_dispositions"] if row["claim_id"] != first_claim]
     graph["claim_evidence"] = [row for row in graph["claim_evidence"] if row["claim_id"] != first_claim]
@@ -129,7 +157,7 @@ def _mac_gray_payload() -> dict:
                 "actor_kind": "group",
                 "observability": "named",
                 "confidence": "high",
-                "quote_text": "CSC and Pamplona, who together we refer to as CSC/Pamplona",
+                "evidence_refs": _refs("CSC and Pamplona, who together we refer to as CSC/Pamplona"),
             },
             {
                 "claim_type": "actor",
@@ -139,7 +167,7 @@ def _mac_gray_payload() -> dict:
                 "observability": "named",
                 "actor_class": "strategic",
                 "confidence": "high",
-                "quote_text": "CSC was an operating strategic buyer in the process",
+                "evidence_refs": _refs("CSC was an operating strategic buyer in the process"),
             },
         ],
         "actor_relation_claims": [
@@ -152,7 +180,7 @@ def _mac_gray_payload() -> dict:
                 "role_detail": "operating strategic buyer",
                 "effective_date_first": "2013-08-01",
                 "confidence": "high",
-                "quote_text": "CSC and Pamplona, who together we refer to as CSC/Pamplona",
+                "evidence_refs": _refs("CSC and Pamplona, who together we refer to as CSC/Pamplona"),
             },
             {
                 "claim_type": "actor_relation",
@@ -163,7 +191,7 @@ def _mac_gray_payload() -> dict:
                 "role_detail": "financial sponsor",
                 "effective_date_first": "2013-08-01",
                 "confidence": "high",
-                "quote_text": "CSC and Pamplona, who together we refer to as CSC/Pamplona",
+                "evidence_refs": _refs("CSC and Pamplona, who together we refer to as CSC/Pamplona"),
             },
             {
                 "claim_type": "actor_relation",
@@ -174,7 +202,7 @@ def _mac_gray_payload() -> dict:
                 "role_detail": "financing capital provider",
                 "effective_date_first": "2013-08-01",
                 "confidence": "high",
-                "quote_text": "Pamplona would provide financing capital to CSC/Pamplona",
+                "evidence_refs": _refs("Pamplona would provide financing capital to CSC/Pamplona"),
             },
         ],
         "bid_claims": [
@@ -190,7 +218,7 @@ def _mac_gray_payload() -> dict:
                 "consideration_type": "cash",
                 "bid_stage": "initial",
                 "confidence": "high",
-                "quote_text": "CSC/Pamplona submitted an indication of interest at $18.50 per share",
+                "evidence_refs": _refs("CSC/Pamplona submitted an indication of interest at $18.50 per share"),
             },
             {
                 "claim_type": "bid",
@@ -204,7 +232,7 @@ def _mac_gray_payload() -> dict:
                 "consideration_type": "cash",
                 "bid_stage": "final",
                 "confidence": "high",
-                "quote_text": "CSC/Pamplona submitted a final proposal of $21.25 per share",
+                "evidence_refs": _refs("CSC/Pamplona submitted a final proposal of $21.25 per share"),
             },
         ],
     }

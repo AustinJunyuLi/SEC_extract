@@ -8,9 +8,18 @@ from typing import Any
 
 from pipeline import core
 
-from .canonicalize import canonicalize_claim_payload
+from .canonicalize import (
+    canonicalize_claim_payload,
+    claim_id_for_provider_claim,
+    iter_provider_claims,
+)
 from .claims import parse_provider_payload
-from .evidence import QuoteBindingError, bind_exact_quote, pages_to_paragraphs
+from .evidence import (
+    QuoteBindingError,
+    bind_quote_to_citation_unit,
+    citation_unit_paragraphs,
+    quote_candidate_units,
+)
 from .export import write_csv, write_jsonl, write_snapshot
 from .ids import make_id
 from .project_estimation import project_estimation_rows
@@ -48,11 +57,20 @@ def finalize_claim_payload(
     proposes typed claims only; Python owns quote binding, canonical rows,
     validation flags, projections, state updates, and artifact writes.
     """
-    provider_payload = parse_provider_payload(raw_payload).model_dump(mode="json")
-    graph = canonicalize_claim_payload(provider_payload, deal_slug=slug, run_id=run_id)
-
     section_pages = _background_pages(slug)
-    _bind_claim_quotes(graph, slug=slug, run_id=run_id, pages=section_pages)
+    provider_payload = parse_provider_payload(raw_payload).model_dump(mode="json")
+    evidence_context = _bind_provider_evidence(
+        provider_payload,
+        slug=slug,
+        run_id=run_id,
+        pages=section_pages,
+    )
+    graph = canonicalize_claim_payload(
+        provider_payload,
+        deal_slug=slug,
+        run_id=run_id,
+        evidence_context=evidence_context,
+    )
 
     validation_flags = validate_graph_as_dicts(graph)
     hard_count = sum(1 for flag in validation_flags if flag.get("severity") == "hard")
@@ -154,52 +172,76 @@ def _background_pages(slug: str) -> list[dict[str, Any]]:
     return section_pages
 
 
-def _bind_claim_quotes(
-    graph: dict[str, Any],
+def _bind_provider_evidence(
+    provider_payload: dict[str, Any],
     *,
     slug: str,
     run_id: str,
     pages: list[dict[str, Any]],
-) -> None:
+) -> dict[str, Any]:
     filing_id = make_id("filing", slug, run_id)
-    paragraphs = pages_to_paragraphs(pages=pages, filing_id=filing_id)
-    links_by_claim: dict[str, list[str]] = {}
-    for link in graph.get("claim_evidence", []):
-        links_by_claim.setdefault(link["claim_id"], []).append(link["evidence_id"])
-
-    old_evidence_remap: dict[str, list[str]] = {}
-    bound_ids_by_claim: dict[str, list[str]] = {}
+    citation_units = citation_unit_paragraphs(pages=pages, filing_id=filing_id)
+    claim_evidence_ids: dict[str, list[str]] = {}
+    claim_failures: dict[str, dict[str, Any]] = {}
     bound_evidence: dict[str, dict[str, Any]] = {}
     review_flags: list[dict[str, Any]] = []
-    for claim in graph.get("claims", []):
-        claim["filing_id"] = filing_id
-        claim.setdefault("provider_source_stage", "extractor_claims")
-        claim_id = claim["claim_id"]
-        quotes = _claim_quote_texts(claim)
+    for family, claim_type, index, sequence, claim in iter_provider_claims(provider_payload):
+        claim_id = claim_id_for_provider_claim(
+            deal_slug=slug,
+            claim_type=claim_type,
+            sequence=sequence,
+            claim=claim,
+        )
+        evidence_refs = claim.get("evidence_refs") or []
         bindings = []
         try:
-            for quote in quotes:
+            if not evidence_refs:
+                raise QuoteBindingError("claim has no evidence_refs")
+            for ref_index, evidence_ref in enumerate(evidence_refs, start=1):
+                if not isinstance(evidence_ref, dict):
+                    raise QuoteBindingError(f"evidence_refs[{ref_index - 1}] is not an object")
+                citation_unit_id = evidence_ref.get("citation_unit_id")
+                quote = evidence_ref.get("quote_text")
+                if not isinstance(citation_unit_id, str) or not citation_unit_id:
+                    raise QuoteBindingError(f"evidence_refs[{ref_index - 1}].citation_unit_id is missing")
+                if not isinstance(quote, str) or not quote:
+                    raise QuoteBindingError(f"evidence_refs[{ref_index - 1}].quote_text is missing")
                 bindings.append(
-                    bind_exact_quote(
+                    bind_quote_to_citation_unit(
                         quote_text=quote,
+                        citation_unit_id=citation_unit_id,
                         filing_id=filing_id,
-                        paragraphs=paragraphs,
+                        citation_units=citation_units,
                     )
                 )
         except QuoteBindingError as exc:
-            reason = f"{type(exc).__name__}: {exc}"
-            _mark_claim_quote_binding_failed(graph, claim_id, reason)
+            failure = _evidence_failure_payload(
+                slug=slug,
+                run_id=run_id,
+                family=family,
+                claim_type=claim_type,
+                claim_index=index,
+                claim_id=claim_id,
+                claim=claim,
+                error=exc,
+                citation_units=citation_units,
+            )
+            claim_failures[claim_id] = {
+                "reason_code": "evidence_ref_binding_failed",
+                "reason": failure["reason"],
+            }
             review_flags.append({
-                "flag_id": make_id("flag", slug, run_id, claim_id, "quote_binding_failed"),
+                "flag_id": failure["flag_id"],
                 "run_id": run_id,
-                "deal_id": graph.get("deals", [{}])[0].get("deal_id"),
+                "deal_id": None,
                 "severity": "blocking",
-                "code": "quote_binding_failed",
-                "reason": reason,
+                "code": "evidence_ref_binding_failed",
+                "reason": failure["reason"],
                 "row_table": "claims",
                 "row_id": claim_id,
                 "status": "open",
                 "current": True,
+                "metadata": failure,
             })
             continue
         new_evidence_ids = []
@@ -212,85 +254,63 @@ def _bind_claim_quotes(
             })
             bound_evidence[evidence["evidence_id"]] = evidence
             new_evidence_ids.append(evidence["evidence_id"])
-        bound_ids_by_claim[claim_id] = new_evidence_ids
-        for old_evidence_id in links_by_claim.get(claim_id, []):
-            old_evidence_remap[old_evidence_id] = new_evidence_ids
+        claim_evidence_ids[claim_id] = new_evidence_ids
 
-    graph["evidence"] = list(bound_evidence.values())
-    graph["review_flags"].extend(review_flags)
-    _rebuild_claim_evidence_links(graph.get("claim_evidence", []), bound_ids_by_claim)
-    _remap_row_evidence_links(graph.get("row_evidence", []), old_evidence_remap)
-
-
-def _claim_quote_texts(claim: dict[str, Any]) -> list[str]:
-    raw_value = claim.get("raw_value")
-    if isinstance(raw_value, str):
-        try:
-            raw_value = json.loads(raw_value)
-        except json.JSONDecodeError:
-            raw_value = {}
-    if not isinstance(raw_value, dict):
-        raw_value = {}
-
-    quotes: list[str] = []
-    primary = claim.get("quote_text")
-    for quote in [primary, *(raw_value.get("quote_texts") or [])]:
-        if not isinstance(quote, str):
-            continue
-        if quote and quote not in quotes:
-            quotes.append(quote)
-    return quotes
+    return {
+        "filing_id": filing_id,
+        "evidence": list(bound_evidence.values()),
+        "claim_evidence_ids": claim_evidence_ids,
+        "claim_failures": claim_failures,
+        "review_flags": review_flags,
+    }
 
 
-def _mark_claim_quote_binding_failed(graph: dict[str, Any], claim_id: str, reason: str) -> None:
-    for row in graph.get("claim_dispositions", []):
-        if row.get("claim_id") != claim_id or not row.get("current", True):
-            continue
-        row.update({
-            "disposition": "rejected_unsupported",
-            "reason_code": "quote_binding_failed",
-            "reason": reason,
-        })
-        return
+def _evidence_failure_payload(
+    *,
+    slug: str,
+    run_id: str,
+    family: str,
+    claim_type: str,
+    claim_index: int,
+    claim_id: str,
+    claim: dict[str, Any],
+    error: Exception,
+    citation_units: dict[str, Any],
+) -> dict[str, Any]:
+    refs = claim.get("evidence_refs") if isinstance(claim, dict) else None
+    first_ref = refs[0] if isinstance(refs, list) and refs and isinstance(refs[0], dict) else {}
+    quote = first_ref.get("quote_text") if isinstance(first_ref, dict) else None
+    reason = f"{type(error).__name__}: {error}"
+    return {
+        "flag_id": make_id("flag", slug, run_id, claim_id, "evidence_ref_binding_failed"),
+        "slug": slug,
+        "run_id": run_id,
+        "claim_family": family,
+        "claim_type": claim_type,
+        "claim_index": claim_index,
+        "claim_id": claim_id,
+        "claim_summary": _claim_summary(claim_type, claim),
+        "provided_citation_unit_id": first_ref.get("citation_unit_id") if isinstance(first_ref, dict) else None,
+        "provided_quote_text": quote,
+        "reason_code": "evidence_ref_binding_failed",
+        "reason": reason,
+        "candidate_units": quote_candidate_units(str(quote or ""), citation_units),
+        "suggested_action": "Choose the correct citation unit and exact quote, or reject the claim.",
+    }
 
 
-def _rebuild_claim_evidence_links(
-    rows: list[dict[str, Any]],
-    bound_ids_by_claim: dict[str, list[str]],
-) -> None:
-    rebuilt: list[dict[str, Any]] = []
-    seen: set[tuple[str, str]] = set()
-    for claim_id, evidence_ids in bound_ids_by_claim.items():
-        for ordinal, evidence_id in enumerate(evidence_ids, start=1):
-            key = (claim_id, evidence_id)
-            if key in seen:
-                continue
-            seen.add(key)
-            rebuilt.append({
-                "claim_id": claim_id,
-                "evidence_id": evidence_id,
-                "ordinal": ordinal,
-            })
-    rows[:] = rebuilt
-
-
-def _remap_row_evidence_links(rows: list[dict[str, Any]], remap: dict[str, list[str]]) -> None:
-    kept: list[dict[str, Any]] = []
-    seen: set[tuple[str, str, str]] = set()
-    for row in rows:
-        evidence_ids = remap.get(row.get("evidence_id"))
-        if not evidence_ids:
-            continue
-        for ordinal, evidence_id in enumerate(evidence_ids, start=1):
-            new_row = dict(row)
-            new_row["evidence_id"] = evidence_id
-            new_row["ordinal"] = ordinal
-            key = (new_row.get("row_table"), new_row.get("row_id"), evidence_id)
-            if key in seen:
-                continue
-            seen.add(key)
-            kept.append(new_row)
-    rows[:] = kept
+def _claim_summary(claim_type: str, claim: dict[str, Any]) -> dict[str, Any]:
+    if claim_type == "actor":
+        keys = ("actor_label", "actor_kind", "observability")
+    elif claim_type == "actor_relation":
+        keys = ("subject_label", "relation_type", "object_label", "effective_date_first")
+    elif claim_type == "event":
+        keys = ("event_type", "event_subtype", "event_date", "actor_label")
+    elif claim_type == "bid":
+        keys = ("bidder_label", "bid_date", "bid_value", "bid_value_lower", "bid_value_upper", "bid_value_unit")
+    else:
+        keys = ("process_stage", "actor_class", "count_min", "count_max", "count_qualifier")
+    return {key: claim.get(key) for key in keys if key in claim}
 
 
 def _attach_projection_rows(

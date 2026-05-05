@@ -5,6 +5,11 @@ from types import SimpleNamespace
 import pytest
 
 from pipeline import run_pool
+from pipeline.llm.audit import (
+    AUDIT_LATEST_SCHEMA_VERSION,
+    AUDIT_RUN_SCHEMA_VERSION,
+    RAW_RESPONSE_SCHEMA_VERSION,
+)
 from pipeline.llm.client import CompletionResult
 from pipeline.llm.extract import ExtractResult
 
@@ -26,8 +31,12 @@ def _claim_payload(label: str = "CSC/Pamplona") -> dict:
                 "actor_kind": "group",
                 "observability": "named",
                 "confidence": "high",
-                "quote_text": "CSC and Pamplona, who together we refer to as CSC/Pamplona",
-                "quote_texts": None,
+                "evidence_refs": [
+                    {
+                        "citation_unit_id": "page_1_paragraph_1",
+                        "quote_text": "CSC and Pamplona, who together we refer to as CSC/Pamplona",
+                    }
+                ],
             }
         ],
         "event_claims": [],
@@ -46,18 +55,13 @@ def _write_audit_manifest(
     cache_eligible: bool = True,
 ):
     (run_dir / "manifest.json").write_text(json.dumps({
-        "schema_version": "audit_run_v2",
+        "schema_version": AUDIT_RUN_SCHEMA_VERSION,
         "slug": slug,
         "run_id": run_id,
         "outcome": outcome,
         "cache_eligible": cache_eligible,
         "rulebook_version": "rules-v1",
         "extractor_contract_version": run_pool.extractor_contract_version(),
-        "tools_contract_version": run_pool.tools_contract_version(),
-        "repair_loop_contract_version": run_pool.repair_loop_contract_version(),
-        "obligation_contract_version": run_pool.obligation_contract_version(),
-        "extract_tool_mode": run_pool.EXTRACT_TOOL_MODE,
-        "repair_strategy": run_pool.REPAIR_STRATEGY,
     }))
 
 
@@ -114,15 +118,12 @@ def test_per_deal_token_cap_is_not_supported():
 
 def test_reasoning_effort_defaults_to_high(monkeypatch):
     monkeypatch.delenv("EXTRACT_REASONING_EFFORT", raising=False)
-    monkeypatch.delenv("ADJUDICATE_REASONING_EFFORT", raising=False)
     parser = run_pool.build_parser()
 
     cfg = run_pool.config_from_args(parser.parse_args(["--filter", "reference", "--dry-run"]))
 
     assert cfg.extract_reasoning_effort == "high"
-    assert cfg.adjudicate_reasoning_effort == "high"
     assert run_pool.PoolConfig().extract_reasoning_effort == "high"
-    assert run_pool.PoolConfig().adjudicate_reasoning_effort == "high"
 
 
 def test_skip_decisions_and_cache_policy(minimal_state_repo, monkeypatch):
@@ -148,7 +149,7 @@ def test_skip_decisions_and_cache_policy(minimal_state_repo, monkeypatch):
     audit.mkdir(parents=True)
     _write_audit_manifest(audit, slug="done", run_id=run_id)
     (audit / "raw_response.json").write_text(json.dumps({
-        "schema_version": "raw_response_v2",
+        "schema_version": RAW_RESPONSE_SCHEMA_VERSION,
         "run_id": run_id,
         "slug": "done",
         "rulebook_version": current,
@@ -156,7 +157,7 @@ def test_skip_decisions_and_cache_policy(minimal_state_repo, monkeypatch):
         "parsed_json": _claim_payload(),
     }))
     (cfg.audit_root / "done" / "latest.json").write_text(json.dumps({
-        "schema_version": "audit_v2",
+        "schema_version": AUDIT_LATEST_SCHEMA_VERSION,
         "slug": "done",
         "run_id": run_id,
         "outcome": "passed_clean",
@@ -167,15 +168,15 @@ def test_skip_decisions_and_cache_policy(minimal_state_repo, monkeypatch):
     assert run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state).action == "re_validate"
     manifest = json.loads((audit / "manifest.json").read_text())
     valid_manifest = dict(manifest)
-    manifest["repair_strategy"] = "prompt_then_" "filing_tools"
+    manifest["extractor_contract_version"] = "old-contract"
     (audit / "manifest.json").write_text(json.dumps(manifest))
     decision = run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state)
     assert decision.action == "blocked"
-    assert "repair_strategy" in decision.reason
+    assert "extractor_contract_version" in decision.reason
     (audit / "manifest.json").write_text(json.dumps(valid_manifest))
 
     (audit / "raw_response.json").write_text(json.dumps({
-        "schema_version": "raw_response_v2",
+        "schema_version": RAW_RESPONSE_SCHEMA_VERSION,
         "run_id": run_id,
         "slug": "done",
         "rulebook_version": "old",
@@ -184,7 +185,7 @@ def test_skip_decisions_and_cache_policy(minimal_state_repo, monkeypatch):
     }))
     assert run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state).action == "blocked"
     (audit / "raw_response.json").write_text(json.dumps({
-        "schema_version": "raw_response_v2",
+        "schema_version": RAW_RESPONSE_SCHEMA_VERSION,
         "run_id": run_id,
         "slug": "done",
         "rulebook_version": current,
@@ -212,7 +213,6 @@ def test_success_manifest_records_claim_only_graph_strategy(minimal_state_repo, 
                 output_tokens=1,
             ),
             rulebook_version="rules-v1",
-            tool_calls_count=0,
         )
 
     def fake_finalize_claim_payload(**kwargs):
@@ -242,57 +242,10 @@ def test_success_manifest_records_claim_only_graph_strategy(minimal_state_repo, 
     )
 
     manifest = json.loads((summary.outcomes[0].audit_path / "manifest.json").read_text())
-    assert manifest["extract_tool_mode"] == "claim_only"
-    assert manifest["repair_strategy"] == "none_deal_graph_v1"
-    assert manifest["obligation_contract_version"] == run_pool.obligation_contract_version()
-
-
-def test_cache_rejects_missing_obligation_contract_version(minimal_state_repo, monkeypatch):
-    env = minimal_state_repo
-    cfg = _cfg(re_validate=True, audit_root=env.tmp_path / "output" / "audit")
-    env.seed_deal("done", status="passed_clean", rulebook_version="rules-v1")
-    monkeypatch.setattr(run_pool, "extractor_contract_version", lambda: "contract-v1")
-    monkeypatch.setattr(run_pool, "tools_contract_version", lambda: "tools-v1")
-    monkeypatch.setattr(run_pool, "repair_loop_contract_version", lambda: "repair-v1")
-    monkeypatch.setattr(run_pool, "obligation_contract_version", lambda: "obligation-v1")
-    run_id = "run-old"
-    run_dir = cfg.audit_root / "done" / "runs" / run_id
-    run_dir.mkdir(parents=True)
-    (run_dir / "manifest.json").write_text(json.dumps({
-        "schema_version": "audit_run_v2",
-        "slug": "done",
-        "run_id": run_id,
-        "outcome": "passed_clean",
-        "cache_eligible": True,
-        "rulebook_version": "rules-v1",
-        "extractor_contract_version": "contract-v1",
-        "tools_contract_version": "tools-v1",
-        "repair_loop_contract_version": "repair-v1",
-        "extract_tool_mode": run_pool.EXTRACT_TOOL_MODE,
-        "repair_strategy": run_pool.REPAIR_STRATEGY,
-    }))
-    (run_dir / "raw_response.json").write_text(json.dumps({
-        "schema_version": "raw_response_v2",
-        "run_id": run_id,
-        "slug": "done",
-        "rulebook_version": "rules-v1",
-        "extractor_contract_version": "contract-v1",
-        "parsed_json": _claim_payload(),
-    }))
-    (cfg.audit_root / "done" / "latest.json").write_text(json.dumps({
-        "schema_version": "audit_v2",
-        "slug": "done",
-        "run_id": run_id,
-        "outcome": "passed_clean",
-        "cache_eligible": True,
-        "manifest_path": f"runs/{run_id}/manifest.json",
-        "raw_response_path": f"runs/{run_id}/raw_response.json",
-    }))
-
-    decision = run_pool.decide_skip("done", cfg, "rules-v1", json.loads(env.progress.read_text()))
-
-    assert decision.action == "blocked"
-    assert "obligation_contract_version" in decision.reason
+    assert manifest["models"] == {"extract": "gpt-5.5"}
+    assert "extract_tool_mode" not in manifest
+    assert "repair_strategy" not in manifest
+    assert "obligation_contract_version" not in manifest
 
 
 @pytest.mark.parametrize(
@@ -316,7 +269,7 @@ def test_re_validate_rejects_stale_raw_response_shapes(minimal_state_repo, monke
     audit.mkdir(parents=True)
     _write_audit_manifest(audit, slug="done", run_id=run_id)
     payload = {
-        "schema_version": "raw_response_v2",
+        "schema_version": RAW_RESPONSE_SCHEMA_VERSION,
         "run_id": run_id,
         "slug": "done",
         "rulebook_version": "rules-v1",
@@ -326,7 +279,7 @@ def test_re_validate_rejects_stale_raw_response_shapes(minimal_state_repo, monke
     }
     (audit / "raw_response.json").write_text(json.dumps(payload))
     (cfg.audit_root / "done" / "latest.json").write_text(json.dumps({
-        "schema_version": "audit_v2",
+        "schema_version": AUDIT_LATEST_SCHEMA_VERSION,
         "slug": "done",
         "run_id": run_id,
         "outcome": "passed_clean",
@@ -377,7 +330,7 @@ def test_run_pool_treats_blocked_revalidate_as_failed(minimal_state_repo, monkey
     audit = cfg.audit_root / "done"
     audit.mkdir(parents=True)
     (audit / "raw_response.json").write_text(json.dumps({
-        "schema_version": "raw_response_v2",
+        "schema_version": RAW_RESPONSE_SCHEMA_VERSION,
         "slug": "done",
         "run_id": "legacy",
         "rulebook_version": "rules-v1",
@@ -407,7 +360,7 @@ def test_re_validate_can_select_exact_archived_run_id(minimal_state_repo, monkey
         run_dir.mkdir(parents=True)
         _write_audit_manifest(run_dir, slug="done", run_id=run_id)
         (run_dir / "raw_response.json").write_text(json.dumps({
-            "schema_version": "raw_response_v2",
+            "schema_version": RAW_RESPONSE_SCHEMA_VERSION,
             "run_id": run_id,
             "slug": "done",
             "rulebook_version": "rules-v1",
@@ -415,7 +368,7 @@ def test_re_validate_can_select_exact_archived_run_id(minimal_state_repo, monkey
             "parsed_json": _claim_payload(target),
         }))
     (cfg.audit_root / "done" / "latest.json").write_text(json.dumps({
-        "schema_version": "audit_v2",
+        "schema_version": AUDIT_LATEST_SCHEMA_VERSION,
         "slug": "done",
         "run_id": "run-two",
         "outcome": "passed_clean",
@@ -438,14 +391,14 @@ def test_re_validate_latest_requires_cache_eligible_manifest(minimal_state_repo,
     run_dir = cfg.audit_root / "done" / "runs" / run_id
     run_dir.mkdir(parents=True)
     (run_dir / "manifest.json").write_text(json.dumps({
-        "schema_version": "audit_run_v2",
+        "schema_version": AUDIT_RUN_SCHEMA_VERSION,
         "slug": "done",
         "run_id": run_id,
         "outcome": "failed",
         "cache_eligible": False,
     }))
     (run_dir / "raw_response.json").write_text(json.dumps({
-        "schema_version": "raw_response_v2",
+        "schema_version": RAW_RESPONSE_SCHEMA_VERSION,
         "run_id": run_id,
         "slug": "done",
         "rulebook_version": "rules-v1",
@@ -453,7 +406,7 @@ def test_re_validate_latest_requires_cache_eligible_manifest(minimal_state_repo,
         "parsed_json": _claim_payload(),
     }))
     (cfg.audit_root / "done" / "latest.json").write_text(json.dumps({
-        "schema_version": "audit_v2",
+        "schema_version": AUDIT_LATEST_SCHEMA_VERSION,
         "slug": "done",
         "run_id": run_id,
         "outcome": "passed_clean",
@@ -709,7 +662,7 @@ def test_failed_rerun_preserves_prior_success_state(minimal_state_repo, monkeypa
     manifest = json.loads((outcome.audit_path / "manifest.json").read_text())
     latest = json.loads((env.tmp_path / "output" / "audit" / "a" / "latest.json").read_text())
     state = json.loads(env.progress.read_text())
-    assert manifest["schema_version"] == "audit_run_v2"
+    assert manifest["schema_version"] == AUDIT_RUN_SCHEMA_VERSION
     assert manifest["outcome"] == "failed"
     assert manifest["cache_eligible"] is False
     assert latest["run_id"] == manifest["run_id"]
@@ -821,39 +774,3 @@ def test_re_validate_source_run_is_not_mutated_by_new_audit_writer(minimal_state
     assert audit.root.name == "new-revalidate-run"
     assert audit.root != source_dir
 
-
-def test_soft_flags_routes_only_semantic_adjudication_codes():
-    result = run_pool.core.ValidatorResult(
-        row_flags=[
-            {
-                "row_index": 0,
-                "code": "missing_nda_dropsilent",
-                "severity": "soft",
-                "reason": "semantic absence check",
-            },
-            {
-                "row_index": 1,
-                "code": "resolved_name_not_observed",
-                "severity": "soft",
-                "reason": "registry hygiene",
-            },
-            {
-                "row_index": 2,
-                "code": "formal_round_status_inconsistent",
-                "severity": "soft",
-                "reason": "deterministic row-scope issue",
-            },
-        ],
-        deal_flags=[
-            {
-                "code": "deal_level_soft",
-                "severity": "soft",
-                "reason": "not allow-listed",
-                "deal_level": True,
-            }
-        ],
-    )
-
-    routed = run_pool._soft_flags(result)
-
-    assert [flag["code"] for flag in routed] == ["missing_nda_dropsilent"]

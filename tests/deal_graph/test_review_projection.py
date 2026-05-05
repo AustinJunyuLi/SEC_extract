@@ -1,11 +1,32 @@
 from __future__ import annotations
 
 from pipeline.deal_graph import canonicalize_claim_payload
+from pipeline.deal_graph.orchestrate import _bind_provider_evidence
 from pipeline.deal_graph.project_review import project_review_rows
 
 
+def _refs(quote: str) -> list[dict]:
+    return [{"citation_unit_id": "page_1_paragraph_1", "quote_text": quote}]
+
+
+def _graph(payload: dict, *, deal_slug: str = "sample", run_id: str = "run-1") -> dict:
+    quotes = []
+    for claims in payload.values():
+        for claim in claims:
+            for ref in claim.get("evidence_refs", []):
+                if ref["quote_text"] not in quotes:
+                    quotes.append(ref["quote_text"])
+    pages = [{"number": 1, "content": " ".join(quotes)}]
+    return canonicalize_claim_payload(
+        payload,
+        deal_slug=deal_slug,
+        run_id=run_id,
+        evidence_context=_bind_provider_evidence(payload, slug=deal_slug, run_id=run_id, pages=pages),
+    )
+
+
 def test_review_projection_renders_source_backed_event_rows() -> None:
-    graph = canonicalize_claim_payload(
+    graph = _graph(
         {
             "event_claims": [
                 {
@@ -18,7 +39,7 @@ def test_review_projection_renders_source_backed_event_rows() -> None:
                     "actor_label": "Party A",
                     "actor_role": "potential_buyer",
                     "confidence": "high",
-                    "quote_text": "Party A signed a confidentiality agreement with the Company",
+                    "evidence_refs": _refs("Party A signed a confidentiality agreement with the Company"),
                 }
             ],
             "bid_claims": [
@@ -34,12 +55,10 @@ def test_review_projection_renders_source_backed_event_rows() -> None:
                     "consideration_type": "cash",
                     "bid_stage": "initial",
                     "confidence": "high",
-                    "quote_text": "Party A submitted an initial proposal of $10.00 per share",
+                    "evidence_refs": _refs("Party A submitted an initial proposal of $10.00 per share"),
                 }
             ],
-        },
-        deal_slug="sample",
-        run_id="run-1",
+        }
     )
 
     rows = project_review_rows(graph)
@@ -52,7 +71,7 @@ def test_review_projection_renders_source_backed_event_rows() -> None:
 
 
 def test_review_projection_preserves_multi_span_source_lists() -> None:
-    graph = canonicalize_claim_payload(
+    graph = _graph(
         {
             "event_claims": [
                 {
@@ -65,12 +84,10 @@ def test_review_projection_preserves_multi_span_source_lists() -> None:
                     "actor_label": "Longview",
                     "actor_role": "rollover_holder",
                     "confidence": "high",
-                    "quote_text": "Longview agreed to rollover",
+                    "evidence_refs": _refs("Longview agreed to rollover"),
                 }
             ],
-        },
-        deal_slug="sample",
-        run_id="run-1",
+        }
     )
     event_id = graph["events"][0]["event_id"]
     graph["evidence"] = [

@@ -37,9 +37,17 @@ The extractor returns exactly:
 }
 ```
 
-Every claim must include an exact filing `quote_text`, `quote_texts` set to
-`null` or exact separated snippets copied from `citation_units[].text`, and a
-`coverage_obligation_id`. The provider never emits canonical graph ids, source
+Every claim must include `coverage_obligation_id` and at least one
+`evidence_refs` entry:
+
+```json
+{"citation_unit_id": "page_35_paragraph_4", "quote_text": "exact filing substring"}
+```
+
+`citation_unit_id` must identify one embedded `citation_units[]` item, and
+`quote_text` must be copied exactly from that unit's text. Use multiple refs
+when a claim needs separated source support. Provider-level `quote_text` and
+`quote_texts` are retired. The provider never emits canonical graph ids, source
 offsets, old row fields, estimator variables, coverage results, review rows, or
 judgment/disposition fields.
 
@@ -56,7 +64,7 @@ structured output and then calls
 Finalization:
 
 1. parse claim payload;
-2. bind quotes exactly to Background pages;
+2. bind evidence refs exactly to Background citation units;
 3. canonicalize actors, relations, events, bids, and counts;
 4. write graph artifacts in `output/audit/{slug}/runs/{run_id}/`;
 5. validate evidence, dispositions, coverage, row evidence, and projection

@@ -10,13 +10,19 @@ not carry estimator variables or formal/informal judgments.
 - `bid_value`: point value when supported.
 - `bid_value_lower` / `bid_value_upper`: range bounds when supported.
 - `bid_value_unit`: `per_share`, `enterprise_value`, `equity_value`, or
-  `other`.
-- `consideration_type`: `cash`, `stock`, `mixed`, or `other`.
+  `unspecified`.
+- `consideration_type`: `cash`, `stock`, `mixed`, `other`, or `unspecified`.
 - `bid_stage`: `initial`, `revised`, `final`, or `unspecified`.
 
 If a quote supports only a willingness to bid and no economics, emit a bid
 claim with value fields null and explain through the quote/description in a
 related event claim when useful.
+
+Use `equity_value` when the filing supports an aggregate equity transaction
+price. Use `enterprise_value` only when the filing itself supports enterprise
+value. Use `unspecified` when the filing supports a number but does not support
+which aggregate value basis it represents. Do not emit `other` for
+`bid_value_unit`.
 
 ## Python-Owned Projection
 

@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from pipeline import stability
+from pipeline.llm.audit import AUDIT_RUN_SCHEMA_VERSION, RAW_RESPONSE_SCHEMA_VERSION
 
 
 BASE_HASHES = {
@@ -13,9 +14,6 @@ BASE_HASHES = {
     "schema_hash": "schema-v1",
     "rulebook_version": "rules-v1",
     "extractor_contract_version": "contract-v1",
-    "tools_contract_version": "tools-v1",
-    "repair_loop_contract_version": "repair-v1",
-    "obligation_contract_version": "obligation-v1",
 }
 
 
@@ -46,6 +44,31 @@ def _event(
     }
 
 
+def _claim_payload() -> dict:
+    return {
+        "actor_claims": [
+            {
+                "claim_type": "actor",
+                "coverage_obligation_id": "obl_actor_1",
+                "actor_label": "Synthetic Target",
+                "actor_kind": "target",
+                "observability": "named",
+                "confidence": "high",
+                "evidence_refs": [
+                    {
+                        "citation_unit_id": "page_1_paragraph_1",
+                        "quote_text": "Synthetic Target entered into a merger agreement.",
+                    }
+                ],
+            }
+        ],
+        "event_claims": [],
+        "bid_claims": [],
+        "participation_count_claims": [],
+        "actor_relation_claims": [],
+    }
+
+
 def _write_run(
     repo_root: Path,
     *,
@@ -60,7 +83,7 @@ def _write_run(
     run_dir = repo_root / "output" / "audit" / slug / "runs" / run_id
     run_dir.mkdir(parents=True)
     manifest = {
-        "schema_version": "audit_run_v2",
+        "schema_version": AUDIT_RUN_SCHEMA_VERSION,
         "slug": slug,
         "run_id": run_id,
         "outcome": "passed_clean",
@@ -68,13 +91,10 @@ def _write_run(
         "cache_used": False,
         "started_at": "2026-04-29T00:00:00Z",
         "finished_at": finished_at,
-        "models": {"extract": "gpt-5.5", "adjudicate": "gpt-5.5"},
-        "reasoning_efforts": {"extract": "xhigh", "adjudicate": "xhigh"},
+        "models": {"extract": "gpt-5.5"},
+        "reasoning_efforts": {"extract": "xhigh"},
         "api_endpoint": "linkflow",
         "prompt_hashes": {"extract": BASE_HASHES["prompt_hash"]},
-        "repair_turns_used": 0,
-        "repair_loop_outcome": "clean",
-        "tool_calls_count": 0,
         **BASE_HASHES,
     }
     if manifest_extra:
@@ -93,10 +113,10 @@ def _write_run(
         "deal_flags": deal_flags or [],
     }, indent=2, sort_keys=True))
     (run_dir / "raw_response.json").write_text(json.dumps({
-        "schema_version": "raw_response_v2",
+        "schema_version": RAW_RESPONSE_SCHEMA_VERSION,
         "slug": slug,
         "run_id": run_id,
-        "parsed_json": {"deal": {}, "events": []},
+        "parsed_json": _claim_payload(),
     }, indent=2, sort_keys=True))
     (run_dir / "calls.jsonl").write_text("")
     (run_dir / "prompts").mkdir()
@@ -257,7 +277,7 @@ def test_model_or_reasoning_drift_classifies_rule_or_validator_needed(tmp_path, 
         slug="medivation",
         run_id="run-2",
         finished_at="2026-04-29T00:01:00Z",
-        manifest_extra={"reasoning_efforts": {"extract": "high", "adjudicate": "xhigh"}},
+        manifest_extra={"reasoning_efforts": {"extract": "high"}},
     )
     _write_run(tmp_path, slug="medivation", run_id="run-3", finished_at="2026-04-29T00:02:00Z")
 

@@ -41,8 +41,7 @@ rows.
 
 There is no row-per-event canonical schema, no loose JSON fallback, no
 provider branch that turns off structured output, no `previous_response_id`
-chain, and no live repair/adjudicator path. Retired row-event helpers may
-exist only as non-live legacy code until cleaned; they are not output authority.
+chain, and no live repair/adjudicator path.
 
 Per deal:
 
@@ -97,15 +96,21 @@ Reasoning defaults to `high`. Explicit `xhigh` is capped by
 
 ## Evidence Requirements
 
-Every claim must include exact `quote_text` and `quote_texts` copied from
-`citation_units[].text`. Use `quote_texts: null` when the primary quote
-supports the claim; use an ordered list of exact snippets when support is
-separated across sentences, paragraphs, or page breaks, with the first entry
-equal to `quote_text`. Target identity comes from the filing manifest and
-Python-owned deal metadata; the provider does not emit a target-only actor
-claim. Python binds quote text to the Background pages and creates source spans.
-Claims or canonical rows without source-backed evidence produce hard graph flags
-and do not support projection.
+Every claim must include `evidence_refs`. Each evidence ref has:
+
+```json
+{"citation_unit_id": "page_35_paragraph_4", "quote_text": "exact filing substring"}
+```
+
+`citation_unit_id` must be one of the paragraph-local `citation_units[]` ids in
+the extractor input, and `quote_text` must be an exact substring of that unit's
+text. Use multiple refs when support is separated across sentences,
+paragraphs, or pages. The provider must not emit provider-level `quote_text` or
+`quote_texts`. Target identity comes from the filing manifest and Python-owned
+deal metadata; the provider does not emit a target-only actor claim. Python
+binds evidence refs before canonicalization and creates source spans. Claims
+with invalid refs are rejected, receive one blocking review flag, and do not
+create canonical graph rows or projection support.
 
 Quotes must support the specific actor, event, bid, count, relation, date, and
 value being claimed. Ambiguous facts stay low-confidence or unclaimed; do not

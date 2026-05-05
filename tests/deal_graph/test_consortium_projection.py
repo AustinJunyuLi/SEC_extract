@@ -1,11 +1,32 @@
 from __future__ import annotations
 
 from pipeline.deal_graph import canonicalize_claim_payload
+from pipeline.deal_graph.orchestrate import _bind_provider_evidence
 from pipeline.deal_graph.project_estimation import project_estimation_rows
 
 
+def _refs(quote: str) -> list[dict]:
+    return [{"citation_unit_id": "page_1_paragraph_1", "quote_text": quote}]
+
+
+def _graph(payload: dict, *, deal_slug: str) -> dict:
+    quotes = []
+    for claims in payload.values():
+        for claim in claims:
+            for ref in claim.get("evidence_refs", []):
+                if ref["quote_text"] not in quotes:
+                    quotes.append(ref["quote_text"])
+    pages = [{"number": 1, "content": " ".join(quotes)}]
+    return canonicalize_claim_payload(
+        payload,
+        deal_slug=deal_slug,
+        run_id="run-1",
+        evidence_context=_bind_provider_evidence(payload, slug=deal_slug, run_id="run-1", pages=pages),
+    )
+
+
 def test_mac_gray_projects_one_csc_pamplona_bidder_row_without_member_atomization() -> None:
-    graph = canonicalize_claim_payload(_mac_gray_payload(), deal_slug="mac-gray", run_id="run-1")
+    graph = _graph(_mac_gray_payload(), deal_slug="mac-gray")
 
     rows = project_estimation_rows(graph)
 
@@ -19,7 +40,7 @@ def test_mac_gray_projects_one_csc_pamplona_bidder_row_without_member_atomizatio
 
 
 def test_petsmart_buyer_group_bid_not_atomized_to_longview() -> None:
-    graph = canonicalize_claim_payload(_petsmart_payload(), deal_slug="petsmart-inc", run_id="run-1")
+    graph = _graph(_petsmart_payload(), deal_slug="petsmart-inc")
 
     rows = project_estimation_rows(graph)
 
@@ -40,7 +61,7 @@ def _mac_gray_payload() -> dict:
                 "actor_kind": "group",
                 "observability": "named",
                 "confidence": "high",
-                "quote_text": "CSC and Pamplona, who together we refer to as CSC/Pamplona",
+                "evidence_refs": _refs("CSC and Pamplona, who together we refer to as CSC/Pamplona"),
             }
         ],
         "actor_relation_claims": [
@@ -53,7 +74,7 @@ def _mac_gray_payload() -> dict:
                 "role_detail": "operating strategic buyer",
                 "effective_date_first": "2013-08-01",
                 "confidence": "high",
-                "quote_text": "CSC and Pamplona, who together we refer to as CSC/Pamplona",
+                "evidence_refs": _refs("CSC and Pamplona, who together we refer to as CSC/Pamplona"),
             },
             {
                 "claim_type": "actor_relation",
@@ -64,7 +85,7 @@ def _mac_gray_payload() -> dict:
                 "role_detail": "financing capital provider",
                 "effective_date_first": "2013-08-01",
                 "confidence": "high",
-                "quote_text": "Pamplona would provide financing capital to CSC/Pamplona",
+                "evidence_refs": _refs("Pamplona would provide financing capital to CSC/Pamplona"),
             },
         ],
         "bid_claims": [
@@ -80,7 +101,7 @@ def _mac_gray_payload() -> dict:
                 "consideration_type": "cash",
                 "bid_stage": "initial",
                 "confidence": "high",
-                "quote_text": "CSC/Pamplona submitted an indication of interest at $18.50 per share",
+                "evidence_refs": _refs("CSC/Pamplona submitted an indication of interest at $18.50 per share"),
             },
             {
                 "claim_type": "bid",
@@ -94,7 +115,7 @@ def _mac_gray_payload() -> dict:
                 "consideration_type": "cash",
                 "bid_stage": "final",
                 "confidence": "high",
-                "quote_text": "CSC/Pamplona submitted a final proposal of $21.25 per share",
+                "evidence_refs": _refs("CSC/Pamplona submitted a final proposal of $21.25 per share"),
             },
         ],
     }
@@ -110,7 +131,7 @@ def _petsmart_payload() -> dict:
                 "actor_kind": "group",
                 "observability": "named",
                 "confidence": "high",
-                "quote_text": "BC Partners and its co-investors formed the Buyer Group",
+                "evidence_refs": _refs("BC Partners and its co-investors formed the Buyer Group"),
             }
         ],
         "actor_relation_claims": [
@@ -123,7 +144,7 @@ def _petsmart_payload() -> dict:
                 "role_detail": "rollover investor",
                 "effective_date_first": "2014-12-13",
                 "confidence": "high",
-                "quote_text": "Longview agreed to join the Buyer Group on December 13, 2014",
+                "evidence_refs": _refs("Longview agreed to join the Buyer Group on December 13, 2014"),
             },
             {
                 "claim_type": "actor_relation",
@@ -134,7 +155,7 @@ def _petsmart_payload() -> dict:
                 "role_detail": "financial sponsor",
                 "effective_date_first": "2014-12-01",
                 "confidence": "high",
-                "quote_text": "BC Partners and its co-investors formed the Buyer Group",
+                "evidence_refs": _refs("BC Partners and its co-investors formed the Buyer Group"),
             },
         ],
         "bid_claims": [
@@ -150,7 +171,7 @@ def _petsmart_payload() -> dict:
                 "consideration_type": "cash",
                 "bid_stage": "final",
                 "confidence": "high",
-                "quote_text": "The Buyer Group submitted a final proposal of $83.00 per share",
+                "evidence_refs": _refs("The Buyer Group submitted a final proposal of $83.00 per share"),
             }
         ],
     }

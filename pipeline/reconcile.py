@@ -1,4 +1,4 @@
-"""Read-only reconciliation for progress, outputs, flags, and audit v2."""
+"""Read-only reconciliation for progress, outputs, flags, and audit v3."""
 
 from __future__ import annotations
 
@@ -17,6 +17,7 @@ from pipeline.llm.audit import (
     RAW_RESPONSE_SCHEMA_VERSION,
     VALIDATION_SCHEMA_VERSION,
 )
+from pipeline.llm.response_format import DEAL_GRAPH_CLAIM_SCHEMA
 
 
 REFERENCE_SLUGS: tuple[str, ...] = core.REFERENCE_SLUGS
@@ -277,6 +278,12 @@ def _path_under_run(expected_run_id: str, rel_path: Any, filename: str) -> bool:
     return rel_path == f"runs/{expected_run_id}/{filename}"
 
 
+def _is_claim_payload(value: Any) -> bool:
+    if not isinstance(value, dict):
+        return False
+    return all(isinstance(value.get(name), list) for name in DEAL_GRAPH_CLAIM_SCHEMA["required"])
+
+
 def _run_pointer(slug: str, run_id: str, *, cache_eligible: bool = True) -> dict[str, Any]:
     return {
         "schema_version": AUDIT_LATEST_SCHEMA_VERSION,
@@ -366,6 +373,8 @@ def _check_manifest_contract_fields(
         )
     required = (
         "extractor_contract_version",
+    )
+    retired = (
         "tools_contract_version",
         "repair_loop_contract_version",
         "obligation_contract_version",
@@ -373,6 +382,25 @@ def _check_manifest_contract_fields(
         "repair_loop_outcome",
         "tool_calls_count",
     )
+    for key in retired:
+        if key in manifest:
+            report.add(
+                "error",
+                "audit_manifest_retired_field",
+                f"audit manifest must not contain retired {key}",
+                slug=slug,
+                path=_rel(root, manifest_path),
+            )
+    for nested_key in ("models", "reasoning_efforts"):
+        nested = manifest.get(nested_key)
+        if isinstance(nested, dict) and "adjudicate" in nested:
+            report.add(
+                "error",
+                "audit_manifest_retired_field",
+                f"audit manifest {nested_key} must not contain retired adjudicate entry",
+                slug=slug,
+                path=_rel(root, manifest_path),
+            )
     for key in required:
         if key not in manifest or manifest.get(key) in (None, ""):
             report.add(
@@ -422,7 +450,7 @@ def _check_audit(
         report.add(
             "error",
             "audit_latest_schema",
-            "latest.json schema_version must be audit_v2",
+            f"latest.json schema_version must be {AUDIT_LATEST_SCHEMA_VERSION}",
             slug=slug,
             path=_rel(root, latest_path),
         )
@@ -597,6 +625,14 @@ def _check_audit(
             )
     if raw:
         expected_rulebook = progress_deal.get("rulebook_version")
+        if not _is_claim_payload(raw.get("parsed_json")):
+            report.add(
+                "error",
+                "raw_response_shape",
+                "raw_response parsed_json must use the live claim-only provider payload",
+                slug=slug,
+                path=_rel(root, slug_root / latest["raw_response_path"]),
+            )
         if expected_rulebook and raw.get("rulebook_version") != expected_rulebook:
             report.add(
                 "error",
