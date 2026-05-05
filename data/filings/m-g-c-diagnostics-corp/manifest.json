@@ -1,0 +1,26 @@
+{
+  "slug": "m-g-c-diagnostics-corp",
+  "target_name": "M G C DIAGNOSTICS CORP",
+  "acquirer": "ALTUS CAPITAL PARTNERS",
+  "date_announced": "2017-11-27",
+  "is_reference": false,
+  "source": {
+    "seed_url": "https://www.sec.gov/Archives/edgar/data/815093/0000930413-17-003888-index.htm",
+    "index_url": "https://www.sec.gov/Archives/edgar/data/815093/000093041317003888/0000930413-17-003888-index.htm",
+    "cik": "815093",
+    "accession": "000093041317003888",
+    "primary_document_url": "https://www.sec.gov/Archives/edgar/data/815093/000093041317003888/c89784_ex99-12a1a.htm",
+    "primary_document_name": "c89784_ex99-12a1a.htm",
+    "form_type": "EX-99.12(A)(1)(A)"
+  },
+  "artifacts": {
+    "raw_htm_bytes": 1561630,
+    "raw_md_bytes": 333145,
+    "pages_count": 105
+  },
+  "fetch": {
+    "user_agent": "Austin Li <junyu.li.24@ucl.ac.uk>",
+    "fetched_at": "2026-05-05T21:38:41.021285Z",
+    "sec2md_version": "0.1.22"
+  }
+}

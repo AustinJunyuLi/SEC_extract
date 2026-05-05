@@ -1,0 +1,2236 @@
+
+<!-- PAGE 1 -->
+EX-99.12(A)(1)(A) 2 c89784_ex99-12a1a.htm
+
+EXHIBIT (a)(1)(A)
+
+Offer to Purchase for Cash All Outstanding Shares of Common Stock of MGC DIAGNOSTICS CORPORATION at $11.03 Net Per Share by AC BREATHE MERGER SUB INC., a wholly-owned subsidiary of MGC PARENT LLC
+
+**THE OFFER AND WITHDRAWAL RIGHTS WILL EXPIRE AT 12:00 MIDNIGHT, NEW YORK CITY TIME, AT THE END OF DECEMBER 27, 2017, UNLESS THE OFFER IS EXTENDED.**
+
+The Offer (as defined below) is being made pursuant to the Agreement and Plan of Merger, dated as of November 25, 2017 (the “Merger Agreement”), by and among MGC Parent LLC, a Delaware limited liability company (“Parent”), AC Breathe Merger Sub Inc., a Minnesota corporation and a wholly-owned subsidiary of Parent (“Purchaser”), and MGC Diagnostics Corporation, a Minnesota corporation (the “Company”). Purchaser is offering to purchase all of the outstanding shares of common stock, par value $0.10 per share, of the Company (the “Shares”) at a price of $11.03 per Share, net to the seller in cash, without interest thereon, less any applicable deductions or withholding taxes required by applicable law (the “Per Share Amount”), upon the terms and subject to the conditions set forth in this offer to purchase dated November 29, 2017 (this “Offer to Purchase”) and the related letter of transmittal (the “Letter of Transmittal”), which, together with any amendments or supplements, collectively constitute the “Offer.” Pursuant to the Merger Agreement, following the consummation of the Offer and the satisfaction or waiver of each of the applicable conditions set forth in the Merger Agreement, Purchaser and the Company will merge (the “Merger”), with the Company continuing as the surviving corporation in the Merger and as a wholly-owned subsidiary of Parent (the “Surviving Corporation”). As a result of the Merger, each Share outstanding immediately prior to the effective time of the Merger (other than Shares owned by Parent, Purchaser or the Company, any wholly-owned subsidiary of Parent, Purchaser or the Company, or by any shareholder of the Company who or which is entitled to and properly demands and perfects dissenter’s rights with respect to such Shares pursuant to, and complies in all respects with, the applicable provisions of Minnesota law) will at the effective time of the Merger be converted into the right to receive the Per Share Amount.
+
+On November 25, 2017, after careful consideration, the board of directors of the Company (the “Board”) unanimously (a) determined that the Offer, the Merger and the other transactions contemplated by the Merger Agreement were advisable and fair to and in the best interests of the Company and its shareholders, (b) approved, adopted and declared advisable the Merger Agreement, the Offer, the Merger and the other transactions contemplated thereby, (c) authorized and approved the Top-Up Option (as defined below) and the issuance of the Top-Up Shares (as defined below) on the terms contemplated by Section 1.04 of the Merger Agreement, (d) resolved to recommend acceptance of the Offer (i.e. to recommend that the shareholders of the Company tender their Shares to Purchaser pursuant to the Offer), and, if required, approval and adoption of
+
+Field: Page; Sequence: 1
+<!-- PAGE 2 -->
+Field: /Page
+
+the Merger by the Company’s shareholders and (e) to the extent permitted by applicable law, resolved to elect that any “moratorium,” “control share acquisition,” “business combination,” “fair price” or other form of anti-takeover laws or regulations of any jurisdiction that purports to be applicable to the Company, Parent, Purchaser, the Surviving Corporation, the Merger Agreement or the transactions contemplated thereby shall not be applicable to the Company, Parent, Purchaser, the Surviving Corporation, the Merger Agreement or the transactions contemplated thereby.
+
+The obligation of Purchaser to purchase Shares tendered in the Offer is subject to the satisfaction or waiver of a number of conditions set forth in the Merger Agreement, including, among other things:
+
+(a) there being validly tendered in the Offer and not validly withdrawn prior to 12:00 midnight, New York City time, at the end of December 27, 2017 (the “Expiration Time” and such date, or such subsequent date to which the expiration of the Offer is extended, the “Expiration Date”) that number of Shares which, together with the shares beneficially owned by Parent or Purchaser (if any), represents the greater of (1) a majority of the Shares outstanding without giving effect to the Top-Up Option and (2) one Share more than ninety percent (90%) of the total number of Shares outstanding immediately after the issuance of the Top-Up Shares, calculated on a fully diluted basis (which assumes the conversion or exercise of all options to purchase Shares (“Company Stock Options”) and other derivative securities and the vesting and/or exercise of each other right, contingent or accrued, to acquire or receive Shares or benefits measured by the value of Shares (“Company Stock Awards”), in each case, regardless of the conversion or exercise price, the vesting schedule or other terms and conditions thereof);
+
+(b) there not having been entered, enforced, instituted, pending, threatened or issued by any governmental entity any judgment, order, temporary restraining order, temporary or permanent injunction, ruling, proceeding, action, suit, charge or other legal action or order: (i) which could reasonably be expected to make illegal, prevent, restrain or prohibit or make materially more costly the making of the Offer, the acceptance for payment of, or payment for, any Shares or the consummation of the Merger, the Top-Up Option or any of the other transactions contemplated by the Merger Agreement; (ii) which would reasonably be expected to impose limitations on the ability of Parent or Purchaser to exercise full rights of ownership of any Shares; or (iii) which otherwise has had, or would reasonably be expected to have, a Company Material Adverse Effect (as defined below);
+
+(c) there not being in effect any law, statute, rule, regulation, judgment, order, legislation or interpretation of any nature pending, proposed, enacted, enforced, promulgated, amended or issued by any governmental entity or deemed by any governmental entity applicable to (i) Parent, Purchaser, the Company or any of their respective affiliates or (ii) any transaction contemplated by the Merger Agreement, which has resulted in, or is reasonably likely to result in, directly or indirectly, any of the consequences referred to in clauses (i) through (iii) of the condition to described in the immediately preceding condition above;
+
+Field: Page; Sequence: 2
+<!-- PAGE 3 -->
+Field: /Page
+
+(d) there not having occurred any changes, conditions, events, occurrences, facts or developments that would have, or be reasonably likely to have, individually or in the aggregate, a Company Material Adverse Effect (as defined below);
+
+(e) the Merger Agreement having not been validly terminated in accordance with its terms and the Offer having not been terminated in accordance with the terms of the Merger Agreement (the condition described in this condition (e) is referred to as the “Termination Condition”);
+
+(f) the Company not having received demands, notices or instruments from one or more holders of Shares (which demands, notices or instruments shall not have been validly withdrawn or retracted by such holder(s)) exercising, purporting to exercise or clearly indicating an intention to exercise appraisal rights in accordance with Chapters 302A.471 and 302.473 of the Minnesota Business Corporation Act (the “MBCA”) or otherwise, with respect to Shares that represent, in the aggregate, ten percent (10%) or more of the total number of outstanding Shares as of such time (for the avoidance of doubt, prior to giving effect to any exercise of the Top-Up Option or the issuance of any Top-Up Shares) (the condition described in this condition (f) is referred to as the “Dissenting Shares Condition”); and
+
+(g) neither Todd M. Austin nor Matthew S. Margolies having rescinded, revoked or terminated, or having purported or attempted to rescind, revoke or terminate, their respective new employment agreements entered into in connection with the execution of the Merger Agreement.
+
+A summary of the principal terms of the Offer appears on pages 1 through 12 of this Offer to Purchase under the heading “Summary Term Sheet”. You should read this entire Offer to Purchase and the Letter of Transmittal carefully before deciding whether to tender your Shares in the Offer.
+
+Field: Page; Sequence: 3
+<!-- PAGE 4 -->
+Field: /Page
+
+**IMPORTANT**
+
+If you desire to tender all or any portion of your Shares to Purchaser pursuant to the Offer, you should either (i) complete and sign the Letter of Transmittal for the Offer, which is enclosed with this Offer to Purchase, in accordance with the instructions contained in the Letter of Transmittal, and deliver the Letter of Transmittal and any other required documents to Wells Fargo Bank, N.A., in its capacity as depositary for the Offer (the “Depositary”), pursuant to the instructions set forth in the Letter of Transmittal, and either deliver the certificates for your Shares to the Depositary along with the Letter of Transmittal or tender your Shares by book-entry transfer by following the procedures described in Section 3—”Procedures for Accepting the Offer and Tendering Shares,” in each case prior to the Expiration Time, or (ii) request that your broker, dealer, commercial bank, trust company or other nominee effect the transaction for you. If you hold Shares registered in the name of a broker, dealer, commercial bank, trust company or other nominee, you must contact that institution in order to tender your Shares to Purchaser pursuant to the Offer. Such institutions may establish their own earlier deadline for participation in the Offer. Accordingly, if you hold Shares registered in the name of a broker, dealer, commercial bank, trust company or other nominee, you should contact such institution as soon as possible in order to determine the times by which you must take action in order to participate in the Offer.
+
+If you desire to tender your Shares pursuant to the Offer and the certificates representing your Shares are not immediately available, you cannot comply in a timely manner with the procedures for tendering your Shares by book-entry transfer, or you cannot deliver all required documents to the Depositary prior to the Expiration Time, you may be able to tender your Shares to Purchaser pursuant to the Offer by following the procedures for guaranteed delivery described in Section 3 — “Procedures for Accepting the Offer and Tendering Shares.”
+
+* * * * *
+
+Questions and requests for assistance regarding the Offer or any of the terms thereof may be directed to Innisfree M&A Incorporated (“Innisfree”), as information agent for the Offer (the “Information Agent”), at the address and telephone number set forth for the Information Agent on the back cover of this Offer to Purchase. Requests for additional copies of this Offer to Purchase, the Letter of Transmittal, the notice of guaranteed delivery and other tender offer materials may be directed to the Information Agent. You may also contact your broker, dealer, commercial bank, trust company or other nominee for assistance.
+
+**This Offer to Purchase and the Letter of Transmittal contain important information, and you should read both carefully and in their entirety before making a decision with respect to the Offer.**
+
+**This transaction has not been approved or disapproved by the U.S. Securities and Exchange Commission (the “SEC”) or any state securities commission nor has the SEC or any state securities commission passed upon the fairness or merits of this transaction or upon the accuracy or adequacy of the information contained in this Offer to Purchase or the Letter of Transmittal. Any representation to the contrary is unlawful.**
+
+Field: Page; Sequence: 4; Options: NewSection; Value: 1
+
+i
+<!-- PAGE 5 -->
+Field: /Page
+
+**TABLE OF CONTENTS**
+
+| SUMMARY TERM SHEET |  | Page — 1 |
+| --- | --- | --- |
+| INTRODUCTION |  | 13 |
+| THE TENDER OFFER |  | 17 |
+| 1. | Terms of the Offer | 17 |
+| 2. | Acceptance for Payment and Payment for Shares | 19 |
+| 3. | Procedures for Accepting the Offer and Tendering Shares | 20 |
+| 4. | Withdrawal Rights | 24 |
+| 5. | Material United States Federal Income Tax Consequences | 25 |
+| 6. | Price Range of Shares; Dividends | 30 |
+| 7. | Certain Information Concerning the Company | 31 |
+| 8. | Certain Information Concerning Parent and Purchaser | 32 |
+| 9. | Source and Amount of Funds | 34 |
+| 10. | Background of the Offer; Past Contacts or Negotiations with the Company | 47 |
+| 11. | The Merger Agreement | 55 |
+| 12. | Purpose of the Offer; Plans for the Company | 82 |
+| 13. | Certain Effects of the Offer | 90 |
+| 14. | Dividends and Distributions | 91 |
+| 15. | Certain Conditions of the Offer | 91 |
+| 16. | Certain Legal Matters; Regulatory Approvals | 93 |
+| 17. | Fees and Expenses | 96 |
+| 18. | Miscellaneous | 97 |
+| SCHEDULE I DIRECTORS AND EXECUTIVE OFFICERS OF PARENT AND PURCHASER |  | 98 |
+
+Field: Page; Sequence: 5; Value: 1
+
+ii
+<!-- PAGE 6 -->
+Field: /Page
+
+SUMMARY TERM SHEET
+
+*AC Breathe Merger Sub Inc., a Minnesota corporation and wholly-owned subsidiary of MGC Parent LLC, a Delaware limited liability company, is offering to purchase all of the outstanding shares of common stock, par value $0.10 per Share, of MGC Diagnostics Corporation, a Minnesota corporation, at a price of $11.03, net to the seller in cash without interest (less any applicable withholding taxes or deductions required by applicable law), as further described herein, upon the terms and subject to the conditions set forth in this Offer to Purchase and the Letter of Transmittal.*
+
+*The following are some questions you, as a shareholder of the Company, may have and answers to those questions. This summary term sheet highlights selected information from this Offer to Purchase and may not contain all of the information that is important to you and is qualified in its entirety by the more detailed descriptions and explanations contained in this Offer to Purchase and the Letter of Transmittal. **To better understand the Offer and for a complete description of the legal terms of the Offer, you should read this Offer to Purchase and the Letter of Transmittal carefully and in their entirety.** Questions or requests for assistance may be directed to the Information Agent at the address and telephone numbers available on the back cover of this Offer to Purchase. Unless the context indicates otherwise, in this Offer to Purchase, we use the terms “us,” “we” and “our” to refer to Purchaser and where appropriate, Parent and Purchaser, collectively.*
+
+| Securities Sought | All outstanding shares of common stock, par value $0.10 per
+share (the “Shares”), of MGC Diagnostics Corporation, a Minnesota corporation (the “Company”). |
+| --- | --- |
+| Price Offered Per Share | $11.03 per Share, net to the seller in cash, without interest
+and less any applicable withholding taxes or deductions required by applicable law (the “Per Share Amount”). |
+| Scheduled Expiration of Offer | 12:00 midnight, New York City time, at the end of December 27,
+2017, unless the Offer is extended or terminated. See Section 1—”Terms of the Offer.” |
+| Purchaser | AC Breathe Merger Sub Inc., a Minnesota corporation and a wholly-owned
+subsidiary of MGC Parent LLC, a Delaware limited liability company. MGC Parent is an affiliate of Altus Capital Partners II, L.P.,
+a Delaware limited partnership. |
+| The Company’s Board of Directors Recommendation | The board of directors of the Company (the “Board”) has unanimously recommended that the shareholders of the Company tender their Shares in the Offer. |
+
+Field: Page; Sequence: 6; Options: NewSection; Value: 1
+
+1
+<!-- PAGE 7 -->
+Field: /Page
+
+Who is offering to buy my Shares?
+
+AC Breathe Merger Sub Inc., a Minnesota corporation (“Purchaser”) and wholly-owned subsidiary of MGC Parent LLC, a Delaware limited liability company (“Parent), is offering to purchase all of the outstanding Shares. Purchaser is a Minnesota corporation which was formed for the sole purpose of making the Offer and completing the process by which the Company will become a subsidiary of Parent through the Merger. The sole member of Parent is Altus Capital Partners II, L.P., a Delaware limited partnership (“Altus CP II”). See the “Introduction,” Section 8—”Certain Information Concerning Parent and Purchaser” and Schedule I—”Directors and Executive Officers of Parent and Purchaser.”
+
+How many Shares are you offering to purchase in the Offer?
+
+We are making an offer to purchase all of the outstanding Shares on the terms and subject to the conditions set forth in this Offer to Purchase and the Letter of Transmittal. See the “Introduction” and Section 1—”Terms of the Offer.”
+
+Why are you making the Offer?
+
+We are making the Offer because we want to acquire control of, and ultimately the entire equity interest in, the Company. If the Offer is consummated, Parent intends, as soon as practicable after consummation of the Offer, to have Purchaser merge with and into the Company, with the Company as the surviving entity (the “Surviving Corporation”). Upon consummation of the Merger, the Surviving Corporation would be a wholly-owned subsidiary of Parent. See Section 12—”Purpose of the Offer; Plans for the Company.”
+
+How much are you offering to pay and what is the form of payment? Will I have to pay any fees or commissions?
+
+We are offering to pay $11.03 per Share, net to you in cash, without interest and less any applicable withholding taxes or deductions required by applicable law. If you are the record owner of your Shares and you directly tender your Shares to us in the Offer, you will not pay brokerage fees, commissions or similar expenses. If you own your Shares through a broker or other nominee, and your broker tenders your Shares on your behalf, your broker or nominee may charge you a fee for doing so. You should consult with your broker or nominee to determine whether any fees or other charges will apply. See the “Introduction,” Section 1—”Terms of the Offer,” and Section 2—”Acceptance for Payment and Payment for Shares.”
+
+Is there an agreement governing the Offer?
+
+Yes. The Agreement and Plan of Merger entered into by Parent, Purchaser and the Company on November 25, 2017 provides, among other things, for the terms and conditions of the Offer and the Merger. See Section 11—”The Merger Agreement” and Section 15—”Certain Conditions of the Offer.”
+
+Field: Page; Sequence: 7; Value: 1
+
+2
+<!-- PAGE 8 -->
+Field: /Page
+
+What are the most significant conditions of the Offer?
+
+The obligation of Purchaser to purchase Shares tendered in the Offer is subject to the satisfaction or waiver of a number of conditions set forth in the Merger Agreement (the “Tender Offer Conditions”), including, among other things:
+
+a. there being validly tendered in the Offer and not validly withdrawn prior to 12:00 midnight, New York City time, at the end of December 27, 2017 (the “Expiration Time” and such date, or such subsequent date to which the expiration of the Offer is extended, the “Expiration Date”) that number of Shares which, together with the shares beneficially owned by Parent or Purchaser (if any), represents the greater of (1) a majority of the Shares outstanding without giving effect to the Top-Up Option and (2) one share more than ninety percent (90%) of the total number of Shares outstanding immediately after the issuance of the Top-Up Shares, calculated on a fully diluted basis (which assumes the conversion or exercise of all options to purchase Shares (“Company Stock Options”) and other derivative securities and the vesting and/or exercise of each other right, contingent or accrued, to acquire or receive Shares or benefits measured by the value of Shares (“Company Stock Awards”), in each case, regardless of the conversion or exercise price, the vesting schedule or other terms and conditions thereof);
+
+b. there not having been entered, enforced, instituted, pending, threatened or issued by any governmental entity any judgment, order, temporary restraining order, temporary or permanent injunction, ruling, proceeding, action, suit, charge or other legal action or order: (i) which could reasonably be expected to make illegal, prevent, restrain or prohibit or make materially more costly the making of the Offer, the acceptance for payment of, or payment for, any Shares or the consummation of the Merger, the Top-Up Option or any of the other transactions contemplated by the Merger Agreement; (ii) which would reasonably be expected to impose limitations on the ability of Parent or Purchaser to exercise full rights of ownership of any Shares; or (iii) which otherwise has had, or would reasonably be expected to have, a Company Material Adverse Effect (as defined below);
+
+c. there not being in effect any law, statute, rule, regulation, judgment, order, legislation or interpretation of any nature pending, proposed, enacted, enforced, promulgated, amended or issued by any governmental entity or deemed by any governmental entity applicable to (i) Parent, Purchaser, the Company or any of their respective affiliates or (ii) any transaction contemplated by the Merger Agreement, which has resulted in, or is reasonably likely to result in, directly or indirectly, any of the consequences referred to in clauses (i) through (iii) of the condition to described in the immediately preceding condition above;
+
+d. there not having occurred any changes, conditions, events, occurrences, facts or developments that would have, or be reasonably likely to have, individually or in the aggregate, a Company Material Adverse Effect (as defined below);
+
+Field: Page; Sequence: 8; Value: 1
+
+3
+<!-- PAGE 9 -->
+Field: /Page
+
+e. the Merger Agreement having not been validly terminated in accordance with its terms and the Offer having not been terminated in accordance with the terms of the Merger Agreement (the condition described in this condition (e) is referred to as the “Termination Condition”);
+
+f. the Company not having received demands, notices or instruments from one or more holders of Shares (which demands, notices or instruments shall not have been validly withdrawn or retracted by such holder(s)) exercising, purporting to exercise or clearly indicating an intention to exercise appraisal rights in accordance with Chapters 302A.471 and 302.473 of the Minnesota Business Corporation Act (the “MBCA”) or otherwise, with respect to Shares that represent, in the aggregate, ten percent (10%) or more of the total number of outstanding Shares as of such time (for the avoidance of doubt, prior to giving effect to any exercise of the Top-Up Option or the issuance of any Top-Up Shares) (the condition described in this condition (f) is referred to as the “Dissenting Shares Condition”); and
+
+g. neither Todd M. Austin nor Matthew S. Margolies having rescinded, revoked or terminated, or having purported or attempted to rescind, revoke or terminate, his respective new employment agreement entered into in connection with the execution of the Merger Agreement.
+
+According to the Company, as of the close of business on November 24, 2017, there were 4,413,190 Shares issued and outstanding (excluding options, restricted stock awards and shares reserved for purchase under the Company’s Employee Stock Purchase Plan), 347,613 Shares issuable upon exercise or vesting of outstanding stock option grants and restricted stock awards (excluding 3,934 Shares reserved for purchase and funded under the Company’s Employee Stock Purchase Plan with respect to any ongoing offering period).
+
+Assuming no additional Shares are issued after November 24, 2017, based on the Shares outstanding on November 24, 2017, the aggregate number of Shares Purchaser must acquire in the Offer, together with Shares then-owned by Parent or Purchaser, in order to satisfy the Minimum Tender Condition equals 2,206,596 Shares, which represents a majority of the Shares issued and outstanding as of November 24, 2017.
+
+The Offer is also subject to a number of other conditions. We can waive some of the conditions of the Offer without the consent of the Company. We cannot, however, waive the Minimum Tender Condition (as defined in Section 15—”Certain Conditions of the Offer”), without the written consent of the Company. See Section 15—”Certain Conditions of the Offer.”
+
+Do you have the financial resources to pay for all of the Shares that you are offering to purchase in the Offer and to consummate the Merger and the other transactions contemplated by the Merger Agreement?
+
+Purchaser estimates that it will need up to approximately $52,063,200 to purchase all of the issued and outstanding Shares in the Offer, consummate the Merger and the other transactions contemplated by the Merger Agreement and to pay related fees and expenses at the closing of the transactions contemplated by the Merger Agreement. Parent has received (i) a senior debt
+
+Field: Page; Sequence: 9; Value: 1
+
+4
+<!-- PAGE 10 -->
+Field: /Page
+
+commitment letter from Abacus Finance Group, LLC, for an $18,000,000 senior secured credit facility, consisting of a $3,000,000 revolving credit facility and a $15,000,000 term loan facility and (ii) a mezzanine commitment letter from GCG Investors IV, L.P. for (A) term loans in the original aggregate principal amount of $9,800,000 and (B) an equity investment of $2,000,000. In addition, Altus CP II has provided to Parent an equity commitment equal to $22,263,200. Parent will contribute or otherwise advance to Purchaser the proceeds of the equity commitment and debt commitment, which will be sufficient to pay the Per Share Amount for all Shares tendered in the Offer and, together with the Company’s cash on hand at the closing of the Offer, all related fees and expenses. Funding of the Debt Financing and the Equity Financing (as defined in Section 9—”Source and Amount of Funds”) is subject to the satisfaction of various conditions set forth in the Debt Commitment Letter and Equity Commitment Letter. See Section 9—”Source and Amount of Funds.”
+
+Is your financial condition relevant to my decision to tender my Shares in the Offer?
+
+We do not think that our financial condition is relevant to your decision whether to tender Shares and accept the Offer because:
+
+· Parent and Purchaser were organized solely in connection with the Offer and the Merger and, prior to the Expiration Time, will not carry on any activities other than in connection with the Offer and the Merger;
+
+· the consideration offered in the Offer consists solely of cash;
+
+· the Offer is being made for all outstanding Shares of the Company;
+
+· Parent and Purchaser have received equity and debt commitments in respect of funds, which will be sufficient to purchase all Shares tendered pursuant to the Offer;
+
+· the Offer is not subject to any financing condition; and
+
+· Altus CP II is a private equity fund engaged in the purchase, sale and ownership of private equity investments and has no business operations other than investing; only Altus CP II’s commitment to fund the Equity Financing as described below in Section 9—”Source and Amount of Funds” is material to a shareholder’s decision with respect to the Offer.
+
+See Section 9—”Source and Amount of Funds.”
+
+How long do I have to decide whether to tender my Shares in the Offer?
+
+You will have until 12:00 midnight, New York City time, at the end of December 27, 2017 to tender your Shares in the Offer, subject to extension of the Offer in accordance with the terms of the Merger Agreement. Furthermore, if you cannot deliver everything that is required in order to make a valid tender by that time, you may be able to use a guaranteed delivery procedure by which a broker, a bank, or any other fiduciary that is an eligible institution may guarantee that the missing items will be received by the Depositary within two (2) NASDAQ trading days (as defined below). Shares delivered by a Notice of Guaranteed Delivery will not be counted by Purchaser toward the satisfaction of the Minimum Tender Condition; therefore it is preferable for Shares to
+
+Field: Page; Sequence: 10; Value: 1
+
+5
+<!-- PAGE 11 -->
+Field: /Page
+
+be tendered by the other methods described herein. For the tender to be valid, however, the Depositary must receive the missing items within such two (2) NASDAQ trading day period. A “NASDAQ trading day” is any day on which shares are traded on the NASDAQ Capital Market. See Section 1—”Terms of the Offer” and Section 3—”Procedures for Accepting the Offer and Tendering Shares.”
+
+If you hold Shares registered in the name of a broker, dealer, commercial bank, trust company or other nominee, you should be aware that such institutions may establish their own earlier deadline for tendering Shares in the Offer. Accordingly, if you hold Shares registered in the name of a broker, dealer, commercial bank, trust company or other nominee, you should contact such institution as soon as possible in order to determine the times by which you must take action in order to tender Shares in the Offer.
+
+Acceptance for payment of Shares pursuant to and subject to the conditions of the Offer, which will occur on or about December 28, 2017, the first business day following the Expiration Time, unless we extend the Offer pursuant to the terms of the Merger Agreement, is referred to as the “Acceptance Time.” The date and time when the Merger becomes effective is referred to as the “Effective Time.”
+
+Can the Offer be extended and under what circumstances can or will the Offer be extended?
+
+Yes. We have agreed in the Merger Agreement that, subject to our rights and the Company’s rights to terminate the Merger Agreement in accordance with its terms, we can terminate the Offer under certain circumstances:
+
+· if, as of the then-scheduled Expiration Time, any condition of the Offer is not satisfied and has not been waived (to the extent permitted under the Merger Agreement), then Purchaser may extend and re-extend the Offer until all such conditions of the Offer have been satisfied or waived;
+
+· if, as of the then-scheduled Expiration Time, each of the conditions of the Offer is satisfied (other than those conditions that by their nature are to be satisfied at the Expiration Time, but subject to the satisfaction and waiver of such conditions) or has been waived (to the extent permitted under the Merger Agreement), but Parent delivers a notice to the Company representing that the full amount of the Debt Financing has not been funded and would not be available to be funded at the consummation of the Offer if such Expiration Time were not extended, then Purchaser may (on one occasion only) extend the Offer and such Expiration Time for up to ten (10) business days in its sole discretion and without the Company’s consent;
+
+· subject to applicable laws, Purchaser may at any time extend the Offer for any period agreed by Parent and the Company but you have the right to withdrawal; See Section 4—”Withdrawal Rights”; and
+
+Field: Page; Sequence: 11; Value: 1
+
+6
+<!-- PAGE 12 -->
+Field: /Page
+
+· Purchaser will extend the Offer for any period required by any rule, regulation, interpretation or position of the SEC or its staff or the NASDAQ Capital Market applicable to the Offer or as may be required by any other governmental entity.
+
+In any case, Purchaser will not be required to extend the Offer beyond 11:59 p.m. New York City Time on January 31, 2018 (the “Outside Date”) or the valid termination of the Merger Agreement.
+
+If we extend the time period of the Offer, this extension will extend the time that you will have to tender your Shares. See Section 1—”Terms of the Offer” for more details on our ability to extend the Offer.
+
+How will I be notified if the Offer is extended?
+
+If we extend the Offer, we will inform the Depositary of that fact and will make a public announcement of the extension not later than 9:00 A.M., New York City time, on the next business day after the day on which the Offer was scheduled to expire. See Section 1—”Terms of the Offer.”
+
+How do I tender my Shares?
+
+To tender your Shares, you must deliver the certificates representing your Shares or confirmation of a book-entry transfer of such Shares into the account of the Depositary at The Depository Trust Company (“DTC”), together with a completed Letter of Transmittal or an Agent’s Message (as defined in Section 3—”Procedures for Accepting the Offer and Tendering Shares”) and any other documents required by the Letter of Transmittal, to the Depositary, prior to the expiration of the Offer. If your Shares are held in street name (that is, through a broker, dealer or other nominee), they can be tendered by your nominee through DTC. If you are unable to deliver any required document or instrument to the Depositary by the expiration of the Offer, you may gain some extra time by having a broker, a bank or any other fiduciary that is an eligible institution guarantee that the missing items will be received by the Depositary within two (2) NASDAQ trading days. For the tender to be valid, however, the Depositary must receive the missing items within that two-NASDAQ-trading-day period. See Section 3—”Procedures for Accepting the Offer and Tendering Shares.”
+
+Until what time may I withdraw previously tendered Shares?
+
+You may withdraw previously tendered Shares any time prior to the expiration of the Offer by following the procedures for withdrawing your Shares in a timely manner. If you tendered your Shares by giving instructions to a broker or other nominee, you must instruct your broker or nominee prior to the expiration of the Offer to arrange for the withdrawal of your Shares in a timely manner. See Section 4—”Withdrawal Rights.”
+
+How do I withdraw previously tendered Shares?
+
+To validly withdraw any of your previously tendered Shares, you must deliver a written notice of withdrawal, or a facsimile of one (with original delivered via overnight courier), with the required information to the Depositary while you still have the right to withdraw such Shares. If you tendered your Shares by giving instructions to a broker, banker or other nominee, you must
+
+Field: Page; Sequence: 12; Value: 1
+
+7
+<!-- PAGE 13 -->
+Field: /Page
+
+instruct your broker, banker or other nominee to arrange for the withdrawal of your Shares and such broker, banker or other nominee must effectively withdraw such Shares while you still have the right to withdraw Shares. See Section 4—”Withdrawal Rights.”
+
+Do I have to vote to approve the Offer or the Merger?
+
+Your vote is not required to approve the Offer. You only need to tender your Shares if you choose to do so. Following the completion of the Offer and the issuance of the Top-Up Shares (as defined below), if any, Merger Sub will own a sufficient number of shares to consummate the Merger pursuant to Chapter 302A.621 of the MBCA without a vote or any further action by the shareholders of the Company. See Section 12—”Purpose of the Offer; Plans for the Company.”
+
+What does the Board think of the Offer?
+
+We are making the Offer pursuant to the Merger Agreement, which has been unanimously approved by the Board. After careful consideration, the Board has unanimously:
+
+· determined that the Offer, the Merger, and the other transactions contemplated thereby are advisable and fair to and in the best interests of the Company and its shareholders;
+
+· approved, adopted and declared advisable the Merger Agreement, the Offer, the Merger and the other transactions contemplated thereby;
+
+· authorized and approved the Top-Up Option and the issuance of the Top-Up Shares on the terms contemplated by Section 1.04 of the Merger Agreement;
+
+· resolved to recommend acceptance of the Offer (i.e. to recommend that the shareholders of the Company tender their shares of Company Common Stock to Merger Sub pursuant to the Offer); and
+
+· to the extent permitted by applicable law, resolved to elect that any “moratorium,” “control share acquisition,” “business combination,” “fair price” or other form of anti-takeover Laws or regulations of any jurisdiction that purports to be applicable to the Company, Parent, Purchaser, the Surviving Corporation, the Merger Agreement or the transactions contemplated thereby shall not be applicable to the Company, Parent, Purchaser, the Surviving Corporation, the Merger Agreement or the transactions contemplated herby.
+
+A more complete description of the Board’s reasons for authorizing and approving the Merger Agreement and the transactions contemplated thereby, including the Offer and the Merger, will be set forth in the Company’s Solicitation/Recommendation Statement on Schedule 14D-9 under the Securities Exchange Act of 1934, as amended (the “Exchange Act”), that will be mailed to the shareholders of the Company. See the “Introduction” and Section 10—”Background of the Offer; Past Contacts or Negotiations with the Company.”
+
+If the Offer is successfully completed, will the Company continue as a public company?
+
+No. Following the purchase of Shares in the Offer and the issuance of the Top-Up Shares, if any, we expect to consummate the Merger in accordance with Chapter 302A.621 of the MBCA,
+
+Field: Page; Sequence: 13; Value: 1
+
+8
+<!-- PAGE 14 -->
+Field: /Page
+
+and no shareholder vote to adopt the Merger Agreement or any other action by the shareholders of the Company will be required in connection with the Merger. If the Merger takes place, the Company will no longer be publicly-owned. We do not expect there to be a significant period of time between the consummation of the Offer and the consummation of the Merger. If you decide not to tender your Shares in the Offer and the Merger occurs as described above, you will receive as a result of the Merger the right to receive the same amount of cash per Share as if you had tendered your Shares in the Offer. Upon consummation of the Merger, the Company’s common stock will no longer be eligible to be traded on the NASDAQ Capital Market or any other securities exchange, there will not be a public trading market for the common stock or any other securities of the Company, and the Company will no longer be required to make filings with the SEC or otherwise comply with the rules of the SEC relating to publicly-held companies. See Section 13—”Certain Effects of the Offer.”
+
+If you do not consummate the Offer, will you nevertheless consummate the Merger?
+
+No. None of Purchaser, Parent or the Company are under any obligation to pursue or consummate the Merger if the Offer has not been earlier consummated.
+
+Are dissenters’ rights available in either the Offer or the Merger?
+
+You will not be entitled to dissenters’ rights, or the right to have a court determine the fair value of your shares, if you tender your Shares in the Offer. However, if you do not tender your Shares in the Offer, you may be entitled to such rights but only if and to the extent you comply with the applicable provisions of Minnesota law regarding such rights. See Section 12—”Purpose of the Offer; Plans for the Company.”
+
+If I decide not to tender, how will the Offer affect my Shares?
+
+If the Offer is consummated and certain other conditions are met, the Merger will occur and all of the Shares outstanding prior to the Effective Time (other than Shares owned by Parent, Purchaser or the Company, any wholly-owned subsidiary of Parent, Purchaser or the Company, or by any shareholder of the Company who or which is entitled to and properly demands and perfects dissenter’s rights with respect to such Shares pursuant to, and complies in all respects with, the applicable provisions of Minnesota law) will at the Effective Time be converted into the right to receive the Per Share Amount without interest and less any applicable withholding taxes or deductions required by applicable law. Therefore, if the Merger takes place, the only difference to you between tendering your Shares and not tendering your Shares is that you will be paid earlier if you tender your Shares and that no appraisal rights will be available in the Offer. Assuming the requirements of Chapter 302A.621 of the MBCA are met, as currently anticipated, no shareholder vote to adopt the Merger Agreement or any other action by the shareholders of the Company will be required in connection with the Merger. We do not expect there to be significant time between the consummation of the Offer and the consummation of the Merger. Upon consummation of the Merger, there no longer will be any public trading market for the Shares. Also, the Company will no longer be required to make filings with the SEC or otherwise comply with the rules of the SEC relating to publicly-held companies. See the “Introduction” and Section 13—”Certain Effects of the Offer.”
+
+Field: Page; Sequence: 14; Value: 1
+
+9
+<!-- PAGE 15 -->
+Field: /Page
+
+What is the market value of my Shares as of a recent date?
+
+On November 24, 2017, the last NASDAQ trading day before we announced that we entered into the Merger Agreement, the last sale price of the common stock of the Company reported on the NASDAQ Capital Market was $8.80 per Share. On November 27, 2017, the last NASDAQ trading day prior to the original printing of this Offer to Purchase, the last sale price of the Shares reported on the NASDAQ Capital Market was $10.92 per Share. We encourage you to obtain a recent quotation for Shares in deciding whether to tender your Shares. See Section 6—”Price Range of Shares; Dividends.”
+
+Have any shareholders already agreed to tender their Shares in the Offer or to otherwise support the Offer?
+
+Yes. Company officers Todd M. Austin, Matthew S. Margolies and Larry R. Degen and each of the members of the Board of Directors of the Company, who collectively own approximately 8.9% of the issued and outstanding Shares, have entered into Tender Support Agreements (the “Support Agreements”) with Parent. Under the Support Agreements, each of these individuals has already agreed to tender his or her Shares in the Offer (except as may otherwise be mutually agreed with Parent in writing) and to support the Offer, including by waiving any right to exercise dissenter’s or appraisal rights in connection with the Merger. However, each of these Support Agreements would terminate upon a valid termination of the Merger Agreement and certain other circumstances, including a change of the Board’s recommendation for shareholders to tender their Shares in the Offer that is made in compliance with Section 6.04 of the Merger Agreement. See Section 12—”Purpose of the Offer; Plans for the Company.”
+
+If I tender my Shares, when and how will I get paid?
+
+If the conditions of the Offer as set forth in Section 15—”Certain Conditions of the Offer” are satisfied or waived and we consummate the Offer and accept your Shares for payment, we will pay you an amount equal to the number of Shares you tendered multiplied by $11.03 in cash without interest, less any applicable withholding taxes or other deductions required by applicable law, promptly following the expiration of the Offer (but in no event more than three (3) business days thereafter). See Section 1—”Terms of the Offer” and Section 2—”Acceptance for Payment and Payment of Shares.”
+
+What will happen to my stock options in the Offer and the Merger?
+
+Stock options to purchase Shares are not sought in or affected by the Offer. However, pursuant to the Merger Agreement, each stock option to purchase Shares, including options that were granted under any Company equity plan (the “Options”) that is unexpired, unexercised and outstanding as of the Effective Time, whether vested or unvested, will vest automatically immediately prior to the Effective Time and will be cancelled and converted into the right to receive an amount in cash equal to the product obtained by multiplying (A) the aggregate number of Shares subject to such Option and (B) the excess, if any, of the Per Share Amount over the applicable exercise price per Share of such Option, subject to any applicable withholding or taxes (the “Option Consideration”), with each former holder of any such canceled Option becoming
+
+Field: Page; Sequence: 15; Value: 1
+
+10
+<!-- PAGE 16 -->
+Field: /Page
+
+entitled to receive payment of the Option Consideration, if any, made to the holder of such Option through the payroll system of the Company (for employees, but not directors) as soon as reasonably practicable following the closing date (and in no event later than the earlier of the second payroll date of the Company following the closing date and the fifteenth (15th) business day after the closing date). If the exercise price per share of any Option, whether vested or unvested, is equal to or greater than the Per Share Amount, such Option will be cancelled and terminated without any cash payment being made in respect thereof. See Section 11—”The Merger Agreement.”
+
+What will happen to my restricted stock awards in the Offer and the Merger?
+
+Awards of the Company’s outstanding restricted stock are not sought in or affected by the Offer. However, pursuant to the Merger Agreement, all restricted stock awards that are outstanding and unexpired immediately prior to the Effective Time (including any restricted stock awards that vest in accordance with their terms at the Effective Time) will be cancelled and automatically converted into the right to receive the Per Share Amount at the Effective Time. Such payments will be made through the payroll system of the Company (for employees, but not directors) as soon as reasonably practicable following the closing date (and in no event later than the earlier of the second payroll date of the Company following the closing date and the fifteenth (15th) business day after the closing date). See Section 11—”The Merger Agreement.”
+
+What are the United States federal income tax consequences of the Offer and the Merger to a United States Holder?
+
+If you are a United States Holder (as defined in Section 5—”Material United States Federal Income Tax Consequences”), the receipt of cash by you in exchange for your Shares pursuant to the Offer or the Merger will be a taxable transaction for United States federal income tax purposes. In general, if you are a United States Holder and you hold your Shares as a capital asset, you will recognize capital gain or loss equal to the difference between the amount of cash you receive and your adjusted tax basis in the Shares exchanged therefor. Such gain or loss will be treated as a long-term capital gain or loss if you have held the Shares for more than one (1) year at the time of the exchange. If you are a non-United States Holder (as defined in Section 5—”Material United States Federal Income Tax Consequences), you generally will not be subject to United States federal income tax with respect to the exchange of Shares for cash pursuant to the Offer or the Merger unless you have certain connections to the United States. See Section 5—”Material United States Federal Income Tax Consequences” for a summary of the material United States federal income tax consequences of tendering Shares pursuant to the Offer or exchanging Shares in the Merger.
+
+**You are urged to consult your own tax advisors to determine the particular tax consequences to you of the Offer and the Merger, including the application and effect of any state, local or non-United States income and other tax laws or tax treaties (or any potential or anticipated changes, modifications or amendments to such tax laws and tax treaties).**
+
+Field: Page; Sequence: 16; Value: 1
+
+11
+<!-- PAGE 17 -->
+Field: /Page
+
+Who should I talk to if I have additional questions about the Offer?
+
+Shareholders may call Innisfree toll-free at (888) 750-5834 and banks and brokers may call Innisfree at (212) 750-5833. Innisfree is acting as the information agent for the Offer. See the back cover of this Offer to Purchase.
+
+Field: Page; Sequence: 17; Value: 1
+
+12
+<!-- PAGE 18 -->
+Field: /Page
+
+INTRODUCTION
+
+AC Breathe Merger Sub Inc., a Minnesota corporation (“Purchaser”) and a wholly-owned subsidiary of MGC Parent LLC, a Delaware limited liability company (“Parent”), hereby offers to purchase for cash all outstanding shares of common stock, par value $0.10 per share (the “Shares”), of MGC Diagnostics Corporation, a Minnesota corporation (the “Company”), at a price of $11.03 per Share, net to the seller in cash, without interest thereon and less any applicable withholding taxes or other deductions required by applicable law (the “Per Share Amount”), upon the terms and subject to the conditions set forth in this offer to purchase (this “Offer to Purchaser”) and in the related letter of transmittal (the “Letter of Transmittal”) (which, together with any amendments or supplements hereto or thereto, collectively constitute the “Offer”). The Offer and the withdrawal rights will expire at 12:00 midnight, New York City time, at the end of December 27, 2017, unless the Offer is extended in accordance with the terms of the Merger Agreement.
+
+The Offer is being made pursuant to the Agreement and Plan of Merger, dated as of November 25, 2017, by and among Parent, Purchaser and the Company (the “Merger Agreement”). The Merger Agreement provides that after the purchase of Shares in the Offer, Purchaser and the Company will merge (the “Merger”), with the Company as the surviving corporation (the “Surviving Corporation”) in the Merger continuing as a wholly-owned subsidiary of Parent. According to the Merger Agreement, at the effective time of the Merger (the “Effective Time”), each Share outstanding immediately prior to the Effective Time (other than Shares owned by Parent, Purchaser or the Company, any wholly-owned subsidiary of Parent, Purchaser or the Company, or by any shareholder of the Company who or which is entitled to and properly demands and perfects dissenter’s rights with respect to such Shares pursuant to, and complies in all respects with, the applicable provisions of Minnesota law) will be converted into the right to receive the Per Share Amount (the “Merger Consideration”). Under no circumstances will interest on the Per Share Amount for Shares be paid to the shareholders of the Company, regardless of any delay in payment for such Shares. The Merger Agreement is more fully described in Section 11—”The Merger Agreement,” which also contains a discussion of the treatment of Company stock options and other equity awards of the Company.
+
+Tendering shareholders who are record owners of their Shares and tender directly to the Depositary (as defined below) will not be obligated to pay brokerage fees or commissions or, except as otherwise provided in the Instructions to the Letter of Transmittal, stock transfer taxes with respect to the purchase of Shares by Purchaser pursuant to the Offer. Shareholders who hold their Shares through a broker or bank should consult such institution as to whether it charges any brokerage or other service fees. Parent or Purchaser will pay all charges and expenses of Wells Fargo Bank, N.A., as Depositary, and Innisfree M&A Incorporated (“Innisfree”), as Information Agent, incurred in connection with the Offer. See Section 17—”Fees and Expenses.”
+
+**On November 25, 2017, after careful consideration, the board of directors of the Company (the “Board”) unanimously (a) determined that the Offer, the Merger and the other transactions contemplated by the Merger Agreement were advisable and fair to and in the best interests of the Company and its shareholders, (b) approved, adopted and declared advisable the Merger Agreement, the Offer, the Merger and the other transactions contemplated thereby, (c) authorized and approved the Top-Up Option (as defined below) and the issuance of the Top-Up Shares (as defined below) on the terms contemplated by**
+
+Field: Page; Sequence: 18; Value: 1
+
+13
+<!-- PAGE 19 -->
+Field: /Page
+
+**Section 1.04 of the Merger Agreement, (d) resolved to recommend acceptance of the Offer (i.e. to recommend that the shareholders of the Company tender their Shares to Purchaser pursuant to the Offer), and, if required, approval and adoption of the Merger by the Company’s shareholders and (e) to the extent permitted by applicable law, resolved to elect that any “moratorium,” “control share acquisition,” “business combination,” “fair price” or other form of anti-takeover laws or regulations of any jurisdiction that purports to be applicable to the Company, Parent, Purchaser, the Surviving Corporation, the Merger Agreement or the transactions contemplated thereby shall not be applicable to the Company, Parent, Purchaser, the Surviving Corporation, the Merger Agreement or the transactions contemplated thereby.**
+
+A more complete description of the Board’s reasons for authorizing and approving the Offer, the Merger and the other transactions contemplated by the Merger Agreement will be set forth in the Company’s Solicitation/Recommendation Statement on Schedule 14D-9 (together with any supplements thereto, the “Schedule 14D-9”) under the Securities Exchange Act of 1934, as amended (the “Exchange Act”), that will be mailed to the shareholders of the Company.
+
+The obligation of Purchaser to purchase Shares tendered in the Offer is subject to the satisfaction or waiver of a number of conditions set forth in the Merger Agreement, including, among other things:
+
+(a) there being validly tendered in the Offer and not validly withdrawn prior to 12:00 midnight, New York City time, at the end of December 27, 2017 (the “Expiration Time” and such date, or such subsequent date to which the expiration of the Offer is extended, the “Expiration Date”) that number of Shares which, together with the shares beneficially owned by Parent or Purchaser (if any), represents the greater of (1) a majority of the Shares outstanding and (2) one share more than ninety percent (90%) of the total number of Shares outstanding immediately after the issuance of the Top-Up Shares, calculated on a fully diluted basis (which assumes the conversion or exercise of all options to purchase Shares (“Company Stock Options”) and other derivative securities and the vesting and/or exercise of each other right, contingent or accrued, to acquire or receive Shares or benefits measured by the value of Shares (“Company Stock Awards”), in each case, regardless of the conversion or exercise price, the vesting schedule or other terms and conditions thereof);
+
+(b) there not having been entered, enforced, instituted, pending, threatened or issued by any governmental entity any judgment, order, temporary restraining order, temporary or permanent injunction, ruling, proceeding, action, suit, charge or other legal action or order: (i) which could reasonably be expected to make illegal, prevent, restrain or prohibit or make materially more costly the making of the Offer, the acceptance for payment of, or payment for, any Shares or the consummation of the Merger, the Top-Up Option or any of the other transactions contemplated by the Merger Agreement; (ii) which would reasonably be expected to impose limitations on the ability of Parent or Purchaser to exercise full rights of ownership of any Shares; or (iii) which otherwise has had, or would reasonably be expected to have, a Company Material Adverse Effect (as defined in the Merger Agreement);
+
+Field: Page; Sequence: 19; Value: 1
+
+14
+<!-- PAGE 20 -->
+Field: /Page
+
+(c) there not being in effect any law, statute, rule, regulation, judgment, order, legislation or interpretation of any nature pending, proposed, enacted, enforced, promulgated, amended or issued by any governmental entity or deemed by any governmental entity applicable to (i) Parent, Purchaser, the Company or any of their respective affiliates or (ii) any transaction contemplated by the Merger Agreement, which has resulted in, or is reasonably likely to result in, directly or indirectly, any of the consequences referred to in clauses (i) through (iii) of the condition to described in the immediately preceding condition above;
+
+(d) there not having occurred any changes, conditions, events, occurrences, facts or developments that would have, or be reasonably likely to have, individually or in the aggregate, a Company Material Adverse Effect (as defined below);
+
+(e) the Merger Agreement having not been validly terminated in accordance with its terms and the Offer having not been terminated in accordance with the terms of the Merger Agreement (the condition described in this condition (e) is referred to as the “Termination Condition”);
+
+(f) the Company not having received demands, notices or instruments from one or more holders of Shares (which demands, notices or instruments shall not have been validly withdrawn or retracted by such holder(s)) exercising, purporting to exercise or clearly indicating an intention to exercise appraisal rights in accordance with Chapters 302A.471 and 302.473 of the Minnesota Business Corporation Act (the “MBCA”) or otherwise, with respect to Shares that represent, in the aggregate, ten percent (10%) or more of the total number of outstanding Shares as of such time (for the avoidance of doubt, prior to giving effect to any exercise of the Top-Up Option or the issuance of any Top-Up Shares) (the condition described in this condition (f) is referred to as the “Dissenting Shares Condition”); and
+
+(g) neither Todd M. Austin nor Matthew S. Margolies having rescinded, revoked or terminated, or having purported or attempted to rescind, revoke or terminate, their respective new employment agreements entered into in connection with the execution of the Merger Agreement.
+
+According to the Company, as of the close of business on November 24, 2017, there were 4,413,190 Shares issued and outstanding (excluding options, restricted stock awards and shares reserved for purchase under the Company’s Employee Stock Purchase Plan), 347,613 Shares issuable upon exercise or vesting of outstanding stock option grants and restricted stock awards (excluding 3,934 Shares reserved for purchase and funded under the Company’s Employee Stock Purchase Plan with respect to any ongoing offering period).
+
+Assuming no additional Shares are issued after November 24, 2017, based on the Shares outstanding on November 24, 2017, the aggregate number of Shares Purchaser must acquire in the Offer, together with Shares then-owned by Parent or Purchaser, in order to satisfy the Minimum Tender Condition equals 2,206,596 Shares, which represents a majority of the Shares issued and outstanding as of November 24, 2017.
+
+Field: Page; Sequence: 20; Value: 1
+
+15
+<!-- PAGE 21 -->
+Field: /Page
+
+The Merger Agreement provides that, from and after the Effective Time, until successors are duly elected or appointed and qualified in accordance with applicable law, the directors and officers of Purchaser at the Effective Time will be the directors and officers of the Surviving Corporation.
+
+If the Minimum Tender Condition is satisfied, following the issuance of the Top-Up Shares, if any, Purchaser would have sufficient voting power after the issuance of such Top-Up Shares to approve the Merger without the affirmative vote of any other shareholder of the Company pursuant to Chapter 302A.621 of the MBCA. Therefore, the parties have agreed to take all necessary and appropriate actions to cause the Merger to become effective as soon as practicable after such acquisition, without a meeting of the shareholders of the Company, in accordance with Chapter 302A.621 of the MBCA. We do not currently foresee any reason that would prevent us from completing the Merger pursuant to pursuant to Chapter 302A.621 of the MBCA following the consummation of the Offer. See Section 11—”The Merger Agreement.”
+
+The material United States federal income tax consequences of the sale of Shares pursuant to the Offer and the exchange of Shares pursuant to the Merger are summarized in Section 5—”Material United States Federal Income Tax Consequences.”
+
+**This Offer to Purchase and the Letter of Transmittal contain important information that should be read carefully before any decision is made with respect to the Offer.**
+
+Field: Page; Sequence: 21; Value: 1
+
+16
+<!-- PAGE 22 -->
+Field: /Page
+
+THE TENDER OFFER
+
+1. Terms of the Offer.
+
+Upon the terms and subject to the conditions of the Offer (including, if the Offer is extended or amended, the terms and conditions of such extension or amendment), Purchaser will accept for payment and pay for all Shares validly tendered prior to the Expiration Time and not validly withdrawn as permitted under Section 4—”Withdrawal Rights.” The term “Expiration Time” means 12:00 midnight, New York City time, at the end of December 27, 2017, unless Purchaser, in accordance with the Merger Agreement, extends the period during which the Offer is open, in which event the term “Expiration Time” means the latest time and date on which the Offer, as so extended, expires; provided, however, that the Expiration Time may not be extended beyond 11:59 p.m. New York City Time on January 31, 2018 (the “Outside Date”) or the valid termination of the Merger Agreement.
+
+The Offer is conditioned upon the satisfaction of the Minimum Tender Condition, the Termination Condition, the Dissenting Shares Condition and certain other conditions set forth in Section 15—”Certain Conditions of the Offer.” Purchaser and Parent expressly reserve the right (in their sole discretion) to waive, in whole or in part, any condition to the Offer, to increase the Offer Price or to make any other changes in the terms and conditions of the Offer. However, unless otherwise provided by the Merger Agreement or as previously approved in writing by the Company, Purchaser shall not (i) reduce the number of shares of Company Common Stock subject to the Offer, (ii) reduce the Offer Price, (iii) change, modify or waive the Minimum Tender Condition, (iv) add to the conditions to the Offer or modify or change any condition to the Offer in a manner adverse in any material respect to any shareholders of the Company, (v) except as otherwise allowed by the Merger Agreement, extend or otherwise change the expiration date of the Offer, (vi) change the form of consideration payable in the Offer or (vii) otherwise amend, modify or supplement any of the terms of the Offer in a manner adverse in any material respect to any shareholders of the Company.
+
+The Merger Agreement provides that Purchaser will extend the Offer for any period required by any rule, regulation, interpretation or position of the U.S. Securities and Exchange Commission (the “SEC”) or its staff or the NASDAQ Capital Market applicable to the Offer or as may be required by any governmental authority. In addition, we have agreed in the Merger Agreement that, subject to our rights and the Company’s rights to terminate the Merger Agreement in accordance with its terms, we can terminate the Offer under certain circumstances:
+
+· if, as of the then-scheduled Expiration Time, any condition of the Offer is not satisfied and has not been waived (to the extent permitted under the Merger Agreement), then Purchaser may extend and re-extend the Offer until all such conditions of the Offer have been satisfied or waived;
+
+· if, as of the then-scheduled Expiration Time, each of the conditions of the Offer is satisfied (other than those conditions that by their nature are to be satisfied at the Expiration Time, but subject to the satisfaction and waiver of such conditions) or has been waived (to the extent permitted under the Merger Agreement), but Parent delivers a notice to the Company representing that the full amount of the Debt Financing has not been funded and would not
+
+Field: Page; Sequence: 22; Value: 1
+
+17
+<!-- PAGE 23 -->
+Field: /Page
+
+be available to be funded at the consummation of the Offer if such Expiration Time were not extended, then Purchaser may (on one occasion only) extend the Offer and such Expiration Time for up to ten (10) business days in its sole discretion and without the Company’s consent; and
+
+· subject to applicable laws, Purchaser may at any time extend the Offer for any period agreed by Parent and the Company.
+
+In any case, Purchaser will not be required to extend the Offer beyond the Outside Date or after the valid termination of the Merger Agreement.
+
+If Purchaser extends the Offer or if Purchaser (whether before or after its acceptance for payment of Shares) is delayed in its acceptance of or payment for Shares or it is unable to pay for Shares pursuant to the Offer for any reason, then, without prejudice to Purchaser’s rights under the Offer, the Depositary may retain tendered Shares on behalf of Purchaser, and such Shares may not be validly withdrawn except to the extent tendering shareholders are entitled to withdrawal rights as described herein under Section 4—”Withdrawal Rights.” However, the ability of Purchaser to delay the payment for Shares that Purchaser has accepted for payment is limited by Rule 14e-1(c) under the Exchange Act, which requires that a purchaser making a tender offer promptly pay the consideration offered. Alternatively, if the Offer is not consummated, and the Shares are not accepted for payment or Shares are validly withdrawn, Purchaser is obligated to return the securities deposited by or on behalf of shareholders promptly after the termination of the Offer or withdrawal of such Shares.
+
+If Purchaser makes a material change in the terms of the Offer or the information concerning the Offer, or if it waives a material condition of the Offer, Purchaser will disseminate additional Offer materials and extend the Offer to the extent required by Rules 14d-4(d), 14d-6(c) and 14e-1 under the Exchange Act. The minimum period during which an Offer must remain open following material changes in the terms of the Offer, other than a change in price, percentage of securities sought, or inclusion of or changes to a dealer’s soliciting fee, will depend upon the facts and circumstances, including the materiality, of the changes. In the SEC’s view, an offer to purchase should remain open for a minimum of five (5) business days from the date the material change is first published, sent or given to shareholders and, if material changes are made with respect to information that approaches the significance of price and share levels, a minimum of ten (10) business days may be required to allow for adequate dissemination and investor response. Accordingly, if prior to the Expiration Time Purchaser decreases the number of Shares being sought or increases the consideration offered pursuant to the Offer, and if the Offer is scheduled to expire at any time earlier than the tenth (10th) business day from the date that notice of such increase or decrease is first published, sent or given to shareholders, the Offer will be extended at least until the expiration of such tenth (10th) business day.
+
+Any extension, delay, termination, waiver or amendment will be followed as promptly as practicable by public announcement thereof, such announcement in the case of an extension to be made no later than 9:00 A.M., New York City time, on the next business day after the previously scheduled Expiration Time, in accordance with the public announcement requirements of Rule 14e-1(d) under the Exchange Act. Subject to applicable law (including Rules 14d-4(d) and 14d-6(c) under the Exchange Act, which requires that material changes be promptly disseminated to
+
+Field: Page; Sequence: 23; Value: 1
+
+18
+<!-- PAGE 24 -->
+Field: /Page
+
+shareholders in a manner reasonably designed to inform them of such changes) and without limiting the manner in which Purchaser may choose to make any public announcement, Purchaser has no obligation to publish, advertise or otherwise communicate any such public announcement other than by issuing a press release to a national news service. As used in this Offer to Purchase, “business day” means any day, other than Saturday, Sunday or other day on which commercial banks in New York City, New York are authorized or required by applicable law or other governmental action to close.
+
+If, on or before the Expiration Time, we increase the consideration being paid for Shares accepted for payment in the Offer, such increased consideration will be paid to all shareholders whose Shares are purchased in the Offer, whether or not such Shares were tendered before the announcement of the increase in consideration.
+
+The Company has provided Purchaser with the Company’s shareholder list and security position listings for the purpose of disseminating the Offer to holders of Shares. This Offer to Purchase and the Letter of Transmittal will be mailed to record holders of Shares whose names appear on the Company’s shareholder list and will be furnished, for subsequent transmittal to beneficial owners of Shares, to brokers, dealers, commercial banks, trust companies and similar persons whose names, or the names of whose nominees, appear on the shareholder list or, if applicable, who are listed as participants in a clearing agency’s security position listing.
+
+2. Acceptance for Payment and Payment for Shares.
+
+Upon the terms and subject to the conditions of the Offer (including, if the Offer is extended or amended, the terms and conditions of any such extension or amendment), including the satisfaction or earlier waiver of all the conditions to the Offer set forth in Section 15—”Certain Conditions of the Offer,” Purchaser will accept for payment and will pay for all Shares validly tendered and not validly withdrawn prior to the Expiration Time pursuant to the Offer promptly after the Expiration Time. Subject to the Merger Agreement and in compliance with Rule 14e-1(c) under the Exchange Act, Purchaser expressly reserves the right to delay payment for Shares pending receipt of regulatory or government approvals. Rule 14e-1(c) under the Exchange Act relates to the obligation of Purchaser to pay for or return tendered Shares promptly after the termination or withdrawal of the Offer. See Section 16—”Certain Legal Matters; Regulatory Approvals.”
+
+In all cases, payment for Shares accepted for payment pursuant to the Offer will be made only after timely receipt by the Depositary of (i) the certificates evidencing such Shares (the “Certificates”) or confirmation (a “Book-Entry Confirmation”) of a book-entry transfer of such Shares into the Depositary’s account at The Depository Trust Company (the “Book-Entry Transfer Facility”) pursuant to the procedures set forth in Section 3—Procedures for Accepting the Offer and Tendering Shares,” (ii) the Letter of Transmittal, properly completed and duly executed, with any required signature guarantees or, in the case of a book-entry transfer, an Agent’s Message (as defined below) in lieu of the Letter of Transmittal, and (iii) any other documents required by the Letter of Transmittal. Accordingly, tendering shareholders may be paid at different times depending upon when the above listed items are actually received by the Depositary.
+
+Field: Page; Sequence: 24; Value: 1
+
+19
+<!-- PAGE 25 -->
+Field: /Page
+
+For purposes of the Offer, Purchaser will be deemed to have accepted for payment, and thereby purchased, Shares validly tendered and not validly withdrawn, if and when Purchaser gives oral or written notice to the Depositary of Purchaser’s acceptance for payment of such Shares pursuant to the Offer. Upon the terms and subject to the conditions of the Offer, payment for Shares accepted for payment pursuant to the Offer will be made by deposit of the Per Share Amount therefor with the Depositary, which will act as agent for tendering shareholders for the purpose of receiving payments from Purchaser and transmitting such payments to tendering shareholders whose Shares have been accepted for payment. If, for any reason whatsoever, acceptance for payment of any Shares tendered pursuant to the Offer is delayed, or Purchaser is unable to accept for payment Shares tendered pursuant to the Offer, then, without prejudice to Purchaser’s rights under the Offer hereof, the Depositary may, nevertheless, on behalf of Purchaser, retain tendered Shares, and such Shares may not be withdrawn, except to the extent that the tendering shareholders are entitled to withdrawal rights as described in Section 4—”Withdrawal Rights” and as otherwise required by Rule 14e-1(c) under the Exchange Act.
+
+Under no circumstances will interest on the Per Share Amount for Shares be paid to the shareholders, regardless of any delay in payment for such Shares.
+
+If any tendered Shares are not accepted for payment for any reason pursuant to the terms and conditions of the Offer, or if Certificates are submitted evidencing more Shares than are tendered, Certificates evidencing unpurchased or untendered Shares will be returned, without expense to the tendering shareholder (or, in the case of Shares tendered by book-entry transfer into the Depositary’s account at the Book-Entry Transfer Facility pursuant to the procedure set forth in Section 3—”Procedures for Accepting the Offer and Tendering Shares,” such Shares will be credited to an account maintained at the Book-Entry Transfer Facility), promptly following the expiration or termination of the Offer.
+
+If, prior to the Expiration Time, Purchaser increases the price being paid for Shares, Purchaser will pay the increased consideration for all Shares purchased pursuant to the Offer, whether or not those Shares were tendered prior to the increase in consideration.
+
+3. Procedures for Accepting the Offer and Tendering Shares.
+
+*Valid Tenders* . In order for a shareholder of the Company to validly tender Shares pursuant to the Offer, either (i) the Letter of Transmittal, properly completed and duly executed, together with any required signature guarantees (or, in the case of a book-entry transfer, an Agent’s Message (as defined below) in lieu of the Letter of Transmittal), and any other documents required by the Letter of Transmittal must be received by the Depositary at one of its addresses set forth on the back cover of this Offer to Purchase and either the Certificates evidencing tendered Shares must be received by the Depositary at such address or such Shares must be tendered pursuant to the procedure for book-entry transfer described below and a Book-Entry Confirmation must be received by the Depositary, in each case prior to the Expiration Time, or (ii) the tendering shareholder must comply with the guaranteed delivery procedures described below. No alternative, conditional or contingent tenders will be accepted.
+
+*Book-Entry Transfer* . The Depositary will establish an account with respect to the Shares at the Book-Entry Transfer Facility for purposes of the Offer within two (2) business days after
+
+Field: Page; Sequence: 25; Value: 1
+
+20
+<!-- PAGE 26 -->
+Field: /Page
+
+the date of this Offer to Purchase. Any financial institution that is a participant in the system of the Book-Entry Transfer Facility may make a book-entry delivery of Shares by causing the Book-Entry Transfer Facility to transfer such Shares into the Depositary’s account at the Book-Entry Transfer Facility in accordance with the Book-Entry Transfer Facility’s procedures for such transfer. However, although delivery of Shares may be effected through book-entry transfer at the Book-Entry Transfer Facility, either the Letter of Transmittal, properly completed and duly executed, together with any required signature guarantees, or an Agent’s Message in lieu of the Letter of Transmittal, and any other required documents, must, in any case, be received by the Depositary at one of its addresses listed on the back cover of this Offer to Purchase prior to the Expiration Time, or the tendering shareholder must comply with the guaranteed delivery procedure described below. Delivery of documents to the Book-Entry Transfer Facility does not constitute delivery to the Depositary.
+
+The term “Agent’s Message” means a message, transmitted by the Book-Entry Transfer Facility to, and received by, the Depositary and forming a part of a Book-Entry Confirmation, that states that the Book-Entry Transfer Facility has received an express acknowledgment from the participant in the Book-Entry Transfer Facility tendering the Shares that are the subject of such Book-Entry Confirmation, that such participant has received and agrees to be bound by the terms of the Letter of Transmittal and that Purchaser may enforce such agreement against such participant.
+
+*Signature Guarantees* . No signature guarantee is required on the Letter of Transmittal (i) if the Letter of Transmittal is signed by the registered holder (which term, for purposes of this Section 3, includes any participant in the Book-Entry Transfer Facility’s systems whose name appears on a security position listing as the owner of the Shares) of the Shares tendered therewith, unless such holder has completed the box entitled “Special Payment Instructions” on the Letter of Transmittal or (ii) if the Shares are tendered for the account of a financial institution (including most commercial banks, savings and loan associations and brokerage houses) that is a member of or participant in a recognized “Medallion Program” approved by the Securities Transfer Association Inc., including the Security Transfer Agents Medallion Program (STAMP), the Stock Exchange Medallion Program (SEMP) and the New York Stock Exchange Medallion Signature Program (MSP), or any other “eligible guarantor institution,” as such term is defined in Rule 17Ad-15 under the Exchange Act (each, an “Eligible Institution” and collectively “Eligible Institutions”). In all other cases, all signatures on a Letter of Transmittal must be guaranteed by an Eligible Institution. See Instructions 1 and 5 of the Letter of Transmittal. If a Certificate is registered in the name of a person or persons other than the signer of the Letter of Transmittal, or if payment is to be made or delivered to, or a Certificate not accepted for payment or not tendered is to be issued in the name of or returned to, a person other than the registered holder(s), then the Certificate must be endorsed or accompanied by appropriate duly executed stock powers, in either case signed exactly as the name(s) of the registered holder(s) appears on the Certificate, with the signature(s) on such Certificate or stock powers guaranteed by an Eligible Institution as provided in the Letter of Transmittal. See Instructions 1 and 5 of the Letter of Transmittal.
+
+*Guaranteed Delivery* . If a shareholder desires to tender Shares pursuant to the Offer and the Certificates evidencing such shareholder’s Shares are not immediately available or the shareholder cannot deliver the Certificates and all other required documents to the Depositary prior to the Expiration Time; or such shareholder cannot complete the procedure for delivery by book-
+
+Field: Page; Sequence: 26; Value: 1
+
+21
+<!-- PAGE 27 -->
+Field: /Page
+
+entry transfer on a timely basis, the Shares may nevertheless be tendered if all of the following conditions are satisfied:
+
+· the tender is made by or through an Eligible Institution;
+
+· a properly completed and duly executed “Notice of Guaranteed Delivery,” substantially in the form made available by Purchaser, is received prior to the Expiration Time by the Depositary as provided below; and
+
+· the Certificates (or a Book-Entry Confirmation) evidencing all tendered Shares, in proper form for transfer, in each case together with the Letter of Transmittal, properly completed and duly executed, with any required signature guarantees (or, in the case of a book-entry transfer, an Agent’s Message), and any other documents required by the Letter of Transmittal are received by the Depositary within two (2) NASDAQ trading days after the date of execution of such Notice of Guaranteed Delivery.
+
+The Notice of Guaranteed Delivery may be delivered by overnight courier or transmitted by facsimile transmission or mailed to the Depositary and must include a guarantee by an Eligible Institution in the form set forth in the form of Notice of Guaranteed Delivery made available by Purchaser. In the case of Shares held through the Book-Entry Transfer Facility, the Notice of Guaranteed Delivery must be delivered to the Depositary by a participant by means of the confirmation system of the Book-Entry Transfer Facility. **Shares delivered by a Notice of Guaranteed Delivery will not be counted by Purchaser toward the satisfaction of the Minimum Tender Condition and therefore it is preferable for Shares to be tendered by the other methods described herein.**
+
+**The method of delivery of Certificates, the Letter of Transmittal, and all other required documents, including delivery through the Book-Entry Transfer Facility, is at the option and risk of the tendering shareholder, and the delivery will be deemed made only when actually received by the Depositary (including, in the case of a book-entry transfer, receipt of a Book-Entry Confirmation). If delivery is by mail, then registered mail with return receipt requested, properly insured, is recommended. In all cases, sufficient time should be allowed to ensure timely delivery.**
+
+The tender of Shares pursuant to any one of the procedures described above will constitute the tendering shareholder’s acceptance of the Offer, as well as the tendering shareholder’s representation and warranty that such shareholder has the full power and authority to tender and assign the Shares tendered, as specified in the Letter of Transmittal, and that when Purchaser accepts the Shares for payment, it will acquire good and unencumbered title, free and clear of all liens, restrictions, charges and encumbrances and not subject to any adverse claims. Purchaser’s acceptance for payment of Shares tendered pursuant to the Offer will constitute a binding agreement between the tendering shareholder and Purchaser upon the terms and subject to the conditions of the Offer.
+
+*Determination of Validity* . All questions as to the validity, form, eligibility (including time of receipt) and acceptance for payment of any tender of Shares will be determined by Purchaser in its reasonable discretion. Purchaser reserves the absolute right to reject any and all tenders it
+
+Field: Page; Sequence: 27; Value: 1
+
+22
+<!-- PAGE 28 -->
+Field: /Page
+
+determines are not in proper form or the acceptance for payment of which may, in the opinion of its counsel, be unlawful. Purchaser also reserves the absolute right to waive any defect or irregularity in the tender of any Shares of any particular shareholder, whether or not similar defects or irregularities are waived in the case of other shareholders. No tender of Shares will be deemed to have been validly made until all defects and irregularities have been cured or waived to the satisfaction of Purchaser with respect to those Shares. None of Purchaser, the Depositary, the Information Agent or any other person will be under any duty to give notification of any defects or irregularities in tenders or incur any liability for failure to give any such notification. Shareholders may challenge Purchaser’s interpretation of the terms and conditions of the Offer (including the Letter of Transmittal and the instructions thereto), and only a court of competent jurisdiction can make a determination that will be final and binding on all parties.
+
+*Appointment* . By executing the Letter of Transmittal (or delivering an Agent’s Message) as set forth above, the tendering shareholder will irrevocably appoint designees of Purchaser, and each of them, as such shareholder’s attorneys-in-fact and proxies in the manner set forth in the Letter of Transmittal, each with full power of substitution, to the full extent of such shareholder’s rights with respect to the Shares tendered by such shareholder and accepted for payment by Purchaser and with respect to any and all other Shares or other securities or rights issued or issuable in respect of such Shares. All such proxies will be considered coupled with an interest in the tendered Shares. Such appointment will be effective when, and only to the extent that, Purchaser accepts for payment Shares tendered by such shareholder as provided herein. Upon such appointment, all prior powers of attorney, proxies and consents given by such shareholder with respect to such Shares or other securities or rights will, without further action, be revoked and no subsequent powers of attorney, proxies, consents or revocations may be given by such shareholder (and, if given, will not be deemed effective) with respect thereto. Each designee of Purchaser will thereby be empowered to exercise all voting and other rights with respect to such Shares and other securities or rights, including in respect of any annual, special or adjourned meeting of the Company’s shareholders, actions by written consent in lieu of any such meeting or otherwise, as such designee in its sole discretion deems proper. Purchaser reserves the right to require that, in order for Shares to be deemed validly tendered, immediately upon Purchaser’s acceptance for payment of such Shares, Purchaser must be able to exercise full voting, consent and other rights with respect to such Shares and other securities and rights, including voting at any meeting of shareholders.
+
+*Information Reporting and Backup Withholding* . The purchase of the Shares is generally subject to information reporting by the Depositary (as the payor) to the applicable tax authorities. Information disclosed on an applicable IRS Form W-8 by non-United States Holders (as defined in Section 5—”Material United States Federal Income Tax Consequences”) to the IRS by the Depositary may be disclosed to the local tax authorities of the non-United States Holder under an applicable tax treaty or a broad information exchange agreement. Under the “backup withholding” provisions of United States federal income tax law, the Depositary (as the payor) may be required to withhold and pay over to the United States Internal Revenue Service (“IRS”) a portion (currently, 28%) of the amount of any payments made by Purchaser to a shareholder pursuant to the Offer. In order to prevent backup withholding from being imposed on the payment to shareholders of the Per Share Amount of Shares purchased pursuant to the Offer, each United States Holder (as defined in Section 5—”Material United States Federal Income Tax Consequences”) must provide the Depositary with such shareholder’s correct taxpayer
+
+Field: Page; Sequence: 28; Value: 1
+
+23
+<!-- PAGE 29 -->
+Field: /Page
+
+identification number (“TIN”) and certify that such shareholder is not subject to backup withholding by completing the IRS Form W-9 included in the Letter of Transmittal, or otherwise establish a valid exemption from backup withholding to the satisfaction of the Depositary. If a United States Holder does not provide its correct TIN or fails to provide the certifications described above, the IRS may impose a penalty on the shareholder and payment of cash to the shareholder pursuant to the Offer may be subject to backup withholding. All United States Holders surrendering Shares pursuant to the Offer should complete and sign the IRS Form W-9 included in the Letter of Transmittal to provide the information necessary to avoid backup withholding. Certain shareholders (including, among others, all corporations and certain foreign individuals) are exempt from backup withholding and payments to such persons will not be subject to backup withholding provided that a valid exemption is established. Each non-United States Holder must submit an appropriate properly completed executed original IRS Form W-8 (a copy of which may be obtained from the Depositary or www.irs.gov) (and associated documentation, if applicable) certifying, under penalties of perjury, to such non-United States Holder’s foreign status in order to establish an exemption from backup withholding. See Instruction 8 of the Letter of Transmittal. Each holder of Shares who is neither a United States Holder nor a non-United States Holder (e.g., a partnership), should consult their own tax advisors as to the appropriate forms to be delivered to the Depositary to avoid backup withholding.
+
+4. Withdrawal Rights.
+
+Except as otherwise provided in this Section 4, tenders of Shares made pursuant to the Offer are irrevocable. Shares tendered pursuant to the Offer may be withdrawn at any time prior to the Expiration Time and, unless theretofore accepted for payment as provided herein, tenders of Shares may also be withdrawn after January 26, 2018, the date that is 60 days from the date of this Offer to Purchase, unless previously accepted for payment pursuant to the Offer as provided herein.
+
+For a withdrawal of Shares to be effective, a written or facsimile transmission notice of withdrawal must be received by the Depositary at one of its addresses listed on the back cover page of this Offer to Purchase prior to the Expiration Time. Any such notice of withdrawal must specify the name of the person who tendered the Shares to be withdrawn, the number of Shares to be withdrawn and the name of the registered holder of such Shares, if different from that of the person who tendered such Shares. If Certificates evidencing Shares to be withdrawn have been delivered or otherwise identified to the Depositary, then, prior to the physical release of such Certificates, the serial numbers shown on such Certificates must be submitted to the Depositary and the signature(s) on the notice of withdrawal must be guaranteed by an Eligible Institution, unless such Shares have been tendered for the account of an Eligible Institution. If Shares have been tendered pursuant to the procedure for book-entry transfer as set forth in Section 3—”Procedures for Accepting the Offer and Tendering Shares,” any notice of withdrawal must also specify the name and number of the account at the Book-Entry Transfer Facility to be credited with the withdrawn Shares.
+
+If Purchaser extends the Offer, is delayed in its acceptance for payment of Shares or is unable to accept Shares for payment pursuant to the Offer for any reason then, without prejudice to Purchaser’s rights under the Offer, the Depositary may, nevertheless, on behalf of Purchaser, retain tendered Shares, and such Shares may not be withdrawn except to the extent that tendering
+
+Field: Page; Sequence: 29; Value: 1
+
+24
+<!-- PAGE 30 -->
+Field: /Page
+
+shareholders are entitled to withdrawal rights as described in this Section 4 before the Expiration Time or at any time after January 26, 2018, the date that is 60 days from the date of this Offer to Purchase, unless previously accepted for payment pursuant to the Offer as provided herein.
+
+Withdrawals of Shares may not be rescinded. Any Shares validly withdrawn will thereafter be deemed not to have been validly tendered for purposes of the Offer. However, withdrawn Shares may be re-tendered at any time prior to the Expiration Time by following one of the procedures described in Section 3—”Procedures for Accepting the Offer and Tendering Shares.”
+
+All questions as to the form and validity (including time of receipt) of any notice of withdrawal will be determined by Purchaser, in its reasonable discretion, whose determination will be final and binding, except as may otherwise be finally determined in a subsequent judicial proceeding if our determination is challenged by a Company shareholder. None of Purchaser, the Depositary, the Information Agent or any other person will be under duty to give notification of any defects or irregularities in any notice of withdrawal or incur any liability for failure to give any such notification.
+
+5. Material United States Federal Income Tax Consequences.
+
+The following is a summary of the material United States federal income tax consequences to beneficial owners of Shares upon the exchange of Shares for cash pursuant to the Offer or the Merger. This summary is general in nature and does not discuss all aspects of United States federal income taxation that may be relevant to a holder of Shares in light of its particular circumstances. In addition, this summary does not describe any tax consequences arising under the laws of any state, local or non-United States jurisdiction or under any applicable tax treaty and does not consider any aspects of United States federal tax law other than income taxation. This summary deals only with Shares held as capital assets within the meaning of Section 1221 of the Code (generally, property held for investment), and does not address tax considerations applicable to any holder of Shares that may be subject to special treatment under the United States federal income tax laws, including:
+
+· a bank or other financial institution;
+
+· a tax-exempt organization;
+
+· a retirement plan or other tax-deferred account;
+
+· a partnership, an S corporation or other pass-through or disregarded entity (or an investor in a partnership, S corporation or other pass-through or disregarded entity);
+
+· an insurance company;
+
+· a mutual fund;
+
+· a dealer or broker in stocks and securities, or currencies;
+
+· a trader in securities that elects mark-to-market treatment;
+
+Field: Page; Sequence: 30; Value: 1
+
+25
+<!-- PAGE 31 -->
+Field: /Page
+
+· a regulated investment company;
+
+· a real estate investment trust;
+
+· a person who acquired Shares through the exercise of employee stock options, or in other compensatory transactions or who holds Shares that are subject to vesting restrictions;
+
+· a holder of Shares subject to the alternative minimum tax provisions of the Code;
+
+· a United States Holder (as defined below) that has a functional currency other than the United States dollar;
+
+· a person that holds the Shares as part of a hedge, straddle, constructive sale, conversion or other integrated or risk reduction transaction;
+
+· a person that holds the Shares as qualified small business stock for purposes of Section 1045 and/or Section 1202 of the Code;
+
+· a United States expatriate and certain former citizens or long-term residents of the United States;
+
+· any person who owns actually or constructively owns an equity interest in Parent or the Surviving Corporation; or
+
+· any holder of Shares that exercises its appraisal rights pursuant to Chapters 302A.471 and 302.473 of the MBCA.
+
+This discussion does not address the tax consequences of acquisitions or dispositions of Shares outside the Offer or the Merger, or transactions pertaining to options that are cancelled and converted into the right to receive cash, as the case may be, in connection with the Offer or the Merger. This discussion also does not address the tax consequences arising from the Medicare tax on net investment income.
+
+If a partnership (including any entity or arrangement treated as a partnership for United States federal income tax purposes) holds Shares, the tax treatment of a partner in the partnership generally will depend upon the status of the partner and the activities of the partner and the partnership. Partners in a partnership holding Shares should consult their own tax advisors regarding the tax consequences of exchanging the Shares pursuant to the Offer or pursuant to the Merger.
+
+This summary is based on the Code, the Treasury regulations promulgated under the Code, and administrative rulings and judicial decisions, all as in effect as of the date of this Offer to Purchase, and all of which are subject to change or differing interpretations at any time, with possible retroactive effect. We have not sought, and do not intend to seek, any ruling from the IRS with respect to the statements made and the conclusions reached in the following summary, and no assurance can be given that the IRS will agree with the views expressed herein, or that a court will not sustain any challenge by the IRS in the event of litigation.
+
+Field: Page; Sequence: 31; Value: 1
+
+26
+<!-- PAGE 32 -->
+Field: /Page
+
+**The discussion set out herein is intended only as a summary of the material United States federal income tax consequences to a holder of Shares. Holders of Shares should consult their own tax advisors with respect to the specific tax consequences to them in connection with the Offer and the Merger in light of their own particular circumstances, including federal estate, gift and other non-income tax consequences, and tax consequences under state, local or non-United States tax laws or tax treaties (and potential or anticipated changes to such tax laws or tax treaties).**
+
+*United States Holders.*
+
+For purposes of this discussion, the term “United States Holder” means a beneficial owner of Shares that is, for United States federal income tax purposes:
+
+· a citizen or resident of the United States;
+
+· a corporation (or any other entity or arrangement treated as a corporation for United States federal income tax purposes) organized in or under the laws of the United States or any state thereof or the District of Columbia;
+
+· an estate, the income of which is subject to United States federal income taxation regardless of its source; or
+
+· a trust if (i) a court within the United States is able to exercise primary supervision over the administration of the trust, and one or more United States persons have the authority to control all substantial decisions of the trust or (ii) the trust has validly elected to be treated as a “United States person” under applicable Treasury regulations.
+
+Payments with Respect to Shares.
+
+The exchange of Shares for cash pursuant to the Offer or pursuant to the Merger will be a taxable transaction for United States federal income tax purposes, and a United States Holder who receives cash for Shares pursuant to the Offer or pursuant to the Merger will recognize gain or loss, if any, equal to the difference between the amount of cash received and the holder’s adjusted tax basis in the Shares exchanged therefor. Gain or loss will be determined separately for each block of Shares (i.e., Shares acquired at the same cost in a single transaction). Such gain or loss will be capital gain or loss, and will be long-term capital gain or loss if such United States Holder’s holding period for the Shares is more than one (1) year at the time of the exchange. Long-term capital gain recognized by certain non-corporate holders generally is subject to tax at a lower rate than short-term capital gain or ordinary income. There are limitations on the deductibility of capital losses.
+
+Backup Withholding Tax.
+
+Proceeds from the exchange of Shares pursuant to the Offer or pursuant to the Merger generally will be subject to backup withholding tax at the applicable rate (currently, 28%) unless the United States Holder provides a valid taxpayer identification number and complies with certain certification procedures (generally, by providing a properly completed IRS Form W-9) or otherwise establishes an exemption from backup withholding tax. Any amounts withheld under
+
+Field: Page; Sequence: 32; Value: 1
+
+27
+<!-- PAGE 33 -->
+Field: /Page
+
+the backup withholding tax rules from a payment to a United States Holder will be allowed as a credit against that holder’s United States federal income tax liability and may entitle the holder to a refund, provided that the required information is timely furnished to the IRS. Each United States Holder should complete and sign the IRS Form W-9, which will be included with the Letter of Transmittal to be returned to the Depositary, to provide the information and certification necessary to avoid backup withholding, unless an exemption applies and is established in a manner satisfactory to the Depositary. See Section 3—”Procedures for Accepting the Offer and Tendering Shares.”
+
+*Non-United States Holders.*
+
+The following is a summary of the material United States federal income tax consequences that will apply to you if you are a non-United States Holder of Shares. The term “non-United States Holder” means a beneficial owner of Shares that is:
+
+· a nonresident alien individual;
+
+· a foreign corporation; or
+
+· a foreign estate or trust.
+
+The following discussion applies only to non-United States Holders, and assumes that no item of income, gain, deduction or loss derived by the non-United States Holder in respect of Shares at any time is effectively connected with the conduct of a United States trade or business. Special rules, not discussed herein, may apply to certain non-United States Holders, such as:
+
+· certain former citizens or residents of the United States;
+
+· controlled foreign corporations;
+
+· passive foreign investment companies;
+
+· corporations that accumulate earnings to avoid United States federal income tax; and
+
+· investors in pass-through entities that are subject to special treatment under the Code.
+
+Payments with Respect to Shares.
+
+Subject to the discussion on “—Backup Withholding Tax” below, any gain realized by a non-United States Holder with respect to Shares exchanged for cash pursuant to the Offer or pursuant to the Merger generally will be exempt from United States federal income tax unless:
+
+· the gain is effectively connected with a trade or business of such non-United States Holder in the United States (and, if required by an applicable income tax treaty, is attributable to a permanent establishment maintained by such non-United States Holder in the United States), in which case such gain generally will be subject to United States federal income tax at rates generally applicable to United States persons, and, if the non-United States Holder is a corporation, will be included in the corporation’s effectively connected earnings
+
+Field: Page; Sequence: 33; Value: 1
+
+28
+<!-- PAGE 34 -->
+Field: /Page
+
+and profits which are generally subject to a branch profits tax at a rate of 30% (or a lower rate under an applicable income tax treaty);
+
+· such non-United States Holder is an individual who was present in the United States for 183 days or more in the taxable year of the exchange and certain other conditions are met, in which case such holder will be subject to tax at a flat rate of 30% (or such lower rate as may be specified under an applicable income tax treaty) on any gain from the exchange of the Shares, net of applicable United States-source losses from sales or exchanges of other capital assets recognized by the holder during the same taxable year; or
+
+· the Company is or has been a “United States real property holding corporation” as such term is defined in Section 897(c) of the Code (“USRPHC”), at any time within the shorter of the five-year period preceding the Merger or such non-United States Holder’s holding period with respect to the applicable shares of common stock and such non-United States Holder owns directly or is deemed to own pursuant to attribution rules more than 5% of the Company’s common stock at any time during the relevant period, in which case such gain will be subject to United States federal income tax at rates generally applicable to United States persons (as described in the first bullet point above), except that the branch profits tax will not apply. Non-United States Holders that actually or constructively own more than 5% of the Company’s common stock should consult their tax advisors regarding the process for requesting documentation from the Company to establish whether the Company is a USRPHC.
+
+Backup Withholding Tax.
+
+A non-United States Holder may be subject to backup withholding tax with respect to the proceeds from the disposition of Shares pursuant to the Offer or pursuant to the Merger unless the non-United States Holder certifies under penalties of perjury on an applicable IRS Form W-8 that such non-United States Holder is not a United States person, or such non-United States Holder otherwise establishes an exemption in a manner satisfactory to the Depositary. Each non-United States Holder should complete, sign and provide to the Depositary an applicable IRS Form W-8 to provide the information and certification necessary to avoid backup withholding, unless an exemption applies and is established in a manner satisfactory to the Depositary.
+
+Any amounts withheld under the backup withholding tax rules will be allowed as a refund or a credit against the non-United States Holder’s United States federal income tax liability, provided the required information is furnished to the IRS.
+
+**The foregoing summary does not discuss all aspects of United States federal income taxation that may be relevant to particular holders of Shares. Holders of Shares should consult their own tax advisors as to the particular tax consequences to them of exchanging their Shares for cash pursuant to the Offer or the Merger under any federal, state, local, non-United States or other tax laws.**
+
+Field: Page; Sequence: 34; Value: 1
+
+29
+<!-- PAGE 35 -->
+Field: /Page
+
+6. Price Range of Shares; Dividends.
+
+The Shares are listed on the NASDAQ Capital Market under the symbol “MGCD.” The Shares have been listed on the NASDAQ Capital Market (or predecessors of the NASDAQ Capital Market) for more than fifteen (15) years. The following table sets forth, for the fiscal quarters indicated, the high and low sales prices per Share as reported on the Nasdaq Capital Market since November 1, 2014.
+
+|  |  |  |
+| --- | --- | --- |
+| Fiscal Year Ended October 31, 2015: |  |  |
+| First Quarter | $ 7.35 | $ 5.51 |
+| Second Quarter | $ 7.70 | $ 5.96 |
+| Third Quarter | $ 6.99 | $ 5.13 |
+| Fourth Quarter | $ 7.60 | $ 5.00 |
+| Fiscal Year Ended October 31, 2016: |  |  |
+| First Quarter | $ 7.15 | $ 6.02 |
+| Second Quarter | $ 7.21 | $ 5.20 |
+| Third Quarter | $ 6.85 | $ 5.30 |
+| Fourth Quarter | $ 7.87 | $ 6.39 |
+| Fiscal Year Ending October 31, 2017: |  |  |
+| First Quarter | $ 9.50 | $ 6.24 |
+| Second Quarter | $ 10.60 | $ 7.43 |
+| Third Quarter | $ 8.85 | $ 7.00 |
+| Fourth Quarter | $ 9.47 | $ 6.51 |
+| Fiscal Year Ending October 31, 2018: |  |  |
+| First Quarter (through November 27, 2017) | $ 10.98 | $ 8.51 |
+
+On November 24, 2017, the last NASDAQ trading day before public announcement of the Merger Agreement, the last sale price of the Shares reported on the NASDAQ Capital Market was $8.80 per Share; therefore, the Per Share Amount of $11.03 per Share represents a premium of approximately 25.3% over such price. On November 27, 2017, the last NASDAQ trading day prior to the original printing of this Offer to Purchase, the last sale price of the Shares reported on the NASDAQ Capital Market was $10.92 per Share.
+
+Field: Page; Sequence: 35; Value: 1
+
+30
+<!-- PAGE 36 -->
+Field: /Page
+
+Shareholders are urged to obtain current market quotations for Shares before making a decision with respect to the Offer.
+
+The Company has paid the following cash dividends in the past five years:
+
+| Record Date | Payment Date | Amount |
+| --- | --- | --- |
+| April 12, 2013 | April 26, 2013 | $ 0.45 |
+| February 10, 2017 | February 24, 2017 | $ 0.70 |
+
+7. Certain Information Concerning the Company.
+
+The following description of the Company and its business has been taken from the Company’s Annual Report on Form 10-K for the fiscal year ended October 31, 2016, and is qualified in its entirety by reference to such report.
+
+*General* . The Company is a Minnesota corporation with principal executive offices located at 50 Oak Grove Parkway, Saint Paul, Minnesota 55127-8599. The Company’s telephone number at its corporate headquarters is 651-484-4874. The Company is a global medical technology company dedicated to cardiorespiratory health solutions. The Company designs, markets and sells non-invasive cardiorespiratory diagnostic products through its Medical Graphics Corporation subsidiary under the MGC Diagnostics brand and trade name and through its Medisoft subsidiary under the Medisoft brand and trade name. The Company’s product portfolio provides solutions for disease detection, integrated care and wellness across the cardiorespiratory healthcare spectrum. The Company sells its products internationally through distributors and in the United States through a direct sales force targeting specialists located in hospitals, university-based medical centers, medical clinics, physician offices, pharmaceutical companies, medical device manufacturers and clinical research organizations. The Company’s cardiorespiratory diagnostic products measure flow and respiratory pressures and, in most cases analyze the inhaled and exhaled gases such as oxygen and carbon dioxide. The Company operates in a single industry segment: the research, development, manufacture and marketing of non-invasive cardiorespiratory diagnostic products.
+
+*Available Information* . The Company is subject to the information and reporting requirements of the Exchange Act and in accordance therewith is obligated to file reports and other information with the SEC relating to its business, financial condition and other matters. Certain information, as of particular dates, concerning the Company’s business, principal physical properties, capital structure, material pending litigation, operating results, financial condition, directors and officers (including their remuneration and equity awards granted to them), the principal holders of the Company’s securities, any material interests of such persons in transactions with the Company, and other matters are required to be disclosed in proxy statements and periodic reports distributed to the Company’s shareholders and filed or furnished with the SEC. Such reports, proxy statements and other information should be available for inspection at the public reference facilities maintained by the SEC at the SEC’s Public Reference Room at 100 F Street N.E., Washington, D.C. 20549. Information regarding the public reference facilities may be obtained from the SEC by telephoning 1-800-SEC-0330. Copies of such materials may also be obtained by mail, upon payment of the SEC’s customary fees, by writing to its principal office at 100 F Street
+
+Field: Page; Sequence: 36; Value: 1
+
+31
+<!-- PAGE 37 -->
+Field: /Page
+
+N.E., Washington, D.C. 20549. The SEC also maintains electronic reading rooms on the Internet at http://www.sec.gov that contains reports and other information regarding issuers that file electronically with the SEC. The Company also maintains a website at www.mgcdiagnostics.com. The information contained in, accessible from or connected to the Company’s website is not incorporated into, or otherwise a part of, this Offer to Purchase or any of the Company’s filings with the SEC. The website addresses referred to in this paragraph are inactive text references and are not intended to be actual links to the websites.
+
+8. Certain Information Concerning Parent and Purchaser.
+
+*General* . Parent is a Delaware limited liability company with its principal executive offices located at c/o Altus Capital Partners, 10 Westport Road, Suite C204, Wilton, Connecticut 06897. The telephone number of Parent is 203-429-2000. Purchaser is a Minnesota corporation with its principal executive offices located at c/o Altus Capital Partners, 10 Westport Road, Suite C204, Wilton, Connecticut 06897. The telephone number of Purchaser is 203-429-2000. Parent was formed on November 17, 2017, and Purchaser was formed on November 16, 2017, in each case, solely for the purpose of completing the proposed Offer and Merger. Neither Parent nor Purchaser has conducted any business activities other than those related to the structuring and negotiation of the Offer and the Merger and arranging of the Equity Financing and the Debt Financing (as described below in Section 9—”Sources of Funds”) in connection with the Offer and the Merger. Each of Parent and Purchaser has no assets other than cash in a de minimis amount and their respective contractual rights and obligations related to the Merger Agreement, the Equity Financing and the Debt Financing in connection with the Offer and the Merger. Until immediately prior to the time Purchaser purchases Shares pursuant to the Offer, it is not anticipated that Purchaser or Parent will have any significant assets or liabilities or engage in activities other than those incidental to its formation and capitalization and the transactions contemplated by the Offer and the Merger. Purchaser is a wholly-owned subsidiary of Parent, the sole member of which is Altus Capital Partners II, L.P., a Delaware limited partnership (“Altus CP II”). Altus CP II has provided to Parent an equity commitment equal to $22,263,200 (the “Equity Commitment Letter”) and, additionally, Altus CP II has also executed and delivered to the Company a limited guarantee in favor of the Company in respect of certain of Parent’s and Purchaser’s liabilities and obligations under the Merger Agreement. See Section 9—”Source and Amount of Funds.” After giving effect to the Offer and the Merger, the Surviving Corporation will be affiliated with Altus CP II. We refer to Purchaser, Parent and Altus CP II, collectively, as the “Participant Group.” The business office address of each member of the Participant Group and each such member’s telephone number is set forth in the attached Schedule I. The name, citizenship, business address, present principal occupation or employment and five (5)-year employment history of each of the members, directors or executive officers of each member of the Participant Group are set forth in Schedule I to this Offer to Purchase.
+
+*Certain Relationships Between Parent, Purchaser, Altus CP II and the Company* . Except as described in this Offer to Purchase, (i) none of the members of the Participant Group nor, to the best knowledge of any member of the Participant Group after reasonable inquiry, any of the persons listed in Schedule I to this Offer to Purchase or any associate or majority-owned subsidiary
+
+Field: Page; Sequence: 37; Value: 1
+
+32
+<!-- PAGE 38 -->
+Field: /Page
+
+of any member of the Participant Group or any of the persons so listed beneficially owns or has any right to acquire, directly or indirectly, any Shares and (ii) none of the members of the Participant Group nor, to the best knowledge of any member of the Participant Group after reasonable inquiry, any of the persons or entities referred to above nor any director, executive officer or subsidiary of any of the foregoing has effected any transaction in the Shares during the past sixty (60) days.
+
+Except as provided in the Merger Agreement or as otherwise described in this Offer to Purchase, no member of the Participant Group, or their subsidiaries, nor, to the best knowledge of any member of the Participant Group after reasonable inquiry, any of the persons listed in Schedule I to this Offer to Purchase, has any present or proposed material agreement, arrangement, understanding or relationship with the Company or any of its executive officers, directors, controlling persons or subsidiaries. Except as provided in the Merger Agreement or as otherwise described in this Offer to Purchase, no member of the Participant Group nor, to the best knowledge of any member of the Participant Group after reasonable inquiry, any of the persons listed in Schedule I to this Offer to Purchase, has any agreement, arrangement, or understanding with any other person with respect to any securities of the Company, including any contract, arrangement, understanding or relationship concerning the transfer or voting of such securities, finders’ fees, joint ventures, loan or option arrangements, puts or calls, guarantees of loans, guarantees against loss, guarantees of profits, division of profits or loss or the giving or withholding of proxies. Except as set forth in this Offer to Purchase, no member of the Participant Group nor, to the best knowledge of any member of the Participant Group after reasonable inquiry, any of the persons listed on Schedule I hereto, has had any business relationship or transaction with the Company or any of its executive officers, directors or affiliates that is required to be reported under the rules and regulations of the SEC applicable to the Offer. Except as set forth in this Offer to Purchase, there have been no material contacts, negotiations or transactions between any member of the Participant Group or any of their subsidiaries or, to the best knowledge of any member of the Participant Group after reasonable inquiry, any of the persons listed in Schedule I to this Offer to Purchase, on the one hand, and the Company or its affiliates, on the other hand, concerning a merger, consolidation or acquisition, tender offer or other acquisition of the Company’s securities, an election of the Company’s directors or a sale or other transfer of a material amount of the Company’s assets during the past two (2) years. None of the persons listed in Schedule I has, during the past five (5) years, been convicted in a criminal proceeding (excluding traffic violations or similar misdemeanors). None of the persons listed in Schedule I to this Offer to Purchase has, during the past five (5) years, been a party to any judicial or administrative proceeding (except for matters that were dismissed without sanction or settlement) that resulted in a judgment, decree or final order enjoining the person from future violations of, or prohibiting activities subject to, federal or state securities laws, or a finding of any violation of federal or state securities laws.
+
+*Available Information* . Pursuant to Rule 14d-3 under the Exchange Act, Parent and Purchaser filed with the SEC a Tender Offer Statement on Schedule TO (the “Schedule TO”), of which this Offer to Purchase forms a part, and exhibits to the Schedule TO. The Schedule TO and the exhibits thereto, and such reports, proxy statements and other information, can be inspected and copied at the public reference facilities maintained by the SEC at 100 F Street, N.E., Washington, D.C. 20549-0213. Information regarding the public reference facilities may be obtained from the SEC by telephoning 1-800-SEC-0330. These filings are also available to the public on the SEC’s internet site (http://www.sec.gov). Copies of such materials may also be
+
+Field: Page; Sequence: 38; Value: 1
+
+33
+<!-- PAGE 39 -->
+Field: /Page
+
+obtained by mail from the Public Reference Section of the SEC at 100 F Street, N.E., Washington, D.C. 20549-0213 at prescribed rates.
+
+9. Source and Amount of Funds.
+
+*Senior Debt Financing* . Altus Capital Partners (“Altus”) has received a commitment letter (which we refer to as the “Senior Debt Commitment Letter”) from Abacus Finance Group, LLC (“Abacus”) to provide, subject to the conditions set forth in the Senior Debt Commitment Letter to Purchaser (which includes for purposes of the description of the debt financing the Surviving Corporation of the Merger), senior secured credit facilities in the aggregate amount of $18,000,000, consisting of a $15,000,000 term loan facility and a $3,000,000 revolving credit facility (such credit facilities, together, the “Senior Credit Facility”), for the purpose of partially financing the Offer and the Merger and paying related fees and expenses and, after the closing of the Merger, to provide funding for working capital and other general corporate purposes of Purchaser and its subsidiaries (such committed senior secured debt financing, together with any debt securities issued in lieu thereof unless the context requires otherwise, the “Senior Debt Financing”). The commitment of Abacus with respect to the Senior Credit Facilities (as defined below) expires upon February 1, 2018.
+
+The Senior Credit Facility and Senior Debt Financing would be made available to Parent upon the general terms and conditions outlined below. Abacus would underwrite the entire $18,000,000 of the Senior Credit Facility and serve as the administrative agent and the sole lead arranger and underwriter of the Senior Debt Financing.
+
+Altus has agreed to certain covenants in connection with the Senior Debt Commitment Letter:
+
+§ Altus has agreed that Abacus will act as the sole and exclusive administrative agent, lead arranger and bookrunner for the Senior Credit Facility.
+
+§ Altus has agreed to pay to Abacus the nonrefundable fees described in the Senior Debt Commitment Letter and related fee letter with Abacus.
+
+§ The parties have agreed that the commitment under the Senior Debt Financing Commitment is subject to all of the conditions set forth therein or referred to in the term sheet attached thereto (summarized below).
+
+§ Altus has agreed to pay all reasonable and documented costs and expenses incurred by Abacus in connection with due diligence and analysis, examination and appraisals, environmental analysis, documentation, negotiation, syndication and closing of the Senior Credit Facility, including per diem charges of auditors, appraisers and consultants, legal fees and disbursements of counsel, and other reasonable out-of-pocket expenses incurred by Abacus (the “Expenses”), whether or not the proposed Senior Credit Facility closes.
+
+§ Altus has agreed to indemnify Abacus, each other lender involved in the Credit Facility, and their respective affiliates, and their respective directors, officers, employees, agents, auditors, accountants, consultants and counsel (each, an
+
+Field: Page; Sequence: 39; Value: 1
+
+34
+<!-- PAGE 40 -->
+Field: /Page
+
+“Abacus Indemnitee”) from, and hold each of them harmless against, any and all losses, liabilities, claims, actions, suits, proceedings, damages or expenses including amounts paid in settlement, legal fees and defense costs, incurred by any of them arising out of or by reason of any environmental matters or any investigation, litigation or other proceeding brought or threatened relating to any loan made or proposed to be made under the Senior Credit Facility or otherwise relating to the Offer or the Merger, subject to customary limitations.
+
+Below is a summary of the material terms and conditions (the “Summary of Senior Terms”) for the Senior Debt Financing:
+
+| Borrower : | Surviving Corporation and its wholly-owned subsidiaries, collectively. |
+| --- | --- |
+| Holdings : | Parent. |
+| Guarantors : | Holdings (as defined above) and each of Borrower’s (as defined above) present and future direct and indirect domestic subsidiaries and, to the extent no material adverse tax consequences would result therefrom, foreign subsidiaries (collectively, the “Guarantors” and together with the Borrower, the “Loan Parties”). |
+| Sponsor: | Altus Capital Partners and certain of its affiliates. |
+| Sole Lead Arranger: | Abacus. |
+| Administrative Agent: | Abacus. |
+| Lenders: | Abacus and, solely to the extent requested by Sponsor (as defined above), such other financial institutions as are acceptable to Abacus and Sponsor. |
+| Senior Secured Credit Facilities: | $18,000,000 senior secured credit facilities
+consisting of: |
+
+• revolving credit facility in an amount up to $3,000,000 (the “Revolving Credit Facility”) with up to $0 of revolving loans (“Revolving Loans”) thereunder expected to be funded on the Closing Date; and
+
+• $15,000,000 term loan (the “Term Loan”, together with the Revolving Credit Facility, collectively, the “Facilities”). The Term Loan and Revolving Loans are, collectively, referred to as the “Loans”.
+
+| Maturity: | Five (5) years from the Closing Date. |
+| --- | --- |
+| Term Loan Amortization: | The Term Loan will be advanced in one draw on the Closing Date. The principal balance of the Term Loan shall be repayable in quarterly installments commencing on the last day of the first full fiscal quarter after the Closing Date in accordance with the following amortization schedule. The final installment shall equal the entire remaining principal balance of the Term Loan and will be due and payable in full at Maturity. |
+
+Field: Page; Sequence: 40; Value: 1
+
+35
+<!-- PAGE 41 -->
+Field: /Page
+
+| Loan Year | % of Term Loan Annual Amortization |
+| --- | --- |
+| 1 | 1.0% |
+| 2 | 1.0% |
+| 3 | 1.0% |
+| 4 | 1.0% |
+| 5 | 1.0% |
+
+|  | Principal payments of the Term Loan during the final loan year shall consist of three (3) equal payments based on the above, with all outstanding principal amounts due and payable under the Term Loan repaid on the maturity date of the Term Loan. |
+| --- | --- |
+| Interest: | Interest shall be payable on the daily
+outstanding principal balance of all loans initially at a daily fluctuating rate per annum equal to the “Base Rate”
+plus the “Applicable Margin” set forth below. After the Closing Date, Borrower will also be entitled to request, upon
+three business days prior notice, that all or a portion of the outstanding principal balance of the Loans bear interest at a per
+annum rate equal to “LIBOR” plus the “Applicable Margin” set forth below. Interest on Base Rate loans shall be payable
+quarterly in arrears. When selecting the LIBOR option, Borrower will be entitled to choose one, two, three, six or, subject to
+availability, in Agent’s and the Lenders’ discretion, twelve month interest periods; provided, that no more than five
+interest periods may be in effect at any one time. Interest on LIBOR loans shall be payable in arrears on the last day of each
+interest period, and at the end of three months for any interest period that is longer than three months. In the event Borrower
+repays any LIBOR loan on a day other than the last day of an interest period for such loan or fails to borrow a requested LIBOR
+loan on the date funding was requested, Borrower will be required to pay a customary LIBOR breakage fee to the Lenders. All LIBOR interest will be calculated based
+on a 360-day year and all Base Rate interest will be calculated on a 365/366-day year, in each case based on actual days elapsed. “Base Rate” means a daily fluctuating
+rate per annum equal to the highest of (i) 3.25%, (ii) Abacus’s internal “base rate”, (iii) the Federal Funds
+Rate on such day plus 50 basis points, and (iv) the daily floating rate LIBOR (for a one-month term) on such day plus 1.00%. “LIBOR” means, for each interest
+period, a rate per annum equal to the higher of (i) 1.00% and (ii) the London Interbank Offered Rate quoted by ICE Benchmark Administration
+or any successor administrator of the London Interbank Offered Rate, as published by Reuters at |
+
+Field: Page; Sequence: 41; Value: 1
+
+36
+<!-- PAGE 42 -->
+Field: /Page
+
+|  | approximately 11:00 a.m. London
+time two business days prior to the commencement of such interest period, for Dollar deposits (for delivery on the first day of
+such interest period) with a term equivalent to such interest period, as adjusted for reserve requirements. |
+| --- | --- |
+| Default Rate: | The Applicable Margins may be increased by up to 2.0% and the availability of the LIBOR option shall be suspended, in each case during the continuance of an event of default. |
+| Applicable Margins: | The “Applicable Margin” (on a per annum basis) for each type of loan and for purposes of calculating certain fees will be as set forth in the table below: |
+
+| Senior Leverage Ratio | Applicable LIBOR Margin (for both Revolving Loans and Term Loans): | Applicable Base Rate Margin (for both Revolving Loans and Term Loans): |
+| --- | --- | --- |
+| ≥ 2.25 : 1.00 * | 5.25%* | 4.25% |
+| < 2.25 : 1.00 | 5.00% | 4.00% |
+
+|  | * Note: Borrower will be locked-in to
+this rate for a minimum of 12 months regardless of total leverage ratio |
+| --- | --- |
+| Expenses: | Borrower agrees to pay (in addition to all other reasonable and documented fees and expenses provided for herein) on the Closing Date, or immediately in the event the Merger Agreement is terminated, all reasonable and documented external legal and out-of-pocket expenses reasonably incurred by Agent up until that time. |
+| Prepayment Requirements/Commitment Reductions: | In addition to the scheduled payments
+on the Facilities described above, Borrower will be required to make an annual prepayment in an amount equal to 50% of
+its “excess cash flow” (to be defined in the Facilities documentation). The first excess cash flow repayment
+will be calculated based on Borrower’s fiscal year ending October 31, 2018. In addition, Borrower will be required
+to make prepayments with the proceeds generated by Borrower or any of Borrower’s subsidiaries resulting (a) from
+the disposition of assets (other than the sale of inventory in the ordinary course of business, sales of worn out or obsolete
+equipment and other customary exceptions to be mutually agreed), condemnation settlements and insurance settlements from
+casualty losses (in each case subject to 180 day reinvestment provisions set forth in the Facilities documentation), (b)
+from the issuance or sale of any equity (subject to customary exceptions) or the incurrence of any debt (other than permitted
+debt), and (c) from extraordinary receipts above a threshold amount to be agreed upon in the Facilities documentation
+, and (d) from the payment under or proceeds of the key person life insurance policies. Voluntary prepayments of loans
+under the Facilities will be permitted at any time (without premium or penalty). All mandatory prepayments shall
+be applied, first, to prepay the outstanding Term Loans, in inverse order of maturity, and second to |
+
+Field: Page; Sequence: 42; Value: 1
+
+37
+<!-- PAGE 43 -->
+Field: /Page
+
+|  | prepay the outstanding Revolving Loans,
+without any reduction in the Revolving Credit Facility commitment; provided that Borrower pays a LIBOR breakage fee in connection
+with any voluntary prepayments of LIBOR Loans made on a date other than the last day of an interest period. All voluntary prepayments shall be applied,
+first, to prepay scheduled amortization of the Term Loans for the next four quarters, and second to prepay the outstanding Term
+Loans, in inverse order of maturity. |
+| --- | --- |
+| Collateral: | Borrower’s obligations under the Facilities and under any cash management and hedging arrangements entered into with Agent or its affiliate or, if approved by Agent, any Lender or its affiliate, shall be secured by first priority perfected security interests in all existing and after-acquired personal property and, if requested by Agent or the Required Lenders, real property of Holdings, Borrower and the Guarantors (the “Collateral”), including all inventory, accounts, equipment, fixtures, chattel paper, patents, trademarks, copyrights, documents, instruments, deposit accounts, cash and cash equivalents, investment property, general intangibles, supporting obligations, letter of credit rights, commercial tort claims, insurance policies, and other personal property of Borrower and the Guarantors, and all substitutions, accessions, products and proceeds of such property. In addition, all of the outstanding equity interests of Borrower and its direct or indirect subsidiaries (limited, in the case of foreign subsidiaries, to a pledge of 66% of the voting equity interests of each such first-tier foreign subsidiary to the extent the pledge of any greater percentage would result in material adverse tax consequences) will be pledged to secure such obligations and Agent shall have a first priority perfected lien and security interest in all property described above. In addition, Holdings will provide a full recourse pledge of all equity interests in Borrower as more fully described under the “Pledgor” heading above. |
+| Equity Co-Investment: | Up to $500,000 on the same terms and conditions
+as Altus CP II. |
+| Equity Structure: | Holdings shall be capitalized with no less than $22,400,000 of the total capital structure in the form of common and/or preferred stock by Sponsor, key management and/or third party investors, with Sponsor being the controlling shareholder on a fully-diluted basis, with Holdings then contributing such amounts to the Borrower. In addition, Greyrock Capital, the holder of the subordinated indebtedness referred to below, will be investing in $2,000,000 of Holdings’ common stock, with Holdings then contributing such amounts to the Borrower. Investments in the equity of Holdings will be made upon terms reasonably acceptable to Agent and the Lenders. |
+| Subordinated Indebtedness: | Borrower shall be capitalized with at least, and not more than, $9,800,000 of unsecured subordinated indebtedness from Greyrock (as described in more detail below). Such Subordinated Indebtedness shall be on terms approved by Agent and the Lenders and the holders thereof shall have entered into a subordination and intercreditor agreement on terms satisfactory to Agent and the Lenders. |
+
+Field: Page; Sequence: 43; Value: 1
+
+38
+<!-- PAGE 44 -->
+Field: /Page
+
+Documentation: Documentation evidencing the Facilities shall be satisfactory to Agent and the Lenders in all respects and contain such conditions (including those described below), representations and warranties, affirmative and negative covenants, reporting covenants, financial covenants, expense reimbursement and indemnification provisions, yield protection mechanisms, events of default and remedies as are customary for senior secured credit facilities of the type described herein. All obligations under the Facilities will be cross-defaulted to each other and to all other material indebtedness of Borrower or any of its subsidiaries. It is anticipated that the financial covenants will include the following:
+
+| • | minimum fixed charge coverage ratio |
+| --- | --- |
+| • | maximum senior leverage ratio |
+| • | maximum total leverage ratio |
+| • | maximum capital expenditures |
+| • | financial covenants will be set at a ~25% cushion to a management projection plan acceptable to Agent for the Facilities, provided that the cushion will not apply to closing senior and total leverage ratios. |
+
+It is anticipated that the negative covenants will include limitations on (i) indebtedness (including contingent obligations); (ii) liens; (iii) mergers and consolidations; (iv) asset sales; (v) dividends and distributions, redemptions and repurchases of equity interests and other restricted payments (provided payment of management fees will be permitted); (vi) loans and investments; (vii) transactions with affiliates; (viii) burdensome agreements; (ix) modifications to organizational documents and material agreements; (x) use of proceeds; (xi) line of business changes; (xii) fiscal year changes; (xiii) sanctions and anti-corruption laws; and (xiv) margin stock. It is anticipated that the affirmative covenants will include (i) delivery of financial statements and reports, monthly availability certificate, management reports, projections, certificates and other information; (ii) delivery of notices of default and other material events; (iii) maintenance of books and records; (iv) inspection rights; (v) maintenance of property; (vi) maintenance of insurance; (vii) compliance with laws; (viii) payment of taxes and liabilities; (ix) maintenance of existence; (x) employee benefit plans; (xi) environmental matters; and (xii) further assurances. It is anticipated that events of default will include the following:
+
+• payment
+
+Field: Page; Sequence: 44; Value: 1
+
+39
+<!-- PAGE 45 -->
+Field: /Page
+
+| • | material inaccuracy of representations and warranties |
+| --- | --- |
+| • | breach of covenants |
+| • | cross-default |
+| • | bankruptcy or insolvency |
+| • | judgments, orders or decrees |
+| • | pension plans |
+| • | invalidity or contest of loan documents |
+| • | invalidity of perfection or priority of liens |
+| • | invalidity or contest of subordination provisions |
+| • | change of control |
+
+Conditions to Funding: The documentation will contain conditions to closing and funding as are customary for facilities of the type described above. All extensions of credit under the Facilities will be subject to the continuing accuracy in all material respects (unless already qualified by concepts of materiality) of representations and warranties, the absence of defaults and events of default, and pro forma compliance with the fixed charge coverage ratio and senior and total leverage covenants (calculated based on debt as of the borrowing date and EBITDA for the most recently ended 12-month period for which financial statements are available). It is anticipated that the conditions to the closing and initial funding of the Loans will include the following, each of which must be in form and substance satisfactory to Agent:
+
+| • | Execution and delivery of definitive loan documentation for the Facilities. |
+| --- | --- |
+| • | Agent shall have received a Solvency Certificate showing that the Company, Holdings, Borrower and each Subsidiary of Borrower are solvent (to be defined in the Facilities documentation) after the incurrence of all indebtedness and the consummation of the Offer, the Merger and all other transactions to occur on the Closing Date. |
+
+Field: Page; Sequence: 45; Value: 1
+
+40
+<!-- PAGE 46 -->
+Field: /Page
+
+| • | All third-party and regulatory approvals and consents necessary to consummate the proposed transactions shall have been obtained and shall be final and non-appealable. |
+| --- | --- |
+| • | Agent shall have received such resolutions, consents, certificates, legal opinions and other documents as it shall have reasonably requested with respect to the execution and delivery of the Facilities documentation, the related transactions and performance of the obligations created thereunder. |
+| • | No event or condition has occurred or could reasonably be expected to occur that resulted or would result in a “Material Adverse Effect” (as defined in the Merger Agreement). |
+| • | The Offer shall have been completed for at least a majority of the Shares; the Top-Up Option shall have been exercised and closed immediately following the consummation of the Tender Offer in an amount sufficient to permit a short-form merger under Minnesota law; and the Merger shall have been completed immediately following the closing of the Top-Up Option, in each case to the satisfaction of the Agent. |
+| • | Borrower shall have a minimum twelve month Adjusted EBITDA of not less than $5,450,000 as at October 31, 2017, including such add-backs and other adjustments as are reasonably acceptable to Agent (“Adjusted EBITDA”). Since October 31, 2017, no changes shall have occurred in Borrower’s performance, financial condition, operations, cash flow or EBITDA, except for seasonal changes consistent with past practices and operations that do not individually or in the aggregate result in a “Material Adverse Effect” (as defined in the Merger Agreement). |
+| • | Unsecured subordinated debt of the Borrower of not more than $9,800,000 to be consummated and funded by Greyrock on the Closing Date, with such terms and conditions as are satisfactory to the Agent, and the holders thereof shall have entered into an intercreditor agreement on terms satisfactory to Agent including remedies standstill provisions and |
+
+Field: Page; Sequence: 46; Value: 1
+
+41
+<!-- PAGE 47 -->
+Field: /Page
+
+|  | payment blockage rights tied to defaults under the Facilities documentation. |
+| --- | --- |
+| • | Total indebtedness of Borrower on a consolidated basis (including the Facilities and after giving effect thereto) on the Closing Date not to exceed $21,800,000 (excluding Greyrock Capital’s Tranche B subordinated debt described below). The ratio of senior indebtedness (including contingent liabilities of $447,000 which may result from the pending Medisoft SA vs. Guy Martinot litigation) to Adjusted EBITDA shall be less than 2.8x, and the ratio of total indebtedness (excluding Greyrock Capital’s Tranche B subordinated debt, but including contingent liabilities of $447,000 which may result from the pending Medisoft SA vs. Guy Martinot litigation) to Adjusted EBITDA shall be less than 4.0 x as of the closing of the Offer and the Merger (and after giving effect thereto). |
+
+| Closing Date: | The date on which all conditions precedent to the closing and initial funding have been satisfied (the “ Closing Date ”). |
+| --- | --- |
+| Assignments/Participations: | The Lenders will have the right at any time after the Closing Date to sell and assign interests and sell participations under the Facilities in integral multiples of $1,000,000 to other financial institutions in accordance with customary terms, subject to the prior written consent of Agent and, so long as no default is continuing, Borrower (such consents (i) not to be unreasonably withheld, conditioned or delayed, (ii) not to be required in the event of an assignment to another Lender, a Lender’s affiliate, or an approved fund, and (iii) not to be required for participations). |
+| Required Lenders: | Lenders having more than 50% of the commitments or outstandings, as appropriate, of all Lenders, subject to certain customary unanimous consent provisions as Agent may determine. |
+
+*Mezzanine Financing* . Altus has also received a commitment letter (which we refer to as the “Mezz Commitment Letter”) from GCG Investors IV, LP (“Greyrock”) to provide, subject to the conditions set forth in the Mezz Commitment Letter to Altus, (i) term loans in the original aggregate principal amount of $9,800,000 (collectively, the “Subordinated Loan”) and (ii) an equity investment of $2,000,000 (the “Equity Investment”), in each case, for the purpose of financing the Offer and the Merger and paying related fees and expenses (collectively, the “Mezz Financing”). The commitment of Greyrock with respect to the Mezz Facilities (as defined below) will expire if the Offer and the Merger are not consummated by January 31, 2018.
+
+Altus has agreed to certain covenants in connection with the Mezz Commitment Letter:
+
+§ Altus has agreed to indemnify and hold harmless Greyrock and its affiliates and the respective officers, directors, employees, partners, members, agents and attorneys of Greyrock and its affiliates (collectively, the “Greyrock Indemnitees”) from and against any and all liabilities, obligations, losses (other than lost profit), damages, penalties, actions, judgments, suits, claims, costs, expenses and disbursements of
+
+Field: Page; Sequence: 47; Value: 1
+
+42
+<!-- PAGE 48 -->
+Field: /Page
+
+any kind or nature whatsoever (including the reasonable fees and disbursements of counsel for such Greyrock Indemnitee) in connection with any investigative, administrative or judicial proceeding, which may be imposed on, incurred by or asserted against such Greyrock Indemnitee as a result of or in connection with the Transaction and the use or intended use of the proceeds of the Subordinated Loan or the Equity Investment or both, subject to customary limitations.
+
+§ Altus has agreed that it will work exclusively with Greyrock as the provider of the Equity Investment and the Subordinated Loan.
+
+§ Altus has agreed to reimburse Greyrock for its reasonable out-of-pocket fees and expenses (including counsel fees) incurred in connection with the transaction, regardless of whether the transaction closes.
+
+Greyrock’s obligation to provide the Subordinated Loan and the Equity Investment, or either of them, is subject to the satisfaction of each of the following conditions:
+
+§ The execution and delivery by Parent of a subordinated loan agreement and related documentation reasonably satisfactory to Greyrock and its counsel containing, subject to the Summary of Mezz Terms below, customary terms, conditions, representations, warranties and agreements, including those contained in part (a) of the Summary of Mezz Terms below and financial covenants typical for Greyrock’s debt financings, to be negotiated with consideration of and with a customary cushion to the Senior Financing covenants, and receipt by Greyrock of an opinion from Parent’s outside counsel covering such matters as may be reasonably requested by Greyrock or its counsel and otherwise in form and content satisfactory to Greyrock and its counsel.
+
+§ Parent shall simultaneously obtain the Senior Financing on terms and conditions and pursuant to documentation reasonably satisfactory to Greyrock and its counsel.
+
+§ Parent shall simultaneously obtain equity investments aggregating at least $20,400,000.
+
+§ The documentation relating to the Equity Investment shall be reasonably satisfactory to Greyrock and its counsel containing, subject to part (b) of the Summary of Mezz Terms below, customary terms, conditions, representations, warranties and agreements, including those contained in the Summary of Mezz Terms below.
+
+§ All documentation not specified above and relating to the Offer and the Merger shall be reasonably satisfactory to Greyrock and its counsel and Greyrock shall have received satisfactory evidence of all required third party, governmental and other consents necessary to consummate the Offer and the Merger.
+
+§ Todd M. Austin and Matthew S. Margolies shall have entered into employment agreements with the Company in form and substance similar to the drafts provided to Greyrock, which are identical to the drafts summarized in this Offer to Purchase.
+
+Field: Page; Sequence: 48; Value: 1
+
+43
+<!-- PAGE 49 -->
+Field: /Page
+
+§ There shall have been no material adverse change in the condition (financial or otherwise), properties, business, results of operations (or projected results of operations) or prospects of the Company from that shown in the financial information previously delivered to Greyrock, nor shall any omission, inconsistency, inaccuracy or change in presentation or accounting standards which renders such financial statements (including any projections) misleading in any material respect have been determined by Greyrock to exist.
+
+§ The form, terms and conditions of any management agreement or fee arrangement respecting the Offer and the Merger are consistent with agreements and arrangements for other Altus portfolio companies for which Greyrock affiliated funds have provided mezzanine financing.
+
+§ The Offer and the Merger shall close on or before January 31, 2018.
+
+Below is a summary of terms (the “Summary of Mezz Terms”) for the Mezz Financing:
+
+| Original Principal Amount: | $9,800,000. |
+| --- | --- |
+| Price: | 100% of Principal Amount. |
+| Interest Rate/Payments: | Interest on $6,800,000 of the Notes (Tranche
+A) would accrue initially at a rate equal to 13.0% per annum calculated on the basis of actual days elapsed in a 360-day year.
+Cash interest of 11.0% per annum would be paid quarterly in arrears, and incremental interest of up to 2.0% per annum would accrue
+quarterly and be added to the Note balance and thereafter accrue interest. The incremental interest, which ranges from 0.50% to
+2.00%, would be determined according to the methodology attached as Exhibit A to the Mezz Commitment Letter and would be based
+on recent ratios of total debt to trailing twelve month EBITDA. Interest on $3,000,000 of the Notes (Tranche
+B) would accrue at a rate equal to 15.0% per annum calculated on the basis of actual days elapsed in a 360-day year. All of the
+interest on Tranche B would accrue quarterly to the Note balance and thereafter accrue interest |
+| Maturity: | Six years from closing of the Offer and Merger. |
+| Amortization: | No scheduled amortization (bullet repayment). |
+| Guaranty: | Any subsidiaries of the Company will jointly and severally guarantee the Company’s obligations under the loan documentation. |
+
+Field: Page; Sequence: 49; Value: 1
+
+44
+<!-- PAGE 50 -->
+Field: /Page
+
+| Closing Fee: | 2.0% of the original principal amount, payable at closing. |
+| --- | --- |
+| Board Observation Rights: | A representative of Greyrock would be permitted
+board observer status and the right to receive board documentation for as long as Greyrock holds at least either half of the outstanding
+amount of the Subordinated Loan or half of the Equity Investment. |
+| Prepayments: | Prepayment in full of the Notes would be
+mandatory upon a change of control; customary partial prepayments upon loss or destruction of property or assets would be required,
+subject to the terms of the Senior Financing. The Notes may not be voluntarily prepaid during the first 12
+months after the closing of the Offer and the Merger. After year one, the Notes may be voluntarily prepaid in increments of $1,000,000. |
+| Prepayment Premium: | Mandatory Prepayments would not be subject to a Prepayment Premium. Voluntary prepayments made in loan years two and three would be subject to a prepayment premium of 2% and 1%, respectively. |
+| Equity Investment | At closing, Greyrock would invest $2,000,000 of equity in
+Parent on the same economic terms as Altus CP II. Greyrock’s equity would have pro-rata preemptive rights and be
+proportionally entitled to “tag-along” with any third party transfer by Altus CP II. |
+
+We refer to the Senior Debt Financing and the Mezz Financing, together, as the “Debt Financing,” and we refer to the Senior Credit Facilities and the Mezz Facilities, together, as the “Facilities.” The documentation governing the Facilities has not been finalized and, accordingly, the actual terms of such financing may differ from those described in this document. Each of Parent and Purchaser has agreed to use its reasonable best efforts to arrange the financing on the terms and conditions described in the respective commitment letters. If any portion of the Debt Financing becomes unavailable on the terms and conditions contemplated in the applicable commitment letter, each of Parent and Purchaser must use its reasonable best efforts to promptly arrange and obtain alternative debt financing from alternative sources in an amount sufficient to consummate the Merger with terms and conditions not materially less favorable from the standpoint of Parent, Purchaser and the Company than the terms and conditions set forth in the Senior Debt Commitment Letter or the Mezz Commitment Letter, as applicable (giving effect to any rights of the financing sources to adjust certain terms contained therein).
+
+Although the debt financing described in this document is not subject to a due diligence or “market out,” such financing may not be considered assured. As of the date hereof, no alternative financing arrangements or alternative financing plans have been made in the event the debt financing described herein is not available.
+
+Field: Page; Sequence: 50; Value: 1
+
+45
+<!-- PAGE 51 -->
+Field: /Page
+
+The above summaries of the Senior Debt Financing and the Mezzanine Financing do not purport to be complete and are qualified in their entirety by reference to the full text of the corresponding commitment letters, copies of which been filed as Exhibit (b)(1)(A) and Exhibit (b)(1)(B) to the Schedule TO and which are incorporated herein by reference.
+
+*Equity Financing* . Parent has received an Equity Commitment Letter, pursuant to which Altus CP II has committed to contribute to Parent an amount equal to $22,263,200 in cash in immediately available funds for the purpose of funding, and to the extent necessary to fund, a portion of the aggregate Per Share Amount and/or Merger Consideration, pursuant to and in accordance with the Merger Agreement, and certain other amounts required to be paid pursuant to the Merger Agreement (such committed equity financing, the “Equity Financing” and together with the Debt Financing, the “Financing”). We refer to the financing contemplated by the Equity Commitment Letter, as may be amended, restated, supplemented or otherwise modified from time to time, as the “Equity Financing.” The funding of the Equity Financing is subject to the following conditions: (a) each of the conditions set forth in Section 7.01 to the Merger Agreement and each of the conditions to the Offer (in each case, other than those conditions that by their nature are to be satisfied by actions taken at the Offer Closing) shall have been satisfied (or waived by Parent), (b) the Company shall have given notice in writing to Parent representing that it is ready, willing and able complete the Closing, and (c) the full amount of the Debt Financing shall have been funded or shall be funded at the Closing
+
+The obligation of Altus CP II to fund its equity commitment will expire upon the earliest to occur of (a) the valid termination of the Merger Agreement in accordance with the terms of the Merger Agreement and (b) the Effective Time. This summary does not purport to be complete and is qualified in its entirety by reference to the full text of the Equity Commitment Letter, a copy of which has been filed as Exhibit (d)(4) to the Schedule TO and which is incorporated herein by reference.
+
+*Limited Guarantee* . Concurrently with the execution and delivery of the Equity Commitment Letter, Altus CP II executed and delivered to the Company a limited guarantee in favor of the Company in respect of certain of Parent’s and Purchaser’s liabilities and obligations under the Merger Agreement (the “Limited Guarantee”), provided that in no event will Altus CP II incur obligations totaling more than approximately $2,200,000 in the aggregate (plus the amount of any reimbursement obligations payable pursuant to the Merger Agreement) under the Limited Guarantee (“Parent Liability Limitation”).
+
+The obligations of Altus CP II under the Limited Guarantee terminate upon the earliest to occur of: (a) the Effective Time following compliance by Parent and Purchaser with their respective obligations under the Merger Agreement through the Effective Time, (b) the valid termination of the Merger Agreement in accordance with its terms under circumstances set forth in the Merger Agreement not giving rise to a claim for payment of any obligation guaranteed by the Limited Guarantee; and (c) ninety (90) days after any valid termination of the Merger Agreement in accordance with its terms under any other circumstances. However, if the Company has made a claim against Altus CP II under the Limited Guarantee at or prior to the time at which Altus CP II would otherwise have no further obligations under the Limited Guarantee, then Altus CP II’s obligations under the Limited Guarantee will continue until the date on which such claim
+
+Field: Page; Sequence: 51; Value: 1
+
+46
+<!-- PAGE 52 -->
+Field: /Page
+
+is finally satisfied or otherwise resolved by agreement of the parties or by a final, non-appealable judgment of a governmental entity of competent jurisdiction
+
+This summary does not purport to be complete and is qualified in its entirety by reference to the full text of the Limited Guarantee, a copy of which has been filed as Exhibit (d)(3) to the Schedule TO and which is incorporated herein by reference.
+
+Other than as discussed in this Section 9, there are no alternative financing arrangements or alternative financing plans.
+
+10. Background of the Offer; Past Contacts or Negotiations with the Company.
+
+Altus CP II (referred to in this Section 10 as “Altus”) is engaged in (among other activities) managing and making investments in middle market manufacturing businesses. The following is a description of Altus’s participation in a process with the Company that culminated in the execution of the Merger Agreement. For a review of the Company’s activities relating to that process, including its activities regarding other bidders for the Shares, you are referred to the Schedule 14D-9 that will be mailed to Company shareholders.
+
+Altus engages in discussions with regard to potential transactions of public and private companies both in response to company-initiated processes as well as proactively independent of existing sale processes.
+
+On January 25, 2017, the Company issued a press release disclosing that the Board had initiated a strategic review of the Company’s businesses and assets to explore opportunities for enhancing value for its shareholders. A Special Committee consisting of Board Chairman Mark Sheffert, Vice Chairman Terry Bunge and director Hank Struik was formed to oversee this process. The Company announced that the Special Committee had retained Minneapolis-based investment banking firm Craig-Hallum Capital Group LLC (Craig-Hallum), to advise it in this process.
+
+On May 22, 2017, Jared Rance of Craig-Hallum sent Altus a form of Confidentiality and Nondisclosure Agreement and a short “no-names” summary (or “teaser”) of a business for which it had been engaged to assist the board of directors in exploring strategic alternatives, including a potential sale of the business.
+
+On May 25, 2017, Altus Capital Partners, Inc. entered into a two-year Confidentiality and Nondisclosure Agreement (the “Confidentiality Agreement”) with Craig-Hallum (acting on behalf of the Company) in order to receive access to confidential and proprietary information relating to the Company and its businesses. Subject to limited exceptions, the Confidentiality Agreement requires Altus to maintain the confidentiality of information shared with it by the Company and to not use that information for any purpose other than in in connection with its evaluation of a potential transaction with the Company. In addition, the Confidentiality Agreement restricts Altus, its representatives and their respective affiliates from engaging in unsolicited activities relating to a potential acquisition, such as acquiring Shares, soliciting proxies, initiating shareholder proposals and influencing the Company’s management, without the Company’s prior written consent.
+
+Field: Page; Sequence: 52; Value: 1
+
+47
+<!-- PAGE 53 -->
+Field: /Page
+
+Following execution of the Confidentiality Agreement by Altus, on May 25, 2017, Luke Hougo of Craig-Hallum provided Altus with a Confidential Information Memorandum regarding the Company, which provided an overview of the business, its employees, key products and financial performance.
+
+On June 7, 2017, Luke Hougo of Craig-Hallum provided Altus with supplementary data to the previously-provided Confidential Information Memorandum. After analyzing this information, on June 23, 2017, the Altus and Craig-Hallum teams had an initial conference call during which they discussed the opportunity presented in the teaser and Confidential Information Memorandum involving the Company.
+
+On July 25-26, 2017, Altus, Craig-Hallum and key members of Company management met in person to acquaint themselves with one another, to tour the Company’s leased facility in St. Paul, Minnesota and to receive a management presentation from the Company.
+
+On August 10, 2017, Craig-Hallum provided Altus with a letter detailing the instructions for making a final written proposal for the acquisition of the Company. This letter requested that Altus provide the following information in relation to a potential transaction: (i) per share purchase price, (ii) summary of key assumptions, (iii) a mark-up of a form of Agreement and Plan of Merger to be made available by the Company’s outside counsel, (iv) a summary of any remaining/outstanding due diligence, (v) a detailed timeline indicating key dates and milestones toward closing, (vi) a summary of any necessary approvals, (vii) detailed information about financing requirements and proposed sources of third party financing, (viii) detailed expectations for management post-closing, including any requirement employment agreements, compensation packages and/or incentive/option plans and (ix) a summary of any conflicts that the Company’s Board should be aware of in considering Altus’s bid.
+
+Also on August 10, 2017, Altus was granted access to a confidential due diligence data room containing materials relating to the Company and its subsidiaries that was maintained by Craig-Hallum on behalf of the Company.
+
+On August 28, 2017, as contemplated by its prior instruction letter, Craig-Hallum provided Altus with a form of Agreement and Plan of Merger for review by Altus and its outside counsel, Miller Johnson. On August 31, 2017, Craig-Hallum made the contents of an electronic data room available to Miller Johnson, which materials supplemented the review of publicly available SEC filings and other materials already undertaken by Altus and Miller Johnson. Over the course of the following two weeks, Altus and Miller Johnson performed further due diligence as Miller Johnson reviewed the form of Merger Agreement provided by Craig-Hallum. In addition, Miller Johnson had a telephone call with the Company’s outside counsel at Lindquist & Vennum LLP (“Lindquist”) to discuss several transaction structuring issues and related questions.
+
+On September 5, 2017, Altus, Craig-Hallum and Company management had a follow-up meeting to discuss market trends, competitive dynamics and potential growth opportunities for the Company.
+
+On September 13, 2017, following several phone calls with Miller Johnson to discuss their respective due diligence findings and the parameters of its likely bid, Altus submitted an initial
+
+Field: Page; Sequence: 53; Value: 1
+
+48
+<!-- PAGE 54 -->
+Field: /Page
+
+non-binding indication of interest, which valued the Company at $40,000,000 on a cash-free, debt-free basis, assuming no significant deviations in the Company’s consolidated net working capital. Altus developed this initial valuation based on numerous factors, including the Company’s opportunities and risks, financial results through the historical period ended July 31, 2017 as well as expected financial results through the remainder of fiscal year 2017 and forecasted results for fiscal year 2018.
+
+This non-binding proposal also outlined Altus’s expectation that certain of the Company’s senior management (including Todd Austin and Matthew Margolies, and potentially others) would enter into new post-closing employment agreements and make a collective equity investment of at least $400,000 in the equity of the Surviving Corporation on a pari passu basis with Altus. Altus also communicated its expectation that it would establish a post-closing equity incentive plan under which the Company’s management team would be eligible to receive options representing up to 10% of the Company’s common equity, subject to agreement to non-competition, non-solicitation and non-disparagement covenants. Altus also briefly described its anticipated financing structure, consisting of roughly equal parts equity and debt.
+
+With respect to the proposed Merger Agreement, Altus provided Craig-Hallum with a summary memorandum prepared by Miller Johnson, which described the material issues identified during the course of its review of the Merger Agreement and discussions with Altus. Based on the material issues identified by Miller Johnson, Altus proposed several key transaction terms: (i) that Altus not be required to close if more than 5% of the Company’s Shares notify the Company that they intend to dissent or seek an appraisal remedy; (ii) the valuation proposed by Altus assumed that Altus would obtain a representation and warranty insurance policy (at its cost) with minimal carve-outs/exclusions; (iii) a Company termination fee equal to 3.5% of the Company’s enterprise value (plus the reimbursement of out-of-pocket expenses incurred by Altus) if the Merger Agreement were terminated as a result of the Company Board exercising a “fiduciary out” provision; and (iv) a reverse termination fee payable by Altus also equal to 3.5% of the Company’s enterprise value should Altus fail to close the proposed transaction due to a failure of its debt financing. Finally, Altus proposed an initial 30-day exclusivity period (with a potential 15-day extension) as an inducement for Altus to expend resources on the potential transaction in the form of detailed due diligence, a mark-up of the Merger Agreement and negotiation toward a definitive transaction document.
+
+On September 18, 2017, Altus received feedback from Craig-Hallum that the Company had received and was evaluating multiple offers, but that the Company had decided to narrow the second round of proposals to fewer bidders, who would be asked to put forward their best proposal and show their enthusiasm for the transaction. This group included Altus. Craig-Hallum also noted that the Company was disagreeable to reimbursing expenses in a termination scenario, but was generally agreeable to a 3.5% termination fee. However, it was noted that the Company would expect Altus to provide a limited guarantee for an 8% reverse termination fee. Craig-Hallum also noted that the Company was uncomfortable with only a 5% threshold on dissenting shares, but would accept a 10% threshold (assuming satisfactory resolution of other points). Additionally, Craig-Hallum sought clarity that the Company would not be asked to fund Altus’s representation and warranty insurance policy or set aside any funds in escrow to share in any self-insured retention under the policy. Finally, Craig-Hallum indicated that the Company would not be open to adjusting the purchase price based on pre-signing or pre-closing changes in net working capital.
+
+Field: Page; Sequence: 54; Value: 1
+
+49
+<!-- PAGE 55 -->
+Field: /Page
+
+Based on this feedback and additional discussions between Altus and Craig-Hallum between September 18 and September 21, 2017, Altus revised and updated its indication of interest to acquire the Company on September 21, 2017. In its updated letter, Altus increased its proposed valuation of the Company to $44,000,000 on a cash-free, debt-free basis, which would ultimately be translated into a per share purchase price following a detailed review of the Company’s capital structure and expected transaction expenses. Altus agreed that this valuation would not require the Company to maintain a steady level of net working capital through signing or closing. Altus updated its financing plans to reflect that it would provide an additional $4.0 million in equity financing to match the $4.0 million increase in valuation, with no increase in the anticipated amount of debt financing for the transaction.
+
+Altus did not materially modify its expectations for post-closing employment, “rollover equity” or incentive compensation. However, Altus agreed to increase the threshold for the dissenting shares closing condition from 5% to 10%, as requested by the Company, so long as the Company agreed to reimburse Altus for up to $1,000,000 in out-of-pocket transaction expenses should the acquisition fail to close due to excessive dissenting shares. With respect to the Company’s termination fee in the event of a “fiduciary out,” Altus agreed to reduce the fee from 3.5% to 3.0% of the Company’s enterprise value. At the same time, Altus agreed to increase the reverse termination fee it would be required to pay in the event of a debt financing failure from 3.5% to 5.0%.
+
+Altus maintained its proposed 30-day exclusivity period (with an automatic 15-day extension of exclusivity so long as the parties are proceeding in good faith toward completion of transaction documents and due diligence). Craig-Hallum presented Altus’s updated proposal to the Company and, following consideration by the Special Committee and the Board, the Company agreed to proceed exclusively with Altus on the basis of its September 21 proposal.
+
+Shortly thereafter, on September 25, 2017, Altus submitted to Craig-Hallum a detailed legal due diligence request list prepared by Miller Johnson. In addition to Miller Johnson, Altus engaged Hyman, Phelps & McNamara to lead the review of FDA and related regulatory legal due diligence issues and materials as well as Cleary Gottlieb’s Brussels, Belgium office to lead the legal due diligence review of the Company’s European business and operations, which is headquartered in Brussels.
+
+On October 5, 2017, Greg Greenberg, co-founder and Senior Partner at Altus, attended the American Association for Respiratory Care Conference held in Indianapolis, Indiana, at which he was able to visit the Company’s booth and participate in public question and answer sessions with the Company’s current and prospective customers.
+
+On October 11, 2017, Altus held meetings with potential lenders for the transaction, during which they discussed the Company’s business, assets and financial performance.
+
+On October 12, 2017, Miller Johnson provided Lindquist with a revised draft of the Merger Agreement, reflecting the material transaction terms agreed to by the parties in Altus’s September 21 indication of interest as well as less material comments and revisions incorporated by Miller Johnson based on the due diligence completed by Altus’s advisors to-date as well as the input of regulatory and European co-counsel.
+
+Field: Page; Sequence: 55; Value: 1
+
+50
+<!-- PAGE 56 -->
+Field: /Page
+
+On October 18, 2017, Miller Johnson and Lindquist held a conference call to discuss the most material open substantive and transaction structuring issues identified by Lindquist during their review of the revised draft of Merger Agreement provided by Miller Johnson. Most importantly, the attorneys discussed the relative advantages and disadvantages of utilizing the “two-step” tender offer-merger approach originally proposed by the Company versus a “one-step” merger that would dispense with the initial tender offer. During this call, Miller Johnson indicated its client’s preference to proceed on the basis of a “two-step” tender offer-merger structure, in part due to the absence of any required antitrust approvals, non-U.S. competition law filings or waiting periods and the absence of any works council consultation requirements in Europe.
+
+Over the following twelve days, Altus and its financial, tax and legal advisors continued to conduct detailed due diligence and prepare summary due diligence memoranda in anticipation of sharing their due diligence findings with a representation and warranty insurance carrier for the transaction. During this time, Miller Johnson submitted periodic follow-up legal due diligence requests to Lindquist, who coordinated responses from the Company.
+
+On October 25, 2017, Mr. Greenberg and Heidi Goldstein, a Partner at Altus, visited the Company’s Medisoft SA subsidiary’s facility in Sorinnes, Brussels. Todd Austin attended on behalf of the Company, accompanied by Jared Rance of Craig-Hallum and Dr. Jean Beniot Martinot, who is a former minority shareholder of Medisoft SA and currently one of five members of the Company’s Scientific Advisory Board. The meetings with Mr. Austin, Mr. Rance and Dr. Martinot allowed Altus an opportunity to better understand prospective strategic developments and opportunities for the Company, particularly given Dr. Martinot’s involvement with the Company’s Scientific Advisory Board and history with Medisoft SA pre-dating the Company’s ownership.
+
+Following the meeting with Dr. Martinot, Mr. Greenberg and Ms. Goldstein met with Fred Gavage, who has served as the Managing Director of Medisoft SA since 2014. During his time with the business, Mr. Gavage has made significant changes to the operations of Medisoft, including streamlining production capabilities. Medisoft is now a fully integrated manufacturer, including machining, painting, welding and assembly of all the Medisoft equipment. Both Mr. Greenberg and Ms. Goldstein left this meeting with the view that Mr. Gavage was very knowledgeable of not only the manufacturing operations but also the product development and sales side of the business. In addition, they formed a preliminary opinion that Medisoft has a young and energetic engineering staff focused on software and equipment development and manufacturing improvements.
+
+Finally, Mr. Greenberg and Ms. Goldstein met with Dr. Brendan Cooper, head of Pulmonology at Queen Elizabeth Hospital (“QE”). Within the prior eighteen months, Dr. Cooper’s lab had transitioned from a competitor’s products to the Company’s medical devices. Dr. Cooper shared his views on the rationale for the switch to the Company’s devices and also expressed satisfaction with the Company’s transition capabilities as well as its ongoing levels of customer service. This meeting was helpful for Altus in better understanding a key customer’s perspective on the Company and Medisoft.
+
+On October 30, 2017, Lindquist sent Miller Johnson an updated draft of the Merger Agreement. As many of the most material points had already been addressed in the initial
+
+Field: Page; Sequence: 56; Value: 1
+
+51
+<!-- PAGE 57 -->
+Field: /Page
+
+indication of interest or resolved through prior discussion and negotiation by the Company, Altus and their respective outside counsel, the revisions to the Merger Agreement focused in large part on the mechanics of the proposed tender offer and second step merger as well as the precise wording of various representations, warranties and covenants and various qualifications thereto. Shortly thereafter, on October 31, 2017, Lindquist provided Miller Johnson with an initial draft of the Company’s Disclosure Letter to the Merger Agreement.
+
+Given the progress made by the parties in negotiating the Merger Agreement and advancing toward the completion of due diligence, on November 3, 2017, Altus proposed to extend its exclusivity period with the Company through November 20, 2017. The Company countered with an exclusivity extension only through November 17, 2017, to which Altus agreed.
+
+During the period between November 4, 2017 and November 9, 2017, Altus and its advisors continued their due diligence work, while Altus’s representation and warranty insurance broker solicited non-binding indication letters from potential carriers. The due diligence process was facilitated by Lindquist circulating an updated draft of the Company’s Disclosure Letter. After receipt by Altus of insurance proposals from several carriers, Miller Johnson reviewed the proposed coverage terms and further revised the Merger Agreement based on its understanding of the likely representation and warranty insurance policy parameters and limitations. In addition, on November 7, 2017, Miller Johnson provided Lindquist with proposed drafts of the Limited Guarantee and Equity Commitment Letter to be provided by Altus CP II. Then, on November 9, 2017, Miller Johnson also submitted an updated draft of the Merger Agreement to Lindquist, in which many of the proposed changes to the Company’s representations and warranties were accommodated.
+
+On November 10, 2017, Mr. Greenberg and Ms. Goldstein of Altus made a customer visit to the Mayo Clinic, accompanied by Mr. Austin from the Company and Steve Rickman from Craig-Hallum. During this visit, Mr. Greenberg and Ms. Goldstein were able to meet with Dr. Tom Allison of the Mayo Clinic’s Department of Cardiovascular Medicine. Dr. Allison was highly complementary of the Company and its continued effort to improve on its product offerings. Dr. Allison also explained and provided additional context regarding his implementation of Company devices into his practice. In particular, he emphasized that these products provide unique data to doctors in order to identify follow-up diagnostics and other procedures more accurately. Mr. Greenberg and Ms. Goldstein also met with Dr. Bruce Johnson of Mayo Clinic’s Department of Cardiovascular Medicine and Carl Mottram, Director of Mayo Clinic Pulmonary Function Laboratory, who provided additional context for their comparison between the Company’s products and services relative to competitors.
+
+Also on November 10, 2017, Mr. Greenberg, Ms. Goldstein and Joshua Tesoriero of Altus participated in a telephone call with Nick Chapman, the owner of Medical Graphics UK, which has been a distributor of the Company’s products for seventeen years. Mr. Chapman described to the Altus team that he views MedGraphics as a premium brand and that the market’s overall impression of the Company’s products has improved steadily over the last five years.
+
+In addition, on November 10, 2017, Mr. Greenberg, Ms. Goldstein and Mr. Tesoriero participated in a telephone call with Murray Beaton, the owner of Novus Medical, which has been a Canadian distributor of the Company’s products since 2012. Mr. Beaton expressed his view that
+
+Field: Page; Sequence: 57; Value: 1
+
+52
+<!-- PAGE 58 -->
+Field: /Page
+
+the Company is among the most stable industry participants in the North American market. He also relayed positive feedback that he had recently received from top customers relating to the new software platform integrated into various products.
+
+Over the next several days, Altus finalized its selection of senior and mezzanine financing sources for the transaction (Abacus and Greyrock respectively), after which Miller Johnson discussed the timeline, transaction structure and related issues with the lenders’ outside counsel.
+
+On November 14, 2017, Lindquist provided Miller Johnson with an updated draft of the Merger Agreement, with minimal revisions, but still including several footnoted and bracketed items for discussion. Also on November 14, 2017, Altus provided Todd Austin and Matthew Margolies with initial drafts of their respective post-closing employment agreements for discussion and review, while Miller Johnson provided Lindquist with a form of Tender Support Agreement proposed to be executed by each of the Company’s directors and executive officers.
+
+Between November 14, 2017 and November 17, 2017, Altus and its outside tax, financial and legal advisors largely completed their due diligence. On November 17, 2017, Altus and its advisors convened a conference call with Altus’s representation and warranty insurance carrier, Chubb, to discuss the results of their due diligence workstreams and provide Chubb an opportunity to pose questions to Altus and its advisors regarding the scope and findings of their due diligence. Chubb and its outside counsel followed up with additional written questions in certain areas, but continued to progress toward completion of the insurance policy.
+
+On November 15, 2017, Altus received an initial draft of commitment letter from Greyrock for the mezzanine financing, and on November 17, 2017, Altus received an initial draft of commitment letter from Abacus for the senior secured debt financing. Miller Johnson and Lindquist coordinated comments on these commitment letters based on their respective clients’ comments, questions and input before sending consolidated mark-ups of the commitment letters to each lender’s outside counsel.
+
+Also on November 15, 2017, Mr. Greenberg and Ms. Goldstein made a customer visit to the National Jewish Hospital in Denver, Colorado. Similar to prior customer visits, this trip reinforced the positive customer/market view of the Company’s products for the Altus team.
+
+On November 16, 2017, Mr. Greenberg, Ms. Goldstein and Mr. Tesoriero held separate conference calls with two physicians who utilize the Company’s product offerings in their practices.
+
+Also on November 17, 2017, Miller Johnson and Lindquist exchanged comments and finalized the proposed form of Limited Guarantee to be provided by Altus CP II.
+
+From November 20 through November 22, 2017, the parties finalized drafts of the Tender Support Agreements, Employment Agreements, Limited Guarantee, Equity Commitment Letter and Debt Commitment Letters. In addition, the parties made a series of minor changes to the Merger Agreement based on the final revisions to the other transaction documents referred to above. The Company also continued to update its Disclosure Schedules and produce due diligence materials to Altus and its advisors based on their follow-up due diligence requests and questions from the Altus’s representation and warranty insurer.
+
+Field: Page; Sequence: 58; Value: 1
+
+53
+<!-- PAGE 59 -->
+Field: /Page
+
+On Wednesday, November 22, 2017, the day prior to Thanksgiving, the parties agreed to a final extension of the exclusivity period through Monday, November 27, 2017 in order to allow sufficient time for each of the parties to finalize their Board reviews, negotiations and approvals as well as other pre-signing workstreams.
+
+On the morning of November 25, 2017, the Company’s Board of Directors convened a special meeting of the Board to consider and discuss the final forms of the Merger Agreement and other transaction documents. At this time, the Board unanimously (a) determined that the Offer, the Merger and the other transactions contemplated by the Merger Agreement were advisable and fair to and in the best interests of the Company and its shareholders, (b) approved, adopted and declared advisable the Merger Agreement, the Offer, the Merger and the other transactions contemplated thereby, (c) authorized and approved the Top-Up Option (as defined below) and the issuance of the Top-Up Shares (as defined below) on the terms contemplated by Section 1.04 of the Merger Agreement, (d) resolved to recommend acceptance of the Offer (i.e. to recommend that the shareholders of the Company tender their Shares to Purchaser pursuant to the Offer), and, if required, approval and adoption of the Merger by the Company’s shareholders and (e) to the extent permitted by applicable law, resolved to elect that any “moratorium,” “control share acquisition,” “business combination,” “fair price” or other form of anti-takeover laws or regulations of any jurisdiction that purports to be applicable to the Company, Parent, Purchaser, the Surviving Corporation, the Merger Agreement or the transactions contemplated thereby shall not be applicable to the Company, Parent, Purchaser, the Surviving Corporation, the Merger Agreement or the transactions contemplated thereby
+
+Also, on November 25, Altus and its representation and warranty insurer completed due diligence, finalized the forms of insurance binder and policy for the transaction and countersigned the final forms of Debt Commitment Letters, which were then delivered to the Company. Upon completion of this process, the parties exchanged and released signature pages to the Merger Agreement and other transaction documents, upon which they became binding on the parties.
+
+On the morning of November 27, 2017, prior to the opening of trading of the Shares on the NASDAQ Capital Market, the Company issued a press release announcing the execution of the Merger Agreement.
+
+On November 29, 2017, Parent and Purchaser commenced the Offer.
+
+For information on the Merger Agreement and the other agreements between the Company, Parent and Purchaser and their respective related parties, see Section 8—”Certain Information Concerning Parent and Purchaser,” Section 9—”Source and Amount of Funds,” and Section 11—”The Merger Agreement.”
+
+Field: Page; Sequence: 59; Value: 1
+
+54
+<!-- PAGE 60 -->
+Field: /Page
+
+11. The Merger Agreement.
+
+*The following is a summary of certain provisions of the Merger Agreement. This summary is qualified in its entirety by reference to the full text of the Merger Agreement, a copy of which is filed as Exhibit (d)(1) to the Schedule TO, which is incorporated herein by reference. Copies of the Merger Agreement and the Schedule TO, and any other filings that we make with the SEC with respect to the Offer or the Merger, may be obtained in the manner set forth in Section 8—”Certain Information Concerning the Company.” Capitalized terms used but not defined in this section will have the respective meanings given to them in this Offer to Purchase. Shareholders of the Company and other interested parties should read the Merger Agreement for a more complete description of the provisions summarized below.*
+
+The Merger Agreement.
+
+The Merger Agreement has been provided solely to inform investors of its terms. The representations, warranties and covenants contained in the Merger Agreement were made only for the purposes of such agreement and as of specific dates, were made solely for the benefit of the parties to the Merger Agreement and may be intended not as statements of fact, but rather as a way of allocating risk to one of the parties if those statements prove to be inaccurate. In addition, such representations, warranties and covenants may have been qualified by certain disclosures not reflected in the text of the Merger Agreement and may apply standards of materiality in a way that is different from what may be viewed as material by shareholders of, or other investors in, the Company. The Company’s shareholders and other investors are not third-party beneficiaries under the Merger Agreement and should not rely on the representations, warranties and covenants or any descriptions thereof as characterizations of the actual state of facts or conditions of the Company, Parent, Purchaser or any of their respective subsidiaries or affiliates.
+
+The Offer.
+
+The Merger Agreement provides that Purchaser will commence the Offer to purchase all of the Shares at a price per share equal to the Per Share Amount as promptly as practicable after the execution of the Merger Agreement, and that, subject only to the satisfaction, or waiver by Purchaser or Parent, of the conditions to the Offer that are described in Section 15—”Conditions of the Offer,” Purchaser will (and Parent will cause Purchaser to) consummate the Offer in accordance with its terms and accept for payment and promptly pay for all Shares validly tendered and not validly withdrawn pursuant to the Offer as soon as practicable and in any event not more than three (3) business days after the Acceptance Time. However, if, at or prior to any expiration date of the Offer, Parent delivers a notice to the Company representing that the full amount of the Debt Financing has not been funded and would not be available to be funded at the consummation of the Offer if such expiration date were not extended, then Purchaser may (on one occasion only) extend the Offer and such expiration date for up to ten (10) Business Days in its sole discretion. The initial expiration date of the Offer will be 12:00 midnight, New York City time, at the end of December 27, 2017.
+
+Field: Page; Sequence: 60; Value: 1
+
+55
+<!-- PAGE 61 -->
+Field: /Page
+
+Terms and Conditions of the Offer.
+
+The obligations of Purchaser to, and Parent to cause Purchaser to, accept for payment, and pay for, any Shares tendered pursuant to the Offer are subject to the conditions to the Offer described in Section 15—”Conditions of the Offer.” Parent and Merger Sub expressly reserve the right (in their sole discretion) to waive, in whole or in part, any condition to the Offer, to increase the Per Share Amount or to make any other changes in the terms and conditions of the Offer. However, unless otherwise provided by the Merger Agreement or as previously approved in writing by the Company, Purchaser shall not (i) reduce the number of Shares subject to the Offer, (ii) reduce the Per Share Amount, (iii) change, modify or waive the Minimum Tender Condition, (iv) add to the conditions set forth in Exhibit A to the Merger Agreement or modify or change any condition to the Offer in a manner adverse in any material respect to any shareholders of the Company, (v) except as otherwise provided in Section 1.01 of the Merger Agreement, extend or otherwise change the expiration date of the Offer, (vi) change the form of consideration payable in the Offer or (vii) otherwise amend, modify or supplement any of the terms of the Offer in a manner adverse in any material respect to any shareholders of the Company.
+
+Expiration and Extension of the Offer.
+
+The initial expiration date of the Offer will be 12:00 midnight, New York City time, at the end of December 27, 2017. The Merger Agreement provides that Purchaser (i) may, in its sole discretion, without consent of the Company, extend the Offer on one or more occasions for any period, if on any then-scheduled expiration date any of the conditions to the Offer shall not be satisfied or, in Merger Sub’s sole discretion, waived, until such time as such condition or conditions are satisfied or waived and (ii) shall extend the Offer for any period required by applicable law, any interpretation or position of the SEC, the staff thereof or the NASDAQ Capital Market applicable to the Offer, and until any waiting period (and any extension thereof) applicable to the consummation of the Offer under any applicable antitrust, competition or similar law shall have expired or been terminated. However, in no event shall Purchaser be required to extend the Offer (A) beyond January 31, 2018 (the “Outside Date”) or (B) at any time that Parent or Purchaser is permitted to terminate the Merger Agreement.
+
+Purchaser shall not terminate the Offer prior to any scheduled expiration date without the prior written consent of the Company except in the event that the Merger Agreement is validly terminated. If the Offer is terminated or withdrawn by Purchaser, or the Merger Agreement is validly terminated, prior to the acceptance for payment of the Shares tendered in the Offer, Purchaser shall promptly return, and shall cause any depository acting on behalf of Purchaser to return, all tendered Shares to the registered holders thereof.
+
+Recommendation.
+
+On November 25, 2017, after careful consideration, the board of directors of the Company (the “Board”) unanimously (a) determined that the Offer, the Merger and the other transactions contemplated by the Merger Agreement were advisable and fair to and in the best interests of the Company and its shareholders, (b) approved, adopted and declared advisable the Merger Agreement, the Offer, the Merger and the other transactions contemplated thereby, (c) authorized and approved the Top-Up Option (as defined below) and the issuance of the Top-Up Shares (as
+
+Field: Page; Sequence: 61; Value: 1
+
+56
+<!-- PAGE 62 -->
+Field: /Page
+
+defined below) on the terms contemplated by Section 1.04 of the Merger Agreement, (d) resolved to recommend acceptance of the Offer (i.e. to recommend that the shareholders of the Company tender their Shares to Purchaser pursuant to the Offer), and, if required, approval and adoption of the Merger by the Company’s shareholders and (e) to the extent permitted by applicable law, resolved to elect that any “moratorium,” “control share acquisition,” “business combination,” “fair price” or other form of anti-takeover laws or regulations of any jurisdiction that purports to be applicable to the Company, Parent, Purchaser, the Surviving Corporation, the Merger Agreement or the transactions contemplated thereby shall not be applicable to the Company, Parent, Purchaser, the Surviving Corporation, the Merger Agreement or the transactions contemplated thereby.
+
+The Merger Agreement requires that Parent and Purchaser shall, on the same date that the Offer is commenced, file with the Commissioner of Commerce of the State of Minnesota and deliver to the Company a registration statement relating to the Offer required to be filed pursuant to Chapter 80B of Minnesota Statutes and disseminate to the shareholders of the Company the information specified in Chapter 80B.03 of the Minnesota Statutes. Parent and Purchaser shall promptly provide copies to the Company of any and all correspondence between them and the Minnesota Department of Commerce with respect to compliance with Chapter 80B, and shall promptly respond as soon as possible to address any such comments or actions required by the Minnesota Department of Commerce to consummate the transactions contemplated by the Merger Agreement.
+
+**Company Board; Independent Directors**
+
+Effective upon the Offer Closing and at all times thereafter, Parent shall be entitled to elect, appoint and/or designate the number of directors, rounded up to the next whole number, on the Company Board that equals the product of (i) the total number of directors on the Company Board (giving effect to the election of any additional directors pursuant to Section 1.03 of the Merger Agreement) and (ii) the percentage that the number of Shares beneficially owned by Parent and/or Purchaser (including shares accepted for payment pursuant to the Offer) bears to the total number of Shares outstanding. The Company has agreed to cause Parent’s designees (if any) to be elected or appointed to the Company Board, including by increasing the number of directors, seeking and accepting resignations of incumbent directors and filling newly created directorships or vacancies on the Company Board with Parent’s designees. At such time, the Company shall also cause individuals designated by Parent to constitute the number of members, rounded up to the next whole number, on (A) each committee of the Company Board and (B) as requested by Parent, each board of directors of each subsidiary of the Company (and each committee thereof) that represents the same percentage as such individuals represent on the Company Board.
+
+The Company’s obligations to appoint Parent’s designees to the Company Board shall be subject to Section 14(f) of the Exchange Act and Rule 14f-1 promulgated thereunder. If applicable, the Company shall promptly take all actions necessary to effect the appointment of Parent’s designees, including mailing to its shareholders information with respect to the Company and its officers and directors, as Section 14(f) and Rule 14f-1 require, which, unless Parent otherwise elects, shall be mailed together with the Company’s Schedule 14D-9 filing. Parent has agreed to supply to the Company in writing and be solely responsible for any information with respect to itself and its nominees, officers, directors and affiliates required by Section 14(f) and Rule 14f-1.
+
+Field: Page; Sequence: 62; Value: 1
+
+57
+<!-- PAGE 63 -->
+Field: /Page
+
+Following the election or appointment of Parent’s designees to the Company Board, if applicable, and until the Effective Time of the Merger, the approval of a majority of the directors of the Company then in office who were not designated by Parent (the “Independent Directors”) will be required to authorize (i) any termination of the Merger Agreement by the Company, (ii) any amendment of the Merger Agreement requiring action by the Company Board, (iii) any extension of time for performance of any obligation or action under the Merger Agreement by Parent or Purchaser, and (iv) any waiver of compliance with any of the agreements or conditions contained in the Merger Agreement for the benefit of the Company.
+
+**The Top-Up Option**
+
+Under Section 1.04 of the Merger Agreement, the Company has granted to Purchaser an option (the “Top-Up Option”) to purchase at a price per share equal to the Per Share Amount that number of newly issued, fully paid and nonassessable Shares (the “Top-Up Shares”) equal to the lowest number of Shares that, when added to the number of Shares owned by Parent and its Subsidiaries (including Purchaser) at the time of exercise of the Top-Up Option, shall constitute one share more than ninety percent (90%) of the total number of Shares outstanding immediately after the issuance of the Top-Up Shares, calculated on a fully diluted basis. However, (i) the Top-Up Option shall not be exercisable for a number of Shares in excess of the Shares authorized and unissued of the Company at the time of exercise of the Top-Up Option, (ii) the exercise of the Top-Up Option and the issuance and delivery of the Top-Up Shares shall not be prohibited by any law or order and (iii) the Company has no obligation to issue shares under the Top-Up Option unless a majority of the then outstanding Shares have been tendered and not withdrawn from the Offer. The Top-Up Option will be exercisable only once, in whole but not in part, at any time following the Offer Closing and prior to the earlier to occur of (A) the Effective Time and (B) the termination of this Agreement in accordance with its terms.
+
+At the closing of the purchase of Top-Up Shares, the aggregate purchase price owed by Purchaser to the Company for the Top-Up Shares shall be paid to the Company by issuing to the Company a promissory note having a principal amount equal to the aggregate purchase price pursuant to the Top-Up Option (the “Promissory Note”). The Promissory Note (1) shall bear simple interest at a rate of five percent (5.0%) per annum, payable in arrears at maturity, (2) shall mature on the first anniversary of the date of execution of the Promissory Note, (3) shall be full recourse to Parent and Merger Sub, (4) may be prepaid, at any time, in whole or in part, without premium or penalty, and (5) shall have no other material terms.
+
+Any dilutive impact on the value of the Shares as a result of the issuance of the Top-Up Shares will not be taken into account in any determination of the fair value of any Dissenting Shares (as defined below) pursuant to Chapter 302A.471 of the MBCA.
+
+The Merger.
+
+The Merger Agreement provides that, subject to its terms and conditions and in accordance with the MBCA, Purchaser will merge with and into the Company at the Effective Time. As a result of the Merger, the separate corporate existence of Purchaser will cease and the Company will continue its corporate existence under the MBCA as the surviving corporation in the Merger (the “Surviving Corporation”).
+
+Field: Page; Sequence: 63; Value: 1
+
+58
+<!-- PAGE 64 -->
+Field: /Page
+
+The Merger Agreement provides that the Merger will be consummated on the date of, or as soon as practicable (but in no event later than the second Business Day) following, the Offer Closing (or the closing of the issuance of the Top-Up Shares pursuant to Section 1.04 if the Top-Up Option has been exercised), provided that all conditions to the Merger set forth in Article VII of the Merger Agreement have been satisfied or, to the extent permitted under the Merger Agreement, waived as of such time (other than those conditions that by their nature are to be satisfied at the Closing, but subject to the satisfaction or, to the extent permitted under the Merger Agreement, waiver of all such conditions).
+
+The Merger will become effective at such time as articles of merger have been duly filed with the Secretary of State of the State of Minnesota or at such later date or time as may be agreed by the Company and Parent in writing and specified in the articles of merger in accordance with the MBCA (the effective time of the Merger being hereinafter referred to as the “Effective Time”).
+
+The Merger shall have the effects set forth in the Merger Agreement and in the applicable provisions of the MBCA. Without limiting the generality of the foregoing, and subject thereto, from and after the Effective Time, all property, rights, privileges, immunities, powers, franchises, licenses and authority of the Company and Purchaser shall vest in the Surviving Corporation, and all debts, liabilities, obligations, restrictions and duties of each of the Company and Purchaser shall become the debts, liabilities, obligations, restrictions and duties of the Surviving Corporation.
+
+At the Effective Time, (a) the articles of incorporation of the Company shall be amended so as to read in its entirety as set forth in Exhibit B to the Merger Agreement, and, as so amended, shall be the articles of incorporation of the Surviving Corporation until thereafter amended in accordance with the terms thereof or as provided by applicable Law, and (b) the by-laws of Purchaser as in effect immediately prior to the Effective Time shall be the by-laws of the Surviving Corporation (except that the name of the Surviving Corporation shall be amended to “MGC Diagnostics Corporation”) until thereafter amended in accordance with the terms thereof, the articles of incorporation of the Surviving Corporation or as provided by applicable law.
+
+The directors and officers of Purchaser, in each case, immediately prior to the Effective Time shall, from and after the Effective Time, be the directors and officers, respectively, of the Surviving Corporation until their successors have been duly elected or appointed and qualified or until their earlier death, resignation or removal in accordance with the articles of incorporation and by-laws of the Surviving Corporation
+
+Merger Closing Conditions.
+
+The respective obligations of each of Parent, Purchaser and the Company to effect the Merger are subject to the satisfaction at or prior to the Effective Time of the following conditions:
+
+1. To the extent required by applicable law, the Merger Agreement will have been duly adopted by a majority of the issued and outstanding Shares authorized to vote. However, this condition need not be satisfied if the Merger may be consummated without a meeting or vote of the Company’s shareholders in accordance with Chapter 302A.621 of the MBCA;
+
+Field: Page; Sequence: 1; Options: NewSection; Value: 59
+
+59
+<!-- PAGE 65 -->
+Field: /Page
+
+2. No Governmental Entity of competent jurisdiction in the United States or Belgium shall have enacted, issued, promulgated, enforced or entered any laws or orders, whether temporary, preliminary or permanent, that make illegal, enjoin or otherwise prohibit consummation of the Merger or the other transactions contemplated by the Merger Agreement; and
+
+3. Purchaser shall have previously accepted for payment all Shares validly tendered and not validly withdrawn pursuant to the Offer.
+
+Merger Consideration; Conversion of Shares.
+
+At the Effective Time, each Share that is owned, immediately prior to the Effective Time, directly or indirectly, by (A) the Company or its wholly owned Subsidiaries, (B) Parent or Purchaser or (C) any wholly-owned Subsidiary of Parent or Purchaser will be cancelled and extinguished without any conversion or payment of any property or consideration and will cease to exist (the “Cancelled Shares”).
+
+At the Effective Time, each Share that is outstanding immediately prior to the Effective Time (other than (A) Shares that are irrevocably accepted for purchase pursuant to the Offer, (B) Cancelled Shares and (C) Dissenting Shares), will be automatically converted into the right to receive an amount, net in cash, without interest, equal to the Per Share Amount. At the Effective Time, all Shares will no longer be outstanding and all Shares will be cancelled and retired and will cease to exist, and, subject to Section 3.03 of the Merger Agreement, each holder of a certificate or book entry shares formerly representing any such Shares will cease to have any rights with respect thereto, except the right to receive the Per Share Amount in accordance with the preceding sentence or, if applicable, such rights as are granted by Chapters 302A.471 and 302.473 of the MBCA with respect to Dissenting Shares, subject to the terms and conditions of Section 3.03 of the Merger Agreement.
+
+At the Effective Time, each share of common stock of Purchaser issued and outstanding immediately prior to the Effective Time shall be converted into and become one newly issued, fully paid and non-assessable share of common stock of the Surviving Corporation.
+
+**Dissenting Shares**
+
+Notwithstanding any provision of the Merger Agreement to the contrary, any Shares issued and outstanding immediately prior to the Effective Time that have properly exercised appraisal rights in accordance with Chapters 302A.471 and 302.473 of the MBCA (such Shares being referred to collectively as “Dissenting Shares” until such time as such holder fails to perfect or otherwise loses such holder’s appraisal rights under the MBCA with respect to such Shares) shall not be converted into a right to receive the Merger Consideration, but instead shall be entitled to only such rights as are granted by Chapters 302A.471 and 302.473 of the MBCA.
+
+However; if, after the Effective Time, such holder fails to perfect, validly withdraws or otherwise loses such holder’s right to appraisal pursuant to Chapters 302A.471 and 302.473 of the MBCA or if a court of competent jurisdiction shall determine that such holder is not entitled to the relief provided by Chapters 302A.471 and 302.473 of the MBCA, such Shares shall immediately cease to be considered Dissenting Shares, but instead shall be treated as if they had been converted
+
+Field: Page; Sequence: 2; Value: 59
+
+60
+<!-- PAGE 66 -->
+Field: /Page
+
+as of the Effective Time into the right to receive the Merger Consideration, without interest thereon, upon surrender of such Certificate formerly representing such share or transfer of such Book-Entry Share, as the case may be.
+
+The Company shall provide Parent prompt written notice of any demands, notices or instruments received by the Company for appraisal of shares of Company Common Stock, any withdrawal of any such demand and any other demand, notice or instrument delivered to the Company prior to the Effective Time pursuant to the MBCA that relates to such demand, and shall promptly confirm (from time to time at the request of Parent) the number of shares of Company Common Stock with respect to which such demands, notices or instruments have been delivered to the Company and not validly withdrawn (both on an absolute basis and as a percentage of the total number of outstanding shares of Company Common Stock).
+
+Parent shall have the opportunity and right to direct all negotiations and proceedings with respect to such demands, notices and instruments. Except with the prior written consent of Parent, the Company shall not voluntarily make any payment with respect to, or settle or offer to settle, any such demands, notices or instruments, or waive any failure to timely deliver a written demand for appraisal, or agree to do or commit to do any of the foregoing. If any demand for appraisal is made of Dissenting Shares and the Top-Up Option was exercised prior to the Effective Time, then for purposes of determining the appraised value of any Dissenting Shares, the value of the Promissory Note shall be treated as if it had not been paid to or received by the Company and the Top-Up Shares issued shall be treated as if they were not issued or outstanding.
+
+Company Options.
+
+The Merger Agreement provides that, unless otherwise mutually agreed by the Parties or Parent and the applicable award holders, each Option that is unexpired, unexercised and outstanding as of the Effective Time, whether vested or unvested, will be automatically vested, cancelled at the Effective Time and converted into the right to receive an amount in cash equal to the Option Consideration, with each former holder of any such canceled Option becoming entitled to receive payment of the Option Consideration, if any, made to the holder of such Option through the payroll system of the Company as soon as reasonably practicable following the closing date (and in no event later than the earlier of the second payroll date of the Company following the closing date and the fifteenth (15th) business day after the closing date). If the exercise price per share of any Option, whether vested or unvested, is equal to or greater than the Per Share Amount, such Option will be cancelled and terminated without any cash payment being made in respect thereof.
+
+Company Restricted Stock Awards.
+
+Pursuant to the Merger Agreement, all restricted stock awards that are outstanding and unexpired immediately prior to the Effective Time (including any restricted stock awards that vest in accordance with their terms at the Effective Time) will be cancelled and automatically converted into the right to receive the Per Share Amount at the Effective Time. Such payments will be made through the payroll system of the Company as soon as reasonably practicable following the closing date (and in no event later than the earlier of the second payroll date of the Company following the closing date and the fifteenth (15th) business day after the closing date).
+
+Field: Page; Sequence: 3; Value: 59
+
+61
+<!-- PAGE 67 -->
+Field: /Page
+
+Payment for Shares.
+
+The Merger Agreement provides that on or prior to the date Closing Date, Parent will select a reputable bank or trust company to act as paying agent in the Merger (the “Paying Agent”). Promptly following the Effective Time, Parent will deposit with the Paying Agent cash sufficient to make all payments to holders of Shares in connection with the Merger. The Merger Agreement provides that the Paying Agent will mail to the record holders of Certificates or book-entry shares promptly after the Effective Time a letter of transmittal and instructions for use in effecting the surrender of Certificates or transfer of book-entry shares in exchange for the Merger Consideration.
+
+The Paying Agent will pay the Merger Consideration to the shareholders upon timely receipt of (i) surrendered Certificates or transfer of book-entry shares and (ii) a validly executed letter of transmittal or receipt of an “agent’s message” by the Paying Agent in the case of book-entry shares. Each of the Paying Agent, Purchaser, Parent and the Surviving Corporation are entitled to deduct and withhold from any consideration payable or otherwise deliverable in connection with the Merger Agreement any applicable withholding taxes or other deductions required by applicable law.
+
+At any time six months after the Closing Date, Parent may demand that any portion of the funds made available to the Paying Agent that remains undistributed to holders of Certificates or book-entry shares be delivered to Parent, and thereafter, any shareholders who have not yet surrendered their Certificates or book-entry shares shall thereafter look only to Parent for satisfaction of their claims for the Merger Consideration.
+
+Representations and Warranties.
+
+The Merger Agreement contains representations and warranties of the Company, Parent and Purchaser.
+
+In the Merger Agreement, the Company has made customary representations and warranties (qualified in certain instances by reference to the Company’s disclosure letter to the Merger Agreement) to Parent and Purchaser with respect to, among other things:
+
+· the corporate organization, good standing, charter documents and qualification of the Company and its subsidiaries;
+
+· the Company’s and its subsidiaries’ capital structure;
+
+· the Company’s corporate power and authority to enter into the Merger Agreement;
+
+· the due execution and delivery by the Company of the Merger Agreement and the enforceability of the Merger Agreement against the Company;
+
+· the absence of required consent, order, license or registration with any governmental authority;
+
+Field: Page; Sequence: 4; Value: 59
+
+62
+<!-- PAGE 68 -->
+Field: /Page
+
+· the absence of conflicts with the organizational documents of the Company, or applicable law;
+
+· compliance with laws and governmental authorizations by the Company and its subsidiaries;
+
+· the Company’s filings with the SEC;
+
+· the Company’s financial statements, internal controls and Sarbanes-Oxley Act compliance;
+
+· the absence of certain changes or events involving the Company and/or its subsidiaries since July 31, 2017;
+
+· tax matters;
+
+· intellectual property matters;
+
+· compliance with laws and required permits;
+
+· the absence of legal proceedings involving the Company and its subsidiaries;
+
+· brokers’ and finders’ fees;
+
+· related party transactions;
+
+· employment and employee benefits matters;
+
+· real estate and personal property matters;
+
+· environmental matters;
+
+· material contracts;
+
+· the accuracy of the information supplied by the Company for inclusion in certain SEC filings relating to the Offer;
+
+· the fairness opinion delivered to the Company by Craig-Hallum as financial advisor to the Company;
+
+· the Company’s top customers and top suppliers;
+
+· product warranties and liabilities;
+
+· customs and export controls;
+
+· accounts receivable;
+
+· inventory;
+
+Field: Page; Sequence: 5; Value: 59
+
+63
+<!-- PAGE 69 -->
+Field: /Page
+
+· anti-corruption compliance matters;
+
+· certain regulatory compliance matters relating to medical devices, products and services; and
+
+· insurance coverage.
+
+In the Merger Agreement, Parent and Purchaser have made customary representations and warranties to the Company with respect to, among other things:
+
+· the corporate organization and valid existence of Parent and Purchaser;
+
+· Parent’s and Purchaser’s corporate power and authority to enter into the Merger Agreement;
+
+· the absence of conflicts with the organizational documents of Parent or Purchaser, or applicable law;
+
+· the due execution and delivery by Parent and Purchaser of the Merger Agreement and the enforceability of the Merger Agreement against Parent and Purchaser;
+
+· the absence of required consent, order, license or registration with any governmental authority;
+
+· the absence of legal proceedings involving Parent or its affiliates;
+
+· the financing commitments and limited guarantee obtained by Parent for the transactions contemplated by the Merger Agreement;
+
+· the capitalization of Purchaser;
+
+· the accuracy of the information relating to Parent or its Subsidiaries for inclusion in certain SEC filings relating to the Offer; and
+
+· the absence of finders’ or brokers’ fees.
+
+None of the representations and warranties contained in the Merger Agreement will survive the consummation of the Merger. However, this will not limit Parent’s or Purchaser’s rights or remedies under the representation and warranty insurance policy obtained by them in connection with the execution of the Merger Agreement.
+
+Some of the representations and warranties in the Merger Agreement made by the Company are qualified as to “materiality” or “Company Material Adverse Effect.” For purposes of the Merger Agreement, “Company Material Adverse Effect” means any event, occurrence, fact, condition or change that is, or would reasonably be expected to become, individually or in the aggregate, materially adverse to (i) the business, results of operations, prospects, condition (financial or otherwise), liabilities or assets of the Company and its Subsidiaries, taken as a whole, or (ii) the ability of the Company to consummate the transactions contemplated hereby on a timely
+
+Field: Page; Sequence: 6; Value: 59
+
+64
+<!-- PAGE 70 -->
+Field: /Page
+
+basis. However, for the purposes of clause (i), a Company Material Adverse Effect shall not be deemed to include events, occurrences, facts, conditions or changes arising out of, relating to or resulting from:
+
+(a) changes generally affecting the economy, financial or securities markets;
+
+(b) the announcement of the transactions contemplated by the Merger Agreement;
+
+(c) any outbreak or escalation of war or any act of terrorism; or
+
+(d) general conditions in the industry in which the Company and its Subsidiaries operate;
+
+provided that with respect to clauses (a), (c) and (d), only to the extent that any such event, occurrence, fact, condition or change does not adversely affect the Company and its Subsidiaries, taken as a whole, in a materially disproportionate manner relative to other similarly situated participants in the industry in which the Company and its Subsidiaries operate:
+
+Conduct of the Business of the Company.
+
+The Merger Agreement provides that from the date of the signing of the Merger Agreement until the Effective Time, the Company will, and will cause each of its subsidiaries to, conduct its business in the ordinary course of business consistent with past practice, and, to the extent consistent therewith, use its reasonable best efforts to preserve substantially intact its and its subsidiaries’ business organization and material assets, properties and technologies, to keep available the services of its and its subsidiaries’ current officers and employees, to preserve its and its subsidiaries’ present relationships with customers, suppliers, distributors, licensors, licensees and other Persons having business relationships with it.
+
+Without limiting the generality of the preceding paragraph, from the date of the signing of the Merger Agreement until the Effective Time, except as otherwise expressly contemplated by the Merger Agreement, as disclosed by the Company and approved by Parent or as required by applicable law, the Company shall not, nor shall it permit any of its Subsidiaries to, without the prior written consent of Parent:
+
+§ amend, or propose or permit to amend, its articles of incorporation or by-laws (or other comparable organizational documents);
+
+§ (i) split, combine or reclassify any Company securities or Company subsidiary securities, (ii) repurchase, redeem or otherwise acquire, or offer to repurchase, redeem or otherwise acquire, any Company securities or Company subsidiary securities, (iii) declare, establish a record date for, set aside, accrue or pay any dividend or distribution (whether in cash, stock, property or otherwise) in respect of, or enter into any contract with respect to the voting of, any shares of its capital stock (other than dividends from its direct or indirect wholly-owned subsidiary payable entirely to the Company or another direct or indirect wholly-owned subsidiary of the Company, but only to the extent consistent with past practice);
+
+Field: Page; Sequence: 7; Value: 59
+
+65
+<!-- PAGE 71 -->
+Field: /Page
+
+§ issue, sell, grant, deliver, pledge, dispose of or encumber any Company securities or Company subsidiary securities (or authorize any of the foregoing), other than (i) the issuance of Shares upon the exercise of any Company equity award listed in the Company disclosure letter and outstanding as of the date of the Merger Agreement in accordance with its terms, or (ii) the issuance of Shares in respect of other equity compensation awards described in the Company disclosure letter and outstanding under Company stock plans as of the date of the Merger Agreement in accordance with their terms;
+
+§ except to the extent required by applicable law or by any Company employee benefit plan or contract in effect as of the date of the Merger Agreement and, to the extent required by the Merger Agreement, disclosed in the Company Disclosure Letter, (i) increase the compensation payable or that could become payable by the Company or any of its subsidiaries to directors, officers, employees or independent contractors, other than increases in base cash compensation for non-executive officer employees made in the ordinary course of business consistent with past practice and, except in the case of increases in compensation related to the promotion of existing non-executive officer employees, not exceeding five percent (5%) in any individual case, (ii) enter into any new or amend in any material respect, any existing employment, severance, retention or change in control agreement with any of its past or present directors, officers, employees or independent contractors, (iii) promote any officers or employees, except in connection with the Company’s annual or quarterly compensation review cycle or as the result of the termination or resignation of any officer or employee, (iv) establish, adopt, enter into, amend, terminate, or take any action to accelerate rights under any Company employee benefit plan or any plan, agreement, program, policy, trust, fund or other arrangement that would be a Company employee benefit plan if it were in existence as of the date of the Merger Agreement, or make any contribution to any Company employee benefit plan, other than contributions required by law, the terms of such employee benefit plans as in effect on the date of the Merger Agreement or that are made in the ordinary course of business consistent with past practice, or (v) terminate the employment of any executive officer or any employee with 2017 base salary in excess of $100,000, in each case, other than for “cause”;
+
+§ acquire, by merger, consolidation, acquisition of stock or assets, or otherwise, any business, person, entity or division thereof or make any loans, advances or capital contributions to or investments in any person or entity;
+
+§ (i) transfer, license, sell, lease or otherwise dispose of any assets (whether by way of merger, consolidation, sale of stock or assets, or otherwise), including the capital stock or other equity interests in any subsidiary of the Company, provided that the foregoing shall not prohibit the Company and its subsidiaries from transferring, licensing, selling, leasing or disposing of obsolete equipment or assets being replaced, in each case in the ordinary course of business consistent with past practice, or (ii) adopt or effect a plan of complete or partial liquidation, dissolution, restructuring, recapitalization or other reorganization;
+
+Field: Page; Sequence: 8; Value: 59
+
+66
+<!-- PAGE 72 -->
+Field: /Page
+
+§ repurchase, prepay or incur any indebtedness for borrowed money or guarantee any such indebtedness of another person or entity, issue or sell any debt securities or options, warrants, calls or other rights to acquire any debt securities of the Company or any of its subsidiaries, guarantee any debt securities of another person or entity, enter into any “keep well” or other contract to maintain any financial statement condition of any other person or entity (other than any wholly-owned subsidiary of it) or enter into any arrangement having the economic effect of any of the foregoing, other than in connection with the financing of ordinary course trade payables consistent with past practice;
+
+§ enter into, renew or extend, or amend or modify in any material respect, waive or compromise any rights under, terminate or consent to the termination of (other than at its stated expiration date), any material contract or any lease with respect to real estate;
+
+§ institute, settle or compromise any legal actions pending or threatened before any arbitrator, court or other governmental entity involving the payment of monetary damages by the Company or any of its subsidiaries of any amount exceeding $50,000, individually, or $100,000 in the aggregate, other than (i) any legal action brought against Parent or Purchase arising out of a breach or alleged breach of the Merger Agreement by Parent or Purchaser, and (ii) the settlement of claims, liabilities or obligations reserved against on the most recent balance sheet of the Company included in its recent SEC filings; provided that neither the Company nor any of its subsidiaries shall settle or agree to settle any legal action which settlement involves a conduct remedy or injunctive or similar relief or has a restrictive impact on the Company’s business;
+
+§ make any material change in any method of financial accounting principles or practices, in each case except for any such change to the extent required by a change in GAAP or applicable law;
+
+§ (i) settle or compromise any material tax claim, audit or assessment, or surrender a right to a material tax refund, (ii) make or change any material tax election, change any annual tax accounting period, adopt or change any method of tax accounting, (iii) amend any material tax returns or file claims for material tax refunds, (iv) enter into any material closing agreement, surrender in writing any right to claim a material tax refund, offset or other reduction in tax liability or consent to any extension or waiver of the limitation period applicable to any material tax claim or assessment relating to the Company or its subsidiaries, or (v) waive or extend the statute of limitations with respect to any material tax other than (A) pursuant to extensions of time to file a tax return obtained in the ordinary course of business or (B) pursuant to an extension granted in the ordinary course of business in connection with an audit of federal, state or local taxes to prevent the assessment or collection of a tax;
+
+§ form any new subsidiary, acquire any equity interest or other interest in any other person or entity or enter into any material agreement, agreement in principle, letter of intent, memorandum of understanding or similar contract with respect to any joint venture, strategic partnership or alliance;
+
+Field: Page; Sequence: 9; Value: 59
+
+67
+<!-- PAGE 73 -->
+Field: /Page
+
+§ except in connection with actions permitted by Section 6.04 of the Merger Agreement, take any action to exempt any person or entity from, or make any acquisition of securities of the Company by any person or entity not subject to, any state takeover statute or similar statute or regulation that applies to the Company with respect to a Takeover Proposal (as defined below) or otherwise, including the restrictions on “control share acquisitions,” “business combinations” and “takeover offers” set forth in Chapter 302A.671, Chapter 302A.673 and Chapter 302A.675 of the MBCA, except for Parent, Purchaser or any of their respective subsidiaries or affiliates, or the transactions contemplated by the Merger Agreement;
+
+§ abandon, permit to lapse, encumber, pledge, convey title (in whole or in part), license or grant any right or other licenses to Company intellectual property, other than in the ordinary course of business consistent with past practice;
+
+§ knowingly disclose any material trade secret(s) or other material confidential information of the Company or any of its subsidiaries, other than pursuant to agreements entered into in the ordinary course of business consistent with past practice that contain confidentiality undertakings with respect to such trade secret(s) and/or confidential information;
+
+§ make or authorize any capital expenditure, except that the Company and its subsidiaries may make any capital expenditure that: (i) is provided for in the Company’s capital expense budget delivered or made available to Parent prior to the date of the Merger Agreement, which expenditures shall be in accordance with the categories set forth in such budget, (ii) when added to all other capital expenditures made on behalf of the Company and its subsidiaries, collectively, since the date hereof (but not provided for in the capital expense budget referred to above) does not exceed $25,000, individually, and $100,000, in the aggregate, during any fiscal quarter or (iii) is made pursuant to a direct, explicit obligation to serve a customer or distributor pursuant to a contract entered into in the ordinary course of business;
+
+§ enter into any collective bargaining agreement or agreement to form a work council or other agreement with any labor organization or works council (except to the extent required by applicable law);
+
+§ implement or announce any plant closings or material layoffs;
+
+§ engage in any transaction with, or enter into any agreement, arrangement or understanding with, any affiliate of the Company or other person or entity covered by Item 404 of Regulation S-K promulgated by the SEC that would be required to be disclosed pursuant to Item 404 of Regulation S-K;
+
+§ enter into any new line of business outside of its existing lines of business and reasonable extensions thereof; or
+
+§ authorize, agree to or commit to do any of the foregoing.
+
+Field: Page; Sequence: 10; Value: 59
+
+68
+<!-- PAGE 74 -->
+Field: /Page
+
+No Solicitation.
+
+For purposes of this “No Solicitation” summary section, the following terms have the meanings set forth below:
+
+§ “Takeover Proposal” means a proposal or offer from, or indication of interest in making a proposal or offer by, any person or entity (other than Parent and its subsidiaries, including Purchaser) relating to any (a) direct or indirect acquisition of assets of the Company or its subsidiaries (including any voting equity interests of subsidiaries, but excluding sales of assets in the ordinary course of business) equal to twenty percent (20%) or more of the fair market value of the consolidated assets of the Company and its subsidiaries or to which twenty percent (20%) or more of the net revenues or net income of the Company and its subsidiaries, on a consolidated basis, are attributable, (b) direct or indirect acquisition of twenty percent (20%) or more of the voting equity interests of the Company, (c) tender offer or exchange offer that if consummated would result in any Person beneficially owning (within the meaning of Section 13(d) of the Exchange Act) twenty percent (20%) or more of the voting equity interests of the Company, or (d) merger, consolidation, other business combination or similar transaction involving the Company or any of its subsidiaries, pursuant to which such Person would own twenty percent (20%) or more of the consolidated assets, net revenues or net income of the Company and its subsidiaries, taken as a whole; and
+
+§ “Superior Proposal” means a bona fide written Takeover Proposal (as defined above, but with all of the percentages included in the definition of Takeover Proposal increased from twenty percent (20%) to fifty percent (50%)) involving the direct or indirect acquisition pursuant to a tender offer, exchange offer, merger, consolidation or other business combination or transaction, alone or in combination, of all or substantially all of the Company’s consolidated assets or a majority of the outstanding Shares, that the Company Board determines in good faith (after consultation with outside legal counsel and Craig-Hallum) is more favorable from a financial point of view to the holders of Shares than the transactions contemplated by the Merger Agreement, taking into account (a) all financial considerations, (b) the anticipated timing, conditions (including any financing condition or the reliability of any debt or equity funding commitments) and prospects for completion of such Takeover Proposal, and (c) any revisions to the terms of the Merger Agreement and/or Parent’s financing commitments proposed by Parent during the notice period set forth in Section 6.04(d) of the Merger Agreement.
+
+The Company has agreed not to, and to cause its subsidiaries not to, and to not authorize or permit its and its subsidiaries’ respective directors, officers, employees, advisors and investment bankers (“Representatives”) to, directly or indirectly, solicit, initiate, respond to, continue or knowingly take any action to facilitate or encourage the submission of any Takeover Proposal or the making of any proposal that could reasonably be expected to lead to any Takeover Proposal, or, subject to Section 6.04(b) of the Merger Agreement (summarized below), (i) conduct or engage in any communications, discussions or negotiations with, disclose any non-public information relating to the Company or any of its subsidiaries to, afford access to the business, properties, assets, books or records of the Company or any of its subsidiaries to, or knowingly assist, participate in, facilitate or encourage any effort by, any third party that is seeking to make, or has
+
+Field: Page; Sequence: 11; Value: 59
+
+69
+<!-- PAGE 75 -->
+Field: /Page
+
+made, any Takeover Proposal, (ii) (A) amend or grant any waiver or release under any standstill or similar agreement with respect to any class of equity securities of the Company or any of its subsidiaries or (B) approve any transaction under, or any third party becoming an “interested shareholder” under, Chapter 302A.673 of the MBCA, or (iii) enter into any agreement in principle, letter of intent, term sheet, acquisition agreement, merger agreement, option agreement, joint venture agreement, partnership agreement or other contract contemplating, providing for or otherwise relating to any Takeover Proposal (each of the foregoing is referred to herein as a “Company Acquisition Agreement”).
+
+Subject to Section 6.04(b) of the Merger Agreement (summarized below), neither the Company Board nor any committee thereof shall (1) fail to make, withdraw, withhold, amend, modify or qualify, in a manner adverse to Parent or Purchaser, the Company Board Recommendation, including by failing to include the Company Board Recommendation (as defined in the Merger Agreement) in the Company’s Schedule 14D-9 or failing to permit Parent and Purchaser to include the Company Board Recommendation in its tender offer documents, (2) fail to publicly reaffirm the Company Board Recommendation within ten Business Days after Parent so requests in writing, (3) approve, adopt, endorse, declare advisable or recommend a Takeover Proposal (or fail to recommend against any Takeover Proposal subject to Regulation 14D under the Exchange Act in a Solicitation/Recommendation Statement on Schedule 14D-9 within ten Business Days after the commencement of such Takeover Proposal), (4) take any action to exempt any Person (other than Parent and its affiliates) from any applicable “control share acquisition,” “fair price,” “business combination,” “moratorium” or other applicable anti-takeover law, (5) make any public statement inconsistent with the Company Board Recommendation or (6) publicly propose or publicly communicate any intention to do any of the foregoing (any of the foregoing is referred to herein as a “Company Adverse Recommendation Change”).
+
+The Company also agreed to, and to cause its subsidiaries to, cease and cause to be terminated, and not authorize or knowingly permit any of its or their Representatives to continue, any and all existing activities, discussions or negotiations, if any, with any third party conducted prior to the date of the Merger Agreement with respect to any Takeover Proposal (or any communications, negotiations or discussions that could reasonably be expected to lead to any Takeover Proposal) and to use its reasonable best efforts to cause any such third party (or its agents or advisors) in possession of non-public information in respect of the Company or any of its subsidiaries that was furnished by or on behalf of the Company and its subsidiaries to return or destroy all such information.
+
+Notwithstanding Section 6.04(a) of the Merger Agreement (summarized above), pursuant to Section 6.04(b) of the Merger Agreement (summarized here), prior to the Acceptance Time the Company Board may, subject to Section 6.04(c) of the Merger Agreement, (i) participate in negotiations or discussions with any third party that has made (and not withdrawn) a bona fide, unsolicited written Takeover Proposal, not resulting from or attributable to any breach of Section 6.04 of the Merger Agreement, that the Company Board believes in good faith, after consultation with outside legal counsel and Craig-Hallum, constitutes or would reasonably be expected to result in a Superior Proposal, (ii) thereafter furnish to such third party non-public information relating to the Company or any of its subsidiaries pursuant to an executed confidentiality agreement that constitutes an Acceptable Confidentiality Agreement (defined below, and a copy of which confidentiality agreement shall be promptly (in all events within twenty-four (24) hours) provided
+
+Field: Page; Sequence: 12; Value: 59
+
+70
+<!-- PAGE 76 -->
+Field: /Page
+
+for informational purposes only to Parent), and/or (iii) take any action that any court of competent jurisdiction orders the Company to take (which order remains unstayed), but in each case referred to in the foregoing clauses (i) through (iii), only if the Company Board determines in good faith, after consultation with outside legal counsel, that the failure to take such action would reasonably be expected to cause the Company Board to be in breach of its fiduciary duties to the Company’s shareholders under applicable law. Nothing contained in the Merger Agreement, however, will prevent the Company Board from disclosing to the Company’s shareholders a position contemplated by Rule 14d-9 and Rule 14e-2(a) promulgated under the Exchange Act with regard to a Takeover Proposal, if the Company determines, after consultation with outside legal counsel, that failure to disclose such position would constitute a violation of applicable Law; provided that (x) no Company Adverse Recommendation Change may be made unless the Company has first complied with its obligations under Section 6.04 of the Merger Agreement and (y) making such disclosure will not in any way limit or modify the effect, if any, that any such disclosure has under this Section 6.04 or under Article VIII of the Merger Agreement.
+
+§ “Acceptable Confidentiality Agreement” means a confidentiality and standstill agreement that contains confidentiality and standstill provisions that are no less favorable to the Company than those contained in the Confidentiality Agreement (as defined above).
+
+The Company must notify Parent promptly (but in no event later than twenty-four (24) hours) after it obtains knowledge of the receipt by the Company (or any of its Representatives) of any Takeover Proposal or any indication, request or other communication that could reasonably be expected to lead to any Takeover Proposal (or of any material modification, supplement or amendment to any of the foregoing). In such notice, the Company must identify the third party making, and details of the material terms and conditions of, any such Takeover Proposal, indication or request. The Company must keep Parent fully informed of the status and material terms of any such Takeover Proposal, indication, request or other communication, including any material amendments or proposed amendments as to price and other material terms thereof. The Company must provide Parent with at least seventy-two (72) hours prior notice of any meeting of the Company Board at which the Company Board is reasonably expected to consider any Takeover Proposal. The Company must promptly provide Parent with a list and copies of any non-public information concerning the Company’s business, present or future performance, financial condition or results of operations, provided to any third party to the extent such information has not been previously provided to Parent. The Company may not enter into any confidentiality agreement or other contract with any Person that prohibits the Company from providing such information to Parent or otherwise prohibits the Company from complying with its obligations under Section 6.04 of the Merger Agreement.
+
+Except as set forth below, the Company Board has agreed not to make any Company Adverse Recommendation Change or enter into (or permit any subsidiary to enter into) a Company Acquisition Agreement. Notwithstanding the foregoing, at any time prior to the Acceptance Time, the Company Board may make a Company Adverse Recommendation Change or enter into (or permit any subsidiary to enter into) a Company Acquisition Agreement, if: (i) the Company promptly notifies Parent, in writing, at least three (3) Business Days (the “Notice Period”) before making a Company Adverse Recommendation Change or entering into (or causing a subsidiary to enter into) a Company Acquisition Agreement, of its intention to take such action with respect to
+
+Field: Page; Sequence: 13; Value: 59
+
+71
+<!-- PAGE 77 -->
+Field: /Page
+
+a Superior Proposal, which notice shall state expressly that the Company has received a Takeover Proposal that the Company Board intends to declare a Superior Proposal and that the Company Board intends to make a Company Adverse Recommendation Change and/or the Company intends to enter into a Company Acquisition Agreement; (ii) the Company attaches to such notice the most current version of the proposed agreement (which version shall be updated on a prompt basis) and the identity of the third party making such Superior Proposal; (iii) the Company Board determines in good faith, after consulting with outside legal counsel and Craig-Hallum, that (A) such Takeover Proposal constitutes a Superior Proposal after taking into account any adjustments made by Parent during the Notice Period in the terms and conditions of the Merger Agreement and/or Parent’s financing commitments, and (B) the failure to take such action would reasonably be expected to cause the Company Board to be in breach of its fiduciary duties to the Company’s shareholders under applicable law and (iv) in the event of any termination of the Merger Agreement in order to cause or permit the Company or any of its subsidiaries to enter into a Company Acquisition Agreement with respect to such Takeover Proposal, the Company must have validly terminated this Agreement in accordance with Section 8.04(a) of the Merger Agreement and must have paid the Termination Fee in the amount of $1,320,000 to Parent in accordance with the applicable provisions of Section 8.06 of the Merger Agreement.
+
+During the Notice Period, the Company has agreed to permit Parent to make proposals to the Company Board regarding adjustments in the terms and conditions of this Agreement and/or its financing commitments, and negotiate in good faith with Parent with respect thereto, so that the applicable Takeover Proposal ceases to constitute a Superior Proposal if Parent, in its discretion, proposes to make such adjustments (it being understood and agreed by the Company and Parent that there may be multiple extensions of the Notice Period).
+
+Parent Financing.
+
+Parent and Purchaser have agreed to use reasonable best efforts to obtain the Debt Financing on the terms and subject only to the conditions described in the Debt Commitment Letters, including using their reasonable best efforts to:
+
+(i) maintain in effect the Debt Commitment Letters in accordance with the terms and subject to the conditions thereof;
+
+(ii) substantially comply with its obligations under the Debt Commitment Letters;
+
+(iii) in good faith negotiate, execute and deliver definitive agreements with respect to the Debt Financing contemplated by the Debt Commitment Letters on the terms and conditions contemplated by the Debt Commitment Letters or as such terms may otherwise be agreed;
+
+(iv) satisfy on a timely basis all conditions to the Debt Financing that are applicable to, and within the control of, Parent, Purchaser and their respective subsidiaries in the Debt Commitment Letters and the definitive agreements with respect to the Debt Financing contemplated by the Debt Commitment Letters; and
+
+(v) consummate the Debt Financing at or prior to the Offer Closing.
+
+Field: Page; Sequence: 14; Value: 59
+
+72
+<!-- PAGE 78 -->
+Field: /Page
+
+If any portion of the Debt Financing becomes unavailable on the terms and conditions set forth in the Debt Commitment Letters (other than due to the failure of a condition to the consummation of the Debt Financing resulting from a breach of any representation, warranty, covenant or agreement of the Company set forth in the Merger Agreement, which (if curable) has not been cured by the earlier of (x) three business days prior to the Offer Closing Date and (y) twenty (20) days after the Company’s receipt of written notice thereof) and such portion is required to fund the payments required to be made by the Parent or Purchaser under the Merger Agreement, each of Parent and Purchaser shall use its respective reasonable best efforts to, as promptly as practicable following the occurrence of such event: (A) obtain alternative debt financing (the “Alternate Debt Financing”) from alternative sources on terms and conditions not materially less favorable in the aggregate to Parent and Purchaser than those set forth in the Debt Commitment Letters and in an amount sufficient, when added to the portion of the Financing that is still available and available cash on hand and the Equity Financing, to consummate the transactions contemplated by the Merger Agreement and (B) obtain one or more new financing commitment letters with respect to such Alternate Debt Financing (the “New Debt Commitment Letter”), which New Debt Commitment Letter will replace the applicable existing Debt Commitment Letter in whole or in part; provided, however, that nothing herein shall be construed as to require Parent or Merger Sub to accept Alternate Debt Financing (including any commitments therefor) that (1) are less favorable than those in the applicable existing Debt Commitment Letter, (2) require the payment of fees in excess of those contemplated in the applicable existing Debt Commitment Letter, or (3) could reasonably be expected to prevent or materially delay the Offer, the Merger and the other transactions contemplated by the Merger Agreement.
+
+Financing Cooperation.
+
+Prior to the Closing, the Company has agreed to use reasonable best efforts to provide Parent and Purchaser with all cooperation reasonably requested by them to assist them in the arrangement and consummation of the Debt Financing. Such assistance may include:
+
+§ preparing and furnishing to Parent and any financing sources and other financial institutions and investors that are or may become parties to the Debt Financing (the “Financing Sources”) as promptly as practicable all available pertinent financial information (including financial estimates, budgets, forecasts and other forward-looking information) and disclosures relating to the Company and its subsidiaries as may be reasonably requested by Parent or Purchaser;
+
+§ designating appropriate members of senior management of the Company to participate in a reasonable number of lender presentations (including a customary bank meeting with the Financing Sources acting as lead arrangers or agents for, and material prospective Financing Sources for, the Debt Financing), and due diligence sessions;
+
+§ participation by senior management of the Company in the negotiation of, and assisting Parent in connection with the preparation of, and executing and delivering, definitive financing documents, including any pledge and security documents, guarantee and collateral documents and other schedules, exhibits, collateral materials, certificates and documents as may be reasonably requested by Parent,
+
+Field: Page; Sequence: 15; Value: 59
+
+73
+<!-- PAGE 79 -->
+Field: /Page
+
+Purchaser or the Financing Sources, and otherwise reasonably facilitating the pledging of collateral and the granting of security interests in respect of the Debt Financing, it being understood that such documents will not take effect until the Acceptance Time;
+
+§ furnishing Parent and the Financing Sources, as promptly as practicable (but in any event, with respect to financial statements required to be filed with the Company’s Form 10-Q or Form 10-K, as applicable, by no later than the filing deadline required therefor under the Exchange Act), with the audited and unaudited financial information required to be delivered pursuant to the Debt Commitment Letters (the “Required Financial Information”) (provided, that the timely filing by the Company of the required financial statements on Form 10-K and Form 10-Q in accordance with the applicable rules and requirements of the SEC shall satisfy the requirements of this definition) and all other financial information (including executive level financial analyses for the Company and its subsidiaries, on a consolidated basis, with respect to each calendar month ended during the period between the date of this Agreement and the Closing Date), business and other financial data, audit reports and other information regarding the Company and its Subsidiaries of the type and for the time periods that are reasonably requested by Parent, Merger Sub or the Lenders;
+
+§ delivering notices of prepayment within the time periods required by the relevant agreements governing indebtedness and obtaining customary payoff letters, lien terminations and instruments of discharge with respect to the indebtedness required by the Debt Commitment Letters to be terminated, in each case, reasonably satisfactory to Parent, and giving any other necessary notices and otherwise cooperating in the prepayment in full and termination in full of any such indebtedness and the termination in full of all guaranties and security interests in connection therewith;
+
+§ reasonably facilitate the granting of security interests (and perfection thereof) in collateral in connection with the Debt Financing (including the delivery of stock certificates), and the preparation, execution and delivery of guarantees, mortgages, other definitive financing documents or other certificates or documents as may be reasonably requested by Parent or Purchaser, provided that all of the foregoing are not effective until the Acceptance Time;
+
+§ reasonably cooperate in satisfying the conditions precedent set forth in the Debt Financing Letters or any definitive documentation relating thereto, including obtaining insurance certificates and endorsements;
+
+§ consenting to the use of all logos of the Company and its subsidiaries in connection with the Debt Financing so long as such logos (i) are used solely in a manner that is not intended to or likely to harm or disparage the Company or any of its subsidiaries or the reputation or goodwill of the Company or any of its subsidiaries and (ii) are used solely in connection with a description of the Company, its business and products or the transactions contemplated hereby; and
+
+Field: Page; Sequence: 16; Value: 59
+
+74
+<!-- PAGE 80 -->
+Field: /Page
+
+§ furnishing Parent and the Financing Sources with all documentation and other information related solely to the Company and its subsidiaries required by U.S. regulatory authorities pursuant to applicable “know your customer” and anti-money laundering rules and regulations.
+
+Efforts to Close the Transaction.
+
+In the Merger Agreement, each of the Company, Parent and Purchaser has agreed to use its reasonable best efforts to take, or cause to be taken, all actions, and to do, or cause to be done, and to assist and cooperate with the other parties in doing, all things necessary, proper or advisable to consummate and make effective, and to satisfy all conditions to, in the most expeditious manner practicable, the Offer, the Top-Up Option (if applicable), the Merger and the transactions contemplated hereby, including (i) the obtaining of all necessary permits, waivers, consents, approvals and actions or nonactions from governmental entities and the making of all necessary registrations and filings (including filings with governmental entities) and the taking of all steps as may be necessary to obtain an approval or waiver from, or to avoid an action or proceeding by, any governmental entities, (ii) the obtaining of all necessary consents or waivers from third parties, and (iii) the execution and delivery of any additional instruments necessary to consummate the Offer, the Top-Up Option (if applicable), the Merger and to fully carry out the purposes of this Agreement.
+
+The Company and Parent have agreed to, subject to applicable Law, promptly (x) cooperate and coordinate with the other in the taking of the actions contemplated by clauses (i), (ii) and (iii) immediately above and (y) supply the other with any information that may be reasonably required in order to effectuate the taking of such actions. Each party hereto shall promptly inform the other party or parties hereto, as the case may be, of any communication from any governmental entity regarding any of the transactions contemplated by the Merger Agreement. If the Company or Parent receives a request for additional information or documentary material from any governmental entity with respect to the transactions contemplated by the Merger Agreement, then it shall use reasonable best efforts to make, or cause to be made, as soon as reasonably practicable and after consultation with the other party, an appropriate response in compliance with such request, and, if permitted by applicable law and by any applicable governmental entity, provide the other party’s counsel with advance notice and the opportunity to attend and participate in any meeting with any governmental entity in respect of any filing made thereto in connection with the transactions contemplated by the Merger Agreement. Neither Parent nor the Company shall commit to or agree (or permit their respective subsidiaries to commit to or agree) with any governmental entity to stay, toll or extend any applicable waiting period under any applicable antitrust or competition laws, without the prior written consent of the other (such consent not to be unreasonably withheld or delayed).
+
+Employee Benefits.
+
+During the period commencing at the Effective Time and ending on the date which is twelve (12) months from the Effective Time (or if earlier, the date of the employee’s termination of employment with Parent or its applicable subsidiary, including the Surviving Corporation), Parent has agreed to cause the Surviving Corporation and each of its subsidiaries, as applicable, to provide the employees of the Surviving Corporation and its Subsidiaries who remain employed
+
+Field: Page; Sequence: 17; Value: 59
+
+75
+<!-- PAGE 81 -->
+Field: /Page
+
+immediately after the Effective Time (collectively, the “Company Continuing Employees”) with base salary and employee benefits (excluding equity-based compensation, long-term incentives, change in control, retention, transition, stay or similar arrangements, and retiree benefits) that are, in the aggregate, substantially comparable to the base salary and employee benefits (excluding equity-based compensation, long-term incentives, change in control, retention, transition, stay or similar arrangements, and retiree benefits) provided by the Company and its Subsidiaries on the date of the Merger Agreement. However, Parent’s and the Surviving Corporation’s foregoing obligations are subject to such modifications as are necessary to comply with applicable Law of any jurisdiction outside the United States of America (including its territories and possessions).
+
+The foregoing provision is binding upon and inure solely to the benefit of each of the parties to the Merger Agreement, and nothing therein, express or implied, shall confer upon any other person any rights or remedies of any nature whatsoever under. Nothing contained therein, express or implied, (i) shall be construed to establish, amend or modify any benefit plan, program, agreement or arrangement or (ii) shall alter or limit the ability of the Surviving Corporation, Parent or any of their respective Affiliates to amend, modify or terminate any benefit plan, program, agreement or arrangement at any time assumed, established, sponsored or maintained by any of them. The parties have expressly agreed that this provision does not create any right in any Company employee or any other person to any continued employment with the Surviving Corporation, Parent or any of their respective subsidiaries or compensation or benefits of any nature or kind whatsoever.
+
+Indemnification of Officers and Directors.
+
+In the Merger Agreement, Parent and Purchaser have agreed that all rights to indemnification, advancement of expenses and exculpation by the Company now existing in favor of each person who is now, or has been at any time prior to the date of the Merger Agreement or who becomes prior to the Effective Time an officer or director of the Company and its subsidiaries (each such person, an “Indemnified Party”) as provided in the Company’s organizational documents, in each case as in effect on the date of the Merger Agreement, or pursuant to any other Contracts in effect on the date of the Merger Agreement and disclosed in the Company disclosure letter, shall be assumed by the Surviving Corporation in the Merger, without further action, at the Effective Time and shall survive the Merger and shall remain in full force and effect in accordance with their terms, and, in the event that any proceeding is pending or asserted or any claim made during such period, until the final disposition of such proceeding or claim.
+
+In addition, for six years after the Effective Time, to the fullest extent permitted under applicable law, Parent and the Surviving Corporation (the “Indemnifying Parties”) must indemnify, defend and hold harmless each Indemnified Party against all losses, claims, damages, liabilities, fees, reasonable expenses, judgments and fines to the extent arising out of actions or omissions in their capacity as a director or officer of the Company or any of its subsidiaries occurring at or prior to the Effective Time (including in connection with the transactions contemplated by this Agreement) and, subject to certain procedural requirements, reimburse each Indemnified Party for any legal or other expenses reasonably incurred by such Indemnified Party in connection with investigating or defending any such losses, claims, damages, liabilities, fees, expenses, judgments and fines as such expenses are incurred, subject to the Surviving Corporation’s receipt of an undertaking by such Indemnified Party to repay such legal and other
+
+Field: Page; Sequence: 18; Value: 59
+
+76
+<!-- PAGE 82 -->
+Field: /Page
+
+fees and expenses paid in advance if it is ultimately determined in a final and non-appealable judgment of a court of competent jurisdiction that such Indemnified Party is not entitled to be indemnified under applicable law.
+
+Finally, the Surviving Corporation must (i) maintain in effect for a period of six (6) years after the Effective Time, the current policies of directors’ and officers’ liability insurance maintained by the Company immediately prior to the Effective Time (provided that the Surviving Corporation may substitute therefor policies, of at least the same coverage and amounts and containing terms and conditions that are not less advantageous to the directors and officers of the Company and its subsidiaries when compared to the insurance maintained by the Company as of the date of the Merger Agreement), or (ii) obtain as of the Effective Time “tail” insurance policies with a claims period of six (6) years from the Effective Time with at least the same coverage and amounts and containing terms and conditions that are not less advantageous to the directors and officers of the Company and its subsidiaries, in each case with respect to claims arising out of or relating to events which occurred before or at the Effective Time (including in connection with the transactions contemplated by this Agreement). However, in no event will Parent or the Surviving Corporation be required, and the Company shall not be permitted, to expend for such policies an annualized premium amount in excess of 250% of the annual premiums paid by the Company for such insurance as of the date of the Merger Agreement and, if the annual premiums of such insurance coverage exceed such amount, Parent or the Surviving Corporation must instead obtain a substantially similar policy (from an insurance carrier with the same or better rating as the Company’s current directors’ and officers’ liability insurance carrier) with the greatest coverage available for a cost to exceeding such amount.
+
+Other Covenants.
+
+The Merger Agreement contains other customary covenants, including covenants relating to certain regulatory filings, notices of certain events, public announcements, access to information, employee matters, securityholder litigation, takeover statutes and confidentiality.
+
+Termination of the Merger Agreement.
+
+The Merger Agreement may be terminated and the Offer and the Merger may be abandoned prior to the Acceptance Time:
+
+· By mutual written agreement of Parent, Purchaser and the Company;
+
+· By either Parent or the Company, if:
+
+(a) the Acceptance Time has not occurred on or before the Outside Date (an “Outside Date Termination”);
+
+(b) any governmental entity of competent jurisdiction in the United States or Belgium shall have enacted, issued, promulgated, enforced or entered any law or order making illegal, permanently enjoining or otherwise permanently prohibiting the consummation of the Offer, the Top-Up Option or the Merger or any of the other transactions contemplated by the Merger Agreement, and such law or order shall have become final and nonappealable; or
+
+Field: Page; Sequence: 19; Value: 59
+
+77
+<!-- PAGE 83 -->
+Field: /Page
+
+(c) any court of competent jurisdiction or other governmental authority has issued an order or taken any other action permanently restraining, enjoining or otherwise prohibiting the acceptance for payment of, or payment for, the Shares pursuant to the Offer or consummation of the Merger, and such order shall have become final and non-appealable; provided that the right to terminate the Merger Agreement will not be available to any party whose breach of the Merger Agreement has been the primary cause of, or resulted in, the events described in this paragraph (c) or who have failed to comply in all material respects with certain of its obligations under the Merger Agreement (related to such party’s obligations to obtain certain consents, satisfy the Tender Offer Conditions and make certain filings, as applicable).
+
+· By Parent, if:
+
+(a) (i) a Company Adverse Recommendation Change shall have occurred, (ii) the Company shall have entered into, or publicly announced its intention to enter into, a Company Acquisition Agreement (other than an Acceptable Confidentiality Agreement), (iii) the Company shall have breached or failed to perform in any material respect any of the covenants and agreements set forth in Section 6.04 of the Merger Agreement, (iv) the Company Board fails to reaffirm (publicly, if so requested by Parent) the Company Board Recommendation within ten (10) Business Days after the date any Takeover Proposal (or material modification thereto) is first publicly disclosed by the Company or the person or entity making such Takeover Proposal, (v) a tender offer or exchange offer relating to the Shares shall have been commenced by a person or entity unaffiliated with Parent and the Company shall not have sent to its shareholders pursuant to Rule 14e-2 under the Securities Act, within ten (10) Business Days after such tender offer or exchange offer is first published, sent or given, a statement reaffirming the Company Board Recommendation and recommending that shareholders reject such tender or exchange offer, or (vi) the Company or the Company Board (or any committee thereof) shall publicly announce its intentions to do any of actions specified above (a “Parent Adverse Termination”); or
+
+(b) the Company shall have breached or failed to perform any its representations, warranties, covenants or other agreements set forth in the Merger Agreement, which breach or failure to perform would give rise to the failure of a condition set forth in Section 7.01 of the Merger Agreement or any of the conditions to the Offer (and in each case such breach or failure to perform is incapable of being cured by the Outside Date, or if curable, has not been cured within twenty (20) days after its receipt of written notice thereof from Parent); provided that such failure of a condition was not caused by, or a result of, a breach of this Agreement by Parent or Purchaser (a “Parent Breach Termination”);
+
+· By the Company, if:
+
+(a) the Company Board authorizes the Company, in full compliance with the terms of the Merger Agreement, including Section 6.04 of the Merger Agreement, to enter into a Company Acquisition Agreement (other than an Acceptable Confidentiality Agreement) in respect of a Superior Proposal; provided that the Company shall have paid any amounts due pursuant to 8.06 of the Merger Agreement (summarized below) in
+
+Field: Page; Sequence: 20; Value: 59
+
+78
+<!-- PAGE 84 -->
+Field: /Page
+
+accordance with the terms, and at the times, specified therein; and provided further that in the event of such termination, the Company substantially concurrently enters into such Company Acquisition Agreement (a “Company Adverse Termination”);
+
+(b) Parent or Purchaser shall have shall have breached or failed to perform any their respective representations, warranties, covenants or other agreements set forth in the Merger Agreement, which breach or failure to perform would give rise to the failure of a condition set forth in Section 7.01 of the Merger Agreement or any of the Offer Conditions (and in each case such breach or failure to perform is incapable of being cured by the Outside Date, or if curable, has not been cured within twenty (20) days after Parent’s receipt of written notice thereof from the Company); provided that such failure of a condition was not caused by, or a result of, a breach of the Merger Agreement by the Company;
+
+(c) (i) each of the conditions set forth in Section 7.1 of the Merger Agreement and each of the conditions to the Offer (in each case, other than those conditions that by their nature are to be satisfied by actions taken at the Offer Closing) have been satisfied (or waived by Parent) at the applicable Expiration Time, (ii) the full proceeds to be provided to Parent and Merger Sub by the Debt Financing are not available to Parent or Merger Sub on the terms of the applicable Debt Commitment Letter to consummate the Offer when required in accordance with Section 1.01 of the Merger Agreement; (iii) the Company has given notice in writing to Parent representing that it is ready, willing and able to complete the Closing; and (iv) Purchaser shall have failed to consummate the Offer Closing within three (3) Business Days following the time that it is required to consummate the Offer in accordance with Section 1.01 of the Merger Agreement (a “Financing Termination”); or
+
+(d) Parent or Purchaser shall have failed to commence the Offer within thirty (30) days following the date of the Merger Agreement or terminated the Offer in violation of the terms of this Agreement provided that such failure or termination was not primarily caused by, or a primary result of, a breach of this Agreement by the Company (an “Offer Termination”).
+
+Notice of Termination; Effect of Termination.
+
+The party desiring to terminate the Merger Agreement pursuant to this Article VIII must deliver written notice of such termination to each other party specifying with particularity the reason for such termination, and any such valid termination shall be effective immediately upon delivery of such written notice to the other party. If the Merger Agreement is terminated pursuant to Article VIII, it will become void and of no further force and effect, with no liability on the part of any party to the Merger Agreement (or any shareholder, director, officer, employee, agent or representative of such party) to any other party hereto, except (i) with respect to the termination fee and expense reimbursement provisions described below, which shall remain in full force and effect, and (ii) with respect to any liabilities or damages incurred or suffered by a party, to the extent such liabilities or damages were the result of fraud or the willful breach by another party of any of its representations, warranties, covenants or other agreement set forth in the Merger Agreement.
+
+Field: Page; Sequence: 21; Value: 59
+
+79
+<!-- PAGE 85 -->
+Field: /Page
+
+Termination Fees.
+
+In the event that:
+
+· the Merger Agreement is validly terminated by Parent pursuant to a Parent Adverse Termination (as defined above) or a Parent Breach Termination (as defined above) in accordance with Section 8.03 of the Merger Agreement, then the Company shall pay to Parent (by wire transfer of immediately available funds), within two (2) Business Days after such termination, a fee in an amount equal to $1,320,000 (the “Termination Fee”).
+
+· the Merger Agreement is validly terminated by the Company pursuant to a Company Adverse Termination (as defined above) in accordance with Section 8.04(a) of the Merger Agreement, then the Company shall pay to Parent (by wire transfer of immediately available funds), at or prior to such termination, the Termination Fee.
+
+· the Merger Agreement is validly terminated (i) prior to the Offer Closing, by Parent pursuant to a Parent Breach Termination in accordance with Section 8.03(b) or (ii) by the Company or Parent pursuant to an Outside Date Termination in accordance with Section 8.02(a) of the Merger Agreement and, in the case of clauses (i) and (ii) immediately above, (A) prior to such termination, a Takeover Proposal shall (1) in the case of a Parent Breach Termination pursuant to Section 8.03(b), have been publicly disclosed and not withdrawn or (2) in the case of an Outside Date Termination pursuant to Section 8.02(a), have been publicly disclosed or otherwise made or communicated to the Company or the Company Board, and not withdrawn, and (B) within twelve (12) months following the date of such termination of the Merger Agreement the Company shall have entered into a definitive agreement with respect to any Takeover Proposal, or any Takeover Proposal shall have been consummated (in each case whether or not such Takeover Proposal is the same as the original Takeover Proposal made, communicated or publicly disclosed), then in any such event the Company shall pay to Parent (by wire transfer of immediately available funds),within two (2) Business Days of consummating such transaction, the Termination Fee (it being understood by the parties that for all purposes of this provision, all references in the definition of Takeover Proposal to 20% shall be deemed to be references to “more than 50%” instead). If a Person (other than Parent) makes a Takeover Proposal that has been publicly disclosed and subsequently withdrawn prior to such termination, as applicable, and, within twelve (12) months following the date of the termination of the Merger Agreement, such Person or any of its controlled affiliates makes a Takeover Proposal that is publicly disclosed, such initial Takeover Proposal shall be deemed to have been “not withdrawn” for purposes of clauses (1) and (2) of this above.
+
+· the Merger Agreement is validly terminated by the Company pursuant to a Financing Termination in accordance with Section 8.04(c) or an Offer Termination in accordance with Section 8.04(d), then Parent shall pay Company the $2,200,000 (the “Buyer Termination Fee”), it being understood and agreed by the parties that in no event will Parent be required to pay the Buyer Termination Fee on more than one occasion. The Buyer Termination Fee shall be payable within two (2) business days after such termination.
+
+Field: Page; Sequence: 22; Value: 59
+
+80
+<!-- PAGE 86 -->
+Field: /Page
+
+Expense Reimbursement.
+
+If the Merger Agreement is terminated by any party pursuant to an Outside Date Termination in accordance with Section 8.02(a) and (i) at the time of such termination each of the conditions to the Offer (excluding such conditions that by their nature are to be satisfied by actions taken at the Offer Closing) has been satisfied (or waived by Parent in writing), other than the Minimum Tender Condition and/or the Dissenting Shares Condition, then the Company shall reimburse Parent and Purchaser for the actual and reasonable out-of-pocket fees and expenses incurred by Parent, Purchaser and their respective affiliates (including all reasonable fees and expenses of outside counsel, accountants, investment bankers, experts and consultants to Parent or Merger Sub) in an aggregate amount not to exceed $1,000,000 (the “Expense Reimbursement”), by wire transfer of immediately available funds on the second (2nd) business day following the date of such termination of the merger Agreement.
+
+Specific Performance.
+
+Prior to any valid termination of the Merger Agreement, the parties thereto are entitled to an injunction or injunctions to prevent breaches of the Merger Agreement and to enforce specifically the terms thereof, in addition to any other remedy to which they are entitled at law or at equity. However, the Company shall not be entitled to enforce or seek to enforce specifically Parent’s and Purchaser’s obligations to consummate the Offer or effect the Merger unless:
+
+§ each of the conditions set forth in Section 7.1 of the Merger Agreement and each of the conditions to the Offer (in each case, other than those conditions that by their nature are to be satisfied by actions taken at the Offer Closing) have been satisfied (or waived by Parent);
+
+§ the Company has given notice in writing to Parent representing that it is ready, willing and able complete the Closing;
+
+§ the full amount of the Debt Financing has been funded or will be funded at the Closing; and
+
+§ Parent and Purchaser have failed to complete the Offer Closing or the Closing, as applicable, by the date the Offer Closing or the Closing, as applicable, is required to have occurred pursuant to this Agreement:
+
+Expenses.
+
+Except as otherwise provided in the Merger Agreement, all expenses incurred by the parties to the Merger Agreement will be paid by the party incurring such cost or expense.
+
+Amendment.
+
+Subject to applicable law and except as otherwise expressly provided in the Merger Agreement, the Merger Agreement may be amended or supplemented in any and all respects, whether before or after the Offer Closing or any vote or consent of the Company’s shareholders contemplated hereby, but only by a written agreement signed by each of the parties thereto;
+
+Field: Page; Sequence: 23; Value: 59
+
+81
+<!-- PAGE 87 -->
+Field: /Page
+
+provided, however, that following the Offer Closing, no amendment shall be made which decreases the Per Share Amount and, after adoption of this Agreement by the Company’s shareholders, no amendments shall be made which by law requires further approval by such holders without obtaining such further approval.
+
+Governing Law.
+
+The Merger Agreement is governed by Minnesota law.
+
+12. Purpose of the Offer; Plans for the Company.
+
+*Purpose of the Offer* . The purpose of the Offer is to acquire control of, and the entire equity interest in, the Company. The purpose of the Merger is to acquire all outstanding Shares not tendered and purchased pursuant to the Offer. All Shares acquired by Purchaser pursuant to the Offer will be retained by Purchaser pending the Merger. After the Acceptance Time, Purchaser intends to consummate the Merger as promptly as practicable, subject to the satisfaction of certain conditions.
+
+*Merger without a Shareholder Vote or Meeting* . If the Offer is consummated, we do not currently anticipate seeking the approval of the Company’s remaining public shareholders before effecting the Merger. Under Chapter 302A.621 of the MBCA, if we acquire, pursuant to the Offer or otherwise, at least 90% of the outstanding Shares, Purchaser would be able to effect the Merger without a vote or meeting of the Company’s shareholders. The Company has granted us an option to purchase that number of newly-issued Shares (the “Top-Up Shares”) that is equal to one share more than the amount needed to give Purchaser, directly or indirectly, ownership of 90% of the outstanding Shares at the time of exercise (after giving effect to the Shares issued upon the exercise of such option) (the “Top-Up Option”), provided that the Top-Up Option is only exercisable to the extent that the Company has sufficient authorized and unissued Shares available for such issuance and a majority of the Shares then outstanding have been tendered and not withdrawn from the Offer. We will pay the Company $11.03 for each Share acquired through the Top-Up Option. Because the Company has over 25,000,000 authorized but unissued shares, the Top-Up Option will permit us to complete the Merger without a special meeting or vote of the Company’s shareholders under the “short form” merger provisions of Minnesota law. We expect to exercise the Top-Up Option, to the extent necessary. See Section 11—“The Merger Agreement” for a more detailed description of the Top-Up Option.
+
+*Dissenter’s Rights* . No rights to seek to obtain the “fair value” of their Shares are available to shareholders in connection with the Offer. However, if the Merger is consummated, a shareholder who has not tendered its, his or her Shares in the Offer will have certain rights under Sections 302A.471 and 302A.473 of the MBCA to dissent from the Merger and obtain payment in cash for the “fair value” of their Shares. Those rights, if the statutory procedures are complied with, could lead to a judicial determination of the fair value (immediately prior to the effective time of the Merger) required to be paid in cash to dissenting shareholders for their Shares. Any such judicial determination of the fair value of the Shares would not necessarily include any element of value arising from the accomplishment or expectation of the Merger and could be based upon considerations other than or in addition to the consideration per share to be paid in the Merger and the market value of the Shares, including asset values and the investment value of the Shares.
+
+Field: Page; Sequence: 24; Value: 59
+
+82
+<!-- PAGE 88 -->
+Field: /Page
+
+The value so determined could be more or less than the price per Share paid pursuant to the Offer or consideration per Share payable in the Merger. Moreover, we may argue in such a judicial proceeding that, for purposes of such proceeding, the fair value of the Shares is less than the price per Share paid pursuant to the Offer or consideration per Share payable in the Merger. Under subdivision 4 of Section 302A.471 of the MBCA, a shareholder’s rights with respect to the Merger are limited to the dissenters’ rights provided under Sections 302A.471 and 302A.473 of the MBCA. A shareholder has no right, at law or in equity, to set aside the approval of the Merger or the consummation of the Merger, unless such adoption or consummation was fraudulent with respect to such shareholder or the Company. Any Shares which are issued and outstanding immediately prior to the effective time of the Merger and which are held by a holder who has not voted such Shares in favor of the Merger and who has properly exercised dissenters’ rights with respect to such Shares in accordance with the MBCA (including Sections 302A.471 and 302A.473 thereof) and, as of the effective time of the Merger, has neither effectively withdrawn nor otherwise lost for any reason its right to exercise such dissenters’ rights, will not be converted into or represent a right to receive the consideration payable in the Merger. The holders of dissenting shares will be entitled to only such rights as are granted by Section 302A.471 of the MBCA. If any shareholder who asserts dissenters’ rights with respect to its Shares under the MBCA effectively withdraws or otherwise loses for any reason (including failure to perfect) dissenters’ rights, then as of the effective time of the Merger or the occurrence of such event, whichever occurs later, such holder’s Shares will automatically be cancelled and converted into and represent only the right to receive the consideration payable in the Merger, without interest, upon surrender of the certificate or certificates formerly representing the dissenting shares.
+
+THE PRESERVATION AND EXERCISE OF DISSENTERS’ RIGHTS REQUIRES STRICT ADHERENCE TO THE APPLICABLE PROVISIONS OF THE MBCA. FAILURE TO FULLY AND PRECISELY FOLLOW THE STEPS REQUIRED BY SECTIONS 302A.471 AND 302A.473 OF THE MBCA FOR THE PERFECTION OF DISSENTERS’ RIGHTS WILL RESULT IN THE LOSS OF THOSE RIGHTS. THE FOREGOING SUMMARY OF THE RIGHTS OF DISSENTING SHAREHOLDERS UNDER THE MBCA IS NOT A COMPLETE STATEMENT OF THE PROCEDURES TO BE FOLLOWED BY SHAREHOLDERS DESIRING TO EXERCISE ANY DISSENTERS’ RIGHTS AVAILABLE UNDER THE MBCA AND IS QUALIFIED IN ITS ENTIRETY BY REFERENCE TO THE MBCA.
+
+DISSENTERS’ RIGHTS CANNOT BE EXERCISED AT THIS TIME. THE INFORMATION SET FORTH ABOVE IS FOR INFORMATIONAL PURPOSES ONLY WITH RESPECT TO ALTERNATIVES AVAILABLE TO SHAREHOLDERS IF THE MERGER IS CONSUMMATED. SHAREHOLDERS WHO WILL BE ENTITLED TO DISSENTERS’ RIGHTS IN CONNECTION WITH THE MERGER WILL RECEIVE ADDITIONAL INFORMATION CONCERNING DISSENTERS’ RIGHTS AND THE PROCEDURES TO BE FOLLOWED IN CONNECTION THEREWITH BEFORE SUCH SHAREHOLDERS HAVE TO TAKE ANY ACTION RELATING THERETO.
+
+*Going Private Transaction* . The SEC has adopted Rule 13e-3 under the Exchange Act which is applicable to certain “going private” transactions and which may under certain circumstances be applicable to the Merger or another business combination following the purchase of Shares pursuant to the Offer in which Purchaser seeks to acquire the remaining Shares not held by it. Purchaser and the Company believe that Rule 13e-3 will not be applicable to the Merger
+
+Field: Page; Sequence: 25; Value: 59
+
+83
+<!-- PAGE 89 -->
+Field: /Page
+
+because it is anticipated that the Merger will be effected within one (1) year following the consummation of the Offer and, in the Merger, shareholders will receive the same price per Share as paid in the Offer. Rule 13e-3 requires, among other things, that certain financial information concerning the Company and certain information relating to the fairness of the proposed transaction and the consideration offered to minority shareholders be filed with the SEC and disclosed to shareholders prior to consummation of the transaction.
+
+*Plans for the Company* . The Merger Agreement provides that following the Acceptance Time, Purchaser will be merged with and into the Company. At the Effective Time of the Merger, (a) the articles of incorporation of the Company shall be amended so as to read in its entirety as set forth in a form mutually agreed by the parties, and, as so amended, shall be the articles of incorporation of the Surviving Corporation until thereafter amended in accordance with the terms thereof or as provided by applicable Law, and (b) the by-laws of Purchaser as in effect immediately prior to the Effective Time shall be the by-laws of the Surviving Corporation (except that the name of the Surviving Corporation shall be amended to “MGC Diagnostics Corporation”) until thereafter amended in accordance with the terms thereof, the articles of incorporation of the Surviving Corporation or as provided by applicable law.
+
+The directors and officers of Purchaser, in each case, immediately prior to the Effective Time shall, from and after the Effective Time, be the directors and officers, respectively, of the Surviving Corporation until their successors have been duly elected or appointed and qualified or until their earlier death, resignation or removal in accordance with the articles of incorporation and by-laws of the Surviving Corporation
+
+Except as otherwise provided herein, it is currently expected that, initially following the Merger, the business and operations of the Company will, except as set forth in this Offer to Purchase, be continued substantially as they are currently being conducted. Based on available information, we are conducting a detailed review of the Company and its assets, corporate structure, dividend policy, capitalization, indebtedness, operations, properties, policies, management and personnel, obligations to report under Section 15(d) of the Exchange Act and the delisting of its securities from a registered national securities exchange, and will consider what, if any, changes would be desirable in light of the circumstances which exist upon completion of the Offer. We will continue to evaluate the business and operations of the Company during the pendency of the Offer and after the consummation of the Offer and will take such actions as we deem appropriate under the circumstances then existing. Thereafter, we intend to review such information as part of a comprehensive review of the Company’s business, operations, capitalization and management with a view to optimizing development of the Company’s potential. Possible changes could include changes in the Company’s business, corporate structure, charter, bylaws, capitalization, board of directors, management, business development opportunities, indebtedness or dividend policy, and although, except as disclosed in this Offer to Purchase, we have no current plans with respect to any of such matters, Parent, Purchaser and the Surviving Corporation in the Merger expressly reserve the right to make any changes they deem appropriate in light of such evaluation and review or in light of future developments.
+
+Except as discussed in more detail below with respect to the Support Agreements for directors and certain executive officers as well as the Employment Agreements and rollover equity for Todd Austin and Matthew Margolies, as of the date of this Offer to Purchase, none of Parent
+
+Field: Page; Sequence: 26; Value: 59
+
+84
+<!-- PAGE 90 -->
+Field: /Page
+
+or any of its affiliates has had discussions with, or entered into any agreement with, the Company’s directors or executive officers regarding the terms of employment with, or the right to purchase or participate in the equity of, the Surviving Corporation or one or more of its affiliates. Prior to or following the closing of the Offer and the Merger, however, Parent or Purchaser or their respective affiliates may have discussions with, and may enter into agreements with, certain other executive officers regarding the terms of employment with, or the right to purchase or participate in the equity of, the Surviving Corporation or one or more of its affiliates. There can be no assurance that any parties will reach an agreement on any terms, or at all.
+
+*Tender Support Agreements* . Company Officers Todd M. Austin, Matthew S. Margolies and Larry R. Degen and each of the members of the Board of Directors of the Company, who collectively own approximately 8.9% of the issued and outstanding Shares, have entered into Tender Support Agreements (the “Support Agreements”) with Parent. Under the Support Agreements, each of these individuals has agreed to tender his or her Shares in the Offer (except as may otherwise be mutually agreed with Parent in writing) and to support the Offer, including by waiving any right to exercise dissenter’s or appraisal rights in connection with the Merger. In addition, each of these individuals has agreed not to engage in any activity that is restricted under the terms of Section 6.04 of the Merger Agreement; provided that nothing in the Support Agreements will be deemed to limit any director, officer or employee from complying with their fiduciary duties under applicable law. See Section 11—“The Merger Agreement – No Solicitation.” However, each of these Support Agreements would terminate upon a valid termination of the Merger Agreement and certain other circumstances, including a change of the Board’s recommendation for shareholders to tender their Shares in the Offer that is made in compliance with Section 6.04 of the Merger Agreement.
+
+*Todd Austin and Matthew Margolies Employment Agreements* . Todd M. Austin and Matthew S. Margolies (referred to below as the “Executives”) have negotiated new employment agreements (the “Employment Agreements”) to become effective with the Company upon closing of the Offer and the Merger. The material terms of the Employment Agreements are summarized below and, except as otherwise indicated below, are identical for each of the Executives.
+
+§ At-Will Employment . Employment will be on an “at will” basis, which means that either the Company or the applicable Executive may terminate the employment relationship with or without “Cause” or notice at any time, subject to the potential impact and ramifications of other terms of the Employment Agreements (summarized below).
+
+§ Titles, Duties and Responsibilities . Todd Austin will serve as the Company’s Chief Executive Officer, and Matthew Margolies will serve as the Company’s President. Each Executive will devote his full-time attention, energy, and ability to the Company’s business. Each executive agrees to comply with all federal, state and local laws or regulations regarding the Company’s. Each executive agrees that he will not serve on the board of directors of any profit or non-profit company without prior approval.
+
+§ Term of Agreement . Each Employment Agreement will continue for three years, subject to either party’s termination rights set forth therein.
+
+Field: Page; Sequence: 27; Value: 59
+
+85
+<!-- PAGE 91 -->
+Field: /Page
+
+§ Base Salary .
+
+○ Todd Austin: The Company will pay Todd Austin a Base Salary of $300,000. “Base Salary” means regular cash compensation on a periodic basis exclusive of benefits, bonuses or incentive payments. If EBITDA thresholds are achieved during the first six (6) months of the 2018 fiscal year, Mr. Austin’s Base Salary will be increased by $25,000 and if achieved during the entire 2018 fiscal year (12 months), his Base Salary will be increased an additional $25,000.
+
+○ Matthew Margolies: The Company will pay Matthew Margolies a Base Salary of $285,000. “Base Salary” means regular cash compensation on a periodic basis exclusive of benefits, bonuses or incentive payments. If EBITDA thresholds are achieved during the first six (6) months of the 2018 fiscal year, Mr. Austin’s Base Salary will be increased by $20,000 and if achieved during the entire 2018 fiscal year (12 months), his Base Salary will be increased an additional $20,000.
+
+§ Management Incentive Plan . Each executive will be eligible to participate in the Surviving Corporation’s Management Incentive Plan. Each Executive’s participation in and the criteria for this plan will be subject to the written terms and provisions of the plan, as established annually by and solely within the discretion of the Board of Directors, which may be amended at any time by the Board. Each Executive may earn up to fifty percent (50%) of his Base Salary each year under the Incentive Plan if he meets the eligibility requirements and criteria.
+
+§ Fringe Benefits . Each Executive will be entitled to Personal Time Off (PTO) in accordance with the Surviving Corporation’s policies, subject to the terms or any modifications that the Board of Directors may approve. To the extent available or offered, each Executive will be entitled to participate in all other benefit programs offered by the Surviving Corporation to its employees, subject to terms as the Board of Directors may approve, including any medical, dental or other health plan, pension plan, profit-sharing plan and life insurance plan that the Surviving Corporation may adopt or maintain.
+
+§ Car Expense . Each Executive will receive a car allowance of up to $700 per month, subject to applicable tax withholding.
+
+§ Relocation and/or Living Expense for Mr . Austin. Todd Austin may be required to relocate to Minnesota as a condition of employment. In that event, the Surviving Corporation will reimburse Mr. Austin for reasonable relocation costs and expenses in accordance with the company’s policies. At the discretion of the Board, Mr. Austin may also be entitled to a monthly living expense and/or stipend for housing in St. Paul, Minnesota until he relocates to Minnesota.
+
+§ Proprietary, Trade Secret and Confidential Information . Each Executive has agreed not to, at any time, either during Executive’s employment or after
+
+Field: Page; Sequence: 28; Value: 59
+
+86
+<!-- PAGE 92 -->
+Field: /Page
+
+termination, use, copy, transfer or otherwise disclose to any person or entity any confidential or proprietary information of the Surviving Corporation without the written consent from the Board of Directors (subject to customary and limited exceptions), except for the benefit of and in furtherance of the Surviving Corporation’s business.
+
+§ Non-Competition . Each Executive has agreed that during the term of Executive’s employment with the Surviving Corporation and for twelve (12) months following any termination, Executive will not work, directly or indirectly for, provide consultant work, or acquire any financial interest in, any person, business or entity which competes or intends to compete with the Surviving Corporation regarding any services provided by the Surviving Corporation.
+
+§ Non-Competition . Each Executive has agreed that during Executive’s employment with the Surviving Corporation, and for twenty-four (24) months following any termination, Executive will not: (a) divert or attempt to divert from the Surviving Corporation any business or trade of any client, prospective client or supplier, or (b) otherwise interfere with any business or trade opportunity or business relationship that the Surviving Corporation may then have or reasonably expect to have with any client, prospective client or supplier. Each executive agrees and understands that during this period and except in his capacity as an Executive and for the benefit of the Surviving Corporation, Executive is prohibited from: (x) soliciting business from; (y) performing services for and/or (z) accepting business from any clients or prospective clients in competition with the Company’s business and/or from directly or indirectly calling on or otherwise facilitating others to call on or solicit business from a client or prospective client in competition with the Surviving Corporation’s Business. Each Executive further agrees that during this same period Executive will not employ, solicit, or encourage or induce any employee or contractor of the Surviving Corporation to terminate his or her employment or contractual relationship with the Surviving Corporation.
+
+§ Inventions and Property; Rights to Intellectual Property . Each Executive further agrees that all work and creation of work products associated with Executive’s employment with the Surviving Corporation are deemed work for hire for the Surviving Corporation and are the Surviving Corporation’s exclusive property. Each Executive agrees to assign to the Surviving Corporation any rights Executive may have or acquire in such property and agrees to sign and deliver at any time, upon the Surviving Corporation’s request, any instrument requested by it confirming the exclusive ownership of such property by the Surviving Corporation. Executive further acknowledges and agrees that any and all copyright and any other intellectual property rights in designs, software, firmware and related documentation, and works of authorship that are created by him during the period of his employment and related to the existing or reasonably foreseeable business interests of the Surviving Corporation will belong to the Surviving Corporation.
+
+Field: Page; Sequence: 29; Value: 59
+
+87
+<!-- PAGE 93 -->
+Field: /Page
+
+§ Termination .
+
+○ Notice: Executive’s Employment may be terminated by either party at any time with or without “Cause” (as defined below). If an Executive intends to resign from or otherwise terminate his employment, he must give MGC at least 90 days advance written notice, subject to MGC’s power to waive all or any such portion of this notice period. If MGC terminates an Executive without Cause and without notice, Executive may be entitled to severance pay subject to signing a severance agreement drafted solely within the discretion of the Surviving Corporation that includes (but will not be limited to) a written release and waiver by Executive of all legal claims known or unknown against the Corporation.
+
+○ Definition of “Cause”: If an Executive is terminated for Cause, he is not entitled to any severance pay regardless of his tenure with the Surviving Corporation or the Company. “Cause” is defined as:
+
+§ Executive breaching the provisions of the restrictive covenants in Sections 5 through 10 of his Employment Agreement in any respect or materially breaching any other provision of his Employment Agreement;
+
+§ Executive engaging in gross misconduct;
+
+§ Executive consistently failing to meet the financial and operating goals of the Executive’s area of responsibility;
+
+§ Executive failing to substantially perform his duties as an officer or employee of the Surviving Corporation;
+
+§ Executive committing fraud, misappropriation or embezzlement in connection with the Surviving Corporation’s business, or causing substantive harm to the reputation of the company through his actions;
+
+§ Executive being convicted of or pleading nolo contendere to an act or failure to act constituting a felony or gross misdemeanor under federal or state law that is injurious to company or its reputation, or that impairs the Executive’s ability to substantially perform his duties; and/or
+
+§ Death of Executive, or disability of Executive for an aggregate of 180 days during a 12-month period.
+
+○ Pay Upon Termination. If an Executive is terminated by the Surviving Corporation without Cause, and provided the Executive executes a general release of claims against the Surviving Corporation and is otherwise in
+
+Field: Page; Sequence: 30; Value: 59
+
+88
+<!-- PAGE 94 -->
+Field: /Page
+
+compliance with the terms of his Employment Agreement, the Surviving Corporation will pay Executive the following compensation:
+
+§ If the Executive has been in his position with the Surviving Corporation for up to three (3) years or less from the effective date of his Employment Agreement, the Surviving Corporation will pay the Executive an amount equivalent to six (6) months of the Executive’s Base Salary immediately prior to termination.
+
+§ If Executive has been in his position with the Surviving Corporation for more than three (3) years from the effective date of his Employment Agreement, the Surviving Corporation will pay the Executive an amount equivalent to twelve (12) months of Executive’s Base Salary immediately prior to termination.
+
+§ If Executive elects COBRA continuation upon termination, the Surviving Corporation will pay Executive for the employer’s portion of the premium cost during the time Executive remains eligible under COBRA and is receiving Base Salary under the preceding bullet points.
+
+§ Any bonuses earned during Executive’s employment but unpaid at the Executive’s termination date will be paid pro-rata consistent with the Surviving Corporation’s normal business practice.
+
+*Todd Austin and Matthew Margolies Rollover Equity* . Prior to the closing of the Merger, each of the Executives is also expected to contribute to Parent Shares having a value equal to approximately $200,000 based on the Per Share Amount (or approximately 18,133 Shares) in exchange for equity interests of Parent (or an affiliated Altus Capital entity) having an equivalent economic value (after giving effect to the closing of the Offer and the Merger). The parties will cooperate to implement such contribution and exchange (or “rollover equity”) between the execution of the Merger Agreement and the closing of the Offer, giving effect to each party’s tax considerations and the negotiation, execution and implementation of customary definitive documentation for such a minority investment by rollover equityholders.
+
+Except as described above or elsewhere in this Offer to Purchase, neither Purchaser nor Parent has any present plans or proposals or is engaged in negotiations that would, in a manner material to the holders of Shares, relate to or result in (i) any extraordinary transaction involving the Company or any of its subsidiaries (such as a merger, reorganization or liquidation), (ii) any purchase, sale or transfer of a material amount of assets of the Company or any of its subsidiaries, (iii) any material change in the Company’s capitalization or dividend rate or policy or indebtedness, (iv) any change in the Board or management of the Company, (v) any other material change in the Company’s corporate structure or business, (vi) any class of equity securities of the Company being delisted from a national securities exchange or ceasing to be authorized to be quoted in an automated quotation system operated by a national securities association, (vii) any class of equity securities of the Company becoming eligible for termination of registration pursuant to Section 12(g) of the Exchange Act, (viii) the suspension of the Company’s obligation to file
+
+Field: Page; Sequence: 31; Value: 59
+
+89
+<!-- PAGE 95 -->
+Field: /Page
+
+reports under Section 15(d) of the Exchange Act, (ix) the acquisition by any person of additional securities of the Company, or the disposition of securities of the Company, or (x) any changes in the Company’s charter, bylaws or other governing instruments or other actions that could impede the acquisition of control of the Company.
+
+13. Certain Effects of the Offer.
+
+*Market for the Shares* . If the Offer is successful, there will be no market for the Shares because Parent and Purchaser intend to consummate the Merger as promptly as practicable following the Acceptance Time.
+
+*Stock Quotation* . The Shares are currently listed on the NASDAQ Capital Market. Immediately following the consummation of the Merger (which is expected to occur as promptly as practicable following the Acceptance Time), the Shares will no longer meet the requirements for continued listing on the NASDAQ Capital Market because the only shareholder will be Parent. Immediately following the consummation of the Merger, we intend and will cause the Company to delist the Shares from the NASDAQ Capital Market.
+
+*Exchange Act Registration* . The Shares currently are registered under the Exchange Act. The purchase of the Shares pursuant to the Offer may result in the Shares becoming eligible for deregistration under the Exchange Act. Registration of the Shares may be terminated by the Company upon application to the SEC if the outstanding Shares are not listed on a “national securities exchange” and if there are fewer than 300 holders of record of Shares.
+
+We intend to seek to cause the Company to apply for termination of registration of the Shares as soon as possible after consummation of the Offer if the requirements for termination of registration are met. Termination of registration of the Shares under the Exchange Act would reduce the information required to be furnished by the Company to its shareholders and to the SEC and would make certain provisions of the Exchange Act (such as the short-swing profit recovery provisions of Section 16(b), the requirement of furnishing a proxy statement or information statement in connection with shareholders’ meetings or actions in lieu of a shareholders’ meeting pursuant to Sections 14(a) and 14(c) of the Exchange Act and the related requirement of furnishing an annual report to shareholders) no longer applicable with respect to the Shares. In addition, if the Shares are no longer registered under the Exchange Act, the requirements of Rule 13e-3 with respect to “going private” transactions would no longer be applicable to the Company. Furthermore, the ability of “affiliates” of the Company and persons holding “restricted securities” of the Company to dispose of such securities pursuant to Rule 144 under the U.S. Securities Act of 1933, as amended, may be impaired or eliminated. If registration of the Shares under the Exchange Act was terminated, the Shares would no longer be eligible for continued inclusion on the Federal Reserve Board’s list of “margin securities” or eligible for stock exchange listing.
+
+If registration of the Shares is not terminated prior to the Merger, then the registration of the Shares under the Exchange Act will be terminated following completion of the Merger.
+
+*Margin Regulations* . The Shares are currently “margin securities” under the regulations of the Board of Governors of the Federal Reserve System (the “Federal Reserve Board”), which has the effect, among other things, of allowing brokers to extend credit using such Shares as collateral.
+
+Field: Page; Sequence: 32; Value: 59
+
+90
+<!-- PAGE 96 -->
+Field: /Page
+
+Depending upon factors similar to those described above regarding listing and market quotations, following the Offer, the Shares may no longer constitute “margin securities” for purposes of the margin regulations of the Federal Reserve Board, in which event the Shares would be ineligible as collateral for margin loans made by brokers.
+
+14. Dividends and Distributions.
+
+As discussed in Section 11—“The Merger Agreement,” the Merger Agreement provides that from the date of the Merger Agreement to the Effective Time, without the prior written approval of Parent, the Company will not establish a record date for, declare, set aside or pay any dividend on, or make any other distribution (whether in cash, securities or other property) in respect of, any shares of capital stock of the Company.
+
+15. Certain Conditions of the Offer.
+
+Notwithstanding any other provision of the Offer or the Merger Agreement, Purchaser will not be required to, and Parent will not be required to cause Purchaser to, accept for payment or, subject to any applicable rules and regulations of the SEC (including Rule 14e-1(c) under the Exchange Act (relating to the obligation of Purchaser to pay for or return tendered Shares promptly after termination or withdrawal of the Offer)), pay for any Shares validly tendered and not validly withdrawn prior to any then-scheduled Expiration Time in connection with the Offer unless:
+
+· the Minimum Tender Condition shall have been satisfied; provided that for purposes of determining whether the Minimum Tender Condition has been satisfied, any Shares tendered in the Offer pursuant to guaranteed delivery procedures shall be included only if such Shares have been delivered to or on behalf of Purchaser;
+
+· there shall have been entered, enforced, instituted, pending, threatened, or issued by any governmental entity any judgment, order, temporary restraining order, temporary or permanent injunction, ruling, proceeding, action, suit, charge or other legal action or order: (i) which could reasonably be expected to make illegal, prevent, restrain or prohibit or make materially more costly the making of the Offer, the acceptance for payment of, or payment for, any Shares or the consummation of the Merger, the Top-Up Option or any of the other transactions contemplated by the Merger Agreement; (ii) which would reasonably be expected to impose limitations on the ability of Parent, Purchaser or any other affiliate of Parent to exercise full rights of ownership of any Shares, including the right to vote any Shares acquired by the Parent pursuant to the Offer or otherwise on all matters presented to the Company’s shareholders, including the approval and adoption of the Merger Agreement and the Merger (if applicable); or (iii) which otherwise has had, or would reasonably be expected to have, a Company Material Adverse Effect (as defined in the Merger Agreement);
+
+· there shall have been any laws, statute, rule, regulation, judgment, order, legislation or interpretation of any nature pending, proposed, enacted, enforced, promulgated, amended or issued by any governmental entity or deemed by any governmental entity applicable to (i) Parent, Purchaser, the Company or any affiliate of Parent, Purchaser or the Company or (ii) any transaction contemplated by the Merger Agreement, which has resulted in, or is
+
+Field: Page; Sequence: 33; Value: 59
+
+91
+<!-- PAGE 97 -->
+Field: /Page
+
+reasonably likely to result in, directly or indirectly, any of the consequences referred to in clauses (i) through (iii) of the immediately preceding bullet point/condition;
+
+· there shall have occurred any changes, conditions, events, occurrences, facts or developments that would have, or be reasonably likely to have, individually or in the aggregate, a Company Material Adverse Effect (as defined in the Merger Agreement);
+
+· there shall have occurred (i) any general suspension of, or limitation on prices for, trading in securities on the New York Stock Exchange or NASDAQ other than a shortening of trading hours or any coordinated trading halt triggered solely as a result of a specified increase or decrease in a market index, (ii) a declaration of a banking moratorium or any suspension of payments in respect of banks in the United States, (iii) any limitation (whether or not mandatory) on the extension of credit by banks or other lending institutions in the United States or a disruption of or material adverse change in either the syndication market for credit facilities or the financial, banking or capital markets, (iv) the commencement of a war, armed hostilities or any other international or national calamity involving the United States or (v) in the case of any of the foregoing existing at the time of the commencement of the Offer, a material acceleration or worsening thereof;
+
+· the representations and warranties of the Company set forth in the Merger Agreement (disregarding, for this purpose, (i) all qualifications as to “materiality,” “in all material respects,” “Company Material Adverse Effect” and similar qualifications and (ii) any update of or modification to the Company Disclosure Letter made or purported to have been made after the date of the Merger Agreement) shall not be true and correct in all material respects as of the date of the Merger Agreement or as of such time on or after the date of the Merger Agreement, except those representations and warranties that speak as of an earlier date, the truth and correctness of which shall be measured as of such earlier date;
+
+· the Company shall have failed to perform in any material respect any obligation or to comply in any material respect with any agreement or covenant of the Company to be performed or complied with by it under the Merger Agreement;
+
+· the Company shall have failed to perform in any material respect any obligation or to comply in any material respect with any agreement or covenant of the Company to be performed or complied with by it under the Merger Agreement;
+
+· any one or more of the representations and warranties contained in any one or more of Sections 4.01(a), 4.01(d), 4.02, 4.03(a), 4.03(d), 4.03(e) and/or 4.18 of the Merger Agreement (disregarding, for this purpose, (i) all qualifications as to “materiality,” “in all material respects,” “Company Material Adverse Effect” and similar qualifications and (ii) any update of or modification to the Company Disclosure Letter made or purported to have been made after the date of the Merger Agreement) shall not be true and correct in more than a de minimis respect as of the date of the Merger Agreement or as of such time on or after the date of the Merger Agreement, except those representations and warranties that speak as of an earlier date, the truth and correctness of which shall be measured as of such earlier date;
+
+Field: Page; Sequence: 34; Value: 59
+
+92
+<!-- PAGE 98 -->
+Field: /Page
+
+· the Company shall have received demands, notices or instruments from one or more holders of Company Common Stock (which demands, notices or instruments shall not have been validly withdrawn or retracted by such holder(s)) exercising, purporting to exercise or clearly indicating an intention to exercise appraisal rights in accordance with Chapters 302A.471 and 302.473 of the MBCA or otherwise, with respect to Shares that represent, in the aggregate, ten percent (10%) or more of the total number of outstanding Shares as of such time (for the avoidance of doubt, prior to giving effect to any exercise of the Top-Up Option or the issuance of any Top-Up Shares);
+
+· either Todd Austin or Matthew Margolies shall have rescinded, revoked or terminated, or shall have purported or attempted to rescind, revoke or terminate, their respective post-Closing Employment Agreement with the Company; or
+
+· Parent shall have failed to receive a specified closing certificate executed on behalf of the Company by the Company’s Chief Executive Officer or Chief Financial Officer confirming the satisfaction of certain of the conditions described above (those described in the fourth, sixth, seventh, ninth and tenth bullet points above).
+
+The foregoing conditions are for the sole benefit of Parent and Purchaser and may be asserted by Parent or Purchaser regardless of the circumstances giving rise to any such condition or may be waived by Parent or Purchaser in whole or in part at any time and from time to time in their reasonable discretion prior to the Acceptance Time. The failure by Parent or Purchaser at any time to exercise any of the foregoing rights shall not be deemed a waiver of any such right and each such right shall be deemed an ongoing right that may be asserted at any time and from time to time, subject to the terms and conditions of the Merger Agreement and the applicable rules and regulations of the SEC. The foregoing conditions shall be in addition to, and no a limitation of, the rights of Parent and Purchaser to extend, termination and/or modify the Offer pursuant to, and in accordance with, the terms and conditions of the Merger Agreement.
+
+16. Certain Legal Matters; Regulatory Approvals.
+
+*General* . Except as described in this Section 16, Purchaser is not aware of any pending legal proceeding relating to the Offer. Except as described in this Section 16, based on its examination of publicly available information filed by the Company with the SEC and other publicly available information concerning the Company, Purchaser is not aware of any governmental license or regulatory permit that appears to be material to the Company’s business that might be adversely affected by Purchaser’s acquisition of Shares as contemplated herein or of any approval or other action by any governmental, administrative or regulatory authority or agency, domestic or foreign, that would be required for the acquisition or ownership of Shares by Purchaser or Parent as contemplated herein. Should any such approval or other action be required, Purchaser currently contemplates that, except as described below under “State Takeover Laws,” such approval or other action will be sought. While Purchaser does not currently intend to delay acceptance for payment of Shares tendered pursuant to the Offer pending the outcome of any such matter, there can be no assurance that any such approval or other action, if needed, would be obtained or would be obtained without substantial conditions or that if such approvals were not obtained or such other actions were not taken, adverse consequences might not result to the Company’s business, or certain parts of the Company’s business might not have to be disposed of,
+
+Field: Page; Sequence: 35; Value: 59
+
+93
+<!-- PAGE 99 -->
+Field: /Page
+
+any of which could cause Purchaser to elect to terminate the Offer without the purchase of Shares thereunder under certain conditions. See Section 15—“Certain Conditions of the Offer.”
+
+*State Takeover Statutes.* A number of states have adopted laws which purport, to varying degrees, to apply to attempts to acquire corporations that are incorporated in, or which have substantial assets, shareholders, principal executive offices or principal places of business or whose business operations otherwise have substantial economic effects in, such states. The Company conducts business in a number of states throughout the United States, some of which have enacted such laws. Except as described herein, we do not know whether any of these laws will, by their terms, apply to the Offer or the Merger and, except as noted below, we have not complied with any such laws. To the extent that certain provisions of these laws purport to apply to the Offer or the Merger, we believe that there are reasonable bases for contesting such laws.
+
+The Company is incorporated under the laws of the state of Minnesota. Under the MBCA and other Minnesota statutes, the Company is subject to several state takeover laws including the Minnesota Control Share Acquisition Act and the Minnesota Business Combination Act. The Company has not opted out of the Minnesota Control Share Acquisition Act or the Minnesota Business Combination Act as permitted under the MBCA and, accordingly, these laws could apply to the Offer and the subsequent Merger. Furthermore, the Company may be subject to Minnesota Statutes Chapter 80B, which includes disclosure requirements for transactions involving Minnesota shareholders. These disclosure requirements are discussed in greater detail below.
+
+Under Section 302A.673 of the MBCA, a director or person is “disinterested” if the director or person is neither an officer nor an employee, nor has been an officer or employee within five years preceding the formation of the committee, of the publicly held Minnesota corporation or of a related organization.
+
+The Company’s Articles of Incorporation and Bylaws do not exclude the Company from the restrictions imposed by the Minnesota Control Share Acquisition Act. However, prior to the execution of the Merger Agreement, a committee composed solely of disinterested members of the Company Board approved the Offer and the Merger for purposes of the Minnesota Control Share Acquisition Act. Therefore, as an acquisition of shares pursuant to a cash tender offer of all the voting securities of the Company that will not be consummated unless the Minimum Tender Condition is satisfied, the Offer is not subject to the Minnesota Control Share Acquisition Act under Section 302A.671 of the MBCA.
+
+The Company is currently subject to the Minnesota Business Combination Act under Section 302A.673 of the MBCA, which prohibits a publicly held Minnesota corporation, like the Company, from engaging in any “business combination,” including a merger, with an “interested shareholder” (defined as any beneficial owner, directly or indirectly, of 10% or more of the voting power of the outstanding shares of such corporation entitled to vote) for a period of four years after the date of the transaction in which the person became an interested shareholder, unless, among other things, a committee of that corporation’s board of directors comprised solely of one or more disinterested directors has given its approval of either the business combination or the transaction which resulted in the shareholder becoming an “interested shareholder” prior to the shareholder becoming an interested shareholder.
+
+Field: Page; Sequence: 36; Value: 59
+
+94
+<!-- PAGE 100 -->
+Field: /Page
+
+Prior to the execution of the Merger Agreement, a committee composed solely of the Company’s disinterested directors approved both the Purchaser’s acquisition of the Shares pursuant to the Offer and the subsequent Merger, which the Purchaser intends to complete if it consummates the Offer, for the purposes of the Minnesota Business Combination Act. Therefore, the restrictions of the Minnesota Business Combination Act do not apply to the Purchaser’s intended consummation of the Merger following the Purchaser’s acquisition of the Shares pursuant to the Offer.
+
+The Minnesota Takeover Disclosure Law, Minnesota Statutes Sections 80B.01-80B.13 (the “Takeover Disclosure Statute”), by its terms requires certain disclosures and the filing of certain disclosure material with the Minnesota Commissioner of Commerce (the “Commissioner”) with respect to any offer for a corporation, such as the Company, that has its principal place of business in Minnesota and a certain number of shareholders resident in Minnesota. The Purchaser filed a registration statement with the Commissioner on November 29, 2017. Although the Commissioner does not have an approval right with respect to the Offer, the Commissioner does review the disclosure material for the adequacy of such disclosure and is empowered to suspend summarily the Offer in Minnesota within three days of such filing if the Commissioner determines that the registration statement does not (or the material provided to beneficial owners of the Shares residing in Minnesota does not) provide full disclosure. If such summary suspension occurs, a hearing must be held (within ten days of the summary suspension) as to whether to permanently suspend the Offer in Minnesota, subject to corrective disclosure. If the Commissioner takes action under the Takeover Disclosure Statute, such action may have the effect of significantly delaying the Offer. In filing a registration statement under the Takeover Disclosure Statute, the Purchaser does not concede that some or all of the provisions of the Takeover Disclosure Statute are applicable, valid, enforceable or constitutional.
+
+Section 302A.675 of the Minnesota Business Corporation Act which provides that an offeror may not acquire shares of a Minnesota publicly held corporation from a shareholder within two years following the offeror’s last purchase of shares of the same class pursuant to a takeover offer, including acquisitions made by purchase, exchange or merger, unless the selling shareholder is afforded, at the time of the proposed acquisition, a reasonable opportunity to dispose of the shares to the offeror upon substantially equivalent terms as those provided in the earlier takeover offer. The provision described above does not apply if the proposed acquisition of shares is approved, before the purchase of any shares by the offeror pursuant to the earlier takeover offer, by a committee of the board of directors of the corporation, comprised solely of directors who: (i) are not, nor have been in the preceding five years, officers or directors of the corporation or a related organization, (ii) are not the offerors in the takeover offer or any affiliates or associates of the offeror, (iii) were not nominated for election as directors by the offeror or any affiliates or associates of the offeror and (iv) were directors at the time of the first public announcement of the earlier takeover offer or were nominated, elected, or recommended for election as directors by a majority of the directors.
+
+In 1982, in *Edgar v. MITE Corp.* , the Supreme Court of the United States invalidated on constitutional grounds the Illinois Business Takeover Statute which, as a matter of state securities law, made takeovers of corporations meeting certain requirements more difficult. However, in 1987 in *CTS Corp. v. Dynamics Corp. of America* , the Supreme Court held that the State of Indiana could, as a matter of corporate law, constitutionally disqualify a potential acquiror from voting
+
+Field: Page; Sequence: 37; Value: 59
+
+95
+<!-- PAGE 101 -->
+Field: /Page
+
+shares of a target corporation without the prior approval of the remaining shareholders where, among other things, the corporation is incorporated, and has a substantial number of shareholders, in the state. Subsequently, in *TLX Acquisition Corp. v. Telex Corp.* , a U.S. federal district court in Oklahoma ruled that the Oklahoma statutes were unconstitutional as applied to corporations incorporated outside Oklahoma in that they would subject such corporations to inconsistent regulations. Similarly, in *Tyson Foods, Inc. v. McReynolds* , a U.S. federal district court in Tennessee ruled that four Tennessee takeover statutes were unconstitutional as applied to corporations incorporated outside Tennessee. This decision was affirmed by the United States Court of Appeals for the Sixth Circuit. In December 1988, a U.S. federal district court in Florida held in *Grand Metropolitan PLC v. Butterworth* that the provisions of the Florida Affiliated Transactions Act and the Florida Control Share Acquisition Act were unconstitutional as applied to corporations incorporated outside of Florida.
+
+If any government official or third party seeks to apply any state takeover law to the Offer or the Merger, we will take such action as then appears desirable, which action may include challenging the applicability or validity of such statute in appropriate court proceedings. If it is asserted that one or more state takeover statutes is applicable to the Offer or any such merger or other business combination and an appropriate court does not determine that it is inapplicable or invalid as applied to the Offer or the Merger, we might be required to file certain information with, or to receive approvals from, the relevant state authorities or holders of Shares, and we may be unable to accept for payment or pay for Shares tendered pursuant to the Offer, or be delayed in continuing or consummating the Offer or the Merger. In such case, we may not be obligated to accept for payment or pay for any tendered Shares. See Section 15—“Conditions of the Offer.”
+
+17. Fees and Expenses.
+
+Parent and Purchaser have retained Innisfree M&A Incorporated to be the Information Agent and Wells Fargo Bank, N.A., to be the Depositary in connection with the Offer. The Information Agent may contact holders of Shares by mail, telephone, telecopy and personal interview and may request brokers, bankers and other nominees to forward materials relating to the Offer to beneficial owners of Shares.
+
+The Information Agent and the Depositary each will receive reasonable and customary compensation for their respective services in connection with the Offer, will be reimbursed for reasonable and customary expenses and will be indemnified against certain liabilities and expenses in connection therewith, including certain liabilities under federal securities laws.
+
+Neither Parent nor Purchaser will pay any fees or commissions to any broker or dealer or to any other person (other than to the Depositary and the Information Agent) in connection with the solicitation of tenders of Shares pursuant to the Offer. Brokers, bankers and other nominees will, upon request, be reimbursed by Purchaser for customary mailing and handling expenses incurred by them in forwarding offering materials to their customers.
+
+Field: Page; Sequence: 38; Value: 59
+
+96
+<!-- PAGE 102 -->
+Field: /Page
+
+18. Miscellaneous
+
+The Offer is not being made to (nor will tenders be accepted from or on behalf of) holders of Shares in any state in which the making of the Offer or the acceptance thereof would not be in compliance with the laws of such state. However, Purchaser may, in its discretion, take such action as it may deem necessary to make the Offer in any such state and to extend the Offer to holders of Shares in such state.
+
+**No person has been authorized to give any information or to make any representation on behalf of Parent or Purchaser not contained herein or in the Letter of Transmittal and, if given or made, such information or representation must not be relied upon as having been authorized.**
+
+Purchaser has filed with the SEC a Tender Offer Statement on Schedule TO pursuant to Rule 14d-3 of the General Rules and Regulations under the Exchange Act, together with exhibits furnishing certain additional information with respect to the Offer, and may file amendments thereto. A copy of such documents, and any amendments thereto, may be examined at, and copies may be obtained from, the SEC in the manner set forth under Section 7—“Certain Information Concerning the Company.”
+
+Field: Page; Sequence: 39; Value: 59
+
+97
+<!-- PAGE 103 -->
+Field: /Page
+
+SCHEDULE I DIRECTORS AND EXECUTIVE OFFICERS OF PARENT AND PURCHASER
+
+Directors and Executive Officers of Parent and Purchaser
+
+The name, current principal occupation or employment and material occupations, positions, offices or employment for the past five (5) years of each director, executive officer, manager and general partner of each member of the Participant Group (as defined below) and their affiliates are set forth below. All individuals listed below are United States citizens.
+
+The sole shareholder of AC Breathe Merger Sub Inc., a Minnesota corporation (“Purchaser”), is MGC Parent LLC, a Delaware limited liability company (“Parent”). Currently, the sole member of Parent is Altus Capital Partners II, L.P., a Delaware limited partnership (“Altus CP II”, and together with Purchaser and Parent, the “Participant Group”). The general partner of Altus CP II is Altus Management II, LLC (“Altus CP II GP” and together with Altus CP II, the “Altus Entities”).
+
+The principal office address of Purchaser, Parent and the Altus Entities is c/o Altus Capital Partners, 10 Westport Road, Suite C204, Wilton, Connecticut 06897. The telephone number at the principal office of Purchaser, Parent and the Altus Entities is 203-429-2000.
+
+| Name,
+Citizenship and Business Address | Positions | Present
+Principal Occupation or Employment; Material Positions Held During the Past Five Years |
+| --- | --- | --- |
+| Greg Greenberg United States citizen Altus Capital Partners 250 Parkway Drive, Suite 120 Lincolnshire, IL 60069 847-229-0770 | Senior Partner and Co-Founder of Altus Capital Partners Manager and Chairman of Parent Director and Chairman of Purchaser | Mr.
+Greenberg co-founded Altus Capital Partners in 2003, prior to which he was a partner in Max Capital Partners.  Mr.
+Greenberg has been managing the Lincolnshire, Illinois office of Altus Capital Partners since 1997.  Before working
+with Max Capital and co-founding Altus, Mr. Greenberg was Senior Vice President with JMB Realty Corporation, directing the
+investment strategy of a $1 billion Class A office real estate portfolio.  Mr. Greenberg is a graduate of the University
+of Denver with a degree in Business Administration. |
+| Heidi Goldstein United States citizen Altus Capital Partners | Manager and Vice President of Parent Director and Vice President of Purchaser | Heidi
+Goldstein joined Altus Capital Partners in 2006, prior to which Ms. Goldstein participated in the underwriting and portfolio
+management of leveraged transactions at GE Antares Capital. |
+
+Field: Page; Sequence: 40; Value: 59
+
+98
+<!-- PAGE 104 -->
+Field: /Page
+
+| Name,
+Citizenship and Business Address | Present
+Principal Occupation or Employment; Material Positions Held During the Past Five Years |
+| --- | --- |
+| 10 Westport Road, Suite C204 Wilton, CT 06897 203-429-2000 | Before
+that, Ms. Goldstein worked at Dilmun Investments, Inc., the US-based investment advisor of Bahrain International Bank, where
+she held positions in the private equity and the high yield investment group.  Ms. Goldstein earned a BS in Finance
+at the University of Connecticut. |
+
+Field: Page; Sequence: 41; Value: 59
+
+99
+<!-- PAGE 105 -->
+Field: /Page
+
+The Letter of Transmittal, certificates for Shares and any other required documents should be sent by each shareholder or such shareholder’s broker, dealer, commercial bank, trust company or other nominee to Wells Fargo Bank, N.A., the Depositary for the Offer, as follows:
+
+**Wells Fargo Bank, N.A.**
+
+By Mail: By 5:00 p.m. NYC time on Expiration Date Wells Fargo Bank, N.A. Shareowner Services Voluntary Corporate Actions P.O. Box 64858 St. Paul, Minnesota 55164-0858 By Facsimile Transmission: Wells Fargo Bank, N.A. Shareowner Services Voluntary Corporate Actions (800) 468-9716 (phone) (866) 734-9952 (fax) By Hand or Overnight Courier: By 5:00 p.m. NYC time on Expiration Date Wells Fargo Bank, N.A. Shareowner Services Voluntary Corporate Actions 1110 Centre Pointe Curve, Suite 101 Mendota Heights, Minnesota 55120
+
+*The Information Agent for the Offer is:*
+
+![](x5_c89784a001.jpg)
+
+Innisfree M&A Incorporated
+
+501 Madison Avenue, 20th Floor
+
+New York, New York 10022
+
+**Shareholders may call toll free: (888) 750-5834**
+
+**Banks and Brokers may call collect: (212) 750-5833**
+
+Field: Page; Sequence: 42; Value: 59
+
+100
+
+Field: /Page

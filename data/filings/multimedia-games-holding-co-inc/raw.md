@@ -1,0 +1,3902 @@
+
+<!-- PAGE 1 -->
+DEFM14A 1 a2221849zdefm14a.htm DEFM14A
+
+Use these links to rapidly review the document TABLE OF CONTENTS TABLE OF CONTENTS
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;" Table of Contents
+
+**UNITED STATES SECURITIES AND EXCHANGE COMMISSION Washington, D.C. 20549**
+
+**SCHEDULE 14A**
+
+Proxy Statement Pursuant to Section 14(a) of the Securities Exchange Act of 1934 (Amendment No. )
+
+COMMAND=ADD_TABLEWIDTH,"100%" User-specified TAGGED TABLE
+
+| Filed by the Registrant ý |  |
+| --- | --- |
+| Filed by a Party other than the Registrant o |  |
+| Check the appropriate box: |  |
+| o | Preliminary Proxy Statement |
+| o | Confidential, for Use of the Commission Only (as permitted by Rule 14a-6(e)(2)) |
+| ý | Definitive Proxy Statement |
+| o | Definitive Additional Materials |
+| o | Soliciting Material under §240.14a-12 |
+
+end of user-specified TAGGED TABLE
+
+COMMAND=ADD_TABLEWIDTH,"100%" User-specified TAGGED TABLE
+
+| Multimedia Games Holding Company, Inc. |  |  |
+| --- | --- | --- |
+| (Name of Registrant as Specified In Its Charter) |  |  |
+| N/A |  |  |
+| (Name of Person(s) Filing Proxy Statement, if other than the Registrant) |  |  |
+| Payment of Filing Fee (Check the appropriate box): |  |  |
+| o | No fee required. |  |
+| o | Fee computed on table below per Exchange Act Rules 14a-6(i)(1) and 0-11. |  |
+|  | (1) | Title of each class of securities to which transaction applies: |
+|  | (2) | Aggregate number of securities to which transaction applies: |
+|  | (3) | Per unit price or other underlying value of transaction computed pursuant to Exchange Act Rule 0-11 (set forth the amount on which the filing fee is calculated and state how it was determined): |
+|  | (4) | Proposed maximum aggregate value of transaction: |
+|  | (5) | Total fee paid: |
+| ý | Fee paid previously with preliminary materials. |  |
+| o | Check box if any part of the fee is offset as provided by Exchange Act Rule 0-11(a)(2) and identify the filing for which the offsetting fee was paid previously. Identify the previous filing by registration
+statement number, or the Form or Schedule and the date of its filing. |  |
+|  | (1) | Amount Previously Paid: |
+|  | (2) | Form, Schedule or Registration Statement No.: |
+|  | (3) | Filing Party: |
+|  | (4) | Date Filed: |
+
+end of user-specified TAGGED TABLE
+<!-- PAGE 2 -->
+ZEQ.=1,SEQ=1,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=890788,FOLIO='blank',FILE='DISK112:[14ZCP1.14ZCP40801]BA40801A.;16',USER='GKIBBE',CD='21-OCT-2014;12:46' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;" Table of Contents
+
+**![LOGO](g269207.jpg)**
+
+**MULTIMEDIA GAMES HOLDING COMPANY, INC.** **206 Wild Basin Road South, Building B Austin, Texas 78746**
+
+**(512) 334-7500**
+
+**MERGER PROPOSAL—YOUR VOTE IS VERY IMPORTANT**
+
+October 22, 2014
+
+Dear Shareholder:
+
+We cordially invite you to attend a special meeting of shareholders, which we refer to as the "special meeting", of Multimedia Games Holding Company, Inc., which we refer to as "Multimedia Games", to be held on Wednesday, December 3, 2014, at 10:00 a.m. local time, at our corporate office, located at 206 Wild Basin Road South, Building B, Austin, Texas 78746.
+
+On September 8, 2014, we entered into a merger agreement, which we refer to as the "merger agreement", with Global Cash Access Holdings, Inc., which we refer to as "GCA", and Movie Merger Sub, Inc., a wholly owned subsidiary of GCA, which we refer to as "Merger Sub", providing for the acquisition of Multimedia Games by GCA. Pursuant to the terms of the merger agreement, Merger Sub will merge with and into Multimedia Games, which we refer to as the "merger", with Multimedia Games continuing as the surviving corporation and a wholly owned subsidiary of GCA. At the special meeting, we will ask you to consider and vote upon a proposal to approve the merger agreement, thereby approving the merger, and certain other matters as set forth in the shareholder notice and the accompanying proxy statement.
+
+If the merger is approved and completed, you will be entitled to receive $36.50 in cash, without interest and less any applicable withholding taxes, for each share of Multimedia Games common stock, par value $0.01 per share, which we refer to as the "Multimedia Games common stock", that you own.
+
+Approval of the merger agreement and the transactions contemplated thereby, including the merger, requires the affirmative vote of the holders of at least two-thirds of the outstanding shares of Multimedia Games common stock entitled to vote at the special meeting. Our board of directors, after considering various factors, unanimously determined that the merger agreement and the transactions contemplated thereby, including the merger, are advisable, fair to and in the best interests of Multimedia Games and its shareholders, and approved the merger agreement and the transactions contemplated thereby, including the merger. **The Multimedia Games board of directors unanimously recommends that you vote "FOR" the approval of the merger agreement, thereby approving the transactions contemplated thereby, including the merger, "FOR" the proposal to approve, by a non-binding advisory vote, the compensation arrangements disclosed in the accompanying proxy statement that may be payable to Multimedia Games' named executive officers in connection with the consummation of the merger and "FOR" the proposal to approve the adjournment of the special meeting, if necessary or appropriate in the view of the Multimedia Games board of directors, to solicit additional proxies if there are not sufficient votes at the time of the special meeting to approve the merger agreement.**
+
+The accompanying proxy statement provides you with detailed information about the merger agreement and the merger. A copy of the merger agreement is included as Annex A to the proxy statement. You can also obtain other information about Multimedia Games from documents that we have filed with the Securities and Exchange Commission. The proxy statement also describes the actions and determinations of our board of directors in connection with its evaluation of the merger agreement and the merger. We urge you to read the entire proxy statement carefully.
+
+**Your vote is important regardless of the number of shares you own.** ***The merger cannot be completed unless holders of at least two-thirds of the outstanding shares of Multimedia Games common stock entitled to vote at the special meeting vote in favor of the approval of the merger agreement. If your shares of Multimedia Games common stock are held in an account at a broker, bank or other nominee, you should instruct your broker, bank or other nominee how to vote in accordance with the voting instruction form furnished by your broker, bank or other nominee. If you fail to vote on the merger agreement or fail to instruct your broker, bank or other nominee on how to vote, the effect will be the same as a vote against the approval of the merger agreement.*** We greatly appreciate your cooperation in voting your shares. The enclosed proxy card contains instructions regarding voting. Whether or not you plan to attend the special meeting, we request that you submit your proxy to vote your shares at your earliest convenience. If you do attend the special meeting and wish to vote in person, you may withdraw your proxy at that time.
+
+If you have any questions about the special meeting or the merger after reading the proxy statement, you may contact Innisfree M&A Incorporated, our proxy solicitor, toll free at (888) 750-5834 or collect at (212) 750-5833.
+
+On behalf of the Multimedia Games board of directors, we thank you for your support of Multimedia Games Holding Company, Inc. and appreciate your consideration of this matter.
+
+COMMAND=ADD_TABLEWIDTH,"100%" User-specified TAGGED TABLE
+
+Patrick J. Ramsey Chief Executive Officer
+
+end of user-specified TAGGED TABLE
+
+**This transaction has not been approved or disapproved by the Securities and Exchange Commission or any state securities commission. Neither the Securities and Exchange Commission nor any state securities commission has passed upon the merits or fairness of this transaction or upon the adequacy or accuracy of the information contained in the proxy statement. Any representation to the contrary is a criminal offense.**
+
+The proxy statement dated October 22, 2014 and the enclosed proxy card are first being mailed to shareholders on or about October 22, 2014.
+<!-- PAGE 3 -->
+ZEQ.=1,SEQ=2,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=235373,FOLIO='blank',FILE='DISK112:[14ZCP1.14ZCP40801]BC40801A.;31',USER='JFUSS',CD='21-OCT-2014;22:47' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+**![LOGO](g269207.jpg)**
+
+**MULTIMEDIA GAMES HOLDING COMPANY, INC.** **206 Wild Basin Road South, Building B Austin, Texas 78746 (512) 334-7500**
+
+*COMMAND=ADD_LINERULETXT,NOSHADE COLOR="#000000" SIZE="1.0PT" WIDTH="26%" ALIGN="CENTER"* **COMMAND=ADDING_LINEBREAK**
+
+**Notice of Special Meeting of Shareholders**
+
+**To Be Held On December 3, 2014**
+
+*COMMAND=ADD_LINERULETXT,NOSHADE COLOR="#000000" SIZE="1.0PT" WIDTH="26%" ALIGN="CENTER"* **COMMAND=ADDING_LINEBREAK**
+
+**To the Shareholders of Multimedia Games Holding Company, Inc.:**
+
+Notice is hereby given that a special meeting of the shareholders, which we refer to as the "special meeting" in the accompanying proxy statement, of Multimedia Games Holding Company, Inc., a Texas corporation, which we refer to as "Multimedia Games" in the accompanying proxy statement, will be held on Wednesday, December 3, 2014 at 10:00 a.m., local time, at our corporate office, located at 206 Wild Basin Road South, Building B, Austin, Texas 78746, for the following purposes:
+
+Only shareholders of record of our common stock, par value $0.01 per share, which we refer to as the "Multimedia Games common stock" or "our common stock" in the accompanying proxy statement,
+<!-- PAGE 4 -->
+ZEQ.=1,SEQ=3,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=740284,FOLIO='blank',FILE='DISK112:[14ZCP1.14ZCP40801]BE40801A.;31',USER='JFUSS',CD='21-OCT-2014;22:49'
+
+Table of Contents
+
+at the close of business on October 21, 2014, which we refer to as the "record date" in the accompanying proxy statement, are entitled to notice of, and to vote at, the special meeting or any adjournments or postponements thereof. We will make available an alphabetical list of our shareholders of record for examination by any of our shareholders for any purpose germane to the special meeting, at our corporate headquarters located at 206 Wild Basin Road South, Building B, Austin, Texas 78746, during ordinary business hours, for the ten (10) days prior to the special meeting until the end of the special meeting.
+
+The approval of the merger agreement by the affirmative vote of the holders of at least two-thirds of the outstanding shares of Multimedia Games common stock entitled to vote at the special meeting is a condition to the consummation of the merger. The approval of each of the merger-related named executive officer compensation proposal and the adjournment proposal requires the affirmative vote of holders of a majority of the shares of Multimedia Games common stock that are present in person or by proxy and entitled to vote on such proposal. The vote to approve the merger-related named executive officer compensation proposal is advisory only, will not be binding on Multimedia Games or GCA and is not a condition to the consummation of the merger.
+
+Even if you plan to attend the special meeting in person, we request that you complete, sign, date and return the enclosed proxy and thus ensure that your shares will be represented at the special meeting if you are unable to attend. If you do attend the special meeting and wish to vote in person, you may withdraw your proxy at that time. If your shares of Multimedia Games common stock are held in street name through a broker, bank or other nominee, you should instruct your broker, bank or other nominee how to vote in accordance with the voting instruction form furnished by your broker, bank or other nominee.
+
+YOUR VOTE IS IMPORTANT. FAILURE TO VOTE YOUR SHARES WILL HAVE THE SAME EFFECT AS A VOTE "AGAINST" THE APPROVAL OF THE MERGER AGREEMENT. YOU MAY VOTE BY MAIL, INTERNET OR TELEPHONE OR BY ATTENDING THE SPECIAL MEETING AND VOTING BY BALLOT, ALL AS DESCRIBED IN THE ACCOMPANYING PROXY STATEMENT. **The Multimedia Games board of directors unanimously recommends that you vote "FOR" the approval of the merger agreement, thereby approving the transactions contemplated thereby, including the merger, "FOR" the merger-related named executive officer compensation proposal and "FOR" the adjournment proposal.**
+
+Please note that we intend to limit attendance at the special meeting to shareholders as of the record date (or their authorized representatives). If your shares are held by a broker, bank or other nominee, please bring to the special meeting your account statement evidencing your beneficial ownership of Multimedia Games common stock as of the record date. All shareholders should also bring photo identification.
+
+The accompanying proxy statement provides a detailed description of the merger and the merger agreement. We urge you to read the accompanying proxy statement, including the annexes and any documents incorporated by reference, carefully and in their entirety. If you have any questions concerning the merger or the proxy statement of which this notice forms a part, would like additional copies of the proxy statement or need help voting your shares of Multimedia Games common stock, please contact Multimedia Games' proxy solicitor:
+
+Innisfree M&A Incorporated 501 Madison Avenue, 20 th Floor New York, NY 10022 Shareholders call toll-free: (888) 750-5834 Banks and brokers call collect: (212) 750-5833
+
+COMMAND=ADD_TABLEWIDTH,"100%" User-specified TAGGED TABLE
+
+|  |
+| --- |
+| ● |
+| Todd McTavish |
+| Senior Vice President, General Counsel, Chief Compliance Officer and Corporate Secretary |
+| Austin, Texas |
+| October 22, 2014 |
+
+end of user-specified TAGGED TABLE
+<!-- PAGE 5 -->
+ZEQ.=2,SEQ=4,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=195705,FOLIO='blank',FILE='DISK112:[14ZCP1.14ZCP40801]BE40801A.;31',USER='JFUSS',CD='21-OCT-2014;22:49' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+**SUMMARY VOTING INSTRUCTIONS YOUR VOTE IS IMPORTANT**
+
+**Ensure that your shares of Multimedia Games common stock are voted at the special meeting by submitting your proxy or, if your shares of Multimedia Games common stock are held in street name through a broker, bank or other nominee, contacting your broker, bank or other nominee. If you do not vote or do not instruct your broker, bank or other nominee how to vote, it will have the same effect as voting "AGAINST" the approval of the merger agreement but will have no effect on the outcome of any vote on the merger-related named executive officer compensation proposal or the adjournment proposal.**
+
+***If your shares of Multimedia Games common stock are registered in street name through a broker, bank or other nominee:*** check the voting instruction card forwarded by your broker, bank or other nominee or contact your broker, bank or other nominee in order to obtain directions as to how to ensure that your shares of Multimedia Games common stock are voted in favor of the proposals at the special meeting.
+
+***If your shares of Multimedia Games common stock are registered in your name:*** submit your proxy as soon as possible via Internet or telephone or by signing, dating and returning the enclosed proxy card in the enclosed postage-paid envelope so that your shares of common stock can be voted in favor of the proposals at the special meeting.
+
+If you need assistance in completing your proxy card or have questions regarding the special meeting, please contact our proxy solicitor, at:
+
+Innisfree M&A Incorporated Shareholders call toll-free: (888) 750-5834 Banks and brokers call collect: (212) 750-5833
+<!-- PAGE 6 -->
+ZEQ.=1,SEQ=5,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=284975,FOLIO='blank',FILE='DISK112:[14ZCP1.14ZCP40801]BF40801A.;5',USER='CHE108056',CD='20-OCT-2014;20:39' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+**TABLE OF CONTENTS**
+
+COMMAND=ADD_TABLEWIDTH,"100%" COMMAND=ADD_START_LINKTABLE User-specified TAGGED TABLE
+
+| SUMMARY TERM SHEET | 1 |
+| --- | --- |
+| Parties Involved in the Merger | 1 |
+| The Merger | 2 |
+| Expected Timing of the Merger | 2 |
+| Merger Consideration | 3 |
+| The Special Meeting | 3 |
+| Treatment of Stock Options and Other Stock-Based Compensation | 4 |
+| Delisting and Deregistration of Our Common Stock | 5 |
+| Recommendation of Our Board of Directors | 5 |
+| Opinion of Multimedia Games' Financial Advisor | 5 |
+| Interests of Certain Persons in the Merger | 6 |
+| Financing of the Merger | 6 |
+| No Solicitation of Acquisition Proposals | 7 |
+| Changes in Board Recommendation | 8 |
+| Conditions to Completion of the Merger | 8 |
+| Termination of the Merger Agreement | 10 |
+| Termination Fee; Effect of Termination | 11 |
+| Specific Performance | 12 |
+| Material U.S. Federal Income Tax Consequences of the Merger | 13 |
+| Regulatory Matters | 13 |
+| Market Price of Multimedia Games Common Stock and Dividend Information | 14 |
+| Fees and Expenses; Transfer Taxes | 15 |
+| Litigation Relating to the Merger | 15 |
+| Rights of Dissent and Appraisal | 16 |
+| Help in Answering Questions | 16 |
+| QUESTIONS AND ANSWERS ABOUT THE SPECIAL MEETING AND THE
+MERGER | 17 |
+| CAUTIONARY STATEMENT CONCERNING FORWARD-LOOKING INFORMATION | 24 |
+| PARTIES INVOLVED IN THE MERGER | 25 |
+| THE SPECIAL MEETING | 27 |
+| Date, Time and Place | 27 |
+| Purpose of the Special Meeting | 27 |
+| Recommendations of Our Board of Directors | 27 |
+| Record Date and Voting Information | 28 |
+| Quorum | 28 |
+| Required Vote; Effect of Abstentions and Broker Non-Votes | 28 |
+| Voting by Shareholders | 29 |
+| For Shareholders of Record | 29 |
+| For Beneficial Owners | 30 |
+| Revocation of Proxies | 30 |
+| Voting by Multimedia Games' Directors and Executive Officers | 30 |
+| Expenses of Proxy Solicitation | 30 |
+| Householding | 31 |
+| Tabulation of Votes | 31 |
+| Confidential Voting | 31 |
+| Adjournments and Postponements | 32 |
+| Attending the Special Meeting | 32 |
+| Assistance | 32 |
+
+end of user-specified TAGGED TABLE COMMAND=ADD_END_LINKTABLE
+<!-- PAGE 7 -->
+ZEQ.=1,SEQ=6,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=266055,FOLIO='blank',FILE='DISK112:[14ZCP1.14ZCP40801]BG40801A.;26',USER='JFUSS',CD='21-OCT-2014;23:07'
+
+Table of Contents
+
+COMMAND=ADD_TABLEWIDTH,"100%" COMMAND=ADD_START_LINKTABLE User-specified TAGGED TABLE
+
+| PROPOSAL 1: APPROVAL OF THE MERGER AGREEMENT | 33 |
+| --- | --- |
+| Effects of the Merger | 33 |
+| Background of the Merger | 34 |
+| Reasons for the Merger | 43 |
+| Recommendation of Our Board of Directors | 47 |
+| Opinion of Multimedia Games' Financial Advisor | 48 |
+| Delisting and Deregistration of Our Common Stock | 56 |
+| Financing of the Merger | 56 |
+| Interests of Certain Persons in the Merger | 58 |
+| Certain Projections Prepared by the Management of Multimedia
+Games | 60 |
+| Regulatory Matters | 62 |
+| Litigation Relating to the Merger | 63 |
+| Material U.S. Federal Income Tax Consequences of the Merger | 64 |
+| Rights of Dissent and Appraisal | 66 |
+| TERMS OF THE MERGER AGREEMENT | 73 |
+| Terms of the Merger; Merger Consideration | 73 |
+| Certificate of Formation; Bylaws; Directors and Officers | 74 |
+| Completion of the Merger | 74 |
+| Effective Time | 75 |
+| Treatment of Stock Options and Other Stock-Based Compensation | 75 |
+| Exchange of Shares in the Merger | 75 |
+| Lost, Stolen or Destroyed Certificates | 76 |
+| Representations and Warranties | 77 |
+| Covenants Regarding Conduct of Business by Multimedia Games Pending the
+Merger | 81 |
+| No Solicitation of Acquisition Proposals; Changes in Board
+Recommendation | 85 |
+| Required Shareholder Vote | 87 |
+| Consents, Approvals and Filings | 87 |
+| Employee Benefits Matters | 90 |
+| Directors' and Officers' Indemnification and Insurance | 90 |
+| Financing of the Merger | 91 |
+| Other Covenants and Agreements | 94 |
+| Conditions to Completion of the Merger | 94 |
+| Termination of the Merger Agreement | 96 |
+| Termination Fee; Effect of Termination | 97 |
+| Fees and Expenses; Transfer Taxes | 99 |
+| Specific Performance | 99 |
+| Third Party Beneficiaries | 99 |
+| Amendments; Waivers | 100 |
+| PROPOSAL 2: ADVISORY VOTE ON MERGER-RELATED NAMED EXECUTIVE
+OFFICER COMPENSATION | 101 |
+| PROPOSAL 3: APPROVAL OF ADJOURNMENT OF SPECIAL MEETING | 104 |
+| MARKET PRICE OF MULTIMEDIA GAMES COMMON STOCK AND DIVIDEND
+INFORMATION | 105 |
+| SECURITY OWNERSHIP OF CERTAIN BENEFICIAL OWNERS AND
+MANAGEMENT | 106 |
+| OTHER MATTERS | 108 |
+
+end of user-specified TAGGED TABLE COMMAND=ADD_END_LINKTABLE
+
+ii
+<!-- PAGE 8 -->
+ZEQ.=2,SEQ=7,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=880242,FOLIO='ii',FILE='DISK112:[14ZCP1.14ZCP40801]BG40801A.;26',USER='JFUSS',CD='21-OCT-2014;23:07'
+
+Table of Contents
+
+COMMAND=ADD_TABLEWIDTH,"100%" COMMAND=ADD_START_LINKTABLE User-specified TAGGED TABLE
+
+| FUTURE SHAREHOLDER PROPOSALS | 109 |
+| --- | --- |
+| WHERE SHAREHOLDERS CAN FIND MORE INFORMATION | 110 |
+
+end of user-specified TAGGED TABLE COMMAND=ADD_END_LINKTABLE
+
+COMMAND=ADD_TABLEWIDTH,"100%" COMMAND=ADD_START_LINKTABLE User-specified TAGGED TABLE
+
+| Annex A: | Agreement and Plan of Merger, dated as of September 8, 2014, by and among Multimedia Games Holding Company, Inc., Global Cash
+Access Holdings, Inc. and Movie Merger Sub, Inc | A-1 |
+| --- | --- | --- |
+| Annex B: | Opinion of Wells Fargo Securities, LLC. | B-1 |
+| Annex C: | Subchapter H of Chapter 10 of the Texas Business Organizations Code | C-1 |
+
+end of user-specified TAGGED TABLE COMMAND=ADD_END_LINKTABLE
+
+iii
+<!-- PAGE 9 -->
+ZEQ.=3,SEQ=8,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=563152,FOLIO='iii',FILE='DISK112:[14ZCP1.14ZCP40801]BG40801A.;26',USER='JFUSS',CD='21-OCT-2014;23:07' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+**![LOGO](g269207.jpg)**
+
+*COMMAND=ADD_LINERULETXT,NOSHADE COLOR="#000000" SIZE="1.0PT" WIDTH="26%" ALIGN="CENTER"* COMMAND=ADDING_LINEBREAK
+
+**PROXY STATEMENT**
+
+*COMMAND=ADD_LINERULETXT,NOSHADE COLOR="#000000" SIZE="1.0PT" WIDTH="26%" ALIGN="CENTER"* **COMMAND=ADDING_LINEBREAK**
+
+This proxy statement contains information related to our special meeting of shareholders to be held on Wednesday, December 3, 2014, at 10:00 a.m., local time, at our corporate office, located at 206 Wild Basin Road South, Building B, Austin, Texas 78746, and at any adjournments or postponements thereof. We are furnishing this proxy statement to the shareholders of Multimedia Games Holding Company, Inc. as part of the solicitation of proxies by the Multimedia Games board of directors for use at the special meeting.
+
+**SUMMARY TERM SHEET**
+
+This summary term sheet briefly summarizes material information found in this proxy statement. The proxy statement contains a more detailed description of the terms described in this summary. You are urged to read this proxy statement carefully, including the annexes and the documents referred to or incorporated by reference in this proxy statement, as this summary may not contain all of the information that may be important to you. We have included page references in parentheses to direct you to the appropriate place in this proxy statement for a more complete description of the topics presented in this summary term sheet. You may obtain the information incorporated by reference in this proxy statement without charge by following the instructions under "Where Shareholders Can Find More Information" beginning on page 110 of this proxy statement.
+
+In this proxy statement, the terms "we", "us", "our", "Multimedia Games" and the "company" refer to Multimedia Games Holding Company, Inc. and, where appropriate, its subsidiaries. We refer to Global Cash Access Holdings, Inc. as "GCA" and Movie Merger Sub, Inc. as "Merger Sub" in this proxy statement. All references to the "merger" refer to the merger of Merger Sub with and into Multimedia Games, with Multimedia Games surviving as a wholly owned subsidiary of GCA; and, unless otherwise indicated or as the context requires, all references to the "merger agreement" refer to the Agreement and Plan of Merger, dated as of September 8, 2014, as it may be amended from time to time, by and among Multimedia Games, GCA and Merger Sub, a copy of which is included as Annex A to this proxy statement. Multimedia Games, following the completion of the merger, is sometimes referred to in this proxy statement as the "surviving corporation".
+
+**Parties Involved in the Merger (Page 25)**
+
+*Multimedia Games Holding Company, Inc.*
+
+Multimedia Games Holding Company, Inc., a Texas corporation, designs, manufactures and supplies gaming machines and systems to casino operators in North America, domestic lottery operators, and commercial bingo gaming facility operators. Multimedia Games' revenues are generated from the operation of gaming units in revenue-sharing or flat fee leasing arrangements and from the sale of gaming units and systems that feature proprietary and licensed game themes.
+
+Multimedia Games common stock is listed on the NASDAQ Global Select Market, which we refer to as the "NASDAQ" in this proxy statement, under the symbol "MGAM".
+
+Multimedia Games' principal executive offices are located at 206 Wild Basin Road South, Building B, Austin, Texas 78746, its telephone number is (512) 334-7500 and its Internet website address is www.multimediagames.com. The information provided on or accessible through Multimedia Games' website, other than securities filings that are otherwise incorporated herein by reference, is not
+<!-- PAGE 10 -->
+ZEQ.=1,SEQ=9,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=329151,FOLIO='blank',FILE='DISK112:[14ZCP1.14ZCP40801]CA40801A.;33',USER='JFUSS',CD='21-OCT-2014;19:42'
+
+Table of Contents
+
+part of this proxy statement and is not incorporated in this proxy statement by this or any other reference to its website provided in this proxy statement.
+
+Additional information about Multimedia Games is contained in its public filings, which are incorporated by reference herein. See "Where Shareholders Can Find More Information" beginning on page 110 of this proxy statement.
+
+*Global Cash Access Holdings, Inc.*
+
+Global Cash Access Holdings, Inc., a Delaware corporation, is a global provider of cash access services and related equipment and services to the gaming industry. GCA's products and services provide: (i) gaming establishment patrons access to cash through a variety of methods, including Automated Teller Machine ("ATM") cash withdrawals, credit card cash access transactions, point-of-sale ("POS") debit card transactions, check verification and warranty services and money transfers; (ii) integrated cash access devices and related services, such as slot machine ticket redemption and jackpot kiosks to the gaming industry; (iii) products and services that improve credit decision-making, automate cashier operations and enhance patron marketing activities for gaming establishments; and (iv) online payment processing solutions for gaming operators in states that offer intra-state, Internet-based gaming and lottery activities.
+
+GCA's common stock is listed on the New York Stock Exchange, which we refer to as the "NYSE" in this proxy statement, under the symbol "GCA".
+
+GCA's principal executive offices are located at 7250 S. Tenaya Way, Suite 100, Las Vegas, Nevada 89113, its telephone number is (800) 833-7110 and its Internet website address is www.gcainc.com. The information provided on or accessible through GCA's website is not part of this proxy statement and is not incorporated in this proxy statement by this or any other reference to its website provided in this proxy statement.
+
+*Movie Merger Sub, Inc.*
+
+Movie Merger Sub, Inc., a wholly owned subsidiary of GCA, is a Texas corporation that was formed on September 4, 2014 for the sole purpose of entering into the merger agreement and completing the transactions contemplated by the merger agreement, including the merger. Upon the terms and subject to the conditions of the merger agreement, Merger Sub will be merged with and into Multimedia Games, with Multimedia Games surviving the merger as a wholly owned subsidiary of GCA.
+
+Merger Sub's principal executive offices are located at 7250 S. Tenaya Way, Suite 100, Las Vegas, Nevada 89113 and its telephone number is (800) 833-7110.
+
+**The Merger**
+
+The proposed transaction is the acquisition of Multimedia Games by GCA pursuant to the merger agreement. The acquisition will be effected by the merger of Merger Sub with and into Multimedia Games, with Multimedia Games continuing as the surviving corporation and becoming a wholly owned subsidiary of GCA.
+
+**Expected Timing of the Merger**
+
+We currently anticipate that the merger will be completed by the first calendar quarter of 2015. The merger is subject to various regulatory clearances and approvals and other conditions, however, and it is possible that factors outside the control of both GCA and Multimedia Games could result in the merger being completed at a later time, or not at all. There may be a substantial amount of time between the special meeting and the completion of the merger.
+
+2
+<!-- PAGE 11 -->
+ZEQ.=2,SEQ=10,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=699809,FOLIO='2',FILE='DISK112:[14ZCP1.14ZCP40801]CA40801A.;33',USER='JFUSS',CD='21-OCT-2014;19:42'
+
+Table of Contents
+
+We expect to complete the merger promptly following the receipt of all required regulatory approvals and the satisfaction or waiver of the other conditions precedent described in the merger agreement.
+
+**Merger Consideration (Page 73)**
+
+If the merger is completed, each share of our common stock, par value $0.01 per share, which we refer to as "Multimedia Games common stock" or "our common stock" in this proxy statement, issued and outstanding immediately prior to the effective time of the merger, other than the shares of Multimedia Games common stock held directly or indirectly by Multimedia Games, GCA or Merger Sub, or held by shareholders who are entitled to demand and properly perfect the right of dissent and appraisal of such shares pursuant to, and in compliance in all respects with, the Texas Business Organizations Code, which we refer to as the "TBOC" in this proxy statement, will be converted into the right to receive $36.50 in cash, without interest and less any applicable withholding taxes, which we refer to as the "merger consideration" in this proxy statement. At or immediately prior to the effective time of the merger, GCA will deposit or cause to be deposited sufficient funds to pay the aggregate per share merger consideration with the paying agent.
+
+**The Special Meeting (Page 27)**
+
+The special meeting will be held on Wednesday, December 3, 2014 at 10:00 a.m., local time at our corporate office, located at 206 Wild Basin Road South, Building B, Austin, Texas 78746.
+
+At the special meeting, you will be asked to consider and vote upon proposals to: (1) approve the merger agreement, thereby approving the transactions contemplated thereby, including the merger; (2) approve, by a non-binding advisory vote, the compensation arrangements disclosed in this proxy statement that may be payable to Multimedia Games' named executive officers in connection with the consummation of the merger, which proposal we refer to as the "merger-related named executive officer compensation proposal" in this proxy statement; and (3) approve the adjournment of the special meeting if necessary or appropriate in the view of the Multimedia Games board of directors, including to solicit additional proxies if there are not sufficient votes at the time of the special meeting to approve the merger agreement, which proposal we refer to as the "adjournment proposal" in this proxy statement.
+
+Only shareholders who hold shares of our common stock at the close of business on October 21, 2014, which we refer to as the "record date" in this proxy statement, will be entitled to vote at the special meeting. Each share of our common stock outstanding on the record date will be entitled to one vote on each matter submitted to our shareholders for approval at the special meeting. As of the record date for the special meeting, there were 29,732,211 outstanding shares of our common stock entitled to vote at the special meeting.
+
+The presence in person or by proxy of the holders of record of a majority of the shares of our common stock entitled to vote at the meeting is necessary and sufficient to constitute a quorum for the transaction of any business at the special meeting. As of the record date for the special meeting, the presence of holders of record of 14,866,106 shares of our common stock will be required to obtain a quorum.
+
+3
+<!-- PAGE 12 -->
+ZEQ.=3,SEQ=11,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=457950,FOLIO='3',FILE='DISK112:[14ZCP1.14ZCP40801]CA40801A.;33',USER='JFUSS',CD='21-OCT-2014;19:42'
+
+Table of Contents
+
+Approval of the merger agreement requires the affirmative vote of the holders of at least two-thirds of the outstanding shares of Multimedia Games common stock entitled to vote at the special meeting. A failure to vote your shares of Multimedia Games common stock, an abstention from voting or a broker non-vote, as defined below, will have the same effect as a vote "AGAINST" the proposal to approve the merger agreement. Approval of each of the merger-related named executive officer compensation proposal and the adjournment proposal requires the affirmative vote of the holders of a majority of the shares of Multimedia Games common stock that are present in person or by proxy and entitled to vote on such proposal. Abstentions and broker non-votes, if any, will not be counted as votes either "FOR" or "AGAINST" the merger-related named executive officer compensation proposal or the adjournment proposal.
+
+Any Multimedia Games shareholder of record entitled to vote may submit a proxy by returning a signed proxy card by mail, through the Internet or by telephone, or may vote in person by appearing at the special meeting. If you are a beneficial owner and hold your shares of Multimedia Games common stock in "street name" through a broker, bank or other nominee, you should instruct your broker, bank or other nominee on how you wish your shares of Multimedia Games common stock to be voted using the instructions provided by your broker, bank or other nominee. The broker, bank or other nominee cannot vote on these proposals without your instructions. Therefore, it is important that you cast your vote or instruct your broker, bank or nominee on how you wish your shares to be voted. If you are a street name holder and wish to vote the shares beneficially owned by you in person by ballot at the special meeting, you must provide a "legal proxy" from your broker, bank or other nominee, giving you the right to vote the shares at the special meeting.
+
+As of October 21, 2014, the record date for the special meeting, our directors and executive officers beneficially owned and are entitled to vote, in the aggregate, 209,009 shares of our common stock, representing approximately 0.7% of the outstanding shares of our common stock.
+
+**Treatment of Stock Options and Other Stock-Based Compensation (Page 75)**
+
+*Stock Options.* As of immediately prior to the effective time of the merger, each outstanding and unexercised option to purchase shares of Multimedia Games common stock granted prior to September 8, 2014, whether vested or unvested, will automatically terminate and be cancelled and converted into the right to receive the merger consideration, less the applicable exercise price, multiplied by the number of shares subject to the option, less any applicable withholding taxes. If the exercise price of the option is equal to or greater than the merger consideration, the option will automatically terminate and be canceled without the payment of any consideration to the holder. Each outstanding option to purchase Multimedia Games common stock granted on or after September 8, 2014 will be assumed by GCA and will be converted into an option to acquire a number of shares of GCA common stock (rounded down to the nearest whole share) equal to the product of (a) the number of shares of Multimedia Games common stock subject to the Multimedia Games option multiplied by (b) the equity exchange ratio, as defined below. The exercise price per share of the GCA option will be an amount (rounded up to the nearest whole cent) equal to the quotient obtained by dividing (x) the exercise price per share of the Multimedia Games option by (y) the equity exchange ratio. Each option to purchase GCA common stock as so assumed and converted will continue to have, and will be subject to, the same terms and conditions as applied to the applicable Multimedia Games option immediately prior to the effective time of the merger. For purposes of this proxy statement, "equity exchange ratio" means the quotient obtained by dividing (i) the merger consideration, by
+
+4
+<!-- PAGE 13 -->
+ZEQ.=4,SEQ=12,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=438109,FOLIO='4',FILE='DISK112:[14ZCP1.14ZCP40801]CA40801A.;33',USER='JFUSS',CD='21-OCT-2014;19:42'
+
+Table of Contents
+
+(ii) the average closing sales price for a share of GCA common stock over the thirty (30) consecutive trading days ending three (3) trading days prior to the effective time of the merger.
+
+*Restricted Stock Units.* As of immediately prior to the effective time of the merger, each outstanding Multimedia Games restricted stock unit, whether vested or unvested, will automatically terminate and be canceled and converted into the right to receive the merger consideration, less any applicable withholding taxes.
+
+*Performance Share Awards.* Each Multimedia Games performance share award that is outstanding immediately prior to the effective time of the merger, whether vested or unvested, will automatically terminate and be canceled and converted into the right to receive the merger consideration for each share of Multimedia Games common stock underlying the Multimedia Games performance share award (assuming achievement of the applicable performance-based vesting conditions at the maximum level), less any applicable withholding taxes.
+
+**Delisting and Deregistration of Our Common Stock (Page 56)**
+
+Upon completion of the merger, we will remove our common stock from listing on the NASDAQ and price quotations in the public market will no longer be available for our common stock, and the registration of our common stock under the Securities Exchange Act of 1934, as amended, which we refer to as the "Exchange Act" in this proxy statement, will be terminated.
+
+**Recommendation of Our Board of Directors (Page 47)**
+
+The Multimedia Games board of directors, after considering all factors that the Multimedia Games board of directors deemed relevant, unanimously determined that the merger agreement and the transactions contemplated by the merger agreement, including the merger, are advisable, fair to and in the best interests of Multimedia Games and its shareholders, and unanimously approved the merger agreement and the transactions contemplated by the merger agreement, including the merger. Certain factors considered by the Multimedia Games board of directors in reaching its decision to approve the merger agreement and the merger can be found in the section entitled "Proposal 1: Approval of the Merger Agreement—Reasons for the Merger" beginning on page 43 of this proxy statement.
+
+**The Multimedia Games board of directors unanimously recommends that the Multimedia Games shareholders vote "FOR" the approval of the merger agreement, thereby approving the transactions contemplated thereby, including the merger, "FOR" the merger-related named executive officer compensation proposal and "FOR" the adjournment proposal.**
+
+**Opinion of Multimedia Games' Financial Advisor (Page 48 and Annex B)**
+
+In connection with the merger, on September 7, 2014, Wells Fargo Securities, LLC, which we refer to as "Wells Fargo Securities" in this proxy statement, rendered its opinion to the Multimedia Games board of directors (which was subsequently confirmed in writing by delivery of a written opinion on September 8, 2014), that, as of September 8, 2014, and based on and subject to various assumptions made, procedures followed, matters considered and limitations on the review undertaken by Wells Fargo Securities in connection with the opinion, the experience of its investment bankers and other factors it deemed relevant, the merger consideration to be received by holders of Multimedia Games common stock (excluding the excluded shares) pursuant to the merger agreement was fair, from a financial point of view, to such holders.
+
+**The full text of Wells Fargo Securities' written opinion, dated September 8, 2014, to the Multimedia Games board of directors is attached as Annex B to this proxy statement and sets forth, among other things, the assumptions made, procedures followed, factors considered and limitations on the review undertaken by Wells Fargo Securities in rendering its opinion. Wells Fargo Securities**
+
+5
+<!-- PAGE 14 -->
+ZEQ.=5,SEQ=13,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=87959,FOLIO='5',FILE='DISK112:[14ZCP1.14ZCP40801]CA40801A.;33',USER='JFUSS',CD='21-OCT-2014;19:42'
+
+Table of Contents
+
+**provided its opinion for the information and use of the Multimedia Games board of directors (in its capacity as such) in connection with its evaluation of the merger. Wells Fargo Securities' opinion does not address the merits of the underlying decision by Multimedia Games to enter into the merger agreement or the relative merits of the merger compared with other business strategies or transactions available or that have been or might be considered by Multimedia Games' management or the Multimedia Games board of directors or in which Multimedia Games might engage. Wells Fargo Securities' opinion also did not and does not constitute a recommendation to the Multimedia Games board of directors or to any other person or entity in respect of the merger or otherwise, including, without limitation, as to how any holder of Multimedia Games common stock should vote or act in connection with any matter relating to the merger, the merger agreement or any other matters. See the section entitled "Proposal 1: Approval of the Merger Agreement—Opinion of Multimedia Games' Financial Advisor" beginning on page 48 of this proxy statement for additional information.**
+
+**Interests of Certain Persons in the Merger (Page 58)**
+
+In considering the recommendation of the Multimedia Games board of directors that Multimedia Games shareholders vote to approve the merger agreement, which we refer to as its "recommendation" in this proxy statement, you should be aware that some of Multimedia Games' directors and executive officers have interests in the merger that are different from, or in addition to, the interests of Multimedia Games' shareholders generally. Interests of directors and officers that may be different from or in addition to the interests of Multimedia Games' shareholders include, but are not limited to:
+
+These interests are discussed in more detail in the section entitled "Proposal 1: Approval of the Merger Agreement—Interests of Certain Persons in the Merger" beginning on page 58 of this proxy statement. The members of the Multimedia Games board of directors were aware of the different or additional interests set forth herein and considered these interests, among other matters, in evaluating and negotiating the merger agreement and the merger, and in recommending to the shareholders of Multimedia Games that the merger agreement and the transactions contemplated thereby, including the merger, be approved.
+
+**Financing of the Merger (Page 56)**
+
+The merger is not conditioned on GCA obtaining the proceeds of any financing, including the financing contemplated by the debt commitment letter, as defined below. We anticipate that the total amount of funds necessary to complete the merger and the other transactions contemplated by the merger agreement will be approximately $1.2 billion. These funds include the funds needed to:
+
+6
+<!-- PAGE 15 -->
+ZEQ.=6,SEQ=14,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=828763,FOLIO='6',FILE='DISK112:[14ZCP1.14ZCP40801]CA40801A.;33',USER='JFUSS',CD='21-OCT-2014;19:42'
+
+Table of Contents
+
+In connection with entering into the merger agreement, GCA entered into a debt commitment letter, as it may be amended in accordance with the merger agreement, and which we refer to as the "debt commitment letter" in this proxy statement, with Bank of America, N.A., which we refer to as "BOA" in this proxy statement, Merrill Lynch, Pierce, Fenner & Smith Incorporated, which we refer to as "BofA Merrill Lynch" in this proxy statement, Deutsche Bank AG New York Branch, which we refer to as "Deutsche Bank" in this proxy statement, and Deutsche Bank Securities Inc., which we refer to as "Deutsche Bank Securities" in this proxy statement. Pursuant to the debt commitment letter, among other things, each of BOA, BofA Merrill Lynch, Deutsche Bank and Deutsche Bank Securities has agreed to provide debt financing to GCA. The financing contemplated under the debt commitment letter is referred to as the "debt financing" in this proxy statement. See "Terms of the Merger Agreement—Financing of the Merger" beginning on page 56 of this proxy statement for additional information with respect to the debt financing.
+
+**We believe the amounts described in the debt commitment letter, together with cash on hand at Multimedia Games and at GCA, will be sufficient to complete the merger, but we cannot assure you of that. Those amounts might be insufficient if, among other things, we or GCA have substantially less cash on hand, we have more debt or GCA receives substantially lower net proceeds from the debt financing than we currently expect.**
+
+**No Solicitation of Acquisition Proposals (Page 85)**
+
+Multimedia Games agreed to cease any discussions or negotiations that may have been ongoing with any parties with respect to an acquisition proposal, as defined below, to promptly request to have returned to it or have destroyed any confidential information that had been provided in any such discussions or negotiations and to terminate all physical and electronic data room access previously granted to any such parties.
+
+From the date of the merger agreement until the effective time of the merger or, if earlier, the termination of the merger agreement in accordance with its terms, Multimedia Games has agreed not to, and will not authorize or permit any of its subsidiaries to, and will use its reasonable best efforts to cause its and their respective representatives not to, directly or indirectly:
+
+However, at any time prior to obtaining shareholder approval of the merger agreement, in the event that Multimedia Games receives a written acquisition proposal that did not result from its breach of its non-solicit obligations under the merger agreement, Multimedia Games and its board of directors may engage in negotiations or substantive discussions with, or furnish any information and other access to, any third party making such acquisition proposal and its representatives or potential sources of financing if the Multimedia Games board of directors determines in good faith, after consultation with Multimedia Games' outside legal and financial advisors, and based on information then available, that such acquisition proposal constitutes, or could reasonably be expected to result in, a superior proposal, as defined below. Multimedia Games may not furnish non-public information to any such third party making the acquisition proposal without first entering into an acceptable confidentiality agreement with such third party that is no less restrictive of such third party than the confidentiality agreement entered into by and between Multimedia Games and GCA and making available, as promptly as practicable (and in any event within twenty-four (24) hours thereafter) to GCA any such information made available to such third party.
+
+7
+<!-- PAGE 16 -->
+ZEQ.=7,SEQ=15,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=457721,FOLIO='7',FILE='DISK112:[14ZCP1.14ZCP40801]CA40801A.;33',USER='JFUSS',CD='21-OCT-2014;19:42'
+
+Table of Contents
+
+**Changes in Board Recommendation (Page 85)**
+
+Multimedia Games and the Multimedia Games board of directors has agreed not to make a change in the Multimedia Games board of directors' recommendation, or approve, adopt or recommend, or propose publicly to approve, adopt or recommend, or allow Multimedia Games or any of its subsidiaries to execute any letter of intent, memorandum of understanding, agreement in principle, merger agreement, acquisition agreement, option agreement, joint venture agreement, partnership agreement or similar definitive agreement (other than an acceptable confidentiality agreement) with any third party constituting or relating to any acquisition proposal. However, prior to obtaining shareholder approval of the merger agreement, the Multimedia Games board of directors may make a change of its recommendation and terminate the merger agreement if:
+
+**Conditions to Completion of the Merger (Page 94)**
+
+The obligations of GCA, Merger Sub and Multimedia Games to effect the merger are subject to the satisfaction or waiver (to the extent permitted by applicable law) by such party at or prior to the closing date of the merger of the following conditions:
+
+GCA may, in its sole discretion, waive as a condition to the consummation of the merger any required gaming approval on behalf of itself and Multimedia Games if the consummation of the merger in the absence of such required gaming approval would not constitute a violation of applicable law so long as (i) prior to any such waiver, GCA has confirmed to Multimedia Games in an irrevocable written notice that all of the other conditions to its obligations to close have been previously satisfied or waived and (ii) the merger is then consummated immediately following the delivery of such waiver.
+
+8
+<!-- PAGE 17 -->
+ZEQ.=8,SEQ=16,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=428135,FOLIO='8',FILE='DISK112:[14ZCP1.14ZCP40801]CA40801A.;33',USER='JFUSS',CD='21-OCT-2014;19:42'
+
+Table of Contents
+
+The respective obligations of GCA and Merger Sub to consummate the merger are subject to the satisfaction or waiver (to the extent permitted by applicable law) by GCA at or prior to the closing date of the merger of the following further conditions:
+
+Multimedia Games' obligations to consummate the merger are subject to the satisfaction or waiver (to the extent permitted by applicable law) by Multimedia Games at or prior to the closing date of the merger of the following further conditions:
+
+9
+<!-- PAGE 18 -->
+ZEQ.=9,SEQ=17,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=33405,FOLIO='9',FILE='DISK112:[14ZCP1.14ZCP40801]CA40801A.;33',USER='JFUSS',CD='21-OCT-2014;19:42'
+
+THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+**Termination of the Merger Agreement (Page 96)**
+
+The merger agreement may be terminated at any time prior to the effective time of the merger by mutual written consent of each of GCA and Multimedia Games. In addition, either GCA or Multimedia Games may terminate the merger agreement prior to the effective time of the merger, if:
+
+The merger agreement may also be terminated by Multimedia Games if:
+
+The merger agreement may also be terminated by GCA if:
+
+10
+<!-- PAGE 19 -->
+ZEQ.=1,SEQ=18,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=323067,FOLIO='10',FILE='DISK112:[14ZCP1.14ZCP40801]CC40801A.;28',USER='JFUSS',CD='21-OCT-2014;23:24'
+
+Table of Contents
+
+See the section entitled "Terms of the Merger Agreement—Termination of the Merger Agreement" beginning on page 96 of this proxy statement.
+
+**Termination Fee; Effect of Termination (Page 97)**
+
+Under the merger agreement, Multimedia Games will be required to pay GCA the company termination fee, as defined below, if the merger agreement is terminated:
+
+11
+<!-- PAGE 20 -->
+ZEQ.=2,SEQ=19,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=1046412,FOLIO='11',FILE='DISK112:[14ZCP1.14ZCP40801]CC40801A.;28',USER='JFUSS',CD='21-OCT-2014;23:24'
+
+Table of Contents
+
+For purposes of this proxy statement, "company termination fee" means (i) $11 million (or approximately 1.0% of the equity value of the transaction as of September 5, 2014) if payable in connection with a termination of the merger agreement either by (A) Multimedia Games on or before October 8, 2014 with respect to Multimedia Games entering into an alternative acquisition agreement with a person or group that is an excluded party, as defined below, or (B) GCA on or before October 8, 2014 if the event giving rise to the right of GCA to effect such termination is, or relates to, an acquisition proposal by an excluded party and (ii) $32.5 million (or approximately 2.8% of the equity value of the transaction as of September 5, 2014) in any other circumstance. For purposes of this proxy statement, an "excluded party" means any person, third party or group of persons, from whom Multimedia Games or any of its representatives has received an acquisition proposal that our board of directors determines in good faith, after consultation with outside counsel and its financial advisor, constitutes a superior proposal and with respect to which Multimedia Games delivers a matching notice to GCA pursuant to the terms of the merger agreement on or prior to October 8, 2014.
+
+Under the merger agreement, GCA will be required to pay Multimedia Games a termination fee of $50 million, which we refer to as the "GCA termination fee" in this proxy statement, if the merger agreement is terminated by Multimedia Games after the conclusion of the marketing period if the conditions to GCA's and Merger Sub's obligation to close have been satisfied or waived (other than those conditions that by their terms are to be satisfied or waived at the closing of the merger) and GCA fails to complete the merger.
+
+If the merger agreement is validly terminated, the merger agreement will become null and void without liability on the part of any party to the merger agreement (or any of its representatives), and, except for the confidentiality provisions, provisions relating to the effect of termination and certain general provisions of the merger agreement, each of which will survive the termination of the merger agreement, all rights and obligations of any party will cease. However, the parties have agreed that if (i) any termination of the merger agreement resulted, directly or indirectly, from an intentional breach of any provision of the merger agreement or (ii) an intentional breach of any provision of the merger agreement caused the merger not to be consummated then, in either case, the breaching party will be fully liable for any and all damages, costs, liabilities or other losses suffered by the other party as a result of such breach, in addition to any amounts owed in connection with the company termination fee or the GCA termination fee.
+
+**Specific Performance (Page 99)**
+
+The merger agreement generally provides that the parties will be entitled, without posting a bond or other indemnity, to an injunction, specific performance and other equitable relief to prevent breaches of the merger agreement and to enforce specifically the terms and provisions of the merger agreement, in addition to any other remedy to which they are entitled at law or in equity.
+
+However, Multimedia Games is entitled to seek specific performance of GCA's and Merger Sub's obligation to consummate the merger only in the event that each of the following conditions has been satisfied: (i) the marketing period, if applicable, has ended and all of the conditions to GCA's and Merger Sub's obligation to consummate the closing have been satisfied or waived (other than those conditions that by their terms are to be satisfied or waived at the closing of the merger), (ii) GCA and
+
+12
+<!-- PAGE 21 -->
+ZEQ.=3,SEQ=20,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=657290,FOLIO='12',FILE='DISK112:[14ZCP1.14ZCP40801]CC40801A.;28',USER='JFUSS',CD='21-OCT-2014;23:24'
+
+Table of Contents
+
+Merger Sub fail to complete the merger by the date on which the merger would otherwise be required to occur, (iii) the financing (including any alternative financing that has been obtained in accordance with, and which satisfies certain conditions set forth in, the merger agreement) has been, or will be, funded in accordance with the terms thereof at the closing assuming satisfaction by GCA or Merger Sub of the conditions precedent thereto under their respective control, and (iv) Multimedia Games has confirmed in an irrevocable written notice delivered to GCA that if specific performance is granted and the financing is funded, then Multimedia Games would take such actions that are within its control to cause the closing to occur. Multimedia Games is not entitled to enforce or seek to enforce specifically GCA's and Merger Sub's obligation to consummate the merger if the financing has not been funded or will not be funded at the closing. Multimedia Games is, however, permitted to specifically enforce GCA's obligation to obtain committed financing or to obtain alternative financing in the event the committed financing is unavailable. The parties to the merger agreement further agreed that while Multimedia Games may pursue both a grant of specific performance as and only to the extent expressly permitted by the merger agreement and the payment of the GCA termination fee or any other monetary damages or other monetary remedies, to the extent proven (but only to the extent expressly permitted by the merger agreement), under no circumstances would Multimedia Games be permitted or entitled to receive both such grant of specific performance to cause the closing to occur and payment of the GCA termination fee, or alternatively, any other monetary damages or other monetary remedies.
+
+**Material U.S. Federal Income Tax Consequences of the Merger (Page 64)**
+
+The exchange of shares of our common stock for cash pursuant to the merger will generally be taxable for U.S. federal income tax purposes to U.S. holders. If you are a U.S. holder other than a U.S. holder who received shares of our common stock in a compensatory arrangement, and your shares of our common stock are converted into the right to receive cash in the merger, you will generally recognize gain or loss for U.S. federal income tax purposes in an amount equal to the difference, if any, between the amount of cash received with respect to such shares (determined before deduction of any applicable withholding taxes) and your adjusted tax basis in such shares. The exchange of shares of our common stock for cash pursuant to the merger will generally not result in a non-U.S. holder being subject to U.S. federal income tax unless the non-U.S. holder has certain connections to the United States, but may be a taxable transaction under non-U.S. tax laws. You should read "Material U.S. Federal Income Tax Consequences of the Merger" beginning on page 64 of this proxy statement for a more detailed discussion of the U.S. federal income tax consequences of the merger to U.S. holders and non-U.S. holders. You should also consult with your tax advisor for a complete analysis of the effect of the merger on your U.S. federal, state and local and/or non-U.S. taxes, particularly if you received shares in a compensatory arrangement.
+
+**Regulatory Matters (Page 62)**
+
+The merger is subject to the mandatory notification and waiting period requirements of the HSR Act, which requires that we and GCA furnish certain information and materials relating to the merger to the Antitrust Division of the United States Department of Justice, which we refer to as the "Antitrust Division" in this proxy statement, and the Federal Trade Commission, which we refer to as the "FTC" in this proxy statement. Under the HSR Act, the merger may not be consummated until the applicable waiting period has expired or been terminated by the Antitrust Division and the FTC. The required notification and report forms under the HSR Act were filed with the Antitrust Division and the FTC on September 18, 2014 by Multimedia Games and GCA. On September 26, 2014, Multimedia Games received notice from the FTC that early termination of the applicable waiting period had been granted; as such, the condition to the closing of the merger related to the HSR Act has been satisfied.
+
+13
+<!-- PAGE 22 -->
+ZEQ.=4,SEQ=21,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=72266,FOLIO='13',FILE='DISK112:[14ZCP1.14ZCP40801]CC40801A.;28',USER='JFUSS',CD='21-OCT-2014;23:24'
+
+Table of Contents
+
+The parties have agreed that receipt of gaming approvals from six (6) jurisdictions, which we refer to as the "required gaming approvals" in this proxy statement, is a condition to the closing of the merger. We believe that the six (6) jurisdictions represent a majority of the material jurisdictions from which gaming approvals will be required prior to closing.
+
+GCA filed the required gaming approval applications on or before September 24, 2014 for the six (6) jurisdictions with respect to which required gaming approvals are a condition to closing.
+
+In addition to the jurisdictions identified by the parties as conditions to the merger, either Multimedia Games or GCA may make further filings with gaming regulators in various jurisdictions as may be required by applicable law, but the expiration of any waiting periods or receipt of any required approvals in connection with such filings will not be conditions to the consummation of the merger. GCA may under certain circumstances waive the condition relating to any such required gaming approval on behalf of both GCA and Multimedia Games if consummation of the merger in the absence of such required gaming approvals would not constitute a violation of applicable law.
+
+Although we do not expect these regulatory authorities to raise any significant concerns in connection with their review of the merger, there is no assurance that all applicable waiting periods will expire, that GCA will obtain all required regulatory approvals, or that those approvals will not include terms, conditions or restrictions that may have an adverse effect on us or, after completion of the merger, GCA.
+
+Other than the filings described above and in "Proposal 1: Approval of the Merger Agreement—Regulatory Matters" beginning on page 62 of this proxy statement, we are not aware of any material mandatory regulatory filings to be made, approvals to be obtained, or waiting periods to expire, in order to complete the merger. If the parties discover that other regulatory filings, approvals or waiting periods are necessary, they will seek to obtain or comply with them. If any approval or action is needed, however, we may not be able to obtain it or any of the other necessary approvals. Even if we obtain all necessary approvals, and the merger agreement is approved by our shareholders, conditions may be placed on the merger, our business or that of GCA that could cause the parties to fail to consummate the merger.
+
+GCA and Multimedia Games have generally agreed to use their reasonable best efforts to obtain such approvals but neither is required to (i) agree to take or enter into any action that is not conditioned upon the consummation of the merger, or (ii) agree to any obligation or concession or other action relating to the antitrust approval or the required gaming approvals without the prior written consent of GCA, which consent will not be unreasonably withheld or delayed.
+
+**Market Price of Multimedia Games Common Stock and Dividend Information (Page 105)**
+
+Our common stock is listed on the NASDAQ under the trading symbol "MGAM". The closing sale price of our common stock on the NASDAQ on September 5, 2014, which was the last trading day before we announced the execution of the merger agreement, was $27.78, compared to which the merger consideration represents a premium of approximately 31.4%. On October 21, 2014, the last trading day before the date of this proxy statement, the closing price of our common stock on the NASDAQ was $33.41.
+
+Under the terms of the merger agreement, we may not declare, authorize, make or pay any dividend or other distribution. We do not expect to pay dividends in the foreseeable future.
+
+14
+<!-- PAGE 23 -->
+ZEQ.=5,SEQ=22,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=297575,FOLIO='14',FILE='DISK112:[14ZCP1.14ZCP40801]CC40801A.;28',USER='JFUSS',CD='21-OCT-2014;23:24'
+
+Table of Contents
+
+**Fees and Expenses; Transfer Taxes (Page 99)**
+
+All fees and expenses incurred in connection with the merger agreement, the merger and the other transactions contemplated by the merger agreement will be paid by the party incurring such fees or expenses, whether or not the merger or any of the other transactions contemplated by the merger agreement are consummated, with certain exceptions expressly set forth in the merger agreement, including reimbursement for all reasonable costs and expenses (including reasonable attorneys' fees) of the prevailing party in any action at law or suit in equity to enforce the merger agreement or the rights of any of the parties thereunder.
+
+Subject to specific exceptions related to payment of the merger consideration, all transfer, documentary, sales, use, stamp, registration and other such taxes and fees (including penalties and interest) incurred in connection with the merger will be paid by GCA and Merger Sub when due.
+
+**Litigation Relating to the Merger (Page 63)**
+
+Since the announcement of the merger on September 8, 2014, one putative class action was filed on October 3, 2014 on behalf of alleged Multimedia Games shareholders in the United States District Court for the Western District of Texas, captioned *Baird v. Multimedia Games Holding Company, Inc., et al.* , No. 1:14-cv-00922, which we refer to as the "Texas Federal Action" in this proxy statement. One putative class action and shareholder derivative action was also filed on October 15, 2014 on behalf of Multimedia Games and alleged Multimedia Games shareholders in the District Court of Travis County, Texas, under the caption *Lewis v. Global Cash Access Holdings, Inc., et al.* , No. D-1-GN-14-004324, which we refer to as the "Texas State Court Action" in this proxy statement. The Texas State Court Action was filed by the same purported shareholder from whom we received, on September 12, 2014, letters, which we refer to as the "Lewis Demand Letters" in this proxy statement, contending that the Multimedia Games board of directors violated its fiduciary duties in connection with the merger. The Lewis Demand Letters demanded that the Multimedia Games board of directors rescind the merger agreement and any related employment, consulting or compensation agreements, and disclose certain information related to the merger, including our strategic review process and information supporting the Multimedia Games board of directors' decision to enter into the merger agreement. In both the Texas Federal Action and the Texas State Court Action, plaintiffs allege that Multimedia Games' directors breached their fiduciary duties to Multimedia Games and/or its shareholders in negotiating and approving the merger agreement, that the merger consideration negotiated in the merger agreement improperly values Multimedia Games, that the Multimedia Games shareholders will not receive fair value for their Multimedia Games common stock in the merger, and that the terms of the merger agreement impose improper deal-protection devices that purportedly preclude competing offers. The complaints further allege that GCA and Merger Sub aided and abetted those alleged breaches of fiduciary duty. Plaintiffs seek injunctive relief, including enjoining or rescinding the merger, and an award of other unspecified attorneys' and other fees and costs, in addition to other relief.
+
+On October 20, 2014, we received a letter from counsel for the plaintiff in the Texas Federal Action, which we refer to as the "Baird Demand Letter" in this proxy statement, demanding that Multimedia Games conduct an investigation and commence an action on behalf of Multimedia Games against the individual members of the Multimedia Games board for breaches of fiduciary duty arising out of allegedly wrongful conduct in connection with the merger. The Baird Demand Letter refers to allegations set forth in the Texas Federal Action complaint.
+
+The outcome of these lawsuits cannot be predicted with any certainty. An adverse judgment for monetary damages could have a material adverse effect on the operations and liquidity of Multimedia Games or GCA after the merger is completed. A preliminary injunction could delay or jeopardize the completion of the merger, and an adverse judgment granting permanent injunctive relief could indefinitely enjoin completion of the merger. Additional lawsuits arising out of or relating to the
+
+15
+<!-- PAGE 24 -->
+ZEQ.=6,SEQ=23,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=88264,FOLIO='15',FILE='DISK112:[14ZCP1.14ZCP40801]CC40801A.;28',USER='JFUSS',CD='21-OCT-2014;23:24'
+
+Table of Contents
+
+merger agreement or the merger may be filed in the future. Defendants intend to vigorously defend against these lawsuits.
+
+**Rights of Dissent and Appraisal (Page 66 and Annex C)**
+
+Under Texas law, you are entitled to rights of dissent and appraisal in connection with the merger.
+
+If you comply with the requirements of Subchapter H of Chapter 10 of the TBOC, you will have the right under Texas law to demand payment for the fair value of your shares of Multimedia Games common stock as determined by a court in accordance with the statutory requirements. Your rights of dissent and appraisal are subject to a number of restrictions and technical requirements. Generally, in order to exercise your rights of dissent and appraisal, you must comply with the following procedures:
+
+Merely voting against the approval of the merger agreement will not preserve your appraisal rights, which require you to take all the steps provided under Texas law. If you hold your shares in "street name", you must instruct your broker or other nominee to take action in strict compliance with the TBOC to exercise your rights of dissent and appraisal. Requirements under Texas law for exercising rights of dissent and appraisal rights are described in further detail under "Proposal 1: Approval of the Merger Agreement—Rights of Dissent and Appraisal" beginning on page 66 of this proxy statement. Subchapter H of Chapter 10 of the TBOC regarding rights of dissent and appraisal available to shareholders of Texas corporations is reproduced and attached as Annex C to this proxy statement. If you wish to avail yourself of your rights of dissent and appraisal, you should consult your legal advisor.
+
+**Help in Answering Questions**
+
+If you have questions about the special meeting or the merger after reading this document, you may contact Innisfree M&A Incorporated, which we refer to as "Innisfree" in this proxy statement, which is assisting us in the solicitation of proxies, by calling toll free at (888) 750-5834 or collect at (212) 750-5833.
+
+**Neither the U.S. Securities Exchange Commission, which we refer to as the "SEC" in this proxy statement, nor any state securities regulatory agency has approved or disapproved of the transactions described in this proxy statement, including the merger, or determined if the information contained in this proxy statement is accurate or adequate. Any representation to the contrary is a criminal offense.**
+
+16
+<!-- PAGE 25 -->
+ZEQ.=7,SEQ=24,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=143919,FOLIO='16',FILE='DISK112:[14ZCP1.14ZCP40801]CC40801A.;28',USER='JFUSS',CD='21-OCT-2014;23:24' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+**QUESTIONS AND ANSWERS ABOUT THE SPECIAL MEETING AND THE MERGER**
+
+*The following questions and answers are intended to address some commonly asked questions regarding the special meeting and the merger. These questions and answers may not address all questions that may be important to you as a holder of our common stock. Please refer to the more detailed information contained elsewhere in this proxy statement, the annexes to this proxy statement and the documents referred to or incorporated by reference in this proxy statement.*
+
+**Q: Why am I receiving these materials?**
+
+A: You are receiving this proxy statement and the accompanying proxy card because you owned shares of our common stock at the close of business on October 21, 2014, the record date for the special meeting. Our board of directors is soliciting proxies for use at the special meeting to consider and vote upon the proposal to approve the merger agreement. These proxy materials provide you information for use in determining how to vote in connection with the matters to be considered at the special meeting.
+
+**Q: When and where is the special meeting?**
+
+A: The special meeting will take place on Wednesday, December 3, 2014, at 10:00 a.m., local time, at our corporate office, located at 206 Wild Basin Road South, Building B, Austin, Texas 78746.
+
+**Q: What matters will be voted on at the special meeting?**
+
+A: We will ask you to consider and vote upon proposals to: (1) approve the merger agreement by and among Multimedia Games, GCA and Merger Sub, pursuant to which Merger Sub will merge with and into Multimedia Games with Multimedia Games continuing as the surviving corporation and a wholly owned subsidiary of GCA, thereby approving the merger; (2) approve, by a non-binding advisory vote, the compensation arrangements disclosed in this proxy statement that may be payable to Multimedia Games' named executive officers in connection with the consummation of the merger; and (3) approve the adjournment of the special meeting, if necessary or appropriate in the view of the Multimedia Games board of directors, to solicit additional proxies if there are not sufficient votes at the time of the special meeting to approve the merger agreement.
+
+**Q: What is the proposed transaction?**
+
+A: Under the terms of the merger agreement, upon completion of the merger, Merger Sub will be merged with and into Multimedia Games, with Multimedia Games continuing as the surviving corporation and a wholly owned subsidiary of GCA. After the merger is completed, our common stock will cease to be traded on the NASDAQ and the registration of our common stock under the Exchange Act will be terminated and we will no longer be required to file periodic reports with the SEC.
+
+**Q: What will I receive if the merger is completed?**
+
+A: If the merger is completed, you will have the right to receive $36.50 in cash, without interest and less any applicable withholding taxes, for each share of our common stock you own, unless you are a dissenting shareholder and you validly exercise your rights of dissent and appraisal under Texas law. In either case, as a result of the merger, your shares will be cancelled and you will not own shares in the surviving corporation.
+
+17
+<!-- PAGE 26 -->
+ZEQ.=1,SEQ=25,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=706301,FOLIO='17',FILE='DISK112:[14ZCP1.14ZCP40801]CE40801A.;27',USER='GPEARMO',CD='22-OCT-2014;00:29'
+
+Table of Contents
+
+**Q: Should I send in my stock certificates now?**
+
+A: No. Please do not send your stock certificates now. If the merger is completed, you will receive shortly thereafter a letter of transmittal instructing you to send your stock certificates to the paying agent in order to receive the cash payment of the merger consideration for each share of our common stock represented by your stock certificates. You should use the letter of transmittal to exchange your stock certificates for the cash payment to which you are entitled upon completion of the merger. **Please do not send in your stock certificates with your proxy card.**
+
+**Q: What happens if I sell or transfer my shares of common stock after the record date but before the special meeting?**
+
+A: If you sell or transfer your shares of our common stock after the record date but before the special meeting, you will transfer the right to receive the merger consideration, if the merger is completed, to the person to whom you sell or transfer your shares of our common stock, but you will retain your right to vote those shares at the special meeting.
+
+**Q: What vote is required to approve the merger agreement, thereby approving the merger?**
+
+A: Under Texas law, and as a condition to the consummation of the merger, approval of the merger agreement requires the affirmative vote of the holders of at least two-thirds of the outstanding shares of Multimedia Games common stock entitled to vote at the special meeting. Accordingly, a Multimedia Games shareholder's failure to submit a proxy card or to vote in person at the special meeting, an abstention from voting, or the failure of a Multimedia Games shareholder who holds his or her shares in "street name" through a broker, bank or other nominee to give voting instructions to such broker, bank or other nominee, which we refer to as a "broker non-vote" in this proxy statement, will have the same effect as a vote "AGAINST" the proposal to approve the merger agreement. As of the record date, there were 29,732,211 shares of Multimedia Games common stock outstanding.
+
+**Q: What vote is required for the adjournment proposal?**
+
+A: Assuming a quorum is present, approval of the adjournment proposal requires the affirmative vote of the holders of a majority of the shares of Multimedia Games common stock that are present in person or by proxy and entitled to vote on the proposal. Abstentions, broker non-votes and shares not in attendance at the special meeting will have no effect on the outcome of any vote on the adjournment proposal.
+
+**Q: What vote is required for the merger-related named executive officer compensation proposal?**
+
+A: Approval of the non-binding, advisory merger-related named executive officer compensation proposal requires the affirmative vote of the holders of a majority of the shares of Multimedia Games common stock that are present in person or by proxy and entitled to vote on the proposal. Abstentions, broker non-votes and shares not in attendance at the special meeting will have no effect on the outcome of any vote on the merger-related named executive officer compensation proposal.
+
+**Q. What is "merger-related compensation"?**
+
+A. "Merger-related compensation" is certain compensation that is tied to or based on the consummation of the merger and may be payable to Multimedia Games' named executive officers under our existing plans or agreements, which is the subject of a non-binding advisory vote in the merger-related named executive officer compensation proposal. See "Proposal 2: Advisory Vote on
+
+18
+<!-- PAGE 27 -->
+ZEQ.=2,SEQ=26,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=596420,FOLIO='18',FILE='DISK112:[14ZCP1.14ZCP40801]CE40801A.;27',USER='GPEARMO',CD='22-OCT-2014;00:29'
+
+Table of Contents
+
+**Q. Why am I being asked to cast a non-binding, advisory vote to approve "merger-related compensation" payable to Multimedia Games' named executive officers under its plans or agreements?**
+
+A. In accordance with the rules promulgated under Section 14A of the Exchange Act, Multimedia Games is providing its shareholders with the opportunity to cast a non-binding, advisory vote in the merger-related named executive officer compensation proposal on the compensation that may be payable to our named executive officers in connection with the merger.
+
+**Q. What will happen if the shareholders do not approve the "merger-related compensation" in the merger-related named executive officer compensation proposal at the special meeting?**
+
+A: Approval of the merger-related named executive officer compensation proposal is not a condition to the completion of the merger. The vote with respect to the merger-related named executive officer compensation proposal is an advisory vote and will not be binding on Multimedia Games or GCA. Further, the underlying compensation plans and agreements are contractual in nature and not, by their terms, subject to shareholder approval. Accordingly, payment of the "merger-related compensation" is not contingent on shareholder approval of the merger-related named executive officer compensation proposal.
+
+**Q. Are there any other risks to me from the merger that I should consider?**
+
+A. Yes. There are risks associated with all business combinations, including the merger. Please see the section entitled "Cautionary Statement Concerning Forward-Looking Information" beginning on page 24 of this proxy statement.
+
+**Q: What constitutes a quorum?**
+
+A: At the special meeting, shareholders holding a majority of the shares entitled to vote at the special meeting, represented in person or by proxy, will constitute a quorum. When a quorum is present to organize a meeting, it is not broken by the subsequent withdrawal of any shareholders. Abstentions and broker non-votes are considered as present for the purpose of determining the presence of a quorum.
+
+**Q: How does the Multimedia Games board of directors recommend that I vote?**
+
+A: Our board of directors, after considering all factors that our board of directors deemed relevant, unanimously determined that the merger agreement and the transactions contemplated by the merger agreement, including the merger, are advisable, fair to and in the best interests of Multimedia Games and its shareholders, and approved the merger agreement and the transactions contemplated thereby, including the merger. Certain factors considered by our board of directors in reaching its decision to approve the merger agreement and the merger can be found in the section entitled "Proposal 1: Approval of the Merger Agreement—Reasons for the Merger" beginning on page 43 of this proxy statement.
+
+**The Multimedia Games board of directors unanimously recommends that the Multimedia Games shareholders vote "FOR" the approval of the merger agreement, thereby approving the transactions contemplated thereby, including the merger, "FOR" the merger-related named executive officer compensation proposal and "FOR" the adjournment proposal.**
+
+19
+<!-- PAGE 28 -->
+ZEQ.=3,SEQ=27,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=948229,FOLIO='19',FILE='DISK112:[14ZCP1.14ZCP40801]CE40801A.;27',USER='GPEARMO',CD='22-OCT-2014;00:29'
+
+Table of Contents
+
+**Q: What is the difference between holding shares as a shareholder of record and a beneficial owner?**
+
+A: Most of our shareholders hold their shares through a broker, bank or other nominee rather than directly in their own name. As summarized below, there are some distinctions between shares held of record and those owned beneficially. • *Shareholder of Record.* If your shares are registered directly in your name with our transfer agent, American Stock Transfer & Trust Company, LLC, which we refer to as "AST" in this proxy statement, you are considered the shareholder of record with respect to those shares, and this proxy statement is being sent directly to you by us. As the shareholder of record, you have the right to grant your voting proxy directly to the proxies named in the enclosed proxy card or to vote your shares in person at the special meeting. We have enclosed a proxy card for you to use. • *Beneficial Owner.* If your shares are held in a brokerage account or by a bank or other nominee, you are considered the beneficial owner of shares held in "street name," and this proxy statement is being forwarded to you, together with a voting instruction card, by your broker, bank or other nominee, who is considered the shareholder of record with respect to those shares. As the beneficial owner, you have the right to direct your broker, bank or other nominee on how to vote your shares and you are also invited to attend the special meeting, where you may vote your shares in person by following the procedure described below.
+
+**Q: How do I vote my shares of Multimedia Games common stock?**
+
+A: Before you vote, you should carefully read and consider the information contained in or incorporated by reference in this proxy statement, including the annexes. You should also determine whether you hold your shares of our common stock directly in your name as a shareholder of record or through a broker, bank or other nominee, because this will determine the procedure that you must follow in order to vote. You are a shareholder of record if you hold your Multimedia Games common stock in certificate form or if you hold your Multimedia Games common stock in your name directly with our transfer agent, AST. If you are a shareholder of record, you may vote in any of the following ways: • *Via the Internet* —If you choose to vote via the Internet, go to the website indicated on the enclosed proxy card and follow the easy instructions. You will need the control number shown on your proxy card in order to vote. • *Via Telephone* —If you choose to vote via telephone, use a touch-tone telephone to call the phone number indicated on the enclosed proxy card and follow the easy voice prompts. You will need the control number shown on your proxy card in order to vote. • *Via Mail* —If you choose to vote by mail, simply mark your proxy card, date and sign it, and return it in the postage-paid envelope provided. If the envelope is missing, please mail your completed proxy card to Vote Processing, c/o Broadridge, 51 Mercedes Way, Edgewood, New York 11717. Proxy cards that are returned without a signature will not be counted as present at the special meeting and cannot be voted. • *At the Special Meeting* —Shareholders of record who attend the special meeting may vote in person by following the procedures described above, and any previously submitted proxies will be superseded by the vote cast at the special meeting. Even if you intend to attend and vote at the special meeting, our board of directors recommends that you vote via the Internet, telephone or mail in case you are later unable to attend the special meeting to ensure that your vote is counted.
+
+20
+<!-- PAGE 29 -->
+ZEQ.=4,SEQ=28,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=155495,FOLIO='20',FILE='DISK112:[14ZCP1.14ZCP40801]CE40801A.;27',USER='GPEARMO',CD='22-OCT-2014;00:29'
+
+Table of Contents
+
+**Q: If I hold my shares through a broker, bank or other nominee, will my broker, bank or other nominee vote my shares for me?**
+
+A: Yes, but only if you properly instruct them to do so. If your shares are held in a brokerage account or by a bank or other nominee, you are considered the "beneficial owner" of the shares held for you in what is known as "street name". If this is the case, this proxy statement has been forwarded to you by your brokerage firm, bank or other nominee, or its agent. As the beneficial owner, you have the right to direct your broker, bank or other nominee on how to vote your shares. Because a beneficial owner is not the shareholder of record, you may not vote these shares at the special meeting unless you obtain a "legal proxy" from the broker, bank or other nominee that holds your shares, giving you the right to vote the shares at the special meeting. You should allow yourself enough time prior to the special meeting to obtain this "legal proxy" from your broker, bank or other nominee who is the shareholder of record.
+
+If you hold your shares in "street name" through a broker, bank or other nominee and do not return the voting instruction card, the broker, bank or other nominee will determine if it has the discretionary authority to vote on the particular matter. Under applicable rules, brokers, banks and other nominees have the discretion to vote on routine matters. The proposals in this proxy statement are non-routine matters, and therefore brokers, banks and other nominees cannot vote on these proposals without your instructions (i.e., a broker non-vote). Therefore, it is important that you instruct your broker, bank or nominee on how you wish to vote your shares.
+
+We believe that (i) under our bylaws and the TBOC, broker non-votes will be counted for purposes of determining the presence or absence of a quorum at the special meeting and (ii) under the current rules of the NASDAQ, brokers do not have discretionary authority to vote on any of the proposals being voted upon at the special meeting. To the extent that there are any broker non-votes, a broker non-vote will have the same effect as a vote "AGAINST" the proposal to approve the merger agreement but will have no effect on the other proposals.
+
+**Q: What happens if I return my proxy card but I do not indicate how to vote?**
+
+A: If you properly return your proxy card, but do not include instructions on how to vote, your shares of our common stock will be voted "FOR" the approval of the merger agreement, thereby approving the transactions contemplated thereby, including the merger, "FOR" the approval, by a non-binding advisory vote, of the merger-related named executive officer compensation proposal and "FOR" the approval of the adjournment proposal. We do not currently intend to present any other proposals for consideration at the special meeting. If other proposals requiring a vote of shareholders are brought before the special meeting in a proper manner, the persons named in the enclosed proxy card, if properly authorized, will have discretion to vote the shares they represent in accordance with their best judgment.
+
+**Q: What happens if I abstain from voting on a proposal?**
+
+A: If you abstain from voting, it will have the same effect as a vote "AGAINST" the proposal to approve the merger agreement and it will have no effect on the adjournment proposal or on the merger-related named executive officer compensation proposal.
+
+**Q: May I change my vote after I have mailed my signed proxy card or otherwise submitted my vote?**
+
+A: Yes. Even if you sign the proxy card in the form accompanying this proxy statement, you retain the power to revoke your proxy or change your vote. You can revoke your proxy or change your vote at any time before it is exercised by giving written notice to our Corporate Secretary at Multimedia Games Holding Company, Inc., 206 Wild Basin Road South, Building B, Austin, Texas 78746,
+
+21
+<!-- PAGE 30 -->
+ZEQ.=5,SEQ=29,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=53757,FOLIO='21',FILE='DISK112:[14ZCP1.14ZCP40801]CE40801A.;27',USER='GPEARMO',CD='22-OCT-2014;00:29'
+
+Table of Contents
+
+**Q: What does it mean if I receive more than one set of materials?**
+
+A: This means you own shares of our common stock that are registered under different names. For example, you may own some shares directly as a shareholder of record and other shares through a broker or you may own shares through more than one broker. In these situations, you will receive multiple sets of proxy materials. You must complete, sign, date and return all of the proxy cards or follow the instructions for any alternative voting procedure on each of the voting instruction cards that you receive in order to vote all of the shares you own. Each proxy card you receive comes with its own prepaid return envelope; if you vote by mail, make sure you return each proxy card in the return envelope that accompanies that proxy card.
+
+**Q: When do you expect the merger to be completed?**
+
+A: The parties to the merger agreement are working toward completing the merger as promptly as possible. The parties currently expect to complete the merger by the first calendar quarter of 2015, although there can be no assurance that the parties will be able to do so by then or at all. Completion of the merger is subject to a number of conditions specified in the merger agreement.
+
+**Q: If the merger is completed, how will I receive the cash for my shares?**
+
+A: If the merger is completed and your shares of our common stock are held in book-entry or in "street name", the cash proceeds will be deposited into your bank or brokerage account without any further action on your part. If you are a shareholder of record with your shares held in certificate form, you will receive a letter of transmittal with instructions on how to send your shares of our common stock to the paying agent in connection with the merger. The paying agent will issue and deliver to you a check for your shares after you comply with these instructions. See the section entitled "Terms of the Merger Agreement—Exchange of Shares in the Merger" beginning on page 75 of this proxy statement.
+
+**Q: Is the merger taxable to me?**
+
+A: Yes. If you are a U.S. holder, the exchange of shares of our common stock for cash pursuant to the merger will generally be taxable for U.S. federal income tax purposes. If you are a U.S. holder, other than a U.S. holder who received shares of our common stock in a compensatory arrangement, and your shares of our common stock are converted into the right to receive cash in the merger, you will generally recognize gain or loss for U.S. federal income tax purposes in an amount equal to the difference, if any, between the amount of cash received with respect to such shares (determined before deduction of any applicable withholding taxes) and your adjusted tax basis in such shares. The exchange of shares of our common stock for cash pursuant to the merger will generally not result in a non-U.S. holder being subject to U.S. federal income tax unless the non-U.S. holder has certain connections to the United States, but may be a taxable transaction under non-U.S. tax laws. You should read "Proposal 1: Approval of the Merger Agreement—Material U.S. Federal Income Tax Consequences of the Merger" beginning on page 64 of this proxy statement for a more detailed discussion of the U.S. federal income tax consequences of the merger to U.S. holders and non-U.S. holders. You should also consult your tax advisor for a complete analysis of the effect of the merger on your U.S. federal, state and local and/or non-U.S. taxes, particularly if you received shares in a compensatory arrangement.
+
+22
+<!-- PAGE 31 -->
+ZEQ.=6,SEQ=30,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=642497,FOLIO='22',FILE='DISK112:[14ZCP1.14ZCP40801]CE40801A.;27',USER='GPEARMO',CD='22-OCT-2014;00:29'
+
+Table of Contents
+
+**Q: What happens if the merger is not completed?**
+
+A: If the merger agreement is not approved by the shareholders at the special meeting or if the merger is not completed for any other reason, shareholders will not receive any payment for their shares of our common stock in connection with the merger. Instead, our common stock will continue to be listed and traded on the NASDAQ. In certain circumstances, we may be required to pay, or may be entitled to receive, a termination fee or we may seek other remedies, in each case, as described under "Terms of the Merger Agreement—Termination Fee; Effect of Termination" beginning on page 97 of this proxy statement.
+
+**Q: Am I entitled to exercise rights of dissent and appraisal instead of receiving the merger consideration for my shares?**
+
+A: Yes. In order to exercise your rights of dissent and appraisal, you must follow the requirements set forth in Subchapter H of Chapter 10 of the TBOC. Under Texas law, shareholders of Multimedia Games who vote against approving the merger agreement will have the right to seek appraisal of the fair value of their shares as determined by a court in accordance with the statutory requirements *if the merger is completed* . Rights of dissent and appraisal will only be available to these shareholders if they deliver to Multimedia Games a written notice of objection to the merger prior to the special meeting, vote against approving the merger agreement by proxy or in person at the special meeting, deliver to the surviving corporation a demand for payment of fair value of their shares following the merger and otherwise comply with applicable statutory procedures and requirements, which are summarized in this proxy statement. The appraisal amount could be more than, the same as, or less than the merger consideration a shareholder would be entitled to receive under the terms of the merger agreement. A copy of Subchapter H of Chapter 10 of the TBOC is attached as Annex C to this proxy statement and a summary of this provision can be found along with additional information about rights of dissent and appraisal under "Proposal 1: Approval of the Merger Agreement—Rights of Dissent and Appraisal" beginning on page 66 of this proxy statement.
+
+**Q: Who will count the votes?**
+
+A: The votes will be counted by a representative of Broadridge Financial Solutions, which we refer to as "Broadridge" in this proxy statement, who will act as the inspector of election appointed for the special meeting.
+
+**Q: Where can I find the voting results of the special meeting?**
+
+A: Multimedia Games intends to announce preliminary voting results at the special meeting and publish final results in a Current Report on Form 8-K that will be filed with the SEC following the special meeting. All reports Multimedia Games files with the SEC are publicly available when filed. See "Where Shareholders Can Find More Information" beginning on page 110 of this proxy statement.
+
+**Q: Where can I find more information about Multimedia Games?**
+
+A: You can find more information about Multimedia Games in its publicly filed reports with the SEC, Multimedia Games' website www.multimediagames.com, and the section entitled "Where Shareholders Can Find More Information" beginning on page 110 of this proxy statement.
+
+**Q: Who can help answer my questions?**
+
+A: If you would like additional copies, without charge, of this proxy statement or if you have questions about the merger agreement or the merger, including the procedures for voting your shares, you should contact Innisfree, our proxy solicitation firm, toll free at (888) 750-5834 or collect at (212) 750-5833.
+
+If your broker, bank or other nominee holds your shares, you should also call your broker, bank or other nominee for additional information.
+
+23
+<!-- PAGE 32 -->
+ZEQ.=7,SEQ=31,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=568394,FOLIO='23',FILE='DISK112:[14ZCP1.14ZCP40801]CE40801A.;27',USER='GPEARMO',CD='22-OCT-2014;00:29' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+**CAUTIONARY STATEMENT CONCERNING FORWARD-LOOKING INFORMATION**
+
+This proxy statement contains certain "forward-looking" statements as that term is defined by Section 27A of the Securities Act of 1933, as amended, which we refer to as the "Securities Act" in this proxy statement, and Section 21E of the Exchange Act. Forward-looking statements may be typically identified by such words as "may", "will", "should", "expect", "anticipate", "plan", "likely", "believe", "estimate", "project", "intend" and other similar expressions, among others. These forward-looking statements are subject to known and unknown risks and uncertainties that could cause our actual results to differ materially from the expectations expressed in the forward-looking statements. Although we believe that the expectations reflected in our forward-looking statements are reasonable, any or all of our forward-looking statements may prove to be incorrect. Consequently, no forward-looking statements may be guaranteed and there can be no assurance that the actual results or developments anticipated by such forward-looking statements will be realized or, even if substantially realized, that they will have the expected consequences to, or effects on, us or our business or operations. Factors that could cause our actual results to differ from those projected or contemplated in any such forward-looking statements include, but are not limited to, the following factors:
+
+The foregoing review of important factors that could cause actual events to differ from expectations should not be construed as exhaustive and should be read in conjunction with statements that are included herein and elsewhere, including the risk factors included in our most recent Annual Report on Form 10-K for the year ended September 30, 2013, and our more recent reports filed with the SEC. All subsequent written and oral forward-looking statements concerning the proposed transaction or other matters attributable to us or any other person acting on our behalf are expressly qualified in their entirety by the cautionary statements referenced above. None of Multimedia Games, GCA or any other person assumes responsibility for the accuracy or completeness of any of these forward-looking statements. You should not rely upon forward-looking statements as predictions of future events. The forward-looking statements speak only as of the date of the communication in which they are contained. We can give no assurance that the conditions to the merger will be satisfied. Except as required by applicable law, we undertake no obligation to revise or update any forward-looking statement, or to make any other forward-looking statements, whether as a result of new information, future events or otherwise.
+
+All information contained in this proxy statement exclusively concerning GCA, Merger Sub and their affiliates has been supplied by GCA and Merger Sub and has not been independently verified by us.
+
+24
+<!-- PAGE 33 -->
+ZEQ.=1,SEQ=32,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=585920,FOLIO='24',FILE='DISK112:[14ZCP1.14ZCP40801]CG40801A.;18',USER='JFUSS',CD='21-OCT-2014;19:44'
+
+Table of Contents
+
+**PARTIES INVOLVED IN THE MERGER**
+
+**Multimedia Games Holding Company, Inc. 206 Wild Basin Road South, Building B Austin, Texas 78746 Telephone: (512) 334-7500**
+
+Multimedia Games Holding Company, Inc., a Texas corporation, designs, manufactures and supplies gaming machines and systems to casino operators in North America, domestic lottery operators, and commercial bingo gaming facility operators. Multimedia Games' revenues are generated from the operation of gaming units in revenue-sharing or flat fee leasing arrangements and from the sale of gaming units and systems that feature proprietary and licensed game themes. Multimedia Games leases and sells its gaming units and systems in a variety of regulated markets, including slot machines, video lottery terminals and electronic bingo machines, collectively referred to as electronic gaming machines ("EGMs"). Multimedia Games serves gaming facilities operated by commercial and Native American casinos and derives the majority of its gaming revenue from participation arrangements or development and placement fee agreements. Under participation arrangements, Multimedia Games places EGMs and systems, as well as its proprietary and other licensed game content, at a customer's facility, with no specific contract period, in return for either a share of the revenues that these EGMs and systems generate or for a fixed daily lease fee. Multimedia Games enters into development and placement fee agreements to provide financing for new gaming facilities or for the expansion of existing facilities in exchange for a certain amount of floor space for a contracted period of time. All or a portion of the funds provided under development agreements are reimbursed to Multimedia Games, while funding under placement fee agreements is not reimbursed.
+
+Multimedia Games common stock is listed on the NASDAQ under the symbol "MGAM".
+
+Multimedia Games' principal executive offices are located at 206 Wild Basin Road South, Building B, Austin, Texas 78746, its telephone number is (512) 334-7500 and its Internet website address is www.multimediagames.com. The information provided on or accessible through Multimedia Games' website is not part of this proxy statement and is not incorporated in this proxy statement by this or any other reference to its website provided in this proxy statement.
+
+Detailed descriptions about Multimedia Games' business and financial results are contained in its Annual Report on Form 10-K for the fiscal year ended September 30, 2013, and its subsequent reports filed with the SEC, which are incorporated in this proxy statement by reference. See the section entitled "Where Shareholders Can Find More Information" beginning on page 110 of this proxy statement.
+
+**Global Cash Access Holdings, Inc. 7250 S. Tenaya Way, Suite 100 Las Vegas, Nevada 89113 Telephone: (800) 833-7110**
+
+Global Cash Access Holdings, Inc., a Delaware corporation, is a global provider of cash access services and related equipment and services to the gaming industry. GCA's products and services: (i) provide gaming establishment patrons access to cash through a variety of methods, including ATM cash withdrawals, credit card cash access transactions, POS debit card transactions, check verification and warranty services and money transfers; (ii) provide integrated cash access devices and related services, such as slot machine ticket redemption and jackpot kiosks to the gaming industry; (iii) provide products and services that improve credit decision-making, automate cashier operations and enhance patron marketing activities for gaming establishments; and (iv) provide online payment processing solutions for gaming operators in states that offer intra-state, Internet-based gaming and lottery activities.
+
+25
+<!-- PAGE 34 -->
+ZEQ.=2,SEQ=33,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=1045066,FOLIO='25',FILE='DISK112:[14ZCP1.14ZCP40801]CG40801A.;18',USER='JFUSS',CD='21-OCT-2014;19:44'
+
+Table of Contents
+
+GCA's common stock is listed on the NYSE under the symbol "GCA".
+
+GCA's principal executive offices are located at 7250 S. Tenaya Way, Suite 100, Las Vegas, Nevada 89113, its telephone number is (800) 833-7110 and its Internet website address is www.gcainc.com. The information provided on or accessible through GCA's website is not part of this proxy statement and is not incorporated in this proxy statement by this or any other reference to its website provided in this proxy statement.
+
+**Movie Merger Sub, Inc. 7250 S. Tenaya Way, Suite 100 Las Vegas, Nevada 89113 Telephone: (800) 833-7110**
+
+Movie Merger Sub, Inc., a wholly owned subsidiary of GCA, is a Texas corporation that was formed on September 4, 2014 for the sole purpose of entering into the merger agreement and completing the transactions contemplated by the merger agreement, including the merger. Upon the terms and subject to the conditions of the merger agreement, Merger Sub will be merged with and into Multimedia Games, with Multimedia Games surviving the merger as a wholly owned subsidiary of GCA.
+
+The principal executive offices of Merger Sub are located at 7250 S. Tenaya Way, Suite 100, Las Vegas, Nevada 89113 and its telephone number is (800) 833-7110.
+
+26
+<!-- PAGE 35 -->
+ZEQ.=3,SEQ=34,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=1854,FOLIO='26',FILE='DISK112:[14ZCP1.14ZCP40801]CG40801A.;18',USER='JFUSS',CD='21-OCT-2014;19:44'
+
+Table of Contents
+
+**THE SPECIAL MEETING**
+
+*This section contains information about the special meeting of Multimedia Games shareholders that has been called to consider and vote upon a proposal to approve the merger agreement, a proposal to approve, by a non-binding advisory vote, the compensation arrangements disclosed in this proxy statement that may be payable to Multimedia Games' named executive officers in connection with the consummation of the merger, and a proposal to approve the adjournment of the special meeting if necessary or appropriate in the view of the Multimedia Games board of directors, including to solicit additional proxies if there are not sufficient votes at the time of the special meeting to approve the merger agreement.*
+
+*This proxy statement is being provided to the shareholders of Multimedia Games as part of a solicitation of proxies by the Multimedia Games board of directors for use at the special meeting to be held at the date, time and place specified below, and at any properly convened meeting following an adjournment or postponement thereof, for the purposes set forth in this proxy statement and in the accompanying notice of special meeting.*
+
+**Date, Time and Place**
+
+A special meeting of shareholders of Multimedia Games is scheduled to be held on Wednesday, December 3, 2014, at 10:00 a.m., local time, at our corporate office, 206 Wild Basin Road South, Building B, Austin, Texas 78746, unless the special meeting is adjourned or postponed. We intend to mail this proxy statement and the accompanying proxy card on or about October 22, 2014 to all shareholders entitled to vote at the special meeting.
+
+**Purpose of the Special Meeting**
+
+At the special meeting, shareholders will be asked:
+
+**Recommendations of Our Board of Directors**
+
+The Multimedia Games board of directors, after considering all factors that the Multimedia Games board of directors deemed relevant, unanimously determined that the merger agreement and the transactions contemplated by the merger agreement, including the merger, are advisable, fair to and in the best interests of Multimedia Games and its shareholders, and unanimously approved the merger agreement and the transactions contemplated by the merger agreement, including the merger. Certain factors considered by the Multimedia Games board of directors in reaching its decision to approve the merger agreement and the merger can be found in the section entitled "Proposal 1: Approval of the Merger Agreement—Reasons for the Merger" beginning on page 43 of this proxy statement.
+
+27
+<!-- PAGE 36 -->
+ZEQ.=4,SEQ=35,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=303367,FOLIO='27',FILE='DISK112:[14ZCP1.14ZCP40801]CG40801A.;18',USER='JFUSS',CD='21-OCT-2014;19:44'
+
+Table of Contents
+
+**The Multimedia Games board of directors unanimously recommends that Multimedia Games shareholders vote "FOR" the approval of the merger agreement, thereby approving the transactions contemplated thereby, including the merger, "FOR" the merger-related named executive officer compensation proposal and "FOR" the adjournment proposal.**
+
+**Record Date and Voting Information**
+
+Only holders of record of our common stock at the close of business on October 21, 2014, the record date for the special meeting, are entitled to notice of, and to vote at, the special meeting and any adjournments or postponements thereof. Each holder of record of our common stock on the record date will be entitled to one vote for each share held as of the record date on each matter submitted to our shareholders for approval at the special meeting. If you sell or transfer your shares of our common stock after the record date but before the special meeting, you will transfer the right to receive the per share merger consideration, if the merger is completed, to the person to whom you sell or transfer your shares of our common stock, but you will retain your right to vote those shares at the special meeting.
+
+As of the close of business on the record date, there were 29,732,211 shares of Multimedia Games common stock, par value $0.01 per share, issued, outstanding and entitled to vote at the special meeting, which shares were held by approximately 36 holders of record.
+
+Brokers, banks or other nominees who hold shares in "street name" for clients typically have the authority to vote on "routine" proposals when they have not received instructions from beneficial owners. Absent specific instructions from the beneficial owner of the shares, however, brokers, banks or other nominees are not allowed to exercise their voting discretion with respect to the approval of non-routine matters, which includes all of the proposals being voted on at the special meeting. Broker non-votes are discussed in greater detail below.
+
+**Quorum**
+
+At the special meeting, shareholders holding a majority of the shares entitled to vote at the special meeting, represented in person or by proxy, will constitute a quorum. When a quorum is present to organize a meeting, it is not broken by the subsequent withdrawal of any such shareholders. As of the record date for the special meeting, 14,866,106 shares of our common stock will be required to obtain a quorum. Abstentions and broker non-votes are considered as present for the purpose of determining the presence of a quorum. In the event that a quorum is not present, or if there are insufficient votes to approve the merger agreement at the time of the special meeting, it is expected the meeting will be adjourned to solicit additional proxies.
+
+**Required Vote; Effect of Abstentions and Broker Non-Votes**
+
+Approval of the merger agreement requires the affirmative vote of the holders of at least two-thirds of the outstanding shares of our common stock entitled to vote at the special meeting. A failure to vote your shares of common stock, an abstention from voting or a broker non-vote will have the same effect as a vote against the proposal to approve the merger agreement.
+
+Approval of each of the merger-related named executive officer compensation proposal and the adjournment proposal requires the affirmative vote of the holders of a majority of the shares of Multimedia Games common stock that are present in person or by proxy and entitled to vote on such proposal.
+
+Abstentions and broker non-votes, if any, will be counted as present in determining whether the quorum requirement is satisfied. A broker non-vote occurs when a broker, bank or other nominee holding shares of a beneficial shareholder does not vote on a particular proposal because it has not
+
+28
+<!-- PAGE 37 -->
+ZEQ.=5,SEQ=36,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=154467,FOLIO='28',FILE='DISK112:[14ZCP1.14ZCP40801]CG40801A.;18',USER='JFUSS',CD='21-OCT-2014;19:44'
+
+Table of Contents
+
+received instructions from the beneficial shareholder and the broker, bank or other nominee does not have discretionary voting power for that particular item.
+
+It is important that you vote your shares. Because, under the TBOC, the approval of the merger agreement requires the affirmative vote of the holders of at least two-thirds of the outstanding shares of our common stock entitled to vote at the special meeting, your abstaining from voting, failure to vote, or failure to instruct your broker, bank or other nominee to vote, will have the same effect as a vote "AGAINST" the approval of the merger agreement. Abstentions and broker non-votes, if any, will not be counted as votes either "FOR" or "AGAINST" the approval of the adjournment proposal or the merger-related named executive officer compensation proposal. Shares not in attendance will have no effect on the outcome of any vote on the merger-related named executive officer compensation proposal or the adjournment proposal.
+
+If the special meeting is adjourned or postponed for any reason, and the record date remains unchanged, at any subsequent reconvening of the special meeting, all proxies will be voted in the same manner as they would have been voted at the original convening of the special meeting, except for any proxies that have been revoked or withdrawn in the interim.
+
+**Voting by Shareholders**
+
+After carefully reading and considering the information contained in this proxy statement, each shareholder of record of Multimedia Games common stock (that is, if your shares of Multimedia Games common stock are registered in your name with our transfer agent, AST) should vote by mail, through the Internet, by telephone or by attending the special meeting and voting by ballot, according to the instructions described below.
+
+*Voting Methods*
+
+**For Shareholders of Record** :
+
+If your shares are held in your name on the records of our transfer agent, AST, you can vote:
+
+Whether or not you plan to attend the special meeting in person, we request that you complete, sign, date and return the enclosed proxy card or submit your proxy by telephone or via the Internet prior to the special meeting to ensure that your shares will be voted at the special meeting. Proxies received at any time before the special meeting and not expired, revoked or superseded before being voted will be voted at the special meeting. If the proxy indicates a specification, it will be voted in accordance with the specification. If no specification is indicated, the proxy will be voted "FOR" the approval of the merger agreement, thereby voting such shares in favor of approving the transactions contemplated thereby, including the merger, "FOR" the approval, by a non-binding advisory vote, of the merger-related named executive officer compensation proposal, and "FOR" the approval of the adjournment proposal.
+
+29
+<!-- PAGE 38 -->
+ZEQ.=6,SEQ=37,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=49998,FOLIO='29',FILE='DISK112:[14ZCP1.14ZCP40801]CG40801A.;18',USER='JFUSS',CD='21-OCT-2014;19:44' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+**Please do** ***not*** **send us stock certificates or other documents representing Multimedia Games common stock at this time. If the merger is completed, holders of Multimedia Games stock certificates will receive instructions regarding the procedures for exchanging their existing Multimedia Games stock certificates for the payment of the merger consideration.**
+
+**For Beneficial Owners** :
+
+If your shares are held in "street name" through a broker, bank or other nominee, you have the right to direct your broker, bank or other nominee on how to vote your shares. Because a beneficial owner is not the shareholder of record, you may not vote these shares at the special meeting unless you obtain a "legal proxy" from the broker, bank or other nominee that holds your shares, giving you the right to vote the shares at the special meeting.
+
+**Revocation of Proxies**
+
+Multimedia Games shareholders of record retain the power to revoke their proxy or change their vote, even if they sign the proxy card in the form accompanying this proxy statement, vote via telephone or vote via the Internet. Multimedia Games shareholders can revoke their proxy or change their vote at any time before it is exercised by giving written notice to our General Counsel at Multimedia Games Holding Company, Inc., 206 Wild Basin Road South, Building B, Austin, Texas 78746, Attn: General Counsel, specifying such revocation. Multimedia Games shareholders may also change their vote by timely delivering to us a valid, later-dated proxy or by voting by ballot in person at the special meeting. Simply attending the special meeting will not constitute revocation of your proxy. If your shares are held in "street name" through a broker, bank or other nominee, you should follow the instructions of such broker, bank or other nominee regarding the revocation of voting instructions. If you have voted via the Internet or via telephone, you may change your vote by signing on to the website and following the prompts or calling the toll-free number again and following the instructions.
+
+**Voting by Multimedia Games' Directors and Executive Officers**
+
+At the close of business on the record date for the special meeting, directors and executive officers of Multimedia Games and their affiliates were entitled to vote 209,009 shares of Multimedia Games common stock entitled to vote at the special meeting, or approximately 0.7% of the shares of Multimedia Games common stock outstanding on the record date. We currently expect that Multimedia Games' directors and executive officers will vote their shares in favor of the proposal to approve the merger agreement, although none of them have entered into any agreement obligating them to do so.
+
+Certain directors and executive officers of Multimedia Games have interests that are different from, or in addition to, those of other Multimedia Games shareholders generally. For more information, see the section entitled "Proposal 1: Approval of the Merger Agreement—Interests of Certain Persons in the Merger" beginning on page 58 of this proxy statement.
+
+**Expenses of Proxy Solicitation**
+
+This proxy statement is being furnished in connection with the solicitation of proxies by our board of directors. Expenses incurred in connection with printing and mailing of this proxy statement and in connection with notices or other filings with any governmental entities under any laws are our responsibility. We have engaged the services of Innisfree to solicit proxies for the special meeting. In connection with its retention by us, Innisfree has agreed to provide consulting, analytic and proxy solicitation services in connection with the special meeting. We have agreed to pay Innisfree a fee of approximately $25,000, plus reasonable out-of-pocket expenses for its services, and we will indemnify Innisfree for certain losses arising out of its proxy solicitation services. Copies of solicitation materials
+
+30
+<!-- PAGE 39 -->
+ZEQ.=1,SEQ=38,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=164108,FOLIO='30',FILE='DISK112:[14ZCP1.14ZCP40801]CI40801A.;24',USER='JFUSS',CD='21-OCT-2014;19:44'
+
+Table of Contents
+
+will also be furnished to banks, brokerage houses, fiduciaries and custodians holding shares of Multimedia Games common stock in their names that are beneficially owned by others to forward to those beneficial owners. We may reimburse persons representing beneficial owners of our common stock for their costs of forwarding solicitation materials to the beneficial owners. In addition to the solicitation of proxies by mail, proxies may be solicited by our directors, officers and employees, or representatives of Innisfree, in person or by telephone, email, fax or other means of communication and we may pay persons holding shares for others their expenses for sending proxy materials to their principals. No additional compensation will be paid to our directors, officers or employees for their services.
+
+**Householding**
+
+The SEC has adopted rules that permit companies and intermediaries, such as brokers, to satisfy the delivery requirements for proxy statements and annual reports with respect to two or more shareholders sharing the same address by delivering a single annual report or proxy statement, as applicable, addressed to those shareholders. This process, commonly referred to as "householding", potentially provides extra convenience for shareholders and cost savings for companies. We and some brokers may be householding our proxy materials by delivering a single set of proxy materials to multiple shareholders sharing an address unless contrary instructions have been received from the affected shareholders. Once you have received notice from your broker or us that your broker or we will be householding materials to your address, householding will continue until you are notified otherwise or until you revoke your consent. If at any time you no longer wish to participate in householding, and would prefer to receive separate proxy materials, or if you are receiving multiple copies of those materials and wish to receive only one, please notify your broker if you are a street name shareholder or us if you are a shareholder of record. You can notify us by sending a written request to our Investor Relations team at Multimedia Games Holding Company, Inc., 206 Wild Basin Road South, Building B, Austin, Texas 78746, Attn: Investor Relations. In addition, we will promptly deliver, upon written or oral request to the address or telephone number above, a separate copy of the proxy statement to a shareholder at a shared address to which a single copy of the documents was delivered.
+
+**Tabulation of Votes**
+
+All votes will be tabulated by a representative of Broadridge, who will act as the inspector of election appointed for the special meeting and will separately tabulate affirmative and negative votes, abstentions and broker non-votes.
+
+**Confidential Voting**
+
+As a matter of policy, we keep confidential proxies, ballots and voting tabulations that identify individual shareholders. Such documents are available for examination only by the inspector of election, certain of our employees, our transfer agent and our proxy solicitor who are associated with processing proxy cards and tabulating the vote. The vote of any shareholder is not disclosed except (i) when disclosure is required by applicable law, (ii) when disclosure is requested by you, (iii) when we conclude in good faith that a bona fide dispute exists as to the authenticity of one or more proxies, ballots or votes, or as to the accuracy of any tabulation of such proxies, ballots or votes or (iv) in a contested proxy solicitation. Occasionally, shareholders provide written comments on their proxy cards. All comments received are then forwarded to our General Counsel. We intend to announce preliminary aggregate voting results at the special meeting and to then disclose the final aggregate voting results in a Current Report on Form 8-K following the special meeting.
+
+31
+<!-- PAGE 40 -->
+ZEQ.=2,SEQ=39,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=751026,FOLIO='31',FILE='DISK112:[14ZCP1.14ZCP40801]CI40801A.;24',USER='JFUSS',CD='21-OCT-2014;19:44'
+
+Table of Contents
+
+**Adjournments and Postponements**
+
+In addition to the proposal to approve the merger agreement and the merger-related named executive officer compensation proposal, our shareholders are also being asked to approve a proposal that will give our board of directors authority to adjourn the special meeting if necessary or appropriate in the view of our board of directors, including to solicit additional proxies if there are not sufficient votes at the time of the special meeting to approve the merger agreement, to allow reasonable additional time for the filing and distribution of any supplemental or amended disclosure to be disseminated to and reviewed by our shareholders prior to the special meeting, or otherwise with the consent of GCA. In addition, our board of directors could postpone the meeting before it commences, in each case in any of the circumstances described above. If the special meeting is so adjourned for the purpose of soliciting additional proxies, shareholders who have already submitted their proxies will be able to revoke them at any time prior to their use. If you return a proxy and do not indicate how you wish to vote on any proposal, or if you indicate that you wish to vote in favor of the proposal to approve the merger agreement but do not indicate a choice on the adjournment proposal, your shares will be voted in favor of the adjournment proposal. But if you indicate that you wish to vote against the proposal to approve the merger agreement, your shares will only be voted in favor of the adjournment proposal if you indicate that you wish to vote in favor of that proposal.
+
+Any adjournment may be made without notice to another time or place if the date, time and place to which the meeting is adjourned is announced at the meeting at which the adjournment is taken. At the adjourned meeting any business may be transacted that might have been transacted on the original date of the meeting. However, if the adjournment is for more than thirty (30) days or, if after the adjournment, our board of directors fixes a new record date for the adjourned meeting, a notice of the adjourned meeting will be given to each shareholder of record entitled to vote at the adjourned meeting.
+
+**Attending the Special Meeting**
+
+Only shareholders of record as of the close of business on October 21, 2014, or their duly appointed proxies, and "street name" holders (those whose shares are held through a broker, bank or other nominee) who bring evidence of beneficial ownership on the record date for the special meeting, such as a copy of your most recent account statement or similar evidence of ownership of our common stock as of the record date for the special meeting, may attend the special meeting. If you are a "street name" holder and you wish to vote at the special meeting, you must also bring a "legal proxy" from the record holder (your broker, bank or other nominee) of the shares of our common stock authorizing you to vote at the special meeting. All shareholders should bring photo identification (a driver's license or passport is preferred), as you will also be asked to provide photo identification at the registration desk on the day of the special meeting or any adjournment or postponement of the special meeting. Everyone who attends the special meeting must abide by the rules for the conduct of the meeting. These rules will be printed on the meeting agenda. Even if you plan to attend the special meeting, we encourage you to vote by telephone, Internet or mail so that your vote will be counted if you later decide not to attend the special meeting. **No cameras, recording equipment, other electronic devices, large bags or packages will be permitted in the special meeting.** Shareholders will be admitted to the meeting room starting at 9:30 a.m., local time, and admission will be on a first-come, first-served basis.
+
+**Assistance**
+
+If you need assistance in completing your proxy card or have questions regarding the special meeting, please contact Innisfree by telephone. Shareholders may call toll-free at (888) 750-5834 and banks and brokers may call collect at (212) 750-5833.
+
+32
+<!-- PAGE 41 -->
+ZEQ.=3,SEQ=40,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=480203,FOLIO='32',FILE='DISK112:[14ZCP1.14ZCP40801]CI40801A.;24',USER='JFUSS',CD='21-OCT-2014;19:44'
+
+Table of Contents
+
+**PROPOSAL 1: APPROVAL OF THE MERGER AGREEMENT**
+
+**Effects of the Merger**
+
+Pursuant to the terms of the merger agreement, if the merger agreement is approved by Multimedia Games' shareholders and the other conditions to the closing are either satisfied or waived, at the effective time of the merger, Merger Sub will be merged with and into Multimedia Games, with Multimedia Games surviving the merger as a wholly owned subsidiary of GCA. As a result of the merger, Multimedia Games will cease to be a publicly traded company. If the merger is completed, you will not own any shares of the capital stock of the surviving corporation.
+
+At the effective time of the merger, each share of Multimedia Games common stock issued and outstanding immediately prior to such time, other than the excluded shares held by Multimedia Games as treasury stock (which will be canceled at the consummation of the merger and no payment will be made with respect to those shares), the excluded shares owned by subsidiaries of Multimedia Games or by GCA, Merger Sub or any of their wholly owned subsidiaries (which will be converted into one fully paid share of common stock, par value $0.01 per share, of the surviving corporation at the consummation of the merger) and the excluded shares held by shareholders who are entitled to demand and properly perfect the right of dissent and appraisal of such shares pursuant to, and in compliance in all respects with, the TBOC (which will be converted into the right to receive the fair value of such shares in accordance with the applicable provisions of the TBOC), will be converted into the right to receive $36.50 in cash, without interest and subject to any applicable withholding taxes. Each share of common stock, no par value per share, of Merger Sub that is issued and outstanding immediately prior to the effective time of the merger, will be converted into one fully paid and non-assessable share of common stock, par value $0.01 per share, of the surviving corporation.
+
+At the effective time of the merger, each option to purchase Multimedia Games common stock that was granted prior to September 8, 2014 and is outstanding and unexercised immediately prior to the effective time of the merger (whether vested or unvested) will automatically terminate and be canceled and converted into the right to receive the merger consideration with respect to each share of Multimedia Games common stock subject to such option immediately prior to the effective time of the merger, less the applicable exercise price and less any applicable withholding taxes. If the exercise price of the option equals or exceeds the merger consideration, the option will be canceled without any payment to the holder.
+
+At the effective time of the merger, each option to purchase Multimedia Games common stock granted on or after September 8, 2014 will convert into an option to acquire, on the same terms and conditions as were applicable to such option immediately prior to the effective time of the merger, a number of GCA shares of common stock (rounded down to the nearest whole share), determined by multiplying the number of shares of Multimedia Games common stock subject to such option immediately prior to the effective time of the merger by the equity exchange ratio, at an exercise price per share of GCA common stock (rounded up to the nearest whole cent) equal to the quotient obtained by dividing (i) the exercise price per share of Multimedia Games common stock of such Multimedia Games option by (ii) the equity exchange ratio.
+
+At the effective time of the merger, each Multimedia Games restricted stock unit that is outstanding (whether vested or unvested) immediately prior to the effective time of the merger will automatically terminate and be canceled and converted into the right to receive the merger consideration, less any applicable withholding taxes.
+
+At the effective time of the merger, each Multimedia Games performance share award that is outstanding (whether vested or unvested) immediately prior to the effective time of the merger will automatically terminate and be canceled and converted into the right to receive the merger consideration in respect of each share of Multimedia Games common stock underlying the award (assuming achievement of the applicable performance-based vesting conditions at the maximum level), less any applicable withholding taxes.
+
+33
+<!-- PAGE 42 -->
+ZEQ.=4,SEQ=41,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=217603,FOLIO='33',FILE='DISK112:[14ZCP1.14ZCP40801]CI40801A.;24',USER='JFUSS',CD='21-OCT-2014;19:44'
+
+Table of Contents
+
+At the effective time of the merger, the certificate of formation and the bylaws of Multimedia Games will be amended in their entirety to be identical to the certificate of formation and the bylaws of Merger Sub as in effect immediately prior to the effective time of the merger. In addition, as of the effective time of the merger, the directors and officers of Merger Sub immediately prior to the effective time of the merger will be the directors and officers of the surviving corporation until their successors have been duly elected, designated or qualified, as the case may be, or their earlier death, incapacitation, retirement, resignation or removal in accordance with the certificate of formation and bylaws of the surviving corporation.
+
+**Background of the Merger**
+
+Our board of directors and management, in their ongoing effort to maximize shareholder value, have periodically reviewed and assessed our business strategy, the various trends and conditions affecting our industry, our businesses generally and a variety of strategic alternatives reasonably available to Multimedia Games, including a potential sale of the company. As part of this process, our board of directors and management have occasionally received unsolicited inquiries or proposals from third parties regarding potential strategic transactions.
+
+In early April 2013, a financial sponsor, which we refer to as "Bidder A" in this proxy statement, initiated discussions with us regarding a potential acquisition of Multimedia Games. In response to Bidder A's expressed interest, our board of directors engaged an independent bulge bracket financial advisor, which we refer to as "Banker 1" in this proxy statement, to act as its financial advisor and Latham & Watkins LLP, which we refer to as "Latham & Watkins" in this proxy statement, to provide legal advice regarding a potential transaction.
+
+From April 2013 to mid-July 2013, at the direction and under the supervision of our board of directors, our management and advisors engaged in extensive negotiations with Bidder A and Bidder A conducted a thorough due diligence review of Multimedia Games.
+
+On April 23, 2013, Bidder A submitted a written indicative proposal to acquire Multimedia Games at a cash price of $25.00 per share of our common stock. The closing price of our common stock on that day was $20.90. Following further negotiations and diligence, on May 8, 2013, in a revised indicative proposal, Bidder A increased its proposed cash price to a range of $27.00 to $28.00 per share of our common stock. The closing price of our common stock on that day was $24.63.
+
+Following Bidder A's initial proposal on April 23, 2013, Multimedia Games announced positive earnings results for the second quarter of 2013 and analysts increased the target price of our common stock to above $30.00 per share. During this same time, the price of our common stock steadily rose from $20.90 per share on April 23, 2013 to over $30.00 per share in mid-July 2013. As our stock price rose, our board of directors and management indicated to Bidder A that it would need to increase its proposed price in order to move forward with an acquisition of Multimedia Games.
+
+On July 15, 2013, Bidder A informed us that it was no longer interested in pursuing a strategic transaction with us due to our increased stock price and the premium that would be required over that price in a transaction.
+
+As part of the review of strategic alternatives by our board of directors, from May to July 2013, Banker 1, at the direction of our board of directors, contacted 13 additional parties to gauge their interest in a potential acquisition of Multimedia Games. This group, which included eight financial sponsors and five companies in the gaming industry, was selected by our board of directors upon the advice of Banker 1 based on their anticipated interest in an acquisition of Multimedia Games, their perceived ability to offer an acceptable value and their ability to finance such an acquisition. Of these 13 potential acquirors, three entered into confidentiality agreements with us, and the remaining 10 indicated that they were not interested in pursuing a transaction at that time.
+
+34
+<!-- PAGE 43 -->
+ZEQ.=5,SEQ=42,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=319896,FOLIO='34',FILE='DISK112:[14ZCP1.14ZCP40801]CI40801A.;24',USER='JFUSS',CD='21-OCT-2014;19:44'
+
+Table of Contents
+
+Two of the three potential acquirors that had entered into confidentiality agreements with us ultimately declined to continue with discussions or submit a proposal regarding an acquisition of the company, and one, a financial sponsor, which we refer to as "Bidder B" in this proxy statement, submitted a written proposal on July 2, 2013 to acquire Multimedia Games at a cash price of approximately $25.00 per share of our common stock, which was less than the closing price of our common stock on that day of $28.20. At the direction of our board of directors, Banker 1 informed Bidder B that its proposed price would not provide value to our shareholders and we would not engage in discussions with Bidder B unless it submitted a revised proposal with a price reflecting a premium to the then current price of our common stock. Bidder B indicated that it would not submit a revised proposal.
+
+On August 12, 2013, a potential strategic acquiror, which we refer to as "Bidder C" in this proxy statement, and which was one of the additional potential acquirors that had previously entered into a confidentiality agreement with us but declined to make a proposal, submitted a written indication of interest in acquiring the company at a cash price of $35.50 per share of our common stock. The closing price of our common stock on that day was $35.11.
+
+Following receipt of Bidder C's indication of interest, our board of directors met to discuss Bidder C's proposal and the small premium implied by the $35.50 offer price. After discussion, our board of directors determined to engage in negotiations with Bidder C contingent on Bidder C's confirmation that it would increase the price of its offer.
+
+Between August 12, 2013 and August 28, 2013, the price of our common stock increased from $35.11 to $37.38. On August 28, 2013, Bidder C informed us that it was not willing to make an offer above the market price of our common stock, and therefore it was no longer interested in pursuing a strategic transaction with us.
+
+On April 30, 2014, we announced the acquisition of PokerTek, Inc., which we refer to as "Pokertek" in this proxy statement, which is expected to be consummated in the fourth calendar quarter of this year.
+
+Both before and after the announcement of the PokerTek transaction, there has been significant merger activity in the gaming equipment industry, including the acquisition of WMS Industries Inc. by Scientific Games Corporation in October 2013, the proposed acquisition of Video Gaming Technologies, Inc. by Aristocrat Leisure Ltd. announced in July 2014, the proposed acquisition of International Game Technology by GTECH S.p.A. announced in July 2014, the acquisition of Rational Group Ltd., the owner and operator of PokerStars and FullTilt Poker, by Amaya Gaming Group Inc. in August 2014 and the proposed acquisition of Bally Technologies, Inc. by Scientific Games Corporation, announced in August 2014. In light of these combinations, our board of directors considered the challenges to Multimedia Games competing with significantly larger competitors and whether we might be an attractive acquisition candidate. In addition, several stock analysts had identified Multimedia Games as one of the few remaining independent gaming equipment companies and speculated about possible merger activity involving us.
+
+In May 2014, representatives of a financial sponsor, which we refer to as "Bidder D" in this proxy statement, called Patrick Ramsey, our Chief Executive Officer, to gauge our interest in a possible strategic transaction and to request an in-person meeting with our senior management team. Bidder D had been one of the 13 prospective acquirors contacted by Banker 1 at the direction of our board of directors in 2013, but had declined to execute a confidentiality agreement or submit a proposal at that time.
+
+Following Bidder D's initial inquiry, our board of directors engaged Latham & Watkins to act as our board of directors' legal advisor in connection with a potential transaction with Bidder D and other potential strategic transactions. Our board of directors also authorized management to meet with
+
+35
+<!-- PAGE 44 -->
+ZEQ.=6,SEQ=43,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=784256,FOLIO='35',FILE='DISK112:[14ZCP1.14ZCP40801]CI40801A.;24',USER='JFUSS',CD='21-OCT-2014;19:44'
+
+Table of Contents
+
+representatives of Bidder D and share publicly available information. On June 18, 2014, we entered into a confidentiality agreement with Bidder D in connection with our discussions regarding a potential transaction and began sharing non-public information with Bidder D.
+
+Between June 26, 2014 and July 15, 2014, members or our management made available financial diligence information to Bidder D and participated in preliminary due diligence calls with Bidder D.
+
+Following preliminary diligence meetings between our management and representatives of Bidder D, on July 12, 2014, we received a non-binding indication of interest from Bidder D proposing to acquire Multimedia Games at a cash price in the range of $35.00 to $37.00 per share of our common stock, subject to further due diligence. The closing price of our common stock on July 11, 2014, the last trading day preceding the non-binding indication of interest, was $28.21.
+
+On July 15, 2014, our board of directors held a special telephonic meeting to discuss Bidder D's proposal, which representatives of Latham & Watkins attended. At that meeting, our board of directors discussed Bidder D's due diligence efforts to date and whether it would be advisable to engage a financial advisor to evaluate Bidder D's proposal. Following discussion, our board of directors determined to continue preliminary discussions with Bidder D and allow them to continue due diligence in order to elicit a definite proposal on price. Our board of directors also determined it would contact Wells Fargo Securities, which represented Multimedia Games in the PokerTek transaction, and another independent financial advisor, which we refer to as "Banker 2" in this proxy statement, to discuss a potential engagement as our board of directors' financial advisor in connection with a potential strategic transaction. Additionally, in light of the fact that Bidder D was a financial sponsor and would likely seek to retain management after a transaction, our board of directors instructed management to defer any price negotiations to the board, to keep a careful record of any diligence materials shared with Bidder D and not to engage in any discussions regarding post-closing compensation or the terms of their ownership in the acquired company until instructed by our board of directors.
+
+On July 18, 2014, our board of directors held two special telephonic meetings, which representatives of Banker 2 and Wells Fargo Securities attended. At these meetings, representatives of Banker 2 and Wells Fargo Securities separately delivered presentations to our board of directors regarding their qualifications and their ability to assist us in a process to explore strategic alternatives with acceptable conflicts. Following discussion, our board of directors determined that Wells Fargo Securities was best suited to act as the board's financial advisor in the current process, based on Wells Fargo Securities' recent familiarity with the company, its knowledge of the gaming industry, its expertise advising on mergers and acquisitions and its lack of conflicts. Our board of directors authorized Latham & Watkins and management to negotiate and finalize an engagement letter with Wells Fargo Securities, subject to the board's approval.
+
+On July 23, 2014, we provided Bidder D and its advisors access to our electronic data room to facilitate their due diligence process.
+
+On July 29, 2014, we entered into a formal engagement letter with Wells Fargo Securities to engage them as the financial advisor to our board of directors in connection with a potential sale of Multimedia Games. In addition, our board of directors held a special in person meeting, which representatives of Latham & Watkins and Wells Fargo Securities attended. At this meeting, representatives of Wells Fargo Securities reviewed with our board of directors a preliminary financial analysis of the company.
+
+On July 30, 2014, we reported third quarter earnings per share of $0.26, $0.04 less than the consensus estimate of $0.30, and revenue of $50.3 million, $4.2 million less than the consensus estimate of $54.5 million. The closing price of our common stock on that day was $23.99, representing a 13.7% drop from the previous day closing price of $27.81.
+
+36
+<!-- PAGE 45 -->
+ZEQ.=7,SEQ=44,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=407244,FOLIO='36',FILE='DISK112:[14ZCP1.14ZCP40801]CI40801A.;24',USER='JFUSS',CD='21-OCT-2014;19:44' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;" Table of Contents
+
+On July 31 and August 1, 2014, members of our senior management and representatives of Wells Fargo Securities met with Bidder D and its financial advisor in Austin, Texas. Bidder D toured our Austin manufacturing facility and discussed with our management our business strategy and current industry trends. At these meetings, representatives of Bidder D told Mr. Ramsey that Bidder D's investment committee was scheduled to meet on August 13, 2014, after which they would submit a revised offer.
+
+On August 1, 2014, Scientific Games Corporation announced its agreement to acquire Bally Technologies, Inc. Shortly following this announcement, Ram Chary, Chief Executive Officer of GCA, contacted Mr. Ramsey with interest in discussing a potential transaction. This was the first time we were contacted by GCA regarding a strategic transaction. In addition, a representative of Bidder A contacted Mr. Ramsey and expressed interest in resuming discussions.
+
+On August 2, 2014, our board of directors held a special telephonic meeting, which representatives of Latham & Watkins and Wells Fargo Securities attended. At this meeting, Mr. Ramsey gave our board of directors an update on the meetings with Bidder D and the communications he received from Bidder A and GCA. Our board of directors discussed strategies designed to maximize shareholder value. Following discussion, our board of directors instructed management to continue the diligence process with Bidder D and to open a dialogue with GCA with the goal of receiving a preliminary proposal on price. Given the full process we went through with Bidder A in 2013 and the amount of diligence Bidder A had already done on the company, our board of directors decided to wait for Bidder A to provide a proposal on price before determining whether to fully engage with Bidder A.
+
+That same day, Mr. Ramsey called Mr. Chary. Mr. Chary indicated that he had received approval of the GCA board of directors to make a preliminary proposal, had had positive dialogues with debt financing sources and was prepared to move quickly.
+
+On August 6, 2014, we entered into a confidentiality agreement with GCA. The next day, August 7, 2014, we provided GCA and its advisors access to our electronic data room to facilitate the due diligence process, which continued through September 8, 2014.
+
+On August 8, 2014, Mr. Ramsey had a telephonic meeting with Bidder A to discuss the company and the industry generally. On this call, Bidder A indicated that it would prefer to wait to engage in discussions regarding a strategic transaction until at least after the Oklahoma gaming conference being held August 11 to 13, 2014.
+
+Also on August 8, 2014, at the direction of our board of directors, a memorandum from Latham & Watkins regarding, among other things, confidentiality, neutrality and our board of directors' managing role in the process of negotiating a strategic transaction was circulated to members of our senior management, each of whom executed the memorandum confirming their understanding. This memorandum formalized the instructions previously provided by our board of directors to management in 2013 and again following Bidder D's initial contact with us in May 2014.
+
+On August 12, 2014, GCA delivered a written preliminary proposal to acquire Multimedia Games at a cash price in the range of $32.25 to $35.50 per share of our common stock. Among other things, this proposal indicated that financing would not be a condition to closing. The closing price of our common stock on that day was $25.97.
+
+On August 14, 2014, representatives of Bidder A contacted Mr. Ramsey and indicated that Bidder A was not interested in continuing discussions at this time.
+
+On August 15, 2014, our board of directors held a special telephonic meeting attended by representatives of Latham & Watkins and Wells Fargo Securities. Mr. Ramsey updated our board of directors on discussions and negotiations with Bidder A, Bidder D and GCA. Our board of directors then discussed with management and its advisors the strategy going forward with Bidder D and GCA to
+
+37
+<!-- PAGE 46 -->
+ZEQ.=1,SEQ=45,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=1046021,FOLIO='37',FILE='DISK112:[14ZCP1.14ZCP40801]CK40801A.;22',USER='JFUSS',CD='21-OCT-2014;19:44'
+
+Table of Contents
+
+obtain the highest possible price without significant conditions to closing or other contingencies. After discussion, our board of directors determined to continue negotiations with GCA and directed management and the representatives of Wells Fargo Securities to seek a firm price from GCA above the price range set forth in its proposal. With respect to Bidder D, our board of directors decided to wait for a revised proposal before taking any further action. Our board of directors also discussed whether it would be worthwhile to make outbound calls to additional potential acquirors at that time. Representatives of Wells Fargo Securities reviewed with our board of directors the recent consolidation in the gaming industry, additional potential acquirors that Wells Fargo Securities believed might be interested in and have the financial ability to acquire Multimedia Games, the public speculation by analysts that Multimedia Games was a potential takeover target and the associated likelihood that any interested parties would make inbound calls to us to express interest. Our board of directors and its advisors also discussed the possibility of potential acquirors making a proposal to acquire Multimedia Games after we executed and announced a merger agreement, including the likely effects of a "go-shop" provision (which would allow us to contact other bidders after signing a merger agreement) and the amount of the break-up fee associated with competing proposals. After discussion, our board of directors decided to focus on negotiations with Bidder D and GCA rather than make additional outbound inquiries at that time.
+
+Later that same day we received a revised non-binding indication of interest from Bidder D, pursuant to which Bidder D proposed to acquire all the outstanding shares of our common stock at a cash price of $31.00 per share plus additional consideration of up to $5.00 per share contingent on Multimedia Games' achievement of certain operating income targets prior to consummation of the transaction. The closing price of our common stock on that day was $26.88. In our discussions with Bidder D, representatives of Bidder D indicated a timeline to close of between nine and twelve months because Bidder D was not licensed in any of the jurisdictions that would be required to complete the transaction.
+
+From August 15, 2014 through August 22, 2014, our management and representatives of Latham & Watkins and Wells Fargo Securities continued discussions with GCA in an effort to improve GCA's proposed price. Our advisors also made clear the importance of minimizing conditionality or contingencies in the transaction.
+
+On August 22, 2014, GCA delivered a revised written proposal to acquire Multimedia Games at a cash price of $35.00 per share of our common stock. The closing price of our common stock on that day was $27.40. Among other things, this revised proposal reiterated that financing would not be a condition to closing. In addition to the revised proposal, Mr. Chary verbally indicated to Mr. Ramsey that GCA's gaming licenses in various jurisdictions would help GCA be in a position to close a transaction with Multimedia Games as quickly as within four to five months after signing, with GCA targeting a closing as soon as December 31, 2014.
+
+On August 23, 2014, our board of directors held a special telephonic meeting attended by representatives of Latham & Watkins and Wells Fargo Securities. Representatives of Latham & Watkins and Wells Fargo Securities reviewed with our board of directors an analysis of GCA's ability to pay the proposed purchase price in the transaction. Our advisors also noted that the operating income contingency on price proposed by Bidder D was extremely unusual in a transaction of this nature and that in considering the proposed contingent consideration our board of directors should evaluate the risk that the maximum contingent consideration would not be paid if Multimedia Games failed to achieve its operating income targets prior to the consummation of the transaction, including the risk that such failure resulted from market or other forces outside our control. Our board of directors discussed the speed and certainty of GCA's proposal compared to Bidder D's proposal, based on GCA's existing gaming licenses, the contingent component of Bidder D's proposal and the lack of a financing condition to GCA's proposal. Following discussion, our board of directors directed management and its advisors to seek a higher price from GCA and to demand that Bidder D remove the contingency in its
+
+38
+<!-- PAGE 47 -->
+ZEQ.=2,SEQ=46,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=495301,FOLIO='38',FILE='DISK112:[14ZCP1.14ZCP40801]CK40801A.;22',USER='JFUSS',CD='21-OCT-2014;19:44'
+
+Table of Contents
+
+bid. Our board of directors also expressed its willingness to receive any additional consideration from GCA in the form of shares of GCA common stock rather than cash if necessary based on GCA's capital resources or to avoid the need to condition the merger on obtaining financing.
+
+Representatives of Latham & Watkins reviewed with our board of directors their fiduciary duties when considering the proposed transaction, and our board of directors discussed the possibility of making outbound calls to additional potential acquirors. Representatives of Wells Fargo Securities reviewed with our board of directors the recent consolidation in the gaming industry, additional potential acquirors that Wells Fargo Securities believed might be interested in and have the financial ability to acquire Multimedia Games, the public speculation by analysts that Multimedia Games was a potential takeover target and the associated likelihood that any interested parties would make inbound calls to us to express interest in a transaction. Our board of directors and its advisors also discussed the possibility of potential acquirors making a proposal to acquire Multimedia Games after we executed and announced a merger agreement, including the likely effects of a go-shop provision and the amount of the break-up fee on such competing proposals.
+
+On August 24, 2014, after discussions with Mr. Ramsey and representatives of Wells Fargo Securities, GCA indicated that it was not willing to pay any portion of the consideration in GCA stock, but that it would increase its cash proposal to $36.00 per share of our common stock. GCA also reiterated that, given its gaming licenses throughout various jurisdictions, it expected to be able to close a transaction quickly. Later that day, GCA delivered a written "final" non-binding proposal to acquire Multimedia Games at a cash price of $36.00 per share of our common stock. This proposal reconfirmed that financing would not be a condition to closing. The closing price of our common stock on the previous trading day, August 22, 2014, was $27.40.
+
+On August 25, 2014, our board of directors held a special telephonic meeting attended by representatives of Latham & Watkins and Wells Fargo Securities. Representatives of Wells Fargo Securities reported to our board of directors on their interactions with Bidder D and GCA. Representatives of Wells Fargo Securities had informed Bidder D that its proposal should not include any contingencies as to the amount of consideration. Bidder D indicated that its investment committee would only authorize a transaction in that range with a contingent component. At the direction of our board of directors, representatives from Wells Fargo Securities had informed GCA that its revised proposal was very close on price to another offer on the table and that the terms of the merger agreement would be an important factor in our board of directors' decision on whether or not to accept GCA's offer. Mr. Ramsey informed our board of directors that Mr. Chary had reiterated to Mr. Ramsey GCA's potential to close the transaction quickly, with GCA targeting a closing as soon as December 31, 2014. Mr. Chary had also told Mr. Ramsey that GCA was working with its lenders to obtain formal financing commitments. Representatives of Latham & Watkins reviewed with our board of directors a draft merger agreement, based in large part on the merger agreement that had been negotiated during our 2013 process with Bidder A and Bidder C. Our board of directors focused specifically on the following key features of the merger agreement: a ticking fee, which would increase the per share consideration if the closing was delayed; a forty-five (45) day go-shop provision, including a two-tier termination fee (with a lower fee payable during the go-shop period); the covenants regarding financing and regulatory approvals; our right of specific enforcement with respect to the merger agreement, requiring bidders to perform their obligations; and the definition of "company material adverse effect". Following discussion, our board of directors instructed representatives of Latham & Watkins and Wells Fargo Securities to deliver the merger agreement to GCA with a reiteration of the message that GCA's markup of the merger agreement would be an important factor in our decision, given that GCA's proposed price did not exceed an alternative proposal being considered by our board of directors.
+
+Later on August 25, 2014, we delivered an initial draft of the merger agreement to GCA and its advisors.
+
+39
+<!-- PAGE 48 -->
+ZEQ.=3,SEQ=47,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=34755,FOLIO='39',FILE='DISK112:[14ZCP1.14ZCP40801]CK40801A.;22',USER='JFUSS',CD='21-OCT-2014;19:44'
+
+Table of Contents
+
+On August 28, 2014, Bidder D delivered a revised non-binding indication of interest, pursuant to which Bidder D maintained the guaranteed portion of its offer at $31.00 per share but increased the contingent consideration portion of its offer by $1.00 per share for total potential consideration of $37.00 per share. The closing price of our common stock on that day was $26.87. In its revised indication of interest, Bidder D requested the right to exclusivity with Multimedia Games.
+
+Later on August 28, 2014, in light of Bidder D's revised proposal and at the direction of our board of directors, representatives of Wells Fargo Securities delivered an initial draft of the merger agreement to Bidder D and its advisors and requested again that Bidder D remove the contingency from its offer in order to be competitive in the process. This draft of the merger agreement was based on the draft previously sent to GCA, but included certain provisions unique to a financial sponsor. Bidder D ultimately communicated to Wells Fargo Securities that it was not willing to provide a revised draft of the merger agreement unless it was granted exclusivity or Multimedia Games agreed to reimburse Bidder D's expenses.
+
+On August 29, 2014, Pillsbury Winthrop Shaw Pittman, GCA's legal counsel, which we refer to as "Pillsbury" in this proxy statement, delivered a revised draft of the merger agreement.
+
+Later that day, our board of directors held a meeting, with management and representatives of Latham & Watkins and Wells Fargo Securities present, to discuss GCA's draft of the merger agreement. Our board of directors discussed certain principal issues raised by the draft merger agreement provided by GCA, including the addition of a financing condition in the form of a reverse termination fee, payable if GCA is unable to obtain debt financing; the elimination of the ticking fee, go-shop and two-tier termination fee; and the addition of a closing condition based on our retention of key customer revenue. Our board of directors specifically discussed the effect of these changes on the speed and certainty of GCA's revised proposal and instructed management and representatives of Latham & Watkins to negotiate more favorable terms.
+
+Between August 30, 2014 and September 3, 2014, based on input from their respective clients, representatives of Latham & Watkins negotiated the terms of the merger agreement, and exchanged several drafts of the merger agreement, with Pillsbury. During these meetings, representatives of Latham & Watkins advised representatives of Pillsbury of the importance of quickly completing the merger and GCA's frequent statements that the merger could possibly be consummated by December 31, 2014. Representatives of Pillsbury ultimately indicated GCA's acceptance of the requested go-shop, but only with a unitary termination fee of 3.0%.
+
+On September 3, 2014, Latham & Watkins sent GCA a draft of the merger agreement that reflected our positions on a number of key provisions that were open between the parties, including no closing condition based on customer revenue, a ticking fee and a two-tier termination fee (of approximately 1.0% of equity value for terminations within thirty (30) days and 3.0% of equity value for terminations any time thereafter) and a right of specific enforcement to enforce the terms of the merger agreement against GCA rather than rely on a reverse termination fee. After consultation with its outside advisors, our board of directors determined that it was willing to forgo a go-shop in favor of a two-tier termination fee because our board of directors believed the lower initial fee would be more likely to facilitate a superior proposal than a right to make outbound calls to solicit a transaction given the prior process run by Multimedia Games in 2013, the recent consolidation activity in the gaming equipment space and the speculation about Multimedia Games being a candidate for an acquisition.
+
+After receipt of the revised merger agreement, Mr. Chary told Mr. Ramsey that GCA was not willing to move on a number of the key issues, including the reverse termination fee. Mr. Ramsey told Mr. Chary that our board of directors believed that the customer closing condition and reverse termination fee reduced closing certainty. Mr. Ramsey also mentioned that he and our board of directors were concerned about GCA's commitment to a speedy close given its resistance to the ticking
+
+40
+<!-- PAGE 49 -->
+ZEQ.=4,SEQ=48,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=613502,FOLIO='40',FILE='DISK112:[14ZCP1.14ZCP40801]CK40801A.;22',USER='JFUSS',CD='21-OCT-2014;19:44'
+
+Table of Contents
+
+fee. Mr. Ramsey reminded Mr. Chary that the speed and certainty of GCA's offer were of paramount importance.
+
+On September 4, 2014, Mr. Ramsey and Mr. Chary agreed to terminate negotiations due to the fact that they were unable to resolve important issues in the merger agreement.
+
+On the evening of September 5, 2014, GCA delivered a revised offer increasing the proposed price to $36.50 per share. The closing price of our common stock on that day was $27.78. Included with the offer was a revised draft merger agreement that was described as "final" and "non-negotiable". GCA's revised draft of the merger agreement did not include a ticking fee and included a reverse termination fee of $50 million and other terms that reduced the certainty of closing. However, GCA had dropped its previous request for a customer revenue closing condition and had included a two-tier termination fee consistent with Multimedia Games' prior requests.
+
+Later in the evening of September 5, 2014, members of our board of directors, management and representatives of Latham & Watkins and Wells Fargo Securities had a teleconference to discuss GCA's revised proposal and draft merger agreement. Following discussion, our board of directors determined that, given the price increase and GCA's customary financing covenants (including the requirement to obtain alternative financing) and the terms of such committed financing and GCA's contractual commitments to obtain regulatory approvals, it was comfortable with the removal of the ticking fee and the addition of the reverse termination fee, payable only if we terminated the merger agreement. Our board of directors directed management and Latham & Watkins to resume negotiations with GCA, to explore improving the terms of GCA's proposal and to work to finalize the merger agreement.
+
+In the morning of September 6, 2014, representatives of Latham & Watkins resumed negotiations with GCA and Pillsbury, focusing on improving certain terms that, in the opinion of our advisors, reduced the certainty of closing.
+
+Later on September 6, 2014, our board of directors held a special telephonic meeting. At this meeting,
+
+Following discussions, our board of directors instructed management and Latham & Watkins to continue to negotiate to improve the terms of the GCA proposal and finalize the merger agreement with GCA before market open on the following Monday, September 8, 2014.
+
+41
+<!-- PAGE 50 -->
+ZEQ.=5,SEQ=49,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=600655,FOLIO='41',FILE='DISK112:[14ZCP1.14ZCP40801]CK40801A.;22',USER='JFUSS',CD='21-OCT-2014;19:44'
+
+Table of Contents
+
+During the course of September 6 and 7, 2014, we and GCA had a series of telephonic negotiations, in which certain members of each party's respective senior management and each party's legal and financial advisors participated, to address the remaining open issues. During these negotiations, GCA agreed to reduce the size of the termination fee payable after thirty (30) days to below 3.0% of equity value, and the remaining open issues were negotiated and resolved.
+
+On September 7, 2014, Multimedia Games' Regulatory Compliance Committee, which our board of directors has charged with evaluating and providing non-binding recommendations with respect to situations arising in the course of Multimedia Games' business that might adversely affect our objectives with respect to gaming compliance, met to review the terms of the merger agreement and formulate a recommendation on the suitability of GCA and the merger from a regulatory standpoint. Following its review, Multimedia Games' Regulatory Compliance Committee decided to recommend to our board of directors that both GCA and the merger agreement and the transactions contemplated thereby, including the merger, were suitable from a regulatory standpoint.
+
+On the evening of September 7, 2014, our board of directors held a special telephonic meeting to consider approval of the proposed merger agreement. At this meeting,
+
+Our board of directors considered various reasons to approve the merger agreement (see "—Reasons for the Merger" beginning on page 43 of this proxy statement), including certain countervailing factors. After discussions with its financial and legal advisors and members of our senior management, and in light of the reasons considered, our board of directors unanimously determined the merger agreement, the merger and the other transactions contemplated by the merger agreement to be advisable and fair to and in the best interests of Multimedia Games and our shareholders, and unanimously approved the merger agreement, the merger, the other transactions contemplated by the merger agreement and all other actions or matters necessary or advisable to give effect to the foregoing. Our board of directors further unanimously recommended approval of the merger agreement by our shareholders and directed the merger agreement be submitted to our shareholders for approval at a special meeting of our shareholders.
+
+In the early morning of September 8, 2014, the merger agreement and related ancillary documents were finalized. The debt financing commitment letter was executed by GCA and the respective banks and a copy was provided to Multimedia Games and our financial and legal advisors. Concurrently, each of Multimedia Games, GCA and Merger Sub executed and delivered the merger agreement, effective as of September 8, 2014.
+
+42
+<!-- PAGE 51 -->
+ZEQ.=6,SEQ=50,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=1027361,FOLIO='42',FILE='DISK112:[14ZCP1.14ZCP40801]CK40801A.;22',USER='JFUSS',CD='21-OCT-2014;19:44' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+On September 8, 2014, before the opening of trading on the U.S. public stock markets, we and GCA issued a joint press release announcing the execution of the merger agreement.
+
+On September 26, 2014, we received notice from the FTC of the early termination of the applicable waiting period under the HSR Act.
+
+**Reasons for the Merger**
+
+In evaluating the merger agreement and the transactions contemplated by the merger agreement, including the merger, the Multimedia Games board of directors consulted with our senior management, Multimedia Games' Regulatory Compliance Committee, our outside counsel, Latham & Watkins, our financial advisor, Wells Fargo Securities, and our regulatory counsel, Greenberg Traurig, LLP. In the course of reaching its determination to approve the merger agreement and the transactions contemplated thereby, including the merger, and to recommend that our shareholders vote to approve the merger agreement, the Multimedia Games board of directors considered a wide and complex range of factors, including the following positive factors, which are not intended to be exhaustive and are not presented in any relative order of importance:
+
+43
+<!-- PAGE 52 -->
+ZEQ.=1,SEQ=51,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=549390,FOLIO='43',FILE='DISK112:[14ZCP1.14ZCP40801]DA40801A.;21',USER='JFUSS',CD='21-OCT-2014;19:45'
+
+Table of Contents
+
+44
+<!-- PAGE 53 -->
+ZEQ.=2,SEQ=52,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=312991,FOLIO='44',FILE='DISK112:[14ZCP1.14ZCP40801]DA40801A.;21',USER='JFUSS',CD='21-OCT-2014;19:45'
+
+Table of Contents
+
+45
+<!-- PAGE 54 -->
+ZEQ.=3,SEQ=53,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=910527,FOLIO='45',FILE='DISK112:[14ZCP1.14ZCP40801]DA40801A.;21',USER='JFUSS',CD='21-OCT-2014;19:45'
+
+Table of Contents
+
+The Multimedia Games board of directors also considered a variety of risks and other potentially negative factors concerning the merger and the merger agreement, including the following:
+
+46
+<!-- PAGE 55 -->
+ZEQ.=4,SEQ=54,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=431382,FOLIO='46',FILE='DISK112:[14ZCP1.14ZCP40801]DA40801A.;21',USER='JFUSS',CD='21-OCT-2014;19:45'
+
+Table of Contents
+
+The Multimedia Games board of directors concluded that the potential benefits that it expected Multimedia Games and our shareholders would achieve as a result of the merger outweighed the risks and potentially negative factors relevant to the merger. The foregoing discussion of the Multimedia Games board of directors' reasons for its recommendation to our shareholders to vote to approve the merger agreement is not intended to be exhaustive, but addresses the material information and factors considered by the Multimedia Games board of directors in its consideration of the merger. In light of the wide variety of factors considered by the Multimedia Games board of directors in connection with its evaluation of the merger and the complexity of these matters, the Multimedia Games board of directors did not find it practicable to, and did not, quantify or otherwise assign relative weights to, the specific reasons underlying its determination and recommendation. Rather, the Multimedia Games board of directors viewed its determinations and recommendations as being based on the totality of the information and factors presented to and considered by the Multimedia Games board of directors. In considering the factors discussed above, individual directors may have given different weights to different factors.
+
+The foregoing discussion of the information and factors considered by the Multimedia Games board of directors is forward-looking in nature. This information should be read in light of the factors described under the section entitled "Cautionary Statement Concerning Forward-Looking Information" beginning on page 24 of this proxy statement.
+
+**Recommendation of Our Board of Directors**
+
+The Multimedia Games board of directors, after considering all factors that it deemed relevant, unanimously determined that the merger agreement and the transactions contemplated thereby, including the merger, are advisable, fair to and in the best interests of Multimedia Games and its shareholders, and unanimously approved the merger agreement and the transactions contemplated by
+
+47
+<!-- PAGE 56 -->
+ZEQ.=5,SEQ=55,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=427758,FOLIO='47',FILE='DISK112:[14ZCP1.14ZCP40801]DA40801A.;21',USER='JFUSS',CD='21-OCT-2014;19:45'
+
+Table of Contents
+
+the merger agreement, including the merger. Certain factors considered by the Multimedia Games board of directors in reaching its decision to approve the merger agreement and the merger can be found in the section entitled "—Reasons for the Merger" beginning on page 43 of this proxy statement.
+
+**The Multimedia Games board of directors recommends that the Multimedia Games shareholders vote "FOR" the approval of the merger agreement, thereby approving the transactions contemplated thereby, including the merger.**
+
+**Opinion of Multimedia Games' Financial Advisor**
+
+The Multimedia Games board of directors retained Wells Fargo Securities to act as its financial advisor in connection with its consideration of a potential transaction involving Multimedia Games. In connection with this engagement, the Multimedia Games board of directors requested that Wells Fargo Securities provide its opinion as to the fairness, from a financial point of view, of the merger consideration to be received by holders of Multimedia Games common stock (excluding the excluded shares) pursuant to the merger agreement. In selecting Wells Fargo Securities as its financial advisor, the Multimedia Games board of directors considered, among other things, the fact that Wells Fargo Securities is a widely recognized investment banking firm with substantial experience advising companies in the gaming equipment manufacturing industry, has familiarity with Multimedia Games and its business and has substantial experience providing strategic advisory services in similar transactions. Wells Fargo Securities, as part of its investment banking business, is continuously engaged in the evaluation of businesses and debt and equity securities in connection with mergers and acquisitions, underwritings, private placements and other securities offerings, senior credit financings, and general corporate advisory services.
+
+On September 7, 2014, at a meeting of the Multimedia Games board of directors held to evaluate the merger, Wells Fargo Securities delivered to the Multimedia Games board of directors its oral opinion, which was subsequently confirmed in writing on September 8, 2014, to the effect that, as of September 8, 2014, and based on and subject to various assumptions made, procedures followed, matters considered and limitations on the review undertaken by Wells Fargo Securities in connection with the opinion, the experience of its investment bankers and other factors it deemed relevant, the merger consideration to be received by holders of Multimedia Games common stock (excluding the excluded shares) pursuant to the merger agreement was fair, from a financial point of view, to such holders. In rendering its opinion, Wells Fargo Securities expressed no opinion with respect to any amounts to be received by, or to be paid or not paid to, the holders of the excluded shares. The issuance of the opinion of Wells Fargo Securities was approved by an authorized committee of Wells Fargo Securities.
+
+**The full text of Wells Fargo Securities' written opinion, dated September 8, 2014, to the Multimedia Games board of directors is attached as Annex B to this proxy statement and is incorporated by reference in its entirety into this proxy statement. The written opinion of Wells Fargo Securities sets forth, among other things, the assumptions made, procedures followed, factors considered and limitations on the review undertaken by Wells Fargo Securities in rendering its opinion. The following summary is qualified in its entirety by reference to the full text of the opinion. Wells Fargo Securities provided its opinion for the information and use of the Multimedia Games board of directors (in its capacity as such) in connection with its evaluation of the merger. Wells Fargo Securities' opinion did not and does not constitute a recommendation to the Multimedia Games board of directors or to any other person or entity in respect of the merger or otherwise, including, without limitation, as to how any holder of Multimedia Games common stock should vote or act in connection with any matter relating to the merger, the merger agreement or any other matters.**
+
+48
+<!-- PAGE 57 -->
+ZEQ.=6,SEQ=56,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=515958,FOLIO='48',FILE='DISK112:[14ZCP1.14ZCP40801]DA40801A.;21',USER='JFUSS',CD='21-OCT-2014;19:45' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+In arriving at its opinion, Wells Fargo Securities, among other things:
+
+In connection with its review, Wells Fargo Securities assumed and relied upon the accuracy and completeness of the financial and other information provided, discussed with or otherwise made available to it, including all accounting, tax, regulatory and legal information, and Wells Fargo Securities did not make (and did not assume any responsibility for) any independent verification of such information. Wells Fargo Securities assumed, with the consent of the Multimedia Games board of directors, that Multimedia Games is not aware of any facts or circumstances that would make such information inaccurate or misleading in any way meaningful to Wells Fargo Securities' analysis. With respect to the financial forecasts, estimates and other information utilized in its analyses, Wells Fargo Securities assumed, with the consent of the Multimedia Games board of directors, that they have been reasonably prepared and reflect the best current estimates, judgments and assumptions of the management of Multimedia Games as to the future financial performance of Multimedia Games. Wells Fargo Securities assumed no responsibility for, and expressed no view as to, such forecasts, estimates or other information utilized in its analyses or the judgments or assumptions upon which they are based. Wells Fargo Securities also assumed that there were no material changes in the condition (financial or otherwise), results of operations, business or prospects of Multimedia Games since the respective dates of the most recent financial statements and other information provided to Wells Fargo Securities. In arriving at its opinion, Wells Fargo Securities did not conduct any physical inspection of the properties or assets of Multimedia Games or any other entity, nor did it make or receive any evaluations or
+
+49
+<!-- PAGE 58 -->
+ZEQ.=1,SEQ=57,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=318466,FOLIO='49',FILE='DISK112:[14ZCP1.14ZCP40801]DC40801A.;13',USER='CHE107325',CD='21-OCT-2014;00:25'
+
+Table of Contents
+
+appraisals of the properties, assets or liabilities (contingent or otherwise) of Multimedia Games or any other entity. In connection with its engagement, Wells Fargo Securities was not requested to, and did not, solicit third party indications of interest in the possible acquisition of Multimedia Games.
+
+In rendering its opinion, Wells Fargo Securities assumed, with the consent of the Multimedia Games board of directors, that the final form of the merger agreement, when signed by the parties thereto, would not differ from the draft reviewed by it in any respect material to its analyses or opinion, that the merger would be consummated in accordance with the merger agreement and in compliance with all applicable laws and other requirements, without waiver, modification or amendment of any material terms or conditions, and that in the course of obtaining any necessary legal, regulatory or third party consents or approvals for the merger, no delays, limitations, conditions or restrictions would be imposed or actions would be taken that would have an adverse effect on Multimedia Games or the merger in any way meaningful to Wells Fargo Securities' analyses. Wells Fargo Securities' opinion was necessarily based on economic, market, financial and other conditions existing, and the information made available to it, as of September 8, 2014. Although subsequent developments may affect the matters set forth in its opinion, Wells Fargo Securities does not have any obligation to update, revise, reaffirm or withdraw its opinion or otherwise comment on or consider any such events occurring or coming to its attention after September 8, 2014.
+
+Wells Fargo Securities' opinion only addressed the fairness, from a financial point of view and as of September 8, 2014, of the merger consideration to be received by holders of Multimedia Games common stock (excluding the excluded shares) in the merger pursuant to the merger agreement to the extent expressly specified therein, and does not address any other terms or aspects of the merger, including, without limitation, the form or structure of the merger, any tax or accounting matters relating to the merger or otherwise, any financing arrangements or any aspect or implication of any other agreement or arrangement entered into in connection with or contemplated by the merger or otherwise. In addition, Wells Fargo Securities' opinion does not address the fairness of the amount or nature of, or any other aspects relating to, any compensation to be received by any officers, directors or employees of any parties to the merger, or class of such persons, relative to the merger consideration or otherwise. In rendering its opinion, Wells Fargo Securities expressed no opinion with respect to any amounts or consideration to be received by, or to be paid or not paid to, the holders of the excluded shares in connection with the merger. Wells Fargo Securities' opinion also does not address the merits of the underlying decision by Multimedia Games to enter into the merger agreement or the relative merits of the merger compared with other business strategies or transactions available or that have been or might be considered by the management or the Multimedia Games board of directors or in which Multimedia Games might engage. Wells Fargo Securities also did not express any view or opinion with respect to, and with the consent of Multimedia Games have relied upon the assessments of representatives of Multimedia Games regarding, accounting, tax, regulatory, legal or similar matters as to which Wells Fargo Securities understood that Multimedia Games obtained such advice as it deemed necessary from qualified professionals. The Multimedia Games board of directors informed Wells Fargo Securities that Multimedia Games received another indication of interest from a potential acquiror other than GCA at a price that may be higher than the merger consideration should all contingent payments be earned, and that the Multimedia Games board of directors determined not to pursue this other indication of interest because of its conditional and contingent nature, among other factors.
+
+In connection with rendering its opinion, Wells Fargo Securities performed certain financial, comparative and other analyses as summarized below. This summary is not a complete description of the financial analyses performed and factors considered in connection with such opinion. In arriving at its opinion, Wells Fargo Securities made its determinations as to the fairness, from a financial point of view, of the merger consideration to be received by holders of Multimedia Games common stock (excluding the excluded shares) in the merger pursuant to the merger agreement, on the basis of various financial and comparative analyses taken as a whole. The preparation of a financial opinion is a
+
+50
+<!-- PAGE 59 -->
+ZEQ.=2,SEQ=58,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=632775,FOLIO='50',FILE='DISK112:[14ZCP1.14ZCP40801]DC40801A.;13',USER='CHE107325',CD='21-OCT-2014;00:25'
+
+Table of Contents
+
+complex process and involves various determinations as to the most appropriate and relevant methods of financial and comparative analyses and the application of those methods to the particular circumstances. Therefore, a financial opinion is not readily susceptible to summary description.
+
+In arriving at its opinion, Wells Fargo Securities did not attribute any particular weight to any single analysis or factor considered but rather made qualitative judgments as to the significance and relevance of each analysis and factor relative to all other analyses and factors performed and considered and in the context of the circumstances of the particular transaction. Accordingly, the analyses must be considered as a whole, as considering any portion of such analyses and factors, without considering all analyses and factors as a whole, could create a misleading or incomplete view of the process underlying such opinion. The fact that any specific analysis has been referred to in the summary below is not meant to indicate that such analysis was given greater weight than any other analysis referred to in the summary. No company, business or transaction reviewed is identical to Multimedia Games or the merger. An evaluation of these analyses is not entirely mathematical; rather, the analyses involve complex considerations and judgments concerning financial and operating characteristics and other factors that could affect the public trading or other values of the companies, business segments or transactions reviewed.
+
+In performing its analyses, Wells Fargo Securities considered industry performance, general business and economic conditions and other matters existing as of September 8, 2014, many of which are beyond the control of Multimedia Games. Neither Multimedia Games nor Wells Fargo Securities or any other person assumes responsibility if future results are different from those discussed whether or not any such difference is material. Any estimates contained in these analyses and the ranges of valuations resulting from any particular analysis are not necessarily indicative of actual values or predictive of future results or values, which may be significantly more or less favorable than as set forth below. In addition, analyses relating to the value of businesses or securities do not purport to be appraisals or necessarily reflect the prices at which businesses or securities may actually be sold or acquired. Accordingly, the assumptions and estimates used in, and the results derived from, the following analyses are inherently subject to substantial uncertainty.
+
+The following is a summary of the material financial analyses provided on September 6, 2014 to the Multimedia Games board of directors by Wells Fargo Securities in connection with its opinion. **Certain financial analyses summarized below include information presented in tabular format. In order to fully understand the financial analyses, the tables must be read together with the text of each summary, as the tables alone do not constitute a complete description of the financial analyses. Considering the data in the tables below without considering the full narrative description of the financial analyses, including the methodologies and assumptions underlying the analyses, could create a misleading or incomplete view of such financial analyses.**
+
+***Multimedia Games Financial Analyses***
+
+Wells Fargo Securities reviewed the historical trading prices for Multimedia Games common stock for the five-year period ended September 5, 2014 (the last trading day prior to the meeting of the Multimedia Games board of directors on September 6, 2014). In addition, Wells Fargo Securities analyzed the consideration of $36.50 per share to be paid to the holders of Multimedia Games common stock in the merger pursuant to the merger agreement in relation to the closing price of Multimedia Games common stock on September 5, 2014, the volume-weighted average price, or VWAP, of Multimedia Games common stock during the thirty (30) day, sixty (60) day and ninety (90) day periods ended September 5, 2014 and the high and low trading price of Multimedia Games common stock for the fifty-two (52) week period ended September 5, 2014.
+
+51
+<!-- PAGE 60 -->
+ZEQ.=3,SEQ=59,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=522542,FOLIO='51',FILE='DISK112:[14ZCP1.14ZCP40801]DC40801A.;13',USER='CHE107325',CD='21-OCT-2014;00:25'
+
+Table of Contents
+
+This analysis indicated that the price per share to be paid to the holders of Multimedia Games common stock in connection with the merger pursuant to the merger agreement represented:
+
+Using public filings, Wall Street research and other publicly available information and the financial projections for Multimedia Games prepared by the management of Multimedia Games, Wells Fargo Securities compared certain business, financial and other information and financial multiples relating to Multimedia Games to corresponding business, financial and other information and financial multiples for certain publicly traded U.S. gaming equipment manufacturing companies that Wells Fargo Securities, using its professional judgment and expertise, deemed comparable to Multimedia Games. Although none of these companies is directly comparable to Multimedia Games in all respects, Wells Fargo Securities selected these companies because they are publicly traded companies with operations that, for purposes of this analysis, may be considered similar to certain operations of Multimedia Games. The companies included in the selected public companies analysis were:
+
+Wells Fargo Securities calculated and compared the financial multiples for the selected companies based on public filings and Wall Street research for the selected companies as well as common stock closing prices for Bally Technologies, Inc. on July 31, 2014 (one day prior to the announcement of the acquisition of the company), International Game Technology on June 8, 2014 (one day prior to the date on which press reports regarding a potential transaction involving the company became public) and Scientific Games Corporation on September 5, 2014. Wells Fargo Securities calculated the financial multiples for Multimedia Games based on public filings, Wall Street research, financial forecasts provided by management of Multimedia Games and the closing price of Multimedia Games common stock of $27.78 per share on September 5, 2014. With respect to Multimedia Games and each of the selected companies, Wells Fargo Securities calculated:
+
+52
+<!-- PAGE 61 -->
+ZEQ.=4,SEQ=60,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=349429,FOLIO='52',FILE='DISK112:[14ZCP1.14ZCP40801]DC40801A.;13',USER='CHE107325',CD='21-OCT-2014;00:25'
+
+Table of Contents
+
+The following table presents the results of these analyses:
+
+COMMAND=ADD_TABLEWIDTH,"100%" User-specified TAGGED TABLE
+
+| Enterprise Value / 2014E EBITDA | Selected Companies Range — 7.3x - 8.7x | 8.1x | 8.4x |
+| --- | --- | --- | --- |
+| Enterprise Value / 2015E EBITDA | 6.9x - 8.7x | 7.9x | 8.3x |
+| Price / 2014E EPS | 12.2x - 13.4x | 12.8x | 12.8x |
+| Price / 2015E EPS | 10.9x - 11.7x | 11.3x | 11.3x |
+
+end of user-specified TAGGED TABLE COMMAND=ADD_LINERULETXT,NOSHADE COLOR="#000000" SIZE="1.0PT" WIDTH="26%" ALIGN="LEFT"
+
+* For each selected company, all EBITDA and EPS metrics were calculated based on a September 30, 2014 year-end. All EBITDA estimates were adjusted to include last-12 months, which we refer to as "LTM" in this proxy statement, stock-based compensation for comparability.
+
+Wells Fargo Securities then applied selected ranges of 2014E EBITDA multiples of 6.8x to 8.1x, 2015E EBITDA multiples of 5.9x to 7.9x, 2014E EPS multiples of 12.8x to 22.6x and 2015E EPS multiples of 11.3x to 18.0x to corresponding financial data for Multimedia Games provided to Wells Fargo Securities by the management of Multimedia Games, and calculated a range of implied equity values per share of Multimedia Games common stock of $27.78 to $32.58, $27.78 to $36.50, $15.71 to $27.78 and $17.48 to $27.78, respectively. Based on its experience and professional judgment, Wells Fargo Securities derived (i) the higher end of the selected ranges of 2014E EBITDA and 2015E EBITDA multiples and the lower end of the selected ranges of 2014E EPS and 2015E EPS multiples using the corresponding mean of such multiples from the analyses of the selected companies and (ii) the lower end of the selected ranges of 2014E EBITDA and 2015E EBITDA multiples and the higher end of the selected ranges of 2014E EPS and 2015E EPS multiples based on the corresponding multiples for Multimedia Games calculated by Wells Fargo Securities using the financial projections for Multimedia Games prepared by the management of Multimedia Games. Based on its experience and professional judgment, Wells Fargo Securities then derived a selected range of implied equity values per share of Multimedia Games common stock of $20.00 to $34.00. Wells Fargo Securities noted that the per share merger consideration to be paid in connection with the merger is $36.50.
+
+For reference purposes only, Wells Fargo Securities also reviewed the business, financial and other information and financial multiples for certain publicly traded international gaming equipment manufacturing companies that Wells Fargo Securities, using its professional judgment and expertise, deemed comparable to Multimedia Games, including Ainsworth Game Technology Ltd., Aristocrat Leisure Ltd. and GTECH S.p.A. Wells Fargo Securities excluded these companies from its analysis based on its experience and professional judgment taking into account the unique geographical focus, business composition and other aspects of these international companies.
+
+Wells Fargo Securities analyzed certain information relating to the following selected precedent transactions involving publicly traded gaming equipment manufacturing companies. Although none of the companies involved in the selected transactions is identical to Multimedia Games, nor are any of the selected transactions identical to the merger, Wells Fargo Securities chose the transactions in the selected precedent transactions analysis because the companies that participated in the selected precedent transactions are companies with operations that, for the purposes of analysis, may be considered similar to certain of Multimedia Games' results, market size or operations.
+
+53
+<!-- PAGE 62 -->
+ZEQ.=5,SEQ=61,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=963145,FOLIO='53',FILE='DISK112:[14ZCP1.14ZCP40801]DC40801A.;13',USER='CHE107325',CD='21-OCT-2014;00:25'
+
+Table of Contents
+
+**Transactions Involving Gaming Equipment Manufacturing Companies**
+
+COMMAND=ADD_TABLEWIDTH,"100%" User-specified TAGGED TABLE
+
+| Target | Acquiror |  |
+| --- | --- | --- |
+| Bally Technologies, Inc. | Scientific Games Corporation | 08/01/2014 |
+| International Game Technology | GTECH S.p.A. | 07/16/2014 |
+| Video Gaming Technologies, Inc. | Aristocrat Leisure Limited | 07/07/2014 |
+| American Gaming Systems, LLC | AP Gaming I, LLC | 12/03/2013 |
+| SHFL entertainment, Inc. | Bally Technologies, Inc. | 07/18/2013 |
+| WMS Industries Inc. | Scientific Games Corporation | 01/31/2013 |
+
+end of user-specified TAGGED TABLE
+
+For each of the selected precedent transactions, based on public filings and other publicly available information and Wall Street research, Wells Fargo Securities calculated and compared:
+
+Wells Fargo Securities then applied a selected range of 2014E EBITDA multiples of 6.6x to 10.5x and 2014E Net Income multiples of 16.9x to 21.0x, each derived from the analyses of the selected precedent transactions based on its experience and professional judgment, to corresponding financial data for Multimedia Games provided to Wells Fargo Securities by the management of Multimedia Games, and calculated a range of implied equity values per share of Multimedia Games common stock of $27.33 to $41.30 and $20.51 to $25.34, respectively. Based on its experience and professional judgment, Wells Fargo Securities then derived a selected range of implied equity values per share of Multimedia Games common stock of $24.00 to $35.00. Wells Fargo Securities noted that the per share merger consideration to be paid in connection with the merger is $36.50.
+
+Wells Fargo Securities conducted a discounted cash flow analysis of Multimedia Games using the financial forecast for fiscal year 2015 through 2019 provided by Multimedia Games' management to determine an implied present value per share of Multimedia Games common stock as of September 30, 2014. In conducting this analysis, Wells Fargo Securities first calculated the net present value of the projected after-tax unlevered free cash flows for Multimedia Games for the fiscal years 2015 through 2019. Next, Wells Fargo Securities derived implied terminal values for Multimedia Games in the fiscal year 2019 by applying a range of terminal value EBITDA multiples of 6.8x to 8.1x, which were chosen by Wells Fargo Securities based on its experience and professional judgment, to the estimated EBITDA of Multimedia Games for the fiscal year 2019 provided by the management of Multimedia Games. The unlevered, after-tax free cash flows and range of terminal values were discounted to present values using a range of discount rates from 11.5% to 13.5%. Wells Fargo Securities selected the discount range used in this analysis based on its experience and professional judgment taking into account Multimedia Games' weighted average cost of capital, which Wells Fargo Securities calculated using standard corporate finance methodologies. Wells Fargo Securities then derived a range of implied enterprise values of Multimedia Games by adding the present value (as of September 30, 2014) of the projected cash flows of Multimedia Games for the fiscal years 2015 through 2019 to the present value (as of September 30, 2014) of the terminal value for Multimedia Games in fiscal year 2019. For purposes of these present value calculations, Wells Fargo Securities utilized the mid-year cash flow convention. Wells Fargo Securities calculated a range of implied per share values for Multimedia Games by subtracting Multimedia Games' estimated book value of debt less cash and cash equivalents as of September 30, 2014 from the range of implied enterprise values of Multimedia Games and then
+
+54
+<!-- PAGE 63 -->
+ZEQ.=6,SEQ=62,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=747771,FOLIO='54',FILE='DISK112:[14ZCP1.14ZCP40801]DC40801A.;13',USER='CHE107325',CD='21-OCT-2014;00:25'
+
+Table of Contents
+
+dividing by the number of fully diluted shares outstanding. These calculations resulted in a range of implied equity values per share of Multimedia Games common stock of $36.05 to $41.02, $34.89 to $39.65 and $33.78 to $38.36 using the discount rates of 11.5%, 12.5% and 13.5%, respectively, and the range of terminal value EBITDA multiples.
+
+Based on its experience and professional judgment, Wells Fargo Securities then derived a selected range of implied equity values per share of Multimedia Games common stock of $34.00 to $41.00. Wells Fargo Securities noted that the per share merger consideration to be paid in connection with the merger is $36.50.
+
+Wells Fargo Securities observed certain additional factors that were not considered part of Wells Fargo Securities' financial analyses with respect to its opinion but were referenced for informational purposes, including, among other things, publicly available Wall Street research analysts' reports relating to Multimedia Games, which indicated stock price targets ranging from $29.00 to $39.00 per share for Multimedia Games common stock.
+
+***Miscellaneous***
+
+Wells Fargo Securities prepared the analyses described above for purposes of providing its opinion to the Multimedia Games board of directors as to the fairness, from a financial point of view, of the merger consideration to be received by holders of Multimedia Games common stock (excluding the excluded shares) in the merger pursuant to the merger agreement. The type and amount of consideration payable in the merger were determined through negotiations among the board of directors and management of each of Multimedia Games and GCA and their respective advisors. Wells Fargo Securities did not recommend any specific consideration to the Multimedia Games board of directors or state that any given consideration constituted the only appropriate consideration for the merger. The decision to enter into the merger agreement was solely that of the Multimedia Games board of directors. As described above, Wells Fargo Securities' opinion and analyses were only one of many factors taken into consideration by the Multimedia Games board of directors in evaluating the merger. Wells Fargo Securities' analyses summarized above should not be viewed as determinative of the views of the board of directors or management of Multimedia Games with respect to the merger or the consideration to be received in the merger.
+
+Wells Fargo Securities is the trade name for certain capital markets and investment banking services of Wells Fargo & Company and its subsidiaries, including Wells Fargo Securities, LLC. Wells Fargo Securities has been engaged to act as financial advisor to the Multimedia Games board of directors and will receive an aggregate fee of approximately $10.4 million for such services, a portion of which was payable upon delivery of its opinion and the principal portion of which will be payable upon consummation of the merger. In addition, Multimedia Games has agreed to reimburse certain of Wells Fargo Securities' expenses and to indemnify Wells Fargo Securities and certain related parties against certain liabilities that may arise out of the engagement.
+
+Wells Fargo Securities and its affiliates provide a full range of investment banking and financial advisory, securities trading, brokerage and lending services in the ordinary course of business, for which Wells Fargo Securities and such affiliates receive customary fees. In that regard, Wells Fargo Securities or its affiliates in the past have provided, currently are providing and in the future may provide banking and other financial services to Multimedia Games, GCA and certain of their respective affiliates, for which Wells Fargo Securities or such affiliates have received and expect to receive fees, including having acted or acting (i) as financial advisor to Multimedia Games in connection with its acquisition of PokerTek pursuant to an agreement executed in April 2014 and (ii) as syndication agent and lender under the existing credit facility of Multimedia Games. In the ordinary course of business, Wells Fargo
+
+55
+<!-- PAGE 64 -->
+ZEQ.=7,SEQ=63,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=585114,FOLIO='55',FILE='DISK112:[14ZCP1.14ZCP40801]DC40801A.;13',USER='CHE107325',CD='21-OCT-2014;00:25'
+
+Table of Contents
+
+Securities and its affiliates may actively trade or otherwise effect transactions in or hold the securities or financial instruments of Multimedia Games, GCA and/or certain of their respective affiliates for its own account and for the accounts of its customers and, accordingly, may at any time hold a long or short position in such securities or financial instruments.
+
+**Delisting and Deregistration of Our Common Stock**
+
+Multimedia Games common stock is registered as a class of equity securities under the Exchange Act and is quoted on the NASDAQ under the symbol "MGAM". As a result of the merger, we will become a wholly owned subsidiary of GCA, with no public market for our common stock. After the merger, our common stock will cease to be traded on the NASDAQ, and price quotations with respect to sales of shares of our common stock in the public market will no longer be available. In addition, the registration of our common stock under the Exchange Act will be terminated and we will no longer be required to file periodic reports with the SEC after the effective time of the merger.
+
+**Financing of the Merger**
+
+The merger is not conditioned on GCA obtaining the proceeds of any financing, including the financing contemplated by the debt commitment letter. We anticipate that the total amount of funds necessary to complete the merger and the other transactions contemplated by the merger agreement, including the funds needed to (i) pay our shareholders (including equity award holders) the amount due under the merger agreement, (ii) refinance, repay or repurchase certain of our outstanding indebtedness, and (iii) pay customary fees and expenses in connection with the transactions contemplated by the merger agreement, will be approximately $1.2 billion.
+
+In connection with entering into the merger agreement, GCA entered into the debt commitment letter with BOA, BofA Merrill Lynch, Deutsche Bank and Deutsche Bank Securities. Pursuant to the debt commitment letter, among other things, each of the initial lenders has committed to provide debt financing to GCA. See the section entitled "Terms of the Merger Agreement—Financing of the Merger" beginning on page 91 of this proxy statement for additional information with respect to the debt financing.
+
+We believe the amounts described in the debt commitment letter, together with cash on hand at Multimedia Games and at GCA, will be sufficient to complete the merger, but we cannot assure you of that. Those amounts might be insufficient if, among other things, we have substantially more debt or GCA receives substantially lower net proceeds from the debt financing than we currently expect.
+
+*Debt Financing*
+
+Pursuant to the debt commitment letter, BOA, BofA Merrill Lynch, Deutsche Bank and Deutsche Bank Securities, which we refer to as the "commitment parties" in the proxy statement, have committed on a several and not joint basis to provide, in the aggregate, 100% of the debt facilities described below, the proceeds of which are to be used to pay amounts due under the merger agreement, pay fees, costs and expenses incurred in connection with the merger and related transactions and refinance certain of GCA's and Multimedia Games' outstanding indebtedness.
+
+Subject to the debt commitment letter, and subject to the term and conditions set forth therein, the commitment parties have committed to provide:
+
+56
+<!-- PAGE 65 -->
+ZEQ.=8,SEQ=64,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=329306,FOLIO='56',FILE='DISK112:[14ZCP1.14ZCP40801]DC40801A.;13',USER='CHE107325',CD='21-OCT-2014;00:25'
+
+THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+BOA will act as administrative agent and collateral agent for the senior secured facilities and as administrative agent for the bridge loan facility. The debt commitment letter terminates upon the first to occur of (i) the consummation of the merger, (ii) the abandonment or termination of the merger agreement by GCA or (iii) June 8, 2015, subject to one (1) thirty (30) day extension under the merger agreement for regulatory approvals. The commitments of the commitment parties to provide the debt financing are subject to the satisfaction of a number of customary conditions, including the following:
+
+57
+<!-- PAGE 66 -->
+ZEQ.=1,SEQ=65,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=868048,FOLIO='57',FILE='DISK112:[14ZCP1.14ZCP40801]DE40801A.;23',USER='JFUSS',CD='21-OCT-2014;23:25'
+
+Table of Contents
+
+**Interests of Certain Persons in the Merger**
+
+In considering the recommendation of the Multimedia Games board of directors that you vote to approve the merger agreement, you should be aware that our directors and executive officers have interests in the merger that are different from, or in addition to, the interests of our shareholders generally. The members of the Multimedia Games board of directors were aware of the different or additional interests and considered these interests, among other matters, in evaluating and negotiating the merger agreement and the merger, and in recommending to our shareholders that the merger agreement be approved at the special meeting. See the sections entitled "—Background of the Merger", "—Recommendation of Our Board of Directors" and "—Reasons for the Merger" beginning on pages 34, 47 and 43, respectively, of this proxy statement. You should take these interests into account in deciding whether to vote "FOR" the approval of the merger agreement.
+
+These interests are described in more detail below, and certain of them are quantified in the narrative and the table below and under the heading "Proposal 2: Advisory Vote on Merger-Related Named Executive Officer Compensation" beginning on page 101 of this proxy statement. The dates used below to quantify these interests have been selected for illustrative purposes only and do not necessarily reflect the dates on which certain events will occur.
+
+*Treatment of Outstanding Equity Awards*
+
+Certain of our directors and executive officers hold outstanding options to purchase Multimedia Games common stock, restricted stock units and performance share awards. Under the merger agreement, the outstanding and, if applicable, unexercised, Multimedia Games equity awards held by our directors and executive officers as of immediately prior to the effective time of the merger will be treated as follows:
+
+58
+<!-- PAGE 67 -->
+ZEQ.=2,SEQ=66,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=911056,FOLIO='58',FILE='DISK112:[14ZCP1.14ZCP40801]DE40801A.;23',USER='JFUSS',CD='21-OCT-2014;23:25'
+
+Table of Contents
+
+*Summary Table*
+
+The following table sets forth each director and executive officer of Multimedia Games holding options to purchase Multimedia Games common stock and restricted stock units as of October 17, 2014, and the aggregate number of shares of Multimedia Games common stock subject to in-the-money vested stock options, in-the-money unvested stock options, and outstanding restricted stock units as of such date. The table does not include the number of outstanding performance shares held by these individuals, as these awards are expected to vest, be earned and paid out pursuant to their original terms following the completion of a three (3) year performance period ending on September 30, 2014; therefore, these awards will not be subject to the treatment set forth in the merger agreement as they are not anticipated to be outstanding at the effective time.
+
+COMMAND=ADD_TABLEWIDTH,"100%" User-specified TAGGED TABLE
+
+| Name |  |  |  |
+| --- | --- | --- | --- |
+| Executive Officers |  |  |  |
+| Patrick Ramsey | 419,126 | 46,874 | 50,000 |
+| Adam Chibib | 200,521 | 52,812 | 23,350 |
+| Mick Roemer | 241,563 | 23,437 | 23,350 |
+| Todd McTavish | 9,375 | 15,625 | 17,825 |
+| Directors |  |  |  |
+| Stephen Greathouse | 20,625 | — | 3,600 |
+| Steve Ives | — | — | 5,400 |
+| Neil Jenkins | 25,625 | — | 3,600 |
+| Michael J. Maples | — | — | 3,600 |
+| Justin Orlando | 40,000 | — | 3,600 |
+| Robert D. Repass | 26,000 | — | 3,600 |
+
+end of user-specified TAGGED TABLE
+
+*Executive Officer Employment Agreements*
+
+Each of our executive officers is party to an employment agreement that provides certain benefits in the event of certain termination events.
+
+The employment agreements with each of Messrs. Ramsey, Chibib, Roemer and McTavish provide that if the executive's employment is terminated within the twelve (12) month period following a change in control, either without "cause" or for "good reason" (in any case, a "qualifying termination"), the executive will, subject to the execution and non-revocation of a mutual release of claims, be entitled to receive (i) twenty-four (24) months' base salary, (ii) two times the executive's target bonus, and (iii) company-paid healthcare continuation coverage (in an amount sufficient to maintain the level of health benefits in effect on the executive's last day of employment) for up to twelve (12) months.
+
+The employment agreements for each executive provide that these payments and benefits would be reduced to the extent necessary to avoid the application of any "golden parachute" excise tax pursuant to Section 4999 of the Code, as defined below.
+
+*Employee Benefits*
+
+The merger agreement requires GCA or its affiliates (including the surviving corporation) to continue to provide certain compensation and benefits for a period of at least one (1) year following
+
+59
+<!-- PAGE 68 -->
+ZEQ.=3,SEQ=67,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=747467,FOLIO='59',FILE='DISK112:[14ZCP1.14ZCP40801]DE40801A.;23',USER='JFUSS',CD='21-OCT-2014;23:25'
+
+Table of Contents
+
+the effective time of the merger (or, if the closing occurs on or prior to March 31, 2015, until December 31, 2015), and to take certain actions in respect of employee benefits provided to Multimedia Games employees, including its executive officers. For a detailed description of these requirements, please see the section entitled "Terms of the Merger Agreement—Employee Benefits Matters" beginning on page 90 of this proxy statement.
+
+*Indemnification Insurance*
+
+Pursuant to the terms of the merger agreement, our directors and executive officers may be entitled to certain indemnification and an extension of coverage under directors' and officers' liability insurance policies. Such indemnification and insurance coverage is further described in the section entitled "Terms of the Merger Agreement—Directors' and Officers' Indemnification and Insurance" beginning on page 90 of this proxy statement.
+
+**Certain Projections Prepared by the Management of Multimedia Games**
+
+Multimedia Games does not as a matter of course make public long-term projections as to future revenues, earnings or other results due to, among other reasons, the inherent uncertainty of the underlying assumptions and estimates. However, Multimedia Games is including internal financial projections that were made available to the Multimedia Games board of directors and the GCA board of directors in connection with the evaluation of the merger. This information also was provided to Multimedia Games' and GCA's respective financial advisors. The inclusion of this information should not be regarded as an indication that any of Multimedia Games, GCA, their respective financial advisors or any other recipient of this information considered, or now considers, it to be necessarily predictive of actual future results.
+
+The internal financial projections were, in general, prepared solely for internal use and are subjective in many respects. As a result, the prospective results may not be realized and the actual results may be significantly higher or lower than estimated. Since the internal financial projections cover multiple years, that information by its nature becomes less predictive with each successive year. Multimedia Games shareholders are urged to review Multimedia Games' SEC filings for a description of risk factors with respect to Multimedia Games' business. See "Cautionary Statement Concerning Forward-Looking Information" beginning on page 24 and "Where Shareholders Can Find More Information" beginning on page 110 of this proxy statement. The internal financial projections were not prepared with a view toward public disclosure, nor were they prepared with a view toward compliance with U.S. generally accepted accounting principles, which we refer to as "GAAP" in this proxy statement, published guidelines of the SEC or the guidelines established by the American Institute of Certified Public Accountants for preparation and presentation of prospective financial information. In addition, the internal financial projections require significant estimates and assumptions that make them inherently less comparable to the similarly titled GAAP measures in Multimedia Games' historical GAAP financial statements.
+
+Neither Multimedia Games' independent registered public accounting firm, nor any other independent accountants, have compiled, examined or performed any procedures with respect to the internal financial projections contained herein, nor have they expressed any opinion or any other form of assurance on the information or its achievability. The report of Multimedia Games' independent registered public accounting firm contained in Multimedia Games' Annual Report on Form 10-K for the year ended September 30, 2013 relates to Multimedia Games' historical financial information. It does not extend to the internal financial projections and should not be read to do so. Furthermore, the internal financial projections do not take into account any circumstances or events occurring after the date they were prepared.
+
+60
+<!-- PAGE 69 -->
+ZEQ.=4,SEQ=68,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=838173,FOLIO='60',FILE='DISK112:[14ZCP1.14ZCP40801]DE40801A.;23',USER='JFUSS',CD='21-OCT-2014;23:25'
+
+Table of Contents
+
+The following tables present selected internal financial projections for the fiscal years ending 2014 through 2019 for Multimedia Games on a standalone basis.
+
+**Projections** *(dollars in thousands)*
+
+COMMAND=ADD_TABLEWIDTH,"130%" User-specified TAGGED TABLE
+
+|  | Year Ended September 30, — 2014E | 2015E | 2016E | 2017E | 2018E | 2019E |
+| --- | --- | --- | --- | --- | --- | --- |
+| Total Revenues | $ 222,080 | $ 247,714 | $ 275,473 | $ 306,365 | $ 338,298 | $ 378,172 |
+| Operating Income | $ 60,274 | $ 75,668 | $ 88,579 | $ 100,483 | $ 113,612 | $ 133,779 |
+| EBITDA | $ 113,510 | $ 131,658 | $ 148,179 | $ 161,083 | $ 175,212 | $ 195,379 |
+| Net Income | $ 37,949 | $ 47,741 | $ 55,651 | $ 63,356 | $ 71,852 | $ 84,760 |
+
+end of user-specified TAGGED TABLE
+
+EBITDA, as presented above, is a non-GAAP financial measure. Multimedia Games defines EBITDA as net income before net interest expense, income taxes, depreciation, amortization and accretion of contract rights. Non-GAAP financial measures should not be considered in isolation from, or as a substitute for, financial information presented in compliance with GAAP, and non-GAAP financial measures as used by Multimedia Games may not be comparable to similarly titled amounts used by other companies. Presented below is a tabular reconciliation of how we calculate EBITDA.
+
+COMMAND=ADD_TABLEWIDTH,"130%" User-specified TAGGED TABLE
+
+|  |  | Year Ended September 30, |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  |  | 2014E |  |  | 2015E |  |  | 2016E |  |  | 2017E |  |  | 2018E |  |  | 2019E |  |  |
+| Net Income |  | $ | 37,949 |  | $ | 47,741 |  | $ | 55,651 |  | $ | 63,356 |  | $ | 71,852 |  | $ | 84,760 |  |
+| Depreciation and Amortization |  | $ | 43,765 |  | $ | 46,335 |  | $ | 50,000 |  | $ | 51,000 |  | $ | 52,000 |  | $ | 52,000 |  |
+| Contra Revenue (Accretion) |  | $ | 9,448 |  | $ | 9,654 |  | $ | 9,600 |  | $ | 9,600 |  | $ | 9,600 |  | $ | 9,600 |  |
+| Net Interest |  | $ | 593 |  | $ | 486 |  | $ | 244 |  | $ | (82 | ) | $ | (439 | ) | $ | (761 | ) |
+| Taxes |  | $ | 21,756 |  | $ | 27,442 |  | $ | 32,684 |  | $ | 37,209 |  | $ | 42,199 |  | $ | 49,780 |  |
+| ​ | ​ | ​ | ​ | ​ | ​ | ​ | ​ | ​ | ​ | ​ | ​ | ​ | ​ | ​ | ​ | ​ | ​ | ​ | ​ |
+| EBITDA |  | $ | 113,510 |  | $ | 131,658 |  | $ | 148,179 |  | $ | 161,083 |  | $ | 175,212 |  | $ | 195,379 |  |
+
+end of user-specified TAGGED TABLE
+
+These internal financial projections were based on numerous variables and assumptions that are inherently uncertain and may be beyond the control of Multimedia Games' management. They are not a guarantee of future financial performance. Important factors that may affect actual results and cause the internal financial projections not to be achieved include, but are not limited to, risks and uncertainties relating to Multimedia Games' business (including its ability to achieve potential strategic goals, acquisitions, objectives and targets over applicable periods, the gaming machine industry, the interactive business, the regulatory environment, general business and economic conditions and other risk factors described under the section entitled "Risk Factors" in Multimedia Games' Annual Report on Form 10-K for the year ended September 30, 2013, and more recent filings incorporated by reference in this proxy statement and "Cautionary Statement Concerning Forward-Looking Information" beginning on page 24 of this proxy statement). The internal financial projections also do not take into account any circumstances or events occurring after the date on which they were prepared and do not give effect to the transactions contemplated by the merger agreement, including the merger. The internal financial projections also reflect assumptions as to certain business decisions that are subject to change. As a result, actual results may differ materially from those contained in these internal financial projections. Accordingly, there can be no assurance that the internal financial projections will be realized or that actual results will not be significantly higher or lower than projected.
+
+None of Multimedia Games, GCA or their respective affiliates, advisors, officers, employees, directors or representatives undertakes any obligation to update or otherwise revise or reconcile these internal financial projections to reflect circumstances existing after the date the internal financial projections were generated or to reflect the occurrence of future events even in the event that any or all of the assumptions underlying the projections are shown to be in error. Except as may be required
+
+61
+<!-- PAGE 70 -->
+ZEQ.=5,SEQ=69,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=60083,FOLIO='61',FILE='DISK112:[14ZCP1.14ZCP40801]DE40801A.;23',USER='JFUSS',CD='21-OCT-2014;23:25'
+
+Table of Contents
+
+by applicable securities laws, Multimedia Games does not intend to make publicly available any update or other revision to these internal financial projections even in the event that any or all of the assumptions are shown to be in error. None of Multimedia Games or its affiliates, advisors, officers, employees, directors or representatives has made or makes any representation to any Multimedia Games shareholder or other person regarding Multimedia Games' ultimate performance compared to the information contained in these internal financial projections or that projected results will be achieved. Multimedia Games has made no representation to GCA, in the merger agreement or otherwise, concerning these internal financial projections.
+
+Since the date of the projections, Multimedia Games has made publicly available its actual results of operations for the fiscal quarter ended June 30, 2014. You should review Multimedia Games Quarterly Report on Form 10-Q for the fiscal quarter ended June 30, 2014, filed on July 30, 2014, and Current Report on Form 8-K, filed July 30, 2014, to obtain this information.
+
+See the section entitled "Where Shareholders Can Find More Information" beginning on page 110 of this proxy statement.
+
+**Regulatory Matters**
+
+*Antitrust Filings*
+
+The merger is subject to the mandatory notification and waiting period requirements of the HSR Act, which requires that Multimedia Games and GCA furnish certain information and materials relating to the merger to the Antitrust Division and the FTC. Under the HSR Act, the merger may not be consummated until the applicable waiting period has expired or been terminated by the Antitrust Division and the FTC. The required notification and report forms under the HSR Act were filed with the Antitrust Division and the FTC on September 18, 2014 by Multimedia Games and GCA. On September 26, 2014, Multimedia Games received notice from the FTC that early termination of the applicable waiting period had been granted; as such, the condition to the closing of the merger related to the HSR Act has been satisfied.
+
+*Required Gaming Approvals*
+
+The parties have agreed that receipt of required gaming approvals from six (6) jurisdictions is a condition to the closing of the merger. We believe that the six (6) jurisdictions represent a majority of the material jurisdictions from which gaming approvals will be required prior to closing. GCA must also obtain approval from gaming authorities for the financing of the merger, which approval is not a condition to the closing of the merger.
+
+GCA filed the required gaming approval applications on or before September 24, 2014 for the six (6) jurisdictions with respect to which required gaming approvals are a condition to closing.
+
+In addition to the jurisdictions identified by the parties as conditions to the merger, either Multimedia Games or GCA may make further filings with gaming regulators in various jurisdictions as may be required by applicable law, but the expiration of any waiting periods, or receipt of any required approvals, in connection with such filings will not be conditions to the consummation of the merger. GCA may under certain circumstances waive the condition relating to any such required gaming approvals on behalf of both GCA and Multimedia Games if consummation of the merger in the absence of such required gaming approvals would not constitute a violation of applicable law.
+
+Although we do not expect these regulatory authorities to raise any significant concerns in connection with their review of the merger, there is no assurance that all applicable waiting periods will expire, that GCA will obtain all required regulatory approvals, or that those approvals will not include terms, conditions or restrictions that may have an adverse effect on Multimedia Games or, after completion of the merger, GCA or the surviving corporation.
+
+62
+<!-- PAGE 71 -->
+ZEQ.=6,SEQ=70,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=73947,FOLIO='62',FILE='DISK112:[14ZCP1.14ZCP40801]DE40801A.;23',USER='JFUSS',CD='21-OCT-2014;23:25' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+Other than the filings described above and in "—Regulatory Matters" beginning on page 62 of this proxy statement, we are not aware of any material mandatory regulatory filings to be made, approvals to be obtained, or waiting periods to expire, in order to complete the merger. If the parties discover that other regulatory filings, approvals or waiting periods are necessary, they will seek to obtain or comply with them. If any approval or action is needed, however, we may not be able to obtain it or any of the other necessary approvals. Even if we could obtain all necessary approvals, and the merger agreement is approved by our shareholders at the special meeting, conditions may be placed on the merger, our business or that of GCA that could cause the parties to fail to consummate the merger.
+
+GCA and Multimedia Games have generally agreed to use their reasonable best efforts to obtain such approvals but neither is required to (i) agree to take or enter into any action which is not conditioned upon the consummation of the merger, or (ii) agree to any obligation or concession or other action relating to the antitrust approval or the required gaming approvals without the prior written consent of GCA, which consent will not be unreasonably withheld or delayed.
+
+**Litigation Relating to the Merger**
+
+Following the announcement of the merger on September 8, 2014, the Texas Federal Action was filed on October 3, 2014 on behalf of alleged Multimedia Games shareholders in the United States District Court for the Western District of Texas. The Texas State Court Action was filed on October 15, 2014 on behalf of Multimedia Games and alleged Multimedia Games shareholders in the District Court of Travis County, Texas. The Texas State Court Action was filed by the same purported shareholder from whom we received the Lewis Demand Letters, contending that the Multimedia Games board of directors violated its fiduciary duties in connection with the merger. The Lewis Demand Letters demanded that the Multimedia Games board of directors rescind the merger agreement and any related employment, consulting or compensation agreements, and disclose certain information related to the merger, including our strategic review process and information supporting the Multimedia Games board of directors' decision to enter into the merger agreement. In both the Texas Federal Action and the Texas State Court Action, plaintiffs allege that Multimedia Games' directors breached their fiduciary duties to Multimedia Games and/or its shareholders in negotiating and approving the merger agreement, that the merger consideration negotiated in the merger agreement improperly values Multimedia Games, that the Multimedia Games shareholders will not receive fair value for their Multimedia Games common stock in the merger, and that the terms of the merger agreement impose improper deal-protection devices that purportedly preclude competing offers. The complaints further allege that GCA and Merger Sub aided and abetted those alleged breaches of fiduciary duty. Plaintiffs seek injunctive relief, including enjoining or rescinding the merger, and an award of other unspecified attorneys' and other fees and costs, in addition to other relief.
+
+On October 20, 2014, we received the Baird Demand Letter from counsel for the plaintiff in the Texas Federal Action, demanding that Multimedia Games conduct an investigation and commence an action on behalf of Multimedia Games against the individual members of the Multimedia Games board for breaches of fiduciary duty arising out of allegedly wrongful conduct in connection with the merger. The Baird Demand Letter refers to allegations set forth in the Texas Federal Action complaint.
+
+The outcome of these lawsuits cannot be predicted with any certainty. An adverse judgment for monetary damages could have a material adverse effect on the operations and liquidity of Multimedia Games or GCA after the merger is completed. A preliminary injunction could delay or jeopardize the completion of the merger, and an adverse judgment granting permanent injunctive relief could indefinitely enjoin completion of the merger. Additional lawsuits arising out of or relating to the merger agreement or the merger may be filed in the future. Defendants intend to vigorously defend against these lawsuits.
+
+63
+<!-- PAGE 72 -->
+ZEQ.=1,SEQ=71,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=567321,FOLIO='63',FILE='DISK112:[14ZCP1.14ZCP40801]DG40801A.;22',USER='JFUSS',CD='21-OCT-2014;23:25'
+
+Table of Contents
+
+**Material U.S. Federal Income Tax Consequences of the Merger**
+
+The following is a summary of certain material U.S. federal income tax consequences of the merger to the holders of our common stock whose shares of common stock are converted into the right to receive cash in the merger. This discussion is not a complete analysis of all potential U.S. federal income tax consequences, nor does it address any tax consequences arising under any state, local or foreign tax laws or U.S. federal estate or gift tax laws. This discussion is based on the Internal Revenue Code of 1986, as amended, which we refer to as the "Code" in this proxy statement, Treasury Regulations promulgated thereunder, judicial decisions, and published rulings and administrative pronouncements of the Internal Revenue Service, which is referred to in this proxy statement as the "IRS", all as in effect as of the date hereof. These authorities may change, possibly retroactively, resulting in U.S. federal income tax consequences different from those discussed below. No ruling has been or will be sought from the IRS with respect to the matters discussed below, and there can be no assurance that the IRS will not take a contrary position regarding the tax consequences of the merger or that any such contrary position would not be sustained by a court.
+
+This discussion is limited to holders who hold our common stock as capital assets within the meaning of Section 1221 of the Code (generally, property held for investment). This discussion does not address all U.S. federal income tax considerations that may be relevant to a holder in light of a holder's particular circumstances, including the impact of the Medicare contribution tax on net investment income. This discussion also does not consider any specific facts or circumstances that may be relevant to holders subject to special rules under the U.S. federal income tax laws, including without limitation, expatriates and certain former citizens or long-term residents of the United States, partnerships and other pass-through entities, "controlled foreign corporations", "passive foreign investment companies", corporations that accumulate earnings to avoid U.S. federal income tax, financial institutions, insurance companies, brokers, dealers or traders in securities, commodities or currencies, tax-exempt organizations, tax-qualified retirement plans, persons subject to the alternative minimum tax, and persons holding our common stock as part of a hedge, straddle or other risk reduction strategy or as part of a hedging or conversion transaction or other integrated investment. This discussion also does not address the U.S. federal income tax consequence to holders of our common stock who acquired their shares through stock option or stock purchase plan programs or in other compensatory arrangements, holders who exercise rights of dissent and appraisal under the TBOC, or holders who hold an equity interest, actually or constructively, in GCA or the surviving corporation after the merger.
+
+**WE URGE YOU TO CONSULT YOUR TAX ADVISOR REGARDING THE U.S. FEDERAL TAX CONSEQUENCES OF THE MERGER IN RESPECT OF YOUR PARTICULAR CIRCUMSTANCES, AS WELL AS ANY TAX CONSEQUENCES ARISING UNDER ANY STATE, LOCAL OR FOREIGN TAX LAWS.**
+
+As used in this discussion, a U.S. holder is any beneficial owner of our common stock who is treated for U.S. federal income tax purposes as:
+
+64
+<!-- PAGE 73 -->
+ZEQ.=2,SEQ=72,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=1038005,FOLIO='64',FILE='DISK112:[14ZCP1.14ZCP40801]DG40801A.;22',USER='JFUSS',CD='21-OCT-2014;23:25'
+
+Table of Contents
+
+A non-U.S. holder is any beneficial owner of our common stock who is an individual, corporation, estate or trust for U.S. federal income tax purposes and is not a U.S. holder.
+
+If a partnership (or other entity taxed as a partnership for U.S. federal income tax purposes) holds our common stock, the tax treatment of a partner in the partnership generally will depend on the status of the partner and upon the activities of the partnership. Accordingly, partnerships that hold our common stock and partners in such partnerships are urged to consult their tax advisors regarding the specific U.S. federal income tax consequences to them.
+
+*U.S. Holders*
+
+*Effect of the Merger.* The receipt of cash in exchange for our common stock in the merger will be a taxable transaction for U.S. federal income tax purposes. In general, a U.S. holder who receives cash in exchange for our common stock in the merger will recognize capital gain or loss for U.S. federal income tax purposes equal to the difference, if any, between the amount of cash received and the holder's adjusted tax basis in our common stock surrendered. Any such gain or loss would be a long-term capital gain or loss if the holding period for our common stock exceeded one (1) year. Long-term capital gains of non-corporate taxpayers are generally taxable at a reduced rate. The deductibility of capital losses is subject to limitations. Gain or loss must be calculated separately for each block of our common stock (i.e., common stock acquired at the same cost in a single transaction) exchanged for cash in the merger.
+
+*Information Reporting and Backup Withholding.* Payments made to U.S. holders in the merger generally will be subject to information reporting and may be subject to backup withholding (currently at a rate of 28%). To avoid backup withholding, U.S. holders that do not otherwise establish an exemption should complete and return to the paying agent to be engaged by GCA in connection with the merger a Form W-9, which will be included in the letter of transmittal delivered by such paying agent, certifying that such holder is a U.S. person, the taxpayer identification number provided is correct, and that such holder is not subject to backup withholding. Certain holders (including corporations) generally are not subject to backup withholding. Backup withholding is not an additional tax. U.S. holders may use amounts withheld as a credit against their U.S. federal income tax liability or may claim a refund of any excess amounts withheld by timely filing a claim for refund with the IRS.
+
+*Non-U.S. Holders*
+
+*Effect of the Merger.* A non-U.S. holder generally will not be subject to U.S. federal income tax on any gain realized on the receipt of cash for our common stock in the merger unless:
+
+Gains described in the first bullet point above generally will be subject to U.S. federal income tax at a flat 30% rate, but may be offset by U.S. source capital losses. Unless a tax treaty provides otherwise, gain described in the second bullet point above will be subject to U.S. federal income tax on
+
+65
+<!-- PAGE 74 -->
+ZEQ.=3,SEQ=73,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=257055,FOLIO='65',FILE='DISK112:[14ZCP1.14ZCP40801]DG40801A.;22',USER='JFUSS',CD='21-OCT-2014;23:25'
+
+Table of Contents
+
+a net income basis at regular graduated U.S. federal income tax rates. Non-U.S. holders described in the second bullet point that are foreign corporations also may be subject to a 30% branch profits tax (or applicable lower treaty rate) on such effectively connected gain. Non-U.S. holders are urged to consult any applicable tax treaties that may provide for different rules.
+
+With respect to the third bullet point, in general, a corporation is a USRPHC if the fair market value of its "United States real property interests" (as defined in the Code and applicable Treasury Regulations) equals or exceeds 50% of the sum of the fair market value of its worldwide real property interests and its other assets used or held for use in a trade or business. Although there can be no assurances in this regard, we do not believe we are, or have been during the five (5) years preceding the merger, a USRPHC for U.S. federal income tax purposes. However, since our common stock is regularly traded on an established securities market (within the meaning of applicable Treasury Regulations), in the event we are or have been a USRPHC during the five (5) year period preceding the date of the merger, our common stock will be treated as U.S. real property interests only with respect to a non-U.S. holder that owned (actually or constructively) more than 5% of our common stock during the shorter of (i) the five (5) year period preceding the date of the merger and (ii) the period that the non-U.S. holder held the common stock. Non-U.S. holders who have owned (actually or constructively) more than 5% of our common stock during the period described in the preceding sentence should consult their own tax advisors regarding the U.S. federal income tax consequences of the merger.
+
+*Information Reporting and Backup Withholding.* Payments made to non-U.S. holders in the merger may be subject to information reporting and backup withholding (currently at a rate of 28%). Non-U.S. holders can avoid backup withholding by providing the paying agent with the applicable and properly executed IRS Form W-8 certifying the holder's non-U.S. status or by otherwise establishing an exemption. Backup withholding is not an additional tax. Non-U.S. holders may use amounts withheld as a credit against their U.S. federal income tax liability or may claim a refund of any excess amounts withheld by timely filing a claim for refund with the IRS.
+
+**The U.S. federal income tax consequences described above are not intended to constitute a complete description of all tax consequences relating to the merger. Because individual circumstances may differ, each holder should consult the holder's tax advisors regarding the applicability of the rules discussed above to the holder and the particular tax effects to the holder of the merger in light of such holder's particular circumstances and the application of state, local and foreign tax laws.**
+
+**Rights of Dissent and Appraisal**
+
+Under Texas law, our shareholders who do not vote in favor of the approval of the merger agreement, and who properly dissent from the merger and demand appraisal of their shares, will be entitled to the rights of dissent and appraisal under Subchapter H of Chapter 10 of the TBOC, which we refer to as "Subchapter H" in this proxy statement. Our shareholders electing to exercise their rights of dissent and appraisal must strictly comply with the provisions of Subchapter H in order to properly demand and perfect their rights.
+
+The following is a brief summary of the material provisions of the Texas statutory procedures required to be followed by a shareholder in order to properly demand and perfect that shareholder's rights of dissent and appraisal. This summary, however, is not a complete statement of all applicable requirements and is qualified in its entirety by reference to Subchapter H, which is set forth in Annex C to this proxy statement. This summary does not constitute legal advice, nor does it constitute a recommendation that our shareholders exercise their rights of dissent and appraisal under Subchapter H. If you wish to consider exercising your rights of dissent and appraisal, you should carefully review the text of Subchapter H because failure to timely and properly comply with the
+
+66
+<!-- PAGE 75 -->
+ZEQ.=4,SEQ=74,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=186519,FOLIO='66',FILE='DISK112:[14ZCP1.14ZCP40801]DG40801A.;22',USER='JFUSS',CD='21-OCT-2014;23:25'
+
+Table of Contents
+
+requirements of Subchapter H will result in the loss of your rights of dissent and appraisal under Texas law.
+
+In this section of the proxy statement, the word "you" only refers to a holder of record of our common stock. If you hold your shares in "street name" and you wish to exercise rights of dissent and appraisal, you should consult with your broker, bank or other nominee to determine how to follow the appropriate procedures for the making of a demand for appraisal by such broker, bank or nominee.
+
+*Summary*
+
+Subchapter H requires that, when a merger agreement is to be submitted for approval at a shareholders' meeting, a notice regarding the availability of rights of dissent and appraisal to shareholders must accompany the notice of the shareholders' meeting. A copy of Subchapter H must be included with such notice. This proxy statement constitutes notice to our shareholders of the availability of rights of dissent and appraisal in connection with the merger, and a copy of Subchapter H is attached hereto as Annex C in compliance with the requirements of Subchapter H.
+
+In order to exercise your rights of dissent and appraisal, you must vote against the approval of the merger agreement, either by proxy or in person, at the special meeting and comply with the procedures described below. Voting against the approval of the merger agreement, either by proxy or in person, does not by itself constitute a notice of objection to the merger or a demand for payment of fair value of your shares (each as more fully described below). In order to perfect your rights of dissent and appraisal, you must comply with the following procedures:
+
+If you fail to strictly comply with any of these procedures, and the merger is completed, you will be entitled to receive the merger consideration for your shares of common stock as provided for in the merger agreement, but will have no rights of demand and appraisal with respect to your shares.
+
+67
+<!-- PAGE 76 -->
+ZEQ.=5,SEQ=75,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=854093,FOLIO='67',FILE='DISK112:[14ZCP1.14ZCP40801]DG40801A.;22',USER='JFUSS',CD='21-OCT-2014;23:25'
+
+Table of Contents
+
+*Notice of Objection*
+
+In order to preserve your rights of dissent and appraisal, prior to the special meeting, you must deliver to Multimedia Games a written notice of objection to the merger that fully complies with the requirements described herein. Each written notice of objection to the merger must:
+
+The written notice of objection must be in addition to and separate from any proxy or ballot voting against the approval of the merger agreement or any demand for payment of fair value.
+
+*Vote Against the Merger*
+
+In order to exercise your rights of dissent and appraisal, you must vote against the approval of the merger agreement, either by proxy or in person, at the special meeting. A vote in favor of the approval of the merger agreement, by proxy or in person, or abstaining from voting on the merger agreement will constitute a waiver of your rights of dissent and appraisal in respect of your shares and will nullify any previously filed written notice of objection. A proxy that is signed and does not contain voting instructions will, unless revoked, be voted in favor of the approval of the merger agreement, and it will constitute a waiver of your rights of dissent and appraisal, and will nullify any previously delivered written notice of objection. If you do not submit a proxy, your shares will not be voted, either in favor of the approval of the merger agreement or against the approval of the merger agreement, and accordingly will not preserve your right to exercise rights of dissent and appraisal. Therefore, a shareholder who wishes to exercise rights of dissent and appraisal must affirmatively vote against the approval of the merger agreement, either by proxy or in person.
+
+*Demand for Payment of Fair Value*
+
+If the merger agreement is approved at the special meeting, then, within ten (10) days following the effective time of the merger, the surviving corporation must provide notice that the merger has taken effect to each shareholder who voted against the merger, either by proxy or in person, and who properly submitted a written notice of objection to the merger. Voting against the approval of the merger agreement, either by proxy or in person, does not by itself constitute a demand for payment of fair value under Subchapter H. In order to preserve your rights of dissent and appraisal, within twenty (20) days after the date on which the surviving corporation sends you notice that the merger has taken effect, you must deliver to the surviving corporation a written demand for payment of fair value of your shares that fully complies with the requirements described herein. Each demand for payment of fair value of shares must:
+
+68
+<!-- PAGE 77 -->
+ZEQ.=6,SEQ=76,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=195577,FOLIO='68',FILE='DISK112:[14ZCP1.14ZCP40801]DG40801A.;22',USER='JFUSS',CD='21-OCT-2014;23:25'
+
+Table of Contents
+
+The demand for payment of fair value must be in addition to and separate from your notice of objection or any proxy voting against the approval of the merger agreement.
+
+*Delivery of Share Certificates to the Surviving Corporation*
+
+Additionally, within twenty (20) days after the date on which your demand for payment of the fair value of your shares is delivered to the surviving corporation, you must submit to the surviving corporation any certificates representing your shares for purposes of making a notation on such certificates that a demand for payment of fair value for your shares has been made under Subchapter H. All such certificates should be sent to Multimedia Games Holding Company, Inc., Attn: President and Secretary, 206 Wild Basin Road South, Building B, Austin, Texas 78746. The failure to submit your share certificates will have the effect, at the option of the surviving corporation, of terminating your rights of dissent and appraisal unless a court, for good cause shown, directs otherwise.
+
+*Response from Surviving Corporation to Demand for Payment of Fair Value; Payment*
+
+Within twenty (20) days after receiving your demand for payment of fair value of shares, the surviving corporation must provide a written response to you, in which response the surviving corporation may either (i) accept the amount claimed in the demand as the fair value of the shares specified in the demand or (ii) reject the demand, provide the surviving corporation's estimate of the fair value of your shares and offer to pay to you the amount of such estimate. If the surviving corporation accepts the amount claimed in the demand as the fair value of the shares, then the surviving corporation will pay to you such amount within ninety (90) days after the effective time of the merger if you deliver to the surviving corporation endorsed share certificates representing your shares or executed assignments of the shares if such shares are uncertificated.
+
+If you decide to accept the counteroffer made by the surviving corporation in its written response, you must provide notice to the surviving corporation of such acceptance within ninety (90) days after the effective time of the merger. If you validly accept the surviving corporation's counteroffer or you and the surviving corporation otherwise reach an agreement of the fair value of your shares within ninety (90) days after the effective time of the merger, then the surviving corporation will pay to you the agreed amount within one hundred twenty (120) days after the effective time of the merger if you deliver to the surviving corporation endorsed share certificates representing your shares or executed assignments of the shares if such shares are uncertificated.
+
+*Filing of Petition with Court; Determination of Fair Value*
+
+If the surviving corporation has rejected your demand for payment of fair value of your shares and the surviving corporation and you are unable to reach an agreement as to the fair value of your shares, then, within one hundred fifty (150) days after the effective time of the merger, either the surviving corporation or you, if you have complied with the requirements of Subchapter H, may file a petition in a court in Travis County, Texas requesting a finding and determination of the fair value of your shares. The surviving corporation has no obligation (and has no present intention) to file such a petition in the
+
+69
+<!-- PAGE 78 -->
+ZEQ.=7,SEQ=77,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=642829,FOLIO='69',FILE='DISK112:[14ZCP1.14ZCP40801]DG40801A.;22',USER='JFUSS',CD='21-OCT-2014;23:25'
+
+Table of Contents
+
+event there are dissenting shareholders and the surviving corporation and such dissenting shareholders are unable to reach an agreement as to the fair value of the shares. Accordingly, your failure to file such a petition within the period specified could nullify your previous demand for payment of fair value of your shares and terminate your rights of dissent and appraisal.
+
+If you file a petition requesting a finding and determination of the fair value of your shares, then within ten (10) days after receipt of service of such petition by the surviving corporation, the surviving corporation must file with the court a list containing the names and addresses of each shareholder who has demanded payment for fair value of their shares and with whom agreements as to the fair value of their shares have not been reached by the surviving corporation. If the surviving corporation files a petition, then such list must accompany the petition.
+
+After notice to the surviving corporation and shareholders who have demanded an appraisal of their shares, the court will conduct a hearing upon the petition to determine those shareholders who have perfected their rights of dissent and appraisal in compliance with Subchapter H and who have subsequently become entitled to receive payment for the fair value of their shares. Additionally, the court will appoint one or more qualified appraisers to determine the fair value of the shares. Each appraiser so appointed must determine the fair value of the shares of a dissenting shareholder entitled to payment for the shares. Fair value of the shares must be determined on the date preceding the effective time of the merger, exclusive of any element of value arising from the accomplishment or expectation of the merger and considering the value of Multimedia Games as a going concern, without reference to any control premium, minority interest discount or discount for lack of marketability. In determining fair value of the shares, an appraiser may examine the books and records of the surviving corporation and conduct such other investigations as the appraiser determines to be appropriate. A dissenting shareholder or the surviving corporation may submit to an appraiser evidence of other information as it deems relevant to the determination of fair value of the shares. Following the appraiser's determination of the fair value of the shares, the appraiser must file with the court a report of that determination and the clerk of the court will provide notice of the filing of such report to each dissenting shareholder and the surviving corporation.
+
+Following notice of the appraisal report containing the fair value of the shares, a dissenting shareholder or the surviving corporation may object to all or part of such report, in which case the court will conduct a hearing to determine the fair value of the shares. After such hearing, the court will direct the surviving corporation to pay to the dissenting shareholders entitled to receive payment of fair value of their shares the amount determined by the court to be the fair value thereof, together with interest accruing from the ninety-first (91st) day after the effective time of the merger until the date of judgment. Such interest will accrue at the same rate as is provided for the accrual of prejudgment interest in civil cases. Once directed by the court, the surviving corporation will immediately pay the amount of the judgment to each dissenting shareholder whose shares are uncertificated and, for dissenting shareholders whose shares are certificated, will pay the amount of the judgment immediately after such shareholder surrenders to the surviving corporation the endorsed certificates representing the shares.
+
+*Withdrawal of Demand for Payment of Fair Value*
+
+At any time before payment has been made in respect of a demand for payment of fair value of the shares or a petition has been filed in respect of a demand for payment of fair value of the shares, you may withdraw your demand for payment of fair value of your shares and accept the merger consideration by delivering to the surviving corporation a written withdrawal of your demand for payment of fair value of your shares. However, after a payment has been made in respect of a demand for payment of fair value of the shares or a petition has been filed in respect of a demand for payment of fair value of the shares, any attempt to withdraw will require the consent of the surviving
+
+70
+<!-- PAGE 79 -->
+ZEQ.=8,SEQ=78,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=635715,FOLIO='70',FILE='DISK112:[14ZCP1.14ZCP40801]DG40801A.;22',USER='JFUSS',CD='21-OCT-2014;23:25'
+
+Table of Contents
+
+corporation. If the surviving corporation does not consent to your request to withdraw a demand for payment of fair value of your shares when that consent is required, you will be entitled to receive only the fair value determined by the court, which value could be more than, the same as or less than the value of the merger consideration offered pursuant to the merger agreement.
+
+*Other Important Considerations for Shareholders Considering Whether to Exercise Rights of Dissent and Appraisal*
+
+In considering whether to exercise your rights of dissent and appraisal, you should be aware that the fair value of your shares as so determined could be more than, the same as or less than the consideration you would receive pursuant to the merger agreement if you did not exercise your rights of dissent and appraisal and that an investment banking opinion as to fairness from a financial point of view is not necessarily an opinion as to fair value under Subchapter H. Although we believe that the merger consideration is fair, we make no representation as to the outcome of the determination of fair value by a court, and you should recognize that such a determination of fair value could result in a determination of a fair value higher or lower than, or the same as, the merger consideration. All court costs, including reasonable fees for the appraisers, will be allocated between the surviving corporation and the dissenting shareholders, as determined by the court. We do not anticipate that the surviving corporation will offer more than the applicable merger consideration to any shareholder exercising rights of dissent and appraisal, and we reserve the right to assert, in any response to a dissenting shareholder or appraisal proceeding, that for purposes of Subchapter H, the "fair value" of a share of Multimedia Games common stock is less than the applicable merger consideration pursuant to the merger agreement, and that the methods that are generally considered acceptable in the financial community and otherwise admissible in court should be considered in the appraisal proceedings. In addition, the statutory rights of dissent and appraisal are a dissenting shareholder's exclusive remedy for the recovery of the value of its shares or money damages with respect to the merger. If a petition for determination of fair value of shares is not timely filed, then the dissenting shareholder's rights of dissent and appraisal will terminate.
+
+If any shareholder who demands appraisal of shares of our common stock under Subchapter H fails to perfect, or successfully withdraws the demand or loses such shareholder's rights of dissent and appraisal, the shareholder's shares of common stock will be deemed to have been converted at the effective time of the merger into the right to receive the merger consideration and no interest will be paid on such merger consideration. You will fail to perfect, or effectively lose or withdraw, your rights of dissent and appraisal if, among other things:
+
+71
+<!-- PAGE 80 -->
+ZEQ.=9,SEQ=79,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=156896,FOLIO='71',FILE='DISK112:[14ZCP1.14ZCP40801]DG40801A.;22',USER='JFUSS',CD='21-OCT-2014;23:25'
+
+Table of Contents
+
+Any dissenting shareholder who has delivered a demand for payment of fair value of its shares in compliance with Subchapter H will not, after the effective time of the merger, be entitled to vote the shares subject to that demand for any purpose or be entitled to the payment of dividends or other distributions on those shares (except dividends or other distributions payable to holders of record of shares as of a record date before the effective time of the merger).
+
+Failure to comply strictly with all of the procedures set forth in Subchapter H will result in the loss of a shareholder's statutory rights of dissent and appraisal. Consequently, any shareholder wishing to exercise rights of dissent and appraisal is urged to consult legal counsel before attempting to exercise those rights.
+
+72
+<!-- PAGE 81 -->
+ZEQ.=10,SEQ=80,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=24154,FOLIO='72',FILE='DISK112:[14ZCP1.14ZCP40801]DG40801A.;22',USER='JFUSS',CD='21-OCT-2014;23:25' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+**TERMS OF THE MERGER AGREEMENT**
+
+*The following summary describes certain material provisions of the merger agreement and is qualified in its entirety by reference to the merger agreement, a copy of which is attached to this proxy statement as Annex A and which is incorporated by reference into this proxy statement. This summary does not purport to be complete and may not contain all of the information about the merger agreement that may be important to you. We encourage you to read the merger agreement carefully and in its entirety, as it is the legal document governing the merger.*
+
+**Explanatory Note Regarding the Merger Agreement and the Summary of the Merger Agreement; Representations, Warranties and Covenants in the Merger Agreement Are Not Intended to Function or Be Relied on as Public Disclosures**
+
+The merger agreement and the summary of terms included in this proxy statement have been prepared to provide you with information regarding its terms and are not intended to provide any factual information about Multimedia Games, GCA, Merger Sub or any of their respective subsidiaries or affiliates. Such information can be found elsewhere in this proxy statement or in the public filings that we or GCA make with the SEC, as described in the section entitled "Where Shareholders Can Find More Information" beginning on page 110 of this proxy statement. The representations, warranties and covenants contained in the merger agreement have been made solely for the purposes of the merger agreement and as of specific dates and solely for the benefit of parties to the merger agreement, and:
+
+Accordingly, you should not rely on the representations, warranties or covenants or any descriptions thereof as characterizations of the actual state of facts or condition of Multimedia Games, GCA, Merger Sub or any of their respective subsidiaries or affiliates. Moreover, information concerning the subject matter of the representations and warranties may change after the date of the merger agreement, which subsequent information may or may not be fully reflected in Multimedia Games' or GCA's public disclosures. Accordingly, the representations, warranties, covenants and other provisions of the merger agreement or any description of such provisions should not be read alone, but instead should be read together with the information provided elsewhere in this proxy statement and in the documents incorporated by reference into this proxy statement. See the section entitled "Where Shareholders Can Find More Information" beginning on page 110 of this proxy statement.
+
+**Terms of the Merger; Merger Consideration**
+
+The merger agreement provides that, upon the terms and subject to the conditions set forth in the merger agreement and in accordance with the TBOC, at the effective time of the merger, Merger Sub
+
+73
+<!-- PAGE 82 -->
+ZEQ.=1,SEQ=81,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=48177,FOLIO='73',FILE='DISK112:[14ZCP1.14ZCP40801]DI40801A.;15',USER='JFUSS',CD='21-OCT-2014;18:29'
+
+Table of Contents
+
+will be merged with and into Multimedia Games, whereupon the separate existence of Merger Sub will cease, and Multimedia Games will continue as the surviving corporation and a wholly owned subsidiary of GCA.
+
+At the effective time of the merger, on the terms and subject to the conditions set forth in the merger agreement:
+
+In the event that, from the date of the merger agreement until the effective time of the merger, the number of outstanding shares of Multimedia Games common stock, or securities convertible into or exchangeable into or exercisable for such Multimedia Games common stock, is changed in any way by any reclassification, recapitalization, stock split (including a reverse stock split), subdivision, combination, exchange or readjustment of shares or any stock dividend or stock distribution, merger or other similar transaction, the merger consideration will be equitably adjusted to provide holders of Multimedia Games common stock the same economic effect.
+
+**Certificate of Formation; Bylaws; Directors and Officers**
+
+At the effective time of the merger, the certificate of formation and the bylaws of Multimedia Games will be amended in their entirety to be identical to the certificate of formation and the bylaws of Merger Sub as in effect immediately prior to the effective time of the merger. In addition, as of the effective time of the merger, the directors and officers of Merger Sub immediately prior to the effective time of the merger will become the directors and officers of the surviving corporation until their successors have been duly elected, designated or qualified, as the case may be, or their earlier death, incapacitation, retirement, resignation or removal in accordance with the certificate of formation and bylaws of the surviving corporation.
+
+**Completion of the Merger**
+
+The closing of the merger will take place (a) at 11:00 a.m., New York City time, on the later of (i) the second (2nd) business day after all conditions to the completion of the merger have been satisfied or waived (other than those conditions that can only be satisfied at such closing, but subject to the satisfaction or waiver of such conditions), and (ii) the earlier of (x) the third (3rd) business day after the end of the marketing period (described below under "—Financing of the Merger") and (y) a date during the marketing period specified by GCA on no fewer than two (2) business days' notice to Multimedia Games or (b) on such other place, time or date as the parties to the merger agreement may mutually agree in writing.
+
+74
+<!-- PAGE 83 -->
+ZEQ.=2,SEQ=82,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=416122,FOLIO='74',FILE='DISK112:[14ZCP1.14ZCP40801]DI40801A.;15',USER='JFUSS',CD='21-OCT-2014;18:29'
+
+Table of Contents
+
+**Effective Time**
+
+The effective time of the merger will be at the time when the certificate of merger is filed with, and accepted by, the Secretary of State of the State of Texas, or at such later time as the parties agree and specify in the certificate of merger. As promptly as reasonably practicable on the closing date, the parties to the merger agreement will cause the certificate of merger to be filed.
+
+**Treatment of Stock Options and Other Stock-Based Compensation**
+
+*Stock Options*
+
+At the effective time of the merger, each option to purchase Multimedia Games common stock that was granted prior to September 8, 2014 and is outstanding and unexercised immediately prior to the effective time of the merger (whether vested or unvested) will automatically terminate and be canceled and converted into the right to receive the merger consideration with respect to each share of Multimedia Games common stock subject to such option immediately prior to the effective time of the merger, less the applicable exercise price and less any applicable withholding taxes. If the exercise price of the option equals or exceeds the merger consideration, the option will be canceled without the payment of any consideration to the holder.
+
+At the effective time of the merger, each option to purchase Multimedia Games common stock granted on or after September 8, 2014 will convert into an option to acquire, on the same terms and conditions as were applicable to such option immediately prior to the effective time of the merger, a number of GCA shares of common stock (rounded down to the nearest whole share), determined by multiplying the number of shares of Multimedia Games common stock subject to such option immediately prior to the effective time of the merger by the equity exchange ratio, at an exercise price per share of GCA common stock (rounded up to the nearest whole cent) equal to the quotient obtained by dividing (i) the exercise price per share of Multimedia Games common stock of such Multimedia Games option by (ii) the equity exchange ratio.
+
+*Restricted Stock Units*
+
+At the effective time of the merger, each Multimedia Games restricted stock unit that is outstanding (whether unvested or unvested) immediately prior to the effective time of the merger will automatically terminate and be canceled and converted into the right to receive the merger consideration, without interest and less any applicable withholding taxes.
+
+*Performance Share Awards*
+
+At the effective time of the merger, each Multimedia Games performance share award that is outstanding (whether vested or unvested) immediately prior to the effective time of the merger will automatically terminate and be canceled and converted into the right to receive the merger consideration in respect of each share of Multimedia Games common stock underlying the award (assuming achievement of the applicable performance-based vesting conditions at the maximum level), and less any applicable withholding taxes.
+
+**Exchange of Shares in the Merger**
+
+Prior to the effective time of the merger, GCA will designate a paying agent to handle the exchange of shares of Multimedia Games common stock for the merger consideration. At or immediately prior to the filing of the certificate of merger with the Secretary of State of the State of Texas, GCA will deposit (or cause to be deposited) with the paying agent cash in an amount sufficient to pay the aggregate merger consideration.
+
+75
+<!-- PAGE 84 -->
+ZEQ.=3,SEQ=83,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=104799,FOLIO='75',FILE='DISK112:[14ZCP1.14ZCP40801]DI40801A.;15',USER='JFUSS',CD='21-OCT-2014;18:29'
+
+Table of Contents
+
+As promptly as practicable after the effective time of the merger, the paying agent will mail to each record holder of Multimedia Games common stock certificates that represented outstanding shares of common stock that were converted into the right to receive the merger consideration, a letter of transmittal specifying that delivery will be effected, and risk of loss and title to any such certificates will pass, only upon delivery of such certificates to the paying agent, and providing instructions for effecting the surrender of Multimedia Games common stock certificates in exchange for the merger consideration.
+
+**Multimedia Games shareholders should not return stock certificates with the enclosed proxy card, and Multimedia Games shareholders should not forward stock certificates to the paying agent without a letter of transmittal.**
+
+As promptly as practicable after the effective time of the merger, the paying agent will deliver to each holder of record of one or more book-entry shares the amount of cash each such holder is entitled to receive, without such holder being required to deliver a stock certificate to the paying agent in order to receive the merger consideration. The amount will be deposited into the bank or brokerage account of such holder without any further action required by the holder of such book-entry shares. The book-entry shares of Multimedia Games common stock held by such holder will be canceled. No interest will be paid or will accrue on any cash payable upon surrender of any Multimedia Games common stock certificate or book-entry share.
+
+Prior to the effective time of the merger, Multimedia Games and GCA will cooperate with the Depository Trust Company, which we refer to as "DTC" in this proxy statement, to ensure that (i) if the closing occurs at or prior to 2:00 p.m., New York City time, the paying agent will transmit to DTC or its nominees an amount in cash equal to the number of shares of Multimedia Games common stock held of record by DTC or such nominee immediately prior to the effective time of the merger multiplied by the merger consideration, and (ii) if the closing occurs after 2:00 p.m., New York City time, the paying agent will transmit to DTC or its nominee on the first (1st) business day after the closing an amount in cash equal to the number of shares of Multimedia Games common stock held of record by DTC or such nominee immediately prior to the effective time of the merger multiplied by the merger consideration.
+
+Following the date that is one (1) year after the effective time of the merger, any portion of the funds held by the paying agent that remain unclaimed by our former shareholders, including the proceeds from investment thereof, will be delivered to GCA. Thereafter, our former shareholders may look only to GCA or the surviving corporation (subject to abandoned property, escheat or similar laws) for payment with respect to the merger consideration.
+
+At the effective time of the merger, our stock transfer books will be closed and there will be no further registration of transfers of our common stock. If, after the effective time of the merger, certificates are presented to the surviving corporation or GCA for transfer, such certificates will be canceled and exchanged for payment of the merger consideration.
+
+**Lost, Stolen or Destroyed Certificates**
+
+If any Multimedia Games common stock certificate has been lost, stolen or destroyed, then upon the making of an affidavit of that fact by the person claiming such certificate to be lost, stolen or destroyed and, if such person owns at least 0.1% of the authorized capital stock of Multimedia Games and if required by the surviving corporation, the posting by such person of a bond in such customary and reasonable amount as the surviving corporation may direct as indemnity against any claim that may be made against it with respect to such certificate, the paying agent will pay in exchange for such lost, stolen or destroyed certificate the merger consideration that would be payable in respect thereof pursuant to the merger agreement had such lost, stolen or destroyed certificate been surrendered as provided in the merger agreement.
+
+76
+<!-- PAGE 85 -->
+ZEQ.=4,SEQ=84,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=265009,FOLIO='76',FILE='DISK112:[14ZCP1.14ZCP40801]DI40801A.;15',USER='JFUSS',CD='21-OCT-2014;18:29'
+
+Table of Contents
+
+**Representations and Warranties**
+
+The merger agreement contains customary representations and warranties made by Multimedia Games to GCA and Merger Sub and customary representations and warranties made by GCA and Merger Sub to Multimedia Games. These representations and warranties are subject to important limitations and qualifications agreed to by the parties to the merger agreement in connection with negotiating the terms of the merger agreement. In particular, certain of the representations and warranties that Multimedia Games made in the merger agreement are qualified by certain confidential disclosures that Multimedia Games delivered to GCA concurrently with the execution of the merger agreement. In addition, certain representations and warranties were made as of a specified date, may be subject to contractual standards of materiality different from those generally applicable to public disclosures to shareholders, may be subject in some cases to other exceptions and qualifications (including exceptions that do not result in, and would not reasonably be expected to have, a material adverse effect, as defined below), or may have been used for the purpose of allocating risk among the parties rather than establishing matters of fact. See also the definition of "material adverse effect" beginning on page 79 of this proxy statement. Investors are not third-party beneficiaries under the merger agreement and in reviewing the representations, warranties and covenants contained in the merger agreement or any descriptions thereof in this summary, it is important to bear in mind that such representations, warranties and covenants or any description thereof were not intended by the parties to the merger agreement to be characterizations of the actual state of facts or condition of Multimedia Games, GCA or Merger Sub, or any of their respective subsidiaries or affiliates. For the foregoing reasons, the representations and warranties given by the parties in the merger agreement or any description thereof should not be read alone and should instead be read in conjunction with the other information contained in the reports, statements and filings that Multimedia Games publicly files with the SEC.
+
+Multimedia Games' representations and warranties under the merger agreement relate to, among other things:
+
+77
+<!-- PAGE 86 -->
+ZEQ.=5,SEQ=85,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=452362,FOLIO='77',FILE='DISK112:[14ZCP1.14ZCP40801]DI40801A.;15',USER='JFUSS',CD='21-OCT-2014;18:29'
+
+Table of Contents
+
+78
+<!-- PAGE 87 -->
+ZEQ.=6,SEQ=86,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=376156,FOLIO='78',FILE='DISK112:[14ZCP1.14ZCP40801]DI40801A.;15',USER='JFUSS',CD='21-OCT-2014;18:29'
+
+Table of Contents
+
+The merger agreement also contains customary representations and warranties made by GCA and Merger Sub that are subject to specified exceptions and qualifications contained in the merger agreement and certain confidential disclosures that GCA delivered to Multimedia Games concurrently with the execution of the merger agreement. The representations and warranties of GCA and Merger Sub to Multimedia Games under the merger agreement, relate to, among other things:
+
+None of the representations and warranties in the merger agreement survive the completion of the merger.
+
+Many of the representations and warranties in the merger agreement are qualified by a materiality or material adverse effect standard (that is, they will not be deemed to be untrue or incorrect unless a materiality threshold is satisfied or their failure to be true or correct would, or would reasonably be expected to, result in a material adverse effect).
+
+For purposes of the merger agreement, a "material adverse effect" means, with respect to Multimedia Games, any event, change, effect, development, condition, occurrence or circumstance which, individually or in the aggregate, has resulted or would reasonably be expected to result in a
+
+79
+<!-- PAGE 88 -->
+ZEQ.=7,SEQ=87,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=550461,FOLIO='79',FILE='DISK112:[14ZCP1.14ZCP40801]DI40801A.;15',USER='JFUSS',CD='21-OCT-2014;18:29'
+
+Table of Contents
+
+material adverse effect on the business, assets, liabilities, condition (financial or other) or results of operations of Multimedia Games and its subsidiaries, taken as a whole; except that events, changes, effects, developments, conditions, occurrences or circumstances to the extent resulting from, directly or indirectly, the following are excluded:
+
+80
+<!-- PAGE 89 -->
+ZEQ.=8,SEQ=88,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=601650,FOLIO='80',FILE='DISK112:[14ZCP1.14ZCP40801]DI40801A.;15',USER='JFUSS',CD='21-OCT-2014;18:29'
+
+THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+For purposes of the merger agreement, a "material adverse effect" means, with respect to GCA, any change, effect, development or circumstance that, individually or in the aggregate, prevents or materially delays, or would reasonably be expected to prevent or materially delay, the ability of GCA or Merger Sub to consummate the merger and the other transactions contemplated by the merger agreement on a timely basis.
+
+**Covenants Regarding Conduct of Business by Multimedia Games Pending the Merger**
+
+Multimedia Games has agreed to certain covenants in the merger agreement restricting the conduct of its business between the date of the merger agreement and the effective time of the merger. In general, Multimedia Games and its subsidiaries have agreed that, except as (i) may be required by applicable law or any gaming authority, (ii) may be agreed to in writing by GCA, (iii) required under the merger agreement or (iv) set forth in Multimedia Games' confidential disclosure schedule delivered to GCA concurrently with the execution of the merger agreement, from the date of the merger agreement until the earlier of the effective time of the merger or termination of the merger agreement, Multimedia Games will and will cause its subsidiaries to (x) carry on its business in all material respects in the ordinary course and use commercially reasonable efforts to preserve substantially intact its current business organizations, to keep available the services of its current officers and employees and to preserve its relationships with material governmental authorities (including applicable gaming authorities), customers, suppliers, licensors, licensees, distributors, wholesalers, lessors and others having significant business dealings with it, and to preserve the goodwill of and maintain satisfactory relationships with those persons having business relationships with Multimedia Games or any of its subsidiaries and (y) not:
+
+81
+<!-- PAGE 90 -->
+ZEQ.=1,SEQ=89,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=152174,FOLIO='81',FILE='DISK112:[14ZCP1.14ZCP40801]DK40801A.;19',USER='ABEAULI',CD='21-OCT-2014;18:24'
+
+Table of Contents
+
+82
+<!-- PAGE 91 -->
+ZEQ.=2,SEQ=90,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=1032286,FOLIO='82',FILE='DISK112:[14ZCP1.14ZCP40801]DK40801A.;19',USER='ABEAULI',CD='21-OCT-2014;18:24'
+
+Table of Contents
+
+83
+<!-- PAGE 92 -->
+ZEQ.=3,SEQ=91,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=154249,FOLIO='83',FILE='DISK112:[14ZCP1.14ZCP40801]DK40801A.;19',USER='ABEAULI',CD='21-OCT-2014;18:24'
+
+Table of Contents
+
+84
+<!-- PAGE 93 -->
+ZEQ.=4,SEQ=92,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=103348,FOLIO='84',FILE='DISK112:[14ZCP1.14ZCP40801]DK40801A.;19',USER='ABEAULI',CD='21-OCT-2014;18:24'
+
+Table of Contents
+
+**No Solicitation of Acquisition Proposals; Changes in Board Recommendation**
+
+Multimedia Games has agreed to cease discussions or negotiations that may have been ongoing with any parties with respect to an acquisition proposal, as defined below, to request to have returned to it or have destroyed any confidential information that had been provided in any such discussions or negotiations and to terminate all physical and electronic data room access previously granted to any such parties.
+
+From the date of the merger agreement until the effective time of the merger or, if earlier, the termination of the merger agreement in accordance with its terms, Multimedia Games has agreed not to, and will not authorize or permit any of its subsidiaries to, and will use its reasonable best efforts to cause its and their respective representatives not to, directly or indirectly:
+
+However, at any time prior to obtaining shareholder approval of the proposal to approve the merger agreement, in the event that Multimedia Games receives a written acquisition proposal that did not result from its material breach of its non-solicit obligations under the merger agreement, Multimedia Games and its board of directors and representatives may engage in negotiations or substantive discussions with, or furnish any information and other access to, any third party making such acquisition proposal and its representatives or potential sources of financing if the Multimedia Games board of directors determines in good faith, after consultation with Multimedia Games' outside legal and financial advisors, and based on information then available, that such acquisition proposal constitutes, or could reasonably be expected to result in, a superior proposal, as defined below. Multimedia Games may not furnish non-public information to any such third party making the acquisition proposal without first entering into an acceptable confidentiality agreement with such third party that is no less restrictive of such third party than the confidentiality agreement entered into by and between Multimedia Games and GCA and making available, as promptly as practicable (and in any event within twenty-four (24) hours thereafter) to GCA any such information made available to such third party. Within forty-eight (48) hours of the receipt of an acquisition proposal, Multimedia Games must advise GCA of the receipt of such acquisition proposal and provide GCA with the material terms and conditions of such acquisition proposal, and is obligated to keep GCA reasonably informed of the status of any discussions regarding such acquisition proposal.
+
+In addition to the foregoing, Multimedia Games and the Multimedia Games board of directors has agreed to that it will not (A) withdraw (or qualify or modify in any manner adverse to GCA), or publicly propose to withdraw (or so qualify or modify), the Multimedia Games board of directors' recommendation to Multimedia Games shareholders that they vote to approve the merger agreement, or (B) approve, adopt or recommend any acquisition proposal, or propose publicly to approve, adopt or recommend any acquisition proposal, which we refer to as a "change in recommendation" in this proxy statement, or approve, adopt or recommend, or propose publicly to approve, adopt or recommend, or allow Multimedia Games or any of its subsidiaries to execute any letter of intent, memorandum of understanding, agreement in principle, merger agreement, acquisition agreement, option agreement, joint venture agreement, partnership agreement or similar definitive agreement (other than an
+
+85
+<!-- PAGE 94 -->
+ZEQ.=5,SEQ=93,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=420859,FOLIO='85',FILE='DISK112:[14ZCP1.14ZCP40801]DK40801A.;19',USER='ABEAULI',CD='21-OCT-2014;18:24'
+
+Table of Contents
+
+acceptable confidentiality agreement) with any third party constituting or relating to any acquisition proposal. However, prior to obtaining shareholder approval, the Multimedia Games board of directors may make a change of recommendation and terminate the merger agreement if:
+
+The merger agreement provides that, prior to obtaining the approval of Multimedia Games shareholders of the proposal to approve the merger agreement, the Multimedia Games board of directors may terminate the merger agreement: (A) if the Multimedia Games board of directors effects a change in recommendation permitted pursuant to the merger agreement (as described in more detail above), or (B) in connection with entering into an agreement to effect a transaction constituting a superior proposal if (in the case of this clause (B)):
+
+If the merger agreement is terminated in such a circumstance, Multimedia Games must pay GCA the company termination fee prior to, or concurrently with, such termination (as more fully described in the section entitled "—Termination Fee; Effect of Termination" beginning on page 97 of this proxy statement).
+
+On a maximum of two additional occasions, a material revision or amendment to the superior proposal will require Multimedia Games to deliver a new written notice to GCA and to again comply with the above requirements, except that the four (4) day notice period described above is reduced to twenty-four (24) hours with respect to such revised superior proposal.
+
+For the purposes of the merger agreement, the term "acquisition proposal" means any bona fide proposal or offer from a third party relating to (i) a merger, reorganization, sale of assets, share
+
+86
+<!-- PAGE 95 -->
+ZEQ.=6,SEQ=94,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=447797,FOLIO='86',FILE='DISK112:[14ZCP1.14ZCP40801]DK40801A.;19',USER='ABEAULI',CD='21-OCT-2014;18:24'
+
+Table of Contents
+
+exchange, consolidation, business combination, recapitalization, dissolution, liquidation, joint venture or similar transaction involving Multimedia Games or any of its subsidiaries whose revenues, income, EBITDA or assets, individually or in the aggregate, constitute 25% or more of the consolidated revenues, income, EBITDA or assets of Multimedia Games and its subsidiaries (in the case of revenue, income and EBITDA, measured over the previous twelve (12) months, and in the case of assets, based on fair market value, as determined in good faith by the Multimedia Games board of directors); (ii) the acquisition (whether by merger, consolidation, equity investment, joint venture or otherwise) by any person of 25% or more of the assets of Multimedia Games and its subsidiaries, taken as a whole (based on fair market value, as determined in good faith by the Multimedia Games board of directors); (iii) the acquisition in any manner, directly or indirectly, by any person of 25% or more of the issued and outstanding shares of Multimedia Games common stock; (iv) any purchase, acquisition, tender offer or exchange offer that, if consummated, would result in any person beneficially owning 25% or more of Multimedia Games common stock or any class of equity or voting securities of Multimedia Games (or any of its subsidiaries whose revenues, income, EBITDA or assets, individually or in the aggregate, constitute 25% or more of the consolidated revenues, income, EBITDA or assets of Multimedia Games and its subsidiaries (in the case of revenue, income and EBITDA, measured over the previous twelve (12) months, and in the case of assets, based on fair market value, as determined in good faith by the Multimedia Games board of directors)); or (v) any combination of the foregoing.
+
+For the purposes of the merger agreement, the term "superior proposal" means an acquisition proposal (with the references to "25%" in the definition of acquisition proposal being deemed to be references to "50%") made by a third party on terms that the Multimedia Games board of directors determines in good faith, after consultation with Multimedia Games' financial advisor and outside counsel, and considering such factors as the Multimedia Games board of directors considers to be appropriate (including the conditionality, timing and likelihood of consummation of such proposal), are more favorable to the holders of Multimedia Games common stock than the transactions contemplated by the merger agreement (after giving effect to any revised terms proposed by GCA).
+
+**Required Shareholder Vote**
+
+As promptly as practicable, and in any event within five (5) business days following the date on which the SEC confirms it has no further comment to this proxy statement, Multimedia Games is obligated to establish a record date and give notice of a meeting of its shareholders for the purpose of voting upon the approval of the merger agreement. Such special meeting may be postponed, recessed or adjourned in the reasonable judgment of Multimedia Games, after consultation with GCA, but may not occur after January 15, 2015 without GCA's consent. Subject to Multimedia Games' right to effect a change in recommendation and/or terminate the merger agreement (as described above), Multimedia Games is obligated to include in this proxy statement the recommendation of the Multimedia Games board of directors that Multimedia Games shareholders vote in favor of the proposal to approve the merger agreement and use its reasonable best efforts to solicit from Multimedia Games shareholders proxies in favor of the approval of the merger agreement and the transactions contemplated by the merger agreement.
+
+**Consents, Approvals and Filings**
+
+GCA and Multimedia Games have each agreed to use, and cause each of their applicable affiliates and subsidiaries to use, their reasonable best efforts to:
+
+87
+<!-- PAGE 96 -->
+ZEQ.=7,SEQ=95,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=543737,FOLIO='87',FILE='DISK112:[14ZCP1.14ZCP40801]DK40801A.;19',USER='ABEAULI',CD='21-OCT-2014;18:24'
+
+Table of Contents
+
+The parties have agreed that in no event will Multimedia Games be required to agree to take or enter into any action that is not conditioned upon the consummation of the merger and, further, that Multimedia Games will not agree to any obligation or concession or other action relating to the antitrust approval or the required gaming approvals without the prior written consent of GCA.
+
+The required notification and report forms under the HSR Act were filed with the Antitrust Division and the FTC by Multimedia Games and GCA on September 18, 2014. On September 26, 2014, Multimedia Games received notice from the FTC that early termination of the applicable waiting period had been granted; as such, the condition to the closing of the merger related to the HSR Act has been satisfied.
+
+The parties have agreed (i) to file all other notifications required under any antitrust law or any gaming law with respect to the merger agreement and the transactions contemplated as soon as reasonably practicable (and in any event within thirty (30) days following the date of the merger agreement with respect to required gaming approvals), (ii) to supply as promptly as reasonably practicable any additional information and documentary material in its possession that may be requested pursuant to any antitrust law or any gaming law, and (iii) to use reasonable best efforts to take or cause to be taken all actions necessary, proper or advisable to (A) cause the expiration or termination of the applicable waiting periods under any antitrust law as promptly as reasonably practicable, and (B) obtain all gaming approvals required to permit the parties hereto to consummate the transactions contemplated by the merger agreement or necessary to permit GCA to acquire, own and operate Multimedia Games.
+
+The parties will, in connection with the foregoing, obtain all requisite approvals and authorizations for the transactions contemplated by the merger agreement under any antitrust law or any gaming law, use reasonable best efforts to (1) cooperate in good faith in devising and implementing the strategy for obtaining any necessary clearances under any antitrust laws or necessary approvals under any gaming laws, (2) avoid any action or proceeding by any governmental authority challenging the consummation of transactions contemplated hereby, (3) cooperate in all respects with each other in connection with any filing or submission and in connection with any investigation or other inquiry, including any proceeding initiated by a private party, (4) keep the other party reasonably informed of any communication received by such party from, or given by such party to, any governmental authority and of any communication received or given in connection with any proceeding by a private party, in each case regarding any of the transactions contemplated under the merger agreement and (5) reasonably permit the other party to review any material communication given by it to, and consult with each other in advance of any meeting or conference, where reasonably practicable to do so, with, any
+
+88
+<!-- PAGE 97 -->
+ZEQ.=8,SEQ=96,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=459520,FOLIO='88',FILE='DISK112:[14ZCP1.14ZCP40801]DK40801A.;19',USER='ABEAULI',CD='21-OCT-2014;18:24'
+
+Table of Contents
+
+governmental authority or, in connection with any proceeding by a private party, with any other person, and to the extent permitted by such applicable governmental authority or other person, give the other party the opportunity to attend and participate in such meetings and conferences (telephonic or in person), where reasonably practicable to do so, and shall take the lead in all meetings and communications with, or proceeding involving, any governmental authority in connection with obtaining antitrust approval and required gaming approvals; provided, however, that the consent of each party is required prior to the taking of any action (including the failure to take any such action) in connection with obtaining antitrust approval or any required gaming approvals if such action (or failure to act) would be reasonably likely to materially delay, or materially impair the likelihood of obtaining, any such approvals.
+
+If any objections are asserted with respect to the transactions contemplated hereby under any antitrust law or gaming law or if any proceeding, whether judicial or administrative, is instituted (or threatened in writing to be instituted) by any governmental authority or any other private party challenging any of the transactions contemplated hereby as violative of any antitrust law or gaming law or which would otherwise prevent or materially impede, interfere with, hinder or delay the consummation of the merger and the other transactions contemplated by the merger agreement, GCA and Multimedia Games have agreed to use reasonable best efforts to take all such further action as may be reasonably necessary, subject to certain exceptions, using reasonable best efforts to resolve any such objections or suits so as to permit consummation of the transactions contemplated by merger agreement (taking into account the other conditions to the closing of the merger, and in any event no later than the termination date).
+
+Subject to applicable law, the parties will furnish to the each other such necessary information and reasonable assistance as the other may request in connection with the preparation of any required filings or submissions with any governmental authority and will reasonably cooperate in responding to any inquiry from a governmental authority, including promptly informing the other party of such inquiry, consulting in advance before making any presentations or submissions to a governmental authority, and supplying each other with copies of all material correspondence, filings or communications between either party and any governmental authority with respect to the merger agreement. Neither party will have any material communication or meeting (telephonic or in-person) regarding the transactions contemplated by the merger agreement with a governmental authority without giving the other party a reasonable opportunity to attend in person or by phone. GCA and Merger Sub have agreed (i) following receipt of any communications from any governmental authority or gaming authority involving any (x) material issues or (y) requests that are outside the ordinary course of business in the context of an investigation for a similar transaction, to promptly advise the general counsel of Multimedia Games and to make available GCA's Nevada gaming counsel, and any other relevant state gaming regulatory counsel and GCA's outside accounting firm, to discuss any such issues or requests, and (ii) to make GCA's Nevada gaming counsel, and other relevant state gaming regulatory counsel and GCA's outside accounting firm, available to the general counsel of Multimedia Games for the purpose of discussing the status of the gaming regulatory approval process.
+
+If at any time after the date of the merger agreement Multimedia Games completes its acquisition of PokerTek, Multimedia Games will (and will cause its subsidiaries and affiliates to) use its reasonable best efforts to: (i) obtain all gaming approvals required to operate PokerTek; (ii) make any filings or submissions with appropriate governmental authorities to obtain the necessary clearances to operate PokerTek pursuant to applicable law (including gaming law); (iii) obtain any other licenses that are required for PokerTek to conduct business in any jurisdiction in which it operates; and (iv) maintain any of the foregoing. Multimedia Games will (and will cause its subsidiaries and affiliates to) furnish to GCA such necessary information and reasonable assistance as GCA may request in connection with the preparation of any required filings or submissions with any governmental authority in connection with the acquisition of PokerTek and will reasonably cooperate in responding to any inquiry from a governmental authority, including promptly informing GCA of such inquiry, consulting in advance
+
+89
+<!-- PAGE 98 -->
+ZEQ.=9,SEQ=97,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=871119,FOLIO='89',FILE='DISK112:[14ZCP1.14ZCP40801]DK40801A.;19',USER='ABEAULI',CD='21-OCT-2014;18:24'
+
+Table of Contents
+
+before making any presentations or submissions to a governmental authority, and supplying GCA with copies of all material correspondence, filings or communications between Multimedia Games or its subsidiaries and any governmental authority with respect to the obligations set forth in the merger agreement regarding filing and consents.
+
+**Employee Benefits Matters**
+
+Under the merger agreement, GCA has agreed that for one (1) year after the merger (or, if the merger closes on or prior to March 31, 2015, then until December 31, 2015), continuing U.S. employees will be provided with: (i) a base salary or wage rate and annual bonus opportunity at least equal to the those in effect prior to the merger; and (ii) other compensation and benefits that are in the aggregate no less favorable to those in effect prior to the merger (excluding equity, equity-based and other similar long-term incentive opportunities, but including vacation policies, retirement benefits, and health, welfare and fringe benefits). In addition, GCA and the surviving corporation will assume and honor all of Multimedia Games' employment, severance, retention and change in control obligations in accordance with their terms as in effect prior to the signing of the merger agreement.
+
+For purposes of eligibility, vesting and benefit accrual (solely for vacation and paid time off) under the compensation and benefit plans of GCA and its subsidiaries after the merger, continuing U.S. employees will be credited with their years of service before the closing date of the merger to the same extent that such employees were entitled to credit for such service under any similar Multimedia Games benefit plan prior to the closing date of the merger, except where such service would result in a duplication of benefits.
+
+Effective as of the effective time of the merger and thereafter, GCA will, and will cause the surviving corporation to (i) ensure that no eligibility waiting periods, actively-at-work requirements or pre-existing condition limitations or exclusions will apply with respect to the continuing U.S. employees under the applicable health and welfare benefit plans of GCA or any affiliate of GCA (except to the extent applicable under any Multimedia Games benefit plans immediately prior to the effective time of the merger), and (ii) credit each continuing U.S. employee with all deductible payments, out-of-pocket or other co-payments paid by such employee under the Multimedia Games benefit plans prior to the effective time of the merger during the year in which the closing of the merger occurs for the purpose of determining the extent to which any such employee has satisfied his or her deductible and whether he or she has reached the out-of-pocket maximum under any health benefit plan of GCA or an affiliate of GCA for such year.
+
+**Directors' and Officers' Indemnification and Insurance**
+
+Under the merger agreement, from and after the effective time of the merger, GCA and the surviving corporation will (and GCA will cause the surviving corporation to) indemnify, defend and hold harmless, and advance expenses to, to the fullest extent Multimedia Games would have been permitted to do so under applicable law, any present and former officer, director or employee of Multimedia Games or any of its subsidiaries, each of which we refer to as an "indemnitee" in this proxy statement, with respect to (x) all acts or omissions by them in their capacities as such at any time at or prior to the effective time of the merger or (y) any costs or expenses (including attorneys' fees), judgments, fines, losses, claims, damages, liabilities and amounts paid in settlement in connection with any claim, action, suit, proceeding or investigation, whether civil, criminal, administrative or investigative, to the extent such claim, action, suit, proceeding or investigation arises out of or pertains to the merger, the merger agreement and any transactions contemplated thereby, in either case, to the fullest extent permitted by (i) the charter or bylaws (or such equivalent organizational or governing documents of any of Multimedia Games' subsidiaries as in effect on the date of the merger agreement), (ii) any indemnification agreement of Multimedia Games or its subsidiaries or other applicable contract as in effect on the date of the merger agreement, which provisions thereafter may not be amended, repealed or otherwise modified in any manner that would adversely affect the rights thereunder of any indemnitees or (iii) applicable law.
+
+90
+<!-- PAGE 99 -->
+ZEQ.=10,SEQ=98,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=210464,FOLIO='90',FILE='DISK112:[14ZCP1.14ZCP40801]DK40801A.;19',USER='ABEAULI',CD='21-OCT-2014;18:24' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+The merger agreement provides that, at Multimedia Games' option, Multimedia Games will, after consultation with GCA, or if Multimedia Games is unable to or otherwise fails to, the surviving corporation will, obtain and fully pay the premium for the non-cancelable extension of the directors' and officers' liability coverage of Multimedia Games' existing directors' and officers' insurance policies and Multimedia Games' existing fiduciary liability insurance policies. If Multimedia Games or the surviving corporation fails to obtain such "tail" policies as of the effective time of the merger, (i) the surviving corporation will continue to maintain in effect, for a period of at least six (6) years from and after the effective time of the merger, such insurance on terms, conditions, retentions and limits of liability that are no less favorable than the coverage provided under Multimedia Games' existing policies as of the date of the merger agreement, or (ii) the surviving corporation will provide, for a period of not less than six (6) years after the effective time of the merger, the indemnitees who are insured under Multimedia Games' current policies with comparable insurance that is no less favorable than the existing Multimedia Games policy as of the date of the merger agreement, provided that the annual premium for such endorsement does not exceed 300% of the annual premium currently paid by Multimedia Games. If the annual premiums of such insurance coverage exceed such amount, GCA or the surviving corporation will be obligated to obtain a policy with the greatest coverage available for a cost not exceeding such amount.
+
+**Financing of the Merger**
+
+Each of GCA and Merger Sub is obligated to use its respective reasonable best efforts to take, or cause to be taken, all actions and to do, or cause to be done, all things necessary, proper or advisable to arrange and obtain the proceeds of the financing on the terms and conditions, taken as a whole (including the flex provisions) described in the financing commitments, including executing and delivering all such documents and instruments as may be reasonably required thereunder and using (and causing their affiliates to use) their respective reasonable best efforts to: (i) comply with and maintain in effect the financing commitments and negotiate and enter into financing agreements with respect thereto, (ii) satisfy all conditions to the financing contemplated by the financing commitments and the financing agreements relating thereto, (iii) accept (and comply with) to the fullest extent all "market flex" contemplated by the financing commitments and financing agreements, (iv) enforce its rights (including through litigation, to the extent appropriate) under the financing commitments and financing agreements in the event of a breach (or threatened breach) by the commitment parties under the financing commitments and financing agreements relating thereto, including seeking specific performance of the parties thereunder and (v) subject to the satisfaction of the conditions precedent thereto, cause the financing sources to fund the financing at or prior to the time the closing of the merger is required to occur under the terms and conditions of the merger agreement.
+
+Neither GCA nor Merger Sub will agree to or permit any amendment or modification to be made to, or any waiver of any provision or remedy under, the financing commitments if such amendment, modification or waiver would or would reasonably be expected to, among other things, (i) reduce the aggregate amount of the financing (including by changing the amount of the fees to be paid or original issue discount) from the amount contemplated in the financing commitments in a manner that would adversely impact in any material respect the ability of GCA or Merger Sub to consummate the merger, (ii) impose new or additional conditions or otherwise expand, amend or modify any of the conditions to the receipt of the financing, in each case, in a manner that would adversely impact in any material respect the ability of GCA or Merger Sub to obtain the funding of the financing, (iii) make it less likely that the financing would be funded or otherwise prevent or delay or impair in any material respect the ability or likelihood of GCA or Merger Sub to timely consummate the merger and the other transactions contemplated by the merger agreement, (iv) adversely impact the ability of GCA or Merger Sub to enforce its rights against the other parties to the committed financing or (v) otherwise contravene certain limitations GCA and Merger Sub agreed to in their efforts to obtain the financing.
+
+91
+<!-- PAGE 100 -->
+ZEQ.=1,SEQ=99,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=610411,FOLIO='91',FILE='DISK112:[14ZCP1.14ZCP40801]DM40801A.;18',USER='JFUSS',CD='21-OCT-2014;19:47'
+
+Table of Contents
+
+If all or any portion of the financing becomes or would reasonably be expected to become unavailable on the terms and conditions (including any "flex" provisions) or from the sources contemplated in the financing commitments or the financing agreements for any reason or any of the financing commitments or the financing agreements are withdrawn, repudiated, terminated or rescinded for any reason, (i) GCA is obligated to promptly so notify Multimedia Games and (ii) GCA and Merger Sub have agreed to use their respective reasonable best efforts to arrange and obtain, as promptly as practicable following the occurrence of such event (and in any event no later than the closing date of the merger), and to negotiate and enter into definitive agreements with respect to, alternative financing from the same or alternative sources, on terms not less favorable, in any material respect, with respect to conditionality and enforceability, when taken as a whole, than those contained in the financing commitments to GCA, Merger Sub and Multimedia Games, in an amount sufficient to consummate the transactions contemplated by the merger agreement, and to obtain a new financing commitment letter (including any associated engagement letter and related fee letter) with respect to such alternative financing, copies of which will be promptly provided to Multimedia Games (with customary redactions with respect to the fee letter). We refer to the commitment parties and any parties providing alternative financing collectively as "financing sources" in this proxy statement.
+
+GCA and Merger Sub each acknowledge in the merger agreement that the obtaining of the proceeds of the financing is not a condition to the closing of the merger, such that if any financing (or any alternative financing) has not been obtained, each of GCA and Merger Sub will continue to be obligated to consummate the merger.
+
+Multimedia Games has agreed to reasonably cooperate, at the reasonable request of GCA and at GCA's sole expense, in connection with GCA's arrangement of the financing, including by:
+
+92
+<!-- PAGE 101 -->
+ZEQ.=2,SEQ=100,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=718180,FOLIO='92',FILE='DISK112:[14ZCP1.14ZCP40801]DM40801A.;18',USER='JFUSS',CD='21-OCT-2014;19:47'
+
+Table of Contents
+
+GCA has agreed to promptly reimburse Multimedia Games for any reasonable out-of-pocket expenses and costs (including reasonable attorneys' fees) incurred by Multimedia Games, its subsidiaries and their respective representatives in connection with any cooperation it provides in obtaining the financing. GCA and Merger Sub have further agreed to indemnify and hold harmless each of Multimedia Games, its affiliates and their respective representatives against any and all liabilities incurred, directly or indirectly, in connection with the arrangement of the financing, alternative financing or any other refinancing of indebtedness contemplated by the merger agreement, including any such liabilities incurred with respect to the use of Multimedia Games' information in connection with such financing, alternative financing or other refinancing or Multimedia Games' cooperation with respect thereto.
+
+The "marketing period" referred to in the merger agreement and this proxy statement is the first period of fifteen (15) consecutive business days after the date of the merger agreement throughout which: (a) GCA has the "required financial information" described below; and (b) nothing has occurred and no condition exists that would cause any of the conditions to GCA's and Merger Sub's obligation to consummate the merger to fail to be satisfied at the closing of the merger, provided that such fifteen (15) consecutive business day period will (i) exclude November 24, 2014 through and including November 28, 2014 and (ii) end prior to December 22, 2014, or commence after January 5, 2015.
+
+The marketing period will not be deemed to commence if, prior to the completion of the marketing period, (x) Multimedia Games' auditors have withdrawn their audit opinion with respect to any year-end audited financial statements set forth in Multimedia Games' filings with the SEC or (y) Multimedia Games issues a public statement indicating its intention to restate any material financial information included in the required financial information or that any such restatement is under consideration or may be a possibility, in which case the marketing period may not be deemed to commence unless and until such restatement has been completed and Multimedia Games' filings with the SEC have been amended or Multimedia Games has announced that no restatement is required.
+
+The "required financial information" consists of all financial and other information regarding Multimedia Games that is of the type and form customarily included in offering memoranda for private placements under Rule 144A of the Securities Act (and with such exceptions as is customary for an offering under Rule 144A of the Securities Act) and in form and substance reasonably necessary for the financing sources to receive customary accountants' comfort letters, to consummate the offerings of any debt securities contemplated by the financing commitments and of the type customary for one or more confidential information memoranda in connection with the financing, together with any replacements or restatements thereof, if any such information would be unusable under customary practices for such purposes; provided, that such information may not include, and GCA shall be solely responsible for, the preparation of pro forma financial information, including pro forma cost savings,
+
+93
+<!-- PAGE 102 -->
+ZEQ.=3,SEQ=101,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=307059,FOLIO='93',FILE='DISK112:[14ZCP1.14ZCP40801]DM40801A.;18',USER='JFUSS',CD='21-OCT-2014;19:47'
+
+Table of Contents
+
+synergies, capitalization or other pro forma adjustments desired to be incorporated into any pro forma financial information.
+
+**Other Covenants and Agreements**
+
+The merger agreement contains certain other covenants and agreements, including covenants relating to:
+
+**Conditions to Completion of the Merger**
+
+The obligations of GCA, Merger Sub and Multimedia Games to effect the merger are subject to the satisfaction or waiver (to the extent permitted by applicable law) by such party at or prior to the closing date of the merger of the following conditions:
+
+GCA may, in its sole discretion, waive as a condition to the consummation of the merger any required gaming approval on behalf of itself and Multimedia Games if the consummation of the
+
+94
+<!-- PAGE 103 -->
+ZEQ.=4,SEQ=102,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=1036912,FOLIO='94',FILE='DISK112:[14ZCP1.14ZCP40801]DM40801A.;18',USER='JFUSS',CD='21-OCT-2014;19:47'
+
+Table of Contents
+
+merger in the absence of such required gaming approval would not constitute a violation of applicable law so long as (i) prior to any such waiver, GCA has confirmed to Multimedia Games in an irrevocable written notice delivered to Multimedia Games that all of the other conditions to its obligations to close have been previously satisfied or waived, (ii) the closing of the merger will occur immediately following any such waiver and (iii) no such waiver will otherwise affect the obligations of GCA and Merger Sub under the merger agreement.
+
+The respective obligations of GCA and Merger Sub to consummate the merger are subject to the satisfaction or waiver (to the extent permitted by applicable law) by GCA at or prior to the closing date of the merger of the following further conditions:
+
+Multimedia Games' obligations to consummate the merger are subject to the satisfaction or waiver (to the extent permitted by applicable law) by Multimedia Games at or prior to the closing date of the merger of the following further conditions:
+
+95
+<!-- PAGE 104 -->
+ZEQ.=5,SEQ=103,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=597301,FOLIO='95',FILE='DISK112:[14ZCP1.14ZCP40801]DM40801A.;18',USER='JFUSS',CD='21-OCT-2014;19:47'
+
+Table of Contents
+
+**Termination of the Merger Agreement**
+
+The merger agreement may be terminated at any time prior to the effective time of the merger by mutual written consent of each of GCA and Multimedia Games. In addition, either GCA or Multimedia Games may terminate the merger agreement prior to the effective time of the merger, if:
+
+The merger agreement may also be terminated by Multimedia Games if:
+
+96
+<!-- PAGE 105 -->
+ZEQ.=6,SEQ=104,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=211020,FOLIO='96',FILE='DISK112:[14ZCP1.14ZCP40801]DM40801A.;18',USER='JFUSS',CD='21-OCT-2014;19:47'
+
+Table of Contents
+
+The merger agreement may also be terminated by GCA if:
+
+**Termination Fee; Effect of Termination**
+
+Under the merger agreement, Multimedia Games will be required to pay GCA the company termination fee described below, if the merger agreement is terminated:
+
+97
+<!-- PAGE 106 -->
+ZEQ.=7,SEQ=105,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=438399,FOLIO='97',FILE='DISK112:[14ZCP1.14ZCP40801]DM40801A.;18',USER='JFUSS',CD='21-OCT-2014;19:47'
+
+Table of Contents
+
+The company termination fee is an amount equal to (i) $11 million (or approximately 1.0% of the equity value of the transaction as of September 5, 2014) if payable in connection with a termination of the merger agreement either by (x) Multimedia Games on or before October 8, 2014 with respect to Multimedia Games entering into an alternative acquisition agreement with a person or group that is an excluded party, as defined below, or (y) GCA on or before October 8, 2014 if the event giving rise to the right of GCA to effect such termination is, or relates to, an acquisition proposal by an excluded party and (ii) $32.5 million (or approximately 2.8% of the equity value of the transaction as of September 5, 2014) in any other circumstance.
+
+If the merger agreement is validly terminated, the merger agreement will become null and void without liability on the part of any party to the merger agreement (or any of its representatives), and, except for the confidentiality provisions, provisions relating to the effect of termination and certain general provisions of the merger agreement, each of which will survive the termination of the merger agreement, all rights and obligations of any party will cease. However, the parties have agreed that if (i) any termination of the merger agreement resulted, directly or indirectly, from an intentional breach of any provision of the merger agreement or (ii) an intentional breach of any provision of the merger agreement caused the merger not to be consummated then, in either case, the breaching party will be fully liable for any and all damages, costs, liabilities or other losses suffered by the other party as a result of such breach, in addition to any amounts owed in connection with the company termination fee or the GCA termination fee.
+
+For purposes of the merger agreement, "intentional breach" means, with respect to any representation, warranty, agreement or covenant of a party to the merger agreement, an action or omission taken or omitted to be taken by such party in material breach of such representation, warranty, agreement or covenant that the breaching party intentionally takes (or fails to take) and with the actual knowledge that such action or omission would, or would reasonably be expected to, cause such material breach of such representation, warranty, agreement or covenant.
+
+The parties have agreed that, other than with respect to payment of the GCA termination fee and claims for intentional breach, (i) if any termination fee is paid to a party, such payment will be the sole and exclusive monetary remedy of such party, its subsidiaries, shareholders, affiliates, officers, directors,
+
+98
+<!-- PAGE 107 -->
+ZEQ.=8,SEQ=106,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=836146,FOLIO='98',FILE='DISK112:[14ZCP1.14ZCP40801]DM40801A.;18',USER='JFUSS',CD='21-OCT-2014;19:47'
+
+Table of Contents
+
+employees and representatives against the other party or any of its representatives or affiliates for any liability or obligation relating to or arising out of the merger agreement or the transactions contemplated by the merger agreement (as reduced by the GCA termination fee).
+
+**Fees and Expenses; Transfer Taxes**
+
+All fees and expenses incurred in connection with the merger agreement, the merger and the other transactions contemplated by the merger agreement will be paid by the party incurring such fees or expenses, whether or not the merger or any of the other transactions contemplated by the merger agreement are consummated, with certain exceptions expressly set forth in the merger agreement, including reimbursement for all reasonable costs and expenses (including reasonable attorneys' fees) of the prevailing party in any action at law or suit in equity to enforce the merger agreement or the rights of any of the parties thereunder.
+
+Subject to specific exceptions related to payment of the merger consideration, all transfer, documentary, sales, use, stamp, registration and other such taxes and fees (including penalties and interest) incurred in connection with the merger will be paid by GCA and Merger Sub when due.
+
+**Specific Performance**
+
+The merger agreement generally provides that the parties will be entitled, without posting a bond or other indemnity, to an injunction, specific performance and other equitable relief to prevent breaches of the merger agreement and to enforce specifically the terms and provisions of the merger agreement, in addition to any other remedy to which they are entitled at law or in equity.
+
+However, Multimedia Games is entitled to seek specific performance of GCA's and Merger Sub's obligation to consummate the merger only in the event that each of the following conditions has been satisfied: (i) the marketing period related to GCA's financing, if applicable, has ended and all of the conditions to GCA's and Merger Sub's obligation to consummate the closing have been satisfied or waived (other than those conditions that by their terms are to be satisfied or waived at the closing of the merger), (ii) GCA and Merger Sub fail to complete the merger by the date on which the merger would otherwise be required to occur, (iii) the financing (including any alternative financing that GCA is required to obtain in accordance with, and which satisfies certain conditions set forth in, the merger agreement) has been, or will be, funded in accordance with the terms thereof at the closing assuming satisfaction by GCA or Merger Sub of the conditions precedent thereto under their respective control, and (iv) Multimedia Games has confirmed in an irrevocable written notice delivered to GCA that if specific performance is granted and the financing is funded, then Multimedia Games would take such actions that are within its control to cause the closing to occur. Multimedia Games is not entitled to enforce or seek to enforce specifically GCA's and Merger Sub's obligation to consummate the merger if the financing (including any alternative financing GCA is obligated to obtain) has not been funded or will not be funded at the closing. The parties to the merger agreement further agreed that while Multimedia Games may pursue both a grant of specific performance as and only to the extent expressly permitted by the merger agreement and the payment of the GCA termination fee or any other monetary damages or other monetary remedies, to the extent proven (but only to the extent expressly permitted by the merger agreement), under no circumstances would Multimedia Games be permitted or entitled to receive both such grant of specific performance to cause the closing to occur and payment of the GCA termination fee, or alternatively, any other monetary damages or other monetary remedies.
+
+**Third Party Beneficiaries**
+
+The merger agreement provides that it will be binding upon, inure to the benefit of and be enforceable by Multimedia Games, GCA and Merger Sub and their respective successors and permitted
+
+99
+<!-- PAGE 108 -->
+ZEQ.=9,SEQ=107,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=138230,FOLIO='99',FILE='DISK112:[14ZCP1.14ZCP40801]DM40801A.;18',USER='JFUSS',CD='21-OCT-2014;19:47'
+
+Table of Contents
+
+assigns. The merger agreement is not intended to and will not confer any rights or remedies upon any person other than Multimedia Games, GCA and Merger Sub and their respective successors and permitted assigns, except for certain exceptions, including: (i) equity and equity award holders' right to receive payment under the terms and conditions of the merger agreement and (ii) certain provisions with respect to indemnitees and financing sources.
+
+**Amendments; Waivers**
+
+The merger agreement may be amended by mutual agreement of the parties to the merger agreement by action taken by or on behalf of their respective boards of directors at any time before or after receipt of the approval by Multimedia Games shareholders of the matters presented in connection with the merger. However, amendments that by law require approval by shareholders must be further approved by Multimedia Games shareholders if Multimedia Games shareholders have already approved the matters presented in connection with the merger, and certain sections may not be amended in a matter that is adverse to the financing sources without the prior written consent of the financing sources.
+
+100
+<!-- PAGE 109 -->
+ZEQ.=10,SEQ=108,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=968581,FOLIO='100',FILE='DISK112:[14ZCP1.14ZCP40801]DM40801A.;18',USER='JFUSS',CD='21-OCT-2014;19:47' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+**PROPOSAL 2: ADVISORY VOTE ON MERGER-RELATED NAMED EXECUTIVE OFFICER COMPENSATION**
+
+***Merger-Related Compensation***
+
+We are required pursuant to Section 14A of the Exchange Act to include in this proxy statement a proposal with respect to a non-binding advisory vote on the compensation that may be paid or become payable to each of our "named executive officers", as determined in accordance with Item 402(t) of Regulation S-K, in connection with the merger pursuant to arrangements entered into with us, and we therefore are asking our shareholders to approve the following resolution:
+
+**RESOLVED, that the compensation that may be paid or become payable to Multimedia Games' named executive officers in connection with the merger, as disclosed pursuant to Item 402(t) of Regulation S-K, in this merger-related named executive officer compensation proposal, is hereby APPROVED.**
+
+The information set forth in the table below is intended to comply with Item 402(t) of Regulation S-K, which requires disclosure of information about certain compensation for each named executive officer that is based on or otherwise relates to the merger.
+
+Please note that the amounts indicated below are estimates based on the material assumptions described in the notes to the table below, which may or may not actually occur. Some of these assumptions are based on information currently available and, as a result, the actual amounts, if any, that may become payable to a named executive officer may differ in material respects from the amounts set forth below. Furthermore, for purposes of calculating such amounts, we have assumed:
+
+COMMAND=ADD_TABLEWIDTH,"100%" User-specified TAGGED TABLE
+
+| Name — Patrick Ramsey | 2,500,000 | 3,173,565 | 18,150 | 5,691,715 |
+| --- | --- | --- | --- | --- |
+| Adam Chibib | 1,440,000 | 1,904,395 | 18,732 | 3,363,127 |
+| Mick Roemer | 960,000 | 1,526,557 | 12,076 | 2,498,633 |
+| Todd McTavish | 960,000 | 996,550 | 5,007 | 1,961,557 |
+
+end of user-specified TAGGED TABLE COMMAND=ADD_LINERULETXT,NOSHADE COLOR="#000000" SIZE="1.0PT" WIDTH="26%" ALIGN="LEFT"
+
+(1) Amounts represent the cash severance that the named executive officer is eligible to receive (if any) pursuant to his employment agreement with us, and consists of a lump sum payment equal to the sum of (i) twenty-four (24) months' base salary and (ii) two (2) times the executive's target bonus.
+
+Cash severance would be payable upon a "qualifying termination", i.e., a termination of the executive's employment by him for "good reason" or by us without "cause", in either case, during the period ending twelve (12) months following a change in control (i.e., pursuant to a "double trigger" arrangement), subject to the timely execution and non-revocation of a mutual release of claims.
+
+101
+<!-- PAGE 110 -->
+ZEQ.=1,SEQ=109,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=656983,FOLIO='101',FILE='DISK112:[14ZCP1.14ZCP40801]DO40801A.;16',USER='JFUSS',CD='21-OCT-2014;19:48'
+
+Table of Contents
+
+COMMAND=ADD_TABLEWIDTH,"100%" User-specified TAGGED TABLE
+
+| Name — Patrick Ramsey | 1,250,000 | 1,250,000 |
+| --- | --- | --- |
+| Adam Chibib | 900,000 | 540,000 |
+| Mick Roemer | 600,000 | 360,000 |
+| Todd McTavish | 600,000 | 360,000 |
+
+end of user-specified TAGGED TABLE
+
+(2) Pursuant to the merger agreement, each option to purchase shares of our common stock granted prior to September 8, 2014 and each restricted stock unit award that is outstanding immediately prior to the effective time of the merger, whether vested or unvested, will be canceled and converted into the right to receive the merger consideration in respect of each share of our common stock underlying the award or subject to the option, less any applicable exercise price, less any applicable withholding taxes. If the exercise price of the option is equal to or greater than the merger consideration, the option will automatically terminate and be canceled without the payment of any consideration to the holder. Each stock option granted on or after September 8, 2014 (if any) that is outstanding immediately prior to the effective time of the merger will be assumed by GCA and converted into an option to acquire a number of GCA ordinary shares. Amounts included in this column are "single trigger" because they will be paid upon the effective time of the merger, without regard to whether the named executive officer experiences a termination of employment.
+
+The following table quantifies the value of the unvested in-the-money options to purchase our common stock and restricted stock unit awards held by each named executive officer that would become payable upon the effective time of the merger, assuming a price per share of Multimedia Games common stock equal to the merger consideration of $36.50. The following table does not quantify the value of any currently outstanding unvested performance share awards held by the named executive officers, as these awards are expected to vest and be paid out pursuant to their original terms following the completion of a three (3) year performance period ending on September 30, 2014; therefore these awards will not be subject to the treatment set forth in the merger agreement as they are not anticipated to be outstanding at the effective time.
+
+COMMAND=ADD_TABLEWIDTH,"100%" User-specified TAGGED TABLE
+
+| Name — Patrick Ramsey | 46,874 | 1,348,565 | 50,000 | 1,825,000 |
+| --- | --- | --- | --- | --- |
+| Adam Chibib | 52,812 | 1,052,120 | 23,350 | 852,275 |
+| Mick Roemer | 23,437 | 674,282 | 23,350 | 852,275 |
+| Todd McTavish | 15,625 | 345,937 | 17,825 | 650,613 |
+
+end of user-specified TAGGED TABLE
+
+(3) The amounts include the estimated value of company-paid continued healthcare coverage for each named executive officer for twelve (12) months following a qualifying termination. Such benefits are "double-trigger" (i.e., the executive must experience a qualifying termination within twelve (12) months following a change of control).
+
+***Narrative Disclosure to Merger-Related Compensation Table***
+
+For additional information relating to the named executive officers' employment agreements and the treatment of our equity awards held by the named executive officers, see the section entitled
+
+102
+<!-- PAGE 111 -->
+ZEQ.=2,SEQ=110,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=496381,FOLIO='102',FILE='DISK112:[14ZCP1.14ZCP40801]DO40801A.;16',USER='JFUSS',CD='21-OCT-2014;19:48'
+
+Table of Contents
+
+"Proposal 1: Approval of the Merger Agreement—Interests of Certain Persons in the Merger" beginning on page 58.
+
+Completion of the merger is not conditioned on approval of the merger-related named executive officer compensation proposal.
+
+***Vote Required and Board Recommendation***
+
+The vote on this proposal is a vote separate and apart from the vote to approve the merger proposal. Accordingly, you may vote not to approve the merger-related named executive officer compensation proposal and vote to approve the merger proposal and vice versa. The vote to approve the merger-related named executive officer compensation proposal is advisory in nature and, therefore, is not binding on us or our board of directors, or its compensation committee, regardless of whether the merger proposal is approved. Approval of the merger-related named executive officer compensation proposal is not a condition to completion of the merger, and failure to approve this advisory matter will have no effect on the vote to approve the merger proposal. The merger-related named executive officer compensation to be paid in connection with the merger is based on contractual arrangements with the named executive officers, and accordingly the outcome of this advisory vote will not affect the obligation to make these payments.
+
+The affirmative vote of the holders of a majority of the shares of Multimedia Games common stock that are present in person or by proxy and entitled to vote on the merger-related named executive officer compensation proposal is required to approve the merger-related named executive officer compensation proposal.
+
+**The Multimedia Games board of directors unanimously recommends that Multimedia Games shareholders vote "FOR" the merger-related named executive officer compensation proposal.**
+
+103
+<!-- PAGE 112 -->
+ZEQ.=3,SEQ=111,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=1003438,FOLIO='103',FILE='DISK112:[14ZCP1.14ZCP40801]DO40801A.;16',USER='JFUSS',CD='21-OCT-2014;19:48'
+
+Table of Contents
+
+**PROPOSAL 3: APPROVAL OF ADJOURNMENT OF SPECIAL MEETING**
+
+Multimedia Games shareholders are being asked to approve the adjournment proposal, providing for the adjournment of the special meeting if necessary or appropriate in the view of the Multimedia Games board of directors to solicit additional proxies if there are not sufficient votes at the time of the special meeting to approve the merger agreement, to allow reasonable additional time for the filing and distribution of any supplemental or amended disclosure to be disseminated to and reviewed by Multimedia Games shareholders prior to the special meeting with the consent of GCA or for any other reason.
+
+In this proposal, we are asking you to authorize the holder of any proxy solicited by our board of directors to vote in favor of adjourning the special meeting, and any later adjournments, to another time and place. If Multimedia Games shareholders approve the adjournment proposal, we could adjourn the special meeting in any of the circumstances described above, and any adjourned session of the special meeting, to a later date and use the additional time to, among other things, solicit additional proxies in favor of the merger proposal, including the solicitation of proxies from holders of Multimedia Games common stock that have previously voted against the merger proposal. Among other things, approval of the adjournment proposal could mean that, even if we had received proxies representing a sufficient number of votes against the merger proposal, we could adjourn the special meeting without a vote on the merger proposal and seek to convince the holders of those shares to change their votes to votes in favor of the approval of the merger agreement.
+
+The Multimedia Games board of directors believes that if the number of shares of Multimedia Games common stock present in person or represented at the special meeting and voting in favor of the merger proposal is not sufficient to approve the merger agreement, it is in the best interests of the holders of Multimedia Games common stock to enable the Multimedia Games board of directors to continue to seek to obtain a sufficient number of additional votes to approve the merger agreement.
+
+The vote on the adjournment proposal is a vote separate and apart from the vote on the proposal to approve the merger agreement. Accordingly, you may vote to approve the proposal to approve the merger agreement and vote not to approve the adjournment proposal, and vice versa. The adjournment proposal requires the affirmative vote of the holders of a majority of the shares of Multimedia Games common stock that are present in person or by proxy and entitled to vote on the proposal. Abstentions and broker non-votes, if any, will not be counted as votes either "FOR" or "AGAINST" the approval of the adjournment proposal and shares not in attendance will have no effect on the outcome of any vote on the adjournment proposal.
+
+If the special meeting is adjourned for the purpose of soliciting additional proxies, shareholders who have already submitted their proxies will be able to revoke them at any time prior to their use.
+
+**The Multimedia Games board of directors unanimously recommends that Multimedia Games shareholders vote "FOR" the adjournment proposal.**
+
+104
+<!-- PAGE 113 -->
+ZEQ.=4,SEQ=112,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=393889,FOLIO='104',FILE='DISK112:[14ZCP1.14ZCP40801]DO40801A.;16',USER='JFUSS',CD='21-OCT-2014;19:48' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+**MARKET PRICE OF MULTIMEDIA GAMES COMMON STOCK AND DIVIDEND INFORMATION**
+
+Our common stock trades on the NASDAQ under the symbol "MGAM". As of October 21, 2014, there were 29,732,211 shares of our common stock outstanding, held by approximately 36 shareholders of record.
+
+The following table sets forth the high and low reported closing sale prices for our common stock for the periods shown as reported on the NASDAQ and the dividends declared per share in the periods shown.
+
+COMMAND=ADD_TABLEWIDTH,"100%" User-specified TAGGED TABLE
+
+|  | Common Stock — High | Low | Dividends Declared — Regular Dividends | Special Dividends |
+| --- | --- | --- | --- | --- |
+| Fiscal Year Ended September 30, 2015 |  |  |  |  |
+| First Quarter (as of October 21, 2014) | $ 36.14 | $ 32.25 | — | — |
+| Fiscal Year Ended September 30, 2014 |  |  |  |  |
+| First Quarter | $ 35.14 | $ 26.63 | — | — |
+| Second Quarter | 35.48 | 25.03 | — | — |
+| Third Quarter | 30.93 | 26.40 | — | — |
+| Fourth Quarter | 37.00 | 23.37 | — | — |
+| Fiscal Year Ended September 30, 2013 |  |  |  |  |
+| First Quarter | $ 16.75 | $ 13.26 | — | — |
+| Second Quarter | 20.92 | 13.75 | — | — |
+| Third Quarter | 27.60 | 18.98 | — | — |
+| Fourth Quarter | 40.15 | 26.21 | — | — |
+
+end of user-specified TAGGED TABLE
+
+On September 5, 2014, the last trading day before we publicly announced the execution of the merger agreement, the high and low sale prices for our common stock as reported on the NASDAQ were $27.80 and $27.32 per share, respectively, and the closing sale price on that date was $27.78, compared to which the merger consideration represents a premium of approximately 31.4%. On October 21, 2014, the last trading day before the date of this proxy statement, the high and low sale prices for our common stock as reported on the NASDAQ were $33.46 and $32.81 per share, respectively, and the closing price on that date was $33.41. As of the record date, there were 29,732,211 shares of Multimedia Games common stock issued and outstanding and approximately 36 holders of record.
+
+No cash dividends were paid on our common stock during fiscal year 2015, 2014 or 2013. Our ability to pay future cash dividends will depend upon, among other things, our earnings, anticipated expansions, capital requirements, compliance with limitations under our revolving credit facility, and our financial condition. Furthermore, under the terms of the merger agreement, we are generally prohibited from declaring, authorizing, making or paying any dividend or distribution. We do not expect to pay cash dividends in the foreseeable future.
+
+**SHAREHOLDERS SHOULD OBTAIN A CURRENT MARKET QUOTATION FOR OUR COMMON STOCK BEFORE MAKING ANY DECISION WITH RESPECT TO THE MERGER.**
+
+105
+<!-- PAGE 114 -->
+ZEQ.=1,SEQ=113,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=329398,FOLIO='105',FILE='DISK112:[14ZCP1.14ZCP40801]DQ40801A.;25',USER='JFUSS',CD='22-OCT-2014;01:07'
+
+Table of Contents
+
+**SECURITY OWNERSHIP OF CERTAIN BENEFICIAL OWNERS AND MANAGEMENT**
+
+The following table sets forth information as of October 17, 2014 concerning "beneficial" ownership of our common stock, as that term is defined in the rules and regulations of the SEC, by: (i) all persons known by us to be beneficial owners of more than 5% of our outstanding common stock; (ii) each director; (iii) each "named executive officer", as that term is defined in Item 402(a)(3) of SEC Regulation S-K; and (iv) all executive officers and directors as a group. Beneficial ownership is determined in accordance with the rules of the SEC, which generally attribute beneficial ownership of securities to persons who possess sole or shared voting or investment power with respect to those securities, including shares of common stock issuable upon the exercise of vested options that are immediately exercisable or exercisable within sixty (60) days, shares underlying unvested restricted stock units which will become vested within sixty (60) days and shares underlying performance shares earned and expected to be issued within sixty (60) days. Unless otherwise indicated, the persons or entities identified in this table have sole voting and investment power with respect to all shares shown as beneficially owned by them, subject to applicable community property laws. Percentage ownership calculations are based on 29,732,211 shares outstanding as of October 17, 2014.
+
+COMMAND=ADD_TABLEWIDTH,"100%" User-specified TAGGED TABLE
+
+| Named Executive Officer, Director, Beneficial Holder or Identity of Group(1) — BlackRock Inc. | 2,585,612 | (3) | Percent of Shares Beneficially Owned(2) — 8.7% |
+| --- | --- | --- | --- |
+| RS Investment Management Co LLC | 2,333,899 | (4) | 7.8% |
+| Pembroke Management LTD | 1,800,300 | (5) | 6.1% |
+| Eagle Asset Management Inc. | 1,770,262 | (6) | 6.0% |
+| Patrick J. Ramsey | 534,940 | (7) | 1.8% |
+| Adam Chibib | 280,517 | (8) | * |
+| Todd F. McTavish | 20,578 | (9) | * |
+| Mick Roemer | 308,062 | (10) | 1.0% |
+| Stephen J. Greathouse | 99,450 | (11) | * |
+| Stephen P. Ives | — |  | — |
+| Neil E. Jenkins | 41,625 | (12) | * |
+| Michael J. Maples, Sr. | 12,525 | (13) | * |
+| Justin A. Orlando | 47,000 | (14) | * |
+| Robert D. Repass | 35,672 | (15) | * |
+| All executive officers and directors as a group (10 persons) | 1,380,369 | (16) | 4.5% |
+
+end of user-specified TAGGED TABLE COMMAND=ADD_LINERULETXT,NOSHADE COLOR="#000000" SIZE="1.0PT" WIDTH="26%" ALIGN="LEFT"
+
+* Represents beneficial ownership of less than 1.0%. (1) Unless otherwise noted, the address for all officers and directors is the address of our principal executive offices at 206 Wild Basin Road South, Building B, Austin, Texas 78746. (2) Percentages of ownership are based on 29,732,211 shares of common stock outstanding on October 17, 2014 plus the number of such shares of common stock outstanding pursuant to SEC Rule 13d-3(d)(1), including shares underlying restricted stock units which will become vested within sixty (60) days after October 17, 2014, shares of common stock subject to stock options which are currently exercisable or will become exercisable within sixty (60) days after October 17, 2014 and shares underlying performance shares earned and expected to be issued within sixty (60) days after October 17, 2014. Shares of common stock subject to stock options which are currently exercisable or will become exercisable within sixty (60) days after October 17, 2014, shares underlying restricted stock units which will become vested within sixty (60) days after October 17, 2014 and shares underlying performance shares earned and expected to be issued within sixty (60) days after October 17, 2014 are deemed outstanding for computing the percentage
+
+106
+<!-- PAGE 115 -->
+ZEQ.=2,SEQ=114,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=885709,FOLIO='106',FILE='DISK112:[14ZCP1.14ZCP40801]DQ40801A.;25',USER='JFUSS',CD='22-OCT-2014;01:07'
+
+Table of Contents
+
+(3) Based solely on a Schedule 13G/A filed on January 30, 2014 with the SEC, BlackRock, Inc. ("BlackRock") is the beneficial owner of 2,585,612 shares of Multimedia Games common stock and has the sole voting and dispositive power as to those 2,585,612 shares. BlackRock's address is 40 East 52nd Street, New York, New York 10022. (4) Based solely on a Form 13F filed on August 15, 2014 with the SEC, RS Investment Management Co LLC ("RS") owns 2,333,899 shares of Multimedia Games common stock. RS's address is 1 Bush Street, Suite 900, San Francisco, California 94104. (5) Based solely on a Form 13F filed on July 22, 2014 with the SEC, Pembroke Management LTD ("Pembroke") owns 1,800,300 shares of Multimedia Games common stock. Pembroke's address is 1002 Sherbrooke Street West, Suite 1700, Montreal, A8 H3A 354, Canada. (6) Based solely on a Form 13F filed on October 14, 2014 with the SEC, Eagle Asset Management Inc. ("Eagle") owns 1,770,262 shares of Multimedia Games common stock. Eagle's address is 7335 South Lewis Avenue, Suite 204, Tulsa, Oklahoma 74136. (7) Consists of (i) 28,940 shares owned by Mr. Ramsey, (ii) 441,000 shares issuable upon the exercise of stock options that are currently exercisable or exercisable within sixty (60) days, (iii) 5,000 shares underlying restricted stock units that will vest within sixty (60) days and (iv) 60,000 shares underlying performance shares earned and expected to be issued within sixty (60) days for Mr. Ramsey. (8) Consists of (i) 23,572 shares owned by Mr. Chibib, (ii) 219,583 shares issuable upon the exercise of stock options that are currently exercisable or exercisable within sixty (60) days, (iii) 2,362 shares underlying restricted stock units that will vest within sixty (60) days and (iv) 35,000 shares underlying performance shares earned and expected to be issued within sixty (60) days for Mr. Chibib. (9) Consists of (i) 8,025 shares owned by Mr. McTavish, (ii) 10,938 shares issuable upon the exercise of stock options that are exercisable within sixty (60) days, and (iii) 1,615 shares underlying restricted stock units that will vest within sixty (60) days for Mr. McTavish. (10) Consists of (i) 24,450 shares owned by Mr. Roemer, (ii) 246,250 shares issuable upon the exercise of stock options that are currently exercisable or exercisable within sixty (60) days, (iii) 2,362 shares underlying restricted stock units that will vest within sixty (60) days and (iv) 35,000 shares underlying performance shares earned and expected to be issued within sixty (60) days for Mr. Roemer. (11) Consists of (i) 78,825 shares owned by Mr. Greathouse and (ii) 20,625 shares issuable upon the exercise of stock options that are currently exercisable. (12) Consists of (i) 16,000 shares owned by Mr. Jenkins and (ii) 25,625 shares issuable upon the exercise of stock options that are currently exercisable. (13) Consists of 12,525 shares owned by Mr. Maples. (14) Consists of (i) 7,000 shares owned by Mr. Orlando and (ii) 40,000 shares issuable upon the exercise of stock options that are currently exercisable. (15) Consists of (i) 9,672 shares owned by Mr. Repass and (ii) 26,000 shares issuable upon the exercise of stock options that are currently exercisable. (16) Consists of (i) 209,009 shares owned directly, (ii) 1,030,021 shares issuable upon the exercise of stock options that are currently exercisable or exercisable within sixty (60) days, (iii) 11,339 shares underlying restricted stock units that vest within sixty (60) days and (iv) 130,000 shares underlying performance shares earned and expected to be issued within sixty (60) days.
+
+107
+<!-- PAGE 116 -->
+ZEQ.=3,SEQ=115,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=775175,FOLIO='107',FILE='DISK112:[14ZCP1.14ZCP40801]DQ40801A.;25',USER='JFUSS',CD='22-OCT-2014;01:07' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+**OTHER MATTERS**
+
+As of the date of this proxy statement the Multimedia Games board of directors has not received notice of any shareholder proposals and does not intend to propose any other matters for shareholder action at the special meeting other than as described in this proxy statement. However, if any other matters are properly brought before the meeting, it is intended that the persons voting the accompanying proxy will vote the shares represented by the proxy in accordance with their best judgment.
+
+108
+<!-- PAGE 117 -->
+ZEQ.=1,SEQ=116,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=821863,FOLIO='108',FILE='DISK112:[14ZCP1.14ZCP40801]DS40801A.;16',USER='GKIBBE',CD='21-OCT-2014;12:48'
+
+Table of Contents
+
+**FUTURE SHAREHOLDER PROPOSALS**
+
+If the merger is completed, we will have no public shareholders and there will be no public participation in any of our future shareholder meetings. However, if the merger is not completed, or if Multimedia Games is otherwise required to do so under applicable law, we will hold a 2015 annual meeting of shareholders. Any shareholder nominations or proposals for other business intended to be presented at our next annual meeting must be submitted to Multimedia Games as set forth below.
+
+The deadline for submitting a shareholder proposal for inclusion in our proxy statement and form of proxy pursuant to Rule 14a-8 under the Exchange Act for our 2015 annual meeting was September 15, 2014. Shareholder proposals that are intended to be presented at our 2015 annual meeting, but that are not intended to be considered for inclusion in our proxy statement and proxy related to that meeting, or nominations of a candidate for election as a director, must be delivered to us in accordance with our bylaws not later than the close of business on the ninetieth (90th) day nor earlier than the close of business on the one hundred twentieth (120th) day prior to the first (1st) anniversary of the preceding year's annual meeting; provided, however, that in the event that the date of the annual meeting is more than thirty (30) days before or more than seventy (70) days after such anniversary date, notice by a shareholder must be delivered not earlier than the one hundred twentieth (120th) day prior to the annual meeting and not later than the tenth (10th) day following the day on which we first publicly announce the date of the meeting. All notices must be delivered to our Corporate Secretary at 206 Wild Basin Road South, Building B, Austin, Texas 78746, Attn: Corporate Secretary. Provided we do not change our meeting date, the submission period for notices of shareholder proposals (other than shareholder proposals submitted pursuant to Rule 14a-8) and director nominations will extend from October 2, 2014, to November 1, 2014. As of the date of this proxy statement, the Multimedia Games board of directors has not received notice of any shareholder proposals for the 2015 annual meeting.
+
+109
+<!-- PAGE 118 -->
+ZEQ.=2,SEQ=117,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=331365,FOLIO='109',FILE='DISK112:[14ZCP1.14ZCP40801]DS40801A.;16',USER='GKIBBE',CD='21-OCT-2014;12:48'
+
+Table of Contents
+
+**WHERE SHAREHOLDERS CAN FIND MORE INFORMATION**
+
+We file annual, quarterly and current reports, proxy statements and other documents with the SEC under the Exchange Act. These reports, proxy statements and other information contain additional information about us and will be made available for inspection and copying at our executive offices during regular business hours by any shareholder or a representative of a shareholder as so designated in writing.
+
+Shareholders may read and copy any reports, statements or other information filed by us at the SEC's public reference room at Station Place, 100 F Street, N.E., Washington, D.C. 20549. You may also obtain copies of this information by mail from the public reference section of the SEC at Station Place, 100 F Street, N.E., Washington, D.C. 20549, at prescribed rates. Please call the SEC at 1-800-SEC-0330 for further information on the operation of the public reference room. Our SEC filings made electronically through the SEC's EDGAR system are available to the public at the SEC's website located at www.sec.gov. In addition, shareholders may obtain free copies of the documents filed with the SEC by Multimedia Games through the Investor Relations section of our website, and the "Financial Information" tab therein. The website address is www.multimediagames.com. The information on our website is not, and shall not be deemed to be a part hereof or incorporated into this or any other filings with the SEC. You may also send a written request to our Corporate Secretary at Multimedia Games Holding Company, Inc., 206 Wild Basin Road South, Building B, Austin, Texas 78746, Attn: Corporate Secretary, or by calling the Corporate Secretary at (512) 334-7500.
+
+A list of shareholders will be available for inspection by shareholders of record at our executive offices at 206 Wild Basin Road South, Building B, Austin, Texas 78746 during ordinary business hours for ten (10) days prior to the date of the special meeting and will be available for review at the special meeting or any adjournment or postponement thereof.
+
+The SEC allows us to "incorporate by reference" information that we file with the SEC in other documents into this proxy statement. This means that we may disclose important information to you by referring you to another document filed separately with the SEC. The information incorporated by reference is considered to be part of this proxy statement. This proxy statement and the information that we file later with the SEC may update and supersede the information incorporated by reference. Similarly, the information that we later file with the SEC may update and supersede the information in this proxy statement. Such updated and superseded information will not, except as so modified or superseded, constitute part of this proxy statement.
+
+We incorporate by reference each document we file under Sections 13(a), 13(c), 14 or 15(d) of the Exchange Act after the date of the initial filing of this proxy statement and before the special meeting (other than current reports on Form 8-K furnished pursuant to Item 2.02 or Item 7.01 of Form 8-K, including any exhibits included with such information, unless otherwise indicated therein). We also incorporate by reference in this proxy statement the following documents filed by us with the SEC under the Exchange Act:
+
+110
+<!-- PAGE 119 -->
+ZEQ.=3,SEQ=118,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=455435,FOLIO='110',FILE='DISK112:[14ZCP1.14ZCP40801]DS40801A.;16',USER='GKIBBE',CD='21-OCT-2014;12:48'
+
+Table of Contents
+
+We undertake to provide without charge to each person to whom a copy of this proxy statement has been delivered, upon request, by first class mail or other equally prompt means, within one (1) business day of receipt of such request, a copy of any or all of the documents incorporated by reference in this proxy statement, other than the exhibits to these documents, unless the exhibits are specifically incorporated by reference into the information that this proxy statement incorporates. You may obtain documents incorporated by reference by requesting them in writing or by telephone at the following address and telephone number:
+
+**Multimedia Games Holding Company, Inc. Attention: Corporate Secretary 206 Wild Basin Road South, Building B Austin, Texas 78746 Telephone number: (512) 334-7500**
+
+You may also obtain documents incorporated by reference by requesting them by telephone from Innisfree, our proxy solicitation firm, toll free at (888) 750-5834 or collect at (212) 750-5833. Documents should be requested by Wednesday, November 26, 2014 in order to receive them before the special meeting. You should be sure to include your complete name and address in your request.
+
+**This proxy statement does not constitute the solicitation of a proxy in any jurisdiction to or from any person to whom it is not lawful to make any solicitation in that jurisdiction. The delivery of this proxy statement should not create an implication that there has been no change in the affairs of Multimedia Games since the date of this proxy statement or that the information herein is correct as of any later date.**
+
+GCA and Merger Sub have supplied, and we have not independently verified, the information in this proxy statement exclusively concerning GCA and Merger Sub.
+
+Shareholders should not rely on information other than that contained or incorporated by reference in this proxy statement. We have not authorized anyone to provide information that is different from that contained in this proxy statement. This proxy statement is dated October 22, 2014. No assumption should be made that the information contained in this proxy statement is accurate as of any date other than that date, and the mailing of this proxy statement will not create any implication to the contrary. Notwithstanding the foregoing, if there is any material change in any of the information previously disclosed, we will, where relevant and to the extent required by applicable law, update such information through a supplement to this proxy statement.
+
+111
+<!-- PAGE 120 -->
+ZEQ.=4,SEQ=119,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=258492,FOLIO='111',FILE='DISK112:[14ZCP1.14ZCP40801]DS40801A.;16',USER='GKIBBE',CD='21-OCT-2014;12:48' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+**Annex A**
+
+AGREEMENT AND PLAN OF MERGER By and Among GLOBAL CASH ACCESS HOLDINGS, INC., MOVIE MERGER SUB, INC. and MULTIMEDIA GAMES HOLDING COMPANY, INC. Dated as of September 8, 2014
+<!-- PAGE 121 -->
+ZEQ.=1,SEQ=120,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=1047501,FOLIO='blank',FILE='DISK112:[14ZCP1.14ZCP40801]LA40801A.;7',USER='CHE107325',CD='21-OCT-2014;00:27' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+**TABLE OF CONTENTS**
+
+COMMAND=ADD_TABLEWIDTH,"100%" COMMAND=ADD_START_LINKTABLE User-specified TAGGED TABLE
+
+|  | ARTICLE I. |  |
+| --- | --- | --- |
+|  | DEFINITIONS |  |
+| Section 1.1 | Definitions | A-1 |
+|  | ARTICLE II. |  |
+|  | THE MERGER |  |
+| Section 2.1 | The Merger | A-12 |
+| Section 2.2 | Merger Closing | A-12 |
+| Section 2.3 | Effective Time | A-12 |
+| Section 2.4 | Effects of the Merger | A-12 |
+| Section 2.5 | Certificate of Formation and Bylaws of the Surviving Corporation | A-13 |
+| Section 2.6 | Board of Directors | A-13 |
+| Section 2.7 | Officers | A-13 |
+|  | ARTICLE III. |  |
+|  | EFFECT OF THE MERGER ON CAPITAL STOCK; EXCHANGE OF CERTIFICATES |  |
+| Section 3.1 | Effect on Securities | A-13 |
+| Section 3.2 | Exchange of Certificates | A-14 |
+| Section 3.3 | Equity Awards | A-16 |
+| Section 3.4 | Lost Certificates | A-18 |
+| Section 3.5 | Dissenting Shares | A-18 |
+| Section 3.6 | Withholdings | A-19 |
+| Section 3.7 | Transfers; No Further Ownership Rights | A-19 |
+|  | ARTICLE IV. |  |
+|  | REPRESENTATIONS AND WARRANTIES OF THE COMPANY |  |
+| Section 4.1 | Organization and Qualification; Subsidiaries | A-20 |
+| Section 4.2 | Capitalization; Subsidiaries | A-20 |
+| Section 4.3 | Authority Relative to Agreement | A-21 |
+| Section 4.4 | No Conflict; Required Filings and Consents | A-22 |
+| Section 4.5 | Permits and Licenses | A-23 |
+| Section 4.6 | Compliance with Laws | A-23 |
+| Section 4.7 | Company SEC Documents; Financial Statements | A-24 |
+| Section 4.8 | Information Supplied | A-25 |
+| Section 4.9 | Disclosure Controls and Procedures; Internal Controls over Financial Reporting | A-25 |
+| Section 4.10 | Absence of Certain Changes or Events | A-25 |
+| Section 4.11 | No Undisclosed Liabilities | A-25 |
+| Section 4.12 | Absence of Litigation | A-25 |
+| Section 4.13 | Environmental Matters | A-26 |
+| Section 4.14 | Employee Benefit Plans | A-26 |
+| Section 4.15 | Intellectual Property | A-28 |
+| Section 4.16 | Taxes | A-30 |
+| Section 4.17 | Material Contracts | A-31 |
+| Section 4.18 | Real Property | A-33 |
+| Section 4.19 | Labor Matters | A-33 |
+| Section 4.20 | Insurance | A-34 |
+| Section 4.21 | Suppliers and Customers | A-34 |
+
+end of user-specified TAGGED TABLE COMMAND=ADD_END_LINKTABLE
+
+A-i
+<!-- PAGE 122 -->
+ZEQ.=1,SEQ=121,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=711334,FOLIO='A-i',FILE='DISK112:[14ZCP1.14ZCP40801]LC40801A.;16',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+COMMAND=ADD_TABLEWIDTH,"100%" COMMAND=ADD_START_LINKTABLE User-specified TAGGED TABLE
+
+| Section 4.22 | Questionable Payments | A-34 |
+| --- | --- | --- |
+| Section 4.23 | Voting Requirements | A-35 |
+| Section 4.24 | Opinion of Financial Advisor | A-35 |
+| Section 4.25 | Takeover Statutes | A-35 |
+| Section 4.26 | Brokers | A-35 |
+| Section 4.27 | No Other Representations or Warranties | A-35 |
+|  | ARTICLE V. |  |
+|  | REPRESENTATIONS AND WARRANTIES OF PARENT AND MERGER SUB |  |
+| Section 5.1 | Organization and Qualification; Subsidiaries | A-36 |
+| Section 5.2 | Authority Relative to Agreement | A-36 |
+| Section 5.3 | No Conflict; Required Filings and Consents | A-37 |
+| Section 5.4 | Absence of Litigation | A-37 |
+| Section 5.5 | Absence of Certain Agreements | A-37 |
+| Section 5.6 | Information Supplied | A-38 |
+| Section 5.7 | Financing | A-38 |
+| Section 5.8 | Capitalization of Merger Sub | A-40 |
+| Section 5.9 | Gaming Approvals and Licensing Matters | A-40 |
+| Section 5.10 | Solvency | A-40 |
+| Section 5.11 | Ownership of Company Securities | A-41 |
+| Section 5.12 | Management Agreements | A-41 |
+| Section 5.13 | Brokers | A-41 |
+| Section 5.14 | No Other Representations or Warranties | A-41 |
+|  | ARTICLE VI. |  |
+|  | COVENANTS AND AGREEMENTS |  |
+| Section 6.1 | Conduct of Business by the Company Pending the Merger | A-41 |
+| Section 6.2 | Proxy Statement; Shareholders' Meeting | A-45 |
+| Section 6.3 | Appropriate Action; Consents; Filings | A-46 |
+| Section 6.4 | Access to Information; Confidentiality | A-50 |
+| Section 6.5 | Acquisition Proposals | A-50 |
+| Section 6.6 | Directors' and Officers' Indemnification and Insurance | A-53 |
+| Section 6.7 | Notification of Certain Matters | A-55 |
+| Section 6.8 | Public Announcements | A-56 |
+| Section 6.9 | Employee Matters | A-56 |
+| Section 6.10 | Conduct of Business by Parent Pending the Merger | A-58 |
+| Section 6.11 | Financing | A-58 |
+| Section 6.12 | Financing Cooperation | A-61 |
+| Section 6.13 | Merger Sub | A-63 |
+| Section 6.14 | No Control of the Company's Business | A-63 |
+|  | ARTICLE VII. |  |
+|  | CONDITIONS TO THE MERGER |  |
+| Section 7.1 | Conditions to the Obligations of Each Party | A-63 |
+| Section 7.2 | Conditions to the Obligations of Parent and Merger Sub | A-63 |
+| Section 7.3 | Conditions to the Obligations of the Company | A-64 |
+| Section 7.4 | Frustration of Closing Conditions | A-64 |
+
+end of user-specified TAGGED TABLE COMMAND=ADD_END_LINKTABLE
+
+A-ii
+<!-- PAGE 123 -->
+ZEQ.=2,SEQ=122,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=795561,FOLIO='A-ii',FILE='DISK112:[14ZCP1.14ZCP40801]LC40801A.;16',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+COMMAND=ADD_TABLEWIDTH,"100%" COMMAND=ADD_START_LINKTABLE User-specified TAGGED TABLE
+
+|  | ARTICLE VIII. |  |
+| --- | --- | --- |
+|  | TERMINATION, AMENDMENT AND WAIVER |  |
+| Section 8.1 | Termination | A-65 |
+| Section 8.2 | Effect of Termination | A-66 |
+| Section 8.3 | Termination Fees | A-67 |
+| Section 8.4 | Amendment | A-69 |
+| Section 8.5 | Extension; Waiver | A-69 |
+| Section 8.6 | Expenses | A-69 |
+| Section 8.7 | Transfer Taxes | A-69 |
+|  | ARTICLE IX. |  |
+|  | GENERAL PROVISIONS |  |
+| Section 9.1 | Non-Survival of Representations, Warranties and Agreements | A-69 |
+| Section 9.2 | Notices | A-70 |
+| Section 9.3 | Interpretation; Certain Definitions | A-70 |
+| Section 9.4 | Severability | A-72 |
+| Section 9.5 | Assignment | A-72 |
+| Section 9.6 | Entire Agreement | A-72 |
+| Section 9.7 | No Third-Party Beneficiaries | A-72 |
+| Section 9.8 | Governing Law | A-73 |
+| Section 9.9 | Specific Performance | A-73 |
+| Section 9.10 | Consent to Jurisdiction | A-74 |
+| Section 9.11 | Counterparts | A-75 |
+| Section 9.12 | WAIVER OF JURY TRIAL | A-75 |
+| Section 9.13 | Attorneys' Fees | A-75 |
+| Section 9.14 | Obligations | A-75 |
+| Section 9.15 | No Recourse Against Related Parties | A-75 |
+
+end of user-specified TAGGED TABLE COMMAND=ADD_END_LINKTABLE
+
+A-iii
+<!-- PAGE 124 -->
+ZEQ.=3,SEQ=123,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=971646,FOLIO='A-iii',FILE='DISK112:[14ZCP1.14ZCP40801]LC40801A.;16',USER='CHE107325',CD='21-OCT-2014;00:27' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+THIS AGREEMENT AND PLAN OF MERGER, dated as of September 8, 2014 (this " **Agreement** "), is made by and among Global Cash Access Holdings, Inc., a Delaware corporation (" **Parent** "), Movie Merger Sub, Inc., a Texas corporation and a wholly owned Subsidiary of Parent (" **Merger Sub** ") and Multimedia Games Holding Company, Inc., a Texas corporation (the " **Company** "). Capitalized terms used and not otherwise defined herein have the meanings set forth in *Article I* .
+
+W I T N E S S E T H:
+
+WHEREAS, the board of directors of the Company has (i) determined that this Agreement and the transactions contemplated hereby, including the Merger, are advisable and fair to and in the best interests of the Company and (ii) approved this Agreement and the transactions contemplated hereby, including the Merger, on the terms and subject to the conditions set forth in this Agreement;
+
+WHEREAS, the board of directors of Parent has unanimously approved this Agreement and the transactions contemplated hereby, including the Merger, on the terms and subject to the conditions set forth in this Agreement;
+
+WHEREAS, the board of directors of Merger Sub has unanimously approved this Agreement and the transactions contemplated hereby, including the Merger, on the terms and subject to the conditions set forth in this Agreement, and has deemed the Merger Agreement to be advisable;
+
+WHEREAS, the Company Board has recommended approval of this Agreement by the Company's shareholders and directed that this Agreement be submitted to such shareholders for approval;
+
+WHEREAS, Merger Sub will merge with and into the Company, with the Company continuing as the surviving corporation in the merger (the " **Merger** "), upon the terms and subject to the conditions set forth in this Agreement, whereby, except as expressly provided in *Section 3.1* , each issued and outstanding share of common stock, par value $0.01 per share, of the Company (the " **Company Common Stock** "), immediately prior to the Effective Time will be canceled and converted into the right to receive the Merger Consideration;
+
+WHEREAS, following the Merger, the Company's Subsidiaries will remain wholly owned subsidiaries of the Company and intend to continue to hold all gaming and other licenses held by such Subsidiaries prior to the Merger; and
+
+WHEREAS, each of Parent, Merger Sub and the Company desire to make certain representations, warranties, covenants and agreements in connection with the Merger and also to prescribe various conditions to the Merger.
+
+NOW, THEREFORE, in consideration of the foregoing and the mutual representations, warranties and covenants and subject to the conditions herein contained, and other good and valuable consideration, the receipt and sufficiency of which are hereby acknowledged, the parties hereto intending to be legally bound hereby agree as follows:
+
+ARTICLE I. DEFINITIONS
+
+Section 1.1 *Definitions.* Defined terms used in this Agreement have the respective meanings ascribed to them by definition in this Agreement and as follows:
+
+" **6.5 Notice** " shall have the meaning set forth in *Section 6.5(e)* .
+
+" **6.12 Indemnitees** " shall have the meaning set forth in *Section 6.12(b)* .
+
+" **Acceptable Confidentiality Agreement** " shall mean a confidentiality and standstill agreement containing confidentiality and standstill terms no less restrictive of the Third Party in the aggregate
+
+A-1
+<!-- PAGE 125 -->
+ZEQ.=1,SEQ=124,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=567904,FOLIO='A-1',FILE='DISK112:[14ZCP1.14ZCP40801]LE40801A.;7',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+than the terms set forth in the Confidentiality Agreement; *provided* , *however* , that such confidentiality agreement (a) shall not prohibit the making or amending of any Acquisition Proposal, and (b) shall not otherwise prohibit compliance by the Company with any of the provisions set forth in *Section 6.5* .
+
+" **Acquisition Proposal** " shall have the meaning set forth in *Section 6.5(h)(i)* .
+
+" **Affiliate** " of any Person shall mean another Person that directly or indirectly, through one or more intermediaries, controls, is controlled by, or is under common control with, such first Person.
+
+" **Agreement** " shall have the meaning set forth in the Preamble.
+
+" **Alternative Acquisition Agreement** " shall have the meaning set forth in *Section 6.5(c)* .
+
+" **Alternative Financing** " shall have the meaning set forth in *Section 6.11(d)* .
+
+" **Anti-Takeover Law** " shall have the meaning set forth in *Section 4.24* .
+
+" **Antitrust Approvals** " shall have the meaning set forth in *Section 7.1(b)* .
+
+" **Antitrust Laws** " shall have the meaning set forth in *Section 4.4(b)(ii)* .
+
+" **Assumed Options** " shall have the meaning set forth in *Section 3.3(a)(v)* .
+
+" **Book-Entry Shares** " shall have the meaning set forth in *Section 3.1(c)* .
+
+" **Brand/IP License Agreement** " shall mean any Contract pursuant to which the Company or any of its Subsidiaries is granted a license to or right to use or exploit (including by means of a covenant not to sue) Intellectual Property Rights or proprietary rights owned or controlled by Third Parties for use in connection with the Company Products and Services.
+
+" **Business Day** " shall mean any day other than a Saturday, Sunday or a day on which the Federal Reserve Bank of New York is closed.
+
+" **Bylaws** " shall have the meaning set forth in *Section 4.1* .
+
+" **Certificate of Merger** " shall have the meaning set forth in *Section 2.3* .
+
+" **Certificates** " shall have the meaning set forth in *Section 3.1(c)* .
+
+" **Change in Recommendation** " shall have the meaning set forth in *Section 6.5(c)* .
+
+" **Charter** " shall have the meaning set forth in *Section 4.1* .
+
+" **Chosen Courts** " shall have the meaning set forth in *Section 9.10(a)* .
+
+" **Code** " shall mean the Internal Revenue Code of 1986, as amended.
+
+" **Company** " shall have the meaning set forth in the Preamble.
+
+" **Company Benefit Plan** " shall mean each "employee pension benefit plan" (as defined in Section 3(2) of ERISA), each "employee welfare benefit plan" (as defined in Section 3(1) of ERISA), and each other plan, program, agreement, arrangement or policy relating to stock options, restricted stock, restricted stock units, phantom shares, stock purchases or other equity or equity-based compensation, deferred compensation, bonus, severance, change-in-control, retention, fringe benefits or other compensation or employment terms or employee benefits, including individual employment, consulting, change in control and severance agreements, whether or not subject to ERISA, in each case maintained or contributed to, or required to be maintained or contributed to, by the Company or its Subsidiaries or otherwise providing for payments or benefits for or to any current or former employees, directors, officers or consultants of the Company or any of its Subsidiaries and/or their dependents, including, for purposes of clarification, the Company Plans, but other than any Multiemployer Plan and
+
+A-2
+<!-- PAGE 126 -->
+ZEQ.=2,SEQ=125,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=1035951,FOLIO='A-2',FILE='DISK112:[14ZCP1.14ZCP40801]LE40801A.;7',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+excluding any statutorily required plans contributed to by the Company or any of its Subsidiaries that are maintained by any non-United States Governmental Authority.
+
+" **Company Board** " shall have the meaning set forth in *Section 4.3(b)* .
+
+" **Company Board Recommendation** " shall have the meaning set forth in *Section 4.3(b)* .
+
+" **Company Common Stock** " shall have the meaning set forth in the Recitals.
+
+" **Company Disclosure Letter** " shall mean the disclosure letter delivered by the Company to Parent simultaneously with the execution of this Agreement.
+
+" **Company Employees** " shall have the meaning set forth in *Section 6.9(a)* .
+
+" **Company Lease** " shall mean any lease, sublease, sub-sublease, license and other agreement under which the Company or any of its Subsidiaries leases, subleases, licenses, uses or occupies (in each case whether as landlord, tenant, sublandlord, subtenant or by other occupancy arrangement), or has the right to use or occupy, now or in the future, any real property.
+
+" **Company Material Adverse Effect** " shall mean any event, change, effect, development, condition, occurrence or circumstance which, individually or in the aggregate, has resulted in, or would reasonably be expected to result in a material adverse effect on the business, assets, liabilities, condition (financial or otherwise) or results of operations of the Company and its Subsidiaries, taken as a whole; *provided* , *however* , that events, changes, effects, developments, conditions, occurrences or circumstances to the extent resulting from, directly or indirectly, the following shall be excluded from the determination of Company Material Adverse Effect: (i) any event, change, effect, development, condition, occurrence or circumstance in any of the industries or markets in which the Company or its Subsidiaries operate; (ii) any change or prospective change in any Law or GAAP (or changes in interpretations or enforcement of any Law or GAAP) applicable to the Company or any of its Subsidiaries or any of their respective properties or assets; (iii) any change in general economic, regulatory or political conditions or the financial, credit or securities markets generally in the United States or any international market (including changes in interest or exchange rates, stock, bond and/or debt prices); (iv) any change in the gaming industry generally in the United States or any international market (including the impact of any of the foregoing); (v) delisting or suspension of trading in the Company Common Stock; (vi) any act of God, natural disasters, fires, floods, earthquakes, hurricanes, terrorism, armed hostilities, war, civil or military disturbances, epidemics, riots, interruptions, loss or malfunctions of utilities, computer (hardware or software) or communications services, accidents, labor disputes or other force majeure event or any escalation or worsening thereof; (vii) the negotiation, execution, announcement or consummation of this Agreement or the transactions contemplated hereby (including the impact of any of the foregoing on relationships, contractual or otherwise, with customers, suppliers, distributors, partners, licensors, employees, financing sources or regulators (including any Gaming Authority) of the Company or its Subsidiaries), and any Proceeding arising therefrom or in connection therewith (provided that the provisions of this clause (vii) shall not apply to the representations and warranties set forth in *Section 4.4* ); (viii) any action taken or not taken as expressly permitted or required by this Agreement (it being understood and agreed that actions taken by the Company or its Subsidiaries pursuant to its obligations under *Section 6.1* to conduct its business in the ordinary course shall not be automatically excluded in determining whether a Company Material Adverse Effect has occurred except to the extent any such action is agreed to in writing by Parent) or any action taken or not taken at the written consent or direction of Parent or Merger Sub; (ix) any changes in the market price or trading volume of the Company Common Stock, any changes in credit ratings or any failure (in and of itself) by the Company or its Subsidiaries to meet analysts' or other earnings estimates, budgets, plans, forecasts or financial projections of its revenues, earnings, cash flow, cash position or other financial performance or results of operations (but not excluding any event, change, effect, development, condition, occurrence or circumstance giving rise to any such change or failure to the extent such
+
+A-3
+<!-- PAGE 127 -->
+ZEQ.=3,SEQ=126,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=282805,FOLIO='A-3',FILE='DISK112:[14ZCP1.14ZCP40801]LE40801A.;7',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+change, effect, development or circumstance is not otherwise excluded pursuant to this definition); or (x) events, changes, effects, developments, conditions, occurrences or circumstances to the extent arising from or relating to the identity of Parent or Merger Sub or Parent's ability to obtain the Gaming Approvals; but only to the extent, in the case of clauses *(i)* , *(ii)* , *(iii)* or *(iv)* , such event, change, effect, development, condition, occurrence or circumstance does not disproportionately impact the Company and its Subsidiaries, taken as whole, relative to other companies in the industries in which the Company or its Subsidiaries operate.
+
+" **Company Material Contract** " shall have the meaning set forth in *Section 4.17(a)* .
+
+" **Company Option** " shall mean each option to purchase shares of Company Common Stock granted pursuant to any Company Plan.
+
+" **Company Owned IP** " shall mean all Intellectual Property Rights owned or purported to be owned by the Company or any of its Subsidiaries.
+
+" **Company Performance Share Award** " shall have the meaning set forth in *Section 3.3(a)(ii)* .
+
+" **Company Permits** " shall have the meaning set forth in *Section 4.5* .
+
+" **Company Plans** " shall mean any of the Multimedia Games Holding Company, Inc. 2012 Equity Incentive Plan, Multimedia Games, Inc. Consolidated Equity Incentive Plan, Multimedia Games, Inc. 2008 Employment Inducement Award Plan, Multimedia Games, Inc. 2003 Outside Director Stock Option Plan, Multimedia Games, Inc. 2002 Stock Option Plan, Multimedia Games, Inc. 2001 Stock Option Plan and Multimedia Games, Inc. 2000 Stock Option Plan.
+
+" **Company Products or Services** " shall mean the products (including hardware and software) and/or services produced, manufactured, marketed, licensed, sold, leased, distributed or operated by the Company or any of its Subsidiaries.
+
+" **Company Registered IP** " shall have the meaning set forth in *Section 4.15(a)* .
+
+" **Company Related Parties** " shall have the meaning set forth in *Section 8.3(b)(ii)* .
+
+" **Company Restricted Stock Unit** " shall mean each restricted share unit granted pursuant to any Company Plan, excluding Company Performance Share Awards.
+
+" **Company SEC Documents** " shall have the meaning set forth in *Section 4.7(a)* .
+
+" **Company Termination Fee** " shall mean (i) $11,000,000 if payable in connection with a termination of this Agreement either by (A) the Company on or before October 8, 2014 pursuant to *Section 8.1(c)(ii)* with respect to the Company entering into an Alternative Acquisition Agreement with a Person or group that is an Excluded Party or (B) Parent on or before October 8, 2014 pursuant to *Section 8.1(d)(ii)* if the event giving rise to the right of Parent to effect such termination is, or relates to, an Acquisition Proposal by an Excluded Party and (ii) $32,500,000 if payable by the Company in any other circumstance.
+
+" **Company Websites** " shall have the meaning set forth in *Section 4.6(c)* .
+
+" **Confidentiality Agreement** " shall mean the confidentiality agreement dated August 6, 2014 between Parent and the Company.
+
+" **Contract** " shall mean any written contract, agreement, commitment, franchise, indenture, lease or license.
+
+" **control** " (including the terms "controlled by" and "under common control with") shall mean the possession, directly or indirectly, or as trustee or executor, of the power to direct or cause the direction of the management and policies of a Person, whether through the ownership of voting securities, as trustee or executor, by Contract or otherwise.
+
+A-4
+<!-- PAGE 128 -->
+ZEQ.=4,SEQ=127,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=569483,FOLIO='A-4',FILE='DISK112:[14ZCP1.14ZCP40801]LE40801A.;7',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+" **Copyright** " shall mean all copyrights, copyrightable works and mask works (including all applications and registrations for each of the foregoing), and all other rights corresponding thereto throughout the world.
+
+" **Credit Facility** " shall mean the Amended and Restated Credit Agreement, dated as of August 3, 2011 (as amended, supplemented, restated or otherwise modified from time to time, the " **Credit Facility Agreement** "), by and among Multimedia Games, Inc., MGAM Systems, Inc., Comerica Bank, in its capacity as administrative agent and lead arranger, and Wells Fargo Bank, N.A., as syndication agent, and the Fee Letter (as defined in the Credit Facility Agreement) and all Loan Documents (as defined in the Credit Facility Agreement) related thereto.
+
+" **Credit Facility Agreement** " shall have the meaning set forth in the definition of "Credit Facility" in this *Section 1.1* .
+
+" **D&O Insurance** " shall have the meaning set forth in *Section 6.6(c)* .
+
+" **Damages** " shall have the meaning set forth in *Section 8.2* .
+
+" **Disclosed Conditions** " shall have the meaning set forth in *Section 5.7(e)* .
+
+" **Dissenting Shares** " shall have the meaning set forth in *Section 3.5* .
+
+" **DTC** " shall have the meaning set forth in *Section 3.2(c)(iii)* .
+
+" **DTC Payment** " shall have the meaning set forth in *Section 3.2(c)(iii)* .
+
+" **EBITDA** " shall mean, with respect to a Person, the net income of such Person (as determined in accordance with GAAP) before interest, Taxes, depreciation and amortization.
+
+" **Effective Time** " shall have the meaning set forth in *Section 2.3* .
+
+" **Electronic Data Room** " shall have the meaning set forth in *Section 4.27* .
+
+" **Environmental Claim** " shall mean any claim, action, cause of action, suit, proceeding, order, demand or written notice alleging potential liability (including potential liability for investigatory costs, cleanup costs, governmental response costs, property damages, and personal injuries), based on or under Environmental Law or arising out of, based on or resulting from (i) the existence or Release of Hazardous Substance at any location or (ii) exposure to any Hazardous Substance.
+
+" **Environmental Laws** " shall mean all Laws and binding agreements between the Company and any Governmental Authority relating to pollution, contamination, cleanup, preservation, reclamation or protection of human health or the environment, including Laws relating to the exposure to, Release, or threatened Release of Hazardous Substances, or relating to the manufacture, use, treatment, storage, disposal, transport or handling of Hazardous Substances and all Laws regarding recordkeeping, notification, disclosure and reporting requirements for Hazardous Substances.
+
+" **Environmental Permits** " shall mean any permit, license, approval or other authorization under any Environmental Laws.
+
+" **ERISA** " shall mean the Employee Retirement Income Security Act of 1974, as amended.
+
+" **ERISA Affiliate** " shall have the meaning set forth in *Section 4.14(c)* .
+
+" **Exchange Act** " shall mean the Securities Exchange Act of 1934, as amended.
+
+" **Exchange Fund** " shall have the meaning set forth in *Section 3.2(a)* .
+
+" **Excluded Party** " shall mean any Person, Third Party or group of Persons, from whom the Company or any of its Representatives has received an Acquisition Proposal that the Company Board determines in good faith, after consultation with outside counsel and its financial advisor, constitutes a Superior Proposal and with respect to which the Company delivers a 6.5 Notice on or prior to October 8, 2014.
+
+A-5
+<!-- PAGE 129 -->
+ZEQ.=5,SEQ=128,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=725247,FOLIO='A-5',FILE='DISK112:[14ZCP1.14ZCP40801]LE40801A.;7',USER='CHE107325',CD='21-OCT-2014;00:27' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+" **Equity Exchange Ratio** " shall mean the quotient obtained by *dividing* (x) the Merger Consideration by (y) the average closing sales price for a share of Parent Common Stock on the NYSE for the thirty (30) consecutive trading days ending with, and including, the trading day that is three (3) trading days prior to the Merger Closing Date.
+
+" **Fee Letter** " shall mean any fee letter entered into in connection with the Financing Commitments.
+
+" **Financing** " shall have the meaning set forth in *Section 5.7(a)* , as supplemented by *Section 6.11* , as applicable.
+
+" **Financing Agreements** " shall have the meaning set forth in *Section 5.7(b)* .
+
+" **Financing Commitments** " shall have the meaning set forth in *Section 5.7(a)* , as supplemented by *Section 6.11* , as applicable.
+
+" **Financing Source** " shall mean the Persons (other than the Company or any of its Subsidiaries or any of their respective Affiliates or controlling persons) that have committed to provide or have otherwise entered into agreements (including any Financing Commitment or Financing Agreements), in each case, in connection with the Financing or any other financing in connection with the transactions contemplated hereby, and any joinder agreements, indentures or credit agreements entered into pursuant thereto, including the Lenders, together with their respective former, current or future general or limited partners, direct or indirect shareholders, managers, members, Affiliates, officers, directors, employees, agents, representatives, successors and assigns and any former, current or future general or limited partner, direct or indirect shareholder, manager, member, Affiliate, officer, director, employee, agent, representative, successor or assign of any of the foregoing; it being understood that Parent and Merger Sub shall not be Financing Sources for any purposes hereunder.
+
+" **Foreign Antitrust Laws** " shall have the meaning set forth in *Section 4.4(b)(ii)* .
+
+" **Foreign Benefit Plan** " shall mean each Company Benefit Plan maintained outside of the United States that provides compensation or benefits in respect of any employee that is primarily based outside of the United States.
+
+" **Funding Failure Termination Fee** " shall have the meaning set forth in *Section 8.3(a)(ii)* .
+
+" **GAAP** " shall mean the United States generally accepted accounting principles, consistently applied.
+
+" **Gaming Approvals** " shall have the meaning set forth in *Section 4.4(b)(iv)* .
+
+" **Gaming Authority** " shall mean any Governmental Authority with regulatory control and authority or jurisdiction over the manufacture, sale, lease, distribution or operation of gaming devices or equipment, the design, ownership, operation or distribution of internet, online, interactive or mobile gaming services or products, the ownership or operation of any current casinos or any other gaming activities and operations.
+
+" **Gaming Law** " shall mean, with respect to any Person, any Law governing or relating to the manufacture, sale, lease, distribution or operation of gaming devices or equipment, the design, ownership, operation or distribution of internet, online, interactive or mobile gaming services or products, the ownership or operation of any current casinos or other gaming activities and operations of such Person and its Affiliates and Subsidiaries, including the rules, regulations and standards promulgated by any Gaming Authority.
+
+" **Governmental Authority** " shall mean any United States (federal, state, county or local), tribal or foreign government, or any political subdivision thereof, or any governmental, regulatory, or judicial or
+
+A-6
+<!-- PAGE 130 -->
+ZEQ.=1,SEQ=129,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=59235,FOLIO='A-6',FILE='DISK112:[14ZCP1.14ZCP40801]LG40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+administrative authority, agency, board, tribunal, body, bureau or commission, including any Gaming Authority.
+
+" **Hazardous Substance** " shall mean substances defined, listed, classified or regulated as "hazardous substances," "hazardous wastes," "hazardous materials," "extremely hazardous wastes," "restricted hazardous wastes," "toxic substances," "toxic pollutants," "contaminants," "pollutants," "radioactive materials," "petroleum," "petroleum by-product," or words of similar import under any Environmental Law.
+
+" **HSR Act** " shall mean the Hart-Scott-Rodino Antitrust Improvements Act of 1976, as amended, and the rules and regulations thereunder.
+
+" **Indebtedness** " shall mean, with respect to any Person, without duplication: (a) any obligations for borrowed money, (b) any obligations evidenced by bonds, notes, debentures, letters of credit or similar instruments, (c) any capital lease obligations, (d) any net obligations in respect of interest rate, currency or commodity swaps, collars, caps, hedges, futures contract, forward contract, option or other derivative instruments or arrangements and (e) any obligations to guarantee any of the foregoing types of obligations on behalf of any Person; *provided* , *however* , that, with respect to the Company, "Indebtedness" shall not be deemed to include any intercompany Indebtedness to the extent owing by the Company to any of its Subsidiaries, by a Subsidiary of the Company to the Company or by one Subsidiary of the Company to another Subsidiary of the Company.
+
+" **Indemnitee** " shall mean any individual who, on or prior to the Effective Time, was an officer, director or employee of the Company or served on behalf of the Company as an officer, director or employee of any of the Company's Subsidiaries or Affiliates or any of their predecessors in their capacities as such and the heirs, executors, trustees, fiduciaries and administrators of such officer, director or employee.
+
+" **Intellectual Property Rights** " shall mean all intellectual property and other similar proprietary rights, whether registered or unregistered, including all U.S. and foreign (i) Patents, (ii) Trademarks, (iii) Copyrights, (iv) rights in domain names, domain name registrations, computer programs and software (whether in source code, object code or other form), application programming interfaces, algorithms, databases, compilations and data, technology and documentation supporting the foregoing, (v) Trade Secrets, (vi) all rights of publicity and other rights to use the names and likeness of individuals, (vii) rights in designs, (viii) other intellectual property rights (whether or not appropriate steps have been taken to protect such rights under applicable Law) and (ix) the right (whether at law, in equity, by contract or otherwise) to use, practice or otherwise exploit any of the foregoing.
+
+" **Intentional Breach** " shall mean, with respect to any representation, warranty, agreement or covenant of a party in this Agreement, an action or omission taken or omitted to be taken by such party in material breach of such representation, warranty, agreement or covenant that the breaching party intentionally takes (or fails to take) and with the actual knowledge that such action or omission would, or would reasonably be expected to, cause such material breach of such representation, warranty, agreement or covenant.
+
+" **IRS** " shall mean the United States Internal Revenue Service.
+
+" **Key Employee** " shall mean any Director or executive officer of the Company or any other Person eligible to receive benefits under the Company's Long Term Incentive Plan.
+
+" **Knowledge** " shall mean (i) with respect to the Company, the actual knowledge of the individuals set forth in *Section 1.1* of the Company Disclosure Letter after reasonable review of the Company's records pertaining to such matters and reasonable inquiry of the other executives and managers having primary responsibility for such matters and (ii) with respect to Parent or Merger Sub, the actual knowledge of the individuals set forth in *Section 1.1* of the Parent Disclosure Letter after reasonable
+
+A-7
+<!-- PAGE 131 -->
+ZEQ.=2,SEQ=130,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=39572,FOLIO='A-7',FILE='DISK112:[14ZCP1.14ZCP40801]LG40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+review of the Parent's records pertaining to such matters and reasonable inquiry of the other executives and managers having primary responsibility for such matters.
+
+" **Law** " shall mean any and all domestic (federal, state, county or local), tribal or foreign statutes, laws, ordinances, rules, regulations, orders, judgments or decrees issued by any Governmental Authority, including Gaming Laws.
+
+" **Leased Real Property** " shall have the meaning set forth in *Section 4.18(b)* .
+
+" **Lenders** " shall have the meaning set forth in *Section 5.7(a)* .
+
+" **Licensed IP Rights** " shall mean any Intellectual Property Rights of a Third Party that are licensed to the Company or any of its Subsidiaries or that the Company or any of its Subsidiaries is granted a right to use or exploit (including by means of a covenant not to sue) pursuant to a Brand/IP License Agreement.
+
+" **Lien** " shall mean liens (statutory or other), claims, mortgages, encumbrances, pledges, deeds of trust, security interests, easements, rights-of-way, covenants, conditions, restrictions (including transfer restrictions), options, rights of first offer or refusal, third party rights, limitations on voting rights, encroachments, title defects or charges of any kind or nature whatsoever, excluding restrictions imposed by securities laws.
+
+" **Malicious Code** " shall have the meaning set forth in *Section 4.15(h)* .
+
+" **Marketing Period** " shall mean the first period of fifteen (15) consecutive Business Days after the date of this Agreement throughout which: (a) Parent shall have the Required Financial Information that the Company is required to provide to Parent pursuant to *Section 6.12(a)* in connection with any portion of the Financing to be consummated on the Merger Closing Date; *provided* , that if the Company shall in good faith reasonably believe it has delivered the Required Financial Information, it may deliver to Parent a written notice to that effect (stating when it believes it completed such delivery), in which case the Marketing Period shall be deemed to have commenced on the date of such notice unless Parent in good faith reasonably believes the Company has not completed delivery of the Required Financial Information or cannot obtain from the Financing Sources confirmation that the Required Financial Information has been provided and, within four Business Days after the delivery of such notice by the Company, delivers a written notice to the Company to that effect (stating with specificity which Required Financial Information the Company has not delivered) and (b) nothing shall have occurred and no condition shall exist that would cause any of the conditions set forth in *Section 7.1* and *Section 7.2* to fail to be satisfied at the Merger Closing; *provided* , that such fifteen (15)-consecutive-Business-Day period shall (i) exclude November 24, 2014 through and including November 28, 2014 and (ii) end prior to December 22, 2014 or commence after January 5, 2015; *provided* , *further* , that the Marketing Period shall not be deemed to have commenced if, prior to the completion of such fifteen (15)-consecutive-Business-Day period, (A) the Company's auditor shall have withdrawn its audit opinion with respect to any year-end audited financial statements set forth in the Company SEC Documents or (B) the Company shall have publicly announced any intention to restate any material financial information included in the Required Financial Information or that any such restatement is under consideration or may be a possibility, in which case the Marketing Period shall not be deemed to commence unless and until such restatement has been completed and the Company SEC Documents have been amended or the Company has announced that no restatement shall be required.
+
+" **Material Company Lease** " shall mean any Company Lease which has annual rent obligations in excess of $1,000,000 or has a remaining term (excluding any renewal options), as of the date hereof, in excess of three (3) years.
+
+" **Merger** " shall have the meaning set forth in the Recitals.
+
+" **Merger Closing** " shall have the meaning set forth in *Section 2.2* .
+
+A-8
+<!-- PAGE 132 -->
+ZEQ.=3,SEQ=131,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=1022312,FOLIO='A-8',FILE='DISK112:[14ZCP1.14ZCP40801]LG40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+" **Merger Closing Date** " shall have the meaning set forth in *Section 2.2* .
+
+" **Merger Consideration** " shall have the meaning set forth in *Section 3.1(c)* .
+
+" **Merger Sub** " shall have the meaning set forth in the Preamble.
+
+" **Multiemployer Plan** " shall mean any "multiemployer plan" within the meaning of Section 3(37) of ERISA.
+
+" **NASDAQ** " shall mean the NASDAQ Global Select Market.
+
+" **New Financing Commitment Letter** " shall have the meaning set forth in *Section 6.11(d)* .
+
+" **New Options** " means, subject to *Section 6.1(e)* , any Company Options that are awarded by the Company on or after the date hereof.
+
+" **New Plans** " shall have the meaning set forth in *Section 6.9(a)(iii)* .
+
+" **NYSE** " shall mean the New York Stock Exchange.
+
+" **Open Source License** " shall have the meaning set forth in *Section 4.15(g)*
+
+" **Open Source Materials** " shall have the meaning set forth in *Section 4.15(g)* .
+
+" **Option Cash Payment** " shall have the meaning set forth in *Section 3.3(a)(i)* .
+
+" **Order** " shall mean any decree, order, judgment, injunction, temporary restraining order or other order in any suit or Proceeding by, before or with any Governmental Authority.
+
+" **Parent** " shall have the meaning set forth in the Preamble.
+
+" **Parent Common Stock** " shall mean Parent's common stock, par value $0.001 per share.
+
+" **Parent Disclosure Letter** " shall have the meaning set forth in the preamble to *Article V.*
+
+" **Parent Material Adverse Effect** " shall mean any change, effect, development or circumstance that, individually or in the aggregate, prevents or materially delays, or would reasonably be expected to prevent or materially delay, the ability of Parent or Merger Sub to consummate the Merger and the other transactions contemplated by this Agreement on a timely basis.
+
+" **Parent Organizational Documents** " shall have the meaning set forth in *Section 5.1* .
+
+" **Parent Related Parties** " shall have the meaning set forth in *Section 8.3(b)(iii)* .
+
+" **Patent** " shall mean all issued patents (including utility and design patents) and pending patent applications (including invention disclosures, records of invention, certificates of invention and applications for certificates of inventions and priority rights) filed with any Registration Office, including all non-provisional and provisional patent applications, substitutions, continuations, continuations-in-part, divisions, renewals, revivals, reissues, re-examinations and extensions thereof.
+
+" **Paying Agent** " shall have the meaning set forth in *Section 3.2(a)* .
+
+" **Performance Share Award Payment** " shall have the meaning set forth in *Section 3.3(a)(ii)* .
+
+" **Permitted Liens** " shall mean (a) any Lien for Taxes, assessments or utilities not yet due or delinquent and Liens for Taxes being contested in good faith or for which adequate accruals or reserves have been established on the financial statements of the Company in accordance with GAAP; (b) any zoning and other land use restrictions; (c) Liens that will be removed prior to or on the Merger Closing; (d) survey exceptions, utility easements, rights of way and similar agreements, easements, covenants, reservations, restrictions and Liens that are imposed by any Governmental Authority having jurisdiction thereon or by Law or otherwise or typical for the applicable property type and locality, *provided* , *however* , that, such Liens do not, individually or in the aggregate, materially impair current
+
+A-9
+<!-- PAGE 133 -->
+ZEQ.=4,SEQ=132,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=674397,FOLIO='A-9',FILE='DISK112:[14ZCP1.14ZCP40801]LG40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+occupancy, materially detract from the value of, or materially impair the present or continued use and operation of the affected asset (and excluding in all events any Liens securing the payment of money); (e) Liens disclosed on existing title reports or existing surveys, in each case to the extent provided to Parent; (f) Liens or state of facts that would be shown on a title report, an accurate survey or a personal inspection of the property, *provided* , *however* , that, such Liens do not, individually or in the aggregate, materially impair current occupancy, materially detract from the value of, or materially impair the present or continued use and operation of the affected asset (and excluding in all events any Liens securing the payment of money); (g) exceptions disclosed by any title insurance commitment or title insurance policy for any real property owned or leased by the Company and its Subsidiaries issued by a title company and delivered or otherwise made available to Parent; (h) construction, mechanic's, materialmen's, laborer's, workmen's, repairmen's, carrier's, warehouseman's, landlords' and similar Liens, including all statutory Liens, arising or incurred in the ordinary course of business; (i) rights of parties in possession pursuant to Company Leases disclosed to Parent; (j) licenses or other grants of rights to use Intellectual Property Rights and covenants not to sue; (k) Liens that are set forth in any permits, licenses, governmental authorizations, registrations or approvals that have been provided to Parent; (l) Liens for existing Indebtedness or liabilities as of the date hereof disclosed in the Company Disclosure Letter; (m) in the case of Leased Real Property, Liens to which the fee or other superior interest are subject; or (n) any other Liens that do not secure a liquidated amount, that have been incurred or suffered in the ordinary course of business.
+
+" **Person** " shall mean an individual, a corporation (including non-for-profit corporation), general or limited partnership, limited liability company, unlimited liability company, joint venture, association, Governmental Authority, unincorporated organization, trust or any other entity of any kind or nature.
+
+" **Placement Fee Agreement** " shall mean an agreement under which the Company places player terminals and systems as well as its proprietary and other licensed game content at a customer's facility in return for either a share of the revenues that these terminals and systems generate or for a fixed daily lease fee.
+
+" **Preferred Stock** " shall have the meaning set forth in *Section 4.2.*
+
+" **Proceeding** " shall have the meaning set forth in *Section 4.12* .
+
+" **Proposed Changed Terms** " shall have the meaning set forth in *Section 6.5(e)(ii)* .
+
+" **Proxy Date** " shall have the meaning set forth in *Section 6.2(c)* .
+
+" **Proxy Statement** " shall have the meaning set forth in *Section 6.2(a)* .
+
+" **Proxy Statement Clearance Date** " shall mean the first date on which the SEC (or staff of the SEC) has, orally or in writing, confirmed that (a) it has no further comments on the Proxy Statement, or (b) it does not intend to review the Proxy Statement; *provided* , *however* , in the case of clause (b), the Proxy Statement Clearance Date shall not be earlier than the date which is ten (10) days following the date on which the Proxy Statement is initially filed with the SEC.
+
+" **Registration Office** " shall mean the United States Patent and Trademark Office, United States Copyright Office and all equivalent foreign patent, trademark, copyright offices or other Governmental Authority.
+
+" **Release** " shall mean any release, spill, emission, discharge, leaking, pumping, injection, deposit, disposal, dispersal, leaching or migration of Hazardous Substances into the environment (including ambient air, surface water, groundwater and surface or subsurface strata) or into or out of any property.
+
+" **Representatives** " shall mean, with respect to any Person, any Subsidiary of such Person and such Person's and each of its respective Subsidiaries' directors (in their capacity as such), officers, employees,
+
+A-10
+<!-- PAGE 134 -->
+ZEQ.=5,SEQ=133,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=84895,FOLIO='A-10',FILE='DISK112:[14ZCP1.14ZCP40801]LG40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+investment bankers, financial advisors, attorneys, accountants or other advisors, agents or representatives.
+
+" **Required Financial Information** " shall mean all financial and other information regarding the Company that is of the type and form customarily included in offering memoranda for private placements under Rule 144A of the Securities Act (and with such exceptions as is customary for an offering under Rule 144A of the Securities Act, including no need to (A) comply with Rules 3-09, 3-10 and 3-16 of Regulation S-X or otherwise provide separate financial statements of any Subsidiary or (B) include Compensation Discussion and Analysis required by Regulation S-K Item 402(b)) and in form and substance reasonably necessary for the Financing Sources to receive customary accountants' comfort letters, to consummate the offerings of any debt securities contemplated by the Financing Commitment and of the type customary for one or more confidential information memoranda in connection with the Financing, together with any replacements or restatements thereof, if any such information would be unusable under customary practices for such purposes; provided, that such information shall not include, and Parent shall be solely responsible for, the preparation of pro forma financial information, including pro forma cost savings, synergies, capitalization or other pro forma adjustments desired to be incorporated into any pro forma financial information.
+
+" **Required Gaming Approvals** " shall have the meaning set forth in *Section 7.1(c)* .
+
+" **Required Payment Amount** " shall have the meaning set forth in *Section 5.7(d)* .
+
+" **Requisite Shareholder Approval** " shall have the meaning set forth in *Section 4.3(a)* .
+
+" **Restraints** " shall have the meaning set forth in *Section 7.1(d)* .
+
+" **Restricted Award Payment** " shall have the meaning set forth in *Section 3.3(a)(iii)* .
+
+" **SEC** " shall mean the Securities and Exchange Commission.
+
+" **Secretary of State** " shall mean the Secretary of State of the State of Texas.
+
+" **Securities Act** " shall mean the Securities Act of 1933, as amended.
+
+" **Series A Preferred Stock** " shall have the meaning set forth in *Section 4.2(a)* .
+
+" **Series B Preferred Stock** " shall have the meaning set forth in *Section 4.2(a)* .
+
+" **Shareholders' Meeting** " shall have the meaning set forth in *Section 6.2(c)* .
+
+" **Solvent** " shall have the meaning set forth in *Section 5.10* .
+
+" **Subsidiary** " of any Person shall mean any corporation, partnership, joint venture or other legal entity of which such Person (either above or through or together with any other Subsidiary) owns, directly or indirectly, more than fifty percent (50%) of the stock or other equity interests, the holders of which are generally entitled to vote for the election of the board of directors or other governing body of such corporation or other legal entity.
+
+" **Superior Proposal** " shall have the meaning set forth in *Section 6.5(h)(ii)* .
+
+" **Surviving Corporation** " shall have the meaning set forth in *Section 2.1* .
+
+" **Tax** " or " **Taxes** " shall mean any and all federal, state and local taxes of any country, tax assessments and other similar governmental charges, duties, impositions and liabilities in the nature of a tax, including taxes based upon or measured by gross receipts, income, profits, sales, use and occupation, and value added, ad valorem, stamp transfer, franchise, withholding, payroll, recapture, employment, excise and property taxes, together with all interest, penalties and additions imposed with respect to such amounts (whether disputed or not), and any obligations under any Contract with any other Person with respect to such amounts, including any liability for taxes of a predecessor entity.
+
+A-11
+<!-- PAGE 135 -->
+ZEQ.=6,SEQ=134,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=183612,FOLIO='A-11',FILE='DISK112:[14ZCP1.14ZCP40801]LG40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+" **Tax Return** " shall mean returns, estimates, reports, claims for refund and information statements, including any schedule or attachment thereto or any amendment thereof, with respect to Taxes filed or required to be filed with the IRS or any other governmental or taxing authority.
+
+" **TBOC** " shall mean the Texas Business Organizations Code.
+
+" **Termination Date** " shall have the meaning set forth in *Section 8.1(b)(i)* .
+
+" **Third Party** " shall mean any Person or group other than Parent, Merger Sub and their respective Affiliates.
+
+" **Trade Secret** " shall mean all proprietary, confidential and/or non-public information, and know-how, however documented, including all trade secrets within the meaning of applicable Law.
+
+" **Trademark** " shall mean all (i) trademarks, service marks, logos, insignias, designs, trade dress, symbols, trade names and fictitious business names, emblems, signs, insignia, slogans, other similar designations of source or origin and general intangibles of like nature (including all applications and registrations for each of the foregoing), and (ii) all goodwill associated with or symbolized by any of the foregoing.
+
+" **Total Common Merger Consideration** " shall have the meaning set forth in *Section 3.1(c)* .
+
+ARTICLE II. THE MERGER
+
+Section 2.1 *The Merger* . Upon the terms and subject to the conditions of this Agreement, and in accordance with the TBOC, at the Effective Time, Merger Sub shall be merged with and into the Company, whereupon the separate corporate existence of Merger Sub shall cease, and the Company shall continue its corporate existence as the surviving entity in the Merger (the " **Surviving Corporation** ") and shall continue to be governed by the laws of the State of Texas.
+
+Section 2.2 *Merger Closing* . The closing of the Merger (the " **Merger Closing** ") will take place (a) at the offices of Pillsbury Winthrop Shaw Pittman LLP, 1540 Broadway, New York, New York 10036 at 11:00 a.m., New York City time, on the later of (i) the second (2nd) Business Day after satisfaction or (to the extent permitted by Law) waiver of the conditions set forth in *Article VII* (other than those conditions that by their terms are to be satisfied at the Merger Closing, but subject to the satisfaction or (to the extent permitted by Law) waiver of those conditions) and (ii) the earlier of (A) a date during the Marketing Period to be specified by Parent on no fewer than two (2) Business Days' notice to the Company and (B) the third (3rd) Business Day after the end of the Marketing Period or (b) at such other place, time or date (including by electronic effectuation) as agreed to in writing by the parties hereto. The date on which the Merger Closing occurs is referred to in this Agreement as the " **Merger Closing Date** ."
+
+Section 2.3 *Effective Time* . Subject to the provisions of this Agreement, as promptly as reasonably practicable on the Merger Closing Date, the parties hereto shall cause a certificate of merger (the " **Certificate of Merger** "), with respect to the Merger, in such form as is required by, and executed and acknowledged in accordance with, the relevant provisions of the TBOC, to be filed with the Secretary of State and shall make all other filings and recordings required under the TBOC. The Merger shall become effective on such date and time as the Certificate of Merger is duly filed with, and accepted by, the Secretary of State or at such later date or time as Parent and the Company shall agree and specify in the Certificate of Merger. The date and time at which the Merger becomes effective is referred to in this Agreement as the " **Effective Time** ."
+
+Section 2.4 *Effects of the Merger* . The Merger shall have the effects set forth in the applicable provisions of the TBOC. Without limiting the generality of the foregoing, from and after the Effective
+
+A-12
+<!-- PAGE 136 -->
+ZEQ.=1,SEQ=135,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=286514,FOLIO='A-12',FILE='DISK112:[14ZCP1.14ZCP40801]LI40801A.;9',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+Time, the Surviving Corporation shall possess all properties, rights, privileges, powers and franchises of the Company and Merger Sub, and all of the claims, obligations, liabilities, debts and duties of the Company and Merger Sub shall become the claims, obligations, liabilities, debts and duties of the Surviving Corporation.
+
+Section 2.5 *Certificate of Formation and Bylaws of the Surviving Corporation* . Subject to *Section 6.6* , at the Effective Time, (a) the certificate of formation of the Surviving Corporation shall be amended and restated in their entirety to be identical to the certificate of formation of Merger Sub as in effect immediately prior to the Effective Time and (b) the bylaws of the Surviving Corporation shall be amended and restated in their entirety to be identical to the bylaws of Merger Sub as in effect immediately prior to the Effective Time, in each case, (x) except that references to the name of Merger Sub shall be replaced with references to the name of the Surviving Corporation and (y) until thereafter amended in accordance with applicable Law and the applicable provisions of the certificate of formation and bylaws of the Surviving Corporation.
+
+Section 2.6 *Board of Directors* . Subject to applicable Law, each of the parties hereto shall take all necessary action to ensure that the board of directors of the Surviving Corporation effective as of, and immediately following, the Effective Time shall consist of the members of the board of directors of Merger Sub immediately prior to the Effective Time, each to hold office in accordance with the certificate of formation and bylaws of the Surviving Corporation until their respective successors shall have been duly elected, designated or qualified, or until their earlier death, incapacitation, retirement, resignation or removal in accordance with the certificate of formation and bylaws of the Surviving Corporation.
+
+Section 2.7 *Officers* . From and after the Effective Time, the officers of Merger Sub immediately prior to the Effective Time shall be the officers of the Surviving Corporation, until their respective successors are duly elected or appointed and qualified in accordance with applicable Law and the certificate of formation and bylaws of the Surviving Corporation or their earlier death, incapacitation, retirement, resignation or removal.
+
+ARTICLE III. EFFECT OF THE MERGER ON CAPITAL STOCK; EXCHANGE OF CERTIFICATES
+
+Section 3.1 *Effect on Securities* . At the Effective Time, by virtue of the Merger and without any action on the part of the Company, Merger Sub or the holders of any securities of the Company or Merger Sub:
+
+A-13
+<!-- PAGE 137 -->
+ZEQ.=2,SEQ=136,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=106536,FOLIO='A-13',FILE='DISK112:[14ZCP1.14ZCP40801]LI40801A.;9',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+Section 3.2 *Exchange of Certificates* .
+
+A-14
+<!-- PAGE 138 -->
+ZEQ.=3,SEQ=137,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=529712,FOLIO='A-14',FILE='DISK112:[14ZCP1.14ZCP40801]LI40801A.;9',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+A-15
+<!-- PAGE 139 -->
+ZEQ.=4,SEQ=138,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=656471,FOLIO='A-15',FILE='DISK112:[14ZCP1.14ZCP40801]LI40801A.;9',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Section 3.3 *Equity Awards.*
+
+A-16
+<!-- PAGE 140 -->
+ZEQ.=1,SEQ=139,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=1031970,FOLIO='A-16',FILE='DISK112:[14ZCP1.14ZCP40801]LK40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+A-17
+<!-- PAGE 141 -->
+ZEQ.=2,SEQ=140,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=774276,FOLIO='A-17',FILE='DISK112:[14ZCP1.14ZCP40801]LK40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+Section 3.4 *Lost Certificates.* If any Certificate shall have been lost, stolen or destroyed, then upon the making of an affidavit in form and substance reasonably acceptable to Parent of that fact by the Person claiming such Certificate to be lost, stolen or destroyed and, if such Person owns at least 0.1% of the authorized capital stock of the Company and if required by the Surviving Corporation, the posting by such Person of a bond, in such customary and reasonable amount as the Surviving Corporation may direct, as indemnity against any claim that may be made against it with respect to such Certificate, the Paying Agent will issue in exchange for such lost, stolen or destroyed Certificate the Merger Consideration to which the holder thereof is entitled pursuant to this *Article III* .
+
+Section 3.5 *Dissenting Shares.* Notwithstanding anything to the contrary contained in this Agreement, shares of Company Common Stock issued and outstanding immediately prior to the Effective Time that are held by any holder, who did not vote in favor of the Merger (or consent thereto in writing) and who is entitled to demand, and who properly demands, appraisal of such shares (" **Dissenting Shares** ") pursuant to, and who complies in all respects with, the provisions of Sections 10.351 through 10.368 of the TBOC, as applicable, shall not be converted into or be exchangeable for the right to receive the Merger Consideration, but instead such holder of Dissenting Shares shall be entitled to payment of the fair value of such Dissenting Shares in accordance with the applicable provisions of the TBOC (and, at the Effective Time, such Dissenting Shares shall no longer be outstanding and shall automatically be canceled and shall cease to exist, and such holder shall cease to have any rights with respect thereto, except the right to receive the fair value of such Dissenting Shares in accordance with the applicable provisions of the TBOC), unless and until such holder shall have failed to perfect or shall have effectively withdrawn or lost the right to receive the fair value of such Dissenting Shares under the TBOC. If any such holder of Dissenting Shares shall have failed to
+
+A-18
+<!-- PAGE 142 -->
+ZEQ.=3,SEQ=141,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=545750,FOLIO='A-18',FILE='DISK112:[14ZCP1.14ZCP40801]LK40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+perfect or shall have effectively withdrawn or lost such right, then the right of such holder to be paid the fair value of such Dissenting Shares shall cease and such Dissenting Shares shall thereupon be treated as if they had been converted as of the Effective Time into and become exchangeable solely for the right to receive the Merger Consideration payable in accordance with *Section 3.1(b)* . Prior to the Effective Time, the Company shall comply, and after the Effective Time, Parent shall comply, with the information delivery and other requirements under Sections 10.355 and 10.358 of the TBOC. The Company shall give Parent (i) prompt notice of any written demands for appraisal of any shares of Company Common Stock, attempted withdrawals of such demands and any other instruments served pursuant to the TBOC and received by the Company relating to demands for appraisal and (ii) the opportunity to participate in negotiations and proceedings with respect to demands for appraisal under the TBOC. The Company shall not, except with the prior written consent of Parent, voluntarily make any payment with respect to any demands for appraisal of Company Common Stock, or settle, or offer or agree to settle, any such demands. Any portion of the Merger Consideration made available to the Paying Agent pursuant to *Section 3.2(a)* to pay for shares of Company Common Stock for which appraisal rights have been perfected shall be returned to Parent upon demand; provided that Parent shall remain liable to pay the Merger Consideration with respect to such shares upon withdrawal of the demand for, or loss of the right to, appraisal for such shares. Each shareholder who, pursuant to Sections 10.351 through 10.368 of the TBOC, as applicable, becomes entitled to payment of the fair value of any Dissenting Shares will receive payment therefor from the Surviving Corporation (but only after the value therefor has been agreed upon or finally determined pursuant to such applicable section).
+
+Section 3.6 *Withholdings.* Parent, the Company, Merger Sub, the Surviving Corporation and the Paying Agent shall be entitled to deduct and withhold from any payment of Merger Consideration, any Option Cash Payment, any Performance Share Award Payment and any Restricted Award Payment, as applicable, and any amounts otherwise payable pursuant to this Agreement to any holder of Company Common Stock, Company Options, Company Performance Share Awards or Company Restricted Stock Units such amounts as Parent, the Company, Merger Sub, the Surviving Corporation or the Paying Agent are required to deduct and withhold with respect to the making of such payment under the Code or any provision of applicable Tax Law. To the extent that amounts are so withheld and timely paid over to the appropriate taxing authority by Parent, the Company, Merger Sub, the Surviving Corporation or the Paying Agent, such withheld amounts shall be treated for all purposes of this Agreement as having been paid to the Person in respect of which such deduction and withholding was made.
+
+Section 3.7 *Transfers; No Further Ownership Rights.* At the Effective Time, the stock transfer books of the Company shall be closed, and there shall be no registration of transfers on the stock transfer books of the Company or the Surviving Corporation of shares of Company Common Stock that were outstanding immediately prior to the Effective Time. If Certificates are presented to the Surviving Corporation or Parent for transfer following the Effective Time, they shall be canceled against delivery of the applicable Merger Consideration, as provided for in *Section 3.1(c)* , for each share of Company Common Stock formerly represented by such Certificates.
+
+ARTICLE IV. REPRESENTATIONS AND WARRANTIES OF THE COMPANY
+
+Except to the extent as (i) disclosed in any form, report, schedule, statement or other document (including all amendments thereto) filed with, or furnished to, the SEC by the Company, since October 1, 2012 and publicly available prior to the date hereof (but excluding any forward-looking disclosures set forth in any risk factor section, any disclosure in any section relating to forward-looking statements, any other disclosures included in any such form, report, schedule, statement or other document to the extent they are predictive or forward-looking in nature) ( *provided* that in no event
+
+A-19
+<!-- PAGE 143 -->
+ZEQ.=4,SEQ=142,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=184204,FOLIO='A-19',FILE='DISK112:[14ZCP1.14ZCP40801]LK40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+shall any disclosure in any such form, report, schedule, statement or other document qualify or limit the representations and warranties of the Company set forth in *Sections 4.2(a)* , *4.3* or *4.26* ) or (ii) disclosed in the corresponding section of the Company Disclosure Letter (it being understood that any information set forth in one section or subsection of the Company Disclosure Letter shall be deemed to apply to and qualify the representation and warranty set forth in this Agreement to which it corresponds in number and, whether or not an explicit reference or cross-reference is made, each other representation and warranty set forth in this *Article IV* for which it is reasonably apparent on its face that such information is relevant to such other representation and warranty), the Company hereby represents and warrants to Parent and Merger Sub as follows:
+
+Section 4.1 *Organization and Qualification; Subsidiaries.* Each of the Company and its Subsidiaries is a corporation or legal entity duly organized or formed, validly existing and (to the extent applicable) in good standing, under the laws of its jurisdiction of organization or formation and has the requisite corporate or similar entity power and authority to conduct its business as it is now being conducted. Each of the Company and its Subsidiaries is duly qualified or licensed as a foreign entity to do business, and (to the extent applicable) is in good standing, in each jurisdiction in which the character of the properties owned, leased or operated by it or the nature of its business makes such qualification or licensing necessary, except where the failure to be so qualified or licensed or to be in good standing would not constitute, individually or in the aggregate, a Company Material Adverse Effect. The copies of the Amended and Restated Articles of Incorporation of the Company, as amended to date (the " **Charter** "), and Seventh Amended and Restated Bylaws of the Company, as amended to date (the " **Bylaws** "), in each case, as most recently filed with the Company SEC Documents, are, in each case, true, complete and correct copies of such documents.
+
+Section 4.2 *Capitalization; Subsidiaries.* (a) As of the date hereof, the authorized capital stock of the Company consists of 75,000,000 shares of Company Common Stock, 1,800,000 shares of the Company's Series A preferred stock, par value $0.01 per share (the " **Series A Preferred Stock** "), and 200,000 shares of the Company's Series B preferred stock, par value $0.01 per share (the " **Series B Preferred Stock** ," and together with the Series A Preferred Stock, the " **Preferred Stock** "). As of September 5, 2014, (i) 38,592,428 shares of Company Common Stock were issued and 29,696,348 shares of Company Common Stock were outstanding, (ii) no shares of Preferred Stock were issued and outstanding, and (iii) 8,896,080 shares of Company Common Stock were held in treasury. As of September 5, 2014, there were 2,714,456 shares of Company Common Stock reserved for issuance under Company Plans (including, as of September 5, 2014, outstanding Company Options to purchase 1,671,292 shares of Company Common Stock, 345,793 shares subject to outstanding Company Restricted Stock Units, and 192,500 shares subject to Company Performance Share Awards). Except as set forth above, as of September 5, 2014, no shares of capital stock of, or other equity or voting interests in, the Company, or options, warrants or other rights to acquire any such stock or securities were issued, reserved for issuance or outstanding. As of September 5, 2014, no bonds, debentures, notes or other indebtedness having the right to vote (or convertible into securities having the right to vote) on any matters on which shareholders of the Company may vote were issued and outstanding. All outstanding shares of capital stock of the Company are, and all shares that may be issued pursuant to the Company Plans will be, when issued in accordance with the terms thereof, duly authorized, validly issued, fully paid and non-assessable, issued in compliance with all applicable Laws concerning the issuance of securities and the Charter and not subject to preemptive rights. *Section 4.2(a)* of the Company Disclosure Letter sets forth, as of September 5, 2014, a true, correct and complete list of the Company Options, Company Restricted Stock Units, Company Performance Share Awards and other equity-based awards outstanding under any Company Plan, including the holder, date of grant, the term (if any), the number of shares of Company Common Stock issuable or amount payable thereunder, and the expiration date and exercise or conversion price relating thereto, if any.
+
+A-20
+<!-- PAGE 144 -->
+ZEQ.=5,SEQ=143,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=624028,FOLIO='A-20',FILE='DISK112:[14ZCP1.14ZCP40801]LK40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+Section 4.3 *Authority Relative to Agreement.* (a) The Company has all necessary corporate power and authority to execute and deliver this Agreement and to perform its obligations hereunder and to consummate the transactions contemplated hereby, including the Merger, subject solely in the case of the Merger to obtaining, at the Shareholders' Meeting, the affirmative vote (in person or by proxy) of the holders of at least two-thirds of the outstanding shares of Company Common Stock entitled to vote thereon at the Shareholders' Meeting in favor of the approval of this Agreement and the transactions contemplated hereby, including the Merger (the " **Requisite Shareholder Approval** "). The execution and delivery of this Agreement by the Company and the consummation by the Company of the transactions contemplated hereby, including the Merger, have been duly and validly authorized by all necessary corporate action, and no other corporate proceedings on the part of the Company are necessary to
+
+A-21
+<!-- PAGE 145 -->
+ZEQ.=6,SEQ=144,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=452429,FOLIO='A-21',FILE='DISK112:[14ZCP1.14ZCP40801]LK40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+authorize the execution and delivery of this Agreement or to consummate the transactions contemplated hereby, including the Merger (other than, with respect to the consummation of the Merger, the receipt of the Requisite Shareholder Approval, as well as the filing of the Certificate of Merger with the Secretary of State). This Agreement has been duly and validly executed and delivered by the Company and, assuming the due authorization, execution and delivery by Parent and Merger Sub, this Agreement constitutes a legal, valid and binding obligation of the Company, enforceable against the Company in accordance with its terms (except as such enforceability may be limited by bankruptcy, insolvency, fraudulent transfer, reorganization, moratorium and other similar laws of general applicability relating to or affecting creditor's rights, and to general equitable principles).
+
+Section 4.4 *No Conflict; Required Filings and Consents.* (a) None of the execution and delivery of this Agreement by the Company, the consummation by the Company of the Merger or any other transaction contemplated by this Agreement, or the Company's performance of its obligations hereunder will (i) subject to obtaining the Requisite Shareholder Approval, conflict with or violate the Charter or Bylaws or other similar governing documents of any of the Company's Subsidiaries, (ii) assuming the consents, registrations, filings, notices, approvals and authorizations specified in *Section 4.4(b)* have been obtained or made and the waiting periods referred to therein have expired, and any condition precedent to such consent, approval, authorization, or waiver has been satisfied, conflict with or violate any Law or injunction applicable to the Company or any of its Subsidiaries or by which any property or asset of the Company or any of its Subsidiaries is bound or affected or (iii) violate, conflict with or result in any breach of, or constitute a default (or an event which with notice or lapse of time or both would become a default) under, or give to others any right of termination, amendment, acceleration or cancellation of, or result in the creation of a Lien, other than any Permitted Lien, upon any of the properties or assets of the Company or any of its Subsidiaries pursuant to, any Contract to which the Company or any of its Subsidiaries is party or by which any property or asset of the Company or any of its Subsidiaries is bound or affected, other than, in the case of clauses (ii) and (iii), any such violation, breach, default, right, termination, amendment, acceleration, cancellation or Lien that would not constitute, individually or in the aggregate, a Company Material Adverse Effect.
+
+A-22
+<!-- PAGE 146 -->
+ZEQ.=7,SEQ=145,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=938516,FOLIO='A-22',FILE='DISK112:[14ZCP1.14ZCP40801]LK40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+Section 4.5 *Permits and Licenses.* The Company and its Subsidiaries have all material franchises, grants, authorizations, licenses, permits, easements, variances, exceptions, consents, certificates, approvals, findings of suitability and orders of or from a Governmental Authority (including all those granted or obtained under Gaming Laws) necessary for the Company and its Subsidiaries to own, lease and operate their respective assets and carry on their respective businesses as such businesses are now being conducted (the " **Company Permits** "). *Section 4.5* of the Company Disclosure Letter sets forth a true, correct and complete list, as of the date hereof, of all such material Company Permits. All such material Company Permits are in full force and effect. Neither the Company nor any of its Subsidiaries has received any written notice since October 1, 2012 from any Governmental Authority threatening to suspend, revoke, withdraw, modify in any material and adverse respect or limit any Company Permit. To the Knowledge of the Company, as of the date of this Agreement, there are no circumstances or conditions providing grounds for any suspension, revocation, termination, amendment, non-renewal, adverse modification, cancellation or withdrawal of any material Company Permit other than to the extent resulting from, directly or indirectly, (a) the negotiation, execution or announcement of this Agreement or the transactions contemplated hereby (including the impact of any of the foregoing on relationships with customers, suppliers, service providers, licensors, employees or regulators (including any Gaming Authority)) or (b) changes, effects, developments or circumstances to the extent arising from or relating to the identity of Parent or Merger Sub or Parent's ability to obtain the Gaming Approvals.
+
+Section 4.6 *Compliance with Laws.* (a) The Company and its Subsidiaries are in compliance with, and have not received written notice of any default or violation of, any Laws applicable to the Company or any of its Subsidiaries or by which any property or asset of the Company or any of its Subsidiaries is bound or affected, in each case except for instances of non-compliance, default or violation that would not constitute, individually or in the aggregate, a Company Material Adverse Effect.
+
+A-23
+<!-- PAGE 147 -->
+ZEQ.=8,SEQ=146,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=193116,FOLIO='A-23',FILE='DISK112:[14ZCP1.14ZCP40801]LK40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Section 4.7 *Company SEC Documents; Financial Statements.* (a) Since October 1, 2012, the Company has filed with the SEC all forms, documents and reports required under the Exchange Act or the Securities Act to be filed or furnished by the Company with the SEC (the forms, documents, and reports filed with the SEC, including any amendments thereto since the date of their filing, the " **Company SEC Documents** "). As of their respective filing dates, or, if amended or restated after the date of filing, as of the date of the last such amendment or applicable subsequent filing, the Company SEC Documents (i) complied in all material respects with the requirements of the Securities Act or the Exchange Act, as the case may be, and the applicable rules and regulations promulgated thereunder, and (ii) did not contain any untrue statement of a material fact or omit to state any material fact required to be stated therein or necessary to make the statements therein, in light of the circumstances under which they were made, or are to be made, not misleading, provided, however, that no representation is made as to the accuracy of any financial projections or forward-looking statements or the completeness of any information furnished by the Company to the SEC solely for the purposes of complying with Regulation FD promulgated under the Exchange Act. The Company has made available to Parent copies of all comment letters received by the Company from the SEC since October 1, 2012 and relating to the Company SEC Documents, together with all written responses of the Company thereto. As of the date of this Agreement, to the Knowledge of the Company, (i) there are no outstanding or unresolved comments in such comment letters received by the Company from the SEC and (ii) none of the Company SEC Documents is the subject of any ongoing review by the SEC. None of the Company's Subsidiaries is, or since October 1, 2012 has been, required to file periodic reports with the SEC pursuant to the Exchange Act.
+
+A-24
+<!-- PAGE 148 -->
+ZEQ.=1,SEQ=147,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=933496,FOLIO='A-24',FILE='DISK112:[14ZCP1.14ZCP40801]LM40801A.;11',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+Section 4.8 *Information Supplied.* To the Knowledge of the Company, none of the information supplied or to be supplied by or on behalf of the Company expressly for inclusion or incorporation by reference in the Proxy Statement will, at the date it is first mailed to the shareholders of the Company and at the time of the Shareholders' Meeting contain any untrue statement of a material fact or omit to state any material fact required to be stated therein or necessary to make the statements therein, in light of the circumstances under which they are made, not misleading. The Proxy Statement will comply as to form in all material respects with the applicable provisions of the Exchange Act and the rules and regulations of the SEC promulgated thereunder. No representation or warranty is made by the Company as to the accuracy of any financial projections or forward-looking statements, or with respect to statements made or incorporated by reference in the Proxy Statement based on information derived from Parent's public SEC filings or supplied by Parent, Merger Sub or any of their respective Representatives expressly for inclusion or incorporation by reference in the Proxy Statement.
+
+Section 4.9 *Disclosure Controls and Procedures; Internal Controls over Financial Reporting.* The Company (a) has established and maintains disclosure controls and procedures over financial reporting (as such terms are defined in paragraphs (e) and (f), respectively, of Rule 13a-15 promulgated under the Exchange Act) as required by Rule 13a-15 promulgated under the Exchange Act designed to ensure that material information relating to the Company, including its consolidated Subsidiaries, is made known to the management of the Company by others within those entities, and (b) since October 1, 2012 to the date of this Agreement, has disclosed, based on its most recent evaluation of internal controls prior to the date of this Agreement, to the Company's auditors and the audit committee of the Company Board (i) any "significant deficiencies" or "material weakness" in the design or operation of internal controls over financial reporting which are reasonably likely to adversely affect in any material respect the Company's ability to record, process, summarize and report financial data and (ii) any fraud, whether or not material, that involves management or other employees who have a significant role in the Company's internal controls. As and to the extent described in the Company SEC Documents, the Company and the Subsidiaries of the Company have devised and maintain a system of internal accounting controls sufficient to provide reasonable assurances regarding the reliability of financial reporting and the preparation of financial statements in accordance with GAAP.
+
+Section 4.10 *Absence of Certain Changes or Events.* Since March 31, 2013, and to the date of this Agreement, (a) there has not been any change, effect, development or circumstance that would constitute, individually or in the aggregate, a Company Material Adverse Effect and (b) except for matters in connection with the transactions contemplated by this Agreement, the Company and its Subsidiaries have conducted their business only in the ordinary course of business consistent with past practice.
+
+Section 4.11 *No Undisclosed Liabilities.* Except (a) as and to the extent reflected or reserved against in the Company's most recent consolidated balance sheet or the notes thereto included in the Company SEC Documents filed prior to the date of this Agreement, (b) for liabilities or obligations incurred in the ordinary course of business since the date of such balance sheet, (c) for liabilities or obligations incurred in connection with the transactions contemplated by this Agreement and (d) for liabilities or obligations that would not constitute, individually or in the aggregate, a Company Material Adverse Effect, neither the Company nor any of its Subsidiaries has any liabilities or obligations of any nature, whether or not accrued, contingent or otherwise, whether due or to become due, that would be required by GAAP to be reflected or reserved against on a consolidated balance sheet (or the notes thereto) of the Company and its Subsidiaries.
+
+Section 4.12 *Absence of Litigation.* *Section 4.12* of the Company Disclosure Letter contains a true, correct and complete list of all material Proceedings to which the Company or any of its Subsidiaries is a party as of the date of this Agreement. There is no material claim, suit, action, litigation, arbitration, mediation, proceeding or investigation (other than regulatory, licensing or other similar investigations of the Company or its Subsidiaries in the ordinary course) (each, a " **Proceeding** ")
+
+A-25
+<!-- PAGE 149 -->
+ZEQ.=2,SEQ=148,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=758359,FOLIO='A-25',FILE='DISK112:[14ZCP1.14ZCP40801]LM40801A.;11',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+pending or, to the Knowledge of the Company, threatened against the Company or any of its Subsidiaries. As of the date hereof, there are no Proceedings pending or, to the Knowledge of the Company, threatened against the Company or any of its Subsidiaries challenging or seeking to prohibit the execution, delivery or performance of this Agreement or any of the transactions contemplated hereby. To the Knowledge of the Company, (x) no officer or director of the Company or any of its Subsidiaries is a defendant in any Proceeding in connection with his or her status as an officer or director of the Company or any of its Subsidiaries, and (y) no such Proceeding is threatened, in either case that is reasonably likely to have, individually or in the aggregate, a Company Material Adverse Effect. Except as would not be material to the Company and its Subsidiaries taken as a whole, neither the Company nor any of its Subsidiaries nor any of their respective properties or assets is or are subject to any Order.
+
+Section 4.13 *Environmental Matters.* Except as would not constitute, individually or in the aggregate, a Company Material Adverse Effect, (a) the Company and its Subsidiaries are in compliance with all applicable Environmental Laws (which compliance includes, but is not limited to, the possession by such entities of all Environmental Permits to conduct its business as it is now being conducted, and compliance with the terms and conditions thereof), (b) all such Environmental Permits are in full force and effect, and all applications, notices or other documents have been timely filed as required to effect timely renewal, issuance or reissuance of such Environmental Permits, (c) there is no Environmental Claim pending or, to the Knowledge of the Company, threatened against the Company or any of its Subsidiaries and (d) since October 1, 2012, the Company and its Subsidiaries have not caused or permitted and, to the Knowledge of the Company, are not otherwise liable for any Releases of Hazardous Substances on, at, in or underneath any property, whether or not currently owned or leased by the Company or any of its Subsidiaries. The representations and warranties made in this *Section 4.13* are the sole and exclusive representations and warranties of the Company in this Agreement with respect to Environmental Laws, Environmental Permits, Environmental Claims, Releases and Hazardous Substances.
+
+Section 4.14 *Employee Benefit Plans.* (a) *Section 4.14(a)* of the Company Disclosure Letter lists the name of each material Company Benefit Plan (other than (i) Company Benefit Plans maintained or contributed to for the benefit of any current or former employees, directors, officers or consultants of the Company or any of its Subsidiaries located outside the United States that are customary in such jurisdictions, or (ii) Company Benefit Plans mandated by applicable Law). For such Company Benefit Plans, the Company has made available to Parent copies of the following: (i) the most recent Company Benefit Plan document and all amendments thereto; (ii) the most recent annual report on Form 5500 filed with respect to each Company Benefit Plan (if required by applicable Law) and the most recent actuarial report in respect of any Company Benefit Plan that is a single employer pension plan subject to Title IV of ERISA; (iii) the most recent summary plan description for each Company Benefit Plan for which a summary plan description is required by applicable Law and all related summaries of material modifications; (iv) the most recent IRS determination, notification, or opinion letter, if any, received with respect to each applicable Company Benefit Plan; and (v) each trust agreement, insurance Contract, annuity Contract, or other funding arrangement in effect as of the date hereof and relating to any Company Benefit Plan. Except as specifically set forth in the foregoing documents made available to Parent or as set forth in *Section 6.1* of the Company Disclosure Letter, there are no material amendments to any Company Benefit Plan that have been adopted or approved, and neither the Company nor any of its Subsidiaries has undertaken to make any material amendments or to adopt or approve any new Company Benefit Plan.
+
+A-26
+<!-- PAGE 150 -->
+ZEQ.=3,SEQ=149,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=911480,FOLIO='A-26',FILE='DISK112:[14ZCP1.14ZCP40801]LM40801A.;11',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+A-27
+<!-- PAGE 151 -->
+ZEQ.=4,SEQ=150,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=16022,FOLIO='A-27',FILE='DISK112:[14ZCP1.14ZCP40801]LM40801A.;11',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+Section 4.15 *Intellectual Property.* (a) *Section 4.15(a)* of the Company Disclosure Letter sets forth a list of all (i) issued Patents and Patent applications, (ii) Trademark registrations and applications, (iii) Copyright applications and registrations, and (iv) Internet domain names registered or pending with any Governmental Authority; in each case, owned (unless indicated otherwise in *Section 4.15(a)* of the Company Disclosure Letter) by the Company or any of its Subsidiaries, as of the date hereof (" **Company Registered IP** "); indicating with respect to all items listed in items (i) through (iii), where applicable, the jurisdiction in which each of the items of Company Registered IP has been applied for, issued or registered, the application/registration number and the current owner of record. To the Company's Knowledge, the foregoing registrations are in effect, valid, enforceable and subsisting (unless indicated otherwise in *Section 4.15(a)* of the Company Disclosure Letter). Except as otherwise indicated in *Section 4.15(a)* of the Company Disclosure Letter, the Company and its Subsidiaries exclusively own the applications included in the Company Registered IP and exclusively own all right, title and interest in, to and under the registrations included in the Company Registered IP free and clear of any Liens other than Permitted Liens.
+
+A-28
+<!-- PAGE 152 -->
+ZEQ.=5,SEQ=151,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=158980,FOLIO='A-28',FILE='DISK112:[14ZCP1.14ZCP40801]LM40801A.;11',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+A-29
+<!-- PAGE 153 -->
+ZEQ.=6,SEQ=152,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=1006695,FOLIO='A-29',FILE='DISK112:[14ZCP1.14ZCP40801]LM40801A.;11',USER='CHE107325',CD='21-OCT-2014;00:27' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Section 4.16 *Taxes* . Except as would not constitute, individually or in the aggregate, a Company Material Adverse Effect:
+
+A-30
+<!-- PAGE 154 -->
+ZEQ.=1,SEQ=153,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=77729,FOLIO='A-30',FILE='DISK112:[14ZCP1.14ZCP40801]LO40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+Section 4.17 *Material Contracts* . (a) *Section 4.17* of the Company Disclosure Letter sets forth a true, correct and complete list, as of the date of this Agreement, of each Company Material Contract, a true, correct and complete copy of which has been made available to Parent. For purposes of this Agreement, " **Company Material Contract** " means any Contract, other than a Company Benefit Plan, to which the Company or any of its Subsidiaries is a party or by which any property or asset of the Company or any of its Subsidiaries is bound or affected that:
+
+A-31
+<!-- PAGE 155 -->
+ZEQ.=2,SEQ=154,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=730573,FOLIO='A-31',FILE='DISK112:[14ZCP1.14ZCP40801]LO40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+A-32
+<!-- PAGE 156 -->
+ZEQ.=3,SEQ=155,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=1001852,FOLIO='A-32',FILE='DISK112:[14ZCP1.14ZCP40801]LO40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+Section 4.18 *Real Property* . (a) Neither the Company nor any of its Subsidiaries owns any real property.
+
+Section 4.19 *Labor Matters* . (a) Except as set forth on Schedule 4.19 of the Company Disclosure Letter, neither the Company nor any of its Subsidiaries is a party to any collective bargaining agreement with a labor union in the United States or any agreement (other than agreements applicable by Law) with any works council, labor union, employee association or other similar labor organization outside the United States. Neither the Company nor any of its Subsidiaries is the subject of any proceeding before the National Labor Relations Board or any similar labor regulatory body or other Governmental Authority outside the United States relating to any assertion that the Company or any of its Subsidiaries has committed an unfair labor practice, or any other complaint or grievance, or seeking to compel the Company or any of its Subsidiaries to bargain with any labor union, employee association or other similar labor organization, nor is there pending or, to the Knowledge of the Company, threatened, nor has there been for the past two years, any labor strike, walkout, work stoppage, or lockout involving the Company or any of its Subsidiaries, except for any such (i) proceeding, the outcome of which would not constitute, individually or in the aggregate, a Company Material Adverse Effect; or (ii) labor strike, walkout, work stoppage, or lockout which would not constitute, individually or in the aggregate, a Company Material Adverse Effect. As a result of the
+
+A-33
+<!-- PAGE 157 -->
+ZEQ.=4,SEQ=156,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=470666,FOLIO='A-33',FILE='DISK112:[14ZCP1.14ZCP40801]LO40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+transactions contemplated by this Agreement, except as would not constitute, individually or in the aggregate, a Company Material Adverse Effect, the Company and its Subsidiaries (a) are not required to provide notification to or engage in consultation with, or (b) will provide any required notification to or engage in consultation with, any labor union, employee association, works council or other similar labor organization. No labor union, employee association, works council or other similar labor organization has made a demand against the Company or any of its Subsidiaries for recognition with respect to representation of any current or former employee of the Company or any Subsidiary of the Company or any group of such employees; and there are no representation proceedings or petitions seeking a representation proceeding presently pending or, to the Knowledge of the Company, threatened against the Company or any of its Subsidiaries in relation to any such employees.
+
+Section 4.20 *Insurance* . The Company maintains insurance coverage with reputable insurers in such amounts and covering such risks as are in accordance with normal industry practice. The Company and its Subsidiaries have paid, or caused to be paid, all premiums due under such policies and have not received written notice that they are in default with respect to any obligations under such policies. Neither the Company nor any of its Subsidiaries has received any written notice of cancellation or termination with respect to any existing material insurance policy that is held by, or for the benefit of, any of the Company or any of its Subsidiaries. To the Knowledge of the Company, all material claims of the Company and its Subsidiaries under any insurance policy maintained by the Company or any of its Subsidiaries have been reported to the applicable insurer.
+
+Section 4.21 *Suppliers and Customers* . *Section 4.21* of the Company Disclosure Letter sets forth the names of the 10 largest customers of the Company and its Subsidiaries (as measured by billings for the twelve-month period ended on June 30, 2014) and the 10 largest suppliers and/or vendors of the Company and its Subsidiaries (as measured by aggregate cost of items or services purchased for the twelve-month period ended on June 30, 2014). To the Knowledge of the Company, neither the Company nor any of its Subsidiaries (a) has been notified of any (i) dispute with any such customer, supplier or vendor or (ii) breach of any Contract with such party by the Company or its Subsidiaries, that, in either case, would be material and adverse to the Company and its Subsidiaries, taken as a whole, or (b) has been notified by any such customer, supplier or vendor that it intends or is threatening to terminate or otherwise materially and adversely alter the terms of its business with the Company or any of its Subsidiaries. As of the date of this Agreement, neither the Company nor any of its Subsidiaries has notified any such customer, supplier or vendor of any material dispute or material breach of any such Contract by such customer, supplier or vendor.
+
+Section 4.22 *Questionable Payments* . Except as would not be material to the Company and its Subsidiaries, taken as a whole, neither the Company nor any of its Subsidiaries (nor, to the Knowledge of the Company, any of their respective Representatives acting or purporting to act on behalf of the Company; provided, that, with respect to Representatives other than directors, officers or employees of the Company, such Representatives were acting with intent to benefit the Company) has (a) used or is using any corporate funds or other assets for any direct or indirect unlawful payments to any foreign or
+
+A-34
+<!-- PAGE 158 -->
+ZEQ.=5,SEQ=157,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=239855,FOLIO='A-34',FILE='DISK112:[14ZCP1.14ZCP40801]LO40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+domestic government officials or employees, (b) violated or is violating any provision of the Foreign Corrupt Practices Act of 1977, as amended, (c) established or maintained, or is maintaining, any unlawful fund of corporate monies or other properties, or (d) made any bribe, unlawful rebate, payoff, influence payment, kickback or other unlawful payment of any nature.
+
+Section 4.23 *Voting Requirements* . Assuming the accuracy of the representation contained in *Section 5.11* , the Requisite Shareholder Approval is the only vote of the holders of any class or series of capital stock of the Company necessary under the Charter and Bylaws and by Law (including the TBOC) for the Company to consummate the transactions contemplated hereby (including the Merger).
+
+Section 4.24 *Opinion of Financial Advisor* . The Company Board has received the oral opinion of Wells Fargo Securities, LLC to the effect that, as of the date of this Agreement and based upon and subject to the factors and assumptions set forth in its written opinion, the Merger Consideration to be paid to the holders of shares of outstanding Company Common Stock (other than Parent and its Affiliates or any holder who has properly exercised statutory appraisal rights), pursuant to this Agreement is fair from a financial point of view to such holders.
+
+Section 4.25 *Takeover Statutes* . Assuming the accuracy of the representation contained in *Section 5.11* , the action of the Company Board in approving this Agreement and the transactions contemplated hereby is sufficient to render inapplicable to this Agreement and the transactions contemplated hereby the restrictions on "business combinations" (as defined in Section 21.604 of the TBOC) as set forth in Section 21.606 of the TBOC and the requirements of any "moratorium," "control share," "fair price," "affiliate transaction," "business combination" or other anti-takeover laws and regulations of any state (any such Law, an " **Anti-Takeover Law")** ; and it has taken all action required to be taken by it in order to make this Agreement and the transactions contemplated hereby comply with, and this Agreement and the transactions contemplated hereby do comply with, the requirements of any Articles, Sections or provisions of its Constituent Documents concerning any Anti-Takeover Law or other related provisions and no other state anti-takeover statute or regulation, any takeover-related provision in the Charter or Bylaws, nor any shareholder rights plan or similar agreement is applicable to Parent, this Agreement or the Merger that would prohibit or restrict the ability of the Company to enter into this Agreement or its ability to consummate the Merger.
+
+Section 4.26 *Brokers* . No broker, finder or investment banker (other than Wells Fargo Securities, LLC) is entitled to any brokerage, finder's or other fee or commission from the Company or any of its Subsidiaries in connection with the Merger and any of the other transactions contemplated by this Agreement based upon arrangements made by or on behalf of the Company.
+
+Section 4.27 *No Other Representations or Warranties* . Except for the representations and warranties expressly set forth in this *Article IV* , none of the Company, any of its Affiliates nor any other Person on behalf of the Company makes any express or implied representation or warranty with respect to the Company, its Subsidiaries or their respective businesses or with respect to any other information provided, or made available, to Parent, Merger Sub or their respective Representatives or Affiliates in connection with the transactions contemplated hereby, including the accuracy or completeness thereof. Without limiting the foregoing, neither the Company nor any other Person will have or be subject to any liability or other obligation to Parent, Merger Sub or their Representatives or Affiliates or any other Person resulting from Parent's, Merger Sub's or their Representatives' or Affiliates' use of any information, documents, projections, forecasts or other material made available to Parent, Merger Sub or their Representatives or Affiliates, including any information made available in the electronic data room maintained by the Company for purposes of the transactions contemplated by this Agreement (the " **Electronic Data Room** "), teaser, marketing material, confidential information memorandum, management presentations, functional "break-out" discussions, responses to questions submitted on behalf of Parent, Merger Sub or their respective Representatives or in any other form in connection with the transactions contemplated by this Agreement, unless and to the extent any such information is
+
+A-35
+<!-- PAGE 159 -->
+ZEQ.=6,SEQ=158,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=401772,FOLIO='A-35',FILE='DISK112:[14ZCP1.14ZCP40801]LO40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+expressly included in a representation or warranty contained in this *Article IV* . Except with respect to the representations and warranties of Parent and Merger Sub expressly set forth in *Article V* or otherwise in this Agreement, there is and has been no reliance by the Company, its Affiliates or any of their respective Representatives on any express or implied representation or warranty of Parent or Merger Sub in connection with the transactions contemplated hereby.
+
+ARTICLE V. REPRESENTATIONS AND WARRANTIES OF PARENT AND MERGER SUB
+
+Except as disclosed in the corresponding section of the separate disclosure letter which has been delivered by Parent to the Company prior to the execution of this Agreement (the " **Parent Disclosure Letter** ") (it being understood that any information set forth in one section or subsection of the Parent Disclosure Letter shall be deemed to apply to and qualify the representation and warranty set forth in this Agreement to which it corresponds in number and, whether or not an explicit reference or cross-reference is made, each other representation and warranty set forth in this *Article V* for which it is reasonably apparent on its face that such information is relevant to such other representation and warranty), Parent and Merger Sub hereby jointly and severally represent and warrant to the Company as follows:
+
+Section 5.1 *Organization and Qualification; Subsidiaries* . Each of Parent and Merger Sub is a corporation duly organized or formed, validly existing and (to the extent applicable) in good standing, under the laws of its jurisdiction of incorporation and has the requisite corporate power and authority to conduct its business as it is now being conducted. Each of Parent and Merger Sub is duly qualified or licensed as a foreign corporation to do business, and (to the extent applicable) is in good standing, in each jurisdiction in which the character of the properties owned, leased or operated by it or the nature of its business makes such qualification or licensing necessary, except where the failure to be so qualified or licensed or to be in good standing would not constitute, individually or in the aggregate, a Parent Material Adverse Effect. True and correct copies of the organizational or governing documents of Parent and Merger Sub (the " **Parent Organizational Documents** ") have previously been provided to the Company.
+
+Section 5.2 *Authority Relative to Agreement* . Each of Parent and Merger Sub has all necessary power and authority to execute and deliver this Agreement, to perform its obligations hereunder and to consummate the transactions contemplated hereby, including the Merger and the Financing. The execution and delivery of this Agreement by Parent and Merger Sub and the consummation by Parent and Merger Sub of the transactions contemplated hereby, including the Merger and the Financing, have been duly and validly authorized by all necessary corporate action of Parent and Merger Sub (and, with respect to Merger Sub, by its sole shareholder), and no other corporate proceedings on the part of Parent or Merger Sub are necessary to authorize the execution and delivery of this Agreement or to consummate the transactions contemplated hereby, including the Merger and the Financing (other than, with respect to the consummation of the Merger, the filing of the Certificate of Merger with the Secretary of State). This Agreement has been duly and validly executed and delivered by Parent and Merger Sub and, assuming the due authorization, execution and delivery by the Company, this Agreement constitutes a legal, valid and binding obligation of Parent and Merger Sub, enforceable against Parent and Merger Sub in accordance with its terms (except as such enforceability may be limited by bankruptcy, insolvency, fraudulent transfer, reorganization, moratorium and other similar laws of general applicability relating to or affecting creditor's rights, and to general equitable principles).
+
+A-36
+<!-- PAGE 160 -->
+ZEQ.=7,SEQ=159,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=128187,FOLIO='A-36',FILE='DISK112:[14ZCP1.14ZCP40801]LO40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:27' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Section 5.3 *No Conflict; Required Filings and Consents* . (a) None of the execution and delivery of this Agreement by Parent and Merger Sub, the consummation by Parent or Merger Sub of the transactions contemplated by this Agreement, including the Merger and the Financing, or performance of their obligations hereunder will (i) conflict with or violate the Parent Organizational Documents, (ii) assuming the consents, registrations, filings, notices, approvals and authorizations specified in *Section 5.3(b)* , including all Gaming Approvals, have been obtained or made and the waiting periods referred to therein have expired, and any condition precedent to such consent, approval, authorization, or waiver has been satisfied, conflict with or violate any Law applicable to Parent or Merger Sub or by which any property or asset of Parent or Merger Sub is bound or affected or (iii) result in any breach of, or constitute a default (or an event which with notice or lapse of time or both would become a default) under, or give to others any right of termination, amendment, acceleration or cancellation of, or result in the creation of a Lien (other than, in the case of the Financing, any Lien required or permitted thereunder) on any of the properties or assets of Parent or Merger Sub pursuant to, any note, bond, mortgage, indenture or credit agreement, or any other Contract or other instrument or obligation to which Parent or Merger Sub is a party or by which Parent or Merger Sub or any property or asset of Parent or Merger Sub is bound, other than, in the case of clauses (ii) and (iii), for any such violation, breach, default, right, termination, amendment, acceleration, or cancellation that would not constitute, individually or in the aggregate, a Parent Material Adverse Effect.
+
+Section 5.4 *Absence of Litigation* . As of the date of this Agreement, there is no Proceeding pending or, to the Knowledge of Parent, threatened against either Parent or Merger Sub as would constitute, individually or in the aggregate, a Parent Material Adverse Effect.
+
+Section 5.5 *Absence of Certain Agreements* . Neither Parent nor any of its Affiliates has entered into any Contract, or authorized, committed or agreed to enter into any Contract, pursuant to which: (a) any shareholder of the Company would be entitled to receive consideration of a different amount or nature than the Merger Consideration, (b) any shareholder of the Company (i) agrees to vote to approve this Agreement or the Merger or (ii) agrees to vote against, or not to tender its shares of Company Common Stock in, any Acquisition Proposal or (c) any third party has agreed to provide, directly or indirectly, equity capital to Parent or the Company to finance in whole or in part the Merger.
+
+A-37
+<!-- PAGE 161 -->
+ZEQ.=1,SEQ=160,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=245485,FOLIO='A-37',FILE='DISK112:[14ZCP1.14ZCP40801]LQ40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+Section 5.6 *Information Supplied* . None of the information supplied or to be supplied by or on behalf of Parent or Merger Sub expressly for inclusion or incorporation by reference in the Proxy Statement will, at the date it is first provided to the Company, in each case, if applicable, contain any untrue statement of a material fact or omit to state any material fact required to be stated therein or necessary to make the statements therein, in light of the circumstances under which they are made, not misleading. No representation or warranty is made by Parent or Merger Sub with respect to statements made or incorporated by reference in the Proxy Statement based on information supplied by the Company or any of its Representatives for inclusion or incorporation by reference in the Proxy Statement.
+
+Section 5.7 *Financing* . (a) Parent has delivered to the Company true, correct and complete copies of the fully executed debt commitment letter and Fee Letter from Bank of America, N.A., Merrill Lynch, Pierce, Fenner & Smith Incorporated, Deutsche Bank AG New York Branch and Deutsche Bank Securities Inc. (collectively, the " **Lenders** "), dated as of the date hereof (including all exhibits, schedules, annexes and amendments thereto as of the date of this Agreement and together with the related Fee Letter, collectively, the " **Financing Commitments** "), pursuant to which, and subject to the terms and conditions thereof, the Lenders have committed to lend the amounts set forth therein to Parent and designated Affiliates for the purpose of refinancing Parent's existing senior secured credit facility (to the extent necessary) and funding the transactions contemplated by this Agreement (the " **Financing** "); provided, however, that solely in the case of the Fee Letter, accurate and complete copies have been delivered to the Company with only the portions thereof addressing fees payable to the Financing Sources, pricing caps, securities demand, economic flex terms and other economic terms redacted.
+
+A-38
+<!-- PAGE 162 -->
+ZEQ.=2,SEQ=161,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=625186,FOLIO='A-38',FILE='DISK112:[14ZCP1.14ZCP40801]LQ40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+A-39
+<!-- PAGE 163 -->
+ZEQ.=3,SEQ=162,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=802195,FOLIO='A-39',FILE='DISK112:[14ZCP1.14ZCP40801]LQ40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+Section 5.8 *Capitalization of Merger Sub* . As of the date of this Agreement, the authorized share capital of Merger Sub consists of 1,000 shares of common stock, no par value per share, all of which are validly issued and outstanding. All of the issued and outstanding share capital of Merger Sub is, and at the Effective Time will be, owned by Parent. Merger Sub was formed solely for the purpose of engaging in the transactions contemplated hereby, and it has not conducted any business prior to the date hereof and has no, and prior to the Effective Time will have no, assets, liabilities or obligations of any nature other than those incident to its formation and pursuant to this Agreement, the Merger and the other transactions contemplated by this Agreement (including the Financing).
+
+Section 5.9 *Gaming Approvals and Licensing Matters* . None of Parent, Merger Sub or, to the Knowledge of Parent, any of their respective officers, directors or Affiliates, any existing beneficial owner of five percent (5%) or more of the voting stock of Parent, or any lender under the Financing Commitments, in each case who or which will be required to be licensed or found suitable under applicable Gaming Laws in connection with the consummation of the transactions contemplated by this Agreement, including the Merger, has ever been denied a gaming license, approval, or related finding of suitability by any Gaming Authority, or had any gaming license or approval revoked or suspended. As of the date hereof, to the Knowledge of Parent, there are no facts or circumstances with respect to Parent, Merger Sub or any of their respective Affiliates insofar as such Affiliate-owned interest would be attributable to Parent or Merger Sub under any applicable Gaming Law, that would prevent or materially delay receipt of any Gaming Approvals.
+
+Section 5.10 *Solvency* . Assuming the satisfaction of the conditions set forth in *Section 7.2(a)* , *Section 7.2(b)* and *Section 7.2(c)* , each of Parent and the Surviving Corporation will, after giving effect to all of the transactions contemplated by this Agreement, including the Financing, any Alternative Financing and the payment of the Required Payment Amount, be Solvent at and immediately after the Effective Time. For the purposes of this Agreement, the term " **Solvent** " means that, as of any date of determination and with respect to any Person: (a) the sum of the debt (including contingent liabilities) of such Person and its Subsidiaries, taken as a whole, does not exceed the present fair saleable value of the present assets of such Person and its Subsidiaries, taken as a whole; (b) the capital of such Person and its Subsidiaries, taken as a whole, is not unreasonably small in relation to the business of such Person and its Subsidiaries, taken as a whole; and (c) such Person and its Subsidiaries, taken as a whole, do not have debts including current obligations beyond their ability to pay or refinance such debts as they mature in the ordinary course of business.
+
+A-40
+<!-- PAGE 164 -->
+ZEQ.=4,SEQ=163,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=929897,FOLIO='A-40',FILE='DISK112:[14ZCP1.14ZCP40801]LQ40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Section 5.11 *Ownership of Company Securities* . Neither Parent nor any of its Subsidiaries holds any capital stock, voting securities or equity interests of the Company or any of its Subsidiaries, or holds any securities or rights convertible into, exchangeable or exercisable for, or evidencing the right to subscribe for any such shares of capital stock, voting securities or equity interests, or any rights, warrants, options, calls, commitments or any other agreements of any character to purchase or acquire any such shares of capital stock, voting securities or equity interests or any securities or rights convertible into, exchangeable or exercisable for, or evidencing the right to subscribe for, any such shares of capital stock, voting securities or equity interests. Neither Parent nor Merger Sub is, or at any time during the last three (3) years has been, an "affiliated shareholder" of the Company as defined in Section 21.602 of the TBOC.
+
+Section 5.12 *Management Agreements* . As of the date hereof, neither Parent nor Merger Sub nor any Representative of Parent or Merger Sub has (a) entered into any employment agreement with any of the Company's directors, officers or employees, (b) offered employment to any of the Company's directors, officers or employees, (c) had negotiations with any of the Company's directors, officers or employees regarding employment after the Merger Closing or (d) sold, or offered to sell, any direct or indirect equity interest in the Company to any of the Company's directors, officers or employees.
+
+Section 5.13 *Brokers* . Other than Merrill Lynch, Pierce, Fenner & Smith Incorporated, whose fees shall be borne solely by Parent, no broker, finder or investment banker is entitled to any brokerage, finder's or other fee or commission in connection with the Merger and any of the other transactions contemplated by this Agreement based upon arrangements made by or on behalf of Parent or Merger Sub.
+
+Section 5.14 *No Other Representations or Warranties* . Except for the representations and warranties expressly set forth in this *Article V* , none of Parent, Merger Sub or any of their respective Affiliates nor any other Person on behalf of any of them makes any express or implied representation or warranty with respect to Parent, Merger Sub or their respective businesses or with respect to any other information provided, or made available, to the Company or any of its Representatives or Affiliates in connection with the transactions contemplated hereby, including the accuracy or completeness thereof. Except with respect to the representations and warranties of the Company expressly set forth in *Article IV* or otherwise in this Agreement, there is and has been no reliance by Parent, Merger Sub, any of their Affiliates or any of their respective Representatives on any express or implied representation or warranty of the Company in connection with the transactions contemplated hereby.
+
+ARTICLE VI. COVENANTS AND AGREEMENTS
+
+Section 6.1 *Conduct of Business by the Company Pending the Merger* . Between the date of this Agreement and the earliest to occur of the Effective Time and the date, if any, on which this Agreement is terminated pursuant to *Section 8.1* , except (a) as may be required by Law or any Gaming Authority with jurisdiction over the Company, any of its Subsidiaries or any of their respective assets or operations, (b) as may be agreed in writing by Parent (which consent shall not be unreasonably withheld, delayed or conditioned), (c) as required pursuant to this Agreement, or (d) as set forth in *Section 6.1* of the Company Disclosure Letter, (x) the Company shall, and shall cause each of its Subsidiaries to, carry on its business in all material respects in the ordinary course and, subject to *Section 6.3* , to the extent consistent therewith, use commercially reasonable efforts to preserve substantially intact its current business organizations, to keep available the services of its current officers and employees and to preserve its relationships with material Governmental Authorities (including applicable Gaming Authorities), customers, suppliers, licensors, licensees, distributors, wholesalers, lessors and others having significant business dealings with it, and to preserve the goodwill
+
+A-41
+<!-- PAGE 165 -->
+ZEQ.=1,SEQ=164,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=537184,FOLIO='A-41',FILE='DISK112:[14ZCP1.14ZCP40801]LS40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+of and maintain satisfactory relationships with those Persons having business relationships with the Company or any of its Subsidiaries; provided, however, that no action by the Company or its Subsidiaries with respect to matters specifically addressed by any provision of this *Section 6.1* shall be deemed a breach of clause (x) unless such action would constitute a breach of such specific provision; and (y) the Company shall not and shall not permit any of its Subsidiaries to:
+
+A-42
+<!-- PAGE 166 -->
+ZEQ.=2,SEQ=165,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=82303,FOLIO='A-42',FILE='DISK112:[14ZCP1.14ZCP40801]LS40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+A-43
+<!-- PAGE 167 -->
+ZEQ.=3,SEQ=166,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=854443,FOLIO='A-43',FILE='DISK112:[14ZCP1.14ZCP40801]LS40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+A-44
+<!-- PAGE 168 -->
+ZEQ.=4,SEQ=167,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=494597,FOLIO='A-44',FILE='DISK112:[14ZCP1.14ZCP40801]LS40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+Section 6.2 *Proxy Statement; Shareholders' Meeting* .
+
+A-45
+<!-- PAGE 169 -->
+ZEQ.=5,SEQ=168,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=68125,FOLIO='A-45',FILE='DISK112:[14ZCP1.14ZCP40801]LS40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+Section 6.3 *Appropriate Action; Consents; Filings* . (a) Upon the terms and subject to the conditions set forth in this Agreement, each of the parties hereto shall (and shall cause each of their applicable Affiliates and Subsidiaries to) use its reasonable best efforts to take, or cause to be taken, all actions, and use its reasonable best efforts to do, or cause to be done, and to assist and cooperate with the other parties in doing, all things necessary, proper or advisable to consummate, as promptly as practicable, the Merger and the other transactions contemplated by this Agreement. Without limiting the foregoing, each of the parties agrees to use its respective reasonable best efforts to (i) cause the conditions to the Merger set forth in *Article VII* to be satisfied as promptly as practicable, (ii) defend against any Proceeding, whether judicial or administrative, challenging this Agreement or the
+
+A-46
+<!-- PAGE 170 -->
+ZEQ.=6,SEQ=169,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=505674,FOLIO='A-46',FILE='DISK112:[14ZCP1.14ZCP40801]LS40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+consummation of the Merger and the other transactions contemplated hereby, (iii) obtain all necessary consents, approvals, orders, waivers, finding of suitability and authorizations of, actions or nonactions by, any Governmental Authority (including Gaming Authorities) or any third party necessary in connection with the consummation of the transactions contemplated by this Agreement, including the Merger, and make all necessary registrations, declarations and filings with, and notices to, any Governmental Authorities (including pursuant to the HSR Act any other applicable Antitrust Law necessary to start any applicable waiting period and including under Gaming Laws) and take all reasonable steps as may be necessary to obtain an approval from, or to avoid a suit, action, proceeding or investigation by, any Governmental Authority or other Persons necessary in connection with the consummation of the transactions contemplated by this Agreement, including the Merger; *provided* , that, in no event shall the Company or any of its Subsidiaries be required to pay, prior to the Effective Time, any fee, penalty or other consideration to obtain any consent, approval, order, waiver or authorization in connection with the transactions contemplated by this Agreement, including the Merger, under any Contract other than *de minimis* amounts or amounts that are advanced or reimbursed substantially simultaneous by Parent and (iv) execute and deliver any additional instruments necessary to consummate the Merger and any other transactions to be performed or consummated by such party in accordance with the terms of this Agreement and to carry out fully the purposes of this Agreement. In no event shall the Company (A) be required to agree to take or enter into any action which is not conditioned upon the consummation of the Merger or (B) agree to any obligation or concession or other action relating to the Antitrust Approval or the Required Gaming Approvals without the prior written consent of Parent, which consent will not be unreasonably withheld or delayed; *provided* , that, notwithstanding the foregoing, it is understood and agreed that any failure by the Company to agree to any such obligation or concession by reason of Parent's withholding its written consent from the Company to do so shall not constitute a breach by the Company of this *Section 6.3* .
+
+A-47
+<!-- PAGE 171 -->
+ZEQ.=7,SEQ=170,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=28775,FOLIO='A-47',FILE='DISK112:[14ZCP1.14ZCP40801]LS40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27'
+
+A-48
+<!-- PAGE 172 -->
+ZEQ.=8,SEQ=171,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=482820,FOLIO='A-48',FILE='DISK112:[14ZCP1.14ZCP40801]LS40801A.;8',USER='CHE107325',CD='21-OCT-2014;00:27' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+A-49
+<!-- PAGE 173 -->
+ZEQ.=1,SEQ=172,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=338475,FOLIO='A-49',FILE='DISK112:[14ZCP1.14ZCP40801]LU40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Section 6.4 *Access to Information; Confidentiality.* From the date of this Agreement to the earlier of the Effective Time or the date, if any, on which this Agreement is terminated pursuant to *Section 8.1* , the Company will, and will cause its Subsidiaries and their respective Representatives to, provide to Parent and its authorized Representatives (x) reasonable access during normal business hours and upon reasonable prior notice from Parent to their respective personnel, facilities, properties, books, contracts and records as Parent may reasonably request and (y) such financial and operating data of the Company and its Subsidiaries and other information with respect to the business, properties and personnel of the Company and its Subsidiaries as Parent may reasonably request. Notwithstanding the foregoing, the Company shall not be required to provide access to, or cause its Subsidiaries to provide access to, or disclose (a) any information or documents which would (in the reasonable judgment of the Company) be reasonably likely to (i) constitute a waiver of the attorney-client or other privilege held by the Company or any of its Subsidiaries, (ii) violate any applicable Laws (and the Company shall be permitted to implement customary "clean-room" or other similar arrangements if the Company reasonably determines, upon advice of outside counsel, that such arrangements are necessary to comply with applicable Law), (iii) unreasonably disrupt the businesses and operations of the Company or any of its Subsidiaries, or (iv) breach any agreement of the Company or any of its Subsidiaries with any Third Party; provided, that each party shall use its commercially reasonable efforts to obtain any required consents and take such other reasonable action (such as the entry into a joint defense agreement or other arrangement to avoid loss of attorney client privilege) to permit such access or disclosure; or (b) if the Company or any of its Affiliates, on the one hand, and Parent or any of its Affiliates, on the other hand, are adverse parties in a litigation, any information that is reasonably pertinent thereto. All information exchanged pursuant to this *Section 6.4* shall be subject to the Confidentiality Agreement and the parties shall comply with, and shall cause their respective Representatives (as defined in the Confidentiality Agreement) to comply with, all of their respective obligations thereunder.
+
+Section 6.5 *Acquisition Proposals.* (a) Except as otherwise provided in this *Section 6.5* , from the date hereof until the Effective Time or, if earlier, the termination of this Agreement in accordance with its terms, the Company will not, nor shall it authorize or permit any of its Subsidiaries to, and will use its reasonable best efforts to cause its and their respective Representatives not to, directly or indirectly (i) initiate, solicit or knowingly encourage or facilitate (including by way of providing non-public information) the making of any Acquisition Proposal or any inquiry, proposal or request for information that may reasonably be expected to lead to an Acquisition Proposal, or (ii) other than informing Third Parties of the existence of the provisions contained in this *Section 6.5* , engage in negotiations or substantive discussions with, or furnish any nonpublic information to, any Third Party relating to an Acquisition Proposal or any inquiry, proposal or request for information that may reasonably be expected to lead to an Acquisition Proposal; *provided* , *however* , that the Company may ascertain facts from the party making such Acquisition Proposal for the sole purpose of the Company Board informing itself about the Acquisition Proposal and the party making it. The Company shall, and shall cause its Affiliates and its and their respective Representatives to, promptly cease and cause to be terminated all existing activities, discussions or negotiations with any Person conducted heretofore with respect to any Acquisition Proposal, or any inquiry or proposal that may reasonably be expected to lead to an Acquisition Proposal, promptly request the prompt return or destruction of all confidential information previously furnished and promptly terminate all physical and electronic dataroom access previously granted to any such Person or its Representatives.
+
+A-50
+<!-- PAGE 174 -->
+ZEQ.=2,SEQ=173,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=649527,FOLIO='A-50',FILE='DISK112:[14ZCP1.14ZCP40801]LU40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+A-51
+<!-- PAGE 175 -->
+ZEQ.=3,SEQ=174,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=404157,FOLIO='A-51',FILE='DISK112:[14ZCP1.14ZCP40801]LU40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+A-52
+<!-- PAGE 176 -->
+ZEQ.=4,SEQ=175,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=746632,FOLIO='A-52',FILE='DISK112:[14ZCP1.14ZCP40801]LU40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Section 6.6 *Directors' and Officers' Indemnification and Insurance* . (a) Parent and Merger Sub agree that all rights to exculpation and indemnification (and all rights to advancement of expenses relating thereto) for acts or omissions occurring at or prior to the Effective Time, whether asserted or claimed prior to, at or after the Effective Time (including any matters arising in connection with the transactions contemplated by this Agreement, including the Merger), now existing in favor of the Indemnitees as provided in the Charter or Bylaws (or such equivalent organizational or governing documents of any of the Company's Subsidiaries or Affiliates as in effect on the date of this Agreement) or in any Contract between such Indemnitee and the Company or any of its Subsidiaries (in each case as in effect on the date hereof) shall survive the Merger and shall continue in full force and effect. From and after the Effective Time, Parent and the Surviving Corporation shall (and Parent shall cause the Surviving Corporation to) indemnify, defend and hold harmless, and advance expenses to, to the fullest extent the Company would have been permitted to do so under applicable Law, Indemnitees with respect to (x) all acts or omissions by them in their capacities as such at any time at or prior to the Effective Time or (y) any costs or expenses (including attorneys' fees), judgments, fines, losses, claims, damages, liabilities and amounts paid in settlement in connection with any claim, action, suit, proceeding or investigation, whether civil, criminal, administrative or investigative, to the extent such claim, action, suit, proceeding or investigation arises out of or pertains to the Merger, this
+
+A-53
+<!-- PAGE 177 -->
+ZEQ.=1,SEQ=176,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=61676,FOLIO='A-53',FILE='DISK112:[14ZCP1.14ZCP40801]LW40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Agreement and any transactions contemplated hereby, in either case, to the fullest extent permitted by (i) the Charter or Bylaws (or such equivalent organizational or governing documents of any of the Company's Subsidiaries or Affiliates as in effect on the date of this Agreement), (ii) any indemnification agreement of the Company or its Subsidiaries or other applicable Contract as in effect on the date of this Agreement, which provisions thereafter shall not be amended, repealed or otherwise modified in any manner that would adversely affect the rights thereunder of any Indemnitees or (iii) applicable Law. Parent shall cause the certificate of formation, bylaws or other organizational documents of the Surviving Corporation and its Subsidiaries to contain provisions with respect to indemnification, advancement of expenses and limitation of director, officer and employee liability that are no less favorable to the Indemnitees than those set forth in the Charter and Bylaws and the Company's Subsidiaries' organizational documents as of the date of this Agreement, which provisions thereafter shall not be amended, repealed or otherwise modified in any manner that would adversely affect the rights thereunder of any Indemnitees.
+
+A-54
+<!-- PAGE 178 -->
+ZEQ.=2,SEQ=177,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=478604,FOLIO='A-54',FILE='DISK112:[14ZCP1.14ZCP40801]LW40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Section 6.7 *Notification of Certain Matters* . Unless prohibited by applicable Law, the Company shall give prompt notice to Parent, and Parent and Merger Sub shall give prompt notice to the Company, upon receiving Knowledge of (a) any notice, complaint, investigation or hearing (or communications indicating that the same may be contemplated) from any Governmental Authority in connection with this Agreement, the Merger or the transactions contemplated hereby, (b) any written notice of any Person (other than a Governmental Authority) alleging that the consent of such Person is or may be required in connection with the Merger or the transactions contemplated hereby, (c) any actions, suits, claims, investigations or proceedings commenced or, to such party's Knowledge, threatened in writing against, relating to or involving or otherwise affecting such party or any of its Subsidiaries which relate to this Agreement, the Merger or the transactions contemplated hereby, or (d) any material change, effect, development or circumstance that would reasonably be expected to give
+
+A-55
+<!-- PAGE 179 -->
+ZEQ.=3,SEQ=178,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=688285,FOLIO='A-55',FILE='DISK112:[14ZCP1.14ZCP40801]LW40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+rise to a failure of a condition precedent in *Section 7.2* (in the case of the Company) and *Section 7.3* (in the case of Parent); provided, however, that no such notification shall affect the representations, warranties, covenants or agreements of the parties herein or the conditions to the obligations of the parties hereunder and any failure to make such notification (in and of itself) shall not be taken into account in determining whether the conditions set forth in *Section 7.2* (in the case of the Company) and *Section 7.3* (in the case of Parent) have been satisfied or give rise to any right of termination to any party hereto under *Article VIII* .
+
+Section 6.8 *Public Announcements* . The initial press release(s) announcing the execution of this Agreement shall be in a form mutually agreed upon by Parent and the Company. Parent and the Company shall consult with each other before issuing, and, to the extent practicable, give each other a reasonable opportunity to review and comment on, any other press release or other public announcements with respect to this Agreement or the transactions contemplated hereby, and shall not issue any such press release or make any such public announcement prior to such consultation, except as may be required by applicable Law, court process or the rules and regulations of any national securities exchange or national securities quotation system. Notwithstanding any other provision of this Agreement, (i) the Company will no longer be required to consult with Parent in connection with any such press release or public announcement if the Company Board has effected any Change in Recommendation or shall have resolved to do so and (ii) the requirements of this *Section 6.8* shall not apply to any disclosure by the Company or Parent of any information concerning this Agreement or the transactions contemplated hereby in connection with any dispute between the parties regarding this Agreement, the Merger or the transactions contemplated by this Agreement.
+
+Section 6.9 *Employee Matters* .
+
+A-56
+<!-- PAGE 180 -->
+ZEQ.=4,SEQ=179,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=271364,FOLIO='A-56',FILE='DISK112:[14ZCP1.14ZCP40801]LW40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+A-57
+<!-- PAGE 181 -->
+ZEQ.=5,SEQ=180,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=385281,FOLIO='A-57',FILE='DISK112:[14ZCP1.14ZCP40801]LW40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Section 6.10 *Conduct of Business by Parent Pending the Merger* . Parent and Merger Sub covenant and agree with the Company that between the date hereof and the earlier of the Effective Time and the date, if any, on which this Agreement is terminated pursuant to *Section 8.1* , Parent shall not, and shall not permit any of its Subsidiaries to, take or agree to take any action (including entering into agreements with respect to any acquisitions, mergers, consolidations or business combinations) which would reasonably be expected to result in, individually or in the aggregate, a Parent Material Adverse Effect.
+
+Section 6.11 *Financing* . (a) Parent and Merger Sub acknowledge and agree that the Company and its Affiliates and its and their respective Representatives shall not have any responsibility for, or incur any liability to any Person under, any financing that Parent and Merger Sub may raise in connection with the transactions contemplated by this Agreement or any cooperation provided pursuant to *Section 6.12* and that Parent and Merger Sub shall, on a joint and several basis, indemnify and hold harmless the Company and its Affiliates and its and their respective Representatives from and against any and all losses, damages, claims, costs or expenses suffered or incurred by any of them in connection with the Financing and any information utilized in connection therewith.
+
+A-58
+<!-- PAGE 182 -->
+ZEQ.=1,SEQ=181,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=366069,FOLIO='A-58',FILE='DISK112:[14ZCP1.14ZCP40801]LY40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+A-59
+<!-- PAGE 183 -->
+ZEQ.=2,SEQ=182,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=362945,FOLIO='A-59',FILE='DISK112:[14ZCP1.14ZCP40801]LY40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+A-60
+<!-- PAGE 184 -->
+ZEQ.=3,SEQ=183,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=312126,FOLIO='A-60',FILE='DISK112:[14ZCP1.14ZCP40801]LY40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Section 6.12 *Financing Cooperation* . (a) Subject to *Section 6.11(a)* and the remaining provisions of this *Section 6.12* , prior to the Merger Closing, the Company shall and shall cause its Subsidiaries to, at Parent's sole expense, reasonably cooperate in connection with the arrangement of the Financing or any Alternative Financing, which reasonable cooperation by the Company shall consist of, at the reasonable request of Parent, (i) furnishing Parent and Merger Sub and their Financing Sources with the Required Financial Information as reasonably requested by Parent and (ii) using its reasonable best efforts to (A) cause its senior officers to be available, during normal business hours and upon reasonable advance notice, to participate in a reasonable number of meetings, presentations, road shows, due diligence sessions and sessions with rating agencies in connection with the Financing, and using its reasonable best efforts to facilitate such contact, (B) provide customary assistance with the preparation of appropriate and customary materials for rating agency presentations, offering documents, private placement memoranda, bank information memoranda, prospectuses and similar documents customarily required in connection with debt financings, (C) execute and deliver customary definitive financing documents to be effective no earlier than, and conditioned on the occurrence of, the Effective Time, (D) furnish Parent, to the extent requested in writing by Parent, with reasonable documents or other information required by bank regulatory authorities with respect to the Financing under applicable "know your customer" and anti-money laundering rules and regulations, including the U.S.A. Patriot Act of 2011, as well as applicable regulations of the Office of Foreign Assets Control (OFAC), the Foreign Corrupt Practices Act of 1977 and the Investment Company Act of 1940, in each case, at least 10 Business Days prior to the Merger Closing, (E) assist Parent in obtaining accountants' comfort letters, including customary negative assurance from one or more of the Company's independent accountants on customary terms and consistent with the accountants customary practice and reasonably cooperate with Parent's legal counsel in connection with any legal opinions that such legal counsel may be required to give in connection with the Financing, (F) agree to enter into customary pay-off letters and perfection certificates and (x) deliver such officer's certificates (including solvency certificates) and lien releases, if any, as are customary in financings of such type and (y) otherwise grant, and provide customary materials that facilitate the perfection or enforcement of, liens on, the assets of the Company or any of its Subsidiaries pursuant to such agreements as may be reasonably requested (including using such reasonable best efforts to provide original copies of all certificated securities (with transfer powers executed in blank)), provided that no obligation of the Company or any of its Subsidiaries under any such agreement, pledge or grant shall be effective until the Effective Time, (G) provide customary cooperation with the marketing efforts of Parent and its Financing Sources for all or any portion of the Financing or any Alternative Financing, (H) provide requested authorization letters with respect to the Company to the Financing Sources (including with respect to absence of material non-public information about the Company and its Subsidiaries and their securities in the public-side version of documents distributed to prospective lenders) and (I) cooperate with the Financing Sources' customary securities underwriting and secured lending due diligence investigation, to the extent customary and reasonable. The Company shall be given reasonable
+
+A-61
+<!-- PAGE 185 -->
+ZEQ.=4,SEQ=184,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=559278,FOLIO='A-61',FILE='DISK112:[14ZCP1.14ZCP40801]LY40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+opportunity to review and comment upon any private placement memoranda or similar documents, or any materials for rating agencies, that include information about the Company or any of its Subsidiaries prepared in connection with the Financing, and Parent shall include in such memoranda, documents and other materials, comments reasonably proposed by the Company. Notwithstanding anything to the contrary contained in this Agreement, neither the Company nor any of its Subsidiaries shall be required to (A) pay any commitment or other similar fee, (B) incur any liability of any kind (or cause their respective Representatives to incur any liability of any kind) prior to the Effective Time, (C) other than with respect to authorization letters referred to above, enter into any binding agreement or commitment in connection with the Financing (or any Alternative Financing) that is not conditioned on the occurrence of the Effective Time and does not terminate without liability to the Company or any of its Subsidiaries upon termination of this Agreement, (D) take any action that would (1) unreasonably interfere with the ongoing operations of the Company and its Subsidiaries, (2) cause any representation or warranty in this Agreement to be breached, (3) cause any director, officer or employee of the Company or any of its Subsidiaries to incur any personal liability, (4) conflict with the Charter, the Bylaws (or similar organizational documents of any of the Subsidiaries of the Company) or any Laws, (5) result in the contravention of, or that could reasonably be expected to result in a violation or breach of, or a default under, any contract to which the Company or any of its Subsidiaries is a party, (6) require the Company to provide access to or disclose information that the Company determines would jeopardize any attorney-client privilege of the Company or any of its Subsidiaries or (7) require the Company to prepare separate financial statements for any Subsidiary of the Company or change any fiscal period.
+
+A-62
+<!-- PAGE 186 -->
+ZEQ.=5,SEQ=185,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=196011,FOLIO='A-62',FILE='DISK112:[14ZCP1.14ZCP40801]LY40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Section 6.13 *Merger Sub* . Parent will take all actions necessary to (a) cause Merger Sub to comply with this Agreement, perform its obligations under this Agreement and to consummate the Merger, in each case, on the terms and conditions set forth in this Agreement and (b) ensure that, prior to the Effective Time, Merger Sub shall not conduct any business or make any investments other than as specifically contemplated by this Agreement, or incur or guarantee any indebtedness or liabilities.
+
+Section 6.14 *No Control of the Company's Business* . Nothing contained in this Agreement is intended to give Parent or Merger Sub, directly or indirectly, the right to control or direct the Company's or its Subsidiaries' operations prior to the Effective Time. Prior to the Effective Time, the Company shall exercise, consistent with the terms and conditions of this Agreement, complete control and supervision over its and its Subsidiaries' operations.
+
+ARTICLE VII. CONDITIONS TO THE MERGER
+
+Section 7.1 *Conditions to the Obligations of Each Party* . The respective obligations of each party to consummate the Merger are subject to the satisfaction or (to the extent permitted by Law) waiver by the Company and Parent at or prior to the Merger Closing Date of the following conditions:
+
+Section 7.2 *Conditions to the Obligations of Parent and Merger Sub* . In addition to the conditions set forth in *Section 7.1* , the respective obligations of Parent and Merger Sub to consummate the Merger
+
+A-63
+<!-- PAGE 187 -->
+ZEQ.=6,SEQ=186,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=869105,FOLIO='A-63',FILE='DISK112:[14ZCP1.14ZCP40801]LY40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+are subject to the satisfaction or (to the extent permitted by Law) waiver by Parent at or prior to the Merger Closing Date of the following further conditions:
+
+Section 7.3 *Conditions to the Obligations of the Company* . In addition to the conditions set forth in *Section 7.1* , the obligations of the Company to consummate the Merger are subject to the satisfaction or (to the extent permitted by Law) waiver by the Company at or prior to the Merger Closing Date of the following further conditions:
+
+Section 7.4 *Frustration of Closing Conditions* . Neither Parent nor Merger Sub may rely on the failure of any conditions set forth in *Section 7.1* or *Section 7.2* to be satisfied if such failure was caused by the failure of Parent or Merger Sub to perform any of their obligations under this Agreement. The Company may not rely on the failure of any conditions set forth in *Section 7.1* or *Section 7.3* to be satisfied if such failure was caused by the failure of the Company to perform any of its obligations under this Agreement.
+
+A-64
+<!-- PAGE 188 -->
+ZEQ.=7,SEQ=187,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=503990,FOLIO='A-64',FILE='DISK112:[14ZCP1.14ZCP40801]LY40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+ARTICLE VIII. TERMINATION, AMENDMENT AND WAIVER
+
+Section 8.1 *Termination.* Notwithstanding anything to the contrary contained in this Agreement, this Agreement may be terminated at any time prior to the Effective Time, whether before or after the Requisite Shareholder Approval is obtained (except as otherwise expressly noted), as follows:
+
+A-65
+<!-- PAGE 189 -->
+ZEQ.=1,SEQ=188,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=826517,FOLIO='A-65',FILE='DISK112:[14ZCP1.14ZCP40801]MA40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Section 8.2 *Effect of Termination.* In the event that this Agreement is terminated in accordance with *Section 8.1* , written notice thereof shall be given to the other party or parties, specifying the
+
+A-66
+<!-- PAGE 190 -->
+ZEQ.=2,SEQ=189,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=175139,FOLIO='A-66',FILE='DISK112:[14ZCP1.14ZCP40801]MA40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+provisions hereof pursuant to which such termination is made and the basis therefor described in reasonable detail, and, except as set forth in this *Section 8.2* , this Agreement shall forthwith become null and void and of no effect without liability on the part of any party hereto (or any of its Representatives), and all rights and obligations of any party hereto shall cease; provided that if (x) such termination resulted, directly or indirectly, from the Intentional Breach of any representation, warranty, covenant or agreement contained herein or (y) the Intentional Breach of any representation, warranty, covenant or other agreement contained herein shall cause the Merger Closing not to occur, then, notwithstanding such termination, such breaching party shall be fully liable for any and all damages, costs, expenses (including pursuant to *Section 9.13* ), liabilities or other losses of any kind, in each case, incurred or suffered by the other party (collectively, " **Damages** ") as a result of such Intentional Breach; provided, further that the Confidentiality Agreement, and the provisions of *Section 4.26* (Brokers), *Section 5.13* (Brokers), *Section 6.4* (Access to Information; Confidentiality) (last sentence only), *Section 6.11(a)* (Financing), *Section 6.12(b)* (Financing Cooperation), *Article I* (Definitions), *Article VIII* (Termination) and *Article IX* (General Provisions) shall survive any termination of this Agreement pursuant to *Section 8.1* .
+
+Section 8.3 *Termination Fees.*
+
+A-67
+<!-- PAGE 191 -->
+ZEQ.=3,SEQ=190,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=581623,FOLIO='A-67',FILE='DISK112:[14ZCP1.14ZCP40801]MA40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+A-68
+<!-- PAGE 192 -->
+ZEQ.=4,SEQ=191,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=472770,FOLIO='A-68',FILE='DISK112:[14ZCP1.14ZCP40801]MA40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Section 8.4 *Amendment.* This Agreement may be amended by mutual agreement of the parties hereto by action taken by or on behalf of their respective boards of directors at any time before or after receipt of the Requisite Shareholder Approval; provided, however, that after the Requisite Shareholder Approval has been obtained, there shall not be any amendment that by Law requires further approval by the shareholders of the Company without such further approval of such shareholders. This Agreement may not be amended except by an instrument in writing signed by each of the parties hereto; provided, that notwithstanding anything to the contrary set forth herein, *Section 8.3(c)* , this *Section 8.4* , *Section 9.7* , *Section 9.8* , *Section 9.9(b)* , *Section 9.10(c)* , *Section 9.12* or *Section 9.15* (in each case, together with any related definitions and other provisions of this Agreement to the extent a modification or termination would serve to modify the substance or provisions or such Sections) may not be amended, modified, waived or terminated in a manner that is adverse to the Financing Sources without the prior written consent of the Financing Sources.
+
+Section 8.5 *Extension; Waiver.* At any time prior to the Effective Time, subject to applicable Law, any party hereto may (a) extend the time for the performance of any obligation or other act of any other party hereto, (b) waive any inaccuracy in the representations and warranties of the other party contained herein or in any document delivered pursuant hereto, and (c) subject to the proviso of the first sentence of *Section 8.4* , waive compliance with any agreement or condition contained herein. Notwithstanding the foregoing, no failure or delay by the Company, Parent or Merger Sub in exercising any right hereunder shall operate as a waiver thereof nor shall any single or partial exercise thereof preclude any other or further exercise of any other right hereunder. Any agreement on the part of a party to any extension or waiver shall be valid only if set forth in an instrument in writing signed on behalf of such party.
+
+Section 8.6 *Expenses.* Except as expressly set forth herein (including *Section 6.12(b)* , *Section 8.2* , *Section 8.3* and *Section 9.13* ), all fees and expenses incurred in connection with this Agreement, the Merger and the other transactions contemplated by this Agreement shall be paid by the party incurring such fees or expenses, whether or not the Merger or any of the other transactions contemplated by this Agreement are consummated.
+
+Section 8.7 *Transfer Taxes.* Except as expressly provided in Section 3.2(c), all transfer, documentary, sales, use, stamp, registration and other such Taxes and fees (including penalties and interest) incurred in connection with the Merger shall be paid by Parent and Merger Sub when due.
+
+ARTICLE IX. GENERAL PROVISIONS
+
+Section 9.1 *Non-Survival of Representations, Warranties and Agreements.* The representations, warranties, covenants and agreements in this Agreement and any certificate delivered pursuant hereto by any Person shall terminate at the Effective Time, except that this *Section 9.1* shall not limit any covenant or agreement of the parties which by its terms contemplates performance in whole or in part after the Effective Time, including those contained in *Article III* , *Section 6.6* , *Section 6.9* or *Section 6.12(b)* .
+
+A-69
+<!-- PAGE 193 -->
+ZEQ.=5,SEQ=192,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=340238,FOLIO='A-69',FILE='DISK112:[14ZCP1.14ZCP40801]MA40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Section 9.2 *Notices.* Any notice required to be given hereunder shall be sufficient if in writing and sent by facsimile transmission (providing confirmation of transmission by the transmitting equipment) or e-mail of a .pdf attachment (with confirmation of receipt by non-automated reply e-mail from the recipient) (provided that any notice received by facsimile or e-mail or otherwise at the addressee's location on any Business Day after 5:00 p.m. (New York City time) shall be deemed to have been received at 9:00 a.m. (New York City time) on the next Business Day), by reliable overnight delivery service (with proof of service), hand delivery or certified or registered mail (return receipt requested and first-class postage prepaid), addressed as follows (or at such other address for a party as shall be specified in a notice given in accordance with this *Section 9.2* ):
+
+if to Parent or Merger Sub:
+
+with a copy (which shall not constitute notice) to:
+
+if to the Company:
+
+with a copy (which shall not constitute notice) to:
+
+and, except as set forth above, such notice shall be deemed to have been delivered as of the date so telecommunicated, personally delivered or received. Any party to this Agreement may notify any other party of any changes to the address or any of the other details specified in this paragraph; *provided* , *however* , that such notification shall only be effective on the date specified in such notice or two (2) Business Days after the notice is given, whichever is later. Rejection or other refusal to accept or the inability to deliver because of changed address of which no notice was given shall be deemed to be receipt of the notice as of the date of such rejection, refusal or inability to deliver.
+
+Section 9.3 *Interpretation; Certain Definitions.* (a) The parties have participated jointly in the negotiation and drafting of this Agreement. Consequently, in the event an ambiguity or question of intent or interpretation arises, this Agreement shall be construed as if drafted jointly by the parties hereto, and no presumption or burden of proof shall arise favoring or disfavoring any party by virtue of the authorship of any provision of this Agreement.
+
+A-70
+<!-- PAGE 194 -->
+ZEQ.=1,SEQ=193,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=249557,FOLIO='A-70',FILE='DISK112:[14ZCP1.14ZCP40801]MC40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+A-71
+<!-- PAGE 195 -->
+ZEQ.=2,SEQ=194,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=663124,FOLIO='A-71',FILE='DISK112:[14ZCP1.14ZCP40801]MC40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Section 9.4 *Severability.* If any term or other provision of this Agreement is held by a court of competent jurisdiction or other authority to be invalid, void, illegal or incapable of being enforced under any present or future Law, or public policy, (a) such term or other provision shall be fully separable, (b) this Agreement shall be construed and enforced as if such invalid, illegal or unenforceable provision had never comprised a part hereof, and (c) all other conditions and provisions of this Agreement shall remain in full force and effect and shall not be affected by the illegal, invalid or unenforceable term or other provision or by its severance herefrom so long as the economic or legal substance of the transactions contemplated hereby is not affected in any manner materially adverse to any party. Upon such determination that any term or other provision is invalid, illegal or incapable of being enforced, the parties hereto shall negotiate in good faith to modify this Agreement so as to effect the original intent of the parties as closely as possible to the fullest extent permitted by applicable Law in a mutually acceptable manner in order that the transactions contemplated hereby are fulfilled as originally contemplated to the fullest extent possible.
+
+Section 9.5 *Assignment.* Neither this Agreement nor any rights, interests or obligations hereunder shall be assigned by any of the parties hereto (whether by operation of Law or otherwise) without the prior written consent of the other parties hereto; provided that Parent or Merger Sub may assign any of their respective rights and obligations to any direct or indirect Subsidiary of Parent or to any other Person of Parent's choosing, but no such assignment shall relieve Parent or Merger Sub, as the case may be, of its obligations hereunder; provided, further, that such assignment shall not prevent or materially delay the Merger Closing. Subject to the preceding sentence, this Agreement will be binding upon, inure to the benefit of and be enforceable by the parties and their respective permitted successors and permitted assigns. Any purported assignment not permitted under this *Section 9.5* shall be null and void.
+
+Section 9.6 *Entire Agreement.* This Agreement (including the Exhibits, Schedules, Annexes and Appendices hereto and other documents delivered pursuant hereto) constitutes, together with the Confidentiality Agreement, the Company Disclosure Letter and the Parent Disclosure Letter, the entire agreement, and supersedes all other prior agreements and understandings, both written and oral, among the parties and their Affiliates, or any of them, with respect to the subject matter hereof.
+
+Section 9.7 *No Third-Party Beneficiaries.* This Agreement is not intended to and shall not confer any rights or remedies upon any Person other than the parties hereto and their respective successors and permitted assigns, except for (a) from and after the Effective Time, the rights of the Company's shareholders to receive the Merger Consideration at the Effective Time, (b) from and after the Effective Time, the right of the holders of Company Options to receive the Option Cash Payment, (c) from and after the Effective Time, the right of the holders of Company Restricted Stock Units to receive Restricted Award Payments, (d) from and after the Effective Time, the right of the holders of Company Performance Share Awards, to receive the Performance Share Award Payments, (e) the provisions of *Section 6.6* (which shall be enforceable by the Indemnitees), (h) the provisions of *Section 6.12(b)* (which shall be enforceable by the 6.12 Indemnitees) and (i) with respect to the Financing Sources, the provisions of *Section 8.3(c)* , *Section 8.4* , this *Section 9.7* , *Section 9.8* , *Section 9.9(b)* , *Section 9.10(c)* , *Section 9.12* and *Section 9.15* . The representations and warranties in this Agreement are the product of negotiations among the parties hereto and are for the sole benefit of the parties hereto. Any inaccuracies in such representations and warranties are subject to waiver by the parties hereto in accordance with *Section 8.5* without notice or liability to any other Person. The representations and warranties in this Agreement may represent an allocation among the parties hereto of risks associated with particular matters regardless of the Knowledge of any of the parties hereto. Accordingly, Persons other than the parties hereto may not rely upon the representations and
+
+A-72
+<!-- PAGE 196 -->
+ZEQ.=3,SEQ=195,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=930752,FOLIO='A-72',FILE='DISK112:[14ZCP1.14ZCP40801]MC40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+warranties in this Agreement as characterizations of actual facts or circumstances as of the date of this Agreement or as of any other date.
+
+Section 9.8 *Governing Law.* The provisions of this Agreement and any other document or instrument delivered pursuant hereto, their negotiation, execution, performance or nonperformance, interpretation, termination, construction and all matters based upon, arising out of or related to any of the foregoing (whether in equity, law or statute) shall be governed by and construed in accordance with the internal laws, both procedural and substantive, of the State of New York applicable to agreements made and to be performed entirely within such State, without regard to the conflicts of law principles of such State; provided, however, that the laws of the State of Texas shall govern to the extent that the provisions of the TBOC are specifically referenced herein or that it is mandatory that the TBOC apply to any of the provisions of this Agreement or any of the transactions contemplated hereby and to (i) the rights (including dissenters' rights) of shareholders in connection with, the Merger and (ii) the duties and obligations of the directors and officers of the Company and its Subsidiaries.
+
+Section 9.9 *Specific Performance.* (a) The parties agree that irreparable damage for which monetary damages, even if available, would not be an adequate remedy, would occur in the event that the parties hereto do not perform the provisions of this Agreement (including failing to take such actions as are required of it hereunder to consummate the transactions contemplated by this Agreement) in accordance with its specified terms or otherwise breach such provisions. Accordingly, except as otherwise set forth in this *Section 9.9* , including the limitations set forth in *Section 9.9(b)* , the parties acknowledge and agree that the parties hereto shall be entitled, without posting a bond or other indemnity, to an injunction, specific performance and other equitable relief to prevent breaches of this Agreement and to enforce specifically the terms and provisions hereof, in addition to any other remedy to which they are entitled at law or in equity.
+
+A-73
+<!-- PAGE 197 -->
+ZEQ.=4,SEQ=196,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=365261,FOLIO='A-73',FILE='DISK112:[14ZCP1.14ZCP40801]MC40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Section 9.10 *Consent to Jurisdiction.* (a) Each of Parent, Merger Sub and the Company hereby irrevocably submits to the exclusive jurisdiction of the state and federal courts sitting in the County, City and State of New York and appellate courts therefrom (collectively, the " **Chosen Courts** "), for the purpose of any action, proceeding or counterclaim (whether based on contract, tort or otherwise) arising out of or relating to this Agreement, or the actions of Parent, Merger Sub or the Company in the negotiation, administration, performance and enforcement thereof, and each of the parties hereto hereby irrevocably agrees that all claims in respect to such action or proceeding may be heard and determined exclusively in the Chosen Courts.
+
+A-74
+<!-- PAGE 198 -->
+ZEQ.=5,SEQ=197,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=2470,FOLIO='A-74',FILE='DISK112:[14ZCP1.14ZCP40801]MC40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Section 9.11 *Counterparts.* This Agreement may be executed in multiple counterparts, and by the different parties hereto in separate counterparts, each of which when executed shall be deemed to be an original but all of which taken together shall constitute one and the same agreement. Delivery of an executed counterpart of a signature page to this Agreement by facsimile or other electronic transmission, including by e-mail attachment, shall be effective as delivery of a manually executed counterpart of this Agreement.
+
+Section 9.12 *WAIVER OF JURY TRIAL.* EACH OF PARENT, MERGER SUB AND THE COMPANY HEREBY IRREVOCABLY WAIVES ALL RIGHT TO TRIAL BY JURY IN ANY ACTION, PROCEEDING OR COUNTERCLAIM (WHETHER BASED ON CONTRACT, TORT OR OTHERWISE) ARISING OUT OF OR RELATING TO THIS AGREEMENT OR THE ACTIONS OF PARENT, MERGER SUB OR THE COMPANY IN THE NEGOTIATION, ADMINISTRATION, PERFORMANCE AND ENFORCEMENT THEREOF.
+
+Section 9.13 *Attorneys' Fees.* In any action at law or suit in equity to enforce this Agreement or the rights of any of the parties hereunder, the prevailing party in such action or suit shall be entitled to receive reimbursement for all reasonable costs and expenses (including reasonable attorneys' fees) incurred in such action or suit.
+
+Section 9.14 *Obligations.* Whenever this Agreement requires a Subsidiary of the Company to take any action, such requirement shall be deemed to include an undertaking on the part of the Company to cause such Subsidiary to take such action and, after the Effective Time, on the part of Parent and the Surviving Corporation to cause such Subsidiary to take such action. Whenever this Agreement requires Merger Sub to take any action, such requirement shall be deemed to include an undertaking on the part of Parent to cause Merger Sub to take such action.
+
+Section 9.15 *No Recourse Against Related Parties.* Notwithstanding anything to the contrary set forth in this Agreement or elsewhere, no Financing Source shall have any liability, personal or otherwise, or obligation relating to or arising out of this Agreement, the transactions contemplated by this Agreement or the exploration or negotiation thereof for any breach or damages suffered (i) as a result of the failure of the Merger or any of the transactions to be consummated or (ii) as a result of, or under, this Agreement and the transactions contemplated by this Agreement (or in respect of any representations made or alleged to be made in connection herewith or therewith).
+
+( *Signature pages follow* )
+
+A-75
+<!-- PAGE 199 -->
+ZEQ.=6,SEQ=198,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=206238,FOLIO='A-75',FILE='DISK112:[14ZCP1.14ZCP40801]MC40801A.;10',USER='CHE107325',CD='21-OCT-2014;00:28' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+IN WITNESS WHEREOF, Parent, Merger Sub and the Company have caused this Agreement to be executed as of the date first written above by their respective officers thereunto duly authorized.
+
+COMMAND=ADD_TABLEWIDTH,"100%" User-specified TAGGED TABLE
+
+| /s/ PATRICK J. RAMSEY |  |
+| --- | --- |
+| Name: | Patrick J. Ramsey |
+| Title: | Chief Executive Officer |
+
+end of user-specified TAGGED TABLE
+
+***Signature Page to Agreement and Plan of Merger***
+<!-- PAGE 200 -->
+ZEQ.=1,SEQ=199,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=183860,FOLIO='blank',FILE='DISK112:[14ZCP1.14ZCP40801]ME40801A.;4',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+COMMAND=ADD_TABLEWIDTH,"100%" User-specified TAGGED TABLE
+
+| GLOBAL CASH ACCESS HOLDINGS, INC. — By: | /s/ RAM V. CHARY |  |
+| --- | --- | --- |
+|  | Name: | Ram V. Chary |
+|  | Title: | CEO |
+| MOVIE MERGER SUB, INC. |  |  |
+| By: | /s/ RAM V. CHARY |  |
+|  | Name: | Ram V. Chary |
+|  | Title: | CEO |
+
+end of user-specified TAGGED TABLE
+
+***Signature Page to Agreement and Plan of Merger***
+<!-- PAGE 201 -->
+ZEQ.=2,SEQ=200,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=773760,FOLIO='blank',FILE='DISK112:[14ZCP1.14ZCP40801]ME40801A.;4',USER='CHE107325',CD='21-OCT-2014;00:28' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+**Annex B**
+
+**![LOGO](g736623.jpg)**
+
+Wells Fargo Securities, LLC 550 S. Tryon Street Charlotte, NC 28288
+
+September 8, 2014
+
+Confidential
+
+Board of Directors of Multimedia Games Holding Company, Inc. 206 Wild Basin Road South Building B, 4 th Floor Austin, TX 78746
+
+Ladies and Gentlemen:
+
+The Board of Directors (the "Board") of Multimedia Games Holding Company, Inc., a Texas corporation ("MGAM"), has asked Wells Fargo Securities, LLC ("Wells Fargo Securities") to advise it with respect to the fairness, from a financial point of view, to the holders of the outstanding shares of common stock, par value $0.01 per share (the "MGAM Common Stock"), of MGAM, other than as specified below, of the Merger Consideration (as hereinafter defined) to be received by such holders pursuant to the Agreement and Plan of Merger (the "Agreement") proposed to be entered into among MGAM, Global Cash Access Holdings, Inc., a Delaware corporation ("GCA"), and Movie Merger Sub, Inc., a Texas corporation and wholly owned subsidiary of GCA ("Merger Sub"). Pursuant to the Agreement, Merger Sub will be merged with and into MGAM, the separate corporate existence of Merger Sub will cease and MGAM will continue as the surviving corporation and a wholly owned subsidiary of GCA (the "Merger"). The Agreement contemplates that, at the effective time of the Merger (the "Effective Time"), each outstanding share of MGAM Common Stock (excluding any such MGAM Common Stock (i) held by MGAM, GCA, Merger Sub or any direct or indirect subsidiary of MGAM or GCA or (ii) with respect to which the holder has exercised statutory appraisal rights ((i) and (ii) collectively, the "Excluded Shares")) shall be converted into the right to receive $36.50 in cash (the "Merger Consideration"). The terms and conditions of the Merger are more fully set forth in the Agreement. Capitalized terms used, but not defined, in this letter shall have the meaning ascribed to them in the Agreement.
+
+In arriving at our opinion, we have, among other things:
+
+• Reviewed a draft, dated September 7, 2014, of the Agreement, including the financial terms of the Merger; • Reviewed certain business, financial and other information regarding MGAM that was publicly available or was furnished to us by MGAM; • Reviewed certain financial projections for MGAM prepared by the management of MGAM, and that were approved for our use by the Board; • Discussed with the management of MGAM the operations and prospects of MGAM, including the historical financial performance and trends in the results of operations of MGAM;
+
+B-1
+<!-- PAGE 202 -->
+ZEQ.=1,SEQ=201,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=847992,FOLIO='B-1',FILE='DISK112:[14ZCP1.14ZCP40801]MG40801A.;11',USER='CHE107325',CD='21-OCT-2014;00:28' • Participated in discussions among representatives of MGAM, GCA and their respective advisors regarding the proposed Merger; • Reviewed the historical prices, implied trading multiples and trading volumes of MGAM Common Stock; • Compared certain business, financial and other information regarding MGAM that was publicly available or was furnished to us by MGAM with publicly available business, financial and other information regarding certain publicly traded companies that we deemed relevant; • Compared the proposed financial terms of the Agreement with the financial terms of certain other business combinations and transactions that we deemed relevant; • Prepared a discounted cash flow analysis of MGAM based upon the financial forecasts and estimates referred to above and assumptions relating thereto discussed with and confirmed as reasonable by the management of MGAM; • Considered other information, such as financial studies, analyses, and investigations, as well as financial, economic and market criteria, that we deemed relevant.
+
+In connection with our review, we have assumed and relied upon the accuracy and completeness of the financial and other information provided, discussed with or otherwise made available to us, including all accounting, tax, regulatory and legal information, and we have not made (and have not assumed any responsibility for) any independent verification of such information. We have assumed, with your consent, that MGAM is not aware of any facts or circumstances that would make such information inaccurate or misleading in any way meaningful to our analysis. With respect to the financial forecasts, estimates and other information utilized in our analyses, we have assumed, with your consent, that they have been reasonably prepared and reflect the best current estimates, judgments and assumptions of the management of MGAM as to the future financial performance of MGAM. We assume no responsibility for, and express no view as to, such forecasts, estimates or other information utilized in our analyses or the judgments or assumptions upon which they are based. We also have assumed that there have been no material changes in the condition (financial or otherwise), results of operations, business or prospects of MGAM since the respective dates of the most recent financial statements and other information provided to us. In arriving at our opinion, we have not conducted any physical inspection of the properties or assets of MGAM or any other entity, nor have we made or been provided with any evaluations or appraisals of the properties, assets or liabilities (contingent or otherwise) of MGAM or any other entity. In connection with our engagement, we were not requested to, and we did not, solicit third party indications of interest in the possible acquisition of MGAM.
+
+In rendering our opinion, we have assumed, with your consent, that the final form of the Agreement, when signed by the parties thereto, will not differ from the draft reviewed by us in any respect meaningful to our analyses or opinion, that the Merger will be consummated in accordance with the Agreement and in compliance with all applicable laws and other requirements, without waiver, modification or amendment of any material terms or conditions, and that in the course of obtaining any necessary legal, regulatory or third party consents or approvals for the Merger, no delays, limitations, conditions or restrictions will be imposed or actions will be taken that will have an adverse effect on MGAM or the Merger in any way meaningful to our analyses. Our opinion is necessarily based on economic, market, financial and other conditions existing, and the information made available to us, as of the date hereof. Although subsequent developments may affect the matters set forth in this opinion, we do not have any obligation to update, revise, reaffirm or withdraw this opinion or otherwise comment on or consider any such events occurring or coming to our attention after the date hereof.
+
+B-2
+<!-- PAGE 203 -->
+ZEQ.=2,SEQ=202,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=794223,FOLIO='B-2',FILE='DISK112:[14ZCP1.14ZCP40801]MG40801A.;11',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Our opinion only addresses the fairness, from a financial point of view and as of the date hereof, of the Merger Consideration to be received by holders of MGAM Common Stock (excluding the Excluded Shares) in the Merger pursuant to the Agreement to the extent expressly specified herein, and does not address any other terms or aspects of the Merger, including, without limitation, the form or structure of the Merger, any tax or accounting matters relating to the Merger or otherwise, any financing arrangements or any aspect or implication of any other agreement or arrangement entered into in connection with or contemplated by the Merger or otherwise. In addition, our opinion does not address the fairness of the amount or nature of, or any other aspects relating to, any compensation to be received by any officers, directors or employees of any parties to the Merger, or class of such persons, relative to the Merger Consideration or otherwise. In rendering this opinion, we express no opinion with respect to any amounts or consideration to be received by, or to be paid or not paid, to the holders of the Excluded Shares in connection with the Merger. Our opinion also does not address the merits of the underlying decision by MGAM to enter into the Agreement or the relative merits of the Merger compared with other business strategies or transactions available or that have been or might be considered by the management or the Board or in which MGAM might engage. We also are not expressing any view or opinion with respect to, and with the consent of MGAM have relied upon the assessments of representatives of MGAM regarding, accounting, tax, regulatory, legal or similar matters as to which we understand that MGAM obtained such advice as it deemed necessary from qualified professionals. You have informed us that MGAM has received another indication of interest from a potential acquirer other than GCA at a price that may be higher than the Merger Consideration should all contingent payments be earned, and that the Board has determined not to pursue this other indication of interest because of its conditional and contingent nature, among other factors.
+
+The issuance of this opinion was approved by an authorized committee of Wells Fargo Securities. Wells Fargo Securities is the trade name for certain capital markets and investment banking services of Wells Fargo & Company and its subsidiaries, including Wells Fargo Securities, LLC. Wells Fargo Securities has been engaged to act as financial advisor to the Board in connection with the Merger and will receive a fee for such services, a portion of which will be payable upon delivery of this opinion and the principal portion of which will be payable upon the consummation of the Merger. MGAM has also agreed to reimburse certain of Wells Fargo Securities' expenses and to indemnify Wells Fargo Securities and certain related parties against certain liabilities that may arise out of our engagement.
+
+Wells Fargo Securities and our affiliates provide a full range of investment banking and financial advisory, securities trading, brokerage and lending services in the ordinary course of business, for which we and such affiliates receive customary fees. In that regard, Wells Fargo Securities or our affiliates in the past have provided, currently are providing and in the future may provide banking and other financial services to MGAM, GCA and certain of their respective affiliates, for which Wells Fargo Securities or such affiliates have received and expect to receive fees, including having acted or acting (i) as financial advisor to MGAM in connection with its acquisition of PokerTek, Inc. in April 2014 and (ii) as syndication agent and lender under the existing credit facility of MGAM. In the ordinary course of business, Wells Fargo Securities and our affiliates may actively trade or otherwise effect transactions in or hold the securities or financial instruments of MGAM, GCA and/or certain of their respective affiliates for our own account and for the accounts of our customers and, accordingly, may at any time hold a long or short position in such securities or financial instruments.
+
+It is understood that this opinion is for the information and use of the Board (in its capacity as such) in connection with its evaluation of the Merger and such opinion does not constitute a recommendation to the Board or to any other person or entity in respect of the Merger or otherwise, including, without limitation, as to how any holder of MGAM Common Stock should vote or act in connection with any matter relating to the Merger, the Agreement or any other matters.
+
+B-3
+<!-- PAGE 204 -->
+ZEQ.=3,SEQ=203,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=1001005,FOLIO='B-3',FILE='DISK112:[14ZCP1.14ZCP40801]MG40801A.;11',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Based upon and subject to the foregoing, our experience as investment bankers, our work as described above and other factors we deemed relevant, it is our opinion that, as of the date hereof, the Merger Consideration to be received by holders of MGAM Common Stock (excluding the Excluded Shares) pursuant to the Agreement is fair, from a financial point of view, to such holders.
+
+Very truly yours,
+
+/s/ Wells Fargo Securities, LLC
+
+WELLS FARGO SECURITIES, LLC
+
+B-4
+<!-- PAGE 205 -->
+ZEQ.=4,SEQ=204,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=352150,FOLIO='B-4',FILE='DISK112:[14ZCP1.14ZCP40801]MG40801A.;11',USER='CHE107325',CD='21-OCT-2014;00:28' THIS IS THE END OF A COMPOSITION COMPONENT
+
+COMMAND=ADD_BASECOLOR,"Black" COMMAND=ADD_DEFAULTFONT,"font-family:times;" COMMAND=ADD_TABLESHADECOLOR,"#CCEEFF" COMMAND=ADD_STABLERULES,"border-bottom:solid #000000 1.0pt;" COMMAND=ADD_DTABLERULES,"border-bottom:double #000000 2.25pt;" COMMAND=ADD_SCRTABLERULES,"border-bottom:solid #000000 1.0pt;margin-bottom:0pt;" COMMAND=ADD_DCRTABLERULES,"border-bottom:double #000000 2.25pt;margin-bottom:0pt;"
+
+TOC_END
+
+Table of Contents
+
+**ANNEX C**
+
+**SUBCHAPTER H OF CHAPTER 10 OF THE TEXAS BUSINESS ORGANIZATIONS CODE**
+
+Sec. 10.351. *APPLICABILITY OF SUBCHAPTER.* (a) This subchapter does not apply to a fundamental business transaction of a domestic entity if, immediately before the effective date of the fundamental business transaction, all of the ownership interests of the entity otherwise entitled to rights to dissent and appraisal under this code are held by one owner or only by the owners who approved the fundamental business transaction.
+
+(b) This subchapter applies only to a "domestic entity subject to dissenters' rights," as defined in Section 1.002. That term includes a domestic for-profit corporation, professional corporation, professional association, and real estate investment trust. Except as provided in Subsection (c), that term does not include a partnership or limited liability company.
+
+(c) The governing documents of a partnership or a limited liability company may provide that its owners are entitled to the rights of dissent and appraisal provided by this subchapter, subject to any modification to those rights as provided by the entity's governing documents.
+
+Sec. 10.352. *DEFINITIONS.* In this subchapter:
+
+Sec. 10.353. *FORM AND VALIDITY OF NOTICE.* (a) Notice required under this subchapter:
+
+(b) Failure to provide notice as required by this subchapter does not invalidate any action taken.
+
+C-1
+<!-- PAGE 206 -->
+ZEQ.=1,SEQ=205,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=111650,FOLIO='C-1',FILE='DISK112:[14ZCP1.14ZCP40801]MI40801A.;4',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Table of Contents
+
+Sec. 10.354. *RIGHTS OF DISSENT AND APPRAISAL.* (a) Subject to Subsection (b), an owner of an ownership interest in a domestic entity subject to dissenters' rights is entitled to:
+
+(b) Notwithstanding Subsection (a), subject to Subsection (c), an owner may not dissent from a plan of merger or conversion in which there is a single surviving or new domestic entity or non-code organization, or from a plan of exchange, if:
+
+C-2
+<!-- PAGE 207 -->
+ZEQ.=2,SEQ=206,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=412825,FOLIO='C-2',FILE='DISK112:[14ZCP1.14ZCP40801]MI40801A.;4',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Table of Contents
+
+(c) Subsection (b) shall not apply to a domestic entity that is a subsidiary with respect to a merger under Section 10.006.
+
+Sec. 10.355. *NOTICE OF RIGHT OF DISSENT AND APPRAISAL.* (a) A domestic entity subject to dissenters' rights that takes or proposes to take an action regarding which an owner has a right to dissent and obtain an appraisal under Section 10.354 shall notify each affected owner of the owner's rights under that section if:
+
+(b) If a parent organization effects a merger under Section 10.006 and a subsidiary organization that is a party to the merger is a domestic entity subject to dissenters' rights, the responsible organization shall notify the owners of that subsidiary organization who have a right to dissent to the merger under Section 10.354 of their rights under this subchapter not later than the 10th day after the effective date of the merger. The notice must also include a copy of the certificate of merger and a statement that the merger has become effective.
+
+(c) A notice required to be provided under Subsection (a) or (b) must:
+
+(d) In addition to the requirements prescribed by Subsection (c), a notice required to be provided under Subsection (a)(1) must accompany the notice of the meeting to consider the action, and a notice required under Subsection (a)(2) must be provided to:
+
+(e) Not later than the 10th day after the date an action described by Subsection (a)(1) takes effect, the responsible organization shall give notice that the action has been effected to each owner who voted against the action and sent notice under Section 10.356(b)(1).
+
+Sec. 10.356. *PROCEDURE FOR DISSENT BY OWNERS AS TO ACTIONS; PERFECTION OF RIGHT OF DISSENT AND APPRAISAL.* (a) An owner of an ownership interest of a domestic entity subject to dissenters' rights who has the right to dissent and appraisal from any of the actions referred to in Section 10.354 may exercise that right to dissent and appraisal only by complying with the procedures specified in this subchapter. An owner's right of dissent and appraisal under Section 10.354 may be exercised by an owner only with respect to an ownership interest that is not voted in favor of the action.
+
+C-3
+<!-- PAGE 208 -->
+ZEQ.=3,SEQ=207,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=680547,FOLIO='C-3',FILE='DISK112:[14ZCP1.14ZCP40801]MI40801A.;4',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Table of Contents
+
+(b) To perfect the owner's rights of dissent and appraisal under Section 10.354, an owner:
+
+(c) An owner who does not make a demand within the period required by Subsection (b)(3)(E) or, if Subsection (b)(1) is applicable, does not give the notice of objection before the meeting of the owners is bound by the action and is not entitled to exercise the rights of dissent and appraisal under Section 10.354.
+
+(d) Not later than the 20th day after the date an owner makes a demand under Subsection (b)(3), the owner must submit to the responsible organization any certificates representing the ownership interest to which the demand relates for purposes of making a notation on the certificates that a demand for the payment of the fair value of an ownership interest has been made under this section. An owner's failure to submit the certificates within the required period has the effect of terminating, at
+
+C-4
+<!-- PAGE 209 -->
+ZEQ.=4,SEQ=208,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=274545,FOLIO='C-4',FILE='DISK112:[14ZCP1.14ZCP40801]MI40801A.;4',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Table of Contents
+
+the option of the responsible organization, the owner's rights to dissent and appraisal under Section 10.354 unless a court, for good cause shown, directs otherwise.
+
+(e) If a domestic entity and responsible organization satisfy the requirements of this subchapter relating to the rights of owners of ownership interests in the entity to dissent to an action and seek appraisal of those ownership interests, an owner of an ownership interest who fails to perfect that owner's right of dissent in accordance with this subchapter may not bring suit to recover the value of the ownership interest or money damages relating to the action.
+
+Sec. 10.357. *WITHDRAWAL OF DEMAND FOR FAIR VALUE OF OWNERSHIP INTEREST.* (a) An owner may withdraw a demand for the payment of the fair value of an ownership interest made under Section 10.356 before:
+
+(b) Unless the responsible organization consents to the withdrawal of the demand, an owner may not withdraw a demand for payment under Subsection (a) after either of the events specified in Subsections (a)(1) and (2).
+
+Sec. 10.358. *RESPONSE BY ORGANIZATION TO NOTICE OF DISSENT AND DEMAND FOR FAIR VALUE BY DISSENTING OWNER.* (a) Not later than the 20th day after the date a responsible organization receives a demand for payment made by a dissenting owner in accordance with Section 10.356(b)(3), the responsible organization shall respond to the dissenting owner in writing by:
+
+(b) If the responsible organization accepts the amount claimed in the demand, the responsible organization shall pay the amount not later than the 90th day after the date the action that is the subject of the demand was effected if the owner delivers to the responsible organization:
+
+(c) If the responsible organization rejects the amount claimed in the demand, the responsible organization shall provide to the owner:
+
+(d) If the dissenting owner decides to accept the offer made by the responsible organization under Subsection (c)(2), the owner must provide to the responsible organization notice of the acceptance of the offer not later than the 90th day after the date the action that is the subject of the demand took effect.
+
+(e) If, not later than the 90th day after the date the action that is the subject of the demand took effect, a dissenting owner accepts an offer made by a responsible organization under Subsection (c)(2) or a dissenting owner and a responsible organization reach an agreement on the fair value of the ownership interests, the responsible organization shall pay the agreed amount not later than the
+
+C-5
+<!-- PAGE 210 -->
+ZEQ.=5,SEQ=209,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=675638,FOLIO='C-5',FILE='DISK112:[14ZCP1.14ZCP40801]MI40801A.;4',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Table of Contents
+
+120th day after the date the action that is the subject of the demand took effect, if the dissenting owner delivers to the responsible organization:
+
+Sec. 10.359. *RECORD OF DEMAND FOR FAIR VALUE OF OWNERSHIP INTEREST.* (a) A responsible organization shall note in the organization's ownership interest records maintained under Section 3.151 the receipt of a demand for payment from any dissenting owner made under Section 10.356.
+
+(b) If an ownership interest that is the subject of a demand for payment made under Section 10.356 is transferred, a new certificate representing that ownership interest must contain:
+
+Sec. 10.360. *RIGHTS OF TRANSFEREE OF CERTAIN OWNERSHIP INTEREST.* A transferee of an ownership interest that is the subject of a demand for payment made under Section 10.356 does not acquire additional rights with respect to the responsible organization following the transfer. The transferee has only the rights the original dissenting owner had with respect to the responsible organization after making the demand.
+
+Sec. 10.361. *PROCEEDING TO DETERMINE FAIR VALUE OF OWNERSHIP INTEREST AND OWNERS ENTITLED TO PAYMENT; APPOINTMENT OF APPRAISERS.* (a) If a responsible organization rejects the amount demanded by a dissenting owner under Section 10.358 and the dissenting owner and responsible organization are unable to reach an agreement relating to the fair value of the ownership interests within the period prescribed by Section 10.358(d), the dissenting owner or responsible organization may file a petition requesting a finding and determination of the fair value of the owner's ownership interests in a court in:
+
+(b) A petition described by Subsection (a) must be filed not later than the 60th day after the expiration of the period required by Section 10.358(d).
+
+(c) On the filing of a petition by an owner under Subsection (a), service of a copy of the petition shall be made to the responsible organization. Not later than the 10th day after the date a responsible organization receives service under this subsection, the responsible organization shall file with the clerk of the court in which the petition was filed a list containing the names and addresses of each owner of the organization who has demanded payment for ownership interests under Section 10.356 and with whom agreement as to the value of the ownership interests has not been reached with the responsible organization. If the responsible organization files a petition under Subsection (a), the petition must be accompanied by this list.
+
+(d) The clerk of the court in which a petition is filed under this section shall provide by registered mail notice of the time and place set for the hearing to:
+
+C-6
+<!-- PAGE 211 -->
+ZEQ.=6,SEQ=210,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=883349,FOLIO='C-6',FILE='DISK112:[14ZCP1.14ZCP40801]MI40801A.;4',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Table of Contents
+
+(e) The court shall:
+
+(f) The court shall approve the form of a notice required to be provided under this section. The judgment of the court is final and binding on the responsible organization, any other organization obligated to make payment under this subchapter for an ownership interest, and each owner who is notified as required by this section.
+
+(g) The beneficial owner of an ownership interest subject to dissenters' rights held in a voting trust or by a nominee on the beneficial owner's behalf may file a petition described by Subsection (a) if no agreement between the dissenting owner of the ownership interest and the responsible organization has been reached within the period prescribed by Section 10.358(d). When the beneficial owner files a petition described by Subsection (a):
+
+Sec. 10.362. *COMPUTATION AND DETERMINATION OF FAIR VALUE OF OWNERSHIP INTEREST.* (a) For purposes of this subchapter, the fair value of an ownership interest of a domestic entity subject to dissenters' rights is the value of the ownership interest on the date preceding the date of the action that is the subject of the appraisal. Any appreciation or depreciation in the value of the ownership interest occurring in anticipation of the proposed action or as a result of the action must be specifically excluded from the computation of the fair value of the ownership interest.
+
+(b) In computing the fair value of an ownership interest under this subchapter, consideration must be given to the value of the domestic entity as a going concern without including in the computation of value any control premium, any minority ownership discount, or any discount for lack of marketability. If the domestic entity has different classes or series of ownership interests, the relative rights and preferences of and limitations placed on the class or series of ownership interests, other than relative voting rights, held by the dissenting owner must be taken into account in the computation of value.
+
+(c) The determination of the fair value of an ownership interest made for purposes of this subchapter may not be used for purposes of making a determination of the fair value of that ownership interest for another purpose or of the fair value of another ownership interest, including for purposes of determining any minority or liquidity discount that might apply to a sale of an ownership interest.
+
+Sec. 10.363. *POWERS AND DUTIES OF APPRAISER; APPRAISAL PROCEDURES.* (a) An appraiser appointed under Section 10.361 has the power and authority that:
+
+C-7
+<!-- PAGE 212 -->
+ZEQ.=7,SEQ=211,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=457721,FOLIO='C-7',FILE='DISK112:[14ZCP1.14ZCP40801]MI40801A.;4',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Table of Contents
+
+(b) The appraiser shall:
+
+(c) The appraiser is entitled to examine the books and records of a responsible organization and may conduct investigations as the appraiser considers appropriate. A dissenting owner or responsible organization may submit to an appraiser evidence or other information relevant to the determination of the fair value of the ownership interest required by Subsection (b)(1).
+
+(d) The clerk of the court appointing the appraiser shall provide notice of the filing of the report under Subsection (b) to each dissenting owner named in the list filed under Section 10.361 and the responsible organization.
+
+Sec. 10.364. *OBJECTION TO APPRAISAL; HEARING.* (a) A dissenting owner or responsible organization may object, based on the law or the facts, to all or part of an appraisal report containing the fair value of an ownership interest determined under Section 10.363(b).
+
+(b) If an objection to a report is raised under Subsection (a), the court shall hold a hearing to determine the fair value of the ownership interest that is the subject of the report. After the hearing, the court shall require the responsible organization to pay to the holders of the ownership interest the amount of the determined value with interest, accruing from the 91st day after the date the applicable action for which the owner elected to dissent was effected until the date of the judgment.
+
+(c) Interest under Subsection (b) accrues at the same rate as is provided for the accrual of prejudgment interest in civil cases.
+
+(d) The responsible organization shall:
+
+(e) On payment of the judgment, the dissenting owner does not have an interest in the:
+
+Sec. 10.365. *COURT COSTS; COMPENSATION FOR APPRAISER.* (a) An appraiser appointed under Section 10.361 is entitled to a reasonable fee payable from court costs.
+
+(b) All court costs shall be allocated between the responsible organization and the dissenting owners in the manner that the court determines to be fair and equitable.
+
+Sec. 10.366. *STATUS OF OWNERSHIP INTEREST HELD OR FORMERLY HELD BY DISSENTING OWNER.* (a) An ownership interest of an organization acquired by a responsible organization under this subchapter:
+
+C-8
+<!-- PAGE 213 -->
+ZEQ.=8,SEQ=212,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=1015326,FOLIO='C-8',FILE='DISK112:[14ZCP1.14ZCP40801]MI40801A.;4',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Table of Contents
+
+(b) An owner who has demanded payment for the owner's ownership interest under Section 10.356 is not entitled to vote or exercise any other rights of an owner with respect to the ownership interest except the right to:
+
+(c) An ownership interest for which payment has been demanded under Section 10.356 may not be considered outstanding for purposes of any subsequent vote or action.
+
+Sec. 10.367. *RIGHTS OF OWNERS FOLLOWING TERMINATION OF RIGHT OF DISSENT.* (a) The rights of a dissenting owner terminate if:
+
+(b) On termination of the right of dissent under this section:
+
+Sec. 10.368. *EXCLUSIVITY OF REMEDY OF DISSENT AND APPRAISAL.* In the absence of fraud in the transaction, any right of an owner of an ownership interest to dissent from an action and
+
+C-9
+<!-- PAGE 214 -->
+ZEQ.=9,SEQ=213,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=54679,FOLIO='C-9',FILE='DISK112:[14ZCP1.14ZCP40801]MI40801A.;4',USER='CHE107325',CD='21-OCT-2014;00:28'
+
+Table of Contents
+
+obtain the fair value of the ownership interest under this subchapter is the exclusive remedy for recovery of:
+
+C-10
+<!-- PAGE 215 -->
+ZEQ.=10,SEQ=214,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=873408,FOLIO='C-10',FILE='DISK112:[14ZCP1.14ZCP40801]MI40801A.;4',USER='CHE107325',CD='21-OCT-2014;00:28' THIS IS THE END OF A COMPOSITION COMPONENT
+
+MULTIMEDIA GAMES HOLDING COMPANY, INC. ATTN: CORPORATE SECRETARY 206 WILD BASIN ROAD SOUTH, BLDG B AUSTIN, TX 78746 VOTE BY INTERNET - www.proxyvote.com Use the Internet to transmit your voting instructions and for electronic delivery of information up until 11:59 P.M. Eastern Time on December 2, 2014. Have your proxy card in hand when you access the web site and follow the instructions to obtain your records and to create an electronic voting instruction form. ELECTRONIC DELIVERY OF FUTURE PROXY MATERIALS If you would like to reduce the costs incurred by our company in mailing proxy materials, you can consent to receiving all future proxy statements, proxy cards and annual reports electronically via e-mail or the Internet. To sign up for electronic delivery, please follow the instructions above to vote using the Internet and, when prompted, indicate that you agree to receive or access proxy materials electronically in future years. VOTE BY PHONE - 1-800-690-6903 Use any touch-tone telephone to transmit your voting instructions up until 11:59 P.M. Eastern Time on December 2, 2014. Have your proxy card in hand when you call and then follow the instructions. VOTE BY MAIL Mark, sign and date your proxy card and return it in the postage-paid envelope we have provided or return it to Vote Processing, c/o Broadridge, 51 Mercedes Way, Edgewood, NY 11717.
+
+| TO   VOTE, MARK BLOCKS BELOW IN BLUE OR BLACK INK AS FOLLOWS: |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- |
+| THIS  PROXY  CARD  IS  VALID  ONLY  WHEN  SIGNED  AND  DATED. |  | DETACH AND RETURN THIS PORTION ONLY |  |  |  |
+| ● |  |  |  |  |  |
+| The Board of Directors recommends you vote FOR proposals 1, 2 and 3: |  |  | For | Against | Abstain |
+| 1. To approve   the Agreement and Plan of Merger, dated as of September 8, 2014 (the “merger   agreement”), as it may be amended from time to time, by and among Multimedia   Games Holding Company, Inc., a Texas corporation (“Multimedia Games”), Global   Cash Access Holdings, Inc., a Delaware corporation (“GCA”), and Movie Merger   Sub, Inc., a Texas corporation and a wholly owned subsidiary of GCA (“Merger   Sub”), thereby approving the transactions contemplated by the merger   agreement, including the merger of Merger Sub with and into Multimedia Games,   with Multimedia Games continuing as the surviving corporation. |  |  | ● | ● | ● |
+| 2. To approve,   by a non-binding advisory vote, the compensation arrangements disclosed in   the proxy statement that may be payable to Multimedia Games’ named executive   officers in connection with the consummation of the merger. |  |  | ● | ● | ● |
+| 3. To approve   the adjournment of the special meeting, if necessary or appropriate in the   view of the Multimedia Games board of directors, to solicit additional   proxies if there are not sufficient votes at the time of the special meeting   to approve the merger agreement. |  |  | ● | ● | ● |
+| Please sign   exactly as your name(s) appear(s) hereon. When signing as attorney, executor,   administrator, or other fiduciary, please give full title as such. Joint   owners should each sign personally. All holders must sign. If a corporation   or partnership, please sign in full corporate or partnership name, by   authorized officer. |  |  |  |  |  |
+| Signature [PLEASE SIGN WITHIN BOX] | Date | Signature (Joint Owners) | Date |  |  |
+
+ZEQ.=1,SEQ=215,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=41557,FOLIO='',FILE="DISK114:[14ZCP2.14ZCP40802]21208-2-BA_ZCP40802.CHC",USER="VRIVERA",CD='Oct 22 05:51 2014'
+
+Important Notice Regarding the Availability of Proxy Materials for the Special Meeting: The Notice and Proxy Statement is/are available at www.proxyvote.com .
+
+MULTIMEDIA GAMES HOLDING COMPANY, INC. Special Meeting of Shareholders Wednesday, December 3, 2014, 10:00 AM CST This proxy is solicited by the Board of Directors The undersigned shareholder(s) hereby appoint(s) Stephen J. Greathouse and Todd F. McTavish, or either of them, as proxies, each with the power to appoint (his/her) substitute, and hereby authorizes them to represent and to vote, as designated on the reverse side of this ballot, all of the shares of Common Stock of MULTIMEDIA GAMES HOLDING COMPANY, INC. that the shareholder(s) is/are entitled to vote at the Special Meeting of Shareholders to be held at 10:00 AM CST, on Wednesday, December 3, 2014 at 206 Wild Basin Road South, Building B, Austin, TX 78746, and any adjournment or postponement thereof. This proxy, when properly executed, will be voted in the manner directed herein. If no such direction is made, this proxy will be voted in accordance with the Board of Directors' recommendations. These proxies are authorized to vote in their discretion upon such other business as may properly come before the Special Meeting of Shareholders or any adjournment or postponement thereof. Continued and to be signed on reverse side
+
+ZEQ.=1,SEQ=216,EFW="2221849",CP="MULTIMEDIA GAMES HOLDING CO. INC",DN="1",CHK=715525,FOLIO='',FILE="DISK114:[14ZCP2.14ZCP40802]21208-2-BC_ZCP40802.CHC",USER="VRIVERA",CD='Oct 22 05:52 2014' TOCEXISTFLAG

@@ -56,6 +56,7 @@ BACKGROUND_CROSS_REF_RE = re.compile(
 BACKGROUND_NARRATIVE_CUE_RE = re.compile(
     r"following\s+chronology|chronology\s+summarizes|regularly\s+reviewed|"
     r"frequently\s+reviews|ongoing\s+evaluation|strategic\s+options|"
+    r"strategic\s+opportunit(?:y|ies)|strategic\s+alternatives|"
     r"last\s+few\s+years|material\s+key\s+events",
     re.IGNORECASE | re.DOTALL,
 )
@@ -134,17 +135,18 @@ def _score_background_start(page: dict[str, Any], match: re.Match[str]) -> int:
     before = content[max(0, match.start() - 120):match.start()]
     after = content[match.end():match.end() + 700]
     around = content[max(0, match.start() - 180):match.end() + 220]
+    marked_heading = "**" in before[-24:] or "**" in after[:24]
 
     score = 0
     if number >= 15:
         score += 6
-    if "**" in before[-24:] or "**" in after[:24]:
+    if marked_heading:
         score += 3
     if BACKGROUND_NARRATIVE_CUE_RE.search(after):
         score += 3
-    if BACKGROUND_CROSS_REF_RE.search(before[-100:]):
+    if BACKGROUND_CROSS_REF_RE.search(before[-100:]) and not marked_heading:
         score -= 8
-    if around.count("|") >= 4:
+    if around.count("|") >= 4 and not marked_heading:
         score -= 8
     return score
 

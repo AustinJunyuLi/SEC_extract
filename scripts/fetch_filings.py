@@ -80,7 +80,7 @@ EXCLUDED_FORM_TYPES = {"425"}
 # reference and grab the Offer to Purchase instead of the cover form.
 TENDER_OFFER_FORMS = {"SC TO-T", "SC TO-T/A"}
 OFFER_TO_PURCHASE_EXHIBIT_PATTERN = re.compile(
-    r"^EX-99\.\(?A\)?\(?1\)?\(?A\)?", re.IGNORECASE
+    r"^EX-99(?:\.\d+)?\.?\(?A\)?\(?1\)?\(?A\)?", re.IGNORECASE
 )
 
 

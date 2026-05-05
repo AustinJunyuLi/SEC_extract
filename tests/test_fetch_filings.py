@@ -47,6 +47,34 @@ def test_resolve_substantive_document_raises_on_unknown_form(monkeypatch):
         )
 
 
+def test_resolve_substantive_document_accepts_numbered_offer_to_purchase_exhibit(monkeypatch):
+    monkeypatch.setattr(
+        fetch_filings,
+        "_parse_index_table",
+        lambda _: [
+            (
+                "/Archives/edgar/data/1/000000000000000001/cover.htm",
+                "cover.htm",
+                "SC TO-T",
+                "50000",
+            ),
+            (
+                "/Archives/edgar/data/1/000000000000000001/offer.htm",
+                "offer.htm",
+                "EX-99.12(A)(1)(A)",
+                "1500000",
+            ),
+        ],
+    )
+
+    doc, _ = fetch_filings.resolve_substantive_document(
+        "https://www.sec.gov/Archives/edgar/data/1/000000000000000001/0000000000-00-000001-index.htm"
+    )
+
+    assert doc.name == "offer.htm"
+    assert doc.form_type == "EX-99.12(A)(1)(A)"
+
+
 def test_main_warns_and_skips_excluded_form_type(monkeypatch, capsys):
     seed = fetch_filings.Seed(
         slug="synthetic-425",

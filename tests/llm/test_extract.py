@@ -101,6 +101,44 @@ def test_build_messages_ignores_toc_and_cross_reference_background_hits(minimal_
     assert "actual background sentence" in combined_pages
 
 
+def test_build_messages_accepts_marked_heading_after_unrelated_cross_reference(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    prompts = env.tmp_path / "prompts"
+    prompts.mkdir()
+    (prompts / "extract.md").write_text("EXTRACT PROMPT")
+    for name in extract.EXTRACTOR_RULE_FILES:
+        (env.rules / name).write_text(f"RULE {name}")
+    body = "The board began evaluating strategic opportunities and alternatives. " * 80
+    env.seed_filing(
+        "synthetic",
+        pages=[
+            {
+                "number": 9,
+                "content": "Table of Contents | Background of the Merger | 29 | Reasons for the Merger | 32 |",
+            },
+            {
+                "number": 29,
+                "content": (
+                    "The merger consideration is described elsewhere. "
+                    "See Merger Consideration on page 27.\n\n"
+                    f"**Background of the Merger**\n\n{body}"
+                ),
+            },
+            {
+                "number": 31,
+                "content": "More background narrative. " * 90 + "\n\n**Reasons for the Merger**\n\nStop.",
+            },
+        ],
+    )
+    monkeypatch.setattr(extract.core, "PROMPTS_DIR", prompts)
+
+    _, user = extract.build_messages("synthetic")
+
+    payload = json.loads(user)
+    assert payload["section"]["start_page"] == 29
+    assert payload["pages"][0]["content"].startswith("Background of the Merger")
+
+
 def test_build_messages_adds_paragraph_local_citation_units(minimal_state_repo, monkeypatch):
     env = minimal_state_repo
     prompts = env.tmp_path / "prompts"

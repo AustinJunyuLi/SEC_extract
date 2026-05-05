@@ -1,0 +1,26 @@
+{
+  "slug": "multimedia-games-holding-co-inc",
+  "target_name": "MULTIMEDIA GAMES HOLDING CO INC",
+  "acquirer": "GLOBAL CASH ACCESS HOLDINGS INC",
+  "date_announced": "2014-09-08",
+  "is_reference": false,
+  "source": {
+    "seed_url": "https://www.sec.gov/Archives/edgar/data/896400/0001047469-14-008440-index.htm",
+    "index_url": "https://www.sec.gov/Archives/edgar/data/896400/000104746914008440/0001047469-14-008440-index.htm",
+    "cik": "896400",
+    "accession": "000104746914008440",
+    "primary_document_url": "https://www.sec.gov/Archives/edgar/data/896400/000104746914008440/a2221849zdefm14a.htm",
+    "primary_document_name": "a2221849zdefm14a.htm",
+    "form_type": "DEFM14A"
+  },
+  "artifacts": {
+    "raw_htm_bytes": 1544526,
+    "raw_md_bytes": 588156,
+    "pages_count": 215
+  },
+  "fetch": {
+    "user_agent": "Austin Li <junyu.li.24@ucl.ac.uk>",
+    "fetched_at": "2026-05-05T20:06:00.252897Z",
+    "sec2md_version": "0.1.22"
+  }
+}

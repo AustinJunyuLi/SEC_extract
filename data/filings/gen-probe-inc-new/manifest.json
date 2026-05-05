@@ -1,0 +1,26 @@
+{
+  "slug": "gen-probe-inc-new",
+  "target_name": "GEN PROBE INC NEW",
+  "acquirer": "HOLOGIC INC",
+  "date_announced": "2012-04-30",
+  "is_reference": false,
+  "source": {
+    "seed_url": "https://www.sec.gov/Archives/edgar/data/820237/0001193125-12-290144-index.htm",
+    "index_url": "https://www.sec.gov/Archives/edgar/data/820237/000119312512290144/0001193125-12-290144-index.htm",
+    "cik": "820237",
+    "accession": "000119312512290144",
+    "primary_document_url": "https://www.sec.gov/Archives/edgar/data/820237/000119312512290144/d355578ddefm14a.htm",
+    "primary_document_name": "d355578ddefm14a.htm",
+    "form_type": "DEFM14A"
+  },
+  "artifacts": {
+    "raw_htm_bytes": 1375256,
+    "raw_md_bytes": 656860,
+    "pages_count": 152
+  },
+  "fetch": {
+    "user_agent": "Austin Li <junyu.li.24@ucl.ac.uk>",
+    "fetched_at": "2026-05-05T20:05:55.251744Z",
+    "sec2md_version": "0.1.22"
+  }
+}

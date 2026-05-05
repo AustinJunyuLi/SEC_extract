@@ -31,15 +31,21 @@ def _hard_flags(payload: dict[str, Any]) -> list[dict[str, Any]]:
             for flag in deal.get("deal_flags", [])
             if isinstance(flag, dict) and flag.get("severity") == "hard"
         )
-    events = payload.get("events")
-    if isinstance(events, list):
-        for event in events:
-            if not isinstance(event, dict):
-                continue
+    graph = payload.get("graph")
+    if isinstance(graph, dict):
+        validation_flags = graph.get("validation_flags")
+        if isinstance(validation_flags, list):
             flags.extend(
                 flag
-                for flag in event.get("flags", [])
+                for flag in validation_flags
                 if isinstance(flag, dict) and flag.get("severity") == "hard"
+            )
+        review_flags = graph.get("review_flags")
+        if isinstance(review_flags, list):
+            flags.extend(
+                flag
+                for flag in review_flags
+                if isinstance(flag, dict) and flag.get("severity") in {"hard", "blocking"}
             )
     return flags
 

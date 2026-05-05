@@ -1,0 +1,26 @@
+{
+  "slug": "wafergen-bio-systems-inc",
+  "target_name": "WAFERGEN BIO SYSTEMS INC",
+  "acquirer": "Takara Bio, Inc.",
+  "date_announced": "2016-05-13",
+  "is_reference": false,
+  "source": {
+    "seed_url": "https://www.sec.gov/Archives/edgar/data/1368993/0001368993-16-000148-index.htm",
+    "index_url": "https://www.sec.gov/Archives/edgar/data/1368993/000136899316000148/0001368993-16-000148-index.htm",
+    "cik": "1368993",
+    "accession": "000136899316000148",
+    "primary_document_url": "https://www.sec.gov/Archives/edgar/data/1368993/000136899316000148/proxystatementforssmmerger.htm",
+    "primary_document_name": "proxystatementforssmmerger.htm",
+    "form_type": "DEFM14A"
+  },
+  "artifacts": {
+    "raw_htm_bytes": 2006423,
+    "raw_md_bytes": 717577,
+    "pages_count": 204
+  },
+  "fetch": {
+    "user_agent": "Austin Li <junyu.li.24@ucl.ac.uk>",
+    "fetched_at": "2026-05-05T20:06:04.595115Z",
+    "sec2md_version": "0.1.22"
+  }
+}

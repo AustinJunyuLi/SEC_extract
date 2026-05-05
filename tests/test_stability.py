@@ -322,7 +322,7 @@ def test_stable_hard_flags_cannot_produce_target_gate_proof(tmp_path, capsys):
     assert "hard flags present" in " ".join(payload["reasons"])
 
 
-def test_row_count_movement_classifies_architecture_unstable(tmp_path, capsys):
+def test_row_count_movement_is_reported_without_blocking_clean_contract_runs(tmp_path, capsys):
     _write_run(tmp_path, slug="medivation", run_id="run-1", finished_at="2026-04-29T00:00:00Z")
     _write_run(
         tmp_path,
@@ -336,8 +336,9 @@ def test_row_count_movement_classifies_architecture_unstable(tmp_path, capsys):
     rc = stability.main(["--repo-root", str(tmp_path), "--slugs", "medivation", "--runs", "3"])
 
     out = capsys.readouterr().out
-    assert rc == 1
-    assert "UNSTABLE_ARCHITECTURE_ESCALATION_CANDIDATE" in out
+    assert rc == 0
+    assert "STABLE_FOR_REFERENCE_REVIEW" in out
+    assert "metric variability observed" in out
     assert "row fingerprints changed" in out
 
 

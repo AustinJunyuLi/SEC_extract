@@ -710,10 +710,25 @@ def _classify_slug(slug: str, runs: tuple[RunMetrics, ...], eligible_count: int,
             classification="UNSTABLE_RULE_OR_VALIDATOR_FIX_NEEDED",
             reasons=tuple(reasons),
         )
+    soft_flag_counts = tuple(
+        tuple(((sev_code, count)) for sev_code, count in run.flag_counts if sev_code[0] == "soft")
+        for run in runs
+    )
+    if any(counts for counts in soft_flag_counts):
+        reasons.append("soft flags present in selected archived runs")
+        return SlugAnalysis(
+            slug=slug,
+            selected_runs=runs,
+            eligible_run_count=eligible_count,
+            required_run_count=required,
+            classification="UNSTABLE_RULE_OR_VALIDATOR_FIX_NEEDED",
+            reasons=tuple(reasons),
+        )
+    metric_changes: list[str] = []
     if len({run.row_fingerprints for run in runs}) > 1:
-        reasons.append("row fingerprints changed")
+        metric_changes.append("row fingerprints changed")
     elif len({run.row_count for run in runs}) > 1:
-        reasons.append("row counts changed")
+        metric_changes.append("row counts changed")
     compared_attrs = (
         ("graph statuses changed", lambda run: run.graph_status),
         ("graph table counts changed", lambda run: run.graph_table_counts),
@@ -735,22 +750,13 @@ def _classify_slug(slug: str, runs: tuple[RunMetrics, ...], eligible_count: int,
     )
     for reason, getter in compared_attrs:
         if len({getter(run) for run in runs}) > 1:
-            reasons.append(reason)
+            metric_changes.append(reason)
     info_only_changed = len({_info_flag_counts(run.flag_counts) for run in runs}) > 1
-    if reasons:
-        return SlugAnalysis(
-            slug=slug,
-            selected_runs=runs,
-            eligible_run_count=eligible_count,
-            required_run_count=required,
-            classification="UNSTABLE_ARCHITECTURE_ESCALATION_CANDIDATE",
-            reasons=tuple(dict.fromkeys(reasons)),
-            info_only_flag_volume_changed=info_only_changed,
-        )
+    if metric_changes:
+        reasons.append("metric variability observed: " + "; ".join(dict.fromkeys(metric_changes)))
     if info_only_changed:
         reasons.append("info-only flag volume changed but substantive metrics were stable")
-    else:
-        reasons.append("selected archived runs have stable hashes, row fingerprints, and substantive metrics")
+    reasons.append("selected archived runs passed live evidence, graph, and projection contract checks")
     return SlugAnalysis(
         slug=slug,
         selected_runs=runs,

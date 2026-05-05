@@ -71,15 +71,22 @@ def _write_progress(root: Path, status: str = "passed_clean") -> None:
     )
 
 
-def _write_extraction(root: Path, hard_flag: bool = False) -> None:
+def _write_extraction(root: Path, hard_flag: bool = False, review_blocker: bool = False) -> None:
     out = root / "output" / "extractions"
     out.mkdir(parents=True)
     flags = [{"severity": "hard", "code": "bad", "reason": "bad"}] if hard_flag else []
+    review_flags = [{"severity": "blocking", "code": "bad", "reason": "bad"}] if review_blocker else []
     (out / "medivation.json").write_text(
         json.dumps(
             {
+                "schema_version": "deal_graph_v1",
                 "deal": {"deal_flags": flags},
-                "events": [{"flags": []}],
+                "graph": {
+                    "validation_flags": flags,
+                    "review_flags": review_flags,
+                },
+                "review_rows": [],
+                "estimation_bidder_rows": [],
             }
         )
     )
@@ -114,6 +121,24 @@ def test_mark_verified_updates_reference_progress(tmp_path):
 def test_mark_verified_rejects_hard_flags(tmp_path):
     _write_progress(tmp_path)
     _write_extraction(tmp_path, hard_flag=True)
+    _write_report(tmp_path)
+
+    try:
+        mark_reference_verified.mark_verified(
+            tmp_path,
+            "medivation",
+            reviewer="Codex agent",
+            now="2026-05-02T12:00:00Z",
+        )
+    except mark_reference_verified.MarkVerifiedError as exc:
+        assert "hard flags" in str(exc)
+    else:
+        raise AssertionError("expected MarkVerifiedError")
+
+
+def test_mark_verified_rejects_blocking_graph_review_flags(tmp_path):
+    _write_progress(tmp_path)
+    _write_extraction(tmp_path, review_blocker=True)
     _write_report(tmp_path)
 
     try:

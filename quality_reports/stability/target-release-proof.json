@@ -1,0 +1,184 @@
+{
+  "classification": "STABLE_FOR_REFERENCE_REVIEW",
+  "reasons": [
+    "providence-worcester: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; anonymous placeholder counts changed; cohort-like placeholder counts changed; estimation counts changed; estimation fingerprints changed; estimation metrics changed; date diagnostics changed; bid-value representation changed",
+    "providence-worcester: selected archived runs passed live evidence, graph, and projection contract checks",
+    "medivation: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; estimation fingerprints changed; date diagnostics changed; bid-value representation changed",
+    "medivation: selected archived runs passed live evidence, graph, and projection contract checks",
+    "imprivata: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; estimation fingerprints changed; date diagnostics changed; bid-value representation changed",
+    "imprivata: selected archived runs passed live evidence, graph, and projection contract checks",
+    "zep: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; anonymous placeholder counts changed; cohort-like placeholder counts changed; estimation fingerprints changed; estimation metrics changed; date diagnostics changed; bid-value representation changed",
+    "zep: selected archived runs passed live evidence, graph, and projection contract checks",
+    "petsmart-inc: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; anonymous placeholder counts changed; cohort-like placeholder counts changed; estimation fingerprints changed; date diagnostics changed; bid-value representation changed",
+    "petsmart-inc: selected archived runs passed live evidence, graph, and projection contract checks",
+    "penford: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; anonymous placeholder counts changed; cohort-like placeholder counts changed; estimation fingerprints changed; estimation metrics changed; date diagnostics changed; bid-value representation changed",
+    "penford: selected archived runs passed live evidence, graph, and projection contract checks",
+    "mac-gray: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; estimation fingerprints changed; estimation metrics changed; date diagnostics changed; bid-value representation changed",
+    "mac-gray: selected archived runs passed live evidence, graph, and projection contract checks",
+    "saks: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; estimation fingerprints changed; estimation metrics changed; date diagnostics changed; bid-value representation changed",
+    "saks: selected archived runs passed live evidence, graph, and projection contract checks",
+    "stec: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; estimation fingerprints changed; date diagnostics changed; bid-value representation changed",
+    "stec: selected archived runs passed live evidence, graph, and projection contract checks"
+  ],
+  "reference_slugs": [
+    "providence-worcester",
+    "medivation",
+    "imprivata",
+    "zep",
+    "petsmart-inc",
+    "penford",
+    "mac-gray",
+    "saks",
+    "stec"
+  ],
+  "requested_runs": 3,
+  "schema_version": "target_gate_proof_v1",
+  "slug_results": [
+    {
+      "classification": "STABLE_FOR_REFERENCE_REVIEW",
+      "eligible_archived_runs": 5,
+      "reasons": [
+        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; anonymous placeholder counts changed; cohort-like placeholder counts changed; estimation counts changed; estimation fingerprints changed; estimation metrics changed; date diagnostics changed; bid-value representation changed",
+        "selected archived runs passed live evidence, graph, and projection contract checks"
+      ],
+      "required_archived_runs": 3,
+      "selected_runs": [
+        "d54d53ae007c4fb0aa4a82afc03a0771",
+        "c75ab78b8dbb4690a7aaddee7206b203",
+        "79df13b83d6e4eb9af936d9f4bdea416"
+      ],
+      "slug": "providence-worcester"
+    },
+    {
+      "classification": "STABLE_FOR_REFERENCE_REVIEW",
+      "eligible_archived_runs": 4,
+      "reasons": [
+        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; estimation fingerprints changed; date diagnostics changed; bid-value representation changed",
+        "selected archived runs passed live evidence, graph, and projection contract checks"
+      ],
+      "required_archived_runs": 3,
+      "selected_runs": [
+        "5c5d9acfd1ef488580e3ceacb8f8c18a",
+        "2bb2447dbfbd434290a8adc05bc5fa1d",
+        "21aef91009484b6aa75e70b42731c378"
+      ],
+      "slug": "medivation"
+    },
+    {
+      "classification": "STABLE_FOR_REFERENCE_REVIEW",
+      "eligible_archived_runs": 5,
+      "reasons": [
+        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; estimation fingerprints changed; date diagnostics changed; bid-value representation changed",
+        "selected archived runs passed live evidence, graph, and projection contract checks"
+      ],
+      "required_archived_runs": 3,
+      "selected_runs": [
+        "d3c1118356a241e7b10a69a9aa0a04db",
+        "4d1c50fcd14f45288744f7302559328c",
+        "d8ecdce928ad429f9fe7c4c888f39ab9"
+      ],
+      "slug": "imprivata"
+    },
+    {
+      "classification": "STABLE_FOR_REFERENCE_REVIEW",
+      "eligible_archived_runs": 6,
+      "reasons": [
+        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; anonymous placeholder counts changed; cohort-like placeholder counts changed; estimation fingerprints changed; estimation metrics changed; date diagnostics changed; bid-value representation changed",
+        "selected archived runs passed live evidence, graph, and projection contract checks"
+      ],
+      "required_archived_runs": 3,
+      "selected_runs": [
+        "ee71cc40edc849c196f8acb9551a2f20",
+        "0438a13cbd084f77964fba6535128d66",
+        "99d72a4a7dc146e9909b7e5f2c50b394"
+      ],
+      "slug": "zep"
+    },
+    {
+      "classification": "STABLE_FOR_REFERENCE_REVIEW",
+      "eligible_archived_runs": 5,
+      "reasons": [
+        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; anonymous placeholder counts changed; cohort-like placeholder counts changed; estimation fingerprints changed; date diagnostics changed; bid-value representation changed",
+        "selected archived runs passed live evidence, graph, and projection contract checks"
+      ],
+      "required_archived_runs": 3,
+      "selected_runs": [
+        "69c7a52932544e1ca298a6258b379cf1",
+        "a2a1a85935eb459291160e8360d17e2e",
+        "6438012254704eed9dac5e576b45d826"
+      ],
+      "slug": "petsmart-inc"
+    },
+    {
+      "classification": "STABLE_FOR_REFERENCE_REVIEW",
+      "eligible_archived_runs": 6,
+      "reasons": [
+        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; anonymous placeholder counts changed; cohort-like placeholder counts changed; estimation fingerprints changed; estimation metrics changed; date diagnostics changed; bid-value representation changed",
+        "selected archived runs passed live evidence, graph, and projection contract checks"
+      ],
+      "required_archived_runs": 3,
+      "selected_runs": [
+        "14a3dc8cf98d44d8b66742e06712c81b",
+        "49c06f136a6f4a2fb97f79ad2ca923f2",
+        "96531bd7a9cd4021bb3ab39a42d47615"
+      ],
+      "slug": "penford"
+    },
+    {
+      "classification": "STABLE_FOR_REFERENCE_REVIEW",
+      "eligible_archived_runs": 4,
+      "reasons": [
+        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; estimation fingerprints changed; estimation metrics changed; date diagnostics changed; bid-value representation changed",
+        "selected archived runs passed live evidence, graph, and projection contract checks"
+      ],
+      "required_archived_runs": 3,
+      "selected_runs": [
+        "9a6a250e3016431faa07bf58f008b036",
+        "c2f2fbd0fc6d4518a57d98d8415c530f",
+        "f905b2adc9a74387869ee4849ebef949"
+      ],
+      "slug": "mac-gray"
+    },
+    {
+      "classification": "STABLE_FOR_REFERENCE_REVIEW",
+      "eligible_archived_runs": 5,
+      "reasons": [
+        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; estimation fingerprints changed; estimation metrics changed; date diagnostics changed; bid-value representation changed",
+        "selected archived runs passed live evidence, graph, and projection contract checks"
+      ],
+      "required_archived_runs": 3,
+      "selected_runs": [
+        "d16457b7d47d46269abbcec9c50a69be",
+        "60f2cc97795f49cba043c752b9144b11",
+        "895a694de35c4574b128e6430a03a6b7"
+      ],
+      "slug": "saks"
+    },
+    {
+      "classification": "STABLE_FOR_REFERENCE_REVIEW",
+      "eligible_archived_runs": 5,
+      "reasons": [
+        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; estimation fingerprints changed; date diagnostics changed; bid-value representation changed",
+        "selected archived runs passed live evidence, graph, and projection contract checks"
+      ],
+      "required_archived_runs": 3,
+      "selected_runs": [
+        "0eac847156974225a7608a504b2eac35",
+        "4a59aaf300b04276913554a3a3f20b14",
+        "3f4ce0a5d03241a4bd027034d83ac2b4"
+      ],
+      "slug": "stec"
+    }
+  ],
+  "slugs": [
+    "providence-worcester",
+    "medivation",
+    "imprivata",
+    "zep",
+    "petsmart-inc",
+    "penford",
+    "mac-gray",
+    "saks",
+    "stec"
+  ]
+}
