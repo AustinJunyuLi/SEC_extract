@@ -25,6 +25,21 @@ from pipeline.llm.response_format import DEAL_GRAPH_CLAIM_SCHEMA
 
 
 ELIGIBLE_OUTCOMES = frozenset({"validated", "passed", "passed_clean"})
+LIVE_GRAPH_SCHEMA_VERSION = "deal_graph_v1"
+LIVE_GRAPH_LIST_KEYS = (
+    "actors",
+    "actor_relations",
+    "claims",
+    "claim_dispositions",
+    "coverage_results",
+    "events",
+    "event_actor_links",
+    "participation_counts",
+    "review_rows",
+    "estimation_bidder_rows",
+    "validation_flags",
+    "review_flags",
+)
 STRUCTURAL_INFO_CODES = frozenset({
     "date_phrase_unmapped",
     "rough_date_mismatch",
@@ -32,7 +47,6 @@ STRUCTURAL_INFO_CODES = frozenset({
     "source_quote_not_substring",
     "source_quote_missing",
 })
-LIFECYCLE_NOTES = ("NDA", "Bid", "Drop", "DropSilent", "Executed")
 FINAL_CLASSIFICATIONS = (
     "STABLE_FOR_REFERENCE_REVIEW",
     "UNSTABLE_RULE_OR_VALIDATOR_FIX_NEEDED",
@@ -71,14 +85,21 @@ class RunMetrics:
     extractor_contract_version: str
     row_count: int
     row_fingerprints: tuple[str, ...]
-    bid_note_counts: tuple[tuple[str, int], ...]
+    event_subtype_counts: tuple[tuple[str, int], ...]
     flag_counts: tuple[tuple[tuple[str, str], int], ...]
     hard_flag_identities: tuple[str, ...]
-    auction_value: str
-    lifecycle_counts: tuple[tuple[str, int], ...]
+    graph_status: str
+    graph_table_counts: tuple[tuple[str, int], ...]
+    actor_kind_counts: tuple[tuple[str, int], ...]
+    relation_type_counts: tuple[tuple[str, int], ...]
+    claim_type_counts: tuple[tuple[str, int], ...]
+    claim_disposition_counts: tuple[tuple[str, int], ...]
+    coverage_result_counts: tuple[tuple[str, int], ...]
     anonymous_placeholder_count: int
     cohort_like_placeholder_count: int
-    final_round_metrics: tuple[tuple[str, int], ...]
+    estimation_count: int
+    estimation_fingerprints: tuple[str, ...]
+    estimation_metrics: tuple[tuple[str, int], ...]
     date_diagnostics: tuple[tuple[str, int], ...]
     bid_value_representation: tuple[tuple[str, int], ...]
     quote_diagnostics: tuple[tuple[str, int], ...]
@@ -100,13 +121,20 @@ class RunMetrics:
         return (
             self.row_count,
             self.row_fingerprints,
-            self.bid_note_counts,
+            self.event_subtype_counts,
             self.hard_flag_identities,
-            self.auction_value,
-            self.lifecycle_counts,
+            self.graph_status,
+            self.graph_table_counts,
+            self.actor_kind_counts,
+            self.relation_type_counts,
+            self.claim_type_counts,
+            self.claim_disposition_counts,
+            self.coverage_result_counts,
             self.anonymous_placeholder_count,
             self.cohort_like_placeholder_count,
-            self.final_round_metrics,
+            self.estimation_count,
+            self.estimation_fingerprints,
+            self.estimation_metrics,
             self.date_diagnostics,
             self.bid_value_representation,
             self.quote_diagnostics,
@@ -175,31 +203,45 @@ def _number_text(value: Any) -> str:
     return str(value)
 
 
-def _auction_repr(deal: dict[str, Any]) -> str:
-    if "auction" not in deal:
-        return "missing"
-    value = deal["auction"]
-    if value is None:
-        return "null"
-    if isinstance(value, bool):
-        return "true" if value else "false"
-    return f"non_bool:{value!r}"
-
-
 def _row_fingerprint(slug: str, row: dict[str, Any]) -> str:
     quote_prefix = _normalize_text(_quote_text(row.get("source_quote")))[:180]
     parts = [
         slug,
-        _normalize_text(row.get("process_phase")),
-        _normalize_text(row.get("bid_note")),
-        _normalize_text(row.get("bid_date_precise")),
-        _normalize_text(row.get("bid_date_rough")),
-        _normalize_text(row.get("bidder_alias") or row.get("bidder_name")),
-        _normalize_text(row.get("bidder_type")),
+        "review",
+        _normalize_text(row.get("event_type")),
+        _normalize_text(row.get("event_subtype")),
+        _normalize_text(row.get("event_date")),
+        _normalize_text(row.get("actor_label")),
+        _normalize_text(row.get("actor_kind")),
+        _normalize_text(row.get("actor_role")),
+        _number_text(row.get("bid_value")),
         _number_text(row.get("bid_value_lower")),
         _number_text(row.get("bid_value_upper")),
+        _normalize_text(row.get("bid_value_unit")),
+        _normalize_text(row.get("consideration_type")),
         _page_text(row.get("source_page")),
         quote_prefix,
+    ]
+    return " | ".join(parts)
+
+
+def _estimation_fingerprint(slug: str, row: dict[str, Any]) -> str:
+    parts = [
+        slug,
+        "estimation",
+        _normalize_text(row.get("actor_label")),
+        _normalize_text(row.get("T")),
+        _number_text(row.get("bI")),
+        _number_text(row.get("bI_lo")),
+        _number_text(row.get("bI_hi")),
+        _number_text(row.get("bF")),
+        _number_text(row.get("admitted")),
+        _number_text(row.get("formal_boundary")),
+        _normalize_text(row.get("bid_value_unit")),
+        _normalize_text(row.get("consideration_type")),
+        _normalize_text(row.get("dropout_mechanism")),
+        _normalize_text(row.get("confidence_min")),
+        _normalize_text(row.get("projection_rule_version")),
     ]
     return " | ".join(parts)
 
@@ -288,24 +330,21 @@ def _validate_manifest(manifest: dict[str, Any], manifest_path: Path) -> None:
 
 def _all_flags(final_output: dict[str, Any], validation: dict[str, Any]) -> list[dict[str, Any]]:
     flags: list[dict[str, Any]] = []
-    for key in ("row_flags", "deal_flags", "flags"):
+    for key in ("validation_flags", "review_flags", "row_flags", "deal_flags", "flags"):
         value = validation.get(key)
         if isinstance(value, list):
             flags.extend(flag for flag in value if isinstance(flag, dict))
+    graph = final_output.get("graph")
+    if isinstance(graph, dict):
+        for key in ("validation_flags", "review_flags"):
+            value = graph.get(key)
+            if isinstance(value, list):
+                flags.extend(flag for flag in value if isinstance(flag, dict))
     deal = final_output.get("deal")
     if isinstance(deal, dict):
         deal_flags = deal.get("deal_flags")
         if isinstance(deal_flags, list):
             flags.extend(flag for flag in deal_flags if isinstance(flag, dict))
-    events = final_output.get("events")
-    if isinstance(events, list):
-        for idx, row in enumerate(events):
-            if not isinstance(row, dict):
-                continue
-            for flag in row.get("flags") or []:
-                if isinstance(flag, dict):
-                    enriched = {"row_index": idx, **flag}
-                    flags.append(enriched)
     seen: set[str] = set()
     unique: list[dict[str, Any]] = []
     for flag in flags:
@@ -331,10 +370,20 @@ def _hard_flag_identities(flags: Iterable[dict[str, Any]]) -> tuple[str, ...]:
         if flag.get("severity") != "hard":
             continue
         code = str(flag.get("code") or "unknown")
-        if "row_index" in flag:
-            location = f"row:{flag.get('row_index')}"
-        else:
-            location = "deal"
+        location_parts = [
+            str(flag.get(key))
+            for key in (
+                "claim_id",
+                "claim_type",
+                "event_id",
+                "actor_id",
+                "coverage_obligation_id",
+                "citation_unit_id",
+                "row_index",
+            )
+            if flag.get(key) not in (None, "")
+        ]
+        location = "|".join(location_parts) if location_parts else "graph"
         identities.append(f"{location}:{code}")
     return tuple(sorted(identities))
 
@@ -371,17 +420,13 @@ def _is_cohort_like_alias(alias: str) -> bool:
     return bool(re.search(r"\b(?:party|bidder|sponsor|strategic party|financial sponsor)\s+[a-z0-9]+\b", normalized))
 
 
-def _date_diagnostics(events: list[dict[str, Any]], flags: list[dict[str, Any]]) -> Counter:
+def _date_diagnostics(review_rows: list[dict[str, Any]], flags: list[dict[str, Any]]) -> Counter:
     counter: Counter = Counter()
-    for row in events:
-        precise = row.get("bid_date_precise")
-        rough = row.get("bid_date_rough")
-        if precise not in (None, ""):
-            counter["precise"] += 1
-        elif rough not in (None, ""):
-            counter["rough_only"] += 1
+    for row in review_rows:
+        if row.get("event_date") not in (None, ""):
+            counter["dated"] += 1
         else:
-            counter["null"] += 1
+            counter["undated"] += 1
     for flag in flags:
         code = str(flag.get("code") or "")
         if code == "date_phrase_unmapped":
@@ -391,22 +436,36 @@ def _date_diagnostics(events: list[dict[str, Any]], flags: list[dict[str, Any]])
     return counter
 
 
-def _bid_value_representation(events: list[dict[str, Any]]) -> Counter:
+def _bid_value_representation(review_rows: list[dict[str, Any]], estimation_rows: list[dict[str, Any]]) -> Counter:
     counter: Counter = Counter()
-    for row in events:
+    for row in review_rows:
+        value = row.get("bid_value")
         lower = row.get("bid_value_lower")
         upper = row.get("bid_value_upper")
-        bid_type = row.get("bid_type")
+        unit = row.get("bid_value_unit")
+        consideration = row.get("consideration_type")
+        value_state = "value" if value not in (None, "") else "no_value"
         lower_state = "lower" if lower not in (None, "") else "no_lower"
         upper_state = "upper" if upper not in (None, "") else "no_upper"
-        type_state = f"type:{bid_type}" if bid_type not in (None, "") else "type:null"
-        counter[f"{lower_state}/{upper_state}/{type_state}"] += 1
+        unit_state = f"unit:{unit}" if unit not in (None, "") else "unit:null"
+        consideration_state = f"consideration:{consideration}" if consideration not in (None, "") else "consideration:null"
+        counter[f"review/{value_state}/{lower_state}/{upper_state}/{unit_state}/{consideration_state}"] += 1
+    for row in estimation_rows:
+        bi_state = "bI" if row.get("bI") not in (None, "") else "no_bI"
+        bi_range_state = (
+            "bI_range"
+            if row.get("bI_lo") not in (None, "") or row.get("bI_hi") not in (None, "")
+            else "no_bI_range"
+        )
+        bf_state = "bF" if row.get("bF") not in (None, "") else "no_bF"
+        unit_state = f"unit:{row.get('bid_value_unit')}" if row.get("bid_value_unit") not in (None, "") else "unit:null"
+        counter[f"estimation/{bi_state}/{bi_range_state}/{bf_state}/{unit_state}"] += 1
     return counter
 
 
-def _quote_diagnostics(events: list[dict[str, Any]], flags: list[dict[str, Any]]) -> Counter:
+def _quote_diagnostics(review_rows: list[dict[str, Any]], flags: list[dict[str, Any]]) -> Counter:
     counter: Counter = Counter()
-    for row in events:
+    for row in review_rows:
         quote = row.get("source_quote")
         page = row.get("source_page")
         quote_values = quote if isinstance(quote, list) else [quote]
@@ -425,50 +484,43 @@ def _quote_diagnostics(events: list[dict[str, Any]], flags: list[dict[str, Any]]
     return counter
 
 
-def _final_round_metrics(events: list[dict[str, Any]], flags: list[dict[str, Any]]) -> Counter:
+def _estimation_metrics(estimation_rows: list[dict[str, Any]]) -> Counter:
     counter: Counter = Counter()
-    dates_with_bids = {
-        row.get("bid_date_precise")
-        for row in events
-        if row.get("bid_note") == "Bid" and row.get("bid_date_precise")
-    }
-    for row in events:
-        if row.get("bid_note") != "Final Round":
-            continue
-        if row.get("final_round_announcement") is True:
-            counter["announcement_rows"] += 1
-        else:
-            counter["non_announcement_rows"] += 1
-        if row.get("bid_date_precise") in dates_with_bids:
-            counter["same_day_bid_milestone_pairs"] += 1
-    for flag in flags:
-        code = str(flag.get("code") or "")
-        if (
-            code.startswith("P-G2")
-            or code.startswith("P-G3")
-            or code in {
-                "P-G2",
-                "P-G3",
-                "bid_type_unsupported",
-                "bid_range_inverted",
-                "bid_range_must_be_informal",
-                "final_round_missing_non_announcement_pair",
-            }
-        ):
-            counter[f"{code}_flags"] += 1
+    for row in estimation_rows:
+        counter[f"T:{row.get('T') or 'null'}"] += 1
+        counter["admitted:true" if row.get("admitted") is True else "admitted:false"] += 1
+        counter["formal_boundary:true" if row.get("formal_boundary") is True else "formal_boundary:false"] += 1
+        counter["has_bI" if row.get("bI") not in (None, "") else "missing_bI"] += 1
+        counter["has_bF" if row.get("bF") not in (None, "") else "missing_bF"] += 1
     return counter
 
 
 def metrics_for_run(archived: ArchivedRun) -> RunMetrics:
     final_output = archived.final_output
-    events_value = final_output.get("events")
-    events = [row for row in events_value if isinstance(row, dict)] if isinstance(events_value, list) else []
+    graph = final_output.get("graph") if isinstance(final_output.get("graph"), dict) else {}
+    review_rows = _list_of_dicts(final_output, "review_rows", archived.run_dir / "final_output.json")
+    estimation_rows = _list_of_dicts(final_output, "estimation_bidder_rows", archived.run_dir / "final_output.json")
+    graph_lists = {
+        key: _list_of_dicts(graph, key, archived.run_dir / "final_output.json")
+        for key in (
+            "actors",
+            "actor_relations",
+            "claims",
+            "claim_dispositions",
+            "coverage_results",
+            "events",
+            "event_actor_links",
+            "participation_counts",
+        )
+    }
     flags = _all_flags(final_output, archived.validation)
-    bid_notes = Counter(str(row.get("bid_note") or "null") for row in events)
-    lifecycle = Counter({note: 0 for note in LIFECYCLE_NOTES})
-    lifecycle.update(str(row.get("bid_note") or "null") for row in events if row.get("bid_note") in LIFECYCLE_NOTES)
-    aliases = [str(row.get("bidder_alias") or row.get("bidder_name") or "") for row in events]
-    deal = final_output.get("deal") if isinstance(final_output.get("deal"), dict) else {}
+    event_subtypes = Counter(str(row.get("event_subtype") or "null") for row in review_rows)
+    actors = graph_lists["actors"]
+    relations = graph_lists["actor_relations"]
+    claims = graph_lists["claims"]
+    dispositions = graph_lists["claim_dispositions"]
+    coverage_results = graph_lists["coverage_results"]
+    aliases = [str(row.get("actor_label") or "") for row in review_rows]
     flag_count_values = _stable_nested_items(_flag_counts(flags))
     return RunMetrics(
         slug=archived.slug,
@@ -482,19 +534,31 @@ def metrics_for_run(archived: ArchivedRun) -> RunMetrics:
         schema_hash=_manifest_value(archived.manifest, "schema_hash"),
         rulebook_hash=_manifest_value(archived.manifest, "rulebook_version"),
         extractor_contract_version=_manifest_value(archived.manifest, "extractor_contract_version"),
-        row_count=len(events),
-        row_fingerprints=tuple(sorted(_row_fingerprint(archived.slug, row) for row in events)),
-        bid_note_counts=_stable_items(bid_notes),
+        row_count=len(review_rows),
+        row_fingerprints=tuple(sorted(_row_fingerprint(archived.slug, row) for row in review_rows)),
+        event_subtype_counts=_stable_items(event_subtypes),
         flag_counts=flag_count_values,
         hard_flag_identities=_hard_flag_identities(flags),
-        auction_value=_auction_repr(deal),
-        lifecycle_counts=_stable_items(lifecycle),
+        graph_status="hard_flags" if any(flag.get("severity") == "hard" for flag in flags) else "no_hard_flags",
+        graph_table_counts=_stable_items(Counter({key: len(rows) for key, rows in graph_lists.items()})),
+        actor_kind_counts=_stable_items(Counter(str(row.get("actor_kind") or "null") for row in actors)),
+        relation_type_counts=_stable_items(Counter(str(row.get("relation_type") or "null") for row in relations)),
+        claim_type_counts=_stable_items(Counter(str(row.get("claim_type") or "null") for row in claims)),
+        claim_disposition_counts=_stable_items(Counter(str(row.get("disposition") or "null") for row in dispositions)),
+        coverage_result_counts=_stable_items(
+            Counter(
+                f"{row.get('obligation_id') or 'null'}:{row.get('result') or 'null'}"
+                for row in coverage_results
+            )
+        ),
         anonymous_placeholder_count=sum(1 for alias in aliases if _is_anonymous_alias(alias)),
         cohort_like_placeholder_count=sum(1 for alias in aliases if _is_cohort_like_alias(alias)),
-        final_round_metrics=_stable_items(_final_round_metrics(events, flags)),
-        date_diagnostics=_stable_items(_date_diagnostics(events, flags)),
-        bid_value_representation=_stable_items(_bid_value_representation(events)),
-        quote_diagnostics=_stable_items(_quote_diagnostics(events, flags)),
+        estimation_count=len(estimation_rows),
+        estimation_fingerprints=tuple(sorted(_estimation_fingerprint(archived.slug, row) for row in estimation_rows)),
+        estimation_metrics=_stable_items(_estimation_metrics(estimation_rows)),
+        date_diagnostics=_stable_items(_date_diagnostics(review_rows, flags)),
+        bid_value_representation=_stable_items(_bid_value_representation(review_rows, estimation_rows)),
+        quote_diagnostics=_stable_items(_quote_diagnostics(review_rows, flags)),
     )
 
 
@@ -514,6 +578,45 @@ def _validate_run_artifacts(run_dir: Path) -> None:
         raise StabilityError(f"archived run prompts artifact is not a directory: {run_dir / 'prompts'}")
 
 
+def _list_of_dicts(payload: dict[str, Any], key: str, artifact_path: Path) -> list[dict[str, Any]]:
+    value = payload.get(key)
+    if not isinstance(value, list):
+        raise StabilityError(f"live deal_graph_v1 artifact missing list {key}: {artifact_path}")
+    if not all(isinstance(row, dict) for row in value):
+        raise StabilityError(f"live deal_graph_v1 artifact list {key} contains non-object row: {artifact_path}")
+    return value
+
+
+def _validate_live_final_output(final_output: dict[str, Any], artifact_path: Path) -> None:
+    if final_output.get("schema_version") != LIVE_GRAPH_SCHEMA_VERSION:
+        raise StabilityError(
+            f"archived run final_output schema_version is not {LIVE_GRAPH_SCHEMA_VERSION}: {artifact_path}"
+        )
+    graph = final_output.get("graph")
+    if not isinstance(graph, dict):
+        raise StabilityError(f"archived run final_output missing live graph object: {artifact_path}")
+    if graph.get("schema_version") != LIVE_GRAPH_SCHEMA_VERSION:
+        raise StabilityError(
+            f"archived run graph schema_version is not {LIVE_GRAPH_SCHEMA_VERSION}: {artifact_path}"
+        )
+    for key in LIVE_GRAPH_LIST_KEYS:
+        _list_of_dicts(graph, key, artifact_path)
+    _list_of_dicts(final_output, "review_rows", artifact_path)
+    _list_of_dicts(final_output, "estimation_bidder_rows", artifact_path)
+
+
+def _is_live_graph_snapshot(final_output: dict[str, Any]) -> bool:
+    graph = final_output.get("graph")
+    return (
+        final_output.get("schema_version") == LIVE_GRAPH_SCHEMA_VERSION
+        and isinstance(graph, dict)
+        and graph.get("schema_version") == LIVE_GRAPH_SCHEMA_VERSION
+        and all(isinstance(graph.get(key), list) for key in LIVE_GRAPH_LIST_KEYS)
+        and isinstance(final_output.get("review_rows"), list)
+        and isinstance(final_output.get("estimation_bidder_rows"), list)
+    )
+
+
 def load_archived_runs(repo_root: Path, slug: str) -> list[ArchivedRun]:
     slug_root = repo_root / "output" / "audit" / slug
     if slug_root.exists():
@@ -525,10 +628,12 @@ def load_archived_runs(repo_root: Path, slug: str) -> list[ArchivedRun]:
     for run_dir in sorted(path for path in runs_root.iterdir() if path.is_dir()):
         manifest_path = run_dir / "manifest.json"
         if not manifest_path.exists():
-            raise StabilityError(f"archived run missing manifest.json: {run_dir}")
+            continue
         manifest = _read_json(manifest_path)
         if manifest.get("schema_version") != AUDIT_RUN_SCHEMA_VERSION:
-            raise StabilityError(f"archived run manifest schema_version is not {AUDIT_RUN_SCHEMA_VERSION}: {manifest_path}")
+            # Immutable historical run directories can remain on disk, but they
+            # are not inputs to the audit-v3 stability proof.
+            continue
         for required_path in (("slug",), ("run_id",), ("outcome",), ("cache_eligible",)):
             _require_manifest_value(manifest, required_path, manifest_path)
         if (
@@ -539,6 +644,10 @@ def load_archived_runs(repo_root: Path, slug: str) -> list[ArchivedRun]:
             continue
         _validate_manifest(manifest, manifest_path)
         _validate_run_artifacts(run_dir)
+        final_output = _read_json(run_dir / "final_output.json")
+        if not _is_live_graph_snapshot(final_output):
+            continue
+        _validate_live_final_output(final_output, run_dir / "final_output.json")
         raw_response = _read_json(run_dir / "raw_response.json")
         if raw_response.get("schema_version") != RAW_RESPONSE_SCHEMA_VERSION:
             raise StabilityError(
@@ -548,7 +657,6 @@ def load_archived_runs(repo_root: Path, slug: str) -> list[ArchivedRun]:
             raise StabilityError(
                 f"archived run raw_response parsed_json is not the live claim-only provider payload: {run_dir / 'raw_response.json'}"
             )
-        final_output = _read_json(run_dir / "final_output.json")
         validation = _read_json(run_dir / "validation.json")
         run_id = str(manifest.get("run_id") or run_dir.name)
         archived.append(ArchivedRun(slug=slug, run_id=run_id, run_dir=run_dir, manifest=manifest, final_output=final_output, validation=validation))
@@ -607,12 +715,19 @@ def _classify_slug(slug: str, runs: tuple[RunMetrics, ...], eligible_count: int,
     elif len({run.row_count for run in runs}) > 1:
         reasons.append("row counts changed")
     compared_attrs = (
-        ("auction values changed", lambda run: run.auction_value),
-        ("bid_note counts changed", lambda run: run.bid_note_counts),
-        ("lifecycle counts changed", lambda run: run.lifecycle_counts),
+        ("graph statuses changed", lambda run: run.graph_status),
+        ("graph table counts changed", lambda run: run.graph_table_counts),
+        ("event subtype counts changed", lambda run: run.event_subtype_counts),
+        ("actor kind counts changed", lambda run: run.actor_kind_counts),
+        ("relation type counts changed", lambda run: run.relation_type_counts),
+        ("claim type counts changed", lambda run: run.claim_type_counts),
+        ("claim disposition counts changed", lambda run: run.claim_disposition_counts),
+        ("coverage result counts changed", lambda run: run.coverage_result_counts),
         ("anonymous placeholder counts changed", lambda run: run.anonymous_placeholder_count),
         ("cohort-like placeholder counts changed", lambda run: run.cohort_like_placeholder_count),
-        ("final-round metrics changed", lambda run: run.final_round_metrics),
+        ("estimation counts changed", lambda run: run.estimation_count),
+        ("estimation fingerprints changed", lambda run: run.estimation_fingerprints),
+        ("estimation metrics changed", lambda run: run.estimation_metrics),
         ("date diagnostics changed", lambda run: run.date_diagnostics),
         ("bid-value representation changed", lambda run: run.bid_value_representation),
         ("quote diagnostics changed", lambda run: run.quote_diagnostics),
@@ -741,13 +856,19 @@ def build_report(analysis: StabilityAnalysis) -> str:
         ])
         for run in result.selected_runs:
             lines.extend([
-                f"- run {run.run_id}: rows={run.row_count}; fingerprints={_digest(run.row_fingerprints)}; auction={run.auction_value}",
-                f"- run {run.run_id} bid_note_counts: {_format_pairs(run.bid_note_counts)}",
+                f"- run {run.run_id}: review_rows={run.row_count}; review_fingerprints={_digest(run.row_fingerprints)}; graph_status={run.graph_status}",
+                f"- run {run.run_id} event_subtype_counts: {_format_pairs(run.event_subtype_counts)}",
                 f"- run {run.run_id} flag_matrix: {_format_nested_pairs(run.flag_counts)}",
                 f"- run {run.run_id} hard_flags: {', '.join(run.hard_flag_identities) if run.hard_flag_identities else '-'}",
-                f"- run {run.run_id} lifecycle_counts: {_format_pairs(run.lifecycle_counts)}",
+                f"- run {run.run_id} graph_table_counts: {_format_pairs(run.graph_table_counts)}",
+                f"- run {run.run_id} actor_kind_counts: {_format_pairs(run.actor_kind_counts)}",
+                f"- run {run.run_id} relation_type_counts: {_format_pairs(run.relation_type_counts)}",
+                f"- run {run.run_id} claim_type_counts: {_format_pairs(run.claim_type_counts)}",
+                f"- run {run.run_id} claim_disposition_counts: {_format_pairs(run.claim_disposition_counts)}",
+                f"- run {run.run_id} coverage_result_counts: {_format_pairs(run.coverage_result_counts)}",
                 f"- run {run.run_id} anonymous_placeholders: {run.anonymous_placeholder_count}; cohort_like_placeholders: {run.cohort_like_placeholder_count}",
-                f"- run {run.run_id} final_round_metrics: {_format_pairs(run.final_round_metrics)}",
+                f"- run {run.run_id} estimation_rows={run.estimation_count}; estimation_fingerprints={_digest(run.estimation_fingerprints)}",
+                f"- run {run.run_id} estimation_metrics: {_format_pairs(run.estimation_metrics)}",
                 f"- run {run.run_id} date_diagnostics: {_format_pairs(run.date_diagnostics)}",
                 f"- run {run.run_id} bid_value_representation: {_format_pairs(run.bid_value_representation)}",
                 f"- run {run.run_id} quote_diagnostics: {_format_pairs(run.quote_diagnostics)}",

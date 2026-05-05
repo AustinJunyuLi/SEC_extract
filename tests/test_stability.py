@@ -19,28 +19,64 @@ BASE_HASHES = {
 
 def _event(
     *,
-    bid_note: str = "Bid",
+    bid_note: str = "bid_submitted",
     bidder_alias: str = "Party A",
-    bidder_type: str | None = "s",
+    bidder_type: str | None = "organization",
     bid_value_lower: float | None = 10.0,
     bid_value_upper: float | None = 12.0,
     source_quote: str = "Party A submitted an indication of interest.",
     source_page: int = 4,
     flags: list[dict] | None = None,
 ) -> dict:
+    subtype = {
+        "Bid": "bid_submitted",
+        "NDA": "nda_signed",
+        "Drop": "bidder_dropped",
+        "DropSilent": "bidder_dropped_silent",
+        "Executed": "merger_agreement_executed",
+        "Final Round": "formal_boundary",
+    }.get(bid_note, bid_note)
     return {
-        "process_phase": "Phase 1",
-        "bid_note": bid_note,
-        "bid_date_precise": "2026-01-15",
-        "bid_date_rough": None,
-        "bidder_alias": bidder_alias,
-        "bidder_type": bidder_type,
+        "deal_slug": "medivation",
+        "cycle_id": "cycle_synthetic",
+        "event_id": f"event_{subtype}_{bidder_alias}".replace(" ", "_").lower(),
+        "event_date": "2026-01-15",
+        "event_type": "process",
+        "event_subtype": subtype,
+        "actor_id": f"actor_{bidder_alias}".replace(" ", "_").lower(),
+        "actor_label": bidder_alias,
+        "actor_kind": bidder_type,
+        "actor_role": "potential bidder",
+        "bid_value": None,
         "bid_value_lower": bid_value_lower,
         "bid_value_upper": bid_value_upper,
-        "bid_type": "informal" if bid_note == "Bid" else None,
+        "bid_value_unit": "per_share" if bid_value_lower is not None or bid_value_upper is not None else None,
+        "consideration_type": "cash" if bid_value_lower is not None or bid_value_upper is not None else None,
         "source_page": source_page,
         "source_quote": source_quote,
         "flags": flags or [],
+    }
+
+
+def _estimation_row(*, bidder_alias: str = "Party A") -> dict:
+    return {
+        "deal_slug": "medivation",
+        "cycle_id": "cycle_synthetic",
+        "actor_id": f"actor_{bidder_alias}".replace(" ", "_").lower(),
+        "actor_label": bidder_alias,
+        "bI": 10.0,
+        "bI_lo": 10.0,
+        "bI_hi": 12.0,
+        "bF": 12.0,
+        "admitted": True,
+        "T": "unknown",
+        "bid_value_unit": "per_share",
+        "consideration_type": "cash",
+        "boundary_event_id": "event_boundary",
+        "formal_boundary": True,
+        "dropout_mechanism": None,
+        "confidence_min": "high",
+        "projection_rule_version": "bidder_cycle_baseline_v1",
     }
 
 
@@ -51,7 +87,7 @@ def _claim_payload() -> dict:
                 "claim_type": "actor",
                 "coverage_obligation_id": "obl_actor_1",
                 "actor_label": "Synthetic Target",
-                "actor_kind": "target",
+                "actor_kind": "organization",
                 "observability": "named",
                 "confidence": "high",
                 "evidence_refs": [
@@ -99,18 +135,114 @@ def _write_run(
     }
     if manifest_extra:
         manifest.update(manifest_extra)
+    review_rows = events if events is not None else [_event()]
+    estimation_rows = [_estimation_row()]
+    graph_flags = row_flags or []
+    graph = {
+        "schema_version": "deal_graph_v1",
+        "run_id": run_id,
+        "deal_slug": slug,
+        "deals": [
+            {
+                "deal_id": "deal_synthetic",
+                "deal_slug": slug,
+                "target_name": "Synthetic Target",
+            }
+        ],
+        "process_cycles": [{"cycle_id": "cycle_synthetic", "deal_id": "deal_synthetic"}],
+        "evidence": [],
+        "claims": [{"claim_id": "claim_synthetic", "claim_type": "event", "status": "current"}],
+        "claim_evidence": [],
+        "claim_dispositions": [
+            {
+                "disposition_id": "disposition_synthetic",
+                "claim_id": "claim_synthetic",
+                "disposition": "supported",
+                "current": True,
+            }
+        ],
+        "claim_coverage_links": [],
+        "coverage_results": [
+            {
+                "coverage_result_id": "coverage_synthetic",
+                "obligation_id": "events_core",
+                "result": "claims_emitted",
+                "current": True,
+            }
+        ],
+        "actors": [
+            {
+                "actor_id": row["actor_id"],
+                "actor_label": row["actor_label"],
+                "actor_kind": row["actor_kind"],
+                "bidder_class": "unknown",
+            }
+            for row in review_rows
+        ],
+        "actor_relations": [],
+        "events": [
+            {
+                "event_id": row["event_id"],
+                "cycle_id": row["cycle_id"],
+                "event_type": row["event_type"],
+                "event_subtype": row["event_subtype"],
+                "event_date": row["event_date"],
+                "bid_value": row["bid_value"],
+                "bid_value_lower": row["bid_value_lower"],
+                "bid_value_upper": row["bid_value_upper"],
+                "bid_value_unit": row["bid_value_unit"],
+                "consideration_type": row["consideration_type"],
+            }
+            for row in review_rows
+        ],
+        "event_actor_links": [
+            {
+                "link_id": f"link_{idx}",
+                "event_id": row["event_id"],
+                "actor_id": row["actor_id"],
+                "actor_label": row["actor_label"],
+                "role": row["actor_role"],
+            }
+            for idx, row in enumerate(review_rows)
+        ],
+        "participation_counts": [],
+        "row_evidence": [],
+        "review_flags": graph_flags,
+        "review_rows": review_rows,
+        "estimation_bidder_rows": estimation_rows,
+        "last_run": finished_at,
+        "rulebook_version": BASE_HASHES["rulebook_version"],
+        "validation_flags": graph_flags,
+    }
     (run_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True))
     (run_dir / "final_output.json").write_text(json.dumps({
+        "schema_version": "deal_graph_v1",
+        "deal_slug": slug,
+        "run_id": run_id,
+        "last_run": finished_at,
+        "rulebook_version": BASE_HASHES["rulebook_version"],
         "deal": {
-            "TargetName": "Synthetic Target",
-            "auction": True,
+            "deal_slug": slug,
             "deal_flags": deal_flags or [],
+            "last_run": finished_at,
+            "last_run_id": run_id,
+            "rulebook_version": BASE_HASHES["rulebook_version"],
+            "status": manifest.get("outcome", "passed_clean"),
         },
-        "events": events if events is not None else [_event()],
+        "graph": graph,
+        "review_rows": review_rows,
+        "estimation_bidder_rows": estimation_rows,
     }, indent=2, sort_keys=True))
     (run_dir / "validation.json").write_text(json.dumps({
-        "row_flags": row_flags or [],
-        "deal_flags": deal_flags or [],
+        "schema_version": "validation_v1",
+        "slug": slug,
+        "run_id": run_id,
+        "final_status": manifest.get("outcome", "passed_clean"),
+        "flag_count": len(graph_flags),
+        "hard_count": sum(1 for flag in graph_flags if flag.get("severity") == "hard"),
+        "soft_count": sum(1 for flag in graph_flags if flag.get("severity") == "soft"),
+        "info_count": sum(1 for flag in graph_flags if flag.get("severity") == "info"),
+        "validation_flags": graph_flags,
     }, indent=2, sort_keys=True))
     (run_dir / "raw_response.json").write_text(json.dumps({
         "schema_version": RAW_RESPONSE_SCHEMA_VERSION,
@@ -333,6 +465,59 @@ def test_strict_mode_rejects_legacy_singleton_audit_files(tmp_path, capsys):
     err = capsys.readouterr().err
     assert rc == 2
     assert "legacy singleton audit file rejected" in err
+
+
+def test_stale_non_v3_run_directories_are_not_stability_inputs(tmp_path, capsys):
+    _write_runs(tmp_path)
+    stale_run = tmp_path / "output" / "audit" / "medivation" / "runs" / "stale-v2"
+    stale_run.mkdir(parents=True)
+    (stale_run / "manifest.json").write_text(json.dumps({
+        "schema_version": "audit_run_v2",
+        "slug": "medivation",
+        "run_id": "stale-v2",
+    }))
+
+    rc = stability.main(["--repo-root", str(tmp_path), "--slugs", "medivation", "--runs", "3"])
+
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert "STABLE_FOR_REFERENCE_REVIEW" in out
+    assert "stale-v2" not in out
+
+
+def test_manifestless_run_directories_are_not_stability_inputs(tmp_path, capsys):
+    _write_runs(tmp_path)
+    partial_run = tmp_path / "output" / "audit" / "medivation" / "runs" / "partial"
+    partial_run.mkdir(parents=True)
+    (partial_run / "raw_response.json").write_text("{}")
+
+    rc = stability.main(["--repo-root", str(tmp_path), "--slugs", "medivation", "--runs", "3"])
+
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert "STABLE_FOR_REFERENCE_REVIEW" in out
+    assert "partial" not in out
+
+
+def test_stale_v3_non_graph_outputs_are_not_stability_inputs(tmp_path, capsys):
+    _write_runs(tmp_path)
+    stale_run = _write_run(
+        tmp_path,
+        slug="medivation",
+        run_id="stale-v3",
+        finished_at="2026-04-29T00:09:00Z",
+    )
+    (stale_run / "final_output.json").write_text(json.dumps({
+        "deal": {"TargetName": "Synthetic Target"},
+        "events": [_event()],
+    }))
+
+    rc = stability.main(["--repo-root", str(tmp_path), "--slugs", "medivation", "--runs", "3"])
+
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert "STABLE_FOR_REFERENCE_REVIEW" in out
+    assert "stale-v3" not in out
 
 
 def test_archived_run_manifest_must_use_live_nested_config_shape(tmp_path, capsys):
