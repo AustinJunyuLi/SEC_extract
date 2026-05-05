@@ -4,15 +4,25 @@ from __future__ import annotations
 from typing import Any
 
 PROJECTION_RULE_VERSION = "bidder_cycle_baseline_v1"
+FINAL_MARKER_SUBTYPES = {"final_round_bid", "merger_agreement_executed"}
+FINAL_MARKER_ROLES = {"acquirer", "bidder", "buyer", "bid_submitter", "party", "purchaser"}
 
 
 def project_estimation_rows(graph: dict[str, Any]) -> list[dict[str, Any]]:
     actors = {row["actor_id"]: row for row in graph.get("actors", [])}
     events = {row["event_id"]: row for row in graph.get("events", [])}
     links_by_actor: dict[str, list[dict[str, Any]]] = {}
+    marker_events_by_actor: dict[str, list[dict[str, Any]]] = {}
     for link in graph.get("event_actor_links", []):
         if link.get("role") == "bid_submitter":
             links_by_actor.setdefault(link["actor_id"], []).append(link)
+        event = events.get(link.get("event_id"))
+        if (
+            event
+            and event.get("event_subtype") in FINAL_MARKER_SUBTYPES
+            and (link.get("role") in FINAL_MARKER_ROLES or event.get("event_subtype") == "final_round_bid")
+        ):
+            marker_events_by_actor.setdefault(link["actor_id"], []).append(event)
 
     rows: list[dict[str, Any]] = []
     for actor_id, links in sorted(links_by_actor.items(), key=lambda item: actors[item[0]]["actor_label"]):
@@ -23,9 +33,10 @@ def project_estimation_rows(graph: dict[str, Any]) -> list[dict[str, Any]]:
         if not bid_events:
             continue
         initial = _first_nonfinal_bid(bid_events)
-        final = _last_final_bid(bid_events)
+        final = _last_final_bid(bid_events, marker_events_by_actor.get(actor_id, []))
         boundary = final or bid_events[-1]
         actor = actors[actor_id]
+        formal_boundary = bool(final)
         rows.append({
             "deal_slug": graph.get("deal_slug"),
             "cycle_id": boundary.get("cycle_id"),
@@ -40,7 +51,7 @@ def project_estimation_rows(graph: dict[str, Any]) -> list[dict[str, Any]]:
             "bid_value_unit": boundary.get("bid_value_unit"),
             "consideration_type": boundary.get("consideration_type"),
             "boundary_event_id": boundary.get("event_id"),
-            "formal_boundary": boundary.get("event_subtype") == "final_round_bid",
+            "formal_boundary": formal_boundary,
             "dropout_mechanism": _dropout_mechanism(actor_id, graph),
             "confidence_min": _confidence_min(actor_id, graph),
             "projection_rule_version": PROJECTION_RULE_VERSION,
@@ -55,9 +66,16 @@ def _first_nonfinal_bid(events: list[dict[str, Any]]) -> dict[str, Any] | None:
     return events[0] if events else None
 
 
-def _last_final_bid(events: list[dict[str, Any]]) -> dict[str, Any] | None:
+def _last_final_bid(
+    events: list[dict[str, Any]],
+    marker_events: list[dict[str, Any]] | None = None,
+) -> dict[str, Any] | None:
     finals = [event for event in events if event.get("event_subtype") == "final_round_bid"]
-    return finals[-1] if finals else None
+    if finals:
+        return finals[-1]
+    if marker_events:
+        return events[-1] if events else None
+    return None
 
 
 def _bid_point(event: dict[str, Any] | None) -> Any:
