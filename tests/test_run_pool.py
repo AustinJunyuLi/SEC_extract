@@ -1,5 +1,6 @@
 import asyncio
 import json
+from types import SimpleNamespace
 
 import pytest
 
@@ -13,6 +14,27 @@ def _cfg(**kwargs):
     for key, value in kwargs.items():
         setattr(base, key, value)
     return base
+
+
+def _claim_payload(label: str = "CSC/Pamplona") -> dict:
+    return {
+        "actor_claims": [
+            {
+                "claim_type": "actor",
+                "coverage_obligation_id": "obl_actor_1",
+                "actor_label": label,
+                "actor_kind": "group",
+                "observability": "named",
+                "confidence": "high",
+                "quote_text": "CSC and Pamplona, who together we refer to as CSC/Pamplona",
+                "quote_texts": None,
+            }
+        ],
+        "event_claims": [],
+        "bid_claims": [],
+        "participation_count_claims": [],
+        "actor_relation_claims": [],
+    }
 
 
 def _write_audit_manifest(
@@ -131,7 +153,7 @@ def test_skip_decisions_and_cache_policy(minimal_state_repo, monkeypatch):
         "slug": "done",
         "rulebook_version": current,
         "extractor_contract_version": contract,
-        "parsed_json": {"deal": {}, "events": []},
+        "parsed_json": _claim_payload(),
     }))
     (cfg.audit_root / "done" / "latest.json").write_text(json.dumps({
         "schema_version": "audit_v2",
@@ -158,7 +180,7 @@ def test_skip_decisions_and_cache_policy(minimal_state_repo, monkeypatch):
         "slug": "done",
         "rulebook_version": "old",
         "extractor_contract_version": contract,
-        "parsed_json": {"deal": {}, "events": []},
+        "parsed_json": _claim_payload(),
     }))
     assert run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state).action == "blocked"
     (audit / "raw_response.json").write_text(json.dumps({
@@ -167,34 +189,20 @@ def test_skip_decisions_and_cache_policy(minimal_state_repo, monkeypatch):
         "slug": "done",
         "rulebook_version": current,
         "extractor_contract_version": "old-contract",
-        "parsed_json": {"deal": {}, "events": []},
+        "parsed_json": _claim_payload(),
     }))
     decision = run_pool.decide_skip("done", _cfg(re_validate=True, audit_root=cfg.audit_root), current, state)
     assert decision.action == "blocked"
     assert "extractor_contract_version" in decision.reason
 
 
-def test_success_manifest_records_prompt_first_repair_strategy(minimal_state_repo, monkeypatch):
+def test_success_manifest_records_claim_only_graph_strategy(minimal_state_repo, monkeypatch):
     env = minimal_state_repo
     env.seed_deal("a", is_reference=True, status="pending", rulebook_version="rules-v1")
     monkeypatch.setattr(run_pool.core, "rulebook_version", lambda: "rules-v1")
 
     async def fake_extract(*args, **kwargs):
-        raw = {
-            "deal": {
-                "TargetName": "A",
-                "Acquirer": "B",
-                "DateAnnounced": None,
-                "DateEffective": None,
-                "auction": False,
-                "all_cash": None,
-                "target_legal_counsel": None,
-                "acquirer_legal_counsel": None,
-                "bidder_registry": {},
-                "deal_flags": [],
-            },
-            "events": [],
-        }
+        raw = _claim_payload("A")
         return ExtractResult(
             raw_extraction=raw,
             completion=CompletionResult(
@@ -207,28 +215,24 @@ def test_success_manifest_records_prompt_first_repair_strategy(minimal_state_rep
             tool_calls_count=0,
         )
 
-    def fake_prepare(slug, raw, filing):
-        return raw, filing, []
-
-    def fake_validate(prepared, filing):
-        return run_pool.core.ValidatorResult(row_flags=[], deal_flags=[])
-
-    class FinalizeResult:
-        status = "passed_clean"
-        flag_count = 0
-        notes = "hard=0 soft=0 info=0"
+    def fake_finalize_claim_payload(**kwargs):
         output_path = env.tmp_path / "output" / "extractions" / "a.json"
-
-    def fake_finalize_prepared(slug, prepared, filing, validation, promotion_log, run_id):
-        FinalizeResult.output_path.parent.mkdir(parents=True, exist_ok=True)
-        FinalizeResult.output_path.write_text(json.dumps(prepared))
-        return FinalizeResult()
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        final_output = {"schema_version": "deal_graph_v1", "deal": {"deal_flags": []}}
+        output_path.write_text(json.dumps(final_output))
+        return SimpleNamespace(
+            status="passed_clean",
+            flag_count=0,
+            notes="hard=0 soft=0 info=0",
+            output_path=output_path,
+            snapshot_path=env.tmp_path / "output" / "audit" / "a" / "runs" / kwargs["run_id"] / "deal_graph_v1.json",
+            database_path=env.tmp_path / "output" / "audit" / "a" / "runs" / kwargs["run_id"] / "deal_graph.duckdb",
+            final_output=final_output,
+            validation_flags=[],
+        )
 
     monkeypatch.setattr(run_pool, "extract_deal", fake_extract)
-    monkeypatch.setattr(run_pool.core, "load_filing", lambda slug: run_pool.core.Filing(slug=slug, pages=[]))
-    monkeypatch.setattr(run_pool.core, "prepare_for_validate", fake_prepare)
-    monkeypatch.setattr(run_pool.core, "validate", fake_validate)
-    monkeypatch.setattr(run_pool.core, "finalize_prepared", fake_finalize_prepared)
+    monkeypatch.setattr(run_pool, "finalize_claim_payload", fake_finalize_claim_payload)
 
     summary = asyncio.run(
         run_pool.run_pool(
@@ -238,8 +242,8 @@ def test_success_manifest_records_prompt_first_repair_strategy(minimal_state_rep
     )
 
     manifest = json.loads((summary.outcomes[0].audit_path / "manifest.json").read_text())
-    assert manifest["extract_tool_mode"] == "none"
-    assert manifest["repair_strategy"] == "obligation_gated_single_repair"
+    assert manifest["extract_tool_mode"] == "claim_only"
+    assert manifest["repair_strategy"] == "none_deal_graph_v1"
     assert manifest["obligation_contract_version"] == run_pool.obligation_contract_version()
 
 
@@ -273,7 +277,7 @@ def test_cache_rejects_missing_obligation_contract_version(minimal_state_repo, m
         "slug": "done",
         "rulebook_version": "rules-v1",
         "extractor_contract_version": "contract-v1",
-        "parsed_json": {"deal": {}, "events": []},
+        "parsed_json": _claim_payload(),
     }))
     (cfg.audit_root / "done" / "latest.json").write_text(json.dumps({
         "schema_version": "audit_v2",
@@ -295,11 +299,11 @@ def test_cache_rejects_missing_obligation_contract_version(minimal_state_repo, m
     "payload",
     [
         {"schema_version": None},
-        {"schema_version": "v0", "slug": "done", "rulebook_version": "rules-v1", "parsed_json": {"deal": {}, "events": []}},
-        {"schema_version": "v1", "slug": "other", "rulebook_version": "rules-v1", "parsed_json": {"deal": {}, "events": []}},
-        {"schema_version": "v1", "slug": "done", "rulebook_version": "rules-v1", "extractor_contract_version": None, "parsed_json": {"deal": {}, "events": []}},
+        {"schema_version": "v0", "slug": "done", "rulebook_version": "rules-v1", "parsed_json": _claim_payload()},
+        {"schema_version": "v1", "slug": "other", "rulebook_version": "rules-v1", "parsed_json": _claim_payload()},
+        {"schema_version": "v1", "slug": "done", "rulebook_version": "rules-v1", "extractor_contract_version": None, "parsed_json": _claim_payload()},
         {"schema_version": "v1", "slug": "done", "rulebook_version": "rules-v1", "parsed_json": {"events": []}},
-        {"schema_version": "v1", "slug": "done", "rulebook_version": "rules-v1", "parsed_json": {"deal": {}, "events": {}}},
+        {"schema_version": "v1", "slug": "done", "rulebook_version": "rules-v1", "parsed_json": {"actor_claims": {}}},
     ],
 )
 def test_re_validate_rejects_stale_raw_response_shapes(minimal_state_repo, monkeypatch, payload):
@@ -317,7 +321,7 @@ def test_re_validate_rejects_stale_raw_response_shapes(minimal_state_repo, monke
         "slug": "done",
         "rulebook_version": "rules-v1",
         "extractor_contract_version": run_pool.extractor_contract_version(),
-        "parsed_json": {"deal": {}, "events": []},
+        "parsed_json": _claim_payload(),
         **payload,
     }
     (audit / "raw_response.json").write_text(json.dumps(payload))
@@ -350,7 +354,7 @@ def test_re_validate_rejects_legacy_loose_raw_response(minimal_state_repo, monke
         "slug": "done",
         "rulebook_version": "rules-v1",
         "extractor_contract_version": "contract-v1",
-        "parsed_json": {"deal": {}, "events": []},
+        "parsed_json": _claim_payload(),
     }))
     state = json.loads(env.progress.read_text())
 
@@ -378,7 +382,7 @@ def test_run_pool_treats_blocked_revalidate_as_failed(minimal_state_repo, monkey
         "run_id": "legacy",
         "rulebook_version": "rules-v1",
         "extractor_contract_version": "contract-v1",
-        "parsed_json": {"deal": {}, "events": []},
+        "parsed_json": _claim_payload(),
     }))
 
     summary = asyncio.run(run_pool.run_pool(cfg, llm_client=object()))
@@ -408,7 +412,7 @@ def test_re_validate_can_select_exact_archived_run_id(minimal_state_repo, monkey
             "slug": "done",
             "rulebook_version": "rules-v1",
             "extractor_contract_version": "contract-v1",
-            "parsed_json": {"deal": {"TargetName": target}, "events": []},
+            "parsed_json": _claim_payload(target),
         }))
     (cfg.audit_root / "done" / "latest.json").write_text(json.dumps({
         "schema_version": "audit_v2",
@@ -422,7 +426,7 @@ def test_re_validate_can_select_exact_archived_run_id(minimal_state_repo, monkey
 
     cached = run_pool._check_cached_raw_response("done", cfg, "rules-v1").parsed_json
 
-    assert cached == {"deal": {"TargetName": "one"}, "events": []}
+    assert cached == _claim_payload("one")
 
 
 def test_re_validate_latest_requires_cache_eligible_manifest(minimal_state_repo, monkeypatch):
@@ -446,7 +450,7 @@ def test_re_validate_latest_requires_cache_eligible_manifest(minimal_state_repo,
         "slug": "done",
         "rulebook_version": "rules-v1",
         "extractor_contract_version": "contract-v1",
-        "parsed_json": {"deal": {}, "events": []},
+        "parsed_json": _claim_payload(),
     }))
     (cfg.audit_root / "done" / "latest.json").write_text(json.dumps({
         "schema_version": "audit_v2",

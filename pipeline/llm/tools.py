@@ -236,13 +236,11 @@ def check_obligations(
     *,
     filing_pages: list[dict[str, Any]],
 ) -> dict[str, Any]:
-    """Run filing-derived obligation checks on a candidate extraction."""
-    _ensure_extraction_shape(candidate_extraction)
-    result = obligations.check_obligations(
-        candidate_extraction,
-        _filing_from_pages(filing_pages),
+    """Fail loud: row-event repair obligations are retired in deal_graph_v1."""
+    raise RuntimeError(
+        "check_obligations repair tool is retired under deal_graph_v1; "
+        "provider output must be claim-only and graph coverage is Python-owned"
     )
-    return obligations.obligation_result_payload(result)
 
 
 @functools.cache

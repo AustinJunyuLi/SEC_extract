@@ -99,21 +99,7 @@ class StubClient:
         self.calls = []
 
     async def complete(self, **kwargs):
-        payload = {
-            "deal": {
-                "TargetName": "Synthetic Target",
-                "Acquirer": "Synthetic Buyer",
-                "DateAnnounced": "2026-04-24",
-                "DateEffective": None,
-                "auction": False,
-                "all_cash": True,
-                "target_legal_counsel": None,
-                "acquirer_legal_counsel": None,
-                "bidder_registry": {},
-                "deal_flags": [],
-            },
-            "events": [],
-        }
+        payload = _valid_claim_payload()
         self.calls.append(kwargs)
         return CompletionResult(
             text=json.dumps(payload),
@@ -145,6 +131,27 @@ def _raw_deal():
     }
 
 
+def _valid_claim_payload():
+    return {
+        "actor_claims": [
+            {
+                "claim_type": "actor",
+                "coverage_obligation_id": "obl_actor_1",
+                "actor_label": "CSC/Pamplona",
+                "actor_kind": "group",
+                "observability": "named",
+                "confidence": "high",
+                "quote_text": "CSC and Pamplona, who together we refer to as CSC/Pamplona",
+                "quote_texts": None,
+            }
+        ],
+        "event_claims": [],
+        "bid_claims": [],
+        "participation_count_claims": [],
+        "actor_relation_claims": [],
+    }
+
+
 def test_extract_deal_writes_audit_and_tracks_token_usage(minimal_state_repo, monkeypatch):
     env = minimal_state_repo
     prompts = env.tmp_path / "prompts"
@@ -171,8 +178,8 @@ def test_extract_deal_writes_audit_and_tracks_token_usage(minimal_state_repo, mo
         )
     )
 
-    assert result.raw_extraction["deal"]["TargetName"] == "Synthetic Target"
-    assert "slug" not in result.raw_extraction["deal"]
+    assert result.raw_extraction["actor_claims"][0]["actor_label"] == "CSC/Pamplona"
+    assert "deal" not in result.raw_extraction
     assert usage.used == 15
     assert client.calls[0]["model"] == "test-model"
     assert client.calls[0]["max_output_tokens"] == 123
@@ -180,7 +187,7 @@ def test_extract_deal_writes_audit_and_tracks_token_usage(minimal_state_repo, mo
     assert "tool_choice" not in client.calls[0] or client.calls[0]["tool_choice"] is None
     assert client.calls[0]["stream"] is True
     assert (audit.root / "prompts" / "extractor.txt").read_text().startswith("=== SYSTEM ===\nPROMPT")
-    assert json.loads((audit.root / "raw_response.json").read_text())["parsed_json"]["deal"]["TargetName"] == "Synthetic Target"
+    assert json.loads((audit.root / "raw_response.json").read_text())["parsed_json"]["actor_claims"][0]["actor_label"] == "CSC/Pamplona"
     call_entries = (audit.root / "calls.jsonl").read_text().splitlines()
     assert len(call_entries) == 1
     assert json.loads(call_entries[0])["phase"] == "extract"
@@ -222,11 +229,13 @@ def test_repair_runs_one_tool_enabled_turn_with_all_tools(minimal_state_repo, mo
 
     monkeypatch.setattr(extract.core, "prepare_for_validate", fake_prepare)
     monkeypatch.setattr(extract.core, "validate", fake_validate)
+    monkeypatch.setattr(
+        extract.obligations,
+        "check_obligations",
+        lambda prepared, filing: extract.obligations.ObligationResult([], []),
+    )
 
-    final_payload = {
-        "deal": _raw_deal(),
-        "events": [],
-    }
+    final_payload = _valid_claim_payload()
 
     class RepairClient:
         def __init__(self):
@@ -276,7 +285,7 @@ def test_repair_runs_one_tool_enabled_turn_with_all_tools(minimal_state_repo, mo
     assert input_items[0]["role"] == "system"
     assert input_items[0]["content"] == extract.REPAIR_SYSTEM_PROMPT
     repair_user = input_items[1]["content"]
-    assert "Synthetic Buyer" in repair_user
+    assert "actor_claims" in repair_user
     assert "PREVIOUS" in repair_user
     assert "PAGES" in repair_user
     repair_turns = [
@@ -349,12 +358,17 @@ def test_repair_streams_complete_body_after_tool_calls(minimal_state_repo, monke
         "validate",
         lambda prepared, filing: extract.core.ValidatorResult(row_flags=[], deal_flags=[]),
     )
+    monkeypatch.setattr(
+        extract.obligations,
+        "check_obligations",
+        lambda prepared, filing: extract.obligations.ObligationResult([], []),
+    )
 
     validation = extract.core.ValidatorResult(
         row_flags=[{"row_index": 0, "code": "bad", "severity": "hard", "reason": "bad"}],
         deal_flags=[],
     )
-    final_payload = {"deal": _raw_deal(), "events": []}
+    final_payload = _valid_claim_payload()
 
     class ToolThenFinalClient:
         def __init__(self):

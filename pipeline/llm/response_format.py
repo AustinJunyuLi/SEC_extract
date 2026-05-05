@@ -5,7 +5,6 @@ import json
 from copy import deepcopy
 from typing import Any
 
-from pipeline.core import EVENT_VOCABULARY
 from pipeline.llm.client import CompletionResult, LLMClient
 
 
@@ -116,190 +115,246 @@ def _validate_schema_value(schema: dict[str, Any], value: Any, path: str = "$") 
                 _validate_schema_value(item_schema, item, _array_path(path, index))
 
 
-FLAG_SCHEMA = {
+CONFIDENCE_SCHEMA = {"type": "string", "enum": ["high", "medium", "low"]}
+QUOTE_TEXT_SCHEMA = {"type": "string", "maxLength": 1500}
+QUOTE_TEXTS_SCHEMA = {
+    "type": ["array", "null"],
+    "items": QUOTE_TEXT_SCHEMA,
+    "minItems": 1,
+}
+
+ACTOR_CLAIM_SCHEMA = {
     "type": "object",
     "properties": {
-        "code": {"type": "string"},
-        "severity": {"type": "string", "enum": ["hard", "soft", "info"]},
-        "reason": {"type": "string"},
+        "claim_type": {"type": "string", "enum": ["actor"]},
+        "coverage_obligation_id": {"type": "string"},
+        "actor_label": {"type": "string"},
+        "actor_kind": {
+            "type": "string",
+            "enum": ["organization", "person", "group", "vehicle", "cohort", "committee"],
+        },
+        "observability": {
+            "type": "string",
+            "enum": ["named", "anonymous_handle", "count_only"],
+        },
+        "confidence": CONFIDENCE_SCHEMA,
+        "quote_text": QUOTE_TEXT_SCHEMA,
+        "quote_texts": QUOTE_TEXTS_SCHEMA,
     },
-    "required": ["code", "severity", "reason"],
+    "required": [
+        "claim_type",
+        "coverage_obligation_id",
+        "actor_label",
+        "actor_kind",
+        "observability",
+        "confidence",
+        "quote_text",
+        "quote_texts",
+    ],
     "additionalProperties": False,
 }
 
-REGISTRY_ENTRY_SCHEMA = {
+EVENT_CLAIM_SCHEMA = {
     "type": "object",
     "properties": {
-        "resolved_name": {"type": ["string", "null"]},
-        "aliases_observed": {"type": "array", "items": {"type": "string"}},
-        "first_appearance_row_index": {"type": ["integer", "null"]},
-    },
-    "required": ["resolved_name", "aliases_observed", "first_appearance_row_index"],
-    "additionalProperties": False,
-}
-
-SCHEMA_R1: dict[str, Any] = {
-    "type": "object",
-    "properties": {
-        "deal": {
-            "type": "object",
-            "properties": {
-                "TargetName": {"type": ["string", "null"]},
-                "Acquirer": {"type": ["string", "null"]},
-                "DateAnnounced": {"type": ["string", "null"]},
-                "DateEffective": {"type": ["string", "null"]},
-                "auction": {"type": "boolean"},
-                "all_cash": {"type": ["boolean", "null"]},
-                "target_legal_counsel": {"type": ["string", "null"]},
-                "acquirer_legal_counsel": {"type": ["string", "null"]},
-                "bidder_registry": {
-                    "type": "object",
-                    # Linkflow currently 502s on dynamic registry objects
-                    # (`additionalProperties` as a schema or true) and on
-                    # fixed canonical bidder keys such as bidder_01. The
-                    # provider schema therefore accepts an empty object here;
-                    # Python rebuilds/enforces the live registry contract
-                    # before validation/finalization.
-                    "properties": {},
-                    "additionalProperties": False,
-                },
-                "deal_flags": {"type": "array", "items": FLAG_SCHEMA},
-            },
-            "required": [
-                "TargetName",
-                "Acquirer",
-                "DateAnnounced",
-                "DateEffective",
-                "auction",
-                "all_cash",
-                "target_legal_counsel",
-                "acquirer_legal_counsel",
-                "bidder_registry",
-                "deal_flags",
+        "claim_type": {"type": "string", "enum": ["event"]},
+        "coverage_obligation_id": {"type": "string"},
+        "event_type": {"type": "string", "enum": ["process", "bid", "transaction"]},
+        "event_subtype": {
+            "type": "string",
+            "enum": [
+                "contact_initial",
+                "nda_signed",
+                "consortium_ca_signed",
+                "ioi_submitted",
+                "first_round_bid",
+                "final_round_bid",
+                "exclusivity_grant",
+                "merger_agreement_executed",
+                "withdrawn_by_bidder",
+                "excluded_by_target",
+                "non_responsive",
+                "cohort_closure",
+                "advancement_admitted",
+                "advancement_declined",
+                "rollover_executed",
+                "financing_committed",
+                "go_shop_started",
+                "go_shop_ended",
             ],
-            "additionalProperties": False,
         },
-        "events": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "BidderID": {"type": "integer"},
-                    "process_phase": {"type": ["integer", "null"]},
-                    "role": {"type": "string", "enum": ["bidder", "advisor_financial", "advisor_legal"]},
-                    "exclusivity_days": {"type": ["integer", "null"]},
-                    "bidder_name": {"type": ["string", "null"]},
-                    "bidder_alias": {"type": ["string", "null"]},
-                    "bidder_type": {"type": ["string", "null"], "enum": ["s", "f", None]},
-                    "bid_note": {"type": "string", "enum": sorted(EVENT_VOCABULARY)},
-                    "bid_type": {"type": ["string", "null"], "enum": ["formal", "informal", None]},
-                    "bid_type_inference_note": {"type": ["string", "null"], "maxLength": 300},
-                    "drop_initiator": {"type": ["string", "null"], "enum": ["bidder", "target", "unknown", None]},
-                    "drop_reason_class": {
-                        "type": ["string", "null"],
-                        "enum": [
-                            "below_market",
-                            "below_minimum",
-                            "target_other",
-                            "no_response",
-                            "never_advanced",
-                            "scope_mismatch",
-                            None,
-                        ],
-                    },
-                    "final_round_announcement": {"type": ["boolean", "null"]},
-                    "final_round_extension": {"type": ["boolean", "null"]},
-                    "final_round_informal": {"type": ["boolean", "null"]},
-                    "press_release_subject": {"type": ["string", "null"], "enum": ["bidder", "sale", "other", None]},
-                    "invited_to_formal_round": {"type": ["boolean", "null"]},
-                    "submitted_formal_bid": {"type": ["boolean", "null"]},
-                    "bid_date_precise": {"type": ["string", "null"]},
-                    "bid_date_rough": {"type": ["string", "null"]},
-                    "bid_value": {"type": ["number", "null"]},
-                    "bid_value_pershare": {"type": ["number", "null"]},
-                    "bid_value_lower": {"type": ["number", "null"]},
-                    "bid_value_upper": {"type": ["number", "null"]},
-                    "bid_value_unit": {
-                        "type": ["string", "null"],
-                        "enum": ["USD_per_share", "USD", "EUR", "GBP", "CAD", None],
-                    },
-                    "consideration_components": {
-                        "type": ["array", "null"],
-                        "items": {
-                            "type": "string",
-                            "enum": ["cash", "stock", "cvr", "earnout", "other"],
-                        },
-                    },
-                    "additional_note": {"type": ["string", "null"]},
-                    "comments": {"type": ["string", "null"]},
-                    "unnamed_nda_promotion": {
-                        "type": ["object", "null"],
-                        "properties": {
-                            "target_bidder_id": {"type": "integer"},
-                            "promote_to_bidder_alias": {"type": "string"},
-                            "promote_to_bidder_name": {"type": "string"},
-                            "reason": {"type": "string"},
-                        },
-                        "required": [
-                            "target_bidder_id",
-                            "promote_to_bidder_alias",
-                            "promote_to_bidder_name",
-                            "reason",
-                        ],
-                        "additionalProperties": False,
-                    },
-                    "source_quote": {
-                        "type": ["string", "array"],
-                        "maxLength": 1500,
-                        "items": {"type": "string", "maxLength": 1500},
-                    },
-                    "source_page": {
-                        "type": ["integer", "array"],
-                        "items": {"type": "integer"},
-                    },
-                    "flags": {"type": "array", "items": FLAG_SCHEMA},
-                },
-                "required": [
-                    "BidderID",
-                    "process_phase",
-                    "role",
-                    "exclusivity_days",
-                    "bidder_name",
-                    "bidder_alias",
-                    "bidder_type",
-                    "bid_note",
-                    "bid_type",
-                    "bid_type_inference_note",
-                    "drop_initiator",
-                    "drop_reason_class",
-                    "final_round_announcement",
-                    "final_round_extension",
-                    "final_round_informal",
-                    "press_release_subject",
-                    "invited_to_formal_round",
-                    "submitted_formal_bid",
-                    "bid_date_precise",
-                    "bid_date_rough",
-                    "bid_value",
-                    "bid_value_pershare",
-                    "bid_value_lower",
-                    "bid_value_upper",
-                    "bid_value_unit",
-                    "consideration_components",
-                    "additional_note",
-                    "comments",
-                    "unnamed_nda_promotion",
-                    "source_quote",
-                    "source_page",
-                    "flags",
-                ],
-                "additionalProperties": False,
-            },
-        },
+        "event_date": {"type": ["string", "null"]},
+        "description": {"type": "string"},
+        "actor_label": {"type": ["string", "null"]},
+        "actor_role": {"type": ["string", "null"]},
+        "confidence": CONFIDENCE_SCHEMA,
+        "quote_text": QUOTE_TEXT_SCHEMA,
+        "quote_texts": QUOTE_TEXTS_SCHEMA,
     },
-    "required": ["deal", "events"],
+    "required": [
+        "claim_type",
+        "coverage_obligation_id",
+        "event_type",
+        "event_subtype",
+        "event_date",
+        "description",
+        "actor_label",
+        "actor_role",
+        "confidence",
+        "quote_text",
+        "quote_texts",
+    ],
     "additionalProperties": False,
 }
+
+BID_CLAIM_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "claim_type": {"type": "string", "enum": ["bid"]},
+        "coverage_obligation_id": {"type": "string"},
+        "bidder_label": {"type": "string"},
+        "bid_date": {"type": ["string", "null"]},
+        "bid_value": {"type": ["number", "null"]},
+        "bid_value_lower": {"type": ["number", "null"]},
+        "bid_value_upper": {"type": ["number", "null"]},
+        "bid_value_unit": {
+            "type": ["string", "null"],
+            "enum": ["per_share", "enterprise_value", "equity_value", "other", None],
+        },
+        "consideration_type": {
+            "type": ["string", "null"],
+            "enum": ["cash", "stock", "mixed", "other", None],
+        },
+        "bid_stage": {
+            "type": "string",
+            "enum": ["initial", "revised", "final", "unspecified"],
+        },
+        "confidence": CONFIDENCE_SCHEMA,
+        "quote_text": QUOTE_TEXT_SCHEMA,
+        "quote_texts": QUOTE_TEXTS_SCHEMA,
+    },
+    "required": [
+        "claim_type",
+        "coverage_obligation_id",
+        "bidder_label",
+        "bid_date",
+        "bid_value",
+        "bid_value_lower",
+        "bid_value_upper",
+        "bid_value_unit",
+        "consideration_type",
+        "bid_stage",
+        "confidence",
+        "quote_text",
+        "quote_texts",
+    ],
+    "additionalProperties": False,
+}
+
+PARTICIPATION_COUNT_CLAIM_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "claim_type": {"type": "string", "enum": ["participation_count"]},
+        "coverage_obligation_id": {"type": "string"},
+        "process_stage": {
+            "type": "string",
+            "enum": ["contacted", "nda_signed", "ioi_submitted", "first_round", "final_round", "exclusivity"],
+        },
+        "actor_class": {
+            "type": "string",
+            "enum": ["financial", "strategic", "mixed", "unknown"],
+        },
+        "count_min": {"type": "integer"},
+        "count_max": {"type": ["integer", "null"]},
+        "count_qualifier": {"type": "string", "enum": ["exact", "at_least", "at_most", "range", "approximate"]},
+        "confidence": CONFIDENCE_SCHEMA,
+        "quote_text": QUOTE_TEXT_SCHEMA,
+        "quote_texts": QUOTE_TEXTS_SCHEMA,
+    },
+    "required": [
+        "claim_type",
+        "coverage_obligation_id",
+        "process_stage",
+        "actor_class",
+        "count_min",
+        "count_max",
+        "count_qualifier",
+        "confidence",
+        "quote_text",
+        "quote_texts",
+    ],
+    "additionalProperties": False,
+}
+
+ACTOR_RELATION_CLAIM_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "claim_type": {"type": "string", "enum": ["actor_relation"]},
+        "coverage_obligation_id": {"type": "string"},
+        "subject_label": {"type": "string"},
+        "object_label": {"type": "string"},
+        "relation_type": {
+            "type": "string",
+            "enum": [
+                "member_of",
+                "joins_group",
+                "exits_group",
+                "affiliate_of",
+                "controls",
+                "acquisition_vehicle_of",
+                "advises",
+                "finances",
+                "supports",
+                "voting_support_for",
+                "rollover_holder_for",
+            ],
+        },
+        "role_detail": {"type": ["string", "null"]},
+        "effective_date_first": {"type": ["string", "null"]},
+        "confidence": CONFIDENCE_SCHEMA,
+        "quote_text": QUOTE_TEXT_SCHEMA,
+        "quote_texts": QUOTE_TEXTS_SCHEMA,
+    },
+    "required": [
+        "claim_type",
+        "coverage_obligation_id",
+        "subject_label",
+        "object_label",
+        "relation_type",
+        "role_detail",
+        "effective_date_first",
+        "confidence",
+        "quote_text",
+        "quote_texts",
+    ],
+    "additionalProperties": False,
+}
+
+DEAL_GRAPH_CLAIM_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "properties": {
+        "actor_claims": {"type": "array", "items": ACTOR_CLAIM_SCHEMA},
+        "event_claims": {"type": "array", "items": EVENT_CLAIM_SCHEMA},
+        "bid_claims": {"type": "array", "items": BID_CLAIM_SCHEMA},
+        "participation_count_claims": {
+            "type": "array",
+            "items": PARTICIPATION_COUNT_CLAIM_SCHEMA,
+        },
+        "actor_relation_claims": {"type": "array", "items": ACTOR_RELATION_CLAIM_SCHEMA},
+    },
+    "required": [
+        "actor_claims",
+        "event_claims",
+        "bid_claims",
+        "participation_count_claims",
+        "actor_relation_claims",
+    ],
+    "additionalProperties": False,
+}
+
+# Compatibility name for existing callers during the deal_graph_v1 provider
+# contract slice. The schema itself is no longer the retired row/event format.
+SCHEMA_R1: dict[str, Any] = DEAL_GRAPH_CLAIM_SCHEMA
 
 
 REPAIR_SCHEMA_R1: dict[str, Any] = deepcopy(SCHEMA_R1)
@@ -313,18 +368,23 @@ REPAIR_SCHEMA_R1["properties"]["obligation_assertions"] = {
                 "type": "string",
                 "enum": ["satisfied", "unmet", "not_applicable"],
             },
-            "row_ids": {"type": "array", "items": {"type": "integer"}},
+            "claim_indexes": {"type": "array", "items": {"type": "integer"}},
             "reason": {"type": "string"},
         },
-        "required": ["obligation_id", "status", "row_ids", "reason"],
+        "required": ["obligation_id", "status", "claim_indexes", "reason"],
         "additionalProperties": False,
     },
 }
-REPAIR_SCHEMA_R1["required"] = ["deal", "events", "obligation_assertions"]
+REPAIR_SCHEMA_R1["required"] = [*SCHEMA_R1["required"], "obligation_assertions"]
 
 
 def json_schema_format(schema: dict[str, Any] = SCHEMA_R1) -> dict[str, Any]:
-    name = "repair_schema_r1" if schema is REPAIR_SCHEMA_R1 else "extraction_schema_r1"
+    if schema is REPAIR_SCHEMA_R1:
+        name = "deal_graph_v1_repair_claim_schema"
+    elif schema is SCHEMA_R1:
+        name = "deal_graph_v1_claim_schema"
+    else:
+        name = "custom_json_schema"
     return {
         "type": "json_schema",
         "name": name,
@@ -352,7 +412,6 @@ def parse_json_text(text: str) -> dict[str, Any]:
 def parse_repair_json_text(text: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     parsed = parse_json_text(text)
     _validate_schema_value(REPAIR_SCHEMA_R1, parsed)
-    _ensure_source_quote_page_pairing(parsed)
     obligation_assertions = parsed.pop("obligation_assertions")
     _ensure_extraction_shape(parsed)
     return parsed, obligation_assertions
@@ -378,10 +437,12 @@ def _ensure_source_quote_page_pairing(parsed: dict[str, Any]) -> None:
 
 
 def _ensure_extraction_shape(parsed: dict[str, Any], schema: dict[str, Any] = SCHEMA_R1) -> None:
-    if "deal" not in parsed or "events" not in parsed:
-        raise MalformedJSONError("expected object with deal and events")
+    missing = [name for name in schema["required"] if name not in parsed]
+    if missing:
+        raise MalformedJSONError(
+            "expected deal_graph_v1 claim object; missing " + ", ".join(missing)
+        )
     _validate_schema_value(schema, parsed)
-    _ensure_source_quote_page_pairing(parsed)
 
 
 async def call_json(

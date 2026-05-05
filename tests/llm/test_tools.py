@@ -215,45 +215,17 @@ def test_dispatch_invokes_get_pages():
     assert result["pages"] == [{"page": 22, "text": _filing_pages()[0]["content"]}]
 
 
-def test_dispatch_invokes_check_obligations():
-    pages = [{
-        "number": 1,
-        "content": (
-            "The Company entered into confidentiality and standstill agreements "
-            "with 2 potentially interested financial buyers."
-        ),
-    }]
-    candidate = {
-        "deal": {
-            "TargetName": "Synthetic Target",
-            "Acquirer": "Synthetic Buyer",
-            "DateAnnounced": None,
-            "DateEffective": None,
-            "auction": True,
-            "all_cash": None,
-            "target_legal_counsel": None,
-            "acquirer_legal_counsel": None,
-            "bidder_registry": {},
-            "deal_flags": [],
-        },
-        "events": [_clean_bid_row()],
-    }
-    candidate["events"][0]["bid_note"] = "NDA"
-    candidate["events"][0]["bid_type"] = None
-    candidate["events"][0]["bidder_type"] = "f"
-
-    result = tools.dispatch(
-        name="check_obligations",
-        arguments={"candidate_extraction": candidate},
-        filing_pages=pages,
-    )
-
-    assert result["hard_unmet_count"] == 1
-    assert result["checks"][0]["obligation"]["kind"] == "exact_count_nda"
+def test_dispatch_rejects_retired_check_obligations_tool():
+    with pytest.raises(RuntimeError, match="retired under deal_graph_v1"):
+        tools.dispatch(
+            name="check_obligations",
+            arguments={"candidate_extraction": {"deal": {}, "events": []}},
+            filing_pages=_filing_pages(),
+        )
 
 
 def test_check_obligations_rejects_partial_candidate_extractions():
-    with pytest.raises(Exception, match="required"):
+    with pytest.raises(RuntimeError, match="retired under deal_graph_v1"):
         tools.check_obligations(
             {"deal": {}, "events": []},
             filing_pages=_filing_pages(),

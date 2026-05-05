@@ -4,9 +4,10 @@ import re
 
 import pytest
 
-from pipeline import core
 from pipeline.llm.client import CompletionResult
 from pipeline.llm.response_format import (
+    DEAL_GRAPH_CLAIM_SCHEMA,
+    REPAIR_SCHEMA_R1,
     SCHEMA_R1,
     MalformedJSONError,
     call_json,
@@ -15,63 +16,73 @@ from pipeline.llm.response_format import (
 )
 
 
-def test_schema_r1_is_strict_deal_events_shape():
+EXPECTED_TOP_LEVEL_KEYS = [
+    "actor_claims",
+    "event_claims",
+    "bid_claims",
+    "participation_count_claims",
+    "actor_relation_claims",
+]
+
+
+def _walk_schema(node):
+    if isinstance(node, dict):
+        yield node
+        for value in node.values():
+            yield from _walk_schema(value)
+    elif isinstance(node, list):
+        for value in node:
+            yield from _walk_schema(value)
+
+
+def test_schema_r1_aliases_deal_graph_claim_schema():
     fmt = json_schema_format()
 
     assert fmt["type"] == "json_schema"
-    assert fmt["name"] == "extraction_schema_r1"
+    assert fmt["name"] == "deal_graph_v1_claim_schema"
     assert fmt["strict"] is True
     assert fmt["schema"] is SCHEMA_R1
-    assert SCHEMA_R1["required"] == ["deal", "events"]
+    assert SCHEMA_R1 is DEAL_GRAPH_CLAIM_SCHEMA
+    assert SCHEMA_R1["required"] == EXPECTED_TOP_LEVEL_KEYS
+    assert list(SCHEMA_R1["properties"]) == EXPECTED_TOP_LEVEL_KEYS
     assert SCHEMA_R1["additionalProperties"] is False
 
 
-def test_schema_r1_requires_prompt_skeleton_event_fields():
-    required = set(SCHEMA_R1["properties"]["events"]["items"]["required"])
-    for field in [
-        "BidderID",
-        "process_phase",
-        "role",
-        "bid_note",
-        "source_quote",
-        "source_page",
-        "flags",
-    ]:
-        assert field in required
-    assert SCHEMA_R1["properties"]["events"]["items"]["additionalProperties"] is False
+def test_schema_is_provider_safe_without_oneof_or_dynamic_additional_properties():
+    for node in _walk_schema(SCHEMA_R1):
+        assert "oneOf" not in node
+        additional = node.get("additionalProperties")
+        assert not isinstance(additional, dict)
 
 
-def test_schema_r1_nullability_matches_validator_contract():
-    props = SCHEMA_R1["properties"]["events"]["items"]["properties"]
-
-    assert props["process_phase"]["type"] == ["integer", "null"]
-    assert props["role"]["type"] == "string"
-    assert props["role"]["enum"] == ["bidder", "advisor_financial", "advisor_legal"]
-
-
-def test_schema_r1_bid_note_enum_matches_core_vocabulary():
-    bid_note = SCHEMA_R1["properties"]["events"]["items"]["properties"]["bid_note"]
-
-    assert bid_note["enum"] == sorted(core.EVENT_VOCABULARY)
+def test_claim_family_schemas_are_closed_and_claim_only():
+    for family in EXPECTED_TOP_LEVEL_KEYS:
+        item_schema = SCHEMA_R1["properties"][family]["items"]
+        assert item_schema["additionalProperties"] is False
+        assert "claim_type" in item_schema["required"]
+        assert "coverage_obligation_id" in item_schema["required"]
+        assert "confidence" in item_schema["required"]
+        assert "quote_text" in item_schema["required"]
+        assert "quote_texts" in item_schema["required"]
 
 
-def test_schema_r1_requires_unnamed_nda_promotion_hint_slot():
-    event_schema = SCHEMA_R1["properties"]["events"]["items"]
-    promotion = event_schema["properties"]["unnamed_nda_promotion"]
+def test_repair_schema_is_claim_payload_plus_repair_assertions():
+    fmt = json_schema_format(REPAIR_SCHEMA_R1)
 
-    assert "unnamed_nda_promotion" in event_schema["required"]
-    assert promotion["additionalProperties"] is False
-    assert set(promotion["required"]) == {
-        "target_bidder_id",
-        "promote_to_bidder_alias",
-        "promote_to_bidder_name",
-        "reason",
+    assert fmt["name"] == "deal_graph_v1_repair_claim_schema"
+    assert REPAIR_SCHEMA_R1["required"] == [
+        *EXPECTED_TOP_LEVEL_KEYS,
+        "obligation_assertions",
+    ]
+    assert set(REPAIR_SCHEMA_R1["properties"]) == {
+        *EXPECTED_TOP_LEVEL_KEYS,
+        "obligation_assertions",
     }
 
 
 def test_parse_json_text_rejects_fenced_json():
     with pytest.raises(ValueError):
-        parse_json_text('```json\n{"deal": {}, "events": []}\n```')
+        parse_json_text('```json\n{"actor_claims": []}\n```')
 
 
 def test_parse_json_text_rejects_non_object_json():
@@ -92,52 +103,76 @@ class StubClient:
 
 def _valid_payload():
     return {
-        "deal": {
-            "TargetName": "Target Inc.",
-            "Acquirer": "Buyer Inc.",
-            "DateAnnounced": "2020-01-02",
-            "DateEffective": None,
-            "auction": True,
-            "all_cash": True,
-            "target_legal_counsel": None,
-            "acquirer_legal_counsel": None,
-            "bidder_registry": {},
-            "deal_flags": [],
-        },
-        "events": [
+        "actor_claims": [
             {
-                "BidderID": 1,
-                "process_phase": 1,
-                "role": "bidder",
-                "exclusivity_days": None,
-                "bidder_name": None,
-                "bidder_alias": "Target board",
-                "bidder_type": None,
-                "bid_note": "Target Sale",
-                "bid_type": None,
-                "bid_type_inference_note": None,
-                "drop_initiator": None,
-                "drop_reason_class": None,
-                "final_round_announcement": None,
-                "final_round_extension": None,
-                "final_round_informal": None,
-                "press_release_subject": None,
-                "invited_to_formal_round": None,
-                "submitted_formal_bid": None,
-                "bid_date_precise": "2020-01-01",
-                "bid_date_rough": None,
-                "bid_value": None,
-                "bid_value_pershare": None,
+                "claim_type": "actor",
+                "coverage_obligation_id": "obl_actor_1",
+                "actor_label": "CSC/Pamplona",
+                "actor_kind": "group",
+                "observability": "named",
+                "confidence": "high",
+                "quote_text": "CSC and Pamplona, who together we refer to as CSC/Pamplona",
+                "quote_texts": None,
+            }
+        ],
+        "event_claims": [
+            {
+                "claim_type": "event",
+                "coverage_obligation_id": "obl_event_1",
+                "event_type": "process",
+                "event_subtype": "nda_signed",
+                "event_date": "2013-08-01",
+                "description": "CSC/Pamplona entered into a confidentiality agreement.",
+                "actor_label": "CSC/Pamplona",
+                "actor_role": "potential_buyer",
+                "confidence": "high",
+                "quote_text": "CSC/Pamplona entered into a confidentiality agreement with Mac-Gray",
+                "quote_texts": None,
+            }
+        ],
+        "bid_claims": [
+            {
+                "claim_type": "bid",
+                "coverage_obligation_id": "obl_bid_1",
+                "bidder_label": "CSC/Pamplona",
+                "bid_date": "2013-09-15",
+                "bid_value": 18.5,
                 "bid_value_lower": None,
                 "bid_value_upper": None,
-                "bid_value_unit": None,
-                "consideration_components": None,
-                "additional_note": None,
-                "comments": None,
-                "unnamed_nda_promotion": None,
-                "source_quote": "The target board met to discuss strategic alternatives.",
-                "source_page": 12,
-                "flags": [],
+                "bid_value_unit": "per_share",
+                "consideration_type": "cash",
+                "bid_stage": "initial",
+                "confidence": "high",
+                "quote_text": "CSC/Pamplona submitted an indication of interest at $18.50 per share",
+                "quote_texts": None,
+            }
+        ],
+        "participation_count_claims": [
+            {
+                "claim_type": "participation_count",
+                "coverage_obligation_id": "obl_count_1",
+                "process_stage": "nda_signed",
+                "actor_class": "mixed",
+                "count_min": 20,
+                "count_max": 20,
+                "count_qualifier": "exact",
+                "confidence": "high",
+                "quote_text": "20 potential bidders entered confidentiality agreements",
+                "quote_texts": None,
+            }
+        ],
+        "actor_relation_claims": [
+            {
+                "claim_type": "actor_relation",
+                "coverage_obligation_id": "obl_relation_1",
+                "subject_label": "Pamplona",
+                "object_label": "CSC/Pamplona",
+                "relation_type": "member_of",
+                "role_detail": "financing sponsor",
+                "effective_date_first": None,
+                "confidence": "high",
+                "quote_text": "CSC and Pamplona, who together we refer to as CSC/Pamplona",
+                "quote_texts": None,
             }
         ],
     }
@@ -156,7 +191,7 @@ def test_call_json_returns_completion_result():
     )
 
     assert result.parsed_json == _valid_payload()
-    assert client.calls[0]["text_format"]["name"] == "extraction_schema_r1"
+    assert client.calls[0]["text_format"]["name"] == "deal_graph_v1_claim_schema"
     assert result.input_tokens == 1
     assert result.output_tokens == 2
     assert result.attempts == 1
@@ -166,23 +201,24 @@ def test_call_json_returns_completion_result():
 @pytest.mark.parametrize(
     ("mutate", "message"),
     [
-        (lambda p: p.update({"bidder_registry": {}}), "unexpected field bidder_registry"),
-        (lambda p: p["events"][0].pop("role"), "events[0].role"),
-        (lambda p: p["events"][0].update({"legacy_bid_note": "Inf"}), "events[0].legacy_bid_note"),
-        (lambda p: p["events"][0].update({"bid_type": "soft"}), "events[0].bid_type"),
-        (
-            lambda p: p["events"][0]["flags"].append({
-                "code": "x",
-                "severity": "info",
-                "reason": "synthetic",
-                "source_page": 12,
-            }),
-            "events[0].flags[0].source_page",
-        ),
-        (lambda p: p["events"][0].update({"source_quote": ["quote"], "source_page": 12}), "source_quote"),
+        (lambda p: p.update({"coverage_results": []}), "coverage_results"),
+        (lambda p: p.update({"deal": {}, "events": []}), "deal"),
+        (lambda p: p["event_claims"][0].update({"BidderID": 1}), "BidderID"),
+        (lambda p: p["event_claims"][0].update({"T": 1}), "T"),
+        (lambda p: p["event_claims"][0].update({"bI": 1}), "bI"),
+        (lambda p: p["event_claims"][0].update({"bF": 0}), "bF"),
+        (lambda p: p["actor_claims"][0].update({"actor_id": "actor_1"}), "actor_id"),
+        (lambda p: p["event_claims"][0].update({"event_id": "event_1"}), "event_id"),
+        (lambda p: p["bid_claims"][0].update({"source_start": 12}), "source_start"),
+        (lambda p: p["bid_claims"][0].update({"source_end": 42}), "source_end"),
+        (lambda p: p["bid_claims"][0].update({"source_page": 12}), "source_page"),
+        (lambda p: p["bid_claims"][0].update({"bid_type": "formal"}), "bid_type"),
+        (lambda p: p["bid_claims"][0].update({"bidder_row": {}}), "bidder_row"),
+        (lambda p: p["event_claims"][0].pop("quote_text"), "quote_text"),
+        (lambda p: p["event_claims"][0].update({"event_subtype": "NDA"}), "event_subtype"),
     ],
 )
-def test_call_json_enforces_local_schema_after_provider_response(mutate, message):
+def test_call_json_rejects_retired_provider_fields(mutate, message):
     payload = _valid_payload()
     mutate(payload)
     client = StubClient([json.dumps(payload)])
@@ -197,16 +233,15 @@ def test_call_json_enforces_local_schema_after_provider_response(mutate, message
             )
         )
 
-    assert client.calls[0]["text_format"]["name"] == "extraction_schema_r1"
+    assert client.calls[0]["text_format"]["name"] == "deal_graph_v1_claim_schema"
 
 
 def test_call_json_enforces_max_length_locally():
     payload = _valid_payload()
-    payload["events"][0]["bid_type"] = "informal"
-    payload["events"][0]["bid_type_inference_note"] = "x" * 301
+    payload["actor_claims"][0]["quote_text"] = "x" * 1501
     client = StubClient([json.dumps(payload)])
 
-    with pytest.raises(MalformedJSONError, match=r"maxLength 300"):
+    with pytest.raises(MalformedJSONError, match=r"maxLength 1500"):
         asyncio.run(
             call_json(
                 client,
@@ -263,22 +298,26 @@ def test_parse_repair_response_accepts_obligation_assertions_and_strips_them():
     parsed, assertions = parse_repair_json_text(
         json.dumps({
             **_valid_payload(),
-            "obligation_assertions": [{
-                "obligation_id": "obl-001",
-                "status": "satisfied",
-                "row_ids": [1],
-                "reason": "Rows satisfy the obligation.",
-            }],
+            "obligation_assertions": [
+                {
+                    "obligation_id": "obl-001",
+                    "status": "satisfied",
+                    "claim_indexes": [1],
+                    "reason": "Claims satisfy the obligation.",
+                }
+            ],
         })
     )
 
     assert parsed == _valid_payload()
-    assert assertions == [{
-        "obligation_id": "obl-001",
-        "status": "satisfied",
-        "row_ids": [1],
-        "reason": "Rows satisfy the obligation.",
-    }]
+    assert assertions == [
+        {
+            "obligation_id": "obl-001",
+            "status": "satisfied",
+            "claim_indexes": [1],
+            "reason": "Claims satisfy the obligation.",
+        }
+    ]
 
 
 def test_call_json_fails_loudly_without_repair_call():

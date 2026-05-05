@@ -37,6 +37,7 @@ from pipeline.llm.response_format import SCHEMA_R1, schema_hash
 from pipeline.llm.retry import RetryConfig
 from pipeline.llm.tools import tools_contract_version
 from pipeline.llm.watchdog import WatchdogConfig
+from pipeline.deal_graph.orchestrate import finalize_claim_payload
 
 
 DONE_STATUSES = {"passed", "passed_clean", "verified"}
@@ -47,8 +48,8 @@ AUDIT_ROOT = core.REPO_ROOT / "output" / "audit"
 TARGET_GATE_PROOF = core.REPO_ROOT / "quality_reports" / "stability" / "target-release-proof.json"
 DEFAULT_XHIGH_MAX_WORKERS = 5
 DEFAULT_REASONING_EFFORT = "high"
-EXTRACT_TOOL_MODE = "none"
-REPAIR_STRATEGY = "obligation_gated_single_repair"
+EXTRACT_TOOL_MODE = "claim_only"
+REPAIR_STRATEGY = "none_deal_graph_v1"
 SEMANTIC_ADJUDICATION_SOFT_FLAGS: frozenset[str] = frozenset({
     "missing_nda_dropsilent",
 })
@@ -425,13 +426,15 @@ def _check_cached_raw_response(slug: str, cfg: PoolConfig, current_rulebook_vers
             "use --re-extract for a fresh SDK call",
         )
     parsed = payload.get("parsed_json")
-    if not isinstance(parsed, dict):
+    if not _is_claim_payload(parsed):
         return CacheCheck(None, "cached raw_response.json parsed_json is not an object")
-    if not isinstance(parsed.get("deal"), dict):
-        return CacheCheck(None, "cached raw_response.json parsed_json.deal is not an object")
-    if not isinstance(parsed.get("events"), list):
-        return CacheCheck(None, "cached raw_response.json parsed_json.events is not a list")
     return CacheCheck(parsed, "valid archived raw_response.json", payload, source_run_id, path)
+
+
+def _is_claim_payload(value: Any) -> bool:
+    if not isinstance(value, dict):
+        return False
+    return all(isinstance(value.get(name), list) for name in SCHEMA_R1["required"])
 
 
 def decide_skip(
@@ -720,86 +723,25 @@ async def process_deal(
         if raw_extraction is None:
             raise RuntimeError("raw extraction cache yielded no parsed_json")
 
-        filing = await asyncio.to_thread(core.load_filing, slug)
-        prepared, filing, promotion_log = await asyncio.to_thread(
-            core.prepare_for_validate,
-            slug,
-            raw_extraction,
-            filing,
-        )
-        validation = await asyncio.to_thread(core.validate, prepared, filing)
-        initial_obligation_result = await asyncio.to_thread(check_obligations, prepared, filing)
-        obligation_result = initial_obligation_result
-        conservation_flags: list[dict[str, Any]] = []
-        repair_outcome = "clean"
-        repair_turns_used = 0
-        hard_validator_flags = any(
-            flag.get("severity") == "hard"
-            for flag in [*validation.row_flags, *validation.deal_flags]
-        )
-        if hard_validator_flags or obligation_result.has_hard_unmet:
-            (
-                prepared,
-                validation,
-                promotion_log,
-                repair_outcome,
-                repair_turns_used,
-                obligation_result,
-                conservation_flags,
-            ) = await run_repair_loop(
-                slug=slug,
-                initial_draft=prepared,
-                filing=filing,
-                validation=validation,
-                obligation_result=obligation_result,
-                llm_client=llm_client,
-                extract_model=config.extract_model,
-                audit=audit,
-                token_usage=token_usage,
-                reasoning_effort=config.extract_reasoning_effort,
-            )
-        validation.deal_flags.extend(flags_for_unmet(obligation_result))
-        validation.deal_flags.extend(conservation_flags)
-        audit.write_obligations({
-            "before_repair": obligation_result_payload(initial_obligation_result),
-            "after_repair": obligation_result_payload(obligation_result),
-            "conservation_flags": conservation_flags,
-        })
-        soft_flags = _soft_flags(validation)
-        if soft_flags:
-            await adjudicate(
-                slug,
-                prepared,
-                soft_flags,
-                filing,
-                llm_client=llm_client,
-                adjudicate_model=config.adjudicate_model,
-                audit=audit,
-                token_usage=token_usage,
-                reasoning_effort=config.adjudicate_reasoning_effort,
-            )
         result = await asyncio.to_thread(
-            core.finalize_prepared,
-            slug,
-            prepared,
-            filing,
-            validation,
-            promotion_log,
+            finalize_claim_payload,
+            slug=slug,
             run_id=run_id,
+            raw_payload=raw_extraction,
+            rulebook_version=rulebook_version,
+            audit_run_dir=audit.root,
         )
-        final_output = json.loads(result.output_path.read_text())
-        audit.write_validation(
-            _validation_payload(
-                status=result.status,
-                flag_count=result.flag_count,
-                final_output=final_output,
-                validation=validation,
-                promotion_log=promotion_log,
-                obligation_result=obligation_result,
-                conservation_flags=conservation_flags,
-            )
-        )
-        audit.write_final_output(final_output)
+        audit.write_validation({
+            "final_status": result.status,
+            "flag_count": result.flag_count,
+            "hard_count": sum(1 for flag in result.validation_flags if flag.get("severity") == "hard"),
+            "soft_count": sum(1 for flag in result.validation_flags if flag.get("severity") == "soft"),
+            "info_count": sum(1 for flag in result.validation_flags if flag.get("severity") == "info"),
+            "validation_flags": result.validation_flags,
+            "graph_snapshot_path": str(result.snapshot_path),
+            "graph_database_path": str(result.database_path),
+        })
+        audit.write_final_output(result.final_output)
         audit.write_manifest(_manifest_payload(
             audit=audit,
             config=config,
@@ -811,8 +753,8 @@ async def process_deal(
             cache_used=cached,
             cache_eligible=True,
             action=decision.action,
-            repair_turns_used=repair_turns_used,
-            repair_loop_outcome=repair_outcome,
+            repair_turns_used=0,
+            repair_loop_outcome="not_applicable",
             source_audit_run_id=source_audit_run_id,
         ))
         audit.write_latest(outcome=result.status, cache_eligible=True)

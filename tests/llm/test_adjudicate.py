@@ -156,7 +156,7 @@ def test_adjudicate_locally_rejects_malformed_schema_output_without_repair(tmp_p
     )
 
     assert len(client.calls) == 1
-    assert client.calls[0]["text_format"]["name"] == "extraction_schema_r1"
+    assert client.calls[0]["text_format"]["name"] == "custom_json_schema"
     assert "adjudicator_unavailable: MalformedJSONError" in annotated[0]["reason"]
     assert usage.used == 0
     calls = [json.loads(line) for line in (audit.root / "calls.jsonl").read_text().splitlines()]
