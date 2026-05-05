@@ -30,6 +30,7 @@ from .tools import TARGETED_REPAIR_TOOL_DEFINITIONS, dispatch
 
 
 EXTRACTOR_RULE_FILES = ("schema.md", "events.md", "bidders.md", "bids.md", "dates.md")
+EXTRACTOR_INPUT_CONTRACT_VERSION = "citation_units_v1"
 MAX_BACKGROUND_SECTION_PAGES = 35
 MIN_BACKGROUND_SECTION_CHARS = 1500
 MAX_TOOL_TURNS = 8
@@ -52,6 +53,8 @@ def extractor_contract_version() -> str:
     """
     h = hashlib.sha256()
     h.update((core.REPO_ROOT / "prompts" / "extract.md").read_bytes())
+    h.update(b"\n---INPUT_CONTRACT---\n")
+    h.update(EXTRACTOR_INPUT_CONTRACT_VERSION.encode("ascii"))
     h.update(b"\n---SCHEMA_R1---\n")
     h.update(schema_hash(SCHEMA_R1).encode("ascii"))
     return h.hexdigest()
@@ -243,6 +246,43 @@ def _background_section_payload(pages: list[dict[str, Any]]) -> tuple[list[dict[
     return section_pages, bounds
 
 
+def _citation_units(section_pages: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    units: list[dict[str, Any]] = []
+    for page in section_pages:
+        page_number = _page_number(page)
+        content = str(page.get("content") or "")
+        paragraph_index = 0
+        for match in re.finditer(r"\S(?:.*?\S)?(?=\n\s*\n|\Z)", content, flags=re.DOTALL):
+            text = match.group(0).strip()
+            if _is_citation_boilerplate(text):
+                continue
+            paragraph_index += 1
+            units.append({
+                "unit_id": f"page_{page_number}_paragraph_{paragraph_index}",
+                "page_number": page_number,
+                "paragraph_index": paragraph_index,
+                "text": text,
+            })
+    if not units:
+        raise ValueError("Background section produced no citation units")
+    return units
+
+
+def _is_citation_boilerplate(text: str) -> bool:
+    compact = " ".join(text.split())
+    if not compact:
+        return True
+    if compact == "Table of Contents":
+        return True
+    if re.fullmatch(r"\d+", compact):
+        return True
+    if compact.startswith("ZEQ.="):
+        return True
+    if compact.startswith("COMMAND="):
+        return True
+    return False
+
+
 def build_messages(slug: str) -> tuple[str, str]:
     prompt = (core.PROMPTS_DIR / "extract.md").read_text()
     rule_chunks = []
@@ -264,6 +304,7 @@ def build_messages(slug: str) -> tuple[str, str]:
                 "source": "verbatim slices from the source filing pages",
             },
             "pages": section_pages,
+            "citation_units": _citation_units(section_pages),
         },
         indent=2,
         sort_keys=True,

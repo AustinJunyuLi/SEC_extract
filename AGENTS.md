@@ -31,6 +31,8 @@ The provider emits strict structured `deal_graph_v1` claim payloads only:
 }
 ```
 
+The extractor input includes paragraph-local `citation_units` derived from the
+Background pages. The AI copies claim receipts from those citation-unit texts.
 Python owns quote binding, source spans, canonical ids, claim dispositions,
 coverage results, graph rows, graph validation, review rows, and estimator
 bidder rows. The AI never emits canonical ids, source offsets, `BidderID`,
@@ -95,13 +97,15 @@ Reasoning defaults to `high`. Explicit `xhigh` is capped by
 
 ## Evidence Requirements
 
-Every claim must include exact `quote_text` and `quote_texts`. Use
-`quote_texts: null` when the primary quote supports the claim; use an ordered
-list of exact snippets when support is separated across sentences, paragraphs,
-or page breaks, with the first entry equal to `quote_text`. Python binds quote
-text to the Background pages and creates source spans. Claims or canonical rows
-without source-backed evidence produce hard graph flags and do not support
-projection.
+Every claim must include exact `quote_text` and `quote_texts` copied from
+`citation_units[].text`. Use `quote_texts: null` when the primary quote
+supports the claim; use an ordered list of exact snippets when support is
+separated across sentences, paragraphs, or page breaks, with the first entry
+equal to `quote_text`. Target identity comes from the filing manifest and
+Python-owned deal metadata; the provider does not emit a target-only actor
+claim. Python binds quote text to the Background pages and creates source spans.
+Claims or canonical rows without source-backed evidence produce hard graph flags
+and do not support projection.
 
 Quotes must support the specific actor, event, bid, count, relation, date, and
 value being claimed. Ambiguous facts stay low-confidence or unclaimed; do not

@@ -38,10 +38,14 @@ The extractor returns exactly:
 ```
 
 Every claim must include an exact filing `quote_text`, `quote_texts` set to
-`null` or exact separated snippets, and a `coverage_obligation_id`. The
-provider never emits canonical graph ids,
-source offsets, old row fields, estimator variables, coverage results, review
-rows, or judgment/disposition fields.
+`null` or exact separated snippets copied from `citation_units[].text`, and a
+`coverage_obligation_id`. The provider never emits canonical graph ids, source
+offsets, old row fields, estimator variables, coverage results, review rows, or
+judgment/disposition fields.
+
+The provider does not emit target-only actor claims. Target identity is
+manifest/deal metadata owned by Python; target labels appear in provider claims
+only as part of substantive source-backed relations.
 
 ## Python Pipeline
 

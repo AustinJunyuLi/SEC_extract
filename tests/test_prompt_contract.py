@@ -34,6 +34,7 @@ def test_extractor_messages_embed_claim_context():
     assert "rules/invariants.md" not in system
     assert "medivation" in user
     assert '"pages"' in user
+    assert '"citation_units"' in user
     assert '"content"' in user
 
 
@@ -46,11 +47,25 @@ def test_prompt_is_claim_only_and_tool_free():
     assert '"bid_claims": []' in text
     assert '"participation_count_claims": []' in text
     assert '"actor_relation_claims": []' in text
-    assert "No tools are available during extraction" in text
+    assert "No tools are available during" in text
+    assert "extraction." in text
     assert "Never emit `deal`, `events`, `BidderID`" in text
     assert "`quote_text` must be an exact contiguous" in text
     assert "`quote_texts` to `null`" in text
     assert "not paraphrase quotes" in text
+    assert "Copy" in text
+    assert "receipt text from `citation_units[].text`" in text
+    assert "exact substring of one `citation_units[].text`" in text
+    assert "long enough" in text
+    assert "unique across the citation units" in text
+    assert "Do not delete words" in text
+    assert "from the middle of" in text
+    assert "join non-adjacent fragments into one quote" in text
+    assert "smooth page breaks" in text
+    assert "include SEC/typesetting metadata" in text
+    assert "Do not emit an `actor_claim` merely to identify the target company" in text
+    assert "Target" in text
+    assert "identity comes from the filing manifest" in text
     assert "`check_row`" not in text
     assert "`search_filing`" not in text
     assert "`get_pages`" not in text

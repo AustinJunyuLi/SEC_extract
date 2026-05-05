@@ -1,7 +1,7 @@
 {
   "schema_version": "v1",
   "created": "2026-04-18T12:29:42.084187Z",
-  "updated": "2026-05-05T14:17:14.585786Z",
+  "updated": "2026-05-05T16:25:54.515444Z",
   "deal_count_total": 401,
   "deal_count_reference": 9,
   "deals": {
@@ -4010,31 +4010,11 @@
       "date_announced": "2015-04-08",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1408287/0001047469-15-004989-index.htm",
       "flag_count": 0,
-      "last_run": "2026-05-05T14:17:14.076181Z",
+      "last_run": "2026-05-05T16:25:16.040186Z",
       "last_verified_by": "Austin",
       "last_verified_at": "2026-05-01T11:22:54Z",
       "notes": "hard=0 soft=0 info=0",
       "rulebook_version_history": [
-        {
-          "ts": "2026-05-02T00:32:25.030112Z",
-          "run_id": "e79b29f278884adea1f31ea493edc42b",
-          "version": "3e17cb1020f2fa86af71a5f64ee9537a0fc0506f251118a3331345e9051c1c6b"
-        },
-        {
-          "ts": "2026-05-02T01:09:05.365368Z",
-          "run_id": "abe14d85ffdb4361b254f46af74b9c5c",
-          "version": "202e46098f12dd75b6e74c014a255db751cd097f876593befa62b2a502ccce6b"
-        },
-        {
-          "ts": "2026-05-02T02:23:13.976536Z",
-          "run_id": "5ff01aef00ad40a6a94d256997a3ccd6",
-          "version": "934efa28610123027b8d97fcc283306db8d4bc0f6e43c6ecdc1dea15765a26b3"
-        },
-        {
-          "ts": "2026-05-02T04:02:54.095422Z",
-          "run_id": "a54713f362aa44949f23f84478027be7",
-          "version": "74a143450da853728b7c91f6fe5d03497a335e47ee904dacd141851cac726210"
-        },
         {
           "ts": "2026-05-02T04:55:45.992860Z",
           "run_id": "1bcbc57ddb2140749bae5e967d53c067",
@@ -4064,44 +4044,44 @@
           "ts": "2026-05-05T14:17:14.076181Z",
           "run_id": "5df95bd9628b400d8f1d7c6c0c7b881f",
           "version": "0176d432c1739af493bc8b4954e6769d9bf6e8c57b54251017b07cd1c050fcf5"
+        },
+        {
+          "ts": "2026-05-05T16:02:04.690848Z",
+          "run_id": "8b183eba87ae468e8c9b994d5f6bfd78",
+          "version": "0176d432c1739af493bc8b4954e6769d9bf6e8c57b54251017b07cd1c050fcf5"
+        },
+        {
+          "ts": "2026-05-05T16:09:16.599991Z",
+          "run_id": "1a457cdec9304fae969ba9e273552420",
+          "version": "0176d432c1739af493bc8b4954e6769d9bf6e8c57b54251017b07cd1c050fcf5"
+        },
+        {
+          "ts": "2026-05-05T16:18:19.559362Z",
+          "run_id": "2d840abefe1240b18d36bc92d22052fc",
+          "version": "cfe077a8b7636fed930321cdeb6bfd8a8abaf917e2b7f84f608a933fa3efe8e3"
+        },
+        {
+          "ts": "2026-05-05T16:25:16.040186Z",
+          "run_id": "460e8b1210a041acb2bfca79d1cb8277",
+          "version": "a214e33d702b8009dac5fceba3bfa664a4a04f1049a8b5fb5b53becc65a05f48"
         }
       ],
-      "last_run_id": "5df95bd9628b400d8f1d7c6c0c7b881f",
-      "rulebook_version": "0176d432c1739af493bc8b4954e6769d9bf6e8c57b54251017b07cd1c050fcf5"
+      "last_run_id": "460e8b1210a041acb2bfca79d1cb8277",
+      "rulebook_version": "a214e33d702b8009dac5fceba3bfa664a4a04f1049a8b5fb5b53becc65a05f48"
     },
     "petsmart-inc": {
-      "status": "validated",
+      "status": "passed_clean",
       "is_reference": true,
       "target_name": "PETSMART INC",
       "acquirer": "BC Partners, Inc., La Caisse de d\u00c3\u00a9p\u00c3\u00b4t et placement du Qu\u00c3\u00a9bec, affiliates of GIC Special Investments Pte Ltd, affiliates of StepStone Group LP and Longview Asset Management, LLC",
       "date_announced": "2014-12-14",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/863157/0001571049-15-000695-index.htm",
-      "flag_count": 15,
-      "last_run": "2026-05-05T14:17:14.585786Z",
+      "flag_count": 0,
+      "last_run": "2026-05-05T16:25:16.234300Z",
       "last_verified_by": null,
       "last_verified_at": null,
-      "notes": "hard=15 soft=0 info=0",
+      "notes": "hard=0 soft=0 info=0",
       "rulebook_version_history": [
-        {
-          "ts": "2026-05-02T04:39:42.460073Z",
-          "run_id": "541a58cb711247a8bcd2e8299a2bcee7",
-          "version": "6314858e07bc442ce73cb0c5b107971edefc7ff67403b09ac8c03ea9cc5ea423"
-        },
-        {
-          "ts": "2026-05-02T05:07:50.606592Z",
-          "run_id": "4b0d6e673d124e84b07263cad4403b06",
-          "version": "6314858e07bc442ce73cb0c5b107971edefc7ff67403b09ac8c03ea9cc5ea423"
-        },
-        {
-          "ts": "2026-05-02T05:26:39.771580Z",
-          "run_id": "24cf690d2ef544e598afd6fb804d0bee",
-          "version": "ae78dfe15ce6cb5ab52c164034305baff76c2771822e4c02230465f10ce87edd"
-        },
-        {
-          "ts": "2026-05-02T05:41:53.044492Z",
-          "run_id": "4a82bc67e6764037b0f92a1151b8d27c",
-          "version": "9f6fac5a0629fcb40109af99cbad1c93d5b39e4071d416bc66ff09f0aa38fb48"
-        },
         {
           "ts": "2026-05-02T06:05:58.390795Z",
           "run_id": "bf1580df61ad4f32a60d1736c6da7b29",
@@ -4131,10 +4111,30 @@
           "ts": "2026-05-05T14:17:14.585786Z",
           "run_id": "4000377715f94238a84c0f7f065eef1b",
           "version": "0176d432c1739af493bc8b4954e6769d9bf6e8c57b54251017b07cd1c050fcf5"
+        },
+        {
+          "ts": "2026-05-05T15:54:48.737949Z",
+          "run_id": "f70a65e740454ebeb3d422aa4afdd6e4",
+          "version": "0176d432c1739af493bc8b4954e6769d9bf6e8c57b54251017b07cd1c050fcf5"
+        },
+        {
+          "ts": "2026-05-05T16:08:06.072204Z",
+          "run_id": "b1c111239e84490ca1b8353a62499fe9",
+          "version": "0176d432c1739af493bc8b4954e6769d9bf6e8c57b54251017b07cd1c050fcf5"
+        },
+        {
+          "ts": "2026-05-05T16:19:25.430344Z",
+          "run_id": "86e00681326445c4a2728b9af2a4cef7",
+          "version": "cfe077a8b7636fed930321cdeb6bfd8a8abaf917e2b7f84f608a933fa3efe8e3"
+        },
+        {
+          "ts": "2026-05-05T16:25:16.234300Z",
+          "run_id": "e4acbe2eee4b4a61a9808025938910dc",
+          "version": "a214e33d702b8009dac5fceba3bfa664a4a04f1049a8b5fb5b53becc65a05f48"
         }
       ],
-      "last_run_id": "4000377715f94238a84c0f7f065eef1b",
-      "rulebook_version": "0176d432c1739af493bc8b4954e6769d9bf6e8c57b54251017b07cd1c050fcf5"
+      "last_run_id": "e4acbe2eee4b4a61a9808025938910dc",
+      "rulebook_version": "a214e33d702b8009dac5fceba3bfa664a4a04f1049a8b5fb5b53becc65a05f48"
     },
     "penford": {
       "status": "passed",
@@ -4419,31 +4419,11 @@
       "date_announced": "2013-10-15",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1038280/0001047469-13-010973-index.htm",
       "flag_count": 0,
-      "last_run": "2026-05-05T14:17:13.394845Z",
+      "last_run": "2026-05-05T16:25:54.515444Z",
       "last_verified_by": "Austin",
       "last_verified_at": "2026-05-01T09:58:45Z",
       "notes": "hard=0 soft=0 info=0",
       "rulebook_version_history": [
-        {
-          "ts": "2026-05-02T01:28:35.915584Z",
-          "run_id": "e3ec64b7c77c4ee8bb7f330112152e9c",
-          "version": "202e46098f12dd75b6e74c014a255db751cd097f876593befa62b2a502ccce6b"
-        },
-        {
-          "ts": "2026-05-02T02:32:23.537694Z",
-          "run_id": "e3043f970faa4456a3de605cd7d77dc0",
-          "version": "934efa28610123027b8d97fcc283306db8d4bc0f6e43c6ecdc1dea15765a26b3"
-        },
-        {
-          "ts": "2026-05-02T04:13:28.995749Z",
-          "run_id": "b607267252f247ca856a5743567833a2",
-          "version": "74a143450da853728b7c91f6fe5d03497a335e47ee904dacd141851cac726210"
-        },
-        {
-          "ts": "2026-05-02T04:29:44.484285Z",
-          "run_id": "657672cc8f0e4a45a8055ea5e3ab6557",
-          "version": "6314858e07bc442ce73cb0c5b107971edefc7ff67403b09ac8c03ea9cc5ea423"
-        },
         {
           "ts": "2026-05-02T05:06:48.747234Z",
           "run_id": "bca98d6685fc4f9eb0f65ad44bab69bf",
@@ -4473,10 +4453,30 @@
           "ts": "2026-05-05T14:17:13.394845Z",
           "run_id": "29e8e4a96c6d4e59961725315b9ce6fd",
           "version": "0176d432c1739af493bc8b4954e6769d9bf6e8c57b54251017b07cd1c050fcf5"
+        },
+        {
+          "ts": "2026-05-05T16:01:43.812903Z",
+          "run_id": "5aa7f87858aa4f8b96c375cb113606d4",
+          "version": "0176d432c1739af493bc8b4954e6769d9bf6e8c57b54251017b07cd1c050fcf5"
+        },
+        {
+          "ts": "2026-05-05T16:07:13.787025Z",
+          "run_id": "a782835b5bb44ef28fc4c9af7f30e861",
+          "version": "0176d432c1739af493bc8b4954e6769d9bf6e8c57b54251017b07cd1c050fcf5"
+        },
+        {
+          "ts": "2026-05-05T16:19:38.946324Z",
+          "run_id": "d976c68e3a564caab41bb92ac91b81bf",
+          "version": "cfe077a8b7636fed930321cdeb6bfd8a8abaf917e2b7f84f608a933fa3efe8e3"
+        },
+        {
+          "ts": "2026-05-05T16:25:54.515444Z",
+          "run_id": "a205da9162904ef5b84ef6588cb6c67a",
+          "version": "a214e33d702b8009dac5fceba3bfa664a4a04f1049a8b5fb5b53becc65a05f48"
         }
       ],
-      "last_run_id": "29e8e4a96c6d4e59961725315b9ce6fd",
-      "rulebook_version": "0176d432c1739af493bc8b4954e6769d9bf6e8c57b54251017b07cd1c050fcf5"
+      "last_run_id": "a205da9162904ef5b84ef6588cb6c67a",
+      "rulebook_version": "a214e33d702b8009dac5fceba3bfa664a4a04f1049a8b5fb5b53becc65a05f48"
     },
     "molex-inc": {
       "status": "pending",

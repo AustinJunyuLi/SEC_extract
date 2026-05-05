@@ -11,8 +11,12 @@ Key rules:
 - SEC filing text in `data/filings/{slug}/pages.json` is ground truth.
 - Provider output is claim-only: `actor_claims`, `event_claims`, `bid_claims`,
   `participation_count_claims`, and `actor_relation_claims`.
-- Each claim includes exact `quote_text` plus `quote_texts`; `quote_texts` is
-  `null` unless separated exact snippets are needed for source support.
+- Extractor input includes paragraph-local `citation_units`.
+- Each claim includes exact `quote_text` plus `quote_texts` copied from
+  `citation_units[].text`; `quote_texts` is `null` unless separated exact
+  snippets are needed for source support.
+- Target identity comes from the filing manifest and Python-owned deal metadata;
+  the provider does not emit a target-only actor claim.
 - The provider must not emit canonical ids, source offsets, `BidderID`,
   bidder registry, `T`, `bI`, `bF`, admitted/dropout outcomes, coverage
   results, or projection rows.

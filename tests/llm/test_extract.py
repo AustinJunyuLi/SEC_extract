@@ -71,6 +71,13 @@ def test_build_messages_embeds_prompt_rules_manifest_and_page_text(minimal_state
     assert payload["pages"][0]["content"].startswith("Background of the Merger")
     assert "embedded filing page text" in payload["pages"][0]["content"]
     assert "Not part of background" not in payload["pages"][-1]["content"]
+    assert payload["citation_units"]
+    assert {
+        "unit_id",
+        "page_number",
+        "paragraph_index",
+        "text",
+    } <= set(payload["citation_units"][0])
     assert "data/filings/synthetic/pages.json" not in user
 
 
@@ -92,6 +99,30 @@ def test_build_messages_ignores_toc_and_cross_reference_background_hits(minimal_
     assert "Table of Contents | Background of the Merger" not in combined_pages
     assert "See the section entitled Background of the Merger" not in combined_pages
     assert "actual background sentence" in combined_pages
+
+
+def test_build_messages_adds_paragraph_local_citation_units(minimal_state_repo, monkeypatch):
+    env = minimal_state_repo
+    prompts = env.tmp_path / "prompts"
+    prompts.mkdir()
+    (prompts / "extract.md").write_text("EXTRACT PROMPT")
+    for name in extract.EXTRACTOR_RULE_FILES:
+        (env.rules / name).write_text(f"RULE {name}")
+    env.seed_filing(
+        "synthetic",
+        pages=background_section_pages(
+            "First exact receipt paragraph.\n\nTable of Contents\n\nSecond exact receipt paragraph."
+        ),
+    )
+    monkeypatch.setattr(extract.core, "PROMPTS_DIR", prompts)
+
+    _, user = extract.build_messages("synthetic")
+    payload = json.loads(user)
+
+    texts = [unit["text"] for unit in payload["citation_units"]]
+    assert any("First exact receipt paragraph" in text for text in texts)
+    assert any("Second exact receipt paragraph" in text for text in texts)
+    assert "Table of Contents" not in texts
 
 
 class StubClient:

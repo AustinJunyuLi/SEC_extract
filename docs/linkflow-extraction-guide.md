@@ -37,10 +37,14 @@ The provider must not emit old row-event output, `BidderID`, `bidder_registry`,
 source offsets/pages, `T`, `bI`, `bF`, admitted/dropout judgments, coverage
 results, review rows, or projection rows.
 
-Each claim must carry exact quote evidence. `quote_texts` is `null` when the
+Each claim must carry exact quote evidence copied from the paragraph-local
+`citation_units` in the extractor input. `quote_texts` is `null` when the
 primary `quote_text` supports the claim; it is an ordered list of exact snippets
 when the filing support is separated across sentences, paragraphs, or page
 breaks.
+
+The provider does not emit target-only actor claims. Target identity is
+manifest/deal metadata owned by Python.
 
 ## Run Shape
 

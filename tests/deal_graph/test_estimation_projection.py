@@ -1,6 +1,12 @@
 from __future__ import annotations
 
+import json
+import sys
+
+import pytest
+
 from pipeline.deal_graph import canonicalize_claim_payload
+from pipeline.deal_graph import project as project_cli
 from pipeline.deal_graph.project_estimation import project_estimation_rows
 
 
@@ -53,3 +59,38 @@ def test_estimation_projection_derives_initial_final_and_unknown_type() -> None:
     assert rows[0]["admitted"] is True
     assert rows[0]["T"] == "unknown"
     assert rows[0]["projection_rule_version"] == "bidder_cycle_baseline_v1"
+
+
+def test_projection_cli_blocks_invalid_snapshot(tmp_path, monkeypatch, capsys) -> None:
+    graph = canonicalize_claim_payload(
+        {
+            "bid_claims": [
+                {
+                    "claim_type": "bid",
+                    "coverage_obligation_id": "obl_bid_initial",
+                    "bidder_label": "Party B",
+                    "bid_date": "2015-01-02",
+                    "bid_value": 15.0,
+                    "bid_value_lower": None,
+                    "bid_value_upper": None,
+                    "bid_value_unit": "per_share",
+                    "consideration_type": "cash",
+                    "bid_stage": "initial",
+                    "confidence": "high",
+                    "quote_text": "Party B proposed $15.00 per share",
+                }
+            ]
+        },
+        deal_slug="sample",
+        run_id="run-1",
+    )
+    graph["claim_evidence"] = []
+    snapshot = tmp_path / "deal_graph_v1.json"
+    snapshot.write_text(json.dumps(graph))
+    monkeypatch.setattr(sys, "argv", ["project", str(snapshot), "--projection", "estimation"])
+
+    with pytest.raises(SystemExit) as exc:
+        project_cli.main()
+
+    assert exc.value.code == 1
+    assert "projection blocked" in capsys.readouterr().err

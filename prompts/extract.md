@@ -15,9 +15,11 @@ coverage results, source offsets, or validation judgments. Python owns those.
 
 The system message contains this prompt plus `rules/schema.md`,
 `rules/events.md`, `rules/bidders.md`, `rules/bids.md`, and `rules/dates.md`.
-The user message contains JSON with `slug`, `manifest`, `section`, and
-page-numbered `pages` from the Background section. Use only those embedded
-pages. No tools are available during extraction.
+The user message contains JSON with `slug`, `manifest`, `section`,
+page-numbered `pages`, and paragraph-local `citation_units` from the Background
+section. Use only those embedded materials. Use `pages` for context. Copy
+receipt text from `citation_units[].text`. No tools are available during
+extraction.
 
 ## Output Contract
 
@@ -42,6 +44,16 @@ not paraphrase quotes. Set `quote_texts` to `null` when the primary
 sentences, paragraphs, or page breaks, set `quote_texts` to an ordered list of
 exact snippets, with `quote_texts[0]` exactly equal to `quote_text`.
 
+Receipt copying is literal. Each `quote_text` or `quote_texts` entry must be an
+exact substring of one `citation_units[].text` value and should be long enough
+to be unique across the citation units. Do not delete words from the middle of
+filing text, join non-adjacent fragments into one quote, alter capitalization,
+normalize punctuation, smooth page breaks, include page numbers, include
+`Table of Contents`, include SEC/typesetting metadata, or otherwise clean up the
+receipt. If one citation-unit substring does not support every typed field, use
+multiple short exact snippets in `quote_texts` instead of manufacturing a
+cleaner quote.
+
 Use the shortest exact filing snippet that supports the typed fields. Do not
 copy long multi-sentence passages when a clause supports the bidder, date,
 value, or relation. For bids with several values in one paragraph, emit one bid
@@ -59,6 +71,11 @@ shareholders, and count-only/anonymous cohorts when the filing supports them.
 `actor_kind` is one of `organization`, `person`, `group`, `vehicle`, `cohort`,
 or `committee`; `observability` is `named`, `anonymous_handle`, or
 `count_only`.
+
+Do not emit an `actor_claim` merely to identify the target company. Target
+identity comes from the filing manifest and Python-owned deal metadata. Emit the
+target only when it is the object of a substantive relation, such as an advisor
+or support relationship that needs the target as the relation object.
 
 Use `event_claims` for process events such as initial contacts, NDAs,
 consortium confidentiality agreements, withdrawals, exclusions, final-round

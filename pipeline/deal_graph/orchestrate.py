@@ -187,13 +187,15 @@ def _bind_claim_quotes(
                     )
                 )
         except QuoteBindingError as exc:
+            reason = f"{type(exc).__name__}: {exc}"
+            _mark_claim_quote_binding_failed(graph, claim_id, reason)
             review_flags.append({
                 "flag_id": make_id("flag", slug, run_id, claim_id, "quote_binding_failed"),
                 "run_id": run_id,
                 "deal_id": graph.get("deals", [{}])[0].get("deal_id"),
                 "severity": "blocking",
                 "code": "quote_binding_failed",
-                "reason": f"{type(exc).__name__}: {exc}",
+                "reason": reason,
                 "row_table": "claims",
                 "row_id": claim_id,
                 "status": "open",
@@ -238,6 +240,18 @@ def _claim_quote_texts(claim: dict[str, Any]) -> list[str]:
         if quote and quote not in quotes:
             quotes.append(quote)
     return quotes
+
+
+def _mark_claim_quote_binding_failed(graph: dict[str, Any], claim_id: str, reason: str) -> None:
+    for row in graph.get("claim_dispositions", []):
+        if row.get("claim_id") != claim_id or not row.get("current", True):
+            continue
+        row.update({
+            "disposition": "rejected_unsupported",
+            "reason_code": "quote_binding_failed",
+            "reason": reason,
+        })
+        return
 
 
 def _rebuild_claim_evidence_links(

@@ -29,13 +29,19 @@ Every claim includes:
 - `claim_type`
 - `coverage_obligation_id`
 - `confidence`: `high`, `medium`, or `low`
-- `quote_text`: exact filing substring, max 1500 characters
-- `quote_texts`: `null` or an ordered list of exact filing substrings, max
-  1500 characters each; when present, the first entry must equal `quote_text`
+- `quote_text`: exact filing substring copied from one `citation_units[].text`
+  value, max 1500 characters
+- `quote_texts`: `null` or an ordered list of exact filing substrings copied
+  from `citation_units[].text`, max 1500 characters each; when present, the
+  first entry must equal `quote_text`
 
 Provider-owned fields are forbidden: canonical ids, source offsets, source
 pages, `BidderID`, bidder registry, `T`, `bI`, `bF`, admitted/dropout
 judgments, coverage results, projection rows, and old row-event scalar fields.
+
+Target identity is Python-owned manifest/deal metadata. The provider does not
+emit target-only actor claims; target labels appear only when a substantive
+source-backed relation needs the target as subject or object.
 
 ## Actor Claims
 

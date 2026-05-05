@@ -4,10 +4,12 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import sys
 
 from .export import write_jsonl
 from .project_estimation import project_estimation_rows
 from .project_review import project_review_rows
+from .validate import validate_graph_as_dicts
 
 
 def main() -> None:
@@ -18,6 +20,14 @@ def main() -> None:
     args = parser.parse_args()
 
     graph = json.loads(args.snapshot.read_text())
+    flags = validate_graph_as_dicts(graph)
+    hard_flags = [flag for flag in flags if flag.get("severity") == "hard"]
+    if hard_flags:
+        print(
+            f"projection blocked: snapshot has {len(hard_flags)} hard validation flag(s)",
+            file=sys.stderr,
+        )
+        raise SystemExit(1)
     if args.projection == "review":
         rows = project_review_rows(graph)
     else:
