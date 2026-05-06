@@ -18,6 +18,6 @@ def test_live_contracts_define_agent_verification_authority():
         "must not mark a deal verified solely because the model output passes schema validation",
     )
     for path in CONTRACT_FILES:
-        text = path.read_text()
+        text = " ".join(path.read_text().split())
         missing = [phrase for phrase in required_phrases if phrase not in text]
         assert not missing, f"{path} missing {missing}"
