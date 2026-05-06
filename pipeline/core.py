@@ -1,26 +1,20 @@
-"""Core Python plumbing for the M&A extraction pipeline.
+"""Shared deterministic helpers for the M&A extraction pipeline.
 
-SDK orchestration lives in `pipeline.llm` and `pipeline.run_pool`. This module
-provides the shared deterministic pieces:
-
-  - Filing loader (data/filings/{slug}/pages.json + manifest.json)
-  - Vocabularies mirrored from rules/*.md (source of truth stays in markdown)
-  - Python Validator that runs every invariant in rules/invariants.md
-  - Output writers, state updaters, status classification
+SDK orchestration lives in `pipeline.llm` and `pipeline.run_pool`. The
+`deal_graph_v2` finalizer owns claim parsing, graph validation, and review projection.
+This module keeps only shared plumbing: filing artifact loading, atomic writes,
+state updates, flag logging, and status classification.
 """
 
 from __future__ import annotations
 
 import contextlib
-import copy
 import datetime as _dt
 import fcntl
 import hashlib
 import json
 import os
-import re
 import threading
-import unicodedata
 import uuid
 from dataclasses import dataclass
 from pathlib import Path
@@ -49,16 +43,30 @@ REFERENCE_SLUGS: tuple[str, ...] = (
     "stec",
 )
 
+RULEBOOK_HISTORY_CAP = 10
+_FLAG_SEVERITIES = frozenset({"hard", "soft", "info"})
+TRUSTED_STATUSES = frozenset({"passed_clean", "needs_review", "high_burden"})
+FAILURE_STATUSES = frozenset({"failed_system", "stale_after_failure"})
+ALL_RUN_STATUSES = TRUSTED_STATUSES | FAILURE_STATUSES
+
+
+@dataclass
+class Filing:
+    slug: str
+    pages: list[dict[str, Any]]
+
+    def page_content(self, number: int) -> str | None:
+        for page in self.pages:
+            if page.get("number") == number:
+                return page.get("content", "")
+        return None
+
+    def page_numbers(self) -> set[int]:
+        return {page.get("number") for page in self.pages if "number" in page}
+
 
 def _atomic_write_text(path: Path, text: str) -> None:
-    """POSIX-atomic write: tmp file + fsync + os.replace.
-
-    Used for state files where a SIGKILL or OOM mid-write must not leave a
-    truncated artifact on disk. The tmp file is in the same directory so
-    `os.replace` is rename-not-copy (atomic at filesystem level). On any
-    Python-level exception the orphan `.tmp` is cleaned up so partial
-    failures don't accumulate.
-    """
+    """POSIX-atomic write: tmp file + fsync + os.replace."""
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_name(path.name + ".tmp")
     try:
@@ -77,18 +85,7 @@ def _atomic_write_text(path: Path, text: str) -> None:
 
 @contextlib.contextmanager
 def _state_file_lock() -> Iterator[None]:
-    """Advisory exclusive lock for state-file mutations (`flock`).
-
-    Serializes concurrent `run.py --slug X` invocations across `update_progress`
-    and `append_flags_log` so the read-modify-write of `progress.json` and the
-    multi-line append to `flags.jsonl` cannot interleave.
-
-    NOT re-entrant within a single process. `flock` on a separately-opened
-    FD in the same PID blocks. Do NOT nest `_state_file_lock()` blocks and
-    do NOT call the public `update_progress` / `append_flags_log` from
-    inside a `_state_file_lock()` block — use `_update_progress_locked` /
-    `_append_flags_log_locked` instead.
-    """
+    """Advisory exclusive lock for state-file mutations."""
     STATE_DIR.mkdir(parents=True, exist_ok=True)
     with _PROCESS_STATE_LOCK:
         fd = os.open(PROGRESS_LOCK_PATH, os.O_RDWR | os.O_CREAT, 0o644)
@@ -101,13 +98,7 @@ def _state_file_lock() -> Iterator[None]:
 
 
 def rulebook_version() -> str:
-    """Stable content hash for the live rulebook.
-
-    This is intentionally a content hash rather than a git lookup: it fails
-    less mysteriously in uncommitted development states and changes whenever
-    any current `rules/*.md` content changes. Git history is still the record
-    for prior rulebooks; the live pipeline supports only the current schema.
-    """
+    """Stable content hash for the live rulebook."""
     h = hashlib.sha256()
     rule_files = sorted(RULES_DIR.glob("*.md"))
     if not rule_files:
@@ -121,234 +112,13 @@ def rulebook_version() -> str:
 
 
 def _now_iso() -> str:
-    """UTC ISO-8601 timestamp with Z suffix (pipeline-standard format).
-
-    Centralized so finalize() can capture a single value once and use it
-    for both `logged_at` on every appended flag and `last_run` in state.
-    This makes the documented `logged_at == last_run` query an exact
-    equality rather than a timestamp-ordering question.
-    """
+    """UTC ISO-8601 timestamp with Z suffix."""
     return _dt.datetime.now(_dt.timezone.utc).isoformat().replace("+00:00", "Z")
 
 
 def _new_run_id() -> str:
-    """Per-run UUID stamped on every flag line and on the deal's progress entry.
-
-    Independent of `last_run` (timestamp): two clean reruns within the same
-    second would otherwise share a `last_run` and be indistinguishable in
-    `flags.jsonl`. The `(deal, run_id)` pair is the audit primary key for the
-    "3 consecutive unchanged-rulebook clean runs" gate.
-    """
+    """Per-run UUID stamped on state, flags, and audit artifacts."""
     return uuid.uuid4().hex
-
-
-RULEBOOK_HISTORY_CAP = 10  # Per-deal rulebook_version_history tail length.
-SOURCE_QUOTE_TARGET_CHARS = 1500
-SOURCE_QUOTE_HARD_CAP_CHARS = SOURCE_QUOTE_TARGET_CHARS
-
-# ---------------------------------------------------------------------------
-# Vocabularies — mirrors of rules/*.md
-# ---------------------------------------------------------------------------
-# These are the operational, machine-readable form of the rulebook
-# vocabularies. The rulebook markdown is the source of truth; when those
-# files change, update the mirrors here in the same commit.
-
-# Mirror of rules/events.md §C1 — the taxonomy-redesign closed vocabulary.
-# Bid rows all carry bid_note="Bid"; bid_type ("informal"/"formal") is the
-# only bid-row formal/informal distinguisher. Final-round, drop, and press
-# release subtypes live in structured columns, not cross-product event labels.
-EVENT_VOCABULARY: frozenset[str] = frozenset({
-    # Start-of-process
-    "Bidder Interest", "Bidder Sale", "Target Sale",
-    "Target Sale Public", "Activist Sale",
-    # Publicity
-    "Press Release",
-    # Advisors
-    "IB", "IB Terminated",
-    # Counterparty events
-    "NDA", "ConsortiumCA",
-    "Drop", "DropSilent",
-    # Bid rows — §C3 unified; bid_type disambiguates formal/informal
-    "Bid",
-    # Round structure (§K1)
-    "Final Round", "Auction Closed",
-    # Closing
-    "Executed",
-    # Prior-process
-    "Terminated", "Restarted",
-})
-
-EXTRACTOR_DEAL_FIELDS: frozenset[str] = frozenset({
-    "TargetName",
-    "Acquirer",
-    "DateAnnounced",
-    "DateEffective",
-    "auction",
-    "all_cash",
-    "target_legal_counsel",
-    "acquirer_legal_counsel",
-    "bidder_registry",
-    "deal_flags",
-})
-
-# Mirror of rules/bids.md §M3. `role` is required and non-null in finalized
-# rows; advisor rows use advisor-specific role values instead of being skipped.
-ROLE_VOCABULARY: frozenset[str] = frozenset({
-    "bidder", "advisor_financial", "advisor_legal",
-})
-
-# Mirror of rules/bidders.md §F1 — scalar bidder_type after the 2026-04-27
-# flatten dropped `mixed`, `non_us`, and `public`. Enforced by §P-R6.
-BIDDER_TYPE_VOCABULARY: frozenset[str] = frozenset({"s", "f"})
-
-# Mirror of rules/invariants.md §P-S3 — the only legitimate phase enders.
-PHASE_TERMINATORS: frozenset[str] = frozenset({
-    "Executed", "Terminated", "Auction Closed",
-})
-
-# §P-S1 follow-up vocabulary: bid_notes that discharge the NDA→follow-up
-# obligation. Covers bid submissions (§C3 unified "Bid"), every dropout code,
-# Executed, and final-round bid-submission codes. Final-round "Ann" codes
-# (announcements) are NOT follow-ups — they don't record bidder-specific
-# activity.
-BID_NOTE_FOLLOWUPS: frozenset[str] = frozenset({
-    "Bid",
-    "Drop", "DropSilent",
-    "Executed",
-})
-
-# Flag codes that legitimize a non-null bid_date_rough per §B2/§B3/§B4.
-DATE_INFERENCE_FLAG_CODES: frozenset[str] = frozenset({
-    "date_inferred_from_rough",
-    "date_inferred_from_context",
-    "date_range_collapsed",
-    "date_phrase_unmapped",
-})
-
-ANONYMOUS_COHORT_AMBIGUITY_FLAG = "anonymous_cohort_identity_ambiguous"
-ANONYMOUS_LIFECYCLE_NOTES: frozenset[str] = frozenset({
-    "Bid",
-    "Drop",
-    "DropSilent",
-    "Executed",
-})
-_ANONYMOUS_PLACEHOLDER_RE = re.compile(r"^(?P<family>.+?)\s+(?P<number>\d+)$")
-
-def _row_flag_codes(ev: dict) -> set[str]:
-    """Return the set of flag codes attached to a row, guarding against
-    non-dict entries that may slip through LLM output."""
-    return {f.get("code") for f in (ev.get("flags") or []) if isinstance(f, dict)}
-
-
-def _anonymous_placeholder(alias: Any) -> tuple[str, int] | None:
-    """Return normalized (family, number) for exact-count unnamed handles."""
-    if not isinstance(alias, str):
-        return None
-    match = _ANONYMOUS_PLACEHOLDER_RE.match(alias.strip())
-    if not match:
-        return None
-    family = " ".join(match.group("family").casefold().split())
-    if not family:
-        return None
-    return family, int(match.group("number"))
-
-
-def _anonymous_types_compatible(left: Any, right: Any) -> bool:
-    """Unknown bidder_type is compatible; otherwise types must match."""
-    return left in (None, "", []) or right in (None, "", []) or left == right
-
-
-# §A3 logical ordering rank table (lower rank = earlier within same date).
-# Keys are bid_note values; for Bid rows specifically, informal bids rank 6
-# and formal bids rank 7 — the comparator consults bid_type.
-EVENT_RANK: dict[str, int] = {
-    # Rank 1 — process announcements / public events
-    "Press Release": 1,
-    "Target Sale Public": 1,
-    "Bidder Sale": 1,
-    "Activist Sale": 1,
-    # Rank 2 — process start / restart
-    "Target Sale": 2,
-    "Terminated": 2,
-    "Restarted": 2,
-    # Rank 3 — advisor / IB events
-    "IB": 3,
-    "IB Terminated": 3,
-    # Rank 4 — bidder first-contact
-    "Bidder Interest": 4,
-    # Rank 5 — NDAs and consortium CAs (§I2 distinguishes Type A vs Type B)
-    "NDA": 5,
-    "ConsortiumCA": 5,
-    # Rank 6/7 — bids (§C3 unified "Bid"; formal bumps to 7 via _rank())
-    "Bid": 6,
-    # Rank 8 — dropouts
-    "Drop": 8,
-    "DropSilent": 8,
-    # Rank 9 — final-round deadlines / auction closed
-    "Final Round": 9,
-    "Auction Closed": 9,
-    # Rank 11 — closing
-    "Executed": 11,
-}
-
-
-# ---------------------------------------------------------------------------
-# Dataclasses
-# ---------------------------------------------------------------------------
-
-
-@dataclass
-class Filing:
-    slug: str
-    pages: list[dict[str, Any]]
-
-    def page_content(self, number: int) -> str | None:
-        for p in self.pages:
-            if p.get("number") == number:
-                return p.get("content", "")
-        return None
-
-    def page_numbers(self) -> set[int]:
-        return {p.get("number") for p in self.pages if "number" in p}
-
-
-@dataclass
-class ValidatorResult:
-    row_flags: list[dict[str, Any]]
-    deal_flags: list[dict[str, Any]]
-
-
-def compact_validator_report(
-    row_flags: list[dict[str, Any]],
-    deal_flags: list[dict[str, Any]],
-) -> dict[str, Any]:
-    """Return a compact validator summary suitable for model repair turns."""
-
-    def simplify(flag: dict[str, Any]) -> dict[str, Any]:
-        out = {
-            "code": flag.get("code"),
-            "severity": flag.get("severity"),
-            "reason": flag.get("reason"),
-        }
-        if "row_index" in flag:
-            out["row_index"] = flag.get("row_index")
-        if flag.get("deal_level"):
-            out["deal_level"] = True
-        return out
-
-    all_flags = [*row_flags, *deal_flags]
-    return {
-        "row_flags": [simplify(flag) for flag in row_flags],
-        "deal_flags": [simplify(flag) for flag in deal_flags],
-        "hard_count": sum(1 for flag in all_flags if flag.get("severity") == "hard"),
-        "soft_count": sum(1 for flag in all_flags if flag.get("severity") == "soft"),
-        "info_count": sum(1 for flag in all_flags if flag.get("severity") == "info"),
-    }
-
-
-# ---------------------------------------------------------------------------
-# Filing loader
-# ---------------------------------------------------------------------------
 
 
 def load_filing(slug: str) -> Filing:
@@ -357,1655 +127,58 @@ def load_filing(slug: str) -> Filing:
         raise FileNotFoundError(f"no filing directory at {deal_dir}")
     pages_path = deal_dir / "pages.json"
     manifest_path = deal_dir / "manifest.json"
-    for p in (pages_path, manifest_path):
-        if not p.exists():
-            raise FileNotFoundError(f"missing artifact: {p}")
+    for path in (pages_path, manifest_path):
+        if not path.exists():
+            raise FileNotFoundError(f"missing artifact: {path}")
     pages = json.loads(pages_path.read_text())
     return Filing(slug=slug, pages=pages)
 
 
-# ---------------------------------------------------------------------------
-# Validator
-# ---------------------------------------------------------------------------
-
-
-def validate(raw_extraction: dict[str, Any], filing: Filing) -> ValidatorResult:
-    """Run every invariant in rules/invariants.md. Returns row-level and
-    deal-level flags; caller merges them into the extraction and writes out.
-    """
-    row_flags: list[dict[str, Any]] = []
-    deal_flags: list[dict[str, Any]] = []
-
-    deal_flags.extend(_invariant_p_r1(raw_extraction))
-    if deal_flags:
-        return ValidatorResult(row_flags=row_flags, deal_flags=deal_flags)
-
-    deal = raw_extraction.get("deal") or {}
-    if not isinstance(deal, dict):
-        deal_flags.append({
-            "code": "deal_not_a_dict", "severity": "hard",
-            "reason": (
-                f"§P-R0: deal is type {type(deal).__name__!r}, expected dict; "
-                "registry / deal_flags / orchestration fields are all unreachable."
-            ),
-            "deal_level": True,
-        })
-        return ValidatorResult(row_flags=row_flags, deal_flags=deal_flags)
-    events = raw_extraction.get("events") or []
-
-    # §P-R0 must run before any other row invariant, since downstream
-    # invariants assume each row is a dict and `process_phase` is int/null.
-    row_flags.extend(_invariant_p_r0(events))
-    events = [ev for ev in events if isinstance(ev, dict)]
-    if not events:
-        # All rows malformed — skip downstream checks; the §P-R0 hard flags
-        # are sufficient to fail the deal.
-        return ValidatorResult(row_flags=row_flags, deal_flags=deal_flags)
-
-    # Row-level invariants.
-    row_flags.extend(_invariant_p_r2(events, filing))
-    row_flags.extend(_invariant_p_r3(events))
-    row_flags.extend(_invariant_p_r4(events))
-    row_flags.extend(_invariant_p_r5(events, deal))
-    row_flags.extend(_invariant_p_r6(events))
-    row_flags.extend(_invariant_p_r7(events))
-    # §P-R8 returns a mix (row + deal); route by `deal_level` marker.
-    for f in _invariant_p_r8(events, deal):
-        (deal_flags if f.get("deal_level") else row_flags).append(f)
-    row_flags.extend(_invariant_p_r9(events))
-    row_flags.extend(_invariant_p_r10(events))
-    row_flags.extend(_invariant_p_d1(events))
-    row_flags.extend(_invariant_p_d2(events))
-    row_flags.extend(_invariant_p_d5(events))
-    row_flags.extend(_invariant_p_d6(events))
-    row_flags.extend(_invariant_p_d7(events))
-    row_flags.extend(_invariant_p_d8(events))
-    row_flags.extend(_invariant_p_h5(events))
-    row_flags.extend(_invariant_p_g2(events))
-    row_flags.extend(_invariant_p_g3(events))
-
-    # §P-D3 returns a mix (structural are deal-level; ordering violations are
-    # row-level). Route by presence of row_index.
-    for f in _invariant_p_d3(events):
-        (row_flags if "row_index" in f else deal_flags).append(f)
-
-    row_flags.extend(_invariant_p_s1(events))
-    row_flags.extend(_invariant_p_s5(events))
-
-    # Deal-level semantic invariants.
-    deal_flags.extend(_invariant_p_l1(events))
-    deal_flags.extend(_invariant_p_l2(events))
-    deal_flags.extend(_invariant_p_s2(deal, events))
-    deal_flags.extend(_invariant_p_s3(events))
-    deal_flags.extend(_invariant_p_s4(events))
-
-    return ValidatorResult(row_flags=row_flags, deal_flags=deal_flags)
-
-
-def validate_row_local(row: dict[str, Any], filing: Filing) -> list[dict[str, Any]]:
-    """Run row-local validator invariants on one proposed event row.
-
-    This is used by extractor-side tool calls while the full draft is still
-    being assembled. Cross-row and deal-level invariants remain in
-    `validate()`, where the validator has the complete event list and bidder
-    registry.
-    """
-    flags: list[dict[str, Any]] = []
-
-    flags.extend(_invariant_p_r0([row]))
-    if not isinstance(row, dict):
-        return flags
-
-    events = [row]
-    flags.extend(_invariant_p_r2(events, filing))
-    flags.extend(_invariant_p_r3(events))
-    flags.extend(_invariant_p_r4(events))
-    flags.extend(_invariant_p_r6(events))
-    flags.extend(_invariant_p_r7(events))
-    flags.extend(_invariant_p_r8(events, {}))
-    flags.extend(_invariant_p_r9(events))
-    flags.extend(_invariant_p_r10(events))
-    flags.extend(_invariant_p_d1(events))
-    flags.extend(_invariant_p_d2(events))
-    flags.extend(_invariant_p_d7(events))
-    flags.extend(_invariant_p_g2(events))
-    return flags
-
-
-def _nfkc(s: str) -> str:
-    return unicodedata.normalize("NFKC", s)
-
-
-# PDF-extraction curly-quote folding for §P-R2 substring check. Only the
-# four curly-quote codepoints need folding; NFKC (applied first on both
-# sides of the substring check) already canonicalizes NBSP (U+00A0 →
-# U+0020) and ellipsis (U+2026 → "..."), so those entries would be dead
-# code. Case is NOT folded, whitespace is NOT collapsed, punctuation is
-# NOT stripped — those would mask real extractor paraphrase errors.
-_PDF_ARTIFACT_MAP = str.maketrans({
-    "‘": "'",   # left single quotation mark
-    "’": "'",   # right single quotation mark (apostrophe)
-    "“": '"',   # left double quotation mark
-    "”": '"',   # right double quotation mark
-})
-
-
-def _canonicalize_pdf_artifacts(s: str) -> str:
-    """Fold PDF-extraction curly-quote variants to ASCII equivalents.
-
-    Applied to both sides of the §P-R2 substring check so curly-vs-straight
-    quote mismatches do not spuriously fail.
-    """
-    return s.translate(_PDF_ARTIFACT_MAP)
-
-
-def _phase(ev: dict) -> int:
-    """§L2 default: `process_phase` is 1 when absent or None.
-
-    Centralizes the default so invariants that need "main-phase or default"
-    semantics share one implementation. Invariants that test phase 0 explicitly
-    (§P-L2's phase_0_dates, §P-S3's exemption guard) continue to use the raw
-    `ev.get("process_phase")` — defaulting None to 1 would hide the
-    distinction.
-    """
-    phase = ev.get("process_phase")
-    return 1 if phase is None else phase
-
-
-def _invariant_p_r0(events: list) -> list[dict]:
-    """§P-R0 — row shape: events are dicts; process_phase is int>=0 or null;
-    bidder_name / bidder_alias are str or null.
-
-    A single weird row (string where a dict is expected, `"1"` for
-    process_phase) otherwise crashes the validator with an unhandled
-    AttributeError/TypeError; at 392-deal scale the crash is masked behind
-    `mark_failed` and the underlying shape bug stays silent. §P-R0 turns
-    these into explicit hard flags so the rest of the deal still validates.
-
-    Returns row-level flags. Caller must filter `events` to only dict
-    entries before passing to downstream invariants.
-    """
-    flags: list[dict[str, Any]] = []
-    for i, ev in enumerate(events):
-        if not isinstance(ev, dict):
-            flags.append({
-                "row_index": i, "code": "event_not_a_dict", "severity": "hard",
-                "reason": (
-                    f"§P-R0: events[{i}] is type {type(ev).__name__!r}, expected dict; "
-                    "this row is excluded from all downstream invariants."
-                ),
-            })
-            continue
-        phase = ev.get("process_phase")
-        if phase is not None and not (isinstance(phase, int) and not isinstance(phase, bool) and phase >= 0):
-            flags.append({
-                "row_index": i, "code": "process_phase_invalid_type", "severity": "hard",
-                "reason": (
-                    f"§P-R0: process_phase={phase!r} (type {type(phase).__name__!r}) "
-                    "is not int>=0 or null; downstream §P-L1/§P-L2/§P-S2/§P-S4 "
-                    "would crash on the comparison."
-                ),
-            })
-        for field in ("bidder_name", "bidder_alias"):
-            value = ev.get(field)
-            if value is not None and not isinstance(value, str):
-                flags.append({
-                    "row_index": i, "code": "bidder_identity_invalid_type", "severity": "hard",
-                    "reason": (
-                        f"§P-R0: {field}={value!r} (type {type(value).__name__!r}) "
-                        "must be str or null."
-                    ),
-                })
-    return flags
-
-
-def _invariant_p_r1(raw_extraction: dict[str, Any]) -> list[dict]:
-    """§P-R1 — top-level `events` exists, is a list, and is non-empty."""
-    events = raw_extraction.get("events")
-    if isinstance(events, list) and events:
-        return []
-    return [{
-        "code": "empty_events_array",
-        "severity": "hard",
-        "reason": "events[] must exist as a non-empty list",
-        "deal_level": True,
-    }]
-
-
-def _invariant_p_r2(events: list[dict], filing: Filing) -> list[dict]:
-    """§P-R2 — every row has source_quote and source_page; quote is an
-    NFKC-substring of pages[source_page-1].content. Quotes must stay at
-    or below SOURCE_QUOTE_TARGET_CHARS."""
-    flags: list[dict[str, Any]] = []
-    valid_pages = filing.page_numbers()
-    # Canonicalize each cited page at most once; ~N_pages instead of N_rows.
-    page_canon_cache: dict[int, str] = {}
-    for i, ev in enumerate(events):
-        quote = ev.get("source_quote")
-        page = ev.get("source_page")
-
-        if quote in (None, "", []):
-            flags.append({
-                "row_index": i, "code": "missing_evidence", "severity": "hard",
-                "reason": "source_quote absent or empty",
-            })
-            continue
-        if page in (None, "", []):
-            flags.append({
-                "row_index": i, "code": "missing_evidence", "severity": "hard",
-                "reason": "source_page absent or empty",
-            })
-            continue
-
-        # Multi-quote form (§R3) — both lists, equal length.
-        if isinstance(quote, list) or isinstance(page, list):
-            if not (isinstance(quote, list) and isinstance(page, list)):
-                flags.append({
-                    "row_index": i, "code": "source_quote_page_mismatch", "severity": "hard",
-                    "reason": "multi-quote form requires both source_quote and source_page as lists",
-                })
-                continue
-            if len(quote) != len(page):
-                flags.append({
-                    "row_index": i, "code": "source_quote_page_mismatch", "severity": "hard",
-                    "reason": f"list-length mismatch: {len(quote)} quotes vs {len(page)} pages",
-                })
-                continue
-            pairs = list(zip(quote, page))
-        else:
-            pairs = [(quote, page)]
-
-        multi_quote = isinstance(quote, list)
-        for element_index, (q, p) in enumerate(pairs):
-            if not isinstance(q, str):
-                flags.append({
-                    "row_index": i, "code": "missing_evidence", "severity": "hard",
-                    "reason": f"source_quote element must be str; got {type(q).__name__}",
-                })
-                continue
-            if not q.strip():
-                flags.append({
-                    "row_index": i, "code": "missing_evidence", "severity": "hard",
-                    "reason": "source_quote element is empty after trimming whitespace",
-                })
-                continue
-            if not isinstance(p, int):
-                flags.append({
-                    "row_index": i, "code": "missing_evidence", "severity": "hard",
-                    "reason": f"source_page element must be int; got {type(p).__name__}",
-                })
-                continue
-            if len(q) > SOURCE_QUOTE_HARD_CAP_CHARS:
-                quote_label = (
-                    f"source_quote[{element_index}]"
-                    if multi_quote else "source_quote"
-                )
-                flags.append({
-                    "row_index": i, "code": "source_quote_too_long", "severity": "hard",
-                    "reason": (
-                        f"{quote_label} has {len(q)} chars; "
-                        f"hard cap is {SOURCE_QUOTE_HARD_CAP_CHARS}"
-                    ),
-                })
-            if p not in valid_pages:
-                range_str = (
-                    f"{min(valid_pages)}..{max(valid_pages)}"
-                    if valid_pages else "(no pages — empty filing)"
-                )
-                flags.append({
-                    "row_index": i, "code": "source_quote_not_in_page", "severity": "hard",
-                    "reason": f"source_page={p} is not a valid page number for {filing.slug} (range: {range_str})",
-                })
-                continue
-            page_canon = page_canon_cache.get(p)
-            if page_canon is None:
-                page_canon = _canonicalize_pdf_artifacts(_nfkc(filing.page_content(p) or ""))
-                page_canon_cache[p] = page_canon
-            q_canon = _canonicalize_pdf_artifacts(_nfkc(q)).strip()
-            if q_canon not in page_canon:
-                excerpt = q[:120] + ("..." if len(q) > 120 else "")
-                flags.append({
-                    "row_index": i, "code": "source_quote_not_in_page", "severity": "hard",
-                    "reason": f"NFKC+PDF-artifact-normalized source_quote not a substring of pages[{p}].content; excerpt: {excerpt!r}",
-                })
-    return flags
-
-
-def _invariant_p_r3(events: list[dict]) -> list[dict]:
-    """§P-R3 — bid_note ∈ §C1 closed vocabulary on every row."""
-    flags: list[dict[str, Any]] = []
-    for i, ev in enumerate(events):
-        bn = ev.get("bid_note")
-        if bn is None:
-            flags.append({
-                "row_index": i, "code": "bid_note_null", "severity": "hard",
-                "reason": (
-                    "§P-R3: bid_note is null; §C1/§C3 require a "
-                    "closed-vocabulary value on every row (bid rows use 'Bid')."
-                ),
-            })
-            continue
-        if bn in EVENT_VOCABULARY:
-            continue
-        flags.append({
-            "row_index": i, "code": "invalid_event_type", "severity": "hard",
-            "reason": f"bid_note={bn!r} not in §C1 closed vocabulary",
-        })
-    return flags
-
-
-def _invariant_p_r4(events: list[dict]) -> list[dict]:
-    """§P-R4 — role ∈ {bidder, advisor_financial, advisor_legal}."""
-    flags: list[dict[str, Any]] = []
-    for i, ev in enumerate(events):
-        role = ev.get("role", "bidder")
-        if role in ROLE_VOCABULARY:
-            continue
-        flags.append({
-            "row_index": i, "code": "invalid_role", "severity": "hard",
-            "reason": f"role={role!r} not in non-null {{bidder, advisor_financial, advisor_legal}}",
-        })
-    return flags
-
-
-def _invariant_p_r5(events: list[dict], deal: dict) -> list[dict]:
-    """§P-R5 — bidder registry keys, aliases, and resolved names align."""
-    flags: list[dict[str, Any]] = []
-    registry = (deal.get("bidder_registry") or {}) if deal else {}
-    for i, ev in enumerate(events):
-        name = ev.get("bidder_name")
-        if name is None:
-            continue
-        if name not in registry:
-            flags.append({
-                "row_index": i, "code": "bidder_not_in_registry", "severity": "hard",
-                "reason": f"§P-R5/§E4: bidder_name={name!r} not a key in bidder_registry",
-            })
-            continue
-        entry = registry[name] or {}
-        if not isinstance(entry, dict):
-            flags.append({
-                "row_index": i, "code": "bidder_registry_entry_invalid_type", "severity": "hard",
-                "reason": (
-                    f"§P-R5/§E4: bidder_registry[{name!r}] is type "
-                    f"{type(entry).__name__!r}, expected dict."
-                ),
-            })
-            continue
-        # Filter aliases to strings only — sorted() crashes if the list
-        # mixes None/int/str, and a non-string alias is itself a §E4 violation.
-        aliases = {a for a in (entry.get("aliases_observed") or []) if isinstance(a, str)}
-        alias = ev.get("bidder_alias")
-        if alias is not None and alias not in aliases:
-            flags.append({
-                "row_index": i, "code": "bidder_alias_not_observed", "severity": "hard",
-                "reason": (
-                    f"§P-R5/§E4: bidder_alias={alias!r} for {name!r} not in "
-                    f"aliases_observed={sorted(aliases)!r}"
-                ),
-            })
-        resolved = entry.get("resolved_name")
-        if resolved is not None and resolved not in aliases:
-            flags.append({
-                "row_index": i, "code": "resolved_name_not_observed", "severity": "soft",
-                "reason": (
-                    f"§P-R5/§E4: resolved_name={resolved!r} for {name!r} not in "
-                    f"aliases_observed={sorted(aliases)!r}"
-                ),
-            })
-    return flags
-
-
-def _invariant_p_r6(events: list[dict]) -> list[dict]:
-    """§P-R6 — `bidder_type`, when present, must be a scalar string in
-    {"s", "f"} or null. Any non-scalar type or unknown string value fails
-    hard."""
-    flags: list[dict[str, Any]] = []
-    for i, ev in enumerate(events):
-        bt = ev.get("bidder_type")
-        if bt is None:
-            continue
-        if isinstance(bt, str) and bt in BIDDER_TYPE_VOCABULARY:
-            continue
-        flags.append({
-            "row_index": i,
-            "code": "bidder_type_invalid_value",
-            "severity": "hard",
-            "reason": (
-                f"§P-R6: bidder_type={bt!r} (type {type(bt).__name__!r}) is not a "
-                f"scalar in {{\"s\", \"f\"}} or null."
-            ),
-        })
-    return flags
-
-
-def _invariant_p_r7(events: list[dict]) -> list[dict]:
-    """§P-R7 — `ca_type_ambiguous` is a hard flag after the taxonomy redesign.
-
-    The extractor may still attach the ambiguity flag while classifying a
-    CA, but ambiguity over whether a CA is target-bidder, bidder-bidder, or
-    rollover is no longer allowed to pass as soft noise.
-    """
-    flags: list[dict[str, Any]] = []
-    for i, ev in enumerate(events):
-        for flag in ev.get("flags") or []:
-            if not isinstance(flag, dict):
-                continue
-            if flag.get("code") != "ca_type_ambiguous":
-                continue
-            if flag.get("severity") == "hard":
-                continue
-            flags.append({
-                "row_index": i,
-                "code": "ca_type_ambiguous",
-                "severity": "hard",
-                "reason": (
-                    "§P-R7: ca_type_ambiguous is hard after the taxonomy "
-                    "redesign; ambiguous CA type requires adjudication."
-                ),
-            })
-    return flags
-
-
-_FLAG_SEVERITIES = frozenset({"hard", "soft", "info"})
-
-
-def _check_flag_shape(flag: Any, where: str) -> str | None:
-    """Return a short reason string if `flag` violates §P-R8 shape; else None.
-
-    `where` is a human label like "events[3]" or "deal" used in the reason.
-    """
-    if not isinstance(flag, dict):
-        return f"{where}: flag entry is not a dict (type={type(flag).__name__!r})"
-    code = flag.get("code")
-    if not isinstance(code, str) or not code:
-        return f"{where}: missing or empty 'code' field (got {code!r})"
-    severity = flag.get("severity")
-    if severity not in _FLAG_SEVERITIES:
-        return (
-            f"{where}: severity={severity!r} not in {{hard, soft, info}}; "
-            f"a typo would otherwise be silently demoted to 'hard' by count_flags"
-        )
-    reason = flag.get("reason")
-    if reason is not None and not isinstance(reason, str):
-        return f"{where}: reason must be a string (got type={type(reason).__name__!r})"
-    return None
-
-
-def _invariant_p_r8(events: list[dict], deal: dict) -> list[dict]:
-    """§P-R8 — Extractor-emitted flag objects conform to §R2 shape.
-
-    Validates every flag dict on `events[i].flags` and on `deal.deal_flags`.
-    Without this, a typo like `severity: "Hard"` is silently demoted to
-    `"hard"` by `count_flags`, pinning the deal to `validated` for a typo
-    and breaking the 3-consecutive-clean-runs gate.
-
-    Deal-level violations carry `deal_level: True` (the same sentinel
-    `_invariant_p_r1` and `_invariant_p_d3` use); `validate()` routes by
-    that key so this function preserves the flat-list return shape of the
-    rest of the §P-R series.
-    """
-    flags: list[dict[str, Any]] = []
-    for i, ev in enumerate(events):
-        for j, flag in enumerate(ev.get("flags") or []):
-            problem = _check_flag_shape(flag, where=f"events[{i}].flags[{j}]")
-            if problem:
-                flags.append({
-                    "row_index": i,
-                    "code": "flag_shape_invalid",
-                    "severity": "hard",
-                    "reason": f"§P-R8: {problem}",
-                })
-    for j, flag in enumerate(deal.get("deal_flags") or []):
-        problem = _check_flag_shape(flag, where=f"deal.deal_flags[{j}]")
-        if problem:
-            flags.append({
-                "code": "flag_shape_invalid",
-                "severity": "hard",
-                "reason": f"§P-R8: {problem}",
-                "deal_level": True,
-            })
-    return flags
-
-
-def _invariant_p_r9(events: list[dict]) -> list[dict]:
-    """§P-R9 — conditional nullable fields match their owning event types."""
-    flags: list[dict[str, Any]] = []
-
-    def add(row_index: int, reason: str) -> None:
-        flags.append({
-            "row_index": row_index,
-            "code": "conditional_field_mismatch",
-            "severity": "hard",
-            "reason": f"§P-R9: {reason}",
-        })
-
-    for i, ev in enumerate(events):
-        note = ev.get("bid_note")
-
-        if note == "Final Round":
-            for field in ("final_round_announcement", "final_round_extension"):
-                if ev.get(field) not in (True, False):
-                    add(i, f"Final Round requires {field} to be true or false.")
-        else:
-            for field in ("final_round_announcement", "final_round_extension", "final_round_informal"):
-                if ev.get(field) is not None:
-                    add(i, f"{field} must be null outside Final Round rows.")
-
-        if note == "Press Release":
-            if ev.get("press_release_subject") not in {"bidder", "sale", "other"}:
-                add(i, "Press Release requires press_release_subject in {'bidder', 'sale', 'other'}.")
-        elif ev.get("press_release_subject") is not None:
-            add(i, "press_release_subject must be null outside Press Release rows.")
-
-        phase = _phase(ev)
-        is_current_informal_bid = (
-            note == "Bid"
-            and ev.get("bid_type") == "informal"
-            and isinstance(phase, int)
-            and not isinstance(phase, bool)
-            and phase >= 1
-        )
-        if not is_current_informal_bid:
-            for field in ("invited_to_formal_round", "submitted_formal_bid"):
-                if ev.get(field) is not None:
-                    add(i, f"{field} must be null outside current-process informal Bid rows.")
-
-        value_fields = ("bid_value", "bid_value_pershare", "bid_value_lower", "bid_value_upper")
-        stated_value_fields = [field for field in value_fields if ev.get(field) is not None]
-        if note == "Bid":
-            if stated_value_fields:
-                if ev.get("bid_value_unit") in (None, "", []):
-                    add(i, "Bid row with a stated value requires bid_value_unit.")
-                components = ev.get("consideration_components")
-                if not (
-                    isinstance(components, list)
-                    and components
-                    and all(isinstance(component, str) and component for component in components)
-                ):
-                    add(i, "Bid row with a stated value requires non-empty consideration_components.")
-            elif ev.get("bid_value_unit") is not None:
-                add(i, "bid_value_unit must be null when a Bid row has no stated value.")
-        else:
-            for field in value_fields + ("bid_value_unit",):
-                if ev.get(field) is not None:
-                    add(i, f"{field} must be null outside Bid rows.")
-            if ev.get("consideration_components") is not None:
-                add(i, "consideration_components must be null outside Bid rows.")
-
-    return flags
-
-
-AGGREGATE_ALIAS_NOTES: frozenset[str] = frozenset({
-    "NDA",
-    "Bid",
-    "Drop",
-    "DropSilent",
-    "Executed",
-})
-_AGGREGATE_ALIAS_RE = re.compile(
-    r"(?i)(?:/|\bBuyer\s+Group\b|\bConsortium\b|\bInvestor\s+Group\b)"
-)
-
-
-def _invariant_p_r10(events: list[dict]) -> list[dict]:
-    """§P-R10 — bidder lifecycle rows cannot use aggregate group aliases."""
-    flags: list[dict[str, Any]] = []
-    for i, ev in enumerate(events):
-        if ev.get("bid_note") not in AGGREGATE_ALIAS_NOTES:
-            continue
-        if ev.get("role", "bidder") != "bidder":
-            continue
-        alias = ev.get("bidder_alias")
-        if not isinstance(alias, str):
-            continue
-        if not _AGGREGATE_ALIAS_RE.search(alias):
-            continue
-        flags.append({
-            "row_index": i,
-            "code": "aggregate_bidder_alias_unatomized",
-            "severity": "hard",
-            "reason": (
-                f"§P-R10/§E2.b: bidder_alias={alias!r} appears to be an "
-                f"aggregate buyer-group or joint-bidder label on a "
-                f"{ev.get('bid_note')!r} row. Emit one row per identifiable "
-                f"constituent; do not ship a consortium-label fallback row."
-            ),
-        })
-    return flags
-
-
-_ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-
-
-def _invariant_p_d1(events: list[dict]) -> list[dict]:
-    """§P-D1 — bid_date_precise is ISO YYYY-MM-DD or null."""
-    flags: list[dict[str, Any]] = []
-    for i, ev in enumerate(events):
-        d = ev.get("bid_date_precise")
-        if d is None:
-            continue
-        if not (isinstance(d, str) and _ISO_DATE.match(d)):
-            flags.append({
-                "row_index": i, "code": "invalid_date_format", "severity": "hard",
-                "reason": f"bid_date_precise={d!r} not ISO YYYY-MM-DD",
-            })
-    return flags
-
-
-def _invariant_p_d5(events: list[dict]) -> list[dict]:
-    """§P-D5 — every explicit `Drop` row's bidder has a prior engagement row
-    (NDA, Bidder Interest, IB, Bid, bidder-specific sale-start, or prior
-    Drop) in the same process_phase.
-
-    Closes the dangling-drop gap where an AI emits a Drop row for a bidder
-    that was never shown engaging with the process (no NDA, no expression
-    of interest, no IB kickoff). Matches the current §C1 Drop-family
-    DropSilent is explicitly excluded: it is inferred from filing silence and
-    is backed by the matching NDA row under §I1 / §P-S1, not by a narrated
-    dropout agency event. Existence-only check via set membership over
-    per-(phase, bidder) engagement rows: canonicalization (§A2/§A3) has
-    already ordered events, so "earlier row" reduces to "any engagement row
-    for this (name, phase)" in practice. The prior-Drop carve-out covers §I2
-    re-engagement edge cases where an extractor emits Drop→Drop without an
-    intervening NDA.
-
-    Skips:
-      - Unnamed (bidder_name=null) Drop rows — §E3 placeholders are not
-        bidder-bound.
-      - §M4 stale-prior phase 0 — Drop rows in aborted prior processes do
-        not require a prior engagement row in this deal.
-      - Any row for the same (bidder_name, phase) carries
-        `unsolicited_first_contact` (§D1.a) — the bidder approached
-        unsolicited, made a concrete bid, and withdrew without ever
-        signing an NDA; the Drop row IS the withdrawal. Mirrors §P-D6's
-        §D1.a exemption on the tail-end of the lifecycle.
-    """
-    flags: list[dict[str, Any]] = []
-    # Build engagement index by (bidder_name, phase). Engagement = NDA,
-    # Bidder Interest, IB, Bid, bidder-specific sale-start, or any Drop
-    # (to cover §I2 re-engagement chains where a second NDA is missing
-    # between two Drops). Track row index so a Drop row cannot satisfy
-    # itself as the "engagement" witness.
-    engagement_notes = {
-        "NDA",
-        "Bidder Interest",
-        "IB",
-        "Bid",
-        "Bidder Sale",
-        "Activist Sale",
-    }
-    # Map (name, phase) -> set of row indices contributing engagement.
-    engagement_rows: dict[tuple[str, int], set[int]] = {}
-    # Map (name, phase) -> True if any row carries unsolicited_first_contact,
-    # so the §D1.a exemption propagates from the Bid row to the Drop row.
-    unsolicited_keys: set[tuple[str, int]] = set()
-    for j, ev in enumerate(events):
-        name = ev.get("bidder_name")
-        if not name:
-            continue
-        phase = _phase(ev)
-        if "unsolicited_first_contact" in _row_flag_codes(ev):
-            unsolicited_keys.add((name, phase))
-        note = ev.get("bid_note", "") or ""
-        if note not in engagement_notes and note != "Drop":
-            continue
-        engagement_rows.setdefault((name, phase), set()).add(j)
-
-    for i, ev in enumerate(events):
-        note = ev.get("bid_note", "") or ""
-        if note != "Drop":
-            continue
-        name = ev.get("bidder_name")
-        if not name:
-            continue  # unnamed placeholder — skip
-        phase = _phase(ev)
-        if phase == 0:
-            continue  # §M4 stale-prior phase 0 — skip
-        if (name, phase) in unsolicited_keys:
-            continue  # §D1.a — bidder approached unsolicited and withdrew
-        witnesses = engagement_rows.get((name, phase), set()) - {i}
-        if not witnesses:
-            flags.append({
-                "row_index": i, "code": "drop_without_prior_engagement", "severity": "hard",
-                "reason": (
-                    f"§P-D5: Drop row for bidder_name={name!r} in phase={phase} "
-                    f"has no prior NDA/Bidder Interest/IB/Bid/Bidder Sale/"
-                    f"Activist Sale row. If this is an extractor error, rerun. "
-                    f"If the filing genuinely shows a drop without prior "
-                    f"engagement, investigate."
-                ),
-            })
-    return flags
-
-
-def _invariant_p_d6(events: list[dict]) -> list[dict]:
-    """§P-D6 — every named-Bid row's bidder has an NDA row somewhere in the
-    same process_phase.
-
-    Closes the retroactive-naming gap where an AI emits unnamed NDA
-    placeholders that are later not linked to named Bid rows (Providence
-    Party D/E/F case). Existence-only check, not ordering: canonicalization
-    (§A2/§A3) already enforces chronological order, and §D1 permits an
-    unsolicited first-contact Bid to precede the same bidder's later NDA.
-
-    Skips:
-      - Unnamed (bidder_name=null) Bid rows — §E3 placeholders are
-        count-bound, not NDA-bound.
-      - §M4 stale-prior phase 0 — Bid rows emitted against aborted prior
-        processes do not require an NDA.
-      - Rows carrying `unsolicited_first_contact` flag (§D1.a, Class B)
-        — the bidder never signs an NDA in this deal; §D1 itself
-        authorizes the NDA-less Bid row.
-
-    No `pre_nda_informal_bid` exemption is needed. §P-D6 is existence-
-    only, not ordering — §C4's pre-NDA informal-bid pattern has the
-    bidder signing an NDA LATER in the same phase, so the NDA does
-    exist. The §C4 flag remains (documents the pre-NDA timing), but no
-    validator carve-out is needed.
-    """
-    flags: list[dict[str, Any]] = []
-    # Build NDA index by (bidder_name, phase).
-    nda_keys: set[tuple[str, int]] = set()
-    for ev in events:
-        if ev.get("bid_note") != "NDA":
-            continue
-        name = ev.get("bidder_name")
-        if not name:
-            continue
-        nda_keys.add((name, _phase(ev)))
-
-    for i, ev in enumerate(events):
-        if ev.get("bid_note") != "Bid":
-            continue
-        name = ev.get("bidder_name")
-        if not name:
-            continue  # unnamed §E3 placeholder — skip
-        phase = _phase(ev)
-        if phase == 0:
-            continue  # §M4 stale-prior phase 0 — skip
-        # Only §D1.a exempts from §P-D6; §C4 is documentation-only.
-        if "unsolicited_first_contact" in _row_flag_codes(ev):
-            continue
-        if (name, phase) not in nda_keys:
-            flags.append({
-                "row_index": i, "code": "bid_without_preceding_nda", "severity": "hard",
-                "reason": (
-                    f"§P-D6: Bid row for bidder_name={name!r} in phase={phase} "
-                    f"has no NDA row under the same bidder_name in that phase. "
-                    f"If this is an atomized buyer-group constituent, the extractor "
-                    f"must emit the constituent's NDA row, including inherited "
-                    f"group-NDA status when applicable (§I3). "
-                    f"If this bidder's NDA was emitted as an unnamed §E3 placeholder, "
-                    f"the extractor should have attached `unnamed_nda_promotion` on this "
-                    f"Bid row to promote the placeholder at pipeline-finalize time. "
-                    f"If this is a §D1 unsolicited first-contact where the bidder never "
-                    f"signs an NDA, attach the `unsolicited_first_contact` flag (§D1.a) "
-                    f"to exempt this row."
-                ),
-            })
-    return flags
-
-
-TARGET_DROP_REASON_CLASSES = frozenset({
-    "below_market",
-    "below_minimum",
-    "target_other",
-    "never_advanced",
-    "scope_mismatch",
-})
-BIDDER_DROP_REASON_CLASSES = frozenset({None, "no_response", "scope_mismatch"})
-DROP_INITIATORS = frozenset({"bidder", "target", "unknown"})
-
-
-def _invariant_p_d7(events: list[dict]) -> list[dict]:
-    """§P-D7 — `Drop` rows use the redesigned initiator/reason matrix."""
-    flags: list[dict[str, Any]] = []
-    for i, ev in enumerate(events):
-        if ev.get("bid_note") != "Drop":
-            continue
-        initiator = ev.get("drop_initiator")
-        reason = ev.get("drop_reason_class")
-        problem: str | None = None
-        if initiator not in DROP_INITIATORS:
-            problem = (
-                f"drop_initiator={initiator!r} must be one of "
-                "{'bidder', 'target', 'unknown'} on Drop rows"
-            )
-        elif initiator == "target" and reason not in TARGET_DROP_REASON_CLASSES:
-            problem = (
-                f"drop_initiator='target' requires drop_reason_class in "
-                f"{sorted(TARGET_DROP_REASON_CLASSES)!r}; got {reason!r}"
-            )
-        elif initiator == "bidder" and reason not in BIDDER_DROP_REASON_CLASSES:
-            problem = (
-                "drop_initiator='bidder' permits only null, 'no_response', "
-                f"or 'scope_mismatch'; got {reason!r}"
-            )
-        elif initiator == "unknown" and reason is not None:
-            problem = (
-                f"drop_initiator='unknown' requires drop_reason_class=null; "
-                f"got {reason!r}"
-            )
-        if problem is None:
-            continue
-        flags.append({
-            "row_index": i,
-            "code": "drop_reason_class_inconsistent",
-            "severity": "soft",
-            "reason": f"§P-D7: {problem}",
-        })
-    return flags
-
-
-def _invariant_p_d8(events: list[dict]) -> list[dict]:
-    """§P-D8 — informal-bid formal-stage status matches same-phase rows."""
-    flags: list[dict[str, Any]] = []
-    formal_bid_keys = {
-        (ev.get("bidder_name"), _phase(ev))
-        for ev in events
-        if ev.get("bid_note") == "Bid"
-        and ev.get("bid_type") == "formal"
-        and ev.get("bidder_name")
-    }
-    for i, ev in enumerate(events):
-        note = ev.get("bid_note")
-        if note == "Bid" and ev.get("bid_type") == "informal" and _phase(ev) >= 1:
-            key = (ev.get("bidder_name"), _phase(ev))
-            has_formal_bid = key in formal_bid_keys
-            submitted = ev.get("submitted_formal_bid")
-            if submitted is True and not has_formal_bid:
-                flags.append({
-                    "row_index": i,
-                    "code": "formal_round_status_inconsistent",
-                    "severity": "soft",
-                    "reason": (
-                        "§P-D8: submitted_formal_bid=true but no formal Bid "
-                        "row exists for the same bidder and process_phase."
-                    ),
-                })
-            elif submitted is False and has_formal_bid:
-                flags.append({
-                    "row_index": i,
-                    "code": "formal_round_status_inconsistent",
-                    "severity": "soft",
-                    "reason": (
-                        "§P-D8: submitted_formal_bid=false but a formal Bid "
-                        "row exists for the same bidder and process_phase."
-                    ),
-                })
-    return flags
-
-
-def _invariant_p_h5(events: list[dict]) -> list[dict]:
-    """§P-H5 — multi-bid sequences should be date-sorted per bidder."""
-    by_name: dict[str, list[tuple[int, str]]] = {}
-    for i, ev in enumerate(events):
-        if ev.get("bid_note") != "Bid":
-            continue
-        name = ev.get("bidder_name")
-        date = ev.get("bid_date_precise")
-        if not name or not date:
-            continue
-        by_name.setdefault(name, []).append((i, date))
-
-    flags: list[dict[str, Any]] = []
-    for name, rows in by_name.items():
-        if len(rows) <= 1:
-            continue
-        dates = [date for _, date in rows]
-        if dates == sorted(dates):
-            continue
-        flags.append({
-            "row_index": rows[-1][0],
-            "code": "bid_revision_out_of_order",
-            "severity": "soft",
-            "reason": (
-                f"§P-H5: bidder {name!r} has {len(rows)} bids with dates not "
-                f"in chronological order: {dates!r}"
-            ),
-        })
-    return flags
-
-
-def _invariant_p_d2(events: list[dict]) -> list[dict]:
-    """§P-D2 — bid_date_rough ≠ null IFF the row carries a date-inference
-    flag (date_inferred_from_rough / date_inferred_from_context /
-    date_range_collapsed / date_phrase_unmapped). Strict XOR."""
-    flags: list[dict[str, Any]] = []
-    for i, ev in enumerate(events):
-        rough = ev.get("bid_date_rough")
-        row_flag_codes = _row_flag_codes(ev)
-        has_inference = bool(row_flag_codes & DATE_INFERENCE_FLAG_CODES)
-        rough_present = rough not in (None, "", [])
-
-        if rough_present and not has_inference:
-            flags.append({
-                "row_index": i, "code": "rough_date_mismatch_inference", "severity": "hard",
-                "reason": f"bid_date_rough={rough!r} populated without a date-inference flag",
-            })
-        elif has_inference and not rough_present:
-            found = sorted(row_flag_codes & DATE_INFERENCE_FLAG_CODES)
-            flags.append({
-                "row_index": i, "code": "rough_date_mismatch_inference", "severity": "hard",
-                "reason": f"date-inference flag(s) {found} present but bid_date_rough is null",
-            })
-    return flags
-
-
-def _event_date_leq(left: dict, right: dict) -> bool:
-    """Return whether left's precise date is <= right's when both exist.
-
-    If either date is missing, use row order elsewhere as the fallback rather
-    than treating the missing date as disqualifying.
-    """
-    left_date = left.get("bid_date_precise")
-    right_date = right.get("bid_date_precise")
-    if left_date and right_date:
-        return left_date <= right_date
-    return True
-
-
-def _paired_final_round(
-    events: list[dict],
-    bid_index: int,
-    *,
-    require_non_announcement: bool = False,
-    after_index: int | None = None,
-) -> tuple[int, dict] | None:
-    """Find the final-round row that supplies §G1 process-position context.
-
-    Preference follows the taxonomy spec: most recent non-announcement
-    Final Round in the same phase with date <= bid date, including a
-    same-date milestone that sorts after the bid; if none exists and
-    `require_non_announcement` is false, fall back to the most recent
-    applicable Final Round regardless of announcement status.
-    """
-    if bid_index < 0 or bid_index >= len(events):
-        return None
-    bid = events[bid_index]
-    if bid.get("bid_note") != "Bid":
-        return None
-    phase = _phase(bid)
-
-    def candidates(non_announcement_only: bool) -> list[tuple[int, dict]]:
-        out: list[tuple[int, dict]] = []
-        for i, ev in enumerate(events):
-            if i >= bid_index:
-                candidate_date = ev.get("bid_date_precise")
-                bid_date = bid.get("bid_date_precise")
-                if not (candidate_date and bid_date and candidate_date == bid_date):
-                    continue
-            if after_index is not None and i <= after_index:
-                continue
-            if ev.get("bid_note") != "Final Round":
-                continue
-            if _phase(ev) != phase:
-                continue
-            if non_announcement_only and ev.get("final_round_announcement") is not False:
-                continue
-            if not _event_date_leq(ev, bid):
-                continue
-            out.append((i, ev))
-        return out
-
-    non_ann = candidates(non_announcement_only=True)
-    if non_ann:
-        return max(non_ann, key=lambda item: (item[1].get("bid_date_precise") or "", item[0]))
-    if require_non_announcement:
-        return None
-    any_round = candidates(non_announcement_only=False)
-    if any_round:
-        return max(any_round, key=lambda item: (item[1].get("bid_date_precise") or "", item[0]))
-    return None
-
-
-def _invariant_p_g2(events: list[dict]) -> list[dict]:
-    """§P-G2 — every row with non-null bid_type satisfies one of:
-    (1) the row is a true range bid (both `bid_value_lower` and
-    `bid_value_upper` numeric with `lower < upper`, a §G1 informal
-    structural signal), or (2) the row carries a non-empty
-    `bid_type_inference_note: str` of ≤300 chars. §G1 trigger tables are
-    classification guidance for the extractor. The redesigned process-
-    position fallback may also be evidenced by a paired/fallback
-    `Final Round.final_round_informal` value.
-
-    Additional hard rule (per Alex 2026-04-27): when (1) is true, the row
-    MUST have `bid_type = "informal"`. A range with bid_type="formal" is
-    a structural contradiction.
-
-    Violations emit hard `bid_type_unsupported`, `bid_range_inverted`, or
-    `bid_range_must_be_informal`."""
-    flags: list[dict[str, Any]] = []
-    for i, ev in enumerate(events):
-        bid_type = ev.get("bid_type")
-        if bid_type in (None, "", []):
-            continue
-
-        lower = ev.get("bid_value_lower")
-        upper = ev.get("bid_value_upper")
-        try:
-            lo_num = float(lower) if lower not in (None, "", []) else None
-            hi_num = float(upper) if upper not in (None, "", []) else None
-        except (TypeError, ValueError):
-            lo_num = hi_num = None
-        if lo_num is not None and hi_num is not None:
-            if lo_num >= hi_num:
-                flags.append({
-                    "row_index": i, "code": "bid_range_inverted", "severity": "hard",
-                    "reason": (
-                        f"§P-G2: bid_value_lower={lower!r} >= "
-                        f"bid_value_upper={upper!r}; ranges require lower < upper."
-                    ),
-                })
-                continue
-            if bid_type != "informal":
-                flags.append({
-                    "row_index": i, "code": "bid_range_must_be_informal", "severity": "hard",
-                    "reason": (
-                        f"§P-G2 (2026-04-27): true range "
-                        f"({lower!r}..{upper!r}) requires bid_type='informal'; "
-                        f"got bid_type={bid_type!r}. Range bids are unconditionally informal."
-                    ),
-                })
-            continue
-
-        note = ev.get("bid_type_inference_note")
-        if isinstance(note, str) and 0 < len(note.strip()) <= 300:
-            continue
-
-        paired_round = _paired_final_round(events, i)
-        if paired_round is not None:
-            _, final_round = paired_round
-            final_round_informal = final_round.get("final_round_informal")
-            expected = (
-                "informal" if final_round_informal is True
-                else "formal" if final_round_informal is False
-                else None
-            )
-            if expected == bid_type:
-                continue
-
-        flags.append({
-            "row_index": i, "code": "bid_type_unsupported", "severity": "hard",
-            "reason": (
-                f"§P-G2: bid_type={bid_type!r} lacks both a true range "
-                f"(lower<upper), a non-empty ≤300-char "
-                f"bid_type_inference_note, and matching paired/fallback "
-                f"Final Round.final_round_informal evidence."
-            ),
-        })
-    return flags
-
-
-def _invariant_p_g3(events: list[dict]) -> list[dict]:
-    """§P-G3 — Final Round announcements with subsequent bids need evidence
-    of the related submission/deadline event in the same phase.
-
-    The submission row may appear before or after the bidder-specific Bid
-    row when both cite the same same-day narrative paragraph. This keeps the
-    invariant focused on missing evidence rather than row-order accidents.
-    """
-    flags: list[dict[str, Any]] = []
-
-    def has_submission_pair(announcement_index: int, bid_index: int) -> bool:
-        announcement = events[announcement_index]
-        bid = events[bid_index]
-        phase = _phase(announcement)
-        for j, candidate in enumerate(events):
-            if j <= announcement_index:
-                continue
-            if candidate.get("bid_note") != "Final Round":
-                continue
-            if candidate.get("final_round_announcement") is not False:
-                continue
-            if _phase(candidate) != phase:
-                continue
-            if not _event_date_leq(announcement, candidate):
-                continue
-            if not _event_date_leq(candidate, bid):
-                continue
-            return True
-        return False
-
-    for i, ev in enumerate(events):
-        if ev.get("bid_note") != "Final Round":
-            continue
-        if ev.get("final_round_announcement") is not True:
-            continue
-        phase = _phase(ev)
-        subsequent_bid_indices = [
-            j for j, later in enumerate(events)
-            if j > i
-            and later.get("bid_note") == "Bid"
-            and _phase(later) == phase
-            and _event_date_leq(ev, later)
-        ]
-        if not subsequent_bid_indices:
-            continue
-        has_non_announcement_pair = any(
-            has_submission_pair(i, bid_index)
-            for bid_index in subsequent_bid_indices
-        )
-        if has_non_announcement_pair:
-            continue
-        flags.append({
-            "row_index": i,
-            "code": "final_round_missing_non_announcement_pair",
-            "severity": "hard",
-            "reason": (
-                "§P-G3: Final Round announcement has subsequent bids "
-                "but no process-level non-announcement Final Round row "
-                "for the submission/deadline milestone. One such row may "
-                "support multiple same-round bids."
-            ),
-        })
-    return flags
-
-
-def _rank(
-    bid_note: str | None,
-    bid_type: str | None = None,
-    final_round_announcement: bool | None = None,
-) -> int:
-    """§A3 same-date logical rank. Formal bids bump to 7."""
-    if bid_note is None:
-        return 99
-    if bid_note == "Final Round" and final_round_announcement is True:
-        return 1
-    r = EVENT_RANK.get(bid_note, 99)
-    if bid_note == "Bid" and bid_type == "formal":
-        return 7
-    return r
-
-
-def _invariant_p_d3(events: list[dict]) -> list[dict]:
-    """§P-D3 — BidderID structural + chronological integrity (§A4 six rules)."""
-    flags: list[dict[str, Any]] = []
-    if not events:
-        return flags
-    ids = [ev.get("BidderID") for ev in events]
-
-    # Structural block: must be ints, start at 1, strict monotone, unique, gap-free.
-    if not all(isinstance(x, int) for x in ids):
-        flags.append({
-            "code": "bidder_id_structural_error", "severity": "hard",
-            "reason": f"BidderID values must all be ints; got types {[type(x).__name__ for x in ids]}",
-            "deal_level": True,
-        })
-        # Can't run the numeric checks; return early.
-        return flags
-    if ids[0] != 1:
-        flags.append({
-            "code": "bidder_id_structural_error", "severity": "hard",
-            "reason": f"BidderID must start at 1; first row has BidderID={ids[0]}",
-            "deal_level": True,
-        })
-    if any(ids[k] >= ids[k + 1] for k in range(len(ids) - 1)):
-        flags.append({
-            "code": "bidder_id_structural_error", "severity": "hard",
-            "reason": "BidderID not strictly increasing across rows",
-            "deal_level": True,
-        })
-    if len(set(ids)) != len(ids):
-        dupes = sorted(x for x in set(ids) if ids.count(x) > 1)
-        flags.append({
-            "code": "bidder_id_structural_error", "severity": "hard",
-            "reason": f"BidderID duplicates: {dupes}",
-            "deal_level": True,
-        })
-    if max(ids) != len(ids):
-        flags.append({
-            "code": "bidder_id_structural_error", "severity": "hard",
-            "reason": f"BidderID has gaps: max={max(ids)} but len(events)={len(ids)}",
-            "deal_level": True,
-        })
-
-    # Rule 5 — date monotonicity for non-null dates.
-    dates = [ev.get("bid_date_precise") for ev in events]
-    for k in range(len(events) - 1):
-        d_a, d_b = dates[k], dates[k + 1]
-        if d_a and d_b and d_a > d_b:
-            flags.append({
-                "row_index": k + 1, "code": "bidder_id_date_order_violation", "severity": "hard",
-                "reason": f"row {k} date {d_a} precedes row {k + 1} date {d_b}",
-            })
-
-    # Rule 6 — same-date §A3 rank-monotonicity.
-    for k in range(len(events) - 1):
-        d_a, d_b = dates[k], dates[k + 1]
-        if d_a and d_b and d_a == d_b:
-            ev_a, ev_b = events[k], events[k + 1]
-            rank_a = _rank(
-                ev_a.get("bid_note"),
-                ev_a.get("bid_type"),
-                ev_a.get("final_round_announcement"),
-            )
-            rank_b = _rank(
-                ev_b.get("bid_note"),
-                ev_b.get("bid_type"),
-                ev_b.get("final_round_announcement"),
-            )
-            if rank_a > rank_b:
-                flags.append({
-                    "row_index": k + 1, "code": "bidder_id_same_date_rank_violation", "severity": "hard",
-                    "reason": (
-                        f"same date {d_a}: row {k} rank {rank_a} "
-                        f"(bid_note={ev_a.get('bid_note')}, bid_type={ev_a.get('bid_type')}) "
-                        f"after row {k + 1} rank {rank_b} "
-                        f"(bid_note={ev_b.get('bid_note')}, bid_type={ev_b.get('bid_type')})"
-                    ),
-                })
-
-    return flags
-
-
-def _invariant_p_s1(events: list[dict]) -> list[dict]:
-    """§P-S1 (SOFT) — safety net for the §I1 DropSilent contract.
-
-    Per rules/events.md §I1, every NDA row (role=bidder, phase ≥ 1) for a
-    silent signer must be followed by a `DropSilent` row from the same
-    bidder. This invariant fires only when the extractor failed to emit
-    that required DropSilent (or any other follow-up). It is a backstop,
-    not an expected-noise channel."""
-    def identity_key(ev: dict) -> str | None:
-        name = ev.get("bidder_name")
-        if name is not None:
-            return f"name:{name}"
-        alias = ev.get("bidder_alias")
-        if alias not in (None, "", []):
-            return f"alias:{alias}"
-        return None
-
-    flags: list[dict[str, Any]] = []
-    by_identity: dict[str, list[tuple[int, dict]]] = {}
-    for i, ev in enumerate(events):
-        key = identity_key(ev)
-        if key is not None:
-            by_identity.setdefault(key, []).append((i, ev))
-
-    for i, ev in enumerate(events):
-        if ev.get("bid_note") != "NDA":
-            continue
-        if ev.get("role", "bidder") != "bidder":
-            continue
-        if _phase(ev) == 0:
-            continue  # stale prior NDA — excluded per §L1
-        key = identity_key(ev)
-        if key is None:
-            continue  # anonymous NDA with no alias — cannot trace follow-up
-        later = [(j, e) for (j, e) in by_identity.get(key, []) if j > i]
-        has_followup = any(e.get("bid_note") in BID_NOTE_FOLLOWUPS for _, e in later)
-        if not has_followup:
-            flags.append({
-                "row_index": i, "code": "missing_nda_dropsilent", "severity": "soft",
-                "reason": f"bidder identity={key!r} signed NDA at row {i} but no DropSilent (or other follow-up) was emitted; per §I1 the extractor must emit DropSilent for silent signers",
-            })
-    return flags
-
-
-def _invariant_p_s5(events: list[dict]) -> list[dict]:
-    """§P-S5 — exact-count unnamed NDA cohorts are stable lifecycle handles.
-
-    When an unnamed exact-count NDA row creates placeholders such as
-    "Other NDA Signer 1", later unnamed Bid/Drop/DropSilent/Executed rows in
-    the same phase must reuse those aliases. If a later row invents a fresh
-    numeric alias family while compatible unnamed NDA handles already exist,
-    the extractor either lost identity continuity or needs to mark genuine
-    cohort ambiguity explicitly.
-    """
-    flags: list[dict[str, Any]] = []
-    handles: list[dict[str, Any]] = []
-
-    for i, ev in enumerate(events):
-        alias = ev.get("bidder_alias")
-        placeholder = _anonymous_placeholder(alias)
-        note = ev.get("bid_note")
-        phase = _phase(ev)
-        bidder_type = ev.get("bidder_type")
-
-        if note == "NDA" and ev.get("bidder_name") is None and placeholder:
-            family, number = placeholder
-            handles.append({
-                "alias": alias,
-                "family": family,
-                "number": number,
-                "phase": phase,
-                "bidder_type": bidder_type,
-                "row_index": i,
-            })
-            continue
-
-        if note not in ANONYMOUS_LIFECYCLE_NOTES:
-            continue
-        if ev.get("bidder_name") is not None or placeholder is None:
-            continue
-        if ANONYMOUS_COHORT_AMBIGUITY_FLAG in _row_flag_codes(ev):
-            continue
-
-        family, _number = placeholder
-        compatible_handles = [
-            handle for handle in handles
-            if handle["phase"] == phase
-            and _anonymous_types_compatible(handle["bidder_type"], bidder_type)
-        ]
-        if not compatible_handles:
-            continue
-        known_aliases = {handle["alias"] for handle in compatible_handles}
-        known_families = {handle["family"] for handle in compatible_handles}
-        if alias in known_aliases and family in known_families:
-            continue
-
-        expected_aliases = [
-            handle["alias"]
-            for handle in sorted(
-                compatible_handles,
-                key=lambda h: (h["family"], h["number"], h["row_index"]),
-            )
-        ][:5]
-        flags.append({
-            "row_index": i,
-            "code": "anonymous_alias_family_unstable",
-            "severity": "hard",
-            "reason": (
-                "§P-S5: unnamed lifecycle row uses "
-                f"bidder_alias={alias!r}, but compatible unnamed NDA "
-                f"handle(s) already exist in phase={phase}: {expected_aliases!r}. "
-                f"Reuse those handles, or attach `{ANONYMOUS_COHORT_AMBIGUITY_FLAG}` "
-                "when the filing truly makes cohort identity ambiguous."
-            ),
-        })
-    return flags
-
-
-def _invariant_p_l1(events: list[dict]) -> list[dict]:
-    """§P-L1 — phase 2 requires phase-1 Terminated and phase-2 Restarted."""
-    phase_values = {ev.get("process_phase") for ev in events}
-    if 2 not in phase_values:
-        return []
-    phase_1_notes = {
-        ev.get("bid_note")
-        for ev in events
-        if ev.get("process_phase") == 1
-    }
-    phase_2_notes = {
-        ev.get("bid_note")
-        for ev in events
-        if ev.get("process_phase") == 2
-    }
-    missing: list[str] = []
-    if "Terminated" not in phase_1_notes:
-        missing.append("phase-1 Terminated")
-    if "Restarted" not in phase_2_notes:
-        missing.append("phase-2 Restarted")
-    if not missing:
-        return []
-    return [{
-        "code": "orphan_phase_2",
-        "severity": "hard",
-        "reason": (
-            f"§P-L1: process_phase=2 events exist but the restart boundary is "
-            f"missing {missing!r}"
-        ),
-        "deal_level": True,
-    }]
-
-
-def _invariant_p_l2(events: list[dict]) -> list[dict]:
-    """§P-L2 — stale-prior phase 0 must be at least 180 days before main."""
-    phase_0_dates = [
-        ev.get("bid_date_precise")
-        for ev in events
-        if ev.get("process_phase") == 0 and ev.get("bid_date_precise")
-    ]
-    main_dates = [
-        ev.get("bid_date_precise")
-        for ev in events
-        if _phase(ev) >= 1 and ev.get("bid_date_precise")
-    ]
-    if not phase_0_dates or not main_dates:
-        return []
-
-    def _parse(value: str | None) -> _dt.date | None:
-        try:
-            return _dt.date.fromisoformat(value) if value else None
-        except (TypeError, ValueError):
-            return None
-
-    stale_dates = [date for date in (_parse(value) for value in phase_0_dates) if date]
-    current_dates = [date for date in (_parse(value) for value in main_dates) if date]
-    if not stale_dates or not current_dates:
-        return []
-
-    latest_stale = max(stale_dates)
-    earliest_main = min(current_dates)
-    delta_days = (earliest_main - latest_stale).days
-    if delta_days >= 180:
-        return []
-    return [{
-        "code": "stale_prior_too_recent",
-        "severity": "hard",
-        "reason": (
-            f"§P-L2: latest phase-0 {latest_stale.isoformat()} is only "
-            f"{delta_days} days before earliest phase≥1 "
-            f"{earliest_main.isoformat()} (<180-day minimum)"
-        ),
-        "deal_level": True,
-    }]
-
-
-def _invariant_p_s2(deal: dict, events: list[dict]) -> list[dict]:
-    """§P-S2 — deal.auction == (NDA count with role=bidder, phase≥1 ≥ 2)."""
-    nda_count = sum(
-        1 for ev in events
-        if ev.get("bid_note") == "NDA"
-        and ev.get("role", "bidder") == "bidder"
-        and _phase(ev) >= 1
-    )
-    expected = nda_count >= 2
-    actual = bool((deal or {}).get("auction"))
-    if expected != actual:
-        return [{
-            "code": "auction_flag_inconsistent", "severity": "hard",
-            "reason": f"deal.auction={actual} but classifier counts {nda_count} qualifying NDAs (expects {expected})",
-            "deal_level": True,
-        }]
-    return []
-
-
-def _invariant_p_s3(events: list[dict]) -> list[dict]:
-    """§P-S3 — each process_phase contains a terminator event in
-    {Executed, Terminated, Auction Closed}.
-
-    The relaxed form (this implementation) accepts any terminator in
-    the phase, not the literal last row. The strict "literal last row"
-    interpretation was too narrow in three cases:
-
-    1. **Go-shop trailing activity.** Post-Executed go-shop rows (new
-       NDAs, IOIs, Drops during the go-shop window) trail the Executed
-       row and push "last row" past the terminator.
-
-    2. **§A3 rank inversions on stale priors.** §A3 places Terminated
-       at rank 2 (Process start/restart) and Drop at rank 8 (Dropouts).
-       In a same-date cluster with both a Drop and a Terminated, the
-       Drop sorts last. Penford's 2007/2009 stale-prior phases hit this.
-
-    3. **Null-dated §E3 placeholder rows.** Count-audit placeholders
-       (e.g., mac-gray's 16 unnamed financial NDAs + 16 implicit Drops
-       emitted from "over the next two months, 20 bidders signed NDAs")
-       sort AFTER all dated rows, trailing the Executed row. Dated
-       placeholders via §B4 range-collapse often still land after
-       Executed in narrative order.
-
-    All three are cases where the phase DOES contain a terminator; the
-    "literal last row" interpretation was conflating "last row" with
-    "phase terminator" unnecessarily. The relaxed rule ("any terminator
-    in phase") captures the actual invariant: every phase's process
-    must close, but rows representing activity tangential to that
-    close (go-shop, undated placeholders, §A3 same-date clusters) are
-    allowed to trail the terminator in the canonical sequence.
-
-    Hard-invariant coverage is preserved: a phase with NO terminator
-    still fires the flag. §P-S4 (Executed row(s) in the max phase)
-    continues to enforce the deal-level close invariant
-    independently.
-
-    §M4 stale-prior phase 0 is exempted: those rows narrate a prior
-    abandoned process that the filing references for context and that
-    §P-L2 already separates by ≥180 days. Requiring a terminator in
-    phase 0 penalized deals whose filings summarized the stale prior
-    without re-narrating its close (penford, stec, mac-gray).
-    """
-    flags: list[dict[str, Any]] = []
-    by_phase: dict[int, list[dict]] = {}
-    for ev in events:
-        by_phase.setdefault(_phase(ev), []).append(ev)
-    for phase, rows in by_phase.items():
-        if phase == 0:
-            # §M4 stale-prior phase 0 is a narrative record of a prior
-            # abandoned process; it is not required to carry an in-scope
-            # terminator event. §P-L2 enforces the ≥180-day gap between
-            # phase-0 and phase≥1, which is the real coherence check on
-            # stale priors.
-            continue
-        has_terminator = any(
-            r.get("bid_note") in PHASE_TERMINATORS for r in rows
-        )
-        if has_terminator:
-            continue
-        last_row = rows[-1]
-        flags.append({
-            "code": "phase_termination_missing", "severity": "hard",
-            "reason": (
-                f"process_phase={phase}: phase contains no terminator event "
-                f"(no row with bid_note in {{Executed, Terminated, Auction Closed}}); "
-                f"last row is bid_note={last_row.get('bid_note')!r}"
-            ),
-            "deal_level": True,
-        })
-    return flags
-
-
-def _invariant_p_s4(events: list[dict]) -> list[dict]:
-    """§P-S4 — at least one Executed row, all in the max phase."""
-    flags: list[dict[str, Any]] = []
-    executed = [(i, ev) for i, ev in enumerate(events) if ev.get("bid_note") == "Executed"]
-    if not executed:
-        flags.append({
-            "code": "no_executed_row", "severity": "hard",
-            "reason": "no bid_note=Executed row; every in-scope deal closed and must have one",
-            "deal_level": True,
-        })
-        return flags
-    max_phase = max(_phase(ev) for ev in events)
-    wrong_phases = sorted({_phase(ev) for _, ev in executed if _phase(ev) != max_phase})
-    if wrong_phases:
-        flags.append({
-            "code": "executed_wrong_phase", "severity": "hard",
-            "reason": f"Executed row(s) in process_phase={wrong_phases}, but max phase is {max_phase}",
-            "deal_level": True,
-        })
-    return flags
-
-
-# ---------------------------------------------------------------------------
-# Flag merging, status classification, writers
-# ---------------------------------------------------------------------------
-
-
-def merge_flags(
-    raw_extraction: dict[str, Any],
-    row_flags: list[dict[str, Any]],
-    deal_flags: list[dict[str, Any]],
-) -> dict[str, Any]:
-    """Stamp validator flags into a deep-copy of the raw extraction.
-
-    Row-level flags land in events[row_index].flags. Deal-level flags land
-    in deal.deal_flags. The row_index and deal_level routing keys are
-    stripped before embedding (they're orchestration metadata, not schema).
-    """
-    final = copy.deepcopy(raw_extraction)
-    events = final.setdefault("events", [])
-    deal = final.setdefault("deal", {})
-
-    for flag in row_flags:
-        i = flag.get("row_index")
-        if i is None or i < 0 or i >= len(events):
-            # Misplaced row flag — demote to deal-level so it isn't silently dropped.
-            deal.setdefault("deal_flags", []).append({
-                **{k: v for k, v in flag.items() if k not in ("row_index", "deal_level")},
-                "reason": f"[misplaced row_index={i}] {flag.get('reason', '')}",
-            })
-            continue
-        event_flags = events[i].setdefault("flags", [])
-        event_flags.append({
-            k: v for k, v in flag.items() if k not in ("row_index", "deal_level")
-        })
-
-    deal_flag_list = deal.setdefault("deal_flags", [])
-    for flag in deal_flags:
-        deal_flag_list.append({
-            k: v for k, v in flag.items() if k not in ("row_index", "deal_level")
-        })
-
-    return final
-
-
 def count_flags(final_extraction: dict[str, Any]) -> dict[str, int]:
-    """Count combined extractor + validator flags from the finalized output.
-
-    Tolerates malformed severities by demoting to `"hard"` — `count_flags`
-    is a counter, not a validator. The shape check that catches typos
-    explicitly lives in §P-R8 (`_invariant_p_r8`).
-    """
+    """Count current graph validation flags in a finalized output."""
     counts = dict.fromkeys(_FLAG_SEVERITIES, 0)
     deal_flags = (final_extraction.get("deal") or {}).get("deal_flags") or []
-    event_lists = [
-        ev.get("flags") or []
-        for ev in (final_extraction.get("events") or [])
-    ]
-    for flag in deal_flags:
-        severity = flag.get("severity", "hard")
+    flags = deal_flags
+    if not flags:
+        graph_flags = final_extraction.get("validation_flags") or []
+        graph = final_extraction.get("graph") or {}
+        if isinstance(graph, dict):
+            graph_flags = [*graph_flags, *(graph.get("validation_flags") or [])]
+        flags = graph_flags
+
+    for flag in flags:
+        if not isinstance(flag, dict):
+            severity = "hard"
+        else:
+            severity = flag.get("severity", "hard")
+        if severity == "blocking":
+            severity = "hard"
         if severity not in counts:
             severity = "hard"
         counts[severity] += 1
-    for flags in event_lists:
-        for flag in flags:
-            severity = flag.get("severity", "hard")
-            if severity not in counts:
-                severity = "hard"
-            counts[severity] += 1
     return counts
 
 
 def summarize(final_extraction: dict[str, Any]) -> tuple[str, int, str]:
-    """Return (status, flag_count, notes) per the §Status taxonomy.
-
-    hard > 0 → "validated" (blocks advancement, human review required)
-    any soft/info but zero hard → "passed"
-    zero combined flags → "passed_clean"
-    """
-    counts = count_flags(final_extraction)
-    hard = counts["hard"]
-    soft = counts["soft"]
-    info = counts["info"]
-    if hard > 0:
-        status = "validated"
-    elif soft > 0 or info > 0:
-        status = "passed"
-    else:
+    """Return (status, flag_count, notes) per the status taxonomy."""
+    review_rows = final_extraction.get("review_rows")
+    if final_extraction.get("schema_version") != "deal_graph_v2" or not isinstance(review_rows, list):
+        return "failed_system", 0, "trusted deal_graph_v2 review output is missing"
+    burden = sum(
+        1 for row in review_rows
+        if isinstance(row, dict) and row.get("review_status") != "clean"
+    )
+    if burden == 0:
         status = "passed_clean"
-    flag_count = hard + soft + info
-    notes = f"hard={hard} soft={soft} info={info}"
-    return status, flag_count, notes
+    elif burden <= 10:
+        status = "needs_review"
+    else:
+        status = "high_burden"
+    return status, burden, f"review_burden={burden}"
 
 
 def write_output(slug: str, final_extraction: dict[str, Any]) -> Path:
-    """Atomic write of the per-deal extraction JSON.
-
-    Atomicity matters: a SIGKILL mid-write would otherwise leave a truncated
-    JSON the next run reads as "stale-but-valid".
-    """
+    """Atomic write of the latest per-deal extraction snapshot."""
     out_path = EXTRACTIONS_DIR / f"{slug}.json"
     _atomic_write_text(
         out_path,
@@ -2020,29 +193,26 @@ def _append_flags_log_locked(
     run_ts: str,
     run_id: str,
 ) -> int:
-    """Inner half of `append_flags_log`. Caller MUST hold `_state_file_lock`.
-
-    Lines are buffered in memory then written under one `with FLAGS_PATH.open`,
-    flushed and fsynced once at end-of-batch — bytes are atomic per-line
-    because the lock serializes writers, not because of per-line fsync.
-    """
+    """Inner half of `append_flags_log`. Caller must hold `_state_file_lock`."""
     STATE_DIR.mkdir(parents=True, exist_ok=True)
     lines: list[str] = []
     deal = final_extraction.get("deal") or {}
-    events = final_extraction.get("events") or []
-    for f in deal.get("deal_flags") or []:
+    graph = final_extraction.get("graph") if isinstance(final_extraction.get("graph"), dict) else {}
+    flags = [
+        *(deal.get("deal_flags") or []),
+        *(graph.get("review_flags") or []),
+    ]
+    for flag in flags:
+        if not isinstance(flag, dict):
+            continue
         entry = {
-            "deal": slug, "run_id": run_id, "logged_at": run_ts,
-            "deal_level": True, **f,
+            "deal": slug,
+            "run_id": run_id,
+            "logged_at": run_ts,
+            **flag,
         }
+        entry.setdefault("deal_level", True)
         lines.append(json.dumps(entry, default=str))
-    for i, ev in enumerate(events):
-        for f in ev.get("flags") or []:
-            entry = {
-                "deal": slug, "run_id": run_id, "logged_at": run_ts,
-                "row_index": i, **f,
-            }
-            lines.append(json.dumps(entry, default=str))
     if not lines:
         return 0
     with FLAGS_PATH.open("a") as fh:
@@ -2059,13 +229,7 @@ def append_flags_log(
     run_ts: str,
     run_id: str,
 ) -> int:
-    """Append this run's flags to state/flags.jsonl, lock-serialized.
-
-    `run_ts` and `run_id` are both stamped on every line. `run_id` is the
-    audit primary key (independent of `last_run` even when reruns share a
-    timestamp); `logged_at` remains the documented `last_run`-equality field
-    for current-run flag queries.
-    """
+    """Append this run's graph validation flags to `state/flags.jsonl`."""
     with _state_file_lock():
         return _append_flags_log_locked(slug, final_extraction, run_ts, run_id)
 
@@ -2079,20 +243,18 @@ def _update_progress_locked(
     last_run: str,
     run_id: str,
 ) -> None:
-    """Inner half of `update_progress`. Caller MUST hold `_state_file_lock`.
-
-    Auto-creates a minimal deal entry if `slug` was never seeded. Append-only
-    on `rulebook_version_history` (capped at `RULEBOOK_HISTORY_CAP`) so the
-    "3 consecutive unchanged-rulebook clean runs" gate can be audited per-deal.
-    Stale top-level `rulebook_version` fails loudly instead of being
-    cleaned in-place.
-    """
+    """Inner half of `update_progress`. Caller must hold `_state_file_lock`."""
+    if status not in ALL_RUN_STATUSES:
+        raise ValueError(
+            f"status {status!r} is not in the live extraction taxonomy: "
+            f"{', '.join(sorted(ALL_RUN_STATUSES))}"
+        )
     try:
         state = json.loads(PROGRESS_PATH.read_text())
-    except FileNotFoundError as e:
+    except FileNotFoundError as exc:
         raise FileNotFoundError(
             f"{PROGRESS_PATH} does not exist; run scripts/build_seeds.py first"
-        ) from e
+        ) from exc
     if "rulebook_version" in state:
         raise ValueError(
             "state/progress.json contains stale top-level rulebook_version; "
@@ -2102,7 +264,7 @@ def _update_progress_locked(
     if slug not in deals:
         deals[slug] = {
             "is_reference": False,
-            "status": "pending",
+            "status": status,
             "flag_count": 0,
             "last_run": None,
             "last_verified_by": None,
@@ -2113,12 +275,22 @@ def _update_progress_locked(
     history.append({"ts": last_run, "run_id": run_id, "version": current_rulebook_version})
     if len(history) > RULEBOOK_HISTORY_CAP:
         deals[slug]["rulebook_version_history"] = history[-RULEBOOK_HISTORY_CAP:]
+    previous = deals[slug]
+    write_notes = notes
+    if (
+        previous.get("is_reference") is True
+        and status in TRUSTED_STATUSES
+        and isinstance(previous.get("verification_report"), str)
+        and isinstance(previous.get("last_verified_by"), str)
+    ):
+        previous["verified"] = True
+        write_notes = f"{notes}; prior filing-grounded verification metadata preserved"
     deals[slug].update({
         "status": status,
         "flag_count": flag_count,
         "last_run": last_run,
         "last_run_id": run_id,
-        "notes": notes,
+        "notes": write_notes,
         "rulebook_version": current_rulebook_version,
     })
     state["updated"] = last_run
@@ -2137,29 +309,21 @@ def update_progress(
     last_run: str,
     run_id: str,
 ) -> None:
-    """Lock-serialized public wrapper. See `_update_progress_locked` for
-    the actual contract; this just acquires `_state_file_lock` first so
-    single-deal callers (`mark_failed`, tests) don't need to.
-    """
+    """Lock-serialized progress update."""
     with _state_file_lock():
         _update_progress_locked(
-            slug, status, flag_count, notes,
-            current_rulebook_version, last_run, run_id,
+            slug,
+            status,
+            flag_count,
+            notes,
+            current_rulebook_version,
+            last_run,
+            run_id,
         )
 
 
 def mark_failed(slug: str, notes: str) -> None:
-    """Record a failed deal run.
-
-    This is for pipeline/runtime failures before a valid output can be written.
-    Uses `update_progress()`, which auto-creates the deal entry if the slug
-    is not in seeds — this is explicit so that failure-recording for
-    never-seeded slugs still lands rather than crashing. If the rules
-    directory is empty, records `rulebook_version="unavailable"` instead
-    of propagating the FileNotFoundError. Other exceptions (missing
-    progress.json, disk errors) still propagate — the caller needs to know
-    the recorder itself failed.
-    """
+    """Record a runtime failure before a valid finalized output exists."""
     if not notes.strip():
         raise ValueError("failure notes must be non-empty")
     try:
@@ -2168,7 +332,7 @@ def mark_failed(slug: str, notes: str) -> None:
         current_version = "unavailable"
     update_progress(
         slug=slug,
-        status="failed",
+        status=_failure_status_for_slug(slug),
         flag_count=0,
         notes=notes,
         current_rulebook_version=current_version,
@@ -2177,350 +341,16 @@ def mark_failed(slug: str, notes: str) -> None:
     )
 
 
-# ---------------------------------------------------------------------------
-# Convenience: end-to-end finalize (used by run.py and the orchestrator).
-# ---------------------------------------------------------------------------
-
-
-@dataclass
-class PipelineResult:
-    status: str
-    flag_count: int
-    notes: str
-    output_path: Path
-    run_id: str
-    last_run: str
-
-
-def _apply_unnamed_nda_promotions(
-    raw_extraction: dict[str, Any],
-) -> list[dict[str, Any]]:
-    """Consume `unnamed_nda_promotion` hints on Bid rows.
-
-    The extractor emits NDA rows in narrative order. When the filing later
-    names a bidder whose NDA was emitted as an unnamed §E3 placeholder
-    ("Strategic 5"), the AI attaches an `unnamed_nda_promotion` hint on the
-    named Bid row pointing to the placeholder's BidderID. Python applies the
-    hint deterministically: the target NDA row's bidder_alias / bidder_name
-    are rewritten to the promoted values, and the hint field is stripped.
-
-    Hint schema:
-      {
-        "unnamed_nda_promotion": {
-          "target_bidder_id": 12,            // narrative-order BidderID of placeholder NDA row
-          "promote_to_bidder_alias": "Party E",
-          "promote_to_bidder_name": "bidder_07",  // must exist in bidder_registry
-          "reason": "<filing citation>"
-        }
-      }
-
-    Returns a log of {row_index, status, from, to, reason} entries for audit.
-    Mutates raw_extraction in place.
-    """
-    events = raw_extraction.get("events") or []
-    deal = raw_extraction.setdefault("deal", {})
-    bidder_registry = deal.setdefault("bidder_registry", {})
-    by_bidder_id: dict[int, dict] = {
-        ev["BidderID"]: ev for ev in events
-        if isinstance(ev, dict) and isinstance(ev.get("BidderID"), int)
-    }
-
-    log: list[dict[str, Any]] = []
-    for i, ev in enumerate(events):
-        promo = ev.get("unnamed_nda_promotion")
-        if not promo:
-            continue
-
-        def fail(reason: str) -> None:
-            # Hint remains on the row as audit trail; finalize() emits the
-            # corresponding hard flag post-canonicalize so row indices are
-            # stable for downstream consumers.
-            log.append({
-                "row_index": i, "status": "failed",
-                "reason": reason, "hint": promo,
-            })
-
-        target_id = promo.get("target_bidder_id")
-        target = by_bidder_id.get(target_id)
-        if target is None:
-            fail(f"target_bidder_id={target_id} not found in events")
-            continue
-        if target.get("bid_note") != "NDA":
-            fail(f"target row {target_id} has bid_note={target.get('bid_note')!r}, expected 'NDA'")
-            continue
-        old_alias = target.get("bidder_alias")
-        old_name = target.get("bidder_name")
-        new_alias = promo.get("promote_to_bidder_alias")
-        new_name = promo.get("promote_to_bidder_name")
-        if new_name and new_name not in bidder_registry:
-            fail(
-                f"promote_to_bidder_name={new_name!r} not present in "
-                f"bidder_registry — promotion would leave a dangling "
-                f"bidder_name on target row {target_id}"
-            )
-            continue
-        if new_name and not isinstance(bidder_registry.get(new_name), dict):
-            fail(
-                f"bidder_registry[{new_name!r}] is type "
-                f"{type(bidder_registry.get(new_name)).__name__!r}, expected dict — "
-                f"§P-R5 will hard-flag this independently; promotion is unsafe."
-            )
-            continue
-        if old_name is not None and new_name and old_name != new_name:
-            fail(
-                f"target row {target_id} already has bidder_name={old_name!r}; "
-                f"promotion would overwrite a named bidder (only unnamed §E3 "
-                f"placeholders are promotable)"
-            )
-            continue
-        # Success — apply mutations and pop the hint so it doesn't ship.
-        if new_alias:
-            target["bidder_alias"] = new_alias
-        if new_name:
-            target["bidder_name"] = new_name
-            existing_aliases = bidder_registry[new_name].get("aliases_observed")
-            if not isinstance(existing_aliases, list):
-                bidder_registry[new_name]["aliases_observed"] = []
-                existing_aliases = bidder_registry[new_name]["aliases_observed"]
-            if old_alias and old_alias not in existing_aliases:
-                existing_aliases.append(old_alias)
-        target.setdefault("flags", []).append({
-            "code": "nda_promoted_from_placeholder",
-            "severity": "info",
-            "reason": (
-                f"promoted from placeholder bidder_alias={old_alias!r} "
-                f"via BidderID {target_id}: {promo.get('reason')}"
-            ),
-        })
-        ev.pop("unnamed_nda_promotion", None)
-        log.append({
-            "row_index": i,
-            "target_bidder_id": target_id,
-            "status": "applied",
-            "from": {"bidder_alias": old_alias, "bidder_name": old_name},
-            "to": {"bidder_alias": new_alias, "bidder_name": new_name},
-            "reason": promo.get("reason"),
-        })
-    return log
-
-
-def _rebuild_bidder_registry_from_events(raw_extraction: dict[str, Any]) -> None:
-    """Rebuild the canonical bidder registry from event rows.
-
-    Linkflow strict schema cannot carry dynamic `bidder_registry` keys without
-    provider 502s, so the raw provider-facing schema requires `{}`. The live
-    output contract still needs a registry for §P-R5. Build it deterministically
-    from event-level `bidder_name` and `bidder_alias` before promotions,
-    ordering, validation, and finalization.
-    """
-    deal = raw_extraction.setdefault("deal", {})
-    existing = deal.get("bidder_registry")
-    registry: dict[str, dict[str, Any]] = {}
-    if isinstance(existing, dict):
-        for name, entry in existing.items():
-            if isinstance(name, str) and isinstance(entry, dict):
-                aliases = entry.get("aliases_observed")
-                registry[name] = {
-                    "resolved_name": entry.get("resolved_name"),
-                    "aliases_observed": [
-                        alias for alias in (aliases or [])
-                        if isinstance(alias, str) and alias
-                    ],
-                    "first_appearance_row_index": entry.get("first_appearance_row_index"),
-                }
-
-    for ev in raw_extraction.get("events") or []:
-        if not isinstance(ev, dict):
-            continue
-        name = ev.get("bidder_name")
-        if not isinstance(name, str) or not name:
-            continue
-        entry = registry.setdefault(name, {
-            "resolved_name": None,
-            "aliases_observed": [],
-            "first_appearance_row_index": None,
-        })
-        alias = ev.get("bidder_alias")
-        if isinstance(alias, str) and alias and alias not in entry["aliases_observed"]:
-            entry["aliases_observed"].append(alias)
-
-    deal["bidder_registry"] = registry
-
-
-def _canonicalize_order(raw_extraction: dict[str, Any]) -> None:
-    """Python-enforced §A2/§A3 ordering.
-
-    Sort events by (bid_date_precise, §A3 rank, narrative index). Reassign
-    BidderID = 1..N strictly monotone. Null-dated rows sort to the end
-    preserving narrative order among themselves.
-
-    This removes mechanical ordering from the LLM's responsibility. The AI
-    may emit rows in narrative order; Python fixes §A2 date-monotone and
-    §A3 same-date rank violations deterministically.
-
-    Also updates `bidder_registry[*].first_appearance_row_index` to the new
-    BidderID of each bidder's first appearance.
-
-    Mutates raw_extraction in place.
-    """
-    events = raw_extraction.get("events") or []
-    if not events:
-        return
-    for idx, ev in enumerate(events):
-        ev["_narrative_index"] = idx
-
-    def sort_key(ev: dict) -> tuple:
-        date = ev.get("bid_date_precise") or "9999-12-31"
-        rank = _rank(
-            ev.get("bid_note"),
-            ev.get("bid_type"),
-            ev.get("final_round_announcement"),
-        )
-        return (date, rank, ev["_narrative_index"])
-
-    events.sort(key=sort_key)
-    for new_id, ev in enumerate(events, start=1):
-        ev["BidderID"] = new_id
-        ev.pop("_narrative_index", None)
-    raw_extraction["events"] = events
-
-    # Recompute first_appearance_row_index for each bidder_name.
-    registry = raw_extraction.get("deal", {}).get("bidder_registry") or {}
-    first_seen: dict[str, int] = {}
-    for ev in events:
-        name = ev.get("bidder_name")
-        if name and name not in first_seen:
-            first_seen[name] = ev["BidderID"]
-    for name, reg_entry in registry.items():
-        if not isinstance(reg_entry, dict):
-            continue
-        if name in first_seen:
-            reg_entry["first_appearance_row_index"] = first_seen[name]
-
-
-def _enforce_extractor_deal_contract(raw_extraction: dict[str, Any]) -> None:
-    """Reject missing or extra deal fields from extractor output."""
-    deal = raw_extraction.get("deal")
-    if not isinstance(deal, dict):
-        raise ValueError(
-            f"raw_deal_schema_violation: deal is {type(deal).__name__}, expected object"
-        )
-    fields = set(deal)
-    unexpected = sorted(fields - EXTRACTOR_DEAL_FIELDS)
-    missing = sorted(EXTRACTOR_DEAL_FIELDS - fields)
-    if missing:
-        raise ValueError(
-            "raw_deal_schema_violation: extractor deal object is missing "
-            f"current AI-produced field(s): {missing}"
-        )
-    if unexpected:
-        raise ValueError(
-            "raw_deal_schema_violation: extractor deal object has unexpected "
-            f"current AI-produced field(s): {unexpected}"
-        )
-
-
-def prepare_for_validate(
-    slug: str,
-    raw_extraction: dict[str, Any],
-    filing: Filing | None = None,
-) -> tuple[dict[str, Any], Filing, list[dict[str, Any]]]:
-    """Apply every pre-validate transform without writing output."""
-    if filing is None:
-        filing = load_filing(slug)
-    _enforce_extractor_deal_contract(raw_extraction)
-    _rebuild_bidder_registry_from_events(raw_extraction)
-    promotion_log = _apply_unnamed_nda_promotions(raw_extraction)
-    _canonicalize_order(raw_extraction)
-    failed_reasons_by_hint_id = {
-        id(entry["hint"]): entry["reason"]
-        for entry in promotion_log if entry.get("status") == "failed"
-    }
-    for ev in raw_extraction.get("events", []):
-        promo = ev.get("unnamed_nda_promotion")
-        if not promo or id(promo) not in failed_reasons_by_hint_id:
-            continue
-        ev.setdefault("flags", []).append({
-            "code": "nda_promotion_failed", "severity": "hard",
-            "reason": failed_reasons_by_hint_id[id(promo)],
-        })
-        ev.pop("unnamed_nda_promotion", None)
-    return raw_extraction, filing, promotion_log
-
-
-def finalize_prepared(
-    slug: str,
-    raw_extraction: dict[str, Any],
-    filing: Filing,
-    validation_result: ValidatorResult,
-    promotion_log: list[dict[str, Any]] | None = None,
-    *,
-    run_id: str | None = None,
-    run_ts: str | None = None,
-) -> PipelineResult:
-    """Write a prepared extraction using a caller-supplied validation result.
-
-    Direct callers may compute or annotate validation flags before writing
-    output. This helper preserves the supplied `validation_result` instead of
-    recomputing validation inside `finalize()`.
-    """
-    run_ts = run_ts or _now_iso()
-    run_id = run_id or _new_run_id()
-    final = merge_flags(
-        raw_extraction,
-        validation_result.row_flags,
-        validation_result.deal_flags,
-    )
-    current_rulebook_version = rulebook_version()
-    deal_obj = final.setdefault("deal", {})
-    deal_obj["rulebook_version"] = current_rulebook_version
-    deal_obj["last_run"] = run_ts
-    deal_obj["last_run_id"] = run_id
-    status, flag_count, notes = summarize(final)
-    out_path = write_output(slug, final)
-    with _state_file_lock():
-        _update_progress_locked(
-            slug,
-            status,
-            flag_count,
-            notes,
-            current_rulebook_version,
-            last_run=run_ts,
-            run_id=run_id,
-        )
-        _append_flags_log_locked(slug, final, run_ts=run_ts, run_id=run_id)
-    return PipelineResult(
-        status=status,
-        flag_count=flag_count,
-        notes=notes,
-        output_path=out_path,
-        run_id=run_id,
-        last_run=run_ts,
-    )
-
-
-def finalize(
-    slug: str,
-    raw_extraction: dict[str, Any],
-    filing: Filing | None = None,
-) -> PipelineResult:
-    """Run Python validator + merge flags + write output + update state.
-
-    Pre-validate transforms:
-      1. Apply `unnamed_nda_promotion` hints
-      2. Canonicalize row order and BidderIDs (§A2/§A3 sort)
-
-    Direct callers with a precomputed `ValidatorResult` should call
-    `finalize_prepared()` so supplied annotations are preserved.
-    """
-    raw_extraction, filing, promotion_log = prepare_for_validate(
-        slug, raw_extraction, filing=filing
-    )
-    result = validate(raw_extraction, filing)
-    return finalize_prepared(
-        slug,
-        raw_extraction,
-        filing,
-        result,
-        promotion_log=promotion_log,
-    )
+def _failure_status_for_slug(slug: str) -> str:
+    try:
+        state = json.loads(PROGRESS_PATH.read_text())
+    except (FileNotFoundError, json.JSONDecodeError):
+        return "failed_system"
+    deal = state.get("deals", {}).get(slug, {})
+    if (
+        isinstance(deal, dict)
+        and deal.get("status") in TRUSTED_STATUSES
+        and (EXTRACTIONS_DIR / f"{slug}.json").exists()
+    ):
+        return "stale_after_failure"
+    return "failed_system"

@@ -342,7 +342,7 @@ DEAL_GRAPH_CLAIM_SCHEMA: dict[str, Any] = {
 }
 
 def json_schema_format(schema: dict[str, Any] = DEAL_GRAPH_CLAIM_SCHEMA) -> dict[str, Any]:
-    name = "deal_graph_v1_claim_schema" if schema is DEAL_GRAPH_CLAIM_SCHEMA else "custom_json_schema"
+    name = "deal_graph_v2_claim_schema" if schema is DEAL_GRAPH_CLAIM_SCHEMA else "custom_json_schema"
     return {
         "type": "json_schema",
         "name": name,
@@ -371,7 +371,7 @@ def _ensure_extraction_shape(parsed: dict[str, Any], schema: dict[str, Any] = DE
     missing = [name for name in schema["required"] if name not in parsed]
     if missing:
         raise MalformedJSONError(
-            "expected deal_graph_v1 claim object; missing " + ", ".join(missing)
+            "expected deal_graph_v2 claim object; missing " + ", ".join(missing)
         )
     _validate_schema_value(schema, parsed)
 

@@ -182,7 +182,7 @@ def test_failed_outcome_returns_nonzero(monkeypatch):
     monkeypatch.setattr(
         run_cli,
         "_run_single_deal",
-        lambda *a, **k: DummyOutcome(status="failed", notes="bad cache"),
+        lambda *a, **k: DummyOutcome(status="failed_system", notes="bad cache"),
     )
     _set_argv(monkeypatch, "--slug", "medivation", "--re-validate")
 

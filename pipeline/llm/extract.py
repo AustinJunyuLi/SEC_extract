@@ -339,7 +339,7 @@ async def extract_deal(
             "reasoning_effort": reasoning_effort,
             "prompt_hash": prompt_digest,
             "attempts": int(getattr(exc, "attempts", 1) or 1),
-            "outcome": "failed",
+            "outcome": "failed_system",
             "error": {"type": type(exc).__name__, "message": str(exc)[:500]},
         })
         raise

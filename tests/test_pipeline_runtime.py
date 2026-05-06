@@ -2,25 +2,7 @@ import json
 
 import pytest
 
-import pipeline as pipeline_pkg
 import pipeline.core as pipeline
-
-
-def _current_deal(**overrides):
-    deal = {
-        "TargetName": "Synthetic Target",
-        "Acquirer": "Synthetic Buyer",
-        "DateAnnounced": "2026-04-24",
-        "DateEffective": None,
-        "auction": False,
-        "all_cash": True,
-        "target_legal_counsel": None,
-        "acquirer_legal_counsel": None,
-        "bidder_registry": {},
-        "deal_flags": [],
-    }
-    deal.update(overrides)
-    return deal
 
 
 # ---------------------------------------------------------------------------
@@ -29,9 +11,12 @@ def _current_deal(**overrides):
 
 
 def test_pipeline_package_reexports_core_api():
+    import pipeline as pipeline_pkg
+
     assert pipeline_pkg.load_filing is pipeline.load_filing
     assert pipeline_pkg.rulebook_version is pipeline.rulebook_version
     assert not hasattr(pipeline_pkg, "_invariant_p_r0")
+    assert not hasattr(pipeline_pkg, "finalize")
     assert hasattr(pipeline, "_PROCESS_STATE_LOCK")
 
 
@@ -125,7 +110,7 @@ def test_update_progress_auto_creates_missing_slug(minimal_state_repo):
     env = minimal_state_repo
     pipeline.update_progress(
         "mystery",
-        status="failed",
+        status="failed_system",
         flag_count=0,
         notes="brand new slug",
         current_rulebook_version="r1",
@@ -135,7 +120,7 @@ def test_update_progress_auto_creates_missing_slug(minimal_state_repo):
     state = json.loads(env.progress.read_text())
     assert "mystery" in state["deals"]
     entry = state["deals"]["mystery"]
-    assert entry["status"] == "failed"
+    assert entry["status"] == "failed_system"
     assert entry["rulebook_version"] == "r1"
     assert entry["notes"] == "brand new slug"
 
@@ -191,7 +176,7 @@ def test_mark_failed_records_failed_status(minimal_state_repo, monkeypatch):
 
     state = json.loads(env.progress.read_text())
     deal = state["deals"]["synthetic"]
-    assert deal["status"] == "failed"
+    assert deal["status"] == "failed_system"
     assert deal["flag_count"] == 0
     assert deal["notes"] == "missing_filing_artifacts: pages.json"
     assert deal["rulebook_version"] == "rules-v1"
@@ -202,7 +187,7 @@ def test_mark_failed_brand_new_slug(minimal_state_repo):
     env = minimal_state_repo
     pipeline.mark_failed("ghost", "slug was never seeded")
     state = json.loads(env.progress.read_text())
-    assert state["deals"]["ghost"]["status"] == "failed"
+    assert state["deals"]["ghost"]["status"] == "failed_system"
     assert state["deals"]["ghost"]["notes"] == "slug was never seeded"
 
 
@@ -216,7 +201,7 @@ def test_mark_failed_empty_rules_dir_records_unavailable(minimal_state_repo):
     pipeline.mark_failed("synthetic", "failed before rules were set up")
     state = json.loads(env.progress.read_text())
     entry = state["deals"]["synthetic"]
-    assert entry["status"] == "failed"
+    assert entry["status"] == "failed_system"
     assert entry["rulebook_version"] == "unavailable"
 
 
@@ -254,17 +239,13 @@ def test_append_flags_log_uses_provided_run_ts_and_run_id(minimal_state_repo):
     env = minimal_state_repo
     final = {
         "deal": {"deal_flags": [{"code": "x", "severity": "info"}]},
-        "events": [
-            {"flags": [{"code": "y", "severity": "soft"}]},
-            {"flags": []},
-        ],
     }
     count = pipeline.append_flags_log(
         "synthetic", final,
         run_ts="2026-04-24T12:00:00Z",
         run_id="run-flag-test",
     )
-    assert count == 2
+    assert count == 1
     lines = [json.loads(line) for line in env.flags.read_text().splitlines()]
     assert all(line["logged_at"] == "2026-04-24T12:00:00Z" for line in lines)
     assert all(line["run_id"] == "run-flag-test" for line in lines)
@@ -282,14 +263,13 @@ def test_append_flags_log_does_not_interleave_under_concurrent_writers(minimal_s
     # well over PIPE_BUF (4 KiB) even line-by-line.
     def build_final(prefix: str) -> dict:
         return {
-            "deal": {"deal_flags": []},
-            "events": [
-                {"flags": [{
+            "deal": {
+                "deal_flags": [{
                     "code": f"{prefix}_code_{i}",
                     "severity": "info",
                     "reason": "x" * 200,
-                }]} for i in range(60)
-            ],
+                } for i in range(60)]
+            },
         }
 
     finals = [
@@ -316,381 +296,11 @@ def test_append_flags_log_does_not_interleave_under_concurrent_writers(minimal_s
     assert counts == {"run-alpha": 60, "run-beta": 60}
 
 
-# ---------------------------------------------------------------------------
-# finalize() — end-to-end parity of timestamps
-# ---------------------------------------------------------------------------
-
-
-def test_finalize_stamps_deal_last_run_and_single_run_ts(minimal_state_repo):
-    """End-to-end check: finalize() captures one run_ts and uses it for
-    deal.last_run (output JSON), progress.last_run, and every flag's
-    logged_at. Query `logged_at == last_run` returns exactly this run's
-    flags."""
-    env = minimal_state_repo
-    env.seed_deal("synthetic", is_reference=True)
-    env.seed_filing(
-        "synthetic",
-        pages=[{"number": 1, "content": "the target entered a merger agreement on 2026-04-24"}],
-    )
-    # Minimal live-contract extraction: one Executed row so §P-S4 passes
-    # and §P-S3 has a phase-1 terminator.
-    raw = {
-        "deal": _current_deal(),
-        "events": [
-            {
-                "BidderID": 1,
-                "bid_note": "Executed",
-                "bid_date_precise": "2026-04-24",
-                "bid_date_rough": None,
-                "bidder_name": None,
-                "bidder_alias": None,
-                "process_phase": 1,
-                "source_quote": "the target entered a merger agreement on 2026-04-24",
-                "source_page": 1,
-            },
-        ],
+def test_count_flags_uses_deal_graph_flags_once():
+    flag = {"code": "source_missing", "severity": "hard"}
+    final = {
+        "deal": {"deal_flags": [flag]},
+        "graph": {"validation_flags": [flag]},
     }
-    result = pipeline.finalize("synthetic", raw)
-    assert result.status in {"passed", "passed_clean", "validated"}
 
-    # deal.last_run on output.
-    out = json.loads(env.extractions.joinpath("synthetic.json").read_text())
-    last_run_output = out["deal"]["last_run"]
-    assert last_run_output is not None and last_run_output.endswith("Z")
-
-    # progress.last_run.
-    state = json.loads(env.progress.read_text())
-    last_run_state = state["deals"]["synthetic"]["last_run"]
-    assert last_run_output == last_run_state
-
-    # Every flags.jsonl line (if any) has logged_at == last_run.
-    if env.flags.exists():
-        for line in env.flags.read_text().splitlines():
-            entry = json.loads(line)
-            assert entry["logged_at"] == last_run_output
-
-
-def test_finalize_appends_to_rulebook_version_history(minimal_state_repo):
-    env = minimal_state_repo
-    env.seed_deal("synthetic", is_reference=True)
-    env.seed_filing(
-        "synthetic",
-        pages=[{"number": 1, "content": "transaction closed"}],
-    )
-    raw = {
-        "deal": _current_deal(),
-        "events": [{
-            "BidderID": 1,
-            "bid_note": "Executed",
-            "bid_date_precise": "2026-04-24",
-            "bid_date_rough": None,
-            "bidder_name": None,
-            "bidder_alias": None,
-            "process_phase": 1,
-            "source_quote": "transaction closed",
-            "source_page": 1,
-        }],
-    }
-    pipeline.finalize("synthetic", raw)
-    pipeline.finalize("synthetic", raw)
-
-    state = json.loads(env.progress.read_text())
-    history = state["deals"]["synthetic"]["rulebook_version_history"]
-    # Both runs same rulebook → two entries, same hash, distinct run_ids.
-    assert len(history) == 2
-    assert history[0]["version"] == history[1]["version"]
-    assert history[0]["run_id"] != history[1]["run_id"]
-
-
-def test_finalize_extraction_output_is_byte_idempotent_modulo_run_stamps(minimal_state_repo):
-    """Identical input must produce identical extraction JSON across reruns
-    modulo per-run stamps (last_run, last_run_id). Otherwise the
-    "3 consecutive unchanged-rulebook clean runs" gate is meaningless.
-    """
-    env = minimal_state_repo
-    env.seed_deal("synthetic", is_reference=True)
-    env.seed_filing(
-        "synthetic",
-        pages=[{"number": 1, "content": "the target entered a merger agreement on 2026-04-24"}],
-    )
-
-    def fresh_raw():
-        return {
-            "deal": _current_deal(),
-            "events": [{
-                "BidderID": 1,
-                "bid_note": "Executed",
-                "bid_date_precise": "2026-04-24",
-                "bid_date_rough": None,
-                "bidder_name": None,
-                "bidder_alias": None,
-                "process_phase": 1,
-                "source_quote": "the target entered a merger agreement on 2026-04-24",
-                "source_page": 1,
-            }],
-        }
-
-    pipeline.finalize("synthetic", fresh_raw())
-    out1 = json.loads(env.extractions.joinpath("synthetic.json").read_text())
-    pipeline.finalize("synthetic", fresh_raw())
-    out2 = json.loads(env.extractions.joinpath("synthetic.json").read_text())
-
-    # Strip per-run stamps before comparing.
-    for o in (out1, out2):
-        o["deal"].pop("last_run", None)
-        o["deal"].pop("last_run_id", None)
-    assert out1 == out2, (
-        "extraction output must be byte-identical across reruns on identical "
-        "input modulo per-run stamps; mismatch indicates non-determinism in "
-        "the validator or pre-validation ordering"
-    )
-
-    # Flag set per run must also be identical (modulo per-line run_id/logged_at).
-    # If the deal passes clean, flags.jsonl never gets written — skip that
-    # half of the assertion. The extraction-JSON parity above is enough.
-    if env.flags.exists():
-        lines = [json.loads(l) for l in env.flags.read_text().splitlines()]
-        by_run: dict[str, list[dict]] = {}
-        for line in lines:
-            by_run.setdefault(line["run_id"], []).append(
-                {k: v for k, v in line.items() if k not in {"run_id", "logged_at", "deal"}}
-            )
-        if by_run:
-            run_ids = list(by_run.keys())
-            assert len(run_ids) == 2
-            assert by_run[run_ids[0]] == by_run[run_ids[1]]
-
-
-# ---------------------------------------------------------------------------
-# Existing test preserved (unrelated: promotion + canonicalize)
-# ---------------------------------------------------------------------------
-
-
-def test_prepare_for_validate_applies_failed_promotion_flag_and_canonicalizes():
-    raw = {
-        "deal": _current_deal(bidder_registry={}),
-        "events": [
-            {
-                "BidderID": 2,
-                "bid_note": "NDA",
-                "bidder_name": None,
-                "bidder_alias": "Strategic 5",
-                "bid_date_precise": "2020-01-01",
-            },
-            {
-                "BidderID": 1,
-                "bid_note": "Bid",
-                "bidder_name": "bidder_99",
-                "bidder_alias": "Party E",
-                "bid_date_precise": "2020-02-01",
-                    "unnamed_nda_promotion": {
-                        "target_bidder_id": 2,
-                        "promote_to_bidder_alias": "Party E",
-                        "promote_to_bidder_name": "bidder_98",
-                        "reason": "synthetic",
-                    },
-            },
-        ],
-    }
-    filing = pipeline.Filing(slug="synthetic", pages=[{"number": 1, "content": ""}])
-
-    prepared, _, promotion_log = pipeline.prepare_for_validate(
-        "synthetic",
-        raw,
-        filing=filing,
-    )
-
-    assert promotion_log[0]["status"] == "failed"
-    assert prepared["events"][0]["BidderID"] == 1
-    assert prepared["events"][1]["BidderID"] == 2
-    assert prepared["events"][1]["flags"][0]["code"] == "nda_promotion_failed"
-    assert "unnamed_nda_promotion" not in prepared["events"][1]
-
-
-def test_prepare_for_validate_rebuilds_empty_bidder_registry_from_events():
-    raw = {
-        "deal": _current_deal(bidder_registry={}),
-        "events": [
-            {
-                "BidderID": 2,
-                "bid_note": "Bid",
-                "bidder_name": "bidder_01",
-                "bidder_alias": "Party A",
-                "bid_date_precise": "2020-02-01",
-            },
-            {
-                "BidderID": 1,
-                "bid_note": "NDA",
-                "bidder_name": "bidder_01",
-                "bidder_alias": "Acquirer",
-                "bid_date_precise": "2020-01-01",
-            },
-        ],
-    }
-    filing = pipeline.Filing(slug="synthetic", pages=[{"number": 1, "content": ""}])
-
-    prepared, _, _ = pipeline.prepare_for_validate("synthetic", raw, filing=filing)
-
-    registry = prepared["deal"]["bidder_registry"]
-    assert registry["bidder_01"]["aliases_observed"] == ["Party A", "Acquirer"]
-    assert registry["bidder_01"]["resolved_name"] is None
-    assert registry["bidder_01"]["first_appearance_row_index"] == 1
-
-
-def test_prepare_for_validate_rejects_extra_deal_fields():
-    raw = {
-        "deal": _current_deal(FormType="DEFM14A"),
-        "events": [],
-    }
-    filing = pipeline.Filing(slug="synthetic", pages=[])
-
-    with pytest.raises(ValueError, match="unexpected current AI-produced field"):
-        pipeline.prepare_for_validate("synthetic", raw, filing=filing)
-
-
-def test_successful_unnamed_nda_promotion_leaves_visible_flag(minimal_state_repo, monkeypatch):
-    env = minimal_state_repo
-    env.seed_deal("synthetic")
-    env.seed_filing(
-        "synthetic",
-        pages=[{
-            "number": 1,
-            "content": (
-                "Strategic 1 executed a confidentiality agreement. "
-                "Party E submitted a preliminary indication of interest. "
-                "The parties executed the merger agreement."
-            ),
-        }],
-    )
-    monkeypatch.setattr(pipeline, "rulebook_version", lambda: "rules-v1")
-    raw = {
-        "deal": _current_deal(
-            bidder_registry={
-                "bidder_01": {
-                    "resolved_name": "Party E",
-                    "aliases_observed": ["Party E"],
-                    "first_appearance_row_index": 2,
-                }
-            }
-        ),
-        "events": [
-            {
-                "BidderID": 1,
-                "process_phase": 1,
-                "role": "bidder",
-                "exclusivity_days": None,
-                "bidder_name": None,
-                "bidder_alias": "Strategic 1",
-                "bidder_type": "s",
-                "bid_note": "NDA",
-                "bid_type": None,
-                "bid_type_inference_note": None,
-                "drop_initiator": None,
-                "drop_reason_class": None,
-                "final_round_announcement": None,
-                "final_round_extension": None,
-                "final_round_informal": None,
-                "press_release_subject": None,
-                "invited_to_formal_round": None,
-                "submitted_formal_bid": None,
-                "bid_date_precise": "2020-01-01",
-                "bid_date_rough": None,
-                "bid_value": None,
-                "bid_value_pershare": None,
-                "bid_value_lower": None,
-                "bid_value_upper": None,
-                "bid_value_unit": None,
-                "consideration_components": None,
-                "additional_note": None,
-                "comments": None,
-                "source_quote": "Strategic 1 executed a confidentiality agreement.",
-                "source_page": 1,
-                "flags": [],
-            },
-            {
-                "BidderID": 2,
-                "process_phase": 1,
-                "role": "bidder",
-                "exclusivity_days": None,
-                "bidder_name": "bidder_01",
-                "bidder_alias": "Party E",
-                "bidder_type": "s",
-                "bid_note": "Bid",
-                "bid_type": "informal",
-                "bid_type_inference_note": "preliminary indication of interest before formal round",
-                "drop_initiator": None,
-                "drop_reason_class": None,
-                "final_round_announcement": None,
-                "final_round_extension": None,
-                "final_round_informal": None,
-                "press_release_subject": None,
-                "invited_to_formal_round": None,
-                "submitted_formal_bid": None,
-                "bid_date_precise": "2020-01-02",
-                "bid_date_rough": None,
-                "bid_value": None,
-                "bid_value_pershare": None,
-                "bid_value_lower": None,
-                "bid_value_upper": None,
-                "bid_value_unit": None,
-                "consideration_components": None,
-                "additional_note": None,
-                "comments": None,
-                "unnamed_nda_promotion": {
-                    "target_bidder_id": 1,
-                    "promote_to_bidder_alias": "Party E",
-                    "promote_to_bidder_name": "bidder_01",
-                    "reason": "Party E is the later named Strategic 1 placeholder.",
-                },
-                "source_quote": "Party E submitted a preliminary indication of interest.",
-                "source_page": 1,
-                "flags": [],
-            },
-            {
-                "BidderID": 3,
-                "process_phase": 1,
-                "role": "bidder",
-                "exclusivity_days": None,
-                "bidder_name": "bidder_01",
-                "bidder_alias": "Party E",
-                "bidder_type": "s",
-                "bid_note": "Executed",
-                "bid_type": None,
-                "bid_type_inference_note": None,
-                "drop_initiator": None,
-                "drop_reason_class": None,
-                "final_round_announcement": None,
-                "final_round_extension": None,
-                "final_round_informal": None,
-                "press_release_subject": None,
-                "invited_to_formal_round": None,
-                "submitted_formal_bid": None,
-                "bid_date_precise": "2020-01-03",
-                "bid_date_rough": None,
-                "bid_value": None,
-                "bid_value_pershare": None,
-                "bid_value_lower": None,
-                "bid_value_upper": None,
-                "bid_value_unit": None,
-                "consideration_components": None,
-                "additional_note": None,
-                "comments": None,
-                "source_quote": "The parties executed the merger agreement.",
-                "source_page": 1,
-                "flags": [],
-            },
-        ],
-    }
-    filing = pipeline.load_filing("synthetic")
-    prepared, _, promotion_log = pipeline.prepare_for_validate("synthetic", raw, filing=filing)
-    validation = pipeline.validate(prepared, filing)
-
-    pipeline.finalize_prepared("synthetic", prepared, filing, validation, promotion_log)
-    final = json.loads(env.extractions.joinpath("synthetic.json").read_text())
-
-    assert "_unnamed_nda_promotions" not in final["deal"]
-    promoted_nda = final["events"][0]
-    assert promoted_nda["bidder_name"] == "bidder_01"
-    assert promoted_nda["bidder_alias"] == "Party E"
-    assert any(flag["code"] == "nda_promoted_from_placeholder" for flag in promoted_nda["flags"])
-    assert "unnamed_nda_promotion" not in final["events"][1]
+    assert pipeline.count_flags(final) == {"hard": 1, "soft": 0, "info": 0}

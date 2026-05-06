@@ -31,20 +31,22 @@ from pipeline.llm.watchdog import WatchdogConfig
 from pipeline.deal_graph.orchestrate import finalize_claim_payload
 
 
-DONE_STATUSES = {"passed", "passed_clean", "verified"}
-FINALIZED_STATUSES = {"validated", "passed", "passed_clean", "verified"}
+DONE_STATUSES = set(core.TRUSTED_STATUSES)
+FINALIZED_STATUSES = set(core.TRUSTED_STATUSES)
 REFERENCE_SLUGS = frozenset(core.REFERENCE_SLUGS)
-VALID_FILTERS = {"pending", "reference", "failed", "all"}
+FAILURE_FILTERS = set(core.FAILURE_STATUSES)
+VALID_FILTERS = {"pending", "reference", *FAILURE_FILTERS, "all"}
 AUDIT_ROOT = core.REPO_ROOT / "output" / "audit"
 TARGET_GATE_PROOF = core.REPO_ROOT / "quality_reports" / "stability" / "target-release-proof.json"
 DEFAULT_XHIGH_MAX_WORKERS = 5
 DEFAULT_REASONING_EFFORT = "high"
+TARGET_GATE_PROOF_SCHEMA_VERSION = "target_gate_proof_v3"
 
 
 @dataclass
 class PoolConfig:
     slugs: tuple[str, ...] = ()
-    filter: Literal["pending", "reference", "failed", "all"] = "pending"
+    filter: Literal["pending", "reference", "failed_system", "stale_after_failure", "all"] = "pending"
     workers: int = 1
     extract_model: str = "gpt-5.5"
     extract_reasoning_effort: str | None = DEFAULT_REASONING_EFFORT
@@ -80,6 +82,8 @@ class DealOutcome:
     output_path: Path | None = None
     audit_path: Path | None = None
     latest_path: Path | None = None
+    review_csv_path: Path | None = None
+    review_rows_path: Path | None = None
 
 
 @dataclass
@@ -103,7 +107,20 @@ class PoolSummary:
 
     @property
     def failed(self) -> int:
-        return sum(1 for outcome in self.outcomes if outcome.status == "failed")
+        return sum(1 for outcome in self.outcomes if outcome.status in core.FAILURE_STATUSES)
+
+    @property
+    def status_counts(self) -> dict[str, int]:
+        return {
+            status: sum(1 for outcome in self.outcomes if outcome.status == status)
+            for status in (
+                "passed_clean",
+                "needs_review",
+                "high_burden",
+                "failed_system",
+                "stale_after_failure",
+            )
+        }
 
 
 class TargetGateClosedError(RuntimeError):
@@ -145,6 +162,12 @@ def resolve_selection(cfg: PoolConfig, state: dict[str, Any] | None = None) -> l
         return list(deals)
     if cfg.filter == "reference":
         return [slug for slug, deal in deals.items() if deal.get("is_reference") is True]
+    if cfg.filter == "pending":
+        return [
+            slug
+            for slug, deal in deals.items()
+            if not isinstance(deal, dict) or deal.get("status") in (None, "", "pending")
+        ]
     return [slug for slug, deal in deals.items() if deal.get("status") == cfg.filter]
 
 
@@ -161,10 +184,13 @@ def _stability_proof_status(path: Path, reference_slugs: set[str]) -> tuple[bool
         return False, f"stability proof is unreadable JSON: {type(exc).__name__}: {exc}"
     if not isinstance(payload, dict):
         return False, "stability proof top-level value is not an object"
-    if payload.get("schema_version") != "target_gate_proof_v1":
-        return False, "stability proof schema_version is not target_gate_proof_v1"
+    if payload.get("schema_version") != TARGET_GATE_PROOF_SCHEMA_VERSION:
+        return False, f"stability proof schema_version is not {TARGET_GATE_PROOF_SCHEMA_VERSION}"
     if payload.get("classification") != "STABLE_FOR_REFERENCE_REVIEW":
         return False, f"stability proof classification={payload.get('classification')!r}"
+    llm_variation = payload.get("llm_content_variation")
+    if not isinstance(llm_variation, dict) or llm_variation.get("allowed") is not True:
+        return False, "stability proof must explicitly allow LLM content variation"
     proof_refs = payload.get("reference_slugs")
     if not isinstance(proof_refs, list) or set(proof_refs) != reference_slugs:
         return False, "stability proof reference_slugs do not match the live 9-reference set"
@@ -185,6 +211,10 @@ def _stability_proof_status(path: Path, reference_slugs: set[str]) -> tuple[bool
             return False, f"stability proof missing slug_results entry for {slug}"
         if result.get("classification") != "STABLE_FOR_REFERENCE_REVIEW":
             return False, f"stability proof slug {slug} classification={result.get('classification')!r}"
+        if result.get("status") in core.FAILURE_STATUSES:
+            return False, f"stability proof slug {slug} has blocking status {result.get('status')!r}"
+        if result.get("status") not in core.TRUSTED_STATUSES:
+            return False, f"stability proof slug {slug} status is not an eligible trusted outcome"
         eligible = result.get("eligible_archived_runs")
         if not isinstance(eligible, int) or eligible < requested_runs:
             return False, f"stability proof slug {slug} has insufficient eligible_archived_runs"
@@ -193,6 +223,16 @@ def _stability_proof_status(path: Path, reference_slugs: set[str]) -> tuple[bool
             return False, f"stability proof slug {slug} selected_runs must contain at least {requested_runs} runs"
         if not all(isinstance(run_id, str) and run_id for run_id in selected):
             return False, f"stability proof slug {slug} selected_runs contains invalid run IDs"
+        repo_root = path.resolve().parents[2]
+        selected_dirs = result.get("selected_run_dirs")
+        if not isinstance(selected_dirs, list) or len(selected_dirs) < requested_runs:
+            return False, f"stability proof slug {slug} selected_run_dirs must contain at least {requested_runs} paths"
+        for run_dir_rel in selected_dirs:
+            if not isinstance(run_dir_rel, str) or not run_dir_rel:
+                return False, f"stability proof slug {slug} selected_run_dirs contains invalid path"
+            run_dir = repo_root / run_dir_rel
+            if not run_dir.is_dir():
+                return False, f"stability proof slug {slug} selected run directory is missing: {run_dir}"
     return True, "stability proof accepted"
 
 
@@ -205,7 +245,12 @@ def target_gate_status(
     verified_count = 0
     missing_verified: list[str] = []
     for slug in REFERENCE_SLUGS:
-        if deals.get(slug, {}).get("status") == "verified":
+        deal = deals.get(slug, {})
+        if (
+            deal.get("verified") is True
+            and isinstance(deal.get("verification_report"), str)
+            and isinstance(deal.get("last_verified_run_id"), str)
+        ):
             verified_count += 1
         else:
             missing_verified.append(slug)
@@ -235,7 +280,7 @@ def enforce_target_gate(selected_slugs: list[str], state: dict[str, Any], cfg: P
     blockers: list[str] = []
     if status.missing_verified_references:
         blockers.append(
-            "all 9 reference deals must be status=verified; missing "
+            "all 9 reference deals must have verified=true reference metadata; missing "
             + ", ".join(status.missing_verified_references)
         )
     if not status.stability_proof_ok:
@@ -432,9 +477,14 @@ def decide_skip(
     state = state or _load_progress()
     deal = state.get("deals", {}).get(slug, {})
     status = deal.get("status")
+    if status not in core.ALL_RUN_STATUSES and status not in (None, "", "pending"):
+        return SkipDecision(
+            "blocked",
+            f"retired or unknown stored status={status!r}; rerun with --re-extract",
+        )
     if status in DONE_STATUSES and deal.get("rulebook_version") == current_rulebook_version:
         return SkipDecision("skip", f"status={status} rulebook unchanged")
-    return SkipDecision("run", "pending, failed, or stale rulebook")
+    return SkipDecision("run", "pending, failure status, or stale rulebook")
 
 
 def _iter_calls(audit: AuditWriter) -> Iterator[dict[str, Any]]:
@@ -495,7 +545,8 @@ def _prior_status_is_success(slug: str) -> bool:
         state = _load_progress()
     except (FileNotFoundError, json.JSONDecodeError):
         return False
-    return state.get("deals", {}).get(slug, {}).get("status") in FINALIZED_STATUSES
+    status = state.get("deals", {}).get(slug, {}).get("status")
+    return status in FINALIZED_STATUSES
 
 
 def _commit_paths(slug: str, paths: list[Path]) -> None:
@@ -589,7 +640,7 @@ async def process_deal(
     if decision.action == "skip":
         return DealOutcome(slug=slug, status="skipped", skipped=True, notes=decision.reason)
     if decision.action == "blocked":
-        return DealOutcome(slug=slug, status="failed", error=decision.reason, notes=decision.reason)
+        return DealOutcome(slug=slug, status="failed_system", error=decision.reason, notes=decision.reason)
 
     run_id = core._new_run_id()
     audit = _build_audit_writer(config.audit_root, slug, run_id=run_id)
@@ -676,20 +727,22 @@ async def process_deal(
             output_path=result.output_path,
             audit_path=audit.root,
             latest_path=audit.latest_path,
+            review_csv_path=result.review_csv_path,
+            review_rows_path=result.review_rows_path,
         )
     except Exception as exc:  # noqa: BLE001 - per-deal isolation is the pool contract.
         note = f"{type(exc).__name__}: {exc}"[:500]
-        if not _prior_status_is_success(slug):
-            await asyncio.to_thread(
-                core.update_progress,
-                slug,
-                "failed",
-                0,
-                note,
-                rulebook_version,
-                core._now_iso(),
-                run_id,
-            )
+        failure_status = "stale_after_failure" if _prior_status_is_success(slug) else "failed_system"
+        await asyncio.to_thread(
+            core.update_progress,
+            slug,
+            failure_status,
+            0,
+            note,
+            rulebook_version,
+            core._now_iso(),
+            run_id,
+        )
         audit.write_manifest(_manifest_payload(
             audit=audit,
             config=config,
@@ -697,21 +750,21 @@ async def process_deal(
             rulebook_version=rulebook_version,
             token_usage=token_usage,
             started=started,
-            outcome="failed",
+            outcome=failure_status,
             cache_used=cached,
             cache_eligible=False,
             action=decision.action,
             error=note,
             source_audit_run_id=source_audit_run_id,
         ))
-        audit.write_latest(outcome="failed", cache_eligible=False)
+        audit.write_latest(outcome=failure_status, cache_eligible=False)
         if config.commit:
             commit_paths = [core.PROGRESS_PATH, core.FLAGS_PATH, audit.root, audit.latest_path]
             prior_output_path = core.EXTRACTIONS_DIR / f"{slug}.json"
             if prior_output_path.exists():
                 commit_paths.append(prior_output_path)
             _commit_paths(slug, commit_paths)
-        return DealOutcome(slug=slug, status="failed", cached=cached, error=note, audit_path=audit.root, latest_path=audit.latest_path)
+        return DealOutcome(slug=slug, status=failure_status, cached=cached, error=note, audit_path=audit.root, latest_path=audit.latest_path)
 
 
 async def run_pool(config: PoolConfig, *, llm_client: LLMClient | None = None) -> PoolSummary:
@@ -758,14 +811,26 @@ async def run_pool(config: PoolConfig, *, llm_client: LLMClient | None = None) -
     outcomes: list[DealOutcome] = []
     for (slug, _decision), item in zip(plan, gathered, strict=True):
         if isinstance(item, Exception):
-            outcomes.append(DealOutcome(slug=slug, status="failed", error=f"{type(item).__name__}: {item}"))
+            outcomes.append(DealOutcome(slug=slug, status="failed_system", error=f"{type(item).__name__}: {item}"))
         else:
             outcomes.append(item)
     summary = PoolSummary(outcomes)
+    counts = summary.status_counts
     print(
         f"Pool summary: selected={summary.selected} succeeded={summary.succeeded} "
-        f"skipped={summary.skipped} failed={summary.failed}"
+        f"skipped={summary.skipped} failed={summary.failed} "
+        f"passed_clean={counts['passed_clean']} needs_review={counts['needs_review']} "
+        f"high_burden={counts['high_burden']} failed_system={counts['failed_system']} "
+        f"stale_after_failure={counts['stale_after_failure']}"
     )
+    for outcome in outcomes:
+        if outcome.status in DONE_STATUSES:
+            print(
+                f"  {outcome.slug}: status={outcome.status} "
+                f"review_items={outcome.flag_count or 0} review_csv={outcome.review_csv_path or '-'}"
+            )
+        elif outcome.status in core.FAILURE_STATUSES:
+            print(f"  {outcome.slug}: status={outcome.status} error={outcome.error or outcome.notes}")
     return summary
 
 

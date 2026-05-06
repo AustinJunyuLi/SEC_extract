@@ -21,8 +21,9 @@ from pipeline.llm.response_format import DEAL_GRAPH_CLAIM_SCHEMA
 
 
 REFERENCE_SLUGS: tuple[str, ...] = core.REFERENCE_SLUGS
-ACTIVE_STATUSES = {"validated", "passed", "passed_clean", "verified"}
-TERMINAL_WITH_AUDIT_STATUSES = ACTIVE_STATUSES | {"failed"}
+TRUSTED_OUTPUT_STATUSES = set(core.TRUSTED_STATUSES)
+STALE_OUTPUT_STATUSES = {"stale_after_failure"}
+TERMINAL_WITH_AUDIT_STATUSES = set(core.ALL_RUN_STATUSES)
 EXPECTED_PROGRESS_SCHEMA = "v1"
 RETIRED_PROVIDER_FALLBACK_FIELD = "json_" + "schema_used"
 
@@ -186,12 +187,11 @@ def _output_flags(final_output: dict[str, Any]) -> list[dict[str, Any]]:
     for flag in deal.get("deal_flags") or []:
         if isinstance(flag, dict):
             flags.append({"deal_level": True, **flag})
-    for row_index, event in enumerate(final_output.get("events") or []):
-        if not isinstance(event, dict):
-            continue
-        for flag in event.get("flags") or []:
+    graph = final_output.get("graph")
+    if isinstance(graph, dict):
+        for flag in graph.get("review_flags") or []:
             if isinstance(flag, dict):
-                flags.append({"row_index": row_index, **flag})
+                flags.append(dict(flag))
     return flags
 
 
@@ -231,11 +231,26 @@ def _check_targets_not_verified(deals: dict[str, Any], report: Report) -> None:
     for slug, deal in deals.items():
         if not isinstance(deal, dict):
             continue
-        if deal.get("is_reference") is not True and deal.get("status") == "verified":
+        if deal.get("is_reference") is not True and deal.get("verified") is True:
             report.add(
                 "error",
                 "target_verified",
-                "target deals must not be marked verified",
+                "target deals must not carry verified reference metadata",
+                slug=slug,
+                path="state/progress.json",
+            )
+
+
+def _check_status_taxonomy(deals: dict[str, Any], report: Report) -> None:
+    for slug, deal in deals.items():
+        if not isinstance(deal, dict):
+            continue
+        status = deal.get("status")
+        if status not in core.ALL_RUN_STATUSES and status not in (None, ""):
+            report.add(
+                "error",
+                "status_taxonomy",
+                f"stored status {status!r} is not in the live extraction taxonomy",
                 slug=slug,
                 path="state/progress.json",
             )
@@ -465,62 +480,53 @@ def _check_audit(
     run_id = latest.get("run_id")
     progress_run_id = progress_deal.get("last_run_id")
     output_run_id = (output.get("deal") or {}).get("last_run_id") if output else None
-    latest_failed_after_prior_finalized = (
-        status in ACTIVE_STATUSES
-        and latest.get("outcome") == "failed"
-        and latest.get("cache_eligible") is False
-        and isinstance(run_id, str)
-        and isinstance(progress_run_id, str)
-        and run_id != progress_run_id
-        and (output is None or output_run_id == progress_run_id)
-    )
-    if latest_failed_after_prior_finalized:
-        if latest.get("manifest_path") is None:
-            report.add(
-                "error",
-                "audit_manifest_missing",
-                "failed latest attempt must reference runs/{run_id}/manifest.json",
-                slug=slug,
-                path=_rel(root, latest_path),
-            )
-        else:
-            manifest = _check_referenced_audit_file(
-                root=root,
-                report=report,
-                slug=slug,
-                slug_root=slug_root,
-                latest=latest,
-                key="manifest_path",
-                filename="manifest.json",
-                schema_key="schema_version",
-                expected_schema=AUDIT_RUN_SCHEMA_VERSION,
-                run_id=run_id,
-            )
-            if manifest and manifest.get("cache_eligible") is not False:
-                report.add(
-                    "error",
-                    "failed_cache_eligible",
-                    "failed latest attempts must have cache_eligible=false",
-                    slug=slug,
-                    path=_rel(root, slug_root / latest["manifest_path"]),
-                )
-        run_id = progress_run_id
-        latest = _run_pointer(slug, run_id)
-    elif run_id != progress_run_id or (output is not None and run_id != output_run_id):
+    if run_id != progress_run_id:
         report.add(
             "error",
             "audit_run_id_mismatch",
-            "latest audit run_id must match progress/output last_run_id unless it records a failed rerun after the last finalized output",
+            "latest audit run_id must match progress last_run_id",
+            slug=slug,
+            path=_rel(root, latest_path),
+        )
+    if status in TRUSTED_OUTPUT_STATUSES and output is not None and run_id != output_run_id:
+        report.add(
+            "error",
+            "audit_run_id_mismatch",
+            "trusted latest audit run_id must match output deal.last_run_id",
+            slug=slug,
+            path=_rel(root, latest_path),
+        )
+    if status == "stale_after_failure" and output_run_id == progress_run_id:
+        report.add(
+            "error",
+            "reference_artifact_stale",
+            "stale_after_failure must leave a prior trusted output in place, not refresh it",
             slug=slug,
             path=_rel(root, latest_path),
         )
     if not isinstance(run_id, str) or not run_id:
         return
-    if status == "failed" and latest.get("cache_eligible") is not False:
+    if latest.get("outcome") != status:
+        report.add(
+            "error",
+            "audit_outcome_mismatch",
+            f"latest.json outcome={latest.get('outcome')!r} must match progress status={status!r}",
+            slug=slug,
+            path=_rel(root, latest_path),
+        )
+    if status in core.FAILURE_STATUSES and latest.get("cache_eligible") is not False:
         report.add(
             "error",
             "failed_cache_eligible",
-            "failed runs must have cache_eligible=false",
+            "failure runs must have cache_eligible=false",
+            slug=slug,
+            path=_rel(root, latest_path),
+        )
+    if status in TRUSTED_OUTPUT_STATUSES and latest.get("cache_eligible") is not True:
+        report.add(
+            "error",
+            "trusted_cache_ineligible",
+            "trusted extraction runs must have cache_eligible=true",
             slug=slug,
             path=_rel(root, latest_path),
         )
@@ -545,45 +551,51 @@ def _check_audit(
             slug=slug,
             path=_rel(root, latest_path),
         )
-    raw = _check_referenced_audit_file(
-        root=root,
-        report=report,
-        slug=slug,
-        slug_root=slug_root,
-        latest=latest,
-        key="raw_response_path",
-        filename="raw_response.json",
-        schema_key="schema_version",
-        expected_schema=RAW_RESPONSE_SCHEMA_VERSION,
-        run_id=run_id,
-    )
-    validation = _check_referenced_audit_file(
-        root=root,
-        report=report,
-        slug=slug,
-        slug_root=slug_root,
-        latest=latest,
-        key="validation_path",
-        filename="validation.json",
-        schema_key="schema_version",
-        expected_schema=VALIDATION_SCHEMA_VERSION,
-        run_id=run_id,
-    )
-    final_output = _check_referenced_audit_file(
-        root=root,
-        report=report,
-        slug=slug,
-        slug_root=slug_root,
-        latest=latest,
-        key="final_output_path",
-        filename="final_output.json",
-        schema_key=None,
-        expected_schema=None,
-        run_id=run_id,
-        check_identity=False,
-    )
+    raw = None
+    validation = None
+    final_output = None
+    if latest.get("raw_response_path") is not None:
+        raw = _check_referenced_audit_file(
+            root=root,
+            report=report,
+            slug=slug,
+            slug_root=slug_root,
+            latest=latest,
+            key="raw_response_path",
+            filename="raw_response.json",
+            schema_key="schema_version",
+            expected_schema=RAW_RESPONSE_SCHEMA_VERSION,
+            run_id=run_id,
+        )
+    if latest.get("validation_path") is not None:
+        validation = _check_referenced_audit_file(
+            root=root,
+            report=report,
+            slug=slug,
+            slug_root=slug_root,
+            latest=latest,
+            key="validation_path",
+            filename="validation.json",
+            schema_key="schema_version",
+            expected_schema=VALIDATION_SCHEMA_VERSION,
+            run_id=run_id,
+        )
+    if latest.get("final_output_path") is not None:
+        final_output = _check_referenced_audit_file(
+            root=root,
+            report=report,
+            slug=slug,
+            slug_root=slug_root,
+            latest=latest,
+            key="final_output_path",
+            filename="final_output.json",
+            schema_key=None,
+            expected_schema=None,
+            run_id=run_id,
+            check_identity=False,
+        )
 
-    if status != "failed":
+    if status in TRUSTED_OUTPUT_STATUSES:
         for key, payload in (
             ("raw_response_path", raw),
             ("validation_path", validation),
@@ -597,6 +609,47 @@ def _check_audit(
                     slug=slug,
                     path=_rel(root, latest_path),
                 )
+        run_dir = slug_root / "runs" / run_id
+        for artifact_name, code in (
+            ("deal_graph_v2.json", "graph_snapshot_missing"),
+            ("deal_graph.duckdb", "graph_database_missing"),
+        ):
+            artifact_path = run_dir / artifact_name
+            if not artifact_path.exists():
+                report.add(
+                    "error",
+                    code,
+                    f"trusted run must contain {artifact_name}",
+                    slug=slug,
+                    path=_rel(root, artifact_path),
+                )
+        graph_snapshot_path = run_dir / "deal_graph_v2.json"
+        if graph_snapshot_path.exists():
+            graph_snapshot, graph_error = _load_json(graph_snapshot_path)
+            if graph_error:
+                report.add(
+                    "error",
+                    "graph_snapshot_unreadable",
+                    f"deal_graph_v2.json is unreadable: {graph_error}",
+                    slug=slug,
+                    path=_rel(root, graph_snapshot_path),
+                )
+            elif graph_snapshot and graph_snapshot.get("schema_version") != "deal_graph_v2":
+                report.add(
+                    "error",
+                    "graph_snapshot_schema",
+                    "deal_graph_v2.json schema_version must be deal_graph_v2",
+                    slug=slug,
+                    path=_rel(root, graph_snapshot_path),
+                )
+    elif latest.get("final_output_path") is not None:
+        report.add(
+            "error",
+            "failure_final_output_written",
+            "failure runs must not refresh trusted final_output artifacts",
+            slug=slug,
+            path=_rel(root, latest_path),
+        )
     if manifest:
         manifest_path = slug_root / latest["manifest_path"]
         _check_manifest_contract_fields(
@@ -661,7 +714,15 @@ def _check_output_and_flags(
 ) -> dict[str, Any] | None:
     status = progress_deal.get("status")
     output_path = root / "output" / "extractions" / f"{slug}.json"
-    if status in {"pending", "failed"}:
+    if status == "failed_system":
+        if output_path.exists():
+            report.add(
+                "error",
+                "failure_output_present",
+                "failed_system must not leave a trusted latest extraction output",
+                slug=slug,
+                path=_rel(root, output_path),
+            )
         return None
     output, error = _load_json(output_path)
     if error:
@@ -686,6 +747,50 @@ def _check_output_and_flags(
         return output
 
     progress_run_id = progress_deal.get("last_run_id")
+    if output.get("schema_version") != "deal_graph_v2":
+        report.add(
+            "error",
+            "output_schema",
+            "latest output schema_version must be deal_graph_v2",
+            slug=slug,
+            path=_rel(root, output_path),
+        )
+    if "estimation_bidder_rows" in output:
+        report.add(
+            "error",
+            "estimator_output_present",
+            "trusted extraction output must not contain estimation_bidder_rows",
+            slug=slug,
+            path=_rel(root, output_path),
+        )
+    if not isinstance(output.get("review_rows"), list):
+        report.add(
+            "error",
+            "review_rows_missing",
+            "latest output must contain review_rows",
+            slug=slug,
+            path=_rel(root, output_path),
+        )
+
+    if status == "stale_after_failure":
+        if deal.get("last_run_id") == progress_run_id:
+            report.add(
+                "error",
+                "reference_artifact_stale",
+                "stale_after_failure must point progress at the failed run while output remains from a prior trusted run",
+                slug=slug,
+                path=_rel(root, output_path),
+            )
+        else:
+            report.add(
+                "warning",
+                "reference_artifact_stale",
+                "latest trusted output is stale because the newest run failed",
+                slug=slug,
+                path=_rel(root, output_path),
+            )
+        return output
+
     if deal.get("last_run_id") != progress_run_id:
         report.add(
             "error",
@@ -720,16 +825,7 @@ def _check_output_and_flags(
             slug=slug,
             path=_rel(root, output_path),
         )
-    if status == "verified":
-        if counts["hard"]:
-            report.add(
-                "error",
-                "verified_has_hard_flags",
-                "verified deals must not have hard output flags",
-                slug=slug,
-                path=_rel(root, output_path),
-            )
-    elif status != expected_status:
+    if status != expected_status:
         report.add(
             "error",
             "status_mismatch",
@@ -737,14 +833,19 @@ def _check_output_and_flags(
             slug=slug,
             path=_rel(root, output_path),
         )
-    if progress_deal.get("is_reference") is True and status == "validated":
-        report.add(
-            "error",
-            "validated_reference_blocked",
-            "validated reference deals have hard flags and block the reference gate",
-            slug=slug,
-            path=_rel(root, output_path),
-        )
+    for artifact_root, filename, code in (
+        ("output/review_rows", f"{slug}.jsonl", "review_jsonl_missing"),
+        ("output/review_csv", f"{slug}.csv", "review_csv_missing"),
+    ):
+        artifact_path = root / artifact_root / filename
+        if not artifact_path.exists():
+            report.add(
+                "error",
+                code,
+                f"trusted status={status} requires {artifact_root}/{filename}",
+                slug=slug,
+                path=_rel(root, artifact_path),
+            )
 
     output_norm = sorted(
         (_normalize_flag(flag) for flag in _output_flags(output)),
@@ -785,6 +886,7 @@ def reconcile_repo(
     deals = state["deals"]
     _check_reference_membership(deals, report)
     _check_targets_not_verified(deals, report)
+    _check_status_taxonomy(deals, report)
     flags_entries = _load_flags(root, report)
 
     selected = _selected_slugs(deals, scope=scope, slugs=slugs, report=report)

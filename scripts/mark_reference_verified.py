@@ -12,6 +12,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scripts.check_reference_verification import check_reports
+from pipeline import core
 
 
 class MarkVerifiedError(RuntimeError):
@@ -40,13 +41,6 @@ def _hard_flags(payload: dict[str, Any]) -> list[dict[str, Any]]:
                 for flag in validation_flags
                 if isinstance(flag, dict) and flag.get("severity") == "hard"
             )
-        review_flags = graph.get("review_flags")
-        if isinstance(review_flags, list):
-            flags.extend(
-                flag
-                for flag in review_flags
-                if isinstance(flag, dict) and flag.get("severity") in {"hard", "blocking"}
-            )
     return flags
 
 
@@ -69,15 +63,35 @@ def mark_verified(repo_root: Path, slug: str, *, reviewer: str, now: str | None 
         raise MarkVerifiedError(f"slug not found in progress: {slug}")
     if deal.get("is_reference") is not True:
         raise MarkVerifiedError(f"slug is not a reference deal: {slug}")
+    if deal.get("status") not in core.TRUSTED_STATUSES:
+        raise MarkVerifiedError(
+            f"cannot mark {slug} verified because status {deal.get('status')!r} "
+            "is not a trusted extraction status"
+        )
 
     extraction = json.loads(extraction_path.read_text())
+    current_run_id = deal.get("last_run_id")
+    extraction_run_id = extraction.get("run_id") or extraction.get("deal", {}).get("last_run_id")
+    if not isinstance(current_run_id, str) or not current_run_id:
+        raise MarkVerifiedError(f"missing current run_id in progress for {slug}")
+    if extraction_run_id != current_run_id:
+        raise MarkVerifiedError(
+            f"cannot mark {slug} verified because extraction run_id {extraction_run_id!r} "
+            f"does not match progress last_run_id {current_run_id!r}"
+        )
     hard_flags = _hard_flags(extraction)
     if hard_flags:
         raise MarkVerifiedError(f"cannot mark {slug} verified with hard flags: {len(hard_flags)}")
 
-    deal["status"] = "verified"
+    if extraction.get("schema_version") != "deal_graph_v2":
+        raise MarkVerifiedError(
+            f"cannot mark {slug} verified because extraction schema_version "
+            f"{extraction.get('schema_version')!r} is not deal_graph_v2"
+        )
+    deal["verified"] = True
     deal["last_verified_by"] = reviewer
     deal["last_verified_at"] = now or _now_iso()
+    deal["last_verified_run_id"] = current_run_id
     deal["verification_report"] = f"quality_reports/reference_verification/{slug}.md"
     progress_path.write_text(json.dumps(progress, indent=2, sort_keys=False) + "\n")
 

@@ -267,7 +267,7 @@ def test_identical_archived_runs_classify_stable(tmp_path, capsys):
     assert "medivation" in out
 
 
-def test_hard_flag_movement_classifies_architecture_unstable(tmp_path, capsys):
+def test_review_flag_movement_does_not_block_stability(tmp_path, capsys):
     _write_run(tmp_path, slug="medivation", run_id="run-1", finished_at="2026-04-29T00:00:00Z")
     _write_run(
         tmp_path,
@@ -275,24 +275,23 @@ def test_hard_flag_movement_classifies_architecture_unstable(tmp_path, capsys):
         run_id="run-2",
         finished_at="2026-04-29T00:01:00Z",
         row_flags=[{"code": "missing_quote", "severity": "hard", "row_index": 0, "reason": "missing"}],
-        manifest_extra={"outcome": "validated"},
+        manifest_extra={"outcome": "needs_review"},
     )
     _write_run(tmp_path, slug="medivation", run_id="run-3", finished_at="2026-04-29T00:02:00Z")
 
     rc = stability.main(["--repo-root", str(tmp_path), "--slugs", "medivation", "--runs", "3"])
 
     out = capsys.readouterr().out
-    assert rc == 1
-    assert "UNSTABLE_ARCHITECTURE_ESCALATION_CANDIDATE" in out
-    assert "hard flag identities changed" in out
+    assert rc == 0
+    assert "STABLE_FOR_REFERENCE_REVIEW" in out
 
 
-def test_stable_hard_flags_cannot_produce_target_gate_proof(tmp_path, capsys):
+def test_review_flags_can_produce_target_gate_proof(tmp_path, capsys):
     hard_flag = {"code": "missing_quote", "severity": "hard", "row_index": 0, "reason": "missing"}
     _write_runs(
         tmp_path,
         row_flags=[hard_flag],
-        manifest_extra={"outcome": "validated"},
+        manifest_extra={"outcome": "needs_review"},
     )
 
     rc = stability.main([
@@ -303,9 +302,9 @@ def test_stable_hard_flags_cannot_produce_target_gate_proof(tmp_path, capsys):
     ])
 
     payload = json.loads(capsys.readouterr().out)
-    assert rc == 1
-    assert payload["classification"] == "UNSTABLE_RULE_OR_VALIDATOR_FIX_NEEDED"
-    assert "hard flags present" in " ".join(payload["reasons"])
+    assert rc == 0
+    assert payload["classification"] == "STABLE_FOR_REFERENCE_REVIEW"
+    assert payload["slug_results"][0]["status"] == "needs_review"
 
 
 def test_row_count_movement_is_reported_without_blocking_clean_contract_runs(tmp_path, capsys):
@@ -336,7 +335,7 @@ def test_pure_info_count_increase_does_not_force_unstable(tmp_path, capsys):
         run_id="run-2",
         finished_at="2026-04-29T00:01:00Z",
         row_flags=[{"code": "quote_near_limit", "severity": "info", "row_index": 0, "reason": "verbose"}],
-        manifest_extra={"outcome": "passed"},
+        manifest_extra={"outcome": "needs_review"},
     )
     _write_run(tmp_path, slug="medivation", run_id="run-3", finished_at="2026-04-29T00:02:00Z")
 
@@ -384,7 +383,7 @@ def test_json_report_is_target_gate_proof_shape(tmp_path, capsys):
 
     payload = json.loads(capsys.readouterr().out)
     assert rc == 0
-    assert payload["schema_version"] == "target_gate_proof_v2"
+    assert payload["schema_version"] == "target_gate_proof_v3"
     assert payload["classification"] == "STABLE_FOR_REFERENCE_REVIEW"
     assert payload["llm_content_variation"]["allowed"] is True
     assert payload["reference_slugs"] == ["medivation"]
@@ -393,6 +392,7 @@ def test_json_report_is_target_gate_proof_shape(tmp_path, capsys):
         "output/audit/medivation/runs/run-2",
         "output/audit/medivation/runs/run-3",
     ]
+    assert payload["slug_results"][0]["review_item_counts"] == [0, 0, 0]
 
 
 def test_model_or_reasoning_drift_classifies_rule_or_validator_needed(tmp_path, capsys):

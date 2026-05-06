@@ -294,6 +294,6 @@ def test_extract_deal_records_failed_call_attempts(minimal_state_repo, monkeypat
         pass
 
     call_entry = json.loads((audit.root / "calls.jsonl").read_text().strip())
-    assert call_entry["outcome"] == "failed"
+    assert call_entry["outcome"] == "failed_system"
     assert call_entry["attempts"] == 3
     assert usage.used == 0

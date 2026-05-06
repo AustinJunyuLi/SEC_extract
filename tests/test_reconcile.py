@@ -87,21 +87,47 @@ def _output_payload(
     deal_flags: list[dict] | None = None,
     row_flags: list[dict] | None = None,
 ) -> dict:
+    flags = row_flags or deal_flags or []
+    review_status = "needs_review" if flags else "clean"
+    review_rows = [
+        {
+            "review_status": review_status,
+            "claim_id": "claim_synthetic",
+            "claim_type": "event_claim",
+            "bound_source_quote": "Synthetic Target entered into a merger agreement.",
+            "bound_source_page": 1,
+        }
+    ]
+    graph = {
+        "schema_version": "deal_graph_v2",
+        "run_id": run_id,
+        "deal_slug": "medivation",
+        "actors": [],
+        "actor_relations": [],
+        "claims": [],
+        "claim_dispositions": [],
+        "coverage_results": [],
+        "events": [],
+        "event_actor_links": [],
+        "participation_counts": [],
+        "review_rows": review_rows,
+        "review_flags": row_flags or [],
+        "validation_flags": deal_flags or [],
+    }
     return {
+        "schema_version": "deal_graph_v2",
+        "run_id": run_id,
+        "last_run": last_run,
+        "rulebook_version": rulebook_version,
         "deal": {
-            "TargetName": "Synthetic Target",
+            "deal_slug": "medivation",
             "rulebook_version": rulebook_version,
             "last_run": last_run,
             "last_run_id": run_id,
             "deal_flags": deal_flags or [],
         },
-        "events": [
-            {
-                "BidderID": 1,
-                "bid_note": "NDA",
-                "flags": row_flags or [],
-            }
-        ],
+        "graph": graph,
+        "review_rows": review_rows,
     }
 
 
@@ -115,16 +141,23 @@ def _write_output(
     deal_flags: list[dict] | None = None,
     row_flags: list[dict] | None = None,
 ) -> None:
+    payload = _output_payload(
+        run_id=run_id,
+        last_run=last_run,
+        rulebook_version=rulebook_version,
+        deal_flags=deal_flags,
+        row_flags=row_flags,
+    )
     _write_json(
         root / "output" / "extractions" / f"{slug}.json",
-        _output_payload(
-            run_id=run_id,
-            last_run=last_run,
-            rulebook_version=rulebook_version,
-            deal_flags=deal_flags,
-            row_flags=row_flags,
-        ),
+        payload,
     )
+    review_rows_path = root / "output" / "review_rows" / f"{slug}.jsonl"
+    review_rows_path.parent.mkdir(parents=True, exist_ok=True)
+    review_rows_path.write_text("".join(json.dumps(row) + "\n" for row in payload["review_rows"]))
+    review_csv_path = root / "output" / "review_csv" / f"{slug}.csv"
+    review_csv_path.parent.mkdir(parents=True, exist_ok=True)
+    review_csv_path.write_text("review_status\n" + "\n".join(row["review_status"] for row in payload["review_rows"]) + "\n")
 
 
 def _write_audit(
@@ -176,6 +209,11 @@ def _write_audit(
         )
     if include_final_output:
         _write_json(run_dir / "final_output.json", _output_payload(run_id=run_id))
+    (run_dir / "deal_graph_v2.json").write_text(json.dumps({
+        "schema_version": "deal_graph_v2",
+        "run_id": run_id,
+    }))
+    (run_dir / "deal_graph.duckdb").write_bytes(b"duckdb-placeholder")
     _write_json(
         root / "output" / "audit" / slug / "latest.json",
         {
@@ -246,35 +284,31 @@ def test_progress_and_output_run_id_mismatch_fails(tmp_path):
     )
 
 
-def test_validated_reference_deal_is_reported_as_blocked(tmp_path):
+def test_stale_after_failure_reference_is_reported_as_stale(tmp_path):
     _clean_reference_repo(tmp_path)
-    hard_flag = {"code": "source_quote_missing", "severity": "hard", "reason": "missing"}
     progress = json.loads((tmp_path / "state" / "progress.json").read_text())
     progress["deals"]["medivation"] = _progress_deal(
-        status="validated",
-        flag_count=1,
-        run_id="run-hard",
+        status="stale_after_failure",
+        flag_count=0,
+        run_id="run-failed",
     )
     _write_progress(tmp_path, progress["deals"])
-    _write_output(tmp_path, "medivation", run_id="run-hard", row_flags=[hard_flag])
-    _write_audit(tmp_path, "medivation", run_id="run-hard", outcome="validated")
-    _write_flags(
+    _write_output(tmp_path, "medivation", run_id="run-clean")
+    _write_audit(
         tmp_path,
-        [
-            {
-                "deal": "medivation",
-                "run_id": "run-hard",
-                "logged_at": "2026-04-29T00:00:00Z",
-                "row_index": 0,
-                **hard_flag,
-            }
-        ],
+        "medivation",
+        run_id="run-failed",
+        outcome="stale_after_failure",
+        cache_eligible=False,
+        include_raw=False,
+        include_validation=False,
+        include_final_output=False,
     )
 
     report = reconcile.reconcile_repo(tmp_path, scope="reference")
 
     assert any(
-        issue.code == "validated_reference_blocked" and issue.slug == "medivation"
+        issue.code == "reference_artifact_stale" and issue.slug == "medivation"
         for issue in report.issues
     )
 
@@ -284,9 +318,10 @@ def test_target_marked_verified_fails_even_for_reference_scope(tmp_path):
     progress = json.loads((tmp_path / "state" / "progress.json").read_text())
     progress["deals"]["target-deal"] = _progress_deal(
         is_reference=False,
-        status="verified",
+        status="passed_clean",
         run_id="run-target",
     )
+    progress["deals"]["target-deal"]["verified"] = True
     _write_progress(tmp_path, progress["deals"])
 
     report = reconcile.reconcile_repo(tmp_path, scope="reference")
@@ -314,11 +349,18 @@ def test_legacy_loose_audit_files_always_fail(tmp_path):
 
 def test_latest_failed_attempt_after_prior_finalized_run_is_valid_audit_history(tmp_path):
     _clean_reference_repo(tmp_path)
+    progress = json.loads((tmp_path / "state" / "progress.json").read_text())
+    progress["deals"]["medivation"] = _progress_deal(
+        status="stale_after_failure",
+        flag_count=0,
+        run_id="run-failed",
+    )
+    _write_progress(tmp_path, progress["deals"])
     _write_audit(
         tmp_path,
         "medivation",
         run_id="run-failed",
-        outcome="failed",
+        outcome="stale_after_failure",
         cache_eligible=False,
         include_raw=False,
         include_validation=False,
@@ -328,6 +370,10 @@ def test_latest_failed_attempt_after_prior_finalized_run_is_valid_audit_history(
     report = reconcile.reconcile_repo(tmp_path, scope="reference")
 
     assert report.ok
+    assert any(
+        issue.code == "reference_artifact_stale" and issue.slug == "medivation"
+        for issue in report.issues
+    )
     assert not any(
         issue.code == "audit_run_id_mismatch" and issue.slug == "medivation"
         for issue in report.issues
@@ -354,13 +400,13 @@ def test_flags_jsonl_latest_run_must_match_output_flags(tmp_path):
     soft_flag = {"code": "ambiguous_drop", "severity": "soft", "reason": "ambiguous"}
     progress = json.loads((tmp_path / "state" / "progress.json").read_text())
     progress["deals"]["medivation"] = _progress_deal(
-        status="passed",
+        status="needs_review",
         flag_count=1,
         run_id="run-soft",
     )
     _write_progress(tmp_path, progress["deals"])
     _write_output(tmp_path, "medivation", run_id="run-soft", row_flags=[soft_flag])
-    _write_audit(tmp_path, "medivation", run_id="run-soft", outcome="passed")
+    _write_audit(tmp_path, "medivation", run_id="run-soft", outcome="needs_review")
     _write_flags(tmp_path, [])
 
     report = reconcile.reconcile_repo(tmp_path, scope="reference")
@@ -375,7 +421,7 @@ def test_failed_latest_audit_must_not_be_cache_eligible(tmp_path):
     _clean_reference_repo(tmp_path)
     progress = json.loads((tmp_path / "state" / "progress.json").read_text())
     progress["deals"]["medivation"] = _progress_deal(
-        status="failed",
+        status="failed_system",
         flag_count=0,
         run_id="run-failed",
     )
@@ -385,7 +431,7 @@ def test_failed_latest_audit_must_not_be_cache_eligible(tmp_path):
         tmp_path,
         "medivation",
         run_id="run-failed",
-        outcome="failed",
+        outcome="failed_system",
         cache_eligible=True,
         include_raw=False,
         include_validation=False,

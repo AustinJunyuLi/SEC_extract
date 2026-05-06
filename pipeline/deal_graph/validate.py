@@ -133,24 +133,6 @@ def validate_graph(graph: dict[str, Any]) -> list[ValidationFlag]:
         if link.get("actor_id") not in actor_ids:
             flags.append(ValidationFlag("DG_EVENT_LINK_ORPHAN", "hard", "Event actor link references a missing actor.", "event_actor_links", link.get("link_id")))
 
-    unresolved = [
-        row for row in graph.get("review_flags", [])
-        if (
-            row.get("severity") == "blocking"
-            and row.get("current", True) is not False
-            and row.get("status", "open") != "resolved"
-        )
-    ]
-    for row in unresolved:
-        flags.append(ValidationFlag(
-            code=row.get("code", "DG_BLOCKING_REVIEW_FLAG"),
-            severity="hard",
-            reason=row.get("reason", "Unresolved blocking graph review flag."),
-            row_table=row.get("row_table"),
-            row_id=row.get("row_id"),
-            flag_id=row.get("flag_id"),
-            metadata=row.get("metadata") if isinstance(row.get("metadata"), dict) else None,
-        ))
     return flags
 
 

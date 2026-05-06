@@ -13,6 +13,14 @@ from pipeline.llm.audit import (
 )
 from pipeline.llm.client import CompletionResult
 
+CLAIM_PAYLOAD = {
+    "actor_claims": [],
+    "event_claims": [],
+    "bid_claims": [],
+    "participation_count_claims": [],
+    "actor_relation_claims": [],
+}
+
 
 def test_prompt_hash_is_stable_sha256():
     assert prompt_hash("system", "user") == prompt_hash("system", "user")
@@ -42,7 +50,7 @@ def test_audit_writer_requires_explicit_run_directory(tmp_path):
 def test_audit_writer_writes_prompt_call_raw_response_validation_manifest_and_latest(tmp_path):
     writer = _writer(tmp_path)
     result = CompletionResult(
-        text='{"deal":{},"events":[]}',
+        text=json.dumps(CLAIM_PAYLOAD, separators=(",", ":")),
         model="gpt-test",
         input_tokens=1,
         output_tokens=2,
@@ -53,7 +61,7 @@ def test_audit_writer_writes_prompt_call_raw_response_validation_manifest_and_la
     digest = writer.write_prompt(phase="extractor", system="system text", user="user text")
     writer.write_raw_response(
         result=result,
-        parsed_json={"deal": {}, "events": []},
+        parsed_json=CLAIM_PAYLOAD,
         rulebook_version="ruleshash",
         extractor_contract_version="contracthash",
     )
@@ -83,7 +91,7 @@ def test_audit_writer_writes_prompt_call_raw_response_validation_manifest_and_la
         "soft_count": 0,
         "info_count": 0,
     })
-    writer.write_final_output({"deal": {}, "events": []})
+    writer.write_final_output({"schema_version": "deal_graph_v2", "deal": {}, "graph": {}, "review_rows": []})
     writer.write_latest(outcome="passed_clean", cache_eligible=True)
 
     audit_dir = tmp_path / "deal" / "runs" / "run-1"
@@ -93,7 +101,7 @@ def test_audit_writer_writes_prompt_call_raw_response_validation_manifest_and_la
     raw_response = json.loads((audit_dir / "raw_response.json").read_text())
     assert raw_response["schema_version"] == RAW_RESPONSE_SCHEMA_VERSION
     assert raw_response["run_id"] == "run-1"
-    assert raw_response["parsed_json"] == {"deal": {}, "events": []}
+    assert raw_response["parsed_json"] == CLAIM_PAYLOAD
     assert raw_response["extractor_contract_version"] == "contracthash"
     call = json.loads((audit_dir / "calls.jsonl").read_text().strip())
     assert call["prompt_hash"] == digest
@@ -111,7 +119,7 @@ def test_audit_writer_writes_prompt_call_raw_response_validation_manifest_and_la
     validation = json.loads((audit_dir / "validation.json").read_text())
     assert validation["schema_version"] == "validation_v1"
     final_output = json.loads((audit_dir / "final_output.json").read_text())
-    assert final_output == {"deal": {}, "events": []}
+    assert final_output == {"schema_version": "deal_graph_v2", "deal": {}, "graph": {}, "review_rows": []}
     latest = json.loads((tmp_path / "deal" / "latest.json").read_text())
     assert latest["schema_version"] == AUDIT_LATEST_SCHEMA_VERSION
     assert latest["run_id"] == "run-1"
@@ -147,30 +155,30 @@ def test_two_audit_runs_are_immutable_and_latest_points_to_second(tmp_path):
     first.write_prompt(phase="extractor", system="first", user="user")
     first.write_raw_response(
         result=result,
-        parsed_json={"deal": {"TargetName": "first"}, "events": []},
+        parsed_json={**CLAIM_PAYLOAD, "actor_claims": [{"label": "first"}]},
         rulebook_version="rules",
         extractor_contract_version="contract",
     )
     first.write_manifest({"outcome": "passed_clean", "cache_eligible": True})
     first.write_validation({"final_status": "passed_clean", "flag_count": 0})
-    first.write_final_output({"deal": {"TargetName": "first"}, "events": []})
+    first.write_final_output({"schema_version": "deal_graph_v2", "deal_slug": "first", "review_rows": []})
     first.write_latest(outcome="passed_clean", cache_eligible=True)
 
     second.write_prompt(phase="extractor", system="second", user="user")
     second.write_raw_response(
         result=result,
-        parsed_json={"deal": {"TargetName": "second"}, "events": []},
+        parsed_json={**CLAIM_PAYLOAD, "actor_claims": [{"label": "second"}]},
         rulebook_version="rules",
         extractor_contract_version="contract",
     )
     second.write_manifest({"outcome": "passed_clean", "cache_eligible": True})
     second.write_validation({"final_status": "passed_clean", "flag_count": 0})
-    second.write_final_output({"deal": {"TargetName": "second"}, "events": []})
+    second.write_final_output({"schema_version": "deal_graph_v2", "deal_slug": "second", "review_rows": []})
     second.write_latest(outcome="passed_clean", cache_eligible=True)
 
     first_raw = json.loads((tmp_path / "deal" / "runs" / "run-1" / "raw_response.json").read_text())
     second_raw = json.loads((tmp_path / "deal" / "runs" / "run-2" / "raw_response.json").read_text())
     latest = json.loads((tmp_path / "deal" / "latest.json").read_text())
-    assert first_raw["parsed_json"]["deal"]["TargetName"] == "first"
-    assert second_raw["parsed_json"]["deal"]["TargetName"] == "second"
+    assert first_raw["parsed_json"]["actor_claims"][0]["label"] == "first"
+    assert second_raw["parsed_json"]["actor_claims"][0]["label"] == "second"
     assert latest["run_id"] == "run-2"

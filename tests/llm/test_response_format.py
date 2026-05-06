@@ -37,7 +37,7 @@ def test_deal_graph_claim_schema_is_provider_contract():
     fmt = json_schema_format()
 
     assert fmt["type"] == "json_schema"
-    assert fmt["name"] == "deal_graph_v1_claim_schema"
+    assert fmt["name"] == "deal_graph_v2_claim_schema"
     assert fmt["strict"] is True
     assert fmt["schema"] is DEAL_GRAPH_CLAIM_SCHEMA
     assert DEAL_GRAPH_CLAIM_SCHEMA["required"] == EXPECTED_TOP_LEVEL_KEYS
@@ -195,7 +195,7 @@ def test_call_json_returns_completion_result():
     )
 
     assert result.parsed_json == _valid_payload()
-    assert client.calls[0]["text_format"]["name"] == "deal_graph_v1_claim_schema"
+    assert client.calls[0]["text_format"]["name"] == "deal_graph_v2_claim_schema"
     assert result.input_tokens == 1
     assert result.output_tokens == 2
     assert result.attempts == 1
@@ -238,7 +238,7 @@ def test_call_json_rejects_retired_provider_fields(mutate, message):
             )
         )
 
-    assert client.calls[0]["text_format"]["name"] == "deal_graph_v1_claim_schema"
+    assert client.calls[0]["text_format"]["name"] == "deal_graph_v2_claim_schema"
 
 
 def test_call_json_enforces_max_length_locally():

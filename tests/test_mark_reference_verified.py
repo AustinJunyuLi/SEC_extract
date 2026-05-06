@@ -63,7 +63,7 @@ def _write_progress(root: Path, status: str = "passed_clean") -> None:
                         "last_run_id": "run-123",
                         "last_verified_by": None,
                         "last_verified_at": None,
-                        "notes": "hard=0 soft=0 info=0",
+                        "notes": "review_burden=0",
                     }
                 },
             }
@@ -165,7 +165,8 @@ def test_mark_verified_updates_reference_progress(tmp_path):
 
     progress = json.loads((tmp_path / "state" / "progress.json").read_text())
     deal = progress["deals"]["medivation"]
-    assert deal["status"] == "verified"
+    assert deal["status"] == "passed_clean"
+    assert deal["verified"] is True
     assert deal["last_verified_by"] == "Codex agent"
     assert deal["last_verified_at"] == "2026-05-02T12:00:00Z"
     assert deal["last_verified_run_id"] == "run-123"
@@ -191,23 +192,21 @@ def test_mark_verified_rejects_hard_flags(tmp_path):
         raise AssertionError("expected MarkVerifiedError")
 
 
-def test_mark_verified_rejects_blocking_graph_review_flags(tmp_path):
+def test_mark_verified_allows_open_review_flags(tmp_path):
     _write_progress(tmp_path)
     _write_extraction(tmp_path, review_blocker=True)
     _write_filing_and_audit(tmp_path)
     _write_report(tmp_path)
 
-    try:
-        mark_reference_verified.mark_verified(
-            tmp_path,
-            "medivation",
-            reviewer="Codex agent",
-            now="2026-05-02T12:00:00Z",
-        )
-    except mark_reference_verified.MarkVerifiedError as exc:
-        assert "hard flags" in str(exc)
-    else:
-        raise AssertionError("expected MarkVerifiedError")
+    mark_reference_verified.mark_verified(
+        tmp_path,
+        "medivation",
+        reviewer="Codex agent",
+        now="2026-05-02T12:00:00Z",
+    )
+
+    progress = json.loads((tmp_path / "state" / "progress.json").read_text())
+    assert progress["deals"]["medivation"]["verified"] is True
 
 
 def test_mark_verified_rejects_missing_report(tmp_path):

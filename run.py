@@ -232,7 +232,7 @@ def main() -> int:
     if outcome is None:
         outcome = SimpleNamespace(status="completed", flag_count=None, notes="", output_path=None)
     _print_outcome(args.slug, outcome)
-    exit_code = 1 if getattr(outcome, "status", None) == "failed" else 0
+    exit_code = 1 if getattr(outcome, "status", None) in core.FAILURE_STATUSES else 0
     if args.commit:
         try:
             commit_deal_outputs(args.slug, outcome)

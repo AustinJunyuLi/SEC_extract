@@ -84,11 +84,18 @@ def finalize_claim_payload(
     # graph and review rows written for this run.
     validation_flags = validate_graph_as_dicts(graph)
     hard_count = sum(1 for flag in validation_flags if flag.get("severity") == "hard")
-    soft_count = sum(1 for flag in validation_flags if flag.get("severity") == "soft")
-    info_count = sum(1 for flag in validation_flags if flag.get("severity") == "info")
-    status = "validated" if hard_count else "passed" if soft_count or info_count else "passed_clean"
-    flag_count = hard_count + soft_count + info_count
-    notes = f"hard={hard_count} soft={soft_count} info={info_count}"
+    if hard_count:
+        codes = ", ".join(sorted({str(flag.get("code")) for flag in validation_flags if flag.get("severity") == "hard"}))
+        raise RuntimeError(f"graph integrity validation failed: {codes}")
+    review_burden = sum(1 for row in review_projection if row.get("review_status") != "clean")
+    if review_burden == 0:
+        status = "passed_clean"
+    elif review_burden <= 10:
+        status = "needs_review"
+    else:
+        status = "high_burden"
+    flag_count = review_burden
+    notes = f"review_burden={review_burden}"
 
     last_run = core._now_iso()
     graph.update({

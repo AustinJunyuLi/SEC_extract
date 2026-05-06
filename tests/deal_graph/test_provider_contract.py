@@ -33,7 +33,7 @@ def _walk_schema(node):
 def test_provider_schema_top_level_is_claim_only():
     fmt = json_schema_format(DEAL_GRAPH_CLAIM_SCHEMA)
 
-    assert fmt["name"] == "deal_graph_v1_claim_schema"
+    assert fmt["name"] == "deal_graph_v2_claim_schema"
     assert list(DEAL_GRAPH_CLAIM_SCHEMA["properties"]) == EXPECTED_TOP_LEVEL_KEYS
     assert DEAL_GRAPH_CLAIM_SCHEMA["required"] == EXPECTED_TOP_LEVEL_KEYS
     assert DEAL_GRAPH_CLAIM_SCHEMA["additionalProperties"] is False

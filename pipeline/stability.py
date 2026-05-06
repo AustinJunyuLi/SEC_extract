@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import csv
 import hashlib
 import json
 import re
@@ -24,7 +23,7 @@ from pipeline.llm.audit import (
 from pipeline.llm.response_format import DEAL_GRAPH_CLAIM_SCHEMA
 
 
-ELIGIBLE_OUTCOMES = frozenset({"validated", "passed", "passed_clean"})
+ELIGIBLE_OUTCOMES = core.TRUSTED_STATUSES
 LIVE_GRAPH_SCHEMA_VERSION = "deal_graph_v2"
 LIVE_GRAPH_LIST_KEYS = (
     "actors",
@@ -53,7 +52,7 @@ FINAL_CLASSIFICATIONS = (
     "INSUFFICIENT_ARCHIVED_RUNS",
 )
 RETIRED_PROVIDER_FALLBACK_FIELD = "json_" + "schema_used"
-TARGET_GATE_PROOF_SCHEMA_VERSION = "target_gate_proof_v2"
+TARGET_GATE_PROOF_SCHEMA_VERSION = "target_gate_proof_v3"
 
 
 class StabilityError(RuntimeError):
@@ -84,6 +83,7 @@ class RunMetrics:
     rulebook_hash: str
     extractor_contract_version: str
     row_count: int
+    review_item_count: int
     row_fingerprints: tuple[str, ...]
     event_subtype_counts: tuple[tuple[str, int], ...]
     flag_counts: tuple[tuple[tuple[str, str], int], ...]
@@ -119,8 +119,6 @@ class RunMetrics:
             self.row_count,
             self.row_fingerprints,
             self.event_subtype_counts,
-            self.hard_flag_identities,
-            self.graph_status,
             self.graph_table_counts,
             self.actor_kind_counts,
             self.relation_type_counts,
@@ -132,7 +130,6 @@ class RunMetrics:
             self.date_diagnostics,
             self.bid_value_representation,
             self.quote_diagnostics,
-            _structural_flag_counts(self.flag_counts),
         )
 
 
@@ -486,6 +483,7 @@ def metrics_for_run(archived: ArchivedRun) -> RunMetrics:
         rulebook_hash=_manifest_value(archived.manifest, "rulebook_version"),
         extractor_contract_version=_manifest_value(archived.manifest, "extractor_contract_version"),
         row_count=len(review_rows),
+        review_item_count=sum(1 for row in review_rows if row.get("review_status") != "clean"),
         row_fingerprints=tuple(sorted(_row_fingerprint(archived.slug, row) for row in review_rows)),
         event_subtype_counts=_stable_items(event_subtypes),
         flag_counts=flag_count_values,
@@ -550,6 +548,8 @@ def _validate_live_final_output(final_output: dict[str, Any], artifact_path: Pat
     for key in LIVE_GRAPH_LIST_KEYS:
         _list_of_dicts(graph, key, artifact_path)
     _list_of_dicts(final_output, "review_rows", artifact_path)
+    if "estimation_bidder_rows" in final_output or "estimation_bidder_rows" in graph:
+        raise StabilityError(f"archived run contains retired estimator rows: {artifact_path}")
 
 
 def _is_live_graph_snapshot(final_output: dict[str, Any]) -> bool:
@@ -635,48 +635,12 @@ def _classify_slug(slug: str, runs: tuple[RunMetrics, ...], eligible_count: int,
             classification="UNSTABLE_RULE_OR_VALIDATOR_FIX_NEEDED",
             reasons=tuple(reasons),
         )
-    hard_flag_sets = {run.hard_flag_identities for run in runs}
-    if any(run.hard_flag_identities for run in runs):
-        reasons.append("hard flags present in selected archived runs")
-        if len(hard_flag_sets) > 1:
-            reasons.append("hard flag identities changed")
-            return SlugAnalysis(
-                slug=slug,
-                selected_runs=runs,
-                eligible_run_count=eligible_count,
-                required_run_count=required,
-                classification="UNSTABLE_ARCHITECTURE_ESCALATION_CANDIDATE",
-                reasons=tuple(reasons),
-            )
-        return SlugAnalysis(
-            slug=slug,
-            selected_runs=runs,
-            eligible_run_count=eligible_count,
-            required_run_count=required,
-            classification="UNSTABLE_RULE_OR_VALIDATOR_FIX_NEEDED",
-            reasons=tuple(reasons),
-        )
-    soft_flag_counts = tuple(
-        tuple(((sev_code, count)) for sev_code, count in run.flag_counts if sev_code[0] == "soft")
-        for run in runs
-    )
-    if any(counts for counts in soft_flag_counts):
-        reasons.append("soft flags present in selected archived runs")
-        return SlugAnalysis(
-            slug=slug,
-            selected_runs=runs,
-            eligible_run_count=eligible_count,
-            required_run_count=required,
-            classification="UNSTABLE_RULE_OR_VALIDATOR_FIX_NEEDED",
-            reasons=tuple(reasons),
-        )
     metric_changes: list[str] = []
     if len({run.row_fingerprints for run in runs}) > 1:
         metric_changes.append("row fingerprints changed")
     elif len({run.row_count for run in runs}) > 1:
         metric_changes.append("row counts changed")
     compared_attrs = (
-        ("graph statuses changed", lambda run: run.graph_status),
         ("graph table counts changed", lambda run: run.graph_table_counts),
         ("event subtype counts changed", lambda run: run.event_subtype_counts),
         ("actor kind counts changed", lambda run: run.actor_kind_counts),
@@ -689,7 +653,6 @@ def _classify_slug(slug: str, runs: tuple[RunMetrics, ...], eligible_count: int,
         ("date diagnostics changed", lambda run: run.date_diagnostics),
         ("bid-value representation changed", lambda run: run.bid_value_representation),
         ("quote diagnostics changed", lambda run: run.quote_diagnostics),
-        ("structural flag counts changed", lambda run: _structural_flag_counts(run.flag_counts)),
     )
     for reason, getter in compared_attrs:
         if len({getter(run) for run in runs}) > 1:
@@ -763,6 +726,15 @@ def _digest(values: Iterable[str]) -> str:
     return hashlib.sha256(joined.encode("utf-8")).hexdigest()[:12]
 
 
+def _slug_status_for_runs(runs: tuple[RunMetrics, ...]) -> str:
+    outcomes = {run.outcome for run in runs}
+    if "high_burden" in outcomes:
+        return "high_burden"
+    if "needs_review" in outcomes:
+        return "needs_review"
+    return "passed_clean"
+
+
 def build_report(analysis: StabilityAnalysis) -> str:
     lines: list[str] = [
         "# Stability Report",
@@ -805,7 +777,7 @@ def build_report(analysis: StabilityAnalysis) -> str:
         ])
         for run in result.selected_runs:
             lines.extend([
-                f"- run {run.run_id}: review_rows={run.row_count}; review_fingerprints={_digest(run.row_fingerprints)}; graph_status={run.graph_status}",
+                f"- run {run.run_id}: review_rows={run.row_count}; review_items={run.review_item_count}; review_fingerprints={_digest(run.row_fingerprints)}; graph_status={run.graph_status}",
                 f"- run {run.run_id} event_subtype_counts: {_format_pairs(run.event_subtype_counts)}",
                 f"- run {run.run_id} flag_matrix: {_format_nested_pairs(run.flag_counts)}",
                 f"- run {run.run_id} hard_flags: {', '.join(run.hard_flag_identities) if run.hard_flag_identities else '-'}",
@@ -842,9 +814,9 @@ def build_json_summary(analysis: StabilityAnalysis) -> str:
         "llm_content_variation": {
             "allowed": True,
             "basis": (
-                "Clean runs may vary in LLM wording, selected source quotes, row fingerprints, "
-                "and non-blocking content metrics; the proof gate blocks hard flags, soft flags, "
-                "contract drift, and missing live graph/evidence/review artifacts."
+                "Trusted runs may vary in LLM wording, selected source quotes, review burden, "
+                "row fingerprints, and non-blocking content metrics; the proof gate blocks "
+                "contract drift and missing live graph/evidence/review artifacts."
             ),
         },
         "no_estimator": True,
@@ -856,10 +828,14 @@ def build_json_summary(analysis: StabilityAnalysis) -> str:
             {
                 "slug": result.slug,
                 "classification": result.classification,
+                "status": _slug_status_for_runs(result.selected_runs) if result.selected_runs else "insufficient_runs",
                 "eligible_archived_runs": result.eligible_run_count,
                 "required_archived_runs": result.required_run_count,
                 "reasons": list(result.reasons),
                 "selected_runs": [run.run_id for run in result.selected_runs],
+                "selected_statuses": [run.outcome for run in result.selected_runs],
+                "review_item_counts": [run.review_item_count for run in result.selected_runs],
+                "high_burden_count": sum(1 for run in result.selected_runs if run.outcome == "high_burden"),
                 "selected_run_dirs": [
                     f"output/audit/{result.slug}/runs/{run.run_id}"
                     for run in result.selected_runs
@@ -871,20 +847,6 @@ def build_json_summary(analysis: StabilityAnalysis) -> str:
     return json.dumps(payload, indent=2, sort_keys=True) + "\n"
 
 
-def _reference_slugs_from_seeds(repo_root: Path) -> list[str]:
-    seeds_path = repo_root / "seeds.csv"
-    if not seeds_path.exists():
-        return list(REFERENCE_SLUGS)
-    with seeds_path.open(newline="") as handle:
-        reader = csv.DictReader(handle)
-        slugs = [
-            row["deal_slug"]
-            for row in reader
-            if str(row.get("is_reference", "")).strip().lower() == "true"
-        ]
-    return slugs or list(REFERENCE_SLUGS)
-
-
 def resolve_slugs(repo_root: Path, scope: str, slugs_arg: str | None) -> list[str]:
     if slugs_arg:
         slugs = [slug.strip() for slug in slugs_arg.split(",") if slug.strip()]
@@ -892,7 +854,7 @@ def resolve_slugs(repo_root: Path, scope: str, slugs_arg: str | None) -> list[st
             raise StabilityError("--slugs did not contain any non-empty slug")
         return slugs
     if scope == "reference":
-        return _reference_slugs_from_seeds(repo_root)
+        return list(REFERENCE_SLUGS)
     raise StabilityError(f"unsupported scope: {scope}")
 
 
