@@ -295,7 +295,7 @@ def _rejected_claim_rows(graph: dict[str, Any], context: _ReviewContext) -> list
             "issue_codes": _join_unique([flag.get("code") for flag in flags] + [disposition.get("reason_code")]),
             "issue_reasons": _join_unique([flag.get("reason") for flag in flags] + [disposition.get("reason")]),
             "suggested_action": metadata.get("suggested_action") or "Review the supplied citation unit and quote, or reject the claim.",
-            "evidence_ref_index": _cell(metadata.get("evidence_ref_index") or 1),
+            "evidence_ref_index": _cell(metadata.get("evidence_ref_index")),
         })
         rows.append(row)
     return rows
@@ -307,7 +307,7 @@ def _issue_columns(flags: list[dict[str, Any]]) -> dict[str, str]:
         "issue_codes": _join_unique(flag.get("code") for flag in flags),
         "issue_reasons": _join_unique(flag.get("reason") for flag in flags),
         "suggested_action": metadata.get("suggested_action") or ("" if not flags else "Review the source support and canonical row fields."),
-        "evidence_ref_index": _cell(metadata.get("evidence_ref_index") or ""),
+        "evidence_ref_index": _cell(metadata.get("evidence_ref_index")),
     }
 
 

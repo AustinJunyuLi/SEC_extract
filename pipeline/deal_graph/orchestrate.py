@@ -192,18 +192,31 @@ def _bind_provider_evidence(
         )
         evidence_refs = claim.get("evidence_refs") or []
         bindings = []
-        try:
-            if not evidence_refs:
-                raise QuoteBindingError("claim has no evidence_refs")
-            for ref_index, evidence_ref in enumerate(evidence_refs, start=1):
+        failures: list[dict[str, Any]] = []
+        if not evidence_refs:
+            failures.append(_evidence_failure_payload(
+                slug=slug,
+                run_id=run_id,
+                family=family,
+                claim_type=claim_type,
+                claim_index=index,
+                claim_id=claim_id,
+                claim=claim,
+                evidence_ref={},
+                evidence_ref_index=None,
+                error=QuoteBindingError("claim has no evidence_refs"),
+                citation_units=citation_units,
+            ))
+        for ref_index, evidence_ref in enumerate(evidence_refs):
+            try:
                 if not isinstance(evidence_ref, dict):
-                    raise QuoteBindingError(f"evidence_refs[{ref_index - 1}] is not an object")
+                    raise QuoteBindingError(f"evidence_refs[{ref_index}] is not an object")
                 citation_unit_id = evidence_ref.get("citation_unit_id")
                 quote = evidence_ref.get("quote_text")
                 if not isinstance(citation_unit_id, str) or not citation_unit_id:
-                    raise QuoteBindingError(f"evidence_refs[{ref_index - 1}].citation_unit_id is missing")
+                    raise QuoteBindingError(f"evidence_refs[{ref_index}].citation_unit_id is missing")
                 if not isinstance(quote, str) or not quote:
-                    raise QuoteBindingError(f"evidence_refs[{ref_index - 1}].quote_text is missing")
+                    raise QuoteBindingError(f"evidence_refs[{ref_index}].quote_text is missing")
                 bindings.append(
                     bind_quote_to_citation_unit(
                         quote_text=quote,
@@ -212,35 +225,34 @@ def _bind_provider_evidence(
                         citation_units=citation_units,
                     )
                 )
-        except QuoteBindingError as exc:
-            failure = _evidence_failure_payload(
-                slug=slug,
-                run_id=run_id,
-                family=family,
-                claim_type=claim_type,
-                claim_index=index,
-                claim_id=claim_id,
-                claim=claim,
-                error=exc,
-                citation_units=citation_units,
-            )
+            except QuoteBindingError as exc:
+                failures.append(_evidence_failure_payload(
+                    slug=slug,
+                    run_id=run_id,
+                    family=family,
+                    claim_type=claim_type,
+                    claim_index=index,
+                    claim_id=claim_id,
+                    claim=claim,
+                    evidence_ref=evidence_ref if isinstance(evidence_ref, dict) else {},
+                    evidence_ref_index=ref_index,
+                    error=exc,
+                    citation_units=citation_units,
+                ))
+        if failures and not bindings:
+            failure = failures[0]
             claim_failures[claim_id] = {
                 "reason_code": "evidence_ref_binding_failed",
                 "reason": failure["reason"],
             }
-            review_flags.append({
-                "flag_id": failure["flag_id"],
-                "run_id": run_id,
-                "deal_id": None,
-                "severity": "blocking",
-                "code": "evidence_ref_binding_failed",
-                "reason": failure["reason"],
-                "row_table": "claims",
-                "row_id": claim_id,
-                "status": "open",
-                "current": True,
-                "metadata": failure,
-            })
+        for failure in failures:
+            review_flags.append(_review_flag_for_evidence_failure(
+                run_id=run_id,
+                claim_id=claim_id,
+                failure=failure,
+                blocks_claim=not bindings,
+            ))
+        if not bindings:
             continue
         new_evidence_ids = []
         for binding in bindings:
@@ -263,6 +275,28 @@ def _bind_provider_evidence(
     }
 
 
+def _review_flag_for_evidence_failure(
+    *,
+    run_id: str,
+    claim_id: str,
+    failure: dict[str, Any],
+    blocks_claim: bool,
+) -> dict[str, Any]:
+    return {
+        "flag_id": failure["flag_id"],
+        "run_id": run_id,
+        "deal_id": None,
+        "severity": "blocking" if blocks_claim else "soft",
+        "code": "evidence_ref_binding_failed",
+        "reason": failure["reason"],
+        "row_table": "claims",
+        "row_id": claim_id,
+        "status": "open",
+        "current": True,
+        "metadata": failure,
+    }
+
+
 def _evidence_failure_payload(
     *,
     slug: str,
@@ -272,15 +306,17 @@ def _evidence_failure_payload(
     claim_index: int,
     claim_id: str,
     claim: dict[str, Any],
+    evidence_ref: dict[str, Any],
+    evidence_ref_index: int | None,
     error: Exception,
     citation_units: dict[str, Any],
 ) -> dict[str, Any]:
     refs = claim.get("evidence_refs") if isinstance(claim, dict) else None
-    first_ref = refs[0] if isinstance(refs, list) and refs and isinstance(refs[0], dict) else {}
-    quote = first_ref.get("quote_text") if isinstance(first_ref, dict) else None
+    supplied_refs = refs if isinstance(refs, list) else []
+    quote = evidence_ref.get("quote_text") if isinstance(evidence_ref, dict) else None
     reason = f"{type(error).__name__}: {error}"
     return {
-        "flag_id": make_id("flag", slug, run_id, claim_id, "evidence_ref_binding_failed"),
+        "flag_id": make_id("flag", slug, run_id, claim_id, "evidence_ref_binding_failed", evidence_ref_index),
         "slug": slug,
         "run_id": run_id,
         "claim_family": family,
@@ -288,8 +324,10 @@ def _evidence_failure_payload(
         "claim_index": claim_index,
         "claim_id": claim_id,
         "claim_summary": _claim_summary(claim_type, claim),
-        "provided_citation_unit_id": first_ref.get("citation_unit_id") if isinstance(first_ref, dict) else None,
+        "evidence_ref_index": evidence_ref_index,
+        "provided_citation_unit_id": evidence_ref.get("citation_unit_id") if isinstance(evidence_ref, dict) else None,
         "provided_quote_text": quote,
+        "supplied_evidence_refs": supplied_refs,
         "reason_code": "evidence_ref_binding_failed",
         "reason": reason,
         "candidate_units": quote_candidate_units(str(quote or ""), citation_units),

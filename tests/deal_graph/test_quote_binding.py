@@ -185,9 +185,10 @@ def test_evidence_ref_binding_failure_creates_one_sharp_blocking_flag():
     assert graph["review_flags"][0]["code"] == "evidence_ref_binding_failed"
     assert graph["review_flags"][0]["metadata"]["provided_citation_unit_id"] == "page_1_paragraph_1"
     assert {
-        (flag["code"], flag["row_table"], flag["row_id"])
+        (flag["code"], flag["row_table"], flag["row_id"], flag.get("flag_id"))
         for flag in flags
-    } == {("evidence_ref_binding_failed", "claims", claim_id)}
+    } == {("evidence_ref_binding_failed", "claims", claim_id, graph["review_flags"][0]["flag_id"])}
+    assert flags[0]["metadata"]["evidence_ref_index"] == 0
 
     review_rows = project_review_rows(graph)
     assert len(review_rows) == 1
@@ -198,9 +199,10 @@ def test_evidence_ref_binding_failure_creates_one_sharp_blocking_flag():
     assert review_rows[0]["supplied_quote"] == "Party A signed a confidentiality agreement."
     assert review_rows[0]["bound_source_quote"] == ""
     assert review_rows[0]["issue_codes"] == "evidence_ref_binding_failed"
+    assert review_rows[0]["evidence_ref_index"] == 0
 
 
-def test_multi_ref_binding_is_all_or_nothing_for_one_claim():
+def test_multi_ref_binding_preserves_bound_refs_and_flags_failed_ref():
     payload = {
         "actor_relation_claims": [
             {
@@ -245,7 +247,18 @@ def test_multi_ref_binding_is_all_or_nothing_for_one_claim():
 
     claim_id = graph["claims"][0]["claim_id"]
 
-    assert graph["evidence"] == []
-    assert graph["claim_evidence"] == []
-    assert graph["claim_dispositions"][0]["disposition"] == "rejected_unsupported"
+    assert len(graph["evidence"]) == 1
+    assert len(graph["claim_evidence"]) == 1
+    assert graph["claim_dispositions"][0]["disposition"] == "supported"
     assert graph["review_flags"][0]["row_id"] == claim_id
+    assert graph["review_flags"][0]["severity"] == "soft"
+    assert graph["review_flags"][0]["metadata"]["evidence_ref_index"] == 1
+    assert graph["review_flags"][0]["metadata"]["provided_citation_unit_id"] == "page_1_paragraph_2"
+    assert len(graph["review_flags"][0]["metadata"]["supplied_evidence_refs"]) == 2
+
+    rows = [row for row in project_review_rows(graph) if row["relation_id"]]
+    assert len(rows) == 1
+    assert rows[0]["review_status"] == "needs_review"
+    assert rows[0]["issue_codes"] == "evidence_ref_binding_failed"
+    assert rows[0]["evidence_ref_index"] == 1
+    assert rows[0]["bound_source_quote"] == "Longview met with the Buyer Group."

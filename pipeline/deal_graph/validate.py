@@ -12,15 +12,22 @@ class ValidationFlag:
     reason: str
     row_table: str | None = None
     row_id: str | None = None
+    flag_id: str | None = None
+    metadata: dict[str, Any] | None = None
 
     def as_dict(self) -> dict[str, Any]:
-        return {
+        payload = {
             "code": self.code,
             "severity": self.severity,
             "reason": self.reason,
             "row_table": self.row_table,
             "row_id": self.row_id,
         }
+        if self.flag_id:
+            payload["flag_id"] = self.flag_id
+        if self.metadata:
+            payload["metadata"] = self.metadata
+        return payload
 
 
 CANONICAL_ROW_TABLES = {
@@ -141,6 +148,8 @@ def validate_graph(graph: dict[str, Any]) -> list[ValidationFlag]:
             reason=row.get("reason", "Unresolved blocking graph review flag."),
             row_table=row.get("row_table"),
             row_id=row.get("row_id"),
+            flag_id=row.get("flag_id"),
+            metadata=row.get("metadata") if isinstance(row.get("metadata"), dict) else None,
         ))
     return flags
 
