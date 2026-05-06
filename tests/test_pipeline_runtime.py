@@ -251,6 +251,36 @@ def test_append_flags_log_uses_provided_run_ts_and_run_id(minimal_state_repo):
     assert all(line["run_id"] == "run-flag-test" for line in lines)
 
 
+def test_append_flags_log_preserves_review_flags_as_row_level(minimal_state_repo):
+    env = minimal_state_repo
+    final = {
+        "deal": {"deal_flags": []},
+        "graph": {
+            "review_flags": [
+                {
+                    "flag_id": "flag-row",
+                    "code": "evidence_ref_binding_failed",
+                    "severity": "blocking",
+                    "reason": "quote did not bind",
+                    "row_table": "claims",
+                    "row_id": "claim-1",
+                }
+            ]
+        },
+    }
+
+    count = pipeline.append_flags_log(
+        "synthetic",
+        final,
+        run_ts="2026-04-24T12:00:00Z",
+        run_id="run-review-flag",
+    )
+
+    assert count == 1
+    [entry] = [json.loads(line) for line in env.flags.read_text().splitlines()]
+    assert "deal_level" not in entry
+
+
 def test_append_flags_log_does_not_interleave_under_concurrent_writers(minimal_state_repo):
     """Two concurrent appenders must produce well-formed JSONL, never
     half-merged lines. The advisory flock around the per-line writes is what

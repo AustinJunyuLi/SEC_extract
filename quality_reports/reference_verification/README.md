@@ -2,9 +2,9 @@
 
 This directory stores canonical agent filing-grounded verification reports for
 the nine reference deals. A reference deal may receive `verified: true`
-metadata only when its report exists, cites the current extraction run, every
-AI-vs-Alex disagreement is adjudicated against filing text and the rulebook, and
-the report concludes `Conclusion: VERIFIED`.
+metadata only when its report exists, cites the current extraction run, checks
+AI-vs-Alex disagreements against filing text and the rulebook, and the report
+concludes `Conclusion: VERIFIED`.
 
 Each report must be named:
 

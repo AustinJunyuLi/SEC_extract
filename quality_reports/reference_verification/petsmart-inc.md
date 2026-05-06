@@ -5,84 +5,74 @@
 - Slug: petsmart-inc
 - Target: PETSMART INC
 - Acquirer: BC Partners, Inc., La Caisse de dÃ©pÃ´t et placement du QuÃ©bec, affiliates of GIC Special Investments Pte Ltd, affiliates of StepStone Group LP and Longview Asset Management, LLC
-- Run ID: 030577d58a424b589ec0538b2073d4e8
-- Model: gpt-5.5
-- Reasoning effort: high
-- Audit path: output/audit/petsmart-inc/runs/030577d58a424b589ec0538b2073d4e8
-- Filing source: DEFM14A t1500073-defm14a.htm
+- Run ID: `d7e6e290c31d4126a12e3cb013d0570c`
+- Schema version: `deal_graph_v2`
+- Rulebook version: `5802eebbe682821ad16526031588d8ccca896a6d8cc91c9ea0c99e1ebc8ae490`
+- Model: `gpt-5.5`
+- Reasoning effort: `high`
+- Generated: 2026-05-06T15:54:39.237465Z
+- Filing source: t1500073-defm14a.htm
 - Filing URL: https://www.sec.gov/Archives/edgar/data/863157/000157104915000695/t1500073-defm14a.htm
-- Verification generated: 2026-05-05T20:22:37.509823Z
+
+Artifacts:
+- Audit run: `output/audit/petsmart-inc/runs/d7e6e290c31d4126a12e3cb013d0570c`
+- Manifest: `output/audit/petsmart-inc/runs/d7e6e290c31d4126a12e3cb013d0570c/manifest.json`
+- Raw response: `output/audit/petsmart-inc/runs/d7e6e290c31d4126a12e3cb013d0570c/raw_response.json`
+- Graph JSON: `output/audit/petsmart-inc/runs/d7e6e290c31d4126a12e3cb013d0570c/deal_graph_v2.json`
+- DuckDB: `output/audit/petsmart-inc/runs/d7e6e290c31d4126a12e3cb013d0570c/deal_graph.duckdb`
+- Portable extraction: `output/extractions/petsmart-inc.json`
+- Review JSONL: `output/review_rows/petsmart-inc.jsonl`
+- Review CSV: `output/review_csv/petsmart-inc.csv`
 
 ## Commands
 
-- set -a; [ -f .env ] && source .env; set +a; python -m pipeline.run_pool --filter reference --workers 4 --re-validate
-- python scoring/diff.py --slug petsmart-inc
-- python scripts/check_reference_verification.py --slugs petsmart-inc
-- python -m pipeline.reconcile --scope reference
+- `python -m pipeline.run_pool --filter reference --workers 5 --re-extract --extract-reasoning-effort high`
+- `python scripts/check_reference_verification.py`
+- `python -m pipeline.reconcile --scope reference`
+- `python -m pipeline.stability --scope reference --runs 3 --json`
 
 ## Extraction And Flag Summary
 
-- Status: passed_clean
-- Hard flags: 0
-- Soft flags: 0
-- Info flags: 0
-- Current review flags: 0
-- Actors: 20
-- Events/review rows: 20 / 20
+- Review statuses: clean: 62
+- Open review rows: 0
+- Flag severities: none
+- Actors: 25
+- Events: 22
 - Participation counts: 7
-- Actor relations: 6
-- Estimation bidder rows: 4
-- Exact quote audit: 46 graph evidence spans and 32 review-row quotes checked against Filing page text; failures=0
+- Actor relations: 8
+- Evidence spans: 49
+- Review rows: 62
 
 ## AI-vs-Alex Diff Ledger
 
 | Item | Filing evidence | Decision |
 |---|---|---|
-| Comparator status | Filing page evidence was reviewed directly because `scoring/diff.py` still targets the retired row-event surface and matched 0 current AI rows for this deal. | Alex is calibration material, not ground truth; no deal-specific Alex/reference JSON update is required for this verification. |
-| Current output shape | Filing page quotes bind every current review row and graph evidence span exactly; quote audit failures=0. | Verified against SEC filing text under `deal_graph_v1`. |
-| Alex-only legacy rows | Old comparator reported Alex-only rows=55, deal-level disagreements=5. | Not treated as blockers because the comparator does not project `deal_graph_v1`; current filing-cited review and estimator rows are the live authority. |
+| Current graph | Filing page evidence is bound through `evidence_refs` and Python-owned source spans for run `d7e6e290c31d4126a12e3cb013d0570c`. | SEC filing text controls the report; Alex material remains calibration material. |
+| Current review rows | The CSV has 62 rows with review status counts `clean: 62`. | Rows are accepted only through exact source binding in the current artifact set. |
+| Rule surface | The live prompt and rulebook are not changed by this report. | No deal-specific operating rule is introduced. |
 
 ## Filing Evidence Review
 
-The reviewer checked the live Background-section projection against `data/filings/petsmart-inc/pages.json`. Every `source_quote` listed below is an exact substring of the cited Filing page. Estimator rows are accepted only through source-backed boundary events.
+The current artifact set was checked against the Background filing pages. The mechanical checker re-reads the raw provider evidence refs, graph evidence spans, and review-row source quotes from the JSON artifacts and confirms exact filing-page grounding.
 
-### Estimation Rows
-
-| Actor | bI | bI_lo | bI_hi | bF | admitted | T | Unit | Boundary | Filing event date |
-|---|---:|---:|---:|---:|---|---|---|---|---|
-| Bidder 2 |  | 81 | 84 | 81.5 | True | unknown | per_share | final_round_bid | 2014-12-12 |
-| Bidder 3 |  |  | 78 |  | False | unknown | per_share | first_round_bid | 2014-12-10 |
-| Buyer Group |  | 81 | 83 | 83 | True | unknown | per_share | final_round_bid | 2014-12-12 |
-| another bidder |  | 80 | 85 |  | False | unknown | per_share | first_round_bid | 2014-10-30 |
-
-### Review Row Evidence
-
-| Filing page | Date | Event subtype | Actor | Value | Quote excerpt |
-|---|---|---|---|---:|---|
-| Filing page 33 | 2014-12-14 | merger_agreement_executed | Buyer Group |   | On December 14, 2014, the parties executed the merger agreement, the voting agreement and related transaction agreements and issued a press release announcing the transaction. |
-| Filing page 32 | 2014-12-06 | financing_committed | Buyer Group |   | On December 6, 2014, the Buyer Group and Bidder 2 submitted their respective comments on the draft merger agreement and other transaction documents, and the Buyer Group provided its financing commitment documents. |
-| Filing page 31, 31 | 2014-11-03 | advancement_declined | eliminated parties |   | On November 3, 2014, the board met in person \| Following this meeting, representatives of J.P. Morgan notified the eliminated parties, none of which indicated any interest or ability to remain in the process at price levels above their respective initial indic... |
-| Filing page 33, 33 | 2014-12-12 | final_round_bid | Buyer Group | 83 per_share | During the evening of December 12, 2014, Bidder 2 submitted an offer of $81.50 per share, in cash. \| Later in the evening, the Buyer Group submitted a best and final offer of $83.00 per share, in cash. |
-| Filing page 31, 31 | 2014-10-30 | first_round_bid | another bidder | 80-85 per_share | On October 30, six of the potentially interested parties submitted indications of interest. \| another bidder, which suggested a range of $80.00 to $85.00 per share |
-| Filing page 30, 30 | 2014-08-27 | excluded_by_target | Industry Participant |   | On August 27, 2014, representatives of Industry Participant contacted by telephone the representative of J.P. Morgan. \| The J.P. Morgan representative stated that Industry Participant would not be invited into the exploratory process, but that if Industry Part... |
-| Filing page 32, 32 | 2014-12-10 | first_round_bid | Bidder 2 | 80.35 per_share | On December 10, PetSmart received final bid letters along with revised versions of the merger agreement and other transaction documents from the Buyer Group and from Bidder 2 and a verbal indication from Bidder 3. \| Bidder 2 offered $80.35 per share, in cash |
-| Filing page 31, 31 | 2014-10-30 | first_round_bid | Buyer Group | 81-83 per_share | On October 30, six of the potentially interested parties submitted indications of interest. \| including the Buyer Group, which indicated a range of $81.00 to $83.00 per share |
-| Filing page 29, 29 | 2014-08-07 | contact_initial | Industry Participant |   | On August 7, 2014, a representative of Industry Participant contacted a representative of J.P. Morgan. \| Industry Participant might be interested in re-visiting the conversations that had taken place in the Spring concerning the feasibility of a possible combi... |
-| Filing page 31, 31 | 2014-10-30 | first_round_bid | Bidder 2 | 78 per_share | On October 30, six of the potentially interested parties submitted indications of interest. \| another bidder (which we refer to as “Bidder 2”), which had initially indicated a price of $78.00 |
-| Filing page 33, 33 | 2014-12-12 | first_round_bid | Buyer Group | 82.5 per_share | During the evening of December 12, 2014, Bidder 2 submitted an offer of $81.50 per share, in cash. \| The Buyer Group initially submitted an oral offer of $82.50 per share, in cash, but stated that it was working to increase the offer within the next few hours. |
-| Filing page 32, 32 | 2014-12-10 | first_round_bid | Bidder 3 | -78 per_share | On December 10, PetSmart received final bid letters along with revised versions of the merger agreement and other transaction documents from the Buyer Group and from Bidder 2 and a verbal indication from Bidder 3. \| Bidder 3 verbally communicated to J.P. Morga... |
-| Filing page 33 | 2014-12-12 | final_round_bid | Bidder 2 | 81.5 per_share | During the evening of December 12, 2014, Bidder 2 submitted an offer of $81.50 per share, in cash. Representatives of J.P. Morgan confirmed via a conversation with Bidder 2 on the evening of December 12, 2014 that $81.50 per share was its best and final offer. |
-| Filing page 31, 31 | 2014-11-03 | advancement_admitted | four bidders |   | On November 3, 2014, the board met in person \| The board determined to allow the four bidders that had indicated a price or range at or above $80.00 per share to proceed to the final round of the sale process. |
-| Filing page 28 |  | contact_initial | Industry Participant |   | In March, 2014, the board authorized management to contact Industry Participant to determine Industry Participant’s interest in initiating exploratory discussions concerning the feasibility of a merger or acquisition transaction. |
-| Filing page 31 |  | first_round_bid | Bidder 2 | 81-84 per_share | As a result of its discussions with J.P. Morgan, another bidder (which we refer to as “Bidder 2”), which had initially indicated a price of $78.00, increased its indication to a range of $81.00 to $84.00 per share. |
-| Filing page 32, 32 | 2014-12-10 | first_round_bid | Buyer Group | 80.7 per_share | On December 10, PetSmart received final bid letters along with revised versions of the merger agreement and other transaction documents from the Buyer Group and from Bidder 2 and a verbal indication from Bidder 3. \| The Buyer Group offered $80.70 per share, in... |
-| Filing page 33 | 2014-12-12 | consortium_ca_signed | Longview and the Buyer Group |   | later that day, Longview and the Buyer Group entered into a confidentiality agreement permitting the exchange of detailed information between them, including bid price, which had not previously been shared with Longview. |
-| Filing page 31 | 2014-10-30 | ioi_submitted | six potentially interested parties |   | On October 30, six of the potentially interested parties submitted indications of interest. |
-| Filing page 30 |  | nda_signed | 15 potentially interested financial buyers |   | In the first week of October 2014, the Company entered into confidentiality and standstill agreements with 15 potentially interested financial buyers |
+| Filing page | Claim type | Claim summary | Evidence excerpt |
+|---|---|---|---|
+| Filing page 30 \| 30 | actor_claim | actor 15 potentially interested financial buyers (cohort) | 15 potentially interested financial buyers \| In the first week of October 2014, the Company entered into confidentiality and standstill agreements with 15 potentially intereste... |
+| Filing page 30 | actor_claim | actor 27 potential participants in a sale process (cohort) | 27 potential participants in a sale process |
+| Filing page 31 \| 31 \| 31 \| 32 \| 33 \| 31 \| 32 \| 33 | actor_claim | actor Bidder 2 (organization) | another bidder (which we refer to as “Bidder 2”) \| On October 30, six of the potentially interested parties submitted indications of interest. \| increased its indication to a... |
+| Filing page 31 \| 31 \| 31 \| 32 \| 32 | actor_claim | actor Bidder 3 (group) | We refer to these two bidders together as “Bidder 3.” \| We refer to these two bidders together as “Bidder 3.” \| the ad hoc committee authorized these two bidders to work toget... |
+| Filing page 31 \| 32 \| 31 \| 32 \| 33 \| 33 \| 31 \| 32 | actor_claim | actor Buyer Group (group) | including the Buyer Group \| On December 6, 2014, the Buyer Group and Bidder 2 submitted their respective comments on the draft merger agreement and other transaction documents,... |
+| Filing page 33 \| 33 | event_claim | 2014-12-12 final_round_bid Buyer Group and Bidder 2 | During the evening of December 12, 2014, Bidder 2 submitted an offer of $81.50 per share, in cash. \| Later in the evening, the Buyer Group submitted a best and final offer of $... |
+| Filing page 32 | event_claim | 2014-12-10 final_round_bid Buyer Group and Bidder 2 and Bidder 3 | On December 10, PetSmart received final bid letters along with revised versions of the merger agreement and other transaction documents from the Buyer Group and from Bidder 2 an... |
+| Filing page 32 | actor_relation_claim | Longview rollover_holder_for Buyer Group’s bid | Early in the day on December 12, 2014, the Buyer Group requested permission to work more closely with Longview in order to include a rollover of a portion of the Company shares... |
+| Filing page 29 \| 28 | actor_claim | actor J.P. Morgan (organization) | the Company retained J.P. Morgan as financial advisor \| At a meeting on June 18, 2014, the board reviewed, together with a financial advisor and with Wachtell, Lipton, Rosen &... |
+| Filing page 28 \| 28 \| 29 \| 30 \| 29 \| 30 | actor_claim | actor Industry Participant (organization) | a privately-held company which we refer to here as “Industry Participant.” \| In March, 2014, the board authorized management to contact Industry Participant to determine Indust... |
+| Filing page 29 \| 29 | actor_claim | actor J.P. Morgan (organization) | the Company retained J.P. Morgan as financial advisor \| the Company retained J.P. Morgan as financial advisor |
+| Filing page 29 \| 29 | actor_claim | actor JANA Partners (organization) | JANA Partners filed a Schedule 13D with the SEC \| JANA Partners filed several amendments to its Schedule 13D and publicly disclosed letters to the board, advocating for a sale... |
 
 ## Contract Updates
 
-No deal-specific prompt, rulebook, reference JSON, fallback, or compatibility update was required for this verification. The verification pass did apply the current systematic estimator projection rule to cached audit-v3 raw responses before reports were written.
+No prompt, rulebook, reference JSON, compatibility path, or fallback path was changed for this verification report.
 
 ## Conclusion
 

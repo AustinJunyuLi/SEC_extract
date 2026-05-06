@@ -1,4 +1,4 @@
-"""Deterministic identifiers for deal_graph_v1 rows."""
+"""Deterministic identifiers for deal_graph_v2 rows."""
 from __future__ import annotations
 
 import hashlib

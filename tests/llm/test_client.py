@@ -2,13 +2,18 @@ import asyncio
 
 from pipeline.llm.client import OpenAICompatibleClient
 
+CLAIM_ONLY_TEXT = (
+    '{"actor_claims":[],"event_claims":[],"bid_claims":[],'
+    '"participation_count_claims":[],"actor_relation_claims":[]}'
+)
+
 
 class FakeStream:
     def __init__(self):
         self.events = [
-            type("Event", (), {"type": "response.output_text.delta", "delta": '{"deal":'}),
-            type("Event", (), {"type": "response.output_text.delta", "delta": "{}"}),
-            type("Event", (), {"type": "response.output_text.delta", "delta": ',"events":[]}'}),
+            type("Event", (), {"type": "response.output_text.delta", "delta": CLAIM_ONLY_TEXT[:28]}),
+            type("Event", (), {"type": "response.output_text.delta", "delta": CLAIM_ONLY_TEXT[28:70]}),
+            type("Event", (), {"type": "response.output_text.delta", "delta": CLAIM_ONLY_TEXT[70:]}),
         ]
 
     async def __aenter__(self):
@@ -113,7 +118,7 @@ def test_openai_compatible_client_uses_responses_text_format_not_chat_response_f
     assert kwargs["text"] == {"format": text_format}
     assert kwargs["max_output_tokens"] == 123
     assert "response_format" not in kwargs
-    assert result.text == '{"deal":{},"events":[]}'
+    assert result.text == CLAIM_ONLY_TEXT
     assert result.input_tokens == 11
     assert result.output_tokens == 13
     assert result.reasoning_tokens == 5
@@ -147,7 +152,7 @@ def test_openai_compatible_client_keeps_structured_output_for_linkflow_newapi():
     assert kwargs["reasoning"] == {"effort": "high"}
     assert "text" not in kwargs
     assert "max_output_tokens" not in kwargs
-    assert result.text == '{"deal":{},"events":[]}'
+    assert result.text == CLAIM_ONLY_TEXT
 
 
 def test_streaming_client_salvages_text_when_completed_event_is_missing():
@@ -166,7 +171,7 @@ def test_streaming_client_salvages_text_when_completed_event_is_missing():
         )
     )
 
-    assert result.text == '{"deal":{},"events":[]}'
+    assert result.text == CLAIM_ONLY_TEXT
     assert result.finish_reason == "missing_response_completed"
     assert result.input_tokens == 0
 

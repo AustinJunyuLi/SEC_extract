@@ -1,4 +1,4 @@
-"""Source paragraphing and exact quote binding for deal_graph_v1."""
+"""Source paragraphing and exact quote binding for deal_graph_v2."""
 from __future__ import annotations
 
 import hashlib

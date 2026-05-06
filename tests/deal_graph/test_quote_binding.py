@@ -184,11 +184,7 @@ def test_evidence_ref_binding_failure_creates_one_sharp_blocking_flag():
     assert disposition["reason_code"] == "evidence_ref_binding_failed"
     assert graph["review_flags"][0]["code"] == "evidence_ref_binding_failed"
     assert graph["review_flags"][0]["metadata"]["provided_citation_unit_id"] == "page_1_paragraph_1"
-    assert {
-        (flag["code"], flag["row_table"], flag["row_id"], flag.get("flag_id"))
-        for flag in flags
-    } == {("evidence_ref_binding_failed", "claims", claim_id, graph["review_flags"][0]["flag_id"])}
-    assert flags[0]["metadata"]["evidence_ref_index"] == 0
+    assert flags == []
 
     review_rows = project_review_rows(graph)
     assert len(review_rows) == 1

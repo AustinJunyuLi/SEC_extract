@@ -65,6 +65,14 @@ RESOLUTION_FIELDS: tuple[str, ...] = (
     "corrected_quote_text",
 )
 
+NUMERIC_REVIEW_ROW_FIELDS: tuple[str, ...] = (
+    "bid_value",
+    "bid_value_lower",
+    "bid_value_upper",
+    "count_min",
+    "count_max",
+)
+
 
 def project_review_rows(graph: dict[str, Any]) -> list[dict[str, Any]]:
     """Project canonical rows and rejected claims into one review surface."""
@@ -140,6 +148,8 @@ class _ReviewContext:
 
 def _base_row(graph: dict[str, Any]) -> dict[str, Any]:
     row = {field: "" for field in REVIEW_ROW_FIELDS}
+    for field in NUMERIC_REVIEW_ROW_FIELDS:
+        row[field] = None
     row["deal_slug"] = graph.get("deal_slug") or ""
     row["run_id"] = graph.get("run_id") or ""
     return row
@@ -212,9 +222,9 @@ def _event_rows(graph: dict[str, Any], context: _ReviewContext) -> list[dict[str
                 "actor_label": actor.get("actor_label") if actor else "",
                 "actor_kind": actor.get("actor_kind") if actor else "",
                 "actor_role": link.get("role") if link else "",
-                "bid_value": _cell(event.get("bid_value")),
-                "bid_value_lower": _cell(event.get("bid_value_lower")),
-                "bid_value_upper": _cell(event.get("bid_value_upper")),
+                "bid_value": _numeric_cell(event.get("bid_value")),
+                "bid_value_lower": _numeric_cell(event.get("bid_value_lower")),
+                "bid_value_upper": _numeric_cell(event.get("bid_value_upper")),
                 "bid_value_unit": event.get("bid_value_unit") or "",
                 "consideration_type": event.get("consideration_type") or "",
                 "bid_stage": event.get("bid_stage") or "",
@@ -236,8 +246,8 @@ def _participation_count_rows(graph: dict[str, Any], context: _ReviewContext) ->
             "cycle_id": count.get("cycle_id") or "",
             "process_stage": count.get("process_stage") or "",
             "actor_class": count.get("actor_class") or "",
-            "count_min": _cell(count.get("count_min")),
-            "count_max": _cell(count.get("count_max")),
+            "count_min": _numeric_cell(count.get("count_min")),
+            "count_max": _numeric_cell(count.get("count_max")),
             "count_qualifier": count.get("count_qualifier") or "",
         })
         rows.append(row)
@@ -411,6 +421,10 @@ def _ordered(row: dict[str, Any]) -> dict[str, Any]:
 
 def _cell(value: Any) -> Any:
     return "" if value is None else value
+
+
+def _numeric_cell(value: Any) -> Any:
+    return None if value in (None, "") else value
 
 
 def _event_sort_key(event: dict[str, Any]) -> tuple[bool, str, str]:

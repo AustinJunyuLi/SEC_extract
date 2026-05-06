@@ -1,8 +1,0 @@
-{
-  "events": [
-    {
-      "bid_date_precise": "2020-01-01"
-    }
-  ],
-  "expected_flags": []
-}

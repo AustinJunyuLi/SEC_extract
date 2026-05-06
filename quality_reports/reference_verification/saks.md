@@ -5,86 +5,74 @@
 - Slug: saks
 - Target: SAKS INC
 - Acquirer: HUDSON'S BAY COMPANy
-- Run ID: e459b85847ac41a794a976f06fb6c72b
-- Model: gpt-5.5
-- Reasoning effort: high
-- Audit path: output/audit/saks/runs/e459b85847ac41a794a976f06fb6c72b
-- Filing source: DEFM14A d585064ddefm14a.htm
+- Run ID: `d7677b4be48b4e29bde028c3b7eadb6c`
+- Schema version: `deal_graph_v2`
+- Rulebook version: `5802eebbe682821ad16526031588d8ccca896a6d8cc91c9ea0c99e1ebc8ae490`
+- Model: `gpt-5.5`
+- Reasoning effort: `high`
+- Generated: 2026-05-06T15:54:39.237465Z
+- Filing source: d585064ddefm14a.htm
 - Filing URL: https://www.sec.gov/Archives/edgar/data/812900/000119312513390275/d585064ddefm14a.htm
-- Verification generated: 2026-05-05T20:22:37.632718Z
+
+Artifacts:
+- Audit run: `output/audit/saks/runs/d7677b4be48b4e29bde028c3b7eadb6c`
+- Manifest: `output/audit/saks/runs/d7677b4be48b4e29bde028c3b7eadb6c/manifest.json`
+- Raw response: `output/audit/saks/runs/d7677b4be48b4e29bde028c3b7eadb6c/raw_response.json`
+- Graph JSON: `output/audit/saks/runs/d7677b4be48b4e29bde028c3b7eadb6c/deal_graph_v2.json`
+- DuckDB: `output/audit/saks/runs/d7677b4be48b4e29bde028c3b7eadb6c/deal_graph.duckdb`
+- Portable extraction: `output/extractions/saks.json`
+- Review JSONL: `output/review_rows/saks.jsonl`
+- Review CSV: `output/review_csv/saks.csv`
 
 ## Commands
 
-- set -a; [ -f .env ] && source .env; set +a; python -m pipeline.run_pool --filter reference --workers 4 --re-validate
-- python scoring/diff.py --slug saks
-- python scripts/check_reference_verification.py --slugs saks
-- python -m pipeline.reconcile --scope reference
+- `python -m pipeline.run_pool --filter reference --workers 5 --re-extract --extract-reasoning-effort high`
+- `python scripts/check_reference_verification.py`
+- `python -m pipeline.reconcile --scope reference`
+- `python -m pipeline.stability --scope reference --runs 3 --json`
 
 ## Extraction And Flag Summary
 
-- Status: passed_clean
-- Hard flags: 0
-- Soft flags: 0
-- Info flags: 0
-- Current review flags: 0
-- Actors: 15
-- Events/review rows: 22 / 22
-- Participation counts: 3
+- Review statuses: clean: 53
+- Open review rows: 0
+- Flag severities: none
+- Actors: 16
+- Events: 23
+- Participation counts: 4
 - Actor relations: 10
-- Estimation bidder rows: 4
-- Exact quote audit: 37 graph evidence spans and 27 review-row quotes checked against Filing page text; failures=0
+- Evidence spans: 39
+- Review rows: 53
 
 ## AI-vs-Alex Diff Ledger
 
 | Item | Filing evidence | Decision |
 |---|---|---|
-| Comparator status | Filing page evidence was reviewed directly because `scoring/diff.py` still targets the retired row-event surface and matched 0 current AI rows for this deal. | Alex is calibration material, not ground truth; no deal-specific Alex/reference JSON update is required for this verification. |
-| Current output shape | Filing page quotes bind every current review row and graph evidence span exactly; quote audit failures=0. | Verified against SEC filing text under `deal_graph_v1`. |
-| Alex-only legacy rows | Old comparator reported Alex-only rows=23, deal-level disagreements=5. | Not treated as blockers because the comparator does not project `deal_graph_v1`; current filing-cited review and estimator rows are the live authority. |
+| Current graph | Filing page evidence is bound through `evidence_refs` and Python-owned source spans for run `d7677b4be48b4e29bde028c3b7eadb6c`. | SEC filing text controls the report; Alex material remains calibration material. |
+| Current review rows | The CSV has 53 rows with review status counts `clean: 53`. | Rows are accepted only through exact source binding in the current artifact set. |
+| Rule surface | The live prompt and rulebook are not changed by this report. | No deal-specific operating rule is introduced. |
 
 ## Filing Evidence Review
 
-The reviewer checked the live Background-section projection against `data/filings/saks/pages.json`. Every `source_quote` listed below is an exact substring of the cited Filing page. Estimator rows are accepted only through source-backed boundary events.
+The current artifact set was checked against the Background filing pages. The mechanical checker re-reads the raw provider evidence refs, graph evidence spans, and review-row source quotes from the JSON artifacts and confirms exact filing-page grounding.
 
-### Estimation Rows
-
-| Actor | bI | bI_lo | bI_hi | bF | admitted | T | Unit | Boundary | Filing event date |
-|---|---:|---:|---:|---:|---|---|---|---|---|
-| Company H | 2600000000 | 2600000000 | 2600000000 |  | False | unknown | unspecified | first_round_bid | 2013-07-21 |
-| Hudson’s Bay | 15.25 | 15.25 | 15.25 | 16 | True | unknown | per_share | first_round_bid | 2013-07-24 |
-| Sponsor E and Sponsor A |  | 14.5 | 15.5 |  | False | financial | per_share | first_round_bid |  |
-| Sponsor E and Sponsor G |  | 14.5 | 15.5 |  | False | financial | per_share | first_round_bid | 2013-07-11 |
-
-### Review Row Evidence
-
-| Filing page | Date | Event subtype | Actor | Value | Quote excerpt |
-|---|---|---|---|---:|---|
-| Filing page 31 | 2013-04-26 | nda_signed | Sponsor E |   | On April 26, 2013, Saks entered into a confidentiality agreement with each of Sponsor A and Sponsor E |
-| Filing page 34, 35 | 2013-07-24 | first_round_bid | Hudson’s Bay | 16 per_share | On July 24, 2013, representatives of Hudson’s Bay advised Goldman Sachs that, subject to negotiating a definitive, binding agreement, Hudson’s Bay was prepared to offer $16 per share of common stock \| $16 per share of common stock in cash to be paid to Saks’ s... |
-| Filing page 34 | 2013-07-24 | final_round_bid | Hudson’s Bay |   | On July 24, 2013, representatives of Hudson’s Bay advised Goldman Sachs that, subject to negotiating a definitive, binding agreement, Hudson’s Bay was prepared to offer $16 per share of common stock |
-| Filing page 35 | 2013-09-06 | go_shop_ended |  |   | The go shop period ended on September 6, 2013, and no party has been designated by Saks as an excluded party. |
-| Filing page 34 |  | non_responsive | Company H |   | Goldman Sachs subsequently attempted on more than one occasion to contact the appropriate person at Company H both by telephone and by e-mail to discuss the purported offer further but was unsuccessful in making contact with such person. Neither Saks nor Goldm... |
-| Filing page 30 | 2013-04-01 | contact_initial | Hudson’s Bay |   | On April 1, 2013, Mr. Sadove met with Richard Baker, the Director, Governor, and Chief Executive Officer of Hudson’s Bay, at the request of Mr. Baker and discussed a potential acquisition of Saks by Hudson’s Bay. |
-| Filing page 35 |  | non_responsive | Company I |   | None of the parties contacted as part of the go shop process, including Company I, has submitted an acquisition proposal for Saks. |
-| Filing page 35 |  | nda_signed | Company I |   | only one of the six (which we refer to as Company I) executed a confidentiality agreement with, and conducted a due diligence investigation of, Saks |
-| Filing page 35 | 2013-07-28 | merger_agreement_executed | Hudson’s Bay |   | Following the board’s approval of the merger and the merger agreement, Saks, Hudson’s Bay and Merger Sub finalized and executed the merger agreement and other transaction documents later on July 28, 2013. |
-| Filing page 31 | 2013-04-26 | nda_signed | Sponsor A |   | On April 26, 2013, Saks entered into a confidentiality agreement with each of Sponsor A and Sponsor E |
-| Filing page 33 | 2013-07-11 | first_round_bid | Sponsor E and Sponsor G |   | On July 11, 2013, each of Hudson’s Bay, on the one hand, and Sponsor E, together with Sponsor G, on the other hand, submitted proposals expressing their continued interest in an acquisition of Saks. |
-| Filing page 30 |  | contact_initial | Sponsor A |   | In February 2013, Stephen I. Sadove, Saks’ Chairman and Chief Executive Officer, received an unsolicited phone call from a representative of a private equity firm, which we refer to as Sponsor A, expressing interest in a potential acquisition of Saks. |
-| Filing page 32, 33 | 2013-07-11 | first_round_bid | Hudson’s Bay | 15.25 per_share | request for submission of offers for an all-cash acquisition of Saks, along with comments on the draft merger agreement, no later than July 11, 2013 \| Hudson’s Bay’s proposal included a price of $15.25 per share of common stock |
-| Filing page 34 | 2013-07-21 | first_round_bid | Company H |   | On July 21, 2013, Saks received a letter from Company H, a privately held company based in the U.S. unknown to Saks and its advisors, purporting to propose to acquire Saks for an aggregate price of $2.6 billion in cash, with no details or further information. |
-| Filing page 33 | 2013-07-08 | nda_signed | Sponsor G |   | On July 8, 2013, Saks entered into a confidentiality agreement with Sponsor G. |
-| Filing page 33 |  | withdrawn_by_bidder | Sponsor G |   | Saks was subsequently informed that Sponsor G was no longer participating in the process |
-| Filing page 31 | 2013-04-30 | nda_signed | Hudson’s Bay |   | On April 30, 2013, Saks and Hudson’s Bay entered into a confidentiality agreement. |
-| Filing page 33 | 2013-07-11 | first_round_bid | Hudson’s Bay |   | On July 11, 2013, each of Hudson’s Bay, on the one hand, and Sponsor E, together with Sponsor G, on the other hand, submitted proposals expressing their continued interest in an acquisition of Saks. |
-| Filing page 32, 33, 34 |  | first_round_bid | Sponsor E and Sponsor A | 14.5-15.5 per_share | request for submission of offers for an all-cash acquisition of Saks, along with comments on the draft merger agreement, no later than July 11, 2013 \| the joint proposal from Sponsor E and Sponsor A \| their initially indicated range of $14.50 to $15.50 per sha... |
-| Filing page 33 | 2013-07-11 | financing_committed | Hudson’s Bay |   | Hudson’s Bay’s proposal included a price of $15.25 per share of common stock, a revised draft merger agreement and information and documentation relating to Hudson’s Bay’s committed debt and equity financing for the potential transaction. |
-| Filing page 32, 33 | 2013-07-11 | first_round_bid | Sponsor E and Sponsor G | 14.5-15.5 per_share | request for submission of offers for an all-cash acquisition of Saks, along with comments on the draft merger agreement, no later than July 11, 2013 \| The joint proposal from Sponsor E and Sponsor G included an indicative price range of $14.50–$15.50 per share... |
-| Filing page 34 | 2013-07-21 | first_round_bid | Company H | 2600000000 unspecified | On July 21, 2013, Saks received a letter from Company H, a privately held company based in the U.S. unknown to Saks and its advisors, purporting to propose to acquire Saks for an aggregate price of $2.6 billion in cash, with no details or further information. |
+| Filing page | Claim type | Claim summary | Evidence excerpt |
+|---|---|---|---|
+| Filing page 35 | actor_claim | actor 58 potentially interested third parties (cohort) | 58 potentially interested third parties |
+| Filing page 32 \| 32 | actor_claim | actor Company F (organization) | a privately held retail company, which we refer to as Company F \| During the week of June 10, 2013, Saks was informed that a privately held retail company, which we refer to as... |
+| Filing page 34 \| 34 \| 34 \| 34 | actor_claim | actor Company H (organization) | Company H, a privately held company based in the U.S. unknown to Saks and its advisors \| On July 21, 2013, Saks received a letter from Company H, a privately held company based... |
+| Filing page 35 \| 35 \| 35 | actor_claim | actor Company I (organization) | only one of the six (which we refer to as Company I) \| only one of the six (which we refer to as Company I) executed a confidentiality agreement with, and conducted a due dilig... |
+| Filing page 37 \| 37 | actor_claim | actor Equity Provider (organization) | equity financing offered by the Equity Provider \| Hudson’s Bay and Merger Sub had already obtained committed debt and equity financing for the transaction, the limited number a... |
+| Filing page 30 \| 30 | actor_claim | actor Goldman Sachs (organization) | Goldman Sachs, one of Saks’ longstanding financial advisors \| Goldman Sachs, one of Saks’ longstanding financial advisors |
+| Filing page 30 \| 30 \| 31 \| 33 \| 33 \| 34 \| 35 \| 33 \| 34 \| 33 \| 35 | actor_claim | actor Hudson’s Bay (organization) | Hudson’s Bay \| On April 1, 2013, Mr. Sadove met with Richard Baker, the Director, Governor, and Chief Executive Officer of Hudson’s Bay, at the request of Mr. Baker and discuss... |
+| Filing page 37 | actor_relation_claim | Equity Provider finances Hudson’s Bay and Merger Sub | Hudson’s Bay and Merger Sub had already obtained committed debt and equity financing for the transaction, the limited number and nature of the conditions to that debt and equity... |
+| Filing page 35 \| 35 | actor_claim | actor Morgan Stanley (organization) | Morgan Stanley & Co. LLC (a long-time advisor to Saks, referred to as “Morgan Stanley”) \| Morgan Stanley & Co. LLC (a long-time advisor to Saks, referred to as “Morgan Stanley”) |
+| Filing page 30 \| 31 \| 35 | actor_claim | actor Goldman Sachs (organization) | Goldman Sachs, one of Saks’ longstanding financial advisors \| On April 11, 2013, the Finance committee of the board and the Executive committee of the board held a special join... |
+| Filing page 30 \| 33 \| 33 \| 30 \| 31 | actor_claim | actor Sponsor A (organization) | a private equity firm, which we refer to as Sponsor A \| the joint proposal from Sponsor E and Sponsor A \| Sponsor E would again be joined in its proposal by Sponsor A as a pri... |
+| Filing page 33 \| 33 \| 33 \| 33 | actor_claim | actor Sponsor A and Sponsor E (group) | the joint proposal from Sponsor E and Sponsor A \| the joint proposal from Sponsor E and Sponsor A \| the joint proposal from Sponsor E and Sponsor A \| Sponsor E would again be... |
 
 ## Contract Updates
 
-No deal-specific prompt, rulebook, reference JSON, fallback, or compatibility update was required for this verification. The verification pass did apply the current systematic estimator projection rule to cached audit-v3 raw responses before reports were written.
+No prompt, rulebook, reference JSON, compatibility path, or fallback path was changed for this verification report.
 
 ## Conclusion
 

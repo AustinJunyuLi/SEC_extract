@@ -199,19 +199,24 @@ def _append_flags_log_locked(
     deal = final_extraction.get("deal") or {}
     graph = final_extraction.get("graph") if isinstance(final_extraction.get("graph"), dict) else {}
     flags = [
-        *(deal.get("deal_flags") or []),
-        *(graph.get("review_flags") or []),
+        *(
+            {**flag, "deal_level": True}
+            for flag in deal.get("deal_flags") or []
+            if isinstance(flag, dict)
+        ),
+        *(
+            dict(flag)
+            for flag in graph.get("review_flags") or []
+            if isinstance(flag, dict)
+        ),
     ]
     for flag in flags:
-        if not isinstance(flag, dict):
-            continue
         entry = {
             "deal": slug,
             "run_id": run_id,
             "logged_at": run_ts,
             **flag,
         }
-        entry.setdefault("deal_level", True)
         lines.append(json.dumps(entry, default=str))
     if not lines:
         return 0

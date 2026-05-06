@@ -3,14 +3,23 @@ from __future__ import annotations
 import pytest
 
 from pipeline.deal_graph import canonicalize_claim_payload, validate_graph
+from pipeline.deal_graph.ids import make_id
 from pipeline.deal_graph.orchestrate import _bind_provider_evidence
+from pipeline.deal_graph.project_review import project_review_rows
+from pipeline.deal_graph.store import DealGraphStore
 
 
 def _refs(quote: str) -> list[dict]:
     return [{"citation_unit_id": "page_1_paragraph_1", "quote_text": quote}]
 
 
-def _graph(payload: dict, *, deal_slug: str = "mac-gray", run_id: str = "run-1") -> dict:
+def _graph(
+    payload: dict,
+    *,
+    deal_slug: str = "mac-gray",
+    run_id: str = "run-1",
+    target_name: str | None = None,
+) -> dict:
     quotes: list[str] = []
     for family in (
         "actor_claims",
@@ -29,6 +38,7 @@ def _graph(payload: dict, *, deal_slug: str = "mac-gray", run_id: str = "run-1")
         payload,
         deal_slug=deal_slug,
         run_id=run_id,
+        target_name=target_name,
         evidence_context=_bind_provider_evidence(payload, slug=deal_slug, run_id=run_id, pages=pages),
     )
 
@@ -145,6 +155,73 @@ def test_validation_flags_missing_disposition_evidence_and_coverage() -> None:
     assert "DG_CLAIM_DISPOSITION_MISSING" in codes
     assert "DG_CLAIM_EVIDENCE_MISSING" in codes
     assert "DG_COVERAGE_RESULT_MISSING" in codes
+
+
+def test_deal_row_uses_python_owned_target_metadata() -> None:
+    graph = _graph(_mac_gray_payload(), target_name="MAC GRAY CORP")
+
+    deal = graph["deals"][0]
+    assert deal["target_name"] == "MAC GRAY CORP"
+    assert deal["target_actor_id"].startswith("actor_")
+
+
+def test_relation_id_keeps_same_parties_with_different_role_details_distinct() -> None:
+    payload = _mac_gray_payload()
+    payload["actor_relation_claims"].append({
+        **payload["actor_relation_claims"][0],
+        "coverage_obligation_id": "obl_relation_csc_second_detail",
+        "role_detail": "portfolio company",
+    })
+
+    graph = _graph(payload)
+    csc_relations = [
+        row for row in graph["actor_relations"]
+        if row["subject_actor_label"] == "CSC" and row["object_actor_label"] == "CSC/Pamplona"
+    ]
+
+    assert len({row["relation_id"] for row in csc_relations}) == len(csc_relations)
+
+
+def test_inactive_blocking_review_flags_do_not_block_validation() -> None:
+    graph = _graph(_mac_gray_payload())
+    graph["review_flags"].append({
+        "flag_id": "flag_inactive",
+        "run_id": "run-1",
+        "deal_id": graph["deals"][0]["deal_id"],
+        "severity": "blocking",
+        "code": "inactive_blocker",
+        "reason": "Inactive historical blocker.",
+        "row_table": "claims",
+        "row_id": graph["claims"][0]["claim_id"],
+        "status": "open",
+        "current": False,
+    })
+
+    assert not validate_graph(graph)
+
+
+def test_duckdb_store_preserves_live_graph_fields(tmp_path) -> None:
+    graph = _graph(_mac_gray_payload(), target_name="MAC GRAY CORP")
+    graph["review_rows"] = [
+        {"review_row_id": make_id("review_row", "mac-gray", "run-1", index, row), **row}
+        for index, row in enumerate(project_review_rows(graph), start=1)
+    ]
+    database_path = tmp_path / "deal_graph.duckdb"
+
+    with DealGraphStore(database_path) as store:
+        store.init_schema()
+        store.insert_snapshot(graph)
+        actor_relation_columns = set(store.table_columns("actor_relations"))
+        event_columns = set(store.table_columns("events"))
+        event_link_columns = set(store.table_columns("event_actor_links"))
+        deal_columns = set(store.table_columns("deals"))
+
+        assert {"subject_actor_label", "object_actor_label"} <= actor_relation_columns
+        assert "bid_stage" in event_columns
+        assert "actor_label" in event_link_columns
+        assert "target_name" in deal_columns
+        assert store.execute("SELECT target_name FROM deals").fetchone()[0] == "MAC GRAY CORP"
+        assert store.execute("SELECT COUNT(*) FROM review_rows").fetchone()[0] == len(graph["review_rows"])
 
 
 def _mac_gray_payload() -> dict:

@@ -2,7 +2,7 @@
 
 **Purpose.** Alex Gorbenko's hand-corrected extractions of 9 deals, converted from `deal_details_Alex_2026.xlsx` into the current comparison-reference JSON shape, plus Alex's own annotations on rows he flagged as problematic.
 
-**Frame.** Alex's workbook is a **reference guideline** for the pipeline — not ground truth. The SEC filing is ground truth. Alex is an expert with decades of context, and his rulebook + corrections are the single best source we have for *how* to extract these filings, but he is human, makes judgment calls, and has flagged some of his own rows as wrong. During development, Austin manually re-reads the filing for every AI-vs-Alex divergence and adjudicates on the merits.
+**Frame.** Alex's workbook is a **reference guideline** for the pipeline — not ground truth. The SEC filing is ground truth. Alex is an expert with decades of context, and his rulebook + corrections are the single best source we have for *how* to extract these filings, but he is human, makes judgment calls, and has flagged some of his own rows as wrong. During development, Austin manually re-reads the filing for every AI-vs-Alex divergence and reviews it on the merits.
 
 ## What this folder contains
 
@@ -49,7 +49,7 @@ resolved normalizations**, not a literal dump of the workbook cells.
 Re-run the converter whenever:
 - `scripts/build_reference.py` changes;
 - a rules change affects reference-side serialization;
-- a newly adjudicated Alex error should be reflected in the generated
+- a newly reviewed Alex error should be reflected in the generated
   reference JSONs rather than left as workbook noise.
 
 Typical commands:
@@ -61,11 +61,16 @@ python scripts/build_reference.py --slug medivation --dump
 
 ## Diff contract — NOT a scoring contract
 
-`scoring/diff.py` reads every file in this folder that matches a deal slug and joins against `../../output/extractions/{slug}.json`. Its output is a **diff for human review**, not a pass/fail grade. The default mode prints to stdout; use `--write` only when a temporary markdown/JSON artifact is explicitly needed. Every divergence gets a verdict from Austin after re-reading the filing:
+There is no live `scoring/diff.py` gate. Files in this folder are comparison
+material for manual review when Austin wants to inspect AI-vs-Alex differences.
+They are not pass/fail inputs, and they are not the authority for extraction
+truth. Every important divergence gets a verdict from Austin after re-reading
+the filing:
 
 1. **AI right, Alex wrong** — update `alex_flagged_rows.json` with the corrected rule (optional) and move on.
 2. **AI wrong, Alex right** — strengthen the relevant rule in `rules/` and re-run the Extractor.
 3. **Both defensible** — judgment call; flag in `alex_flagged_rows.json` and ensure the rulebook picks one convention explicitly.
 4. **Both wrong** — re-read the filing, decide the right answer, and update both the rule and Alex's row.
 
-The pipeline never sets a `verified` status on its own — only the manual adjudication workflow does.
+The pipeline never sets a `verified` status on its own; only Austin or an agent
+after filing-grounded review may do that.
