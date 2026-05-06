@@ -44,30 +44,11 @@ and source-addressed `evidence_refs`. Each `evidence_refs` item must have
 ```
 
 `citation_unit_id` must exactly match one embedded `citation_units[].id`.
-`quote_text` must be an exact contiguous substring of that citation unit's
-`text` and 1500 characters or shorter. Prefer distinctive sentences or clauses
-that uniquely support the claim. Do not paraphrase quotes. Use multiple
-`evidence_refs` when support is separated across sentences, paragraphs, or page
-breaks. Never emit provider-level `quote_text` or `quote_texts`.
-
-Receipt copying is literal. Do not delete words from the middle of filing text,
-join non-adjacent fragments into one quote, alter capitalization, normalize
-punctuation, smooth page breaks, include page numbers, include `Table of
-Contents`, include SEC/typesetting metadata, or otherwise clean up the receipt.
-Do not change the first letter's case to make a quote read like a sentence; if
-the source substring starts mid-sentence, keep the source's lowercase or
-uppercase exactly. Before returning, every `evidence_refs[].quote_text` must
-pass this literal check: `quote_text in citation_units[citation_unit_id].text`.
-If a quote would fail that check, choose a shorter exact substring from the
-same citation unit or omit the claim.
-If one citation-unit substring does not support every typed field, use multiple
-short exact evidence refs instead of manufacturing a cleaner quote.
-Never remove other actors from a compound list to make one actor's quote read
-cleanly. If a source sentence says that multiple named or anonymous parties did
-something together, either quote the full exact compound sentence or use
-multiple exact refs: one naming the actor and one supporting the shared action.
-If those refs still do not support the individual claim sharply, omit the
-individual claim.
+Follow the quote fidelity invariant in `rules/schema.md`. Prefer distinctive
+sentences or clauses that uniquely support the claim. Do not paraphrase quotes.
+Use multiple `evidence_refs` when support is separated across sentences,
+paragraphs, or page breaks. Never emit provider-level `quote_text` or
+`quote_texts`.
 
 Use the shortest exact filing snippet that supports the typed fields. Do not
 copy long multi-sentence passages when a clause supports the bidder, date,
@@ -113,23 +94,16 @@ object, and relation.
 ## Auction Doctrine
 
 Preserve the filing's bidding unit. A group, club bid, sponsor/corporate pair,
-or changing coalition can be one actor. Do not atomize group bids into member
-bidder rows merely because members are named. Emit member relations as facts
-about composition, financing, rollover, or support.
+or changing coalition can be one actor. Do not atomize group bids unless the
+filing shows separate bidding conduct. Member, support, financing, and rollover
+facts are `actor_relation_claims`, not new bidder rows.
 
-Mac Gray-style `CSC/Pamplona` is one group actor when the filing treats it as
-the bidder. CSC and Pamplona are represented through relations. Pamplona's
-financing/capital role is not a separate bidder row unless the filing shows
-separate bidding conduct.
+Relation timing is source-backed. Populate `effective_date_first` only when the
+filing supports the timing. For changing coalitions, create separate actor
+labels only when the filing treats the coalition differently over time. Do not
+assume permanent membership.
 
-PetSmart-style `Buyer Group` is one group actor when the filing treats it as
-the bidder. Longview membership, rollover, or support is a dated relation only
-when the filing supports that timing; it does not create a Longview bidder row
-by itself.
-
-For changing coalitions, create separate actor labels only when the filing
-treats the coalition differently over time. Do not assume permanent membership.
-
-If a fact is ambiguous, emit only the supported claim and choose `confidence:
-"low"` with a precise quote. Do not invent dates, prices, identities, counts,
-or relations.
+Exact-or-omit. If no exact substring supports the typed fields sharply, omit the
+claim. If a fact is ambiguous, emit only the supported claim and choose
+`confidence: "low"` with a precise quote, or omit the claim. Do not invent
+dates, prices, identities, counts, or relations.

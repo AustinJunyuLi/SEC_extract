@@ -30,17 +30,12 @@ bidder rows or bid events.
 Do not hard-atomize consortiums. A group bid remains a group bid unless the
 filing shows a member separately acting as a bidder.
 
-Mac Gray: `CSC/Pamplona` is one group actor when the filing treats
-CSC/Pamplona as the bidder. CSC and Pamplona are related actors; Pamplona's
-financing/capital role is a relation or judgment, not a second bidder row.
+Member, support, financing, and rollover facts are `actor_relation_claims`, not
+new bidder rows. Relation timing is source-backed; populate
+`effective_date_first` only when the filing supports the timing.
 
-PetSmart: `Buyer Group` is a group actor and bidder unit when the filing uses
-that unit. Longview's rollover, membership, or support is dated only when
-source-supported and does not atomize the final Buyer Group bid.
-
-Changing coalitions: Sponsor A/E and Sponsor E/G style labels remain separate
-actor-cycle facts when the filing treats them differently over time. Do not
-make membership permanent without quote support.
+Changing coalitions remain actor-cycle facts when the filing treats them
+differently over time. Do not make membership permanent without quote support.
 
 ## Anonymous and Count-Only Actors
 

@@ -73,19 +73,20 @@ Finalization:
 
 ## Consortium Rule
 
-Preserve the filing's bidding unit. A buyer group can be the bidder unit. Member
-facts are represented through actor relations and do not create member bidder
-rows unless the filing shows separate bidding conduct.
-
-Mac Gray `CSC/Pamplona`: one group actor/bidder unit; CSC and Pamplona are
-relations; Pamplona financing is not a second bidder row by itself.
-
-PetSmart `Buyer Group`: one group actor/bidder unit; Longview membership,
-rollover, or support is a dated relation only when source-supported.
+Preserve the filing's bidding unit. A group actor can be the bidder unit when
+the filing treats the group as the bidding party. Member, support, financing,
+and rollover facts are represented through actor relations and do not create
+member bidder rows unless the filing shows separate bidding conduct.
 
 ## Validation
 
-Hard flags produce `validated`. Zero flags produce `passed_clean`. Old
-row-per-event JSON is stale and must not pass as canonical input.
+Trusted runs produce `passed_clean`, `needs_review`, or `high_burden` based on
+review-row burden. Runtime, schema, artifact, or graph-integrity failures
+produce `failed_system`; a failed rerun after prior trusted output produces
+`stale_after_failure`. Old row-per-event JSON is stale and must not pass as
+canonical input.
 
-Reference `verified` status requires Austin or agent filing-grounded verification with `quality_reports/reference_verification/{slug}.md`. An agent must not mark a deal verified solely because the model output passes schema validation. The report records a review, not a binding to the latest run id; current extraction artifacts still have to be consistent and filing-grounded.
+Reference `verified: true` metadata requires Austin or agent filing-grounded
+verification with `quality_reports/reference_verification/{slug}.md`. An agent
+must not mark a deal verified solely because the model output passes schema
+validation. The report must cite the current extraction run id.

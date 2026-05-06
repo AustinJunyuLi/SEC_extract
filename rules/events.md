@@ -1,4 +1,4 @@
-# rules/events.md - deal_graph_v1 Event Ontology
+# rules/events.md - deal_graph_v2 Event Ontology
 
 The provider emits `event_claims`; Python turns supported claims into canonical
 events and projections. Old `bid_note` row values are retired as canonical

@@ -1,4 +1,4 @@
-# rules/dates.md - Dates Under deal_graph_v1
+# rules/dates.md - Dates Under deal_graph_v2
 
 Dates in provider claims are filing-supported facts, not sequence numbers.
 
@@ -13,6 +13,6 @@ Relation timing matters. For `joins_group`, `exits_group`,
 `rollover_holder_for`, `voting_support_for`, and financing/support relations,
 populate `effective_date_first` only when the filing supports the timing.
 
-Python owns ordering, process cycles, admission/dropout boundaries, and
-estimation-period variables. Provider claims should not emit `BidderID`,
-sequence numbers, `T`, `bI`, `bF`, or `admitted`.
+Python owns ordering, process cycles, admission/dropout boundaries, and any
+later post-review estimator variables. Provider claims should not emit
+`BidderID`, sequence numbers, `T`, `bI`, `bF`, or `admitted`.

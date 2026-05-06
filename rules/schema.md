@@ -33,16 +33,16 @@ Every claim includes:
   `citation_unit_id` and `quote_text`
 
 Each `citation_unit_id` must identify one extractor-input
-`citation_units[].id`. Each `quote_text` must be an exact substring of that
-unit's text and max 1500 characters. Use multiple refs when a claim needs
-separated source support. Exact means byte-for-byte visible text copying:
-preserve capitalization, punctuation, spacing, and curly/straight quote marks.
+`citation_units[].id`. Quote fidelity invariant: `quote_text` must be an exact
+contiguous substring of `citation_units[citation_unit_id].text` - byte-for-byte,
+including punctuation, capitalization, spacing, and curly versus straight quote
+marks. Use multiple refs when a claim needs separated source support.
 Provider-level `quote_text` and `quote_texts` are retired.
 
 Provider-owned fields are forbidden: canonical ids, source offsets, source
 pages, `BidderID`, bidder registry, `T`, `bI`, `bF`, admitted/dropout
 judgments, coverage results, projection rows, provider-level `quote_text`,
-provider-level `quote_texts`, and old row-event scalar fields.
+provider-level `quote_texts`, and retired event-table scalar fields.
 
 Target identity is Python-owned manifest/deal metadata. The provider does not
 emit target-only actor claims; target labels appear only when a substantive
@@ -116,5 +116,8 @@ output/review_rows/{slug}.jsonl
 output/review_csv/{slug}.csv
 ```
 
-Rows without source-backed evidence do not project. Blocking graph flags make
-the deal `validated`; clean graph outputs are `passed_clean`.
+Rows without source-backed evidence do not project into canonical graph rows.
+Quarantined unsupported claims become review rows. Trusted run statuses are
+`passed_clean`, `needs_review`, and `high_burden`; runtime or graph-integrity
+failures are `failed_system`, with prior trusted outputs marked
+`stale_after_failure`.

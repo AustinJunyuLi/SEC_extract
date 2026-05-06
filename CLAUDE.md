@@ -27,7 +27,7 @@ Key rules:
   member relations do not automatically become bidder rows.
 - No backward compatibility shims or stale row-per-event outputs.
 - Keep API keys in runtime environment only and never commit secrets.
-- Reference `verified` status requires Austin or agent filing-grounded verification with `quality_reports/reference_verification/{slug}.md`; an agent must not mark a deal verified solely because the model output passes schema validation. The report is a historical review artifact, not a promise that its run id equals the latest extraction run id.
+- Reference `verified: true` metadata requires Austin or agent filing-grounded verification with `quality_reports/reference_verification/{slug}.md`; an agent must not mark a deal verified solely because the model output passes schema validation. The report must cite the current extraction run id.
 
 Use:
 

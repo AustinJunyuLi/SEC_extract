@@ -24,9 +24,10 @@ value. Use `unspecified` when the filing supports a number but does not support
 which aggregate value basis it represents. Do not emit `other` for
 `bid_value_unit`.
 
-## Python-Owned Projection
+## Python-Owned Post-Review Projection
 
-Python derives:
+The live extraction artifact stops at the source-backed graph and review rows.
+Later post-review estimator tooling may derive:
 
 - `bI`, `bI_lo`, `bI_hi`, `bF`
 - `admitted`
@@ -34,12 +35,8 @@ Python derives:
 - `dropout_mechanism`
 - bidder class / `T`
 
-The projection unit is actor-cycle scoped. Group actors are eligible bidder
-units when they submit bids. Member actors are not projected unless they are
-independently linked to bid events.
+The post-review projection unit is actor-cycle scoped. Group actors are
+eligible bidder units when they submit bids. Member actors are not projected
+unless they are independently linked to bid events.
 
-`T` is `strategic` when source/projection rules support an operating strategic
-bidder as the auction-facing unit; `financial` for sponsor/financial buyers;
-`mixed` or `unknown` when mechanically unresolved. Mac Gray
-`CSC/Pamplona` is projected as strategic when the filing treats the group as
-the bidder and CSC supplies the operating strategic role.
+`T` is assigned only by Python-owned post-review logic, never by the provider.

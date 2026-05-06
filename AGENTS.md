@@ -38,9 +38,9 @@ coverage results, graph rows, graph validation, and review rows. The AI never
 emits canonical ids, source offsets, `BidderID`, `T`, `bI`, `bF`,
 admitted/dropout outcomes, coverage results, or projection rows.
 
-There is no row-per-event canonical schema, no loose JSON fallback, no
-provider branch that turns off structured output, no `previous_response_id`
-chain, and no live repair/adjudicator path.
+There is no per-event-row canonical schema, no loose JSON fallback, no
+provider branch that turns off structured output, no response-chain reuse, and
+no secondary model correction path.
 
 Per deal:
 
@@ -107,8 +107,9 @@ paragraphs, or pages. The provider must not emit provider-level `quote_text` or
 `quote_texts`. Target identity comes from the filing manifest and Python-owned
 deal metadata; the provider does not emit a target-only actor claim. Python
 binds evidence refs before canonicalization and creates source spans. Claims
-with invalid refs are rejected, receive one blocking review flag, and do not
-create canonical graph rows or projection support.
+with invalid refs are quarantined into review output. A claim with no valid refs
+does not create canonical graph rows; a claim with at least one valid ref can
+create a source-backed row while failed refs remain review issues.
 
 Quotes must support the specific actor, event, bid, count, relation, date, and
 value being claimed. Ambiguous facts stay low-confidence or unclaimed; do not
@@ -116,32 +117,32 @@ invent unsupported facts.
 
 ## Consortium Doctrine
 
-Preserve the filing's bidding unit. A group actor can be a bidder unit. Member
-relations are composition facts, not automatic bidder rows.
+Preserve the filing's bidding unit. A group actor can be a bidder unit when the
+filing treats the group as the bidding party. Do not atomize group bids unless
+the filing shows separate bidding conduct.
 
-Mac Gray: `CSC/Pamplona` is one group actor and one bidder unit when the filing
-treats it that way. CSC and Pamplona are represented through source-backed
-relations. Pamplona financing is not a separate bidder row by itself.
-
-PetSmart: `Buyer Group` is a group actor and bidder unit. Longview membership,
-rollover, voting support, or financing is dated only when the filing supports
-the timing and does not atomize the Buyer Group bid.
-
-Changing coalitions remain time-aware actor-cycle facts. Do not make
-membership permanent without quote support.
+Member, support, financing, and rollover facts are source-backed
+`actor_relation_claims`, not automatic bidder rows. Changing coalitions remain
+time-aware actor-cycle facts. Do not make membership permanent without quote
+support.
 
 ## State and Output Contracts
 
-`state/progress.json` remains schema version `v1`. Status values:
+`state/progress.json` remains schema version `v1`. Per-run status values:
 
-- `pending`
-- `validated`: finalized with hard graph flags
-- `passed`: finalized with only soft/info graph flags
-- `passed_clean`: finalized with no graph flags
-- `verified`: filing-grounded reference verification completed
-- `failed`: runtime failure without a valid finalized output
+- `passed_clean`: trusted graph and review output; zero open review rows
+- `needs_review`: trusted graph and review output; 1 to 10 open review rows
+- `high_burden`: trusted graph and review output; more than 10 open review rows
+- `failed_system`: runtime, schema, artifact, or graph-integrity failure
+- `stale_after_failure`: prior trusted output remains, but the latest run failed
 
-During reference work, `verified` may be set by Austin or by agent filing-grounded verification only when `quality_reports/reference_verification/{slug}.md` exists and concludes the deal is verified against the filing. An agent must not mark a deal verified solely because the model output passes schema validation. A verification report is a historical human/agent review artifact; its recorded run id does not need to equal the latest extraction run id. Current extraction artifacts must still be internally consistent and mechanically grounded in filing pages.
+Reference verification is metadata, not a run status. `verified: true` may be
+set by Austin or by agent filing-grounded verification only when
+`quality_reports/reference_verification/{slug}.md` exists, cites the current
+run, and concludes the deal is verified against the filing. An agent must not
+mark a deal verified solely because the model output passes schema validation.
+Current extraction artifacts must still be internally consistent and
+mechanically grounded in filing pages.
 
 `state/flags.jsonl` is append-only. Current-run flags match exact `run_id`.
 

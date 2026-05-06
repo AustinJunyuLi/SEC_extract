@@ -33,7 +33,7 @@ Extraction uses strict structured output with the claim-only schema:
 The schema is provider-safe: no `oneOf`, no schema-valued
 `additionalProperties`, no dynamic object keys, and no canonical graph ids.
 
-The provider must not emit old row-event output, `BidderID`, `bidder_registry`,
+The provider must not emit retired event-table output, `BidderID`, `bidder_registry`,
 source offsets/pages, `T`, `bI`, `bF`, admitted/dropout judgments, coverage
 results, review rows, or projection rows.
 
@@ -65,7 +65,7 @@ run.py / pipeline.run_pool
   -> final_output.json and output/extractions/{slug}.json
 ```
 
-There is no live repair loop, no `previous_response_id` chain, no loose JSON
+There is no live correction loop, no response-chain reuse, no loose JSON
 fallback, and no provider branch that disables structured output.
 
 ## Commands
@@ -106,18 +106,25 @@ output/review_csv/{slug}.csv
 
 ## Validation
 
-Graph validation is Python-owned. Hard flags include evidence-ref binding failures,
-missing claim evidence, missing current dispositions, missing coverage links,
-canonical rows without evidence, and review output write failures.
+Graph validation is Python-owned. Graph-integrity failures include malformed
+provider payloads, missing claim evidence, missing current dispositions, missing
+coverage links, canonical rows without evidence, and review output write
+failures.
 
-`validated` means the run finalized but has hard graph flags. `passed_clean`
-means no graph flags remain.
+Trusted run statuses are `passed_clean`, `needs_review`, and `high_burden`.
+Review items are operator burden, not system failure. Runtime, schema, artifact,
+or graph-integrity failures produce `failed_system`; failed reruns after prior
+trusted output produce `stale_after_failure`.
 
-Reference `verified` status requires Austin or agent filing-grounded verification with `quality_reports/reference_verification/{slug}.md`. An agent must not mark a deal verified solely because the model output passes schema validation. Verification reports are review records; they do not become stale only because a later clean rerun has a new run id. The current extraction, current audit raw response, and filing pages must still ground mechanically.
+Reference `verified: true` metadata requires Austin or agent filing-grounded
+verification with `quality_reports/reference_verification/{slug}.md`. An agent
+must not mark a deal verified solely because the model output passes schema
+validation. The report must cite the current extraction run id.
 
 ## Target Gate
 
 Target extraction remains fail-closed. A selection containing non-reference
-targets fails unless all reference deals are verified under `deal_graph_v2`,
-the stability proof classifies the archive as
-`STABLE_FOR_REFERENCE_REVIEW`, and the operator passes `--release-targets`.
+targets fails unless all reference deals have current verified metadata under
+`deal_graph_v2`, the `target_gate_proof_v3` stability proof classifies the
+archive as `STABLE_FOR_REFERENCE_REVIEW`, and the operator passes
+`--release-targets`.

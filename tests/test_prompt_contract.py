@@ -30,7 +30,8 @@ def test_extractor_messages_embed_claim_context():
         assert rule_name in system
     assert "actor_claims" in system
     assert "bid_claims" in system
-    assert "Provider claims should not emit `BidderID`" in system
+    assert "Provider claims should not emit" in system
+    assert "`BidderID`" in system
     assert "rules/invariants.md" not in system
     assert "medivation" in user
     assert '"pages"' in user
@@ -54,14 +55,11 @@ def test_prompt_is_claim_only_and_tool_free():
     assert "`citation_unit_id`" in text
     assert "not paraphrase quotes" in text
     assert "must exactly match one embedded `citation_units[].id`" in text
-    assert "exact contiguous substring of that citation unit's" in text
+    assert "Follow the quote fidelity invariant" in text
     assert "source-addressed" in text
-    assert "Never emit provider-level `quote_text` or `quote_texts`" in text
-    assert "Do not delete words" in text
-    assert "from the middle of" in text
-    assert "join non-adjacent fragments into one quote" in text
-    assert "smooth page breaks" in text
-    assert "include SEC/typesetting metadata" in text
+    assert "Never emit provider-level `quote_text`" in text
+    assert "`quote_texts`" in text
+    assert "Exact-or-omit" in text
     assert "Do not emit an `actor_claim` merely to identify the target company" in text
     assert "Target" in text
     assert "identity comes from the filing manifest" in text
@@ -78,22 +76,28 @@ def test_rules_document_graph_boundary_and_forbidden_provider_fields():
     assert "Top-level `deal` / `events` row JSON is retired" in schema
     assert "Provider-owned fields are forbidden" in schema
     assert "`T`, `bI`, `bF`" in schema
-    assert "Old row-event invariants are retained in git history only" in invariants
-    assert "projections are not emitted while blocking review flags remain" in invariants
+    assert "quote_text` must be an exact" in schema
+    assert "byte-for-byte" in schema
+    assert "Retired event-table invariants are retained in git history only" in invariants
+    assert "review rows are written deterministically" in invariants
 
 
-def test_consortium_doctrine_preserves_group_bidder_units():
+def test_live_consortium_doctrine_is_deal_agnostic():
     prompt = (REPO_ROOT / "prompts" / "extract.md").read_text()
     bidders = (REPO_ROOT / "rules" / "bidders.md").read_text()
     bids = (REPO_ROOT / "rules" / "bids.md").read_text()
+    agents = (REPO_ROOT / "AGENTS.md").read_text()
+    skill = (REPO_ROOT / "SKILL.md").read_text()
 
-    combined = "\n".join([prompt, bidders, bids])
+    combined = "\n".join([prompt, bidders, bids, agents, skill])
     assert "Preserve the filing's bidding unit" in combined
-    assert "`CSC/Pamplona` is one group actor" in combined
-    assert "`Buyer Group` is one group actor" in combined
-    assert "Longview" in combined
-    assert "Member relations are composition facts" in combined
-    assert "member actors are not projected unless" in combined.lower()
+    assert "Do not atomize group bids unless" in combined
+    assert "Member, support, financing, and rollover facts" in combined
+    assert "Relation timing is source-backed" in combined
+    assert "Exact-or-omit" in combined
+    assert "Ambiguous" in combined or "ambiguous" in combined
+    banned = ("CSC", "Pamplona", "Buyer Group", "Longview", "Sponsor A", "Sponsor E")
+    assert [term for term in banned if term in combined] == []
 
 
 def test_date_contract_keeps_dates_provider_factual_only():
@@ -158,3 +162,10 @@ def test_dependency_manifest_pins_current_project_dependencies():
         "duckdb==",
     ]:
         assert any(line.startswith(prefix) for line in lines)
+
+
+def test_env_example_excludes_retired_adjudicator_settings():
+    env_example = (REPO_ROOT / ".env.example").read_text()
+
+    assert "ADJUDICATE_MODEL" not in env_example
+    assert "ADJUDICATE_REASONING_EFFORT" not in env_example
