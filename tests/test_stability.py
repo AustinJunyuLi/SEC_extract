@@ -24,8 +24,8 @@ def _event(
     bidder_type: str | None = "organization",
     bid_value_lower: float | None = 10.0,
     bid_value_upper: float | None = 12.0,
-    source_quote: str = "Party A submitted an indication of interest.",
-    source_page: int = 4,
+    bound_source_quote: str = "Party A submitted an indication of interest.",
+    bound_source_page: int = 4,
     flags: list[dict] | None = None,
 ) -> dict:
     subtype = {
@@ -52,8 +52,19 @@ def _event(
         "bid_value_upper": bid_value_upper,
         "bid_value_unit": "per_share" if bid_value_lower is not None or bid_value_upper is not None else None,
         "consideration_type": "cash" if bid_value_lower is not None or bid_value_upper is not None else None,
-        "source_page": source_page,
-        "source_quote": source_quote,
+        "review_status": "clean",
+        "claim_id": "claim_synthetic",
+        "claim_type": "event_claim",
+        "claim_summary": "Party A submitted an indication of interest.",
+        "confidence": "high",
+        "citation_unit_id": "page_1_paragraph_1",
+        "supplied_quote": bound_source_quote,
+        "bound_source_page": bound_source_page,
+        "bound_source_quote": bound_source_quote,
+        "issue_codes": "",
+        "issue_reasons": "",
+        "suggested_action": "",
+        "evidence_ref_index": "",
         "flags": flags or [],
     }
 

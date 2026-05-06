@@ -94,8 +94,15 @@ def _write_extraction(root: Path, hard_flag: bool = False, review_blocker: bool 
                 },
                 "review_rows": [
                     {
-                        "source_page": 42,
-                        "source_quote": "Filing page 42 supports the AI row.",
+                        "review_status": "clean",
+                        "claim_id": "claim-1",
+                        "claim_type": "event_claim",
+                        "claim_summary": "AI row support",
+                        "confidence": "high",
+                        "citation_unit_id": "page_42_paragraph_1",
+                        "supplied_quote": "Filing page 42 supports the AI row.",
+                        "bound_source_page": 42,
+                        "bound_source_quote": "Filing page 42 supports the AI row.",
                     }
                 ],
             }

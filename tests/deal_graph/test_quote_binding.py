@@ -13,6 +13,7 @@ from pipeline.deal_graph.evidence import (
     pages_to_paragraphs,
 )
 from pipeline.deal_graph.orchestrate import _bind_provider_evidence
+from pipeline.deal_graph.project_review import project_review_rows
 from pipeline.deal_graph.schema import ActorRelationClaim
 from pipeline.deal_graph.validate import validate_graph_as_dicts
 
@@ -187,6 +188,16 @@ def test_evidence_ref_binding_failure_creates_one_sharp_blocking_flag():
         (flag["code"], flag["row_table"], flag["row_id"])
         for flag in flags
     } == {("evidence_ref_binding_failed", "claims", claim_id)}
+
+    review_rows = project_review_rows(graph)
+    assert len(review_rows) == 1
+    assert review_rows[0]["review_status"] == "rejected_claim"
+    assert review_rows[0]["claim_id"] == claim_id
+    assert review_rows[0]["claim_type"] == "event_claim"
+    assert review_rows[0]["citation_unit_id"] == "page_1_paragraph_1"
+    assert review_rows[0]["supplied_quote"] == "Party A signed a confidentiality agreement."
+    assert review_rows[0]["bound_source_quote"] == ""
+    assert review_rows[0]["issue_codes"] == "evidence_ref_binding_failed"
 
 
 def test_multi_ref_binding_is_all_or_nothing_for_one_claim():

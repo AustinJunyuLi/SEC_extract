@@ -198,7 +198,7 @@ def _number_text(value: Any) -> str:
 
 
 def _row_fingerprint(slug: str, row: dict[str, Any]) -> str:
-    quote_prefix = _normalize_text(_quote_text(row.get("source_quote")))[:180]
+    quote_prefix = _normalize_text(_quote_text(row.get("bound_source_quote")))[:180]
     parts = [
         slug,
         "review",
@@ -213,7 +213,7 @@ def _row_fingerprint(slug: str, row: dict[str, Any]) -> str:
         _number_text(row.get("bid_value_upper")),
         _normalize_text(row.get("bid_value_unit")),
         _normalize_text(row.get("consideration_type")),
-        _page_text(row.get("source_page")),
+        _page_text(row.get("bound_source_page")),
         quote_prefix,
     ]
     return " | ".join(parts)
@@ -429,8 +429,8 @@ def _bid_value_representation(review_rows: list[dict[str, Any]]) -> Counter:
 def _quote_diagnostics(review_rows: list[dict[str, Any]], flags: list[dict[str, Any]]) -> Counter:
     counter: Counter = Counter()
     for row in review_rows:
-        quote = row.get("source_quote")
-        page = row.get("source_page")
+        quote = row.get("bound_source_quote")
+        page = row.get("bound_source_page")
         quote_values = quote if isinstance(quote, list) else [quote]
         if quote in (None, "") or any(item in (None, "") for item in quote_values):
             counter["missing_quote"] += 1

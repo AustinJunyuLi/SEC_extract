@@ -169,7 +169,7 @@ def test_store_init_creates_expected_tables_under_audit_run(tmp_path):
     store = init_store(tmp_path, "mac-gray", "run_001")
     try:
         assert paths.database_path == tmp_path / "output/audit/mac-gray/runs/run_001/deal_graph.duckdb"
-        assert paths.snapshot_path == tmp_path / "output/audit/mac-gray/runs/run_001/deal_graph_v1.json"
+        assert paths.snapshot_path == tmp_path / "output/audit/mac-gray/runs/run_001/deal_graph_v2.json"
         assert paths.database_path.exists()
         assert schema.EXPECTED_TABLES <= store.list_tables()
     finally:

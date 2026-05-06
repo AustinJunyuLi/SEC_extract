@@ -61,11 +61,13 @@ def test_review_projection_renders_source_backed_event_rows() -> None:
         }
     )
 
-    rows = project_review_rows(graph)
+    rows = [row for row in project_review_rows(graph) if row["event_id"]]
 
     assert [row["event_subtype"] for row in rows] == ["nda_signed", "first_round_bid"]
     assert rows[0]["actor_label"] == "Party A"
-    assert rows[0]["source_quote"] == "Party A signed a confidentiality agreement with the Company"
+    assert rows[0]["review_status"] == "clean"
+    assert rows[0]["claim_type"] == "event_claim"
+    assert rows[0]["bound_source_quote"] == "Party A signed a confidentiality agreement with the Company"
     assert rows[1]["bid_value"] == 10.0
     assert rows[1]["actor_role"] == "bid_submitter"
 
@@ -99,10 +101,7 @@ def test_review_projection_preserves_multi_span_source_lists() -> None:
         {"row_table": "events", "row_id": event_id, "evidence_id": "ev_2", "ordinal": 2},
     ]
 
-    rows = project_review_rows(graph)
+    rows = [row for row in project_review_rows(graph) if row["event_id"]]
 
-    assert rows[0]["source_quote"] == [
-        "Longview agreed to rollover",
-        "remain outstanding as equity",
-    ]
-    assert rows[0]["source_page"] == [23, 24]
+    assert rows[0]["bound_source_quote"] == "Longview agreed to rollover | remain outstanding as equity"
+    assert rows[0]["bound_source_page"] == "23 | 24"

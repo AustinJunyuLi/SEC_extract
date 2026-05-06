@@ -72,20 +72,16 @@ def finalize_claim_payload(
         target_name=_target_name(slug),
     )
 
-    validation_flags = validate_graph_as_dicts(graph)
-    hard_count = sum(1 for flag in validation_flags if flag.get("severity") == "hard")
-    review_projection: list[dict[str, Any]] = []
-    if hard_count == 0:
-        review_projection = project_review_rows(graph)
-        _attach_projection_rows(
-            graph,
-            slug=slug,
-            run_id=run_id,
-            review_projection=review_projection,
-        )
+    review_projection = project_review_rows(graph)
+    _attach_projection_rows(
+        graph,
+        slug=slug,
+        run_id=run_id,
+        review_projection=review_projection,
+    )
 
-    # Re-run validation after projections so unresolved blocking flags cannot
-    # coexist with derived outputs.
+    # Validate after review projection so the audit manifest covers exactly the
+    # graph and review rows written for this run.
     validation_flags = validate_graph_as_dicts(graph)
     hard_count = sum(1 for flag in validation_flags if flag.get("severity") == "hard")
     soft_count = sum(1 for flag in validation_flags if flag.get("severity") == "soft")
@@ -325,9 +321,7 @@ def _attach_projection_rows(
     graph["review_rows"] = [
         {
             "review_row_id": make_id("review_row", slug, run_id, index, row),
-            "run_id": run_id,
-            "deal_slug": slug,
-            "payload_json": json.dumps(row, sort_keys=True),
+            **row,
         }
         for index, row in enumerate(review_projection, start=1)
     ]

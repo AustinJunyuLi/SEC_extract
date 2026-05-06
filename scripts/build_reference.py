@@ -5,7 +5,7 @@ Reference conversion. Reads deal row ranges from
 resolved §Q1–§Q7 overrides, maps to the current comparison-reference shape, and
 emits one JSON per reference deal. These files are comparator inputs, not full
 live extractor outputs, because Alex's workbook does not contain filing
-`source_quote` / `source_page` evidence.
+`bound_source_quote` / `bound_source_page` evidence.
 
 USAGE
 -----
@@ -15,9 +15,9 @@ USAGE
 
 WHY THIS EXISTS
 ---------------
-`reference/alex/{slug}.json` is the answer key that `scoring/diff.py` joins
-against. It is **Alex's intent** as structured data, not the xlsx's literal
-cells — so structural defects Alex flagged (duplicate BidderIDs,
+`reference/alex/{slug}.json` is manual comparison material, not a live
+pass/fail oracle. It is **Alex's intent** as structured data, not the xlsx's
+literal cells — so structural defects Alex flagged (duplicate BidderIDs,
 bidders-in-one-row aggregations, rows he marked for deletion) are fixed
 here rather than copied through. Every fix is preserved as a flag on the
 resulting row (or as a `deal_flag`) so reviewers can trace provenance back
@@ -133,8 +133,8 @@ are equally load-bearing for diffability.
   per the 2026-04-27 unconditional-informal-on-range rule. Records a
   `bid_range_must_be_informal` info flag on the coerced row.
 
-The AI extractor never reads these transforms; they only exist on the
-Alex side to make the diff harness operational.
+The AI extractor never reads these transforms; they only exist on the Alex side
+to make manual AI-vs-Alex review readable.
 """
 
 from __future__ import annotations

@@ -572,7 +572,20 @@ DDL: tuple[str, ...] = (
     """
     CREATE TABLE IF NOT EXISTS review_rows (
       review_row_id TEXT PRIMARY KEY, run_id TEXT NOT NULL, deal_slug TEXT NOT NULL,
-      payload_json TEXT NOT NULL
+      review_status TEXT NOT NULL, event_id TEXT, event_date TEXT, event_type TEXT,
+      event_subtype TEXT, actor_id TEXT, actor_label TEXT, actor_kind TEXT,
+      actor_role TEXT, bid_value REAL, bid_value_lower REAL, bid_value_upper REAL,
+      bid_value_unit TEXT, consideration_type TEXT, bid_stage TEXT, cycle_id TEXT,
+      relation_id TEXT, relation_type TEXT, subject_actor_id TEXT,
+      subject_actor_label TEXT, object_actor_id TEXT, object_actor_label TEXT,
+      participation_count_id TEXT, process_stage TEXT, actor_class TEXT,
+      count_min INTEGER, count_max INTEGER, count_qualifier TEXT, claim_id TEXT NOT NULL,
+      claim_type TEXT NOT NULL, claim_summary TEXT NOT NULL, confidence TEXT,
+      citation_unit_id TEXT, supplied_quote TEXT, bound_source_quote TEXT,
+      bound_source_page TEXT, issue_codes TEXT, issue_reasons TEXT,
+      suggested_action TEXT, evidence_ref_index TEXT, review_resolution TEXT,
+      reviewed_by TEXT, reviewed_at TEXT, resolution_reason TEXT,
+      corrected_citation_unit_id TEXT, corrected_quote_text TEXT
     )
     """,
 )

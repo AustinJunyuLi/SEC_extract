@@ -89,8 +89,15 @@ def _write_current_run_artifacts(root: Path, slug: str = "medivation", run_id: s
         },
         "review_rows": [
             {
-                "source_page": 42,
-                "source_quote": "Party A submitted an indication of interest.",
+                "review_status": "clean",
+                "claim_id": "claim-1",
+                "claim_type": "event_claim",
+                "claim_summary": "Party A bid",
+                "confidence": "high",
+                "citation_unit_id": "page_42_paragraph_1",
+                "supplied_quote": "Party A submitted an indication of interest.",
+                "bound_source_page": 42,
+                "bound_source_quote": "Party A submitted an indication of interest.",
             }
         ],
     }))
