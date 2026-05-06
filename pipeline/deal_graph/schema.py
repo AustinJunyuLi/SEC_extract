@@ -1,4 +1,4 @@
-"""Schema models and SQL table contract for deal_graph_v1."""
+"""Schema models and SQL table contract for deal_graph_v2."""
 from __future__ import annotations
 
 from enum import StrEnum
@@ -7,7 +7,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, ValidationInfo, field_validator, model_validator
 
 
-SCHEMA_VERSION = "deal_graph_v1"
+SCHEMA_VERSION = "deal_graph_v2"
 
 
 class StrictModel(BaseModel):
@@ -373,7 +373,6 @@ EXPECTED_TABLES = frozenset({
     "projection_units",
     "projection_judgments",
     "review_rows",
-    "estimation_bidder_rows",
 })
 
 
@@ -397,7 +396,8 @@ DDL: tuple[str, ...] = (
       evidence_id TEXT PRIMARY KEY, filing_id TEXT NOT NULL, paragraph_id TEXT NOT NULL,
       span_basis TEXT NOT NULL, span_kind TEXT NOT NULL, parent_evidence_id TEXT,
       created_by_stage TEXT NOT NULL, char_start INTEGER NOT NULL, char_end INTEGER NOT NULL,
-      quote_text TEXT NOT NULL, quote_text_hash TEXT NOT NULL, evidence_fingerprint TEXT NOT NULL
+      quote_text TEXT NOT NULL, quote_text_hash TEXT NOT NULL, evidence_fingerprint TEXT NOT NULL,
+      run_id TEXT, deal_slug TEXT, source_page INTEGER
     )
     """,
     """
@@ -431,7 +431,7 @@ DDL: tuple[str, ...] = (
       deal_slug TEXT NOT NULL, region_id TEXT, provider_source_stage TEXT NOT NULL,
       claim_type TEXT NOT NULL, confidence TEXT NOT NULL, raw_value TEXT NOT NULL,
       normalized_value TEXT, quote_text TEXT NOT NULL, quote_text_hash TEXT NOT NULL,
-      status TEXT NOT NULL, claim_sequence INTEGER NOT NULL
+      status TEXT NOT NULL, claim_sequence INTEGER NOT NULL, coverage_obligation_id TEXT
     )
     """,
     """
@@ -488,7 +488,7 @@ DDL: tuple[str, ...] = (
     """
     CREATE TABLE IF NOT EXISTS deals (
       deal_id TEXT PRIMARY KEY, run_id TEXT NOT NULL, deal_slug TEXT NOT NULL,
-      target_actor_id TEXT, announcement_date TEXT, effective_date TEXT, all_cash INTEGER
+      target_actor_id TEXT, target_name TEXT, announcement_date TEXT, effective_date TEXT, all_cash INTEGER
     )
     """,
     """
@@ -510,6 +510,7 @@ DDL: tuple[str, ...] = (
     CREATE TABLE IF NOT EXISTS actor_relations (
       relation_id TEXT PRIMARY KEY, run_id TEXT NOT NULL, deal_id TEXT NOT NULL,
       subject_actor_id TEXT NOT NULL, object_actor_id TEXT NOT NULL, relation_type TEXT NOT NULL,
+      subject_actor_label TEXT NOT NULL, object_actor_label TEXT NOT NULL,
       role_detail TEXT, cycle_id_first_observed TEXT, cycle_id_last_observed TEXT,
       effective_date_first TEXT, effective_date_last TEXT, confidence TEXT NOT NULL
     )
@@ -519,13 +520,13 @@ DDL: tuple[str, ...] = (
       event_id TEXT PRIMARY KEY, run_id TEXT NOT NULL, deal_id TEXT NOT NULL,
       cycle_id TEXT, event_type TEXT NOT NULL, event_subtype TEXT NOT NULL, event_date TEXT,
       description TEXT NOT NULL, bid_value REAL, bid_value_lower REAL, bid_value_upper REAL,
-      bid_value_unit TEXT, consideration_type TEXT
+      bid_value_unit TEXT, consideration_type TEXT, bid_stage TEXT
     )
     """,
     """
     CREATE TABLE IF NOT EXISTS event_actor_links (
       link_id TEXT PRIMARY KEY, run_id TEXT NOT NULL, event_id TEXT NOT NULL,
-      actor_id TEXT NOT NULL, role TEXT NOT NULL, role_detail TEXT
+      actor_id TEXT NOT NULL, actor_label TEXT NOT NULL, role TEXT NOT NULL, role_detail TEXT
     )
     """,
     """
@@ -551,7 +552,8 @@ DDL: tuple[str, ...] = (
     """
     CREATE TABLE IF NOT EXISTS review_flags (
       flag_id TEXT PRIMARY KEY, run_id TEXT NOT NULL, deal_id TEXT,
-      severity TEXT NOT NULL, code TEXT NOT NULL, reason TEXT NOT NULL, current INTEGER NOT NULL
+      severity TEXT NOT NULL, code TEXT NOT NULL, reason TEXT NOT NULL,
+      row_table TEXT, row_id TEXT, status TEXT, metadata TEXT, current INTEGER NOT NULL
     )
     """,
     """
@@ -571,15 +573,6 @@ DDL: tuple[str, ...] = (
     CREATE TABLE IF NOT EXISTS review_rows (
       review_row_id TEXT PRIMARY KEY, run_id TEXT NOT NULL, deal_slug TEXT NOT NULL,
       payload_json TEXT NOT NULL
-    )
-    """,
-    """
-    CREATE TABLE IF NOT EXISTS estimation_bidder_rows (
-      estimation_row_id TEXT PRIMARY KEY, run_id TEXT NOT NULL, deal_slug TEXT NOT NULL,
-      cycle_id TEXT, actor_id TEXT NOT NULL, actor_label TEXT NOT NULL, bI REAL, bI_lo REAL,
-      bI_hi REAL, bF REAL, admitted INTEGER, T TEXT, bid_value_unit TEXT,
-      consideration_type TEXT, boundary_event_id TEXT, formal_boundary TEXT,
-      dropout_mechanism TEXT, confidence_min TEXT, projection_rule_version TEXT NOT NULL
     )
     """,
 )

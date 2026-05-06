@@ -1,4 +1,4 @@
-"""Validation for deal_graph_v1 graph snapshots."""
+"""Validation for deal_graph_v2 graph snapshots."""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -34,11 +34,11 @@ CANONICAL_ROW_TABLES = {
 def validate_graph(graph: dict[str, Any]) -> list[ValidationFlag]:
     """Return hard validation flags for missing graph proof/disposition data."""
     flags: list[ValidationFlag] = []
-    if graph.get("schema_version") != "deal_graph_v1":
+    if graph.get("schema_version") != "deal_graph_v2":
         flags.append(ValidationFlag(
             code="DG_SCHEMA_VERSION",
             severity="hard",
-            reason="Canonical graph snapshot must declare schema_version=deal_graph_v1.",
+            reason="Canonical graph snapshot must declare schema_version=deal_graph_v2.",
         ))
 
     claims = {row["claim_id"]: row for row in graph.get("claims", []) if row.get("claim_id")}
@@ -128,7 +128,11 @@ def validate_graph(graph: dict[str, Any]) -> list[ValidationFlag]:
 
     unresolved = [
         row for row in graph.get("review_flags", [])
-        if row.get("severity") == "blocking" and row.get("status", "open") != "resolved"
+        if (
+            row.get("severity") == "blocking"
+            and row.get("current", True) is not False
+            and row.get("status", "open") != "resolved"
+        )
     ]
     for row in unresolved:
         flags.append(ValidationFlag(
@@ -137,13 +141,6 @@ def validate_graph(graph: dict[str, Any]) -> list[ValidationFlag]:
             reason=row.get("reason", "Unresolved blocking graph review flag."),
             row_table=row.get("row_table"),
             row_id=row.get("row_id"),
-        ))
-    projection_rows = graph.get("projection_units", []) or graph.get("estimation_bidder_rows", [])
-    if unresolved and projection_rows:
-        flags.append(ValidationFlag(
-            code="DG_PROJECTION_BLOCKED",
-            severity="hard",
-            reason="Projection rows must not depend on unresolved blocking review flags.",
         ))
     return flags
 
@@ -172,7 +169,7 @@ def main() -> None:
     import json
     from pathlib import Path
 
-    parser = argparse.ArgumentParser(description="Validate a deal_graph_v1 snapshot.")
+    parser = argparse.ArgumentParser(description="Validate a deal_graph_v2 snapshot.")
     parser.add_argument("snapshot", type=Path)
     args = parser.parse_args()
     flags = validate_graph_as_dicts(json.loads(args.snapshot.read_text()))

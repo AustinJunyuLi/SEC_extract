@@ -3,7 +3,7 @@
 ## Purpose
 
 Given one SEC merger filing, extract source-backed claims from the Background
-section for the `deal_graph_v1` pipeline. The model proposes facts; Python
+section for the `deal_graph_v2` pipeline. The model proposes facts; Python
 constructs and validates the canonical graph.
 
 ## Invocation
@@ -48,8 +48,8 @@ Every claim must include `coverage_obligation_id` and at least one
 `quote_text` must be copied exactly from that unit's text. Use multiple refs
 when a claim needs separated source support. Provider-level `quote_text` and
 `quote_texts` are retired. The provider never emits canonical graph ids, source
-offsets, old row fields, estimator variables, coverage results, review rows, or
-judgment/disposition fields.
+offsets, old row fields, coverage results, review rows, or judgment/disposition
+fields.
 
 The provider does not emit target-only actor claims. Target identity is
 manifest/deal metadata owned by Python; target labels appear in provider claims
@@ -67,16 +67,15 @@ Finalization:
 2. bind evidence refs exactly to Background citation units;
 3. canonicalize actors, relations, events, bids, and counts;
 4. write graph artifacts in `output/audit/{slug}/runs/{run_id}/`;
-5. validate evidence, dispositions, coverage, row evidence, and projection
-   blockers;
-6. project review rows and estimation bidder rows when unblocked;
+5. validate evidence, dispositions, coverage, row evidence, and review output;
+6. project review rows;
 7. write latest output/state/flags.
 
 ## Consortium Rule
 
-Preserve the filing's bidding unit. A buyer group can be the bidder and
-estimator unit. Member facts are represented through actor relations and do not
-create member bidder rows unless the filing shows separate bidding conduct.
+Preserve the filing's bidding unit. A buyer group can be the bidder unit. Member
+facts are represented through actor relations and do not create member bidder
+rows unless the filing shows separate bidding conduct.
 
 Mac Gray `CSC/Pamplona`: one group actor/bidder unit; CSC and Pamplona are
 relations; Pamplona financing is not a second bidder row by itself.
@@ -89,4 +88,4 @@ rollover, or support is a dated relation only when source-supported.
 Hard flags produce `validated`. Zero flags produce `passed_clean`. Old
 row-per-event JSON is stale and must not pass as canonical input.
 
-Reference `verified` status requires Austin or agent filing-grounded verification with `quality_reports/reference_verification/{slug}.md`. An agent must not mark a deal verified solely because the model output passes schema validation.
+Reference `verified` status requires Austin or agent filing-grounded verification with `quality_reports/reference_verification/{slug}.md`. An agent must not mark a deal verified solely because the model output passes schema validation. The report records a review, not a binding to the latest run id; current extraction artifacts still have to be consistent and filing-grounded.

@@ -25,7 +25,7 @@ from pipeline.llm.response_format import DEAL_GRAPH_CLAIM_SCHEMA
 
 
 ELIGIBLE_OUTCOMES = frozenset({"validated", "passed", "passed_clean"})
-LIVE_GRAPH_SCHEMA_VERSION = "deal_graph_v1"
+LIVE_GRAPH_SCHEMA_VERSION = "deal_graph_v2"
 LIVE_GRAPH_LIST_KEYS = (
     "actors",
     "actor_relations",
@@ -36,7 +36,6 @@ LIVE_GRAPH_LIST_KEYS = (
     "event_actor_links",
     "participation_counts",
     "review_rows",
-    "estimation_bidder_rows",
     "validation_flags",
     "review_flags",
 )
@@ -54,6 +53,7 @@ FINAL_CLASSIFICATIONS = (
     "INSUFFICIENT_ARCHIVED_RUNS",
 )
 RETIRED_PROVIDER_FALLBACK_FIELD = "json_" + "schema_used"
+TARGET_GATE_PROOF_SCHEMA_VERSION = "target_gate_proof_v2"
 
 
 class StabilityError(RuntimeError):
@@ -97,9 +97,6 @@ class RunMetrics:
     coverage_result_counts: tuple[tuple[str, int], ...]
     anonymous_placeholder_count: int
     cohort_like_placeholder_count: int
-    estimation_count: int
-    estimation_fingerprints: tuple[str, ...]
-    estimation_metrics: tuple[tuple[str, int], ...]
     date_diagnostics: tuple[tuple[str, int], ...]
     bid_value_representation: tuple[tuple[str, int], ...]
     quote_diagnostics: tuple[tuple[str, int], ...]
@@ -132,9 +129,6 @@ class RunMetrics:
             self.coverage_result_counts,
             self.anonymous_placeholder_count,
             self.cohort_like_placeholder_count,
-            self.estimation_count,
-            self.estimation_fingerprints,
-            self.estimation_metrics,
             self.date_diagnostics,
             self.bid_value_representation,
             self.quote_diagnostics,
@@ -221,27 +215,6 @@ def _row_fingerprint(slug: str, row: dict[str, Any]) -> str:
         _normalize_text(row.get("consideration_type")),
         _page_text(row.get("source_page")),
         quote_prefix,
-    ]
-    return " | ".join(parts)
-
-
-def _estimation_fingerprint(slug: str, row: dict[str, Any]) -> str:
-    parts = [
-        slug,
-        "estimation",
-        _normalize_text(row.get("actor_label")),
-        _normalize_text(row.get("T")),
-        _number_text(row.get("bI")),
-        _number_text(row.get("bI_lo")),
-        _number_text(row.get("bI_hi")),
-        _number_text(row.get("bF")),
-        _number_text(row.get("admitted")),
-        _number_text(row.get("formal_boundary")),
-        _normalize_text(row.get("bid_value_unit")),
-        _normalize_text(row.get("consideration_type")),
-        _normalize_text(row.get("dropout_mechanism")),
-        _normalize_text(row.get("confidence_min")),
-        _normalize_text(row.get("projection_rule_version")),
     ]
     return " | ".join(parts)
 
@@ -436,7 +409,7 @@ def _date_diagnostics(review_rows: list[dict[str, Any]], flags: list[dict[str, A
     return counter
 
 
-def _bid_value_representation(review_rows: list[dict[str, Any]], estimation_rows: list[dict[str, Any]]) -> Counter:
+def _bid_value_representation(review_rows: list[dict[str, Any]]) -> Counter:
     counter: Counter = Counter()
     for row in review_rows:
         value = row.get("bid_value")
@@ -450,16 +423,6 @@ def _bid_value_representation(review_rows: list[dict[str, Any]], estimation_rows
         unit_state = f"unit:{unit}" if unit not in (None, "") else "unit:null"
         consideration_state = f"consideration:{consideration}" if consideration not in (None, "") else "consideration:null"
         counter[f"review/{value_state}/{lower_state}/{upper_state}/{unit_state}/{consideration_state}"] += 1
-    for row in estimation_rows:
-        bi_state = "bI" if row.get("bI") not in (None, "") else "no_bI"
-        bi_range_state = (
-            "bI_range"
-            if row.get("bI_lo") not in (None, "") or row.get("bI_hi") not in (None, "")
-            else "no_bI_range"
-        )
-        bf_state = "bF" if row.get("bF") not in (None, "") else "no_bF"
-        unit_state = f"unit:{row.get('bid_value_unit')}" if row.get("bid_value_unit") not in (None, "") else "unit:null"
-        counter[f"estimation/{bi_state}/{bi_range_state}/{bf_state}/{unit_state}"] += 1
     return counter
 
 
@@ -484,22 +447,10 @@ def _quote_diagnostics(review_rows: list[dict[str, Any]], flags: list[dict[str, 
     return counter
 
 
-def _estimation_metrics(estimation_rows: list[dict[str, Any]]) -> Counter:
-    counter: Counter = Counter()
-    for row in estimation_rows:
-        counter[f"T:{row.get('T') or 'null'}"] += 1
-        counter["admitted:true" if row.get("admitted") is True else "admitted:false"] += 1
-        counter["formal_boundary:true" if row.get("formal_boundary") is True else "formal_boundary:false"] += 1
-        counter["has_bI" if row.get("bI") not in (None, "") else "missing_bI"] += 1
-        counter["has_bF" if row.get("bF") not in (None, "") else "missing_bF"] += 1
-    return counter
-
-
 def metrics_for_run(archived: ArchivedRun) -> RunMetrics:
     final_output = archived.final_output
     graph = final_output.get("graph") if isinstance(final_output.get("graph"), dict) else {}
     review_rows = _list_of_dicts(final_output, "review_rows", archived.run_dir / "final_output.json")
-    estimation_rows = _list_of_dicts(final_output, "estimation_bidder_rows", archived.run_dir / "final_output.json")
     graph_lists = {
         key: _list_of_dicts(graph, key, archived.run_dir / "final_output.json")
         for key in (
@@ -553,11 +504,8 @@ def metrics_for_run(archived: ArchivedRun) -> RunMetrics:
         ),
         anonymous_placeholder_count=sum(1 for alias in aliases if _is_anonymous_alias(alias)),
         cohort_like_placeholder_count=sum(1 for alias in aliases if _is_cohort_like_alias(alias)),
-        estimation_count=len(estimation_rows),
-        estimation_fingerprints=tuple(sorted(_estimation_fingerprint(archived.slug, row) for row in estimation_rows)),
-        estimation_metrics=_stable_items(_estimation_metrics(estimation_rows)),
         date_diagnostics=_stable_items(_date_diagnostics(review_rows, flags)),
-        bid_value_representation=_stable_items(_bid_value_representation(review_rows, estimation_rows)),
+        bid_value_representation=_stable_items(_bid_value_representation(review_rows)),
         quote_diagnostics=_stable_items(_quote_diagnostics(review_rows, flags)),
     )
 
@@ -581,9 +529,9 @@ def _validate_run_artifacts(run_dir: Path) -> None:
 def _list_of_dicts(payload: dict[str, Any], key: str, artifact_path: Path) -> list[dict[str, Any]]:
     value = payload.get(key)
     if not isinstance(value, list):
-        raise StabilityError(f"live deal_graph_v1 artifact missing list {key}: {artifact_path}")
+        raise StabilityError(f"live deal_graph_v2 artifact missing list {key}: {artifact_path}")
     if not all(isinstance(row, dict) for row in value):
-        raise StabilityError(f"live deal_graph_v1 artifact list {key} contains non-object row: {artifact_path}")
+        raise StabilityError(f"live deal_graph_v2 artifact list {key} contains non-object row: {artifact_path}")
     return value
 
 
@@ -602,7 +550,6 @@ def _validate_live_final_output(final_output: dict[str, Any], artifact_path: Pat
     for key in LIVE_GRAPH_LIST_KEYS:
         _list_of_dicts(graph, key, artifact_path)
     _list_of_dicts(final_output, "review_rows", artifact_path)
-    _list_of_dicts(final_output, "estimation_bidder_rows", artifact_path)
 
 
 def _is_live_graph_snapshot(final_output: dict[str, Any]) -> bool:
@@ -613,7 +560,6 @@ def _is_live_graph_snapshot(final_output: dict[str, Any]) -> bool:
         and graph.get("schema_version") == LIVE_GRAPH_SCHEMA_VERSION
         and all(isinstance(graph.get(key), list) for key in LIVE_GRAPH_LIST_KEYS)
         and isinstance(final_output.get("review_rows"), list)
-        and isinstance(final_output.get("estimation_bidder_rows"), list)
     )
 
 
@@ -740,9 +686,6 @@ def _classify_slug(slug: str, runs: tuple[RunMetrics, ...], eligible_count: int,
         ("coverage result counts changed", lambda run: run.coverage_result_counts),
         ("anonymous placeholder counts changed", lambda run: run.anonymous_placeholder_count),
         ("cohort-like placeholder counts changed", lambda run: run.cohort_like_placeholder_count),
-        ("estimation counts changed", lambda run: run.estimation_count),
-        ("estimation fingerprints changed", lambda run: run.estimation_fingerprints),
-        ("estimation metrics changed", lambda run: run.estimation_metrics),
         ("date diagnostics changed", lambda run: run.date_diagnostics),
         ("bid-value representation changed", lambda run: run.bid_value_representation),
         ("quote diagnostics changed", lambda run: run.quote_diagnostics),
@@ -756,7 +699,7 @@ def _classify_slug(slug: str, runs: tuple[RunMetrics, ...], eligible_count: int,
         reasons.append("metric variability observed: " + "; ".join(dict.fromkeys(metric_changes)))
     if info_only_changed:
         reasons.append("info-only flag volume changed but substantive metrics were stable")
-    reasons.append("selected archived runs passed live evidence, graph, and projection contract checks")
+    reasons.append("selected archived runs passed live evidence, graph, and review contract checks")
     return SlugAnalysis(
         slug=slug,
         selected_runs=runs,
@@ -873,8 +816,6 @@ def build_report(analysis: StabilityAnalysis) -> str:
                 f"- run {run.run_id} claim_disposition_counts: {_format_pairs(run.claim_disposition_counts)}",
                 f"- run {run.run_id} coverage_result_counts: {_format_pairs(run.coverage_result_counts)}",
                 f"- run {run.run_id} anonymous_placeholders: {run.anonymous_placeholder_count}; cohort_like_placeholders: {run.cohort_like_placeholder_count}",
-                f"- run {run.run_id} estimation_rows={run.estimation_count}; estimation_fingerprints={_digest(run.estimation_fingerprints)}",
-                f"- run {run.run_id} estimation_metrics: {_format_pairs(run.estimation_metrics)}",
                 f"- run {run.run_id} date_diagnostics: {_format_pairs(run.date_diagnostics)}",
                 f"- run {run.run_id} bid_value_representation: {_format_pairs(run.bid_value_representation)}",
                 f"- run {run.run_id} quote_diagnostics: {_format_pairs(run.quote_diagnostics)}",
@@ -896,8 +837,17 @@ def build_report(analysis: StabilityAnalysis) -> str:
 
 def build_json_summary(analysis: StabilityAnalysis) -> str:
     payload = {
-        "schema_version": "target_gate_proof_v1",
+        "schema_version": TARGET_GATE_PROOF_SCHEMA_VERSION,
         "classification": analysis.classification,
+        "llm_content_variation": {
+            "allowed": True,
+            "basis": (
+                "Clean runs may vary in LLM wording, selected source quotes, row fingerprints, "
+                "and non-blocking content metrics; the proof gate blocks hard flags, soft flags, "
+                "contract drift, and missing live graph/evidence/review artifacts."
+            ),
+        },
+        "no_estimator": True,
         "reference_slugs": list(analysis.slugs),
         "requested_runs": analysis.requested_runs,
         "slugs": list(analysis.slugs),
@@ -910,6 +860,10 @@ def build_json_summary(analysis: StabilityAnalysis) -> str:
                 "required_archived_runs": result.required_run_count,
                 "reasons": list(result.reasons),
                 "selected_runs": [run.run_id for run in result.selected_runs],
+                "selected_run_dirs": [
+                    f"output/audit/{result.slug}/runs/{run.run_id}"
+                    for run in result.selected_runs
+                ],
             }
             for result in analysis.slug_results
         ],

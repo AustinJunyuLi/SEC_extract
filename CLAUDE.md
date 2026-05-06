@@ -1,9 +1,9 @@
 # CLAUDE.md - M&A Takeover Auction Extraction Project
 
 This file mirrors `AGENTS.md` for Claude-oriented sessions. The live contract
-is `deal_graph_v1`: provider claim extraction, Python-owned quote binding and
+is `deal_graph_v2`: provider claim extraction, Python-owned quote binding and
 canonical graph construction, deterministic graph validation, and derived
-review/estimation projections. Read `AGENTS.md` and `SKILL.md` before changing
+review rows. Read `AGENTS.md` and `SKILL.md` before changing
 extraction behavior.
 
 Key rules:
@@ -22,12 +22,12 @@ Key rules:
   bidder registry, `T`, `bI`, `bF`, admitted/dropout outcomes, coverage
   results, or projection rows.
 - Python owns source spans, dispositions, coverage results, canonical actors,
-  actor relations, events, validation flags, review rows, and estimator rows.
+  actor relations, events, validation flags, and review rows.
 - Preserve filing bidding units. Buyer groups and consortiums are actors;
   member relations do not automatically become bidder rows.
 - No backward compatibility shims or stale row-per-event outputs.
 - Keep API keys in runtime environment only and never commit secrets.
-- Reference `verified` status requires Austin or agent filing-grounded verification with `quality_reports/reference_verification/{slug}.md`; an agent must not mark a deal verified solely because the model output passes schema validation.
+- Reference `verified` status requires Austin or agent filing-grounded verification with `quality_reports/reference_verification/{slug}.md`; an agent must not mark a deal verified solely because the model output passes schema validation. The report is a historical review artifact, not a promise that its run id equals the latest extraction run id.
 
 Use:
 

@@ -58,28 +58,6 @@ def _event(
     }
 
 
-def _estimation_row(*, bidder_alias: str = "Party A") -> dict:
-    return {
-        "deal_slug": "medivation",
-        "cycle_id": "cycle_synthetic",
-        "actor_id": f"actor_{bidder_alias}".replace(" ", "_").lower(),
-        "actor_label": bidder_alias,
-        "bI": 10.0,
-        "bI_lo": 10.0,
-        "bI_hi": 12.0,
-        "bF": 12.0,
-        "admitted": True,
-        "T": "unknown",
-        "bid_value_unit": "per_share",
-        "consideration_type": "cash",
-        "boundary_event_id": "event_boundary",
-        "formal_boundary": True,
-        "dropout_mechanism": None,
-        "confidence_min": "high",
-        "projection_rule_version": "bidder_cycle_baseline_v1",
-    }
-
-
 def _claim_payload() -> dict:
     return {
         "actor_claims": [
@@ -136,10 +114,9 @@ def _write_run(
     if manifest_extra:
         manifest.update(manifest_extra)
     review_rows = events if events is not None else [_event()]
-    estimation_rows = [_estimation_row()]
     graph_flags = row_flags or []
     graph = {
-        "schema_version": "deal_graph_v1",
+        "schema_version": "deal_graph_v2",
         "run_id": run_id,
         "deal_slug": slug,
         "deals": [
@@ -209,14 +186,13 @@ def _write_run(
         "row_evidence": [],
         "review_flags": graph_flags,
         "review_rows": review_rows,
-        "estimation_bidder_rows": estimation_rows,
         "last_run": finished_at,
         "rulebook_version": BASE_HASHES["rulebook_version"],
         "validation_flags": graph_flags,
     }
     (run_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True))
     (run_dir / "final_output.json").write_text(json.dumps({
-        "schema_version": "deal_graph_v1",
+        "schema_version": "deal_graph_v2",
         "deal_slug": slug,
         "run_id": run_id,
         "last_run": finished_at,
@@ -231,7 +207,6 @@ def _write_run(
         },
         "graph": graph,
         "review_rows": review_rows,
-        "estimation_bidder_rows": estimation_rows,
     }, indent=2, sort_keys=True))
     (run_dir / "validation.json").write_text(json.dumps({
         "schema_version": "validation_v1",
@@ -398,9 +373,15 @@ def test_json_report_is_target_gate_proof_shape(tmp_path, capsys):
 
     payload = json.loads(capsys.readouterr().out)
     assert rc == 0
-    assert payload["schema_version"] == "target_gate_proof_v1"
+    assert payload["schema_version"] == "target_gate_proof_v2"
     assert payload["classification"] == "STABLE_FOR_REFERENCE_REVIEW"
+    assert payload["llm_content_variation"]["allowed"] is True
     assert payload["reference_slugs"] == ["medivation"]
+    assert payload["slug_results"][0]["selected_run_dirs"] == [
+        "output/audit/medivation/runs/run-1",
+        "output/audit/medivation/runs/run-2",
+        "output/audit/medivation/runs/run-3",
+    ]
 
 
 def test_model_or_reasoning_drift_classifies_rule_or_validator_needed(tmp_path, capsys):

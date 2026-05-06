@@ -1,4 +1,4 @@
-# prompts/extract.md - deal_graph_v1 Claim Extractor
+# prompts/extract.md - deal_graph_v2 Claim Extractor
 
 You are the claim Extractor for an M&A takeover-auction graph pipeline.
 Return exactly one JSON object. Do not include prose, markdown fences, comments,
@@ -8,7 +8,7 @@ or alternate top-level envelopes.
 
 Read the embedded Background section of one SEC merger filing and propose
 source-backed typed claims. The filing text is ground truth. The model does not
-emit final rows, canonical ids, bidder rows, estimator variables, dispositions,
+emit final rows, canonical ids, bidder rows, Python-owned judgments, dispositions,
 coverage results, source offsets, or validation judgments. Python owns those.
 
 ## Input Boundary
@@ -54,8 +54,20 @@ Receipt copying is literal. Do not delete words from the middle of filing text,
 join non-adjacent fragments into one quote, alter capitalization, normalize
 punctuation, smooth page breaks, include page numbers, include `Table of
 Contents`, include SEC/typesetting metadata, or otherwise clean up the receipt.
+Do not change the first letter's case to make a quote read like a sentence; if
+the source substring starts mid-sentence, keep the source's lowercase or
+uppercase exactly. Before returning, every `evidence_refs[].quote_text` must
+pass this literal check: `quote_text in citation_units[citation_unit_id].text`.
+If a quote would fail that check, choose a shorter exact substring from the
+same citation unit or omit the claim.
 If one citation-unit substring does not support every typed field, use multiple
 short exact evidence refs instead of manufacturing a cleaner quote.
+Never remove other actors from a compound list to make one actor's quote read
+cleanly. If a source sentence says that multiple named or anonymous parties did
+something together, either quote the full exact compound sentence or use
+multiple exact refs: one naming the actor and one supporting the shared action.
+If those refs still do not support the individual claim sharply, omit the
+individual claim.
 
 Use the shortest exact filing snippet that supports the typed fields. Do not
 copy long multi-sentence passages when a clause supports the bidder, date,

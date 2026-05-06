@@ -1,4 +1,4 @@
-"""Canonicalize deal_graph_v1 claim payloads into graph snapshots.
+"""Canonicalize deal_graph_v2 claim payloads into graph snapshots.
 
 This module intentionally works with plain dictionaries.  Store-backed workers
 can persist the same tables elsewhere and then pass equivalent rows into the
@@ -45,6 +45,7 @@ class Canonicalizer:
     run_id: str
     deal_id: str
     filing_id: str
+    target_name: str | None = None
     evidence: list[dict[str, Any]] = field(default_factory=list)
     claims: list[dict[str, Any]] = field(default_factory=list)
     claim_evidence: list[dict[str, Any]] = field(default_factory=list)
@@ -211,6 +212,7 @@ class Canonicalizer:
             object_actor["actor_id"],
             claim.get("relation_type"),
             claim.get("effective_date_first"),
+            claim.get("role_detail"),
         )
         relation = {
             "relation_id": relation_id,
@@ -252,6 +254,7 @@ class Canonicalizer:
             "bid_value_upper": None,
             "bid_value_unit": None,
             "consideration_type": None,
+            "bid_stage": None,
         }
         self.events.append(event)
         self.link_row_evidence("events", event_id, evidence_ids)
@@ -328,14 +331,15 @@ class Canonicalizer:
         _propagate_member_class_signals(self.actors, self.actor_relations)
         _dedupe_coverage_results(self.coverage_results)
         return {
-            "schema_version": "deal_graph_v1",
+            "schema_version": "deal_graph_v2",
             "run_id": self.run_id,
             "deal_slug": self.deal_slug,
             "deals": [{
                 "deal_id": self.deal_id,
                 "run_id": self.run_id,
                 "deal_slug": self.deal_slug,
-                "target_actor_id": None,
+                "target_actor_id": _stable_id("actor", self.deal_slug, self.target_name) if self.target_name else None,
+                "target_name": self.target_name,
                 "announcement_date": None,
                 "effective_date": None,
                 "all_cash": None,
@@ -371,6 +375,7 @@ def canonicalize_claim_payload(
     deal_slug: str,
     run_id: str = "local",
     evidence_context: dict[str, Any] | None = None,
+    target_name: str | None = None,
 ) -> dict[str, Any]:
     """Convert a claim-only provider payload into a canonical graph snapshot."""
     if payload.get("schema_version") and payload.get("schema_version") != "deal_graph_claims_v1":
@@ -386,6 +391,7 @@ def canonicalize_claim_payload(
         run_id=run_id,
         deal_id=_stable_id("deal", deal_slug),
         filing_id=str(evidence_context.get("filing_id") or _stable_id("filing", deal_slug, run_id)),
+        target_name=target_name,
         evidence=list(evidence_context.get("evidence", [])),
         bound_evidence_ids_by_claim=dict(evidence_context.get("claim_evidence_ids", {})),
         claim_failures=dict(evidence_context.get("claim_failures", {})),
@@ -456,8 +462,8 @@ def _apply_relation_class_signal(subject: dict[str, Any], object_actor: dict[str
         elif object_actor["bidder_class"] != "financial" and not object_actor["has_strategic_member"]:
             object_actor["bidder_class"] = "mixed"
     if object_actor["has_strategic_member"] and object_actor["has_financial_member"]:
-        # Mac Gray style operating-buyer groups remain strategic for estimation
-        # when a strategic member is source-backed.
+        # Mixed groups with a source-backed strategic member remain strategic
+        # for canonical bidder-class review.
         object_actor["bidder_class"] = "strategic"
 
 

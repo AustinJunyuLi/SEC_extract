@@ -1,4 +1,4 @@
-"""Storage helpers for deal_graph_v1 run artifacts."""
+"""Storage helpers for deal_graph_v2 run artifacts."""
 from __future__ import annotations
 
 import sqlite3
@@ -12,7 +12,7 @@ from .schema import DDL, EXPECTED_TABLES
 
 
 DB_FILENAME = "deal_graph.duckdb"
-SNAPSHOT_FILENAME = "deal_graph_v1.json"
+SNAPSHOT_FILENAME = "deal_graph_v2.json"
 
 
 def _load_duckdb():
@@ -121,7 +121,7 @@ class DealGraphStore:
     def assert_expected_tables(self) -> None:
         missing = set(EXPECTED_TABLES) - self.list_tables()
         if missing:
-            raise RuntimeError(f"deal_graph_v1 store missing tables: {sorted(missing)}")
+            raise RuntimeError(f"deal_graph_v2 store missing tables: {sorted(missing)}")
 
     def reject_legacy_canonical_tables(self) -> None:
         legacy = self.list_tables().intersection({"event_rows", "row_events", "bidder_registry"})
@@ -170,7 +170,6 @@ class DealGraphStore:
             "row_evidence": "row_evidence",
             "review_flags": "review_flags",
             "review_rows": "review_rows",
-            "estimation_bidder_rows": "estimation_bidder_rows",
         }
         if graph.get("evidence"):
             self.insert_rows("spans", graph["evidence"])

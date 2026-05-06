@@ -4,11 +4,10 @@
 
 The canonical actor can be an organization, person, group, vehicle, cohort, or
 committee. The filing's bidding unit is preserved. A buyer group, club bid,
-sponsor/corporate pair, or changing coalition can be one actor and one
-estimation unit.
+sponsor/corporate pair, or changing coalition can be one actor.
 
 Member relations are composition facts. They do not automatically create
-bidder rows, bid events, or estimator rows.
+bidder rows or bid events.
 
 ## Relation Direction
 

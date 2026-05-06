@@ -79,17 +79,62 @@ def _write_extraction(root: Path, hard_flag: bool = False, review_blocker: bool 
     (out / "medivation.json").write_text(
         json.dumps(
             {
-                "schema_version": "deal_graph_v1",
+                "schema_version": "deal_graph_v2",
+                "run_id": "run-123",
                 "deal": {"deal_flags": flags},
                 "graph": {
+                    "evidence": [
+                        {
+                            "source_page": 42,
+                            "quote_text": "Filing page 42 supports the AI row.",
+                        }
+                    ],
                     "validation_flags": flags,
                     "review_flags": review_flags,
                 },
-                "review_rows": [],
-                "estimation_bidder_rows": [],
+                "review_rows": [
+                    {
+                        "source_page": 42,
+                        "source_quote": "Filing page 42 supports the AI row.",
+                    }
+                ],
             }
         )
     )
+
+
+def _write_filing_and_audit(root: Path) -> None:
+    filing_dir = root / "data" / "filings" / "medivation"
+    filing_dir.mkdir(parents=True)
+    (filing_dir / "pages.json").write_text(json.dumps([
+        {
+            "number": 42,
+            "content": "Filing page 42 supports the AI row.",
+        }
+    ]))
+    run_dir = root / "output" / "audit" / "medivation" / "runs" / "run-123"
+    run_dir.mkdir(parents=True)
+    (run_dir / "raw_response.json").write_text(json.dumps({
+        "schema_version": "raw_response_v3",
+        "run_id": "run-123",
+        "slug": "medivation",
+        "parsed_json": {
+            "actor_claims": [
+                {
+                    "evidence_refs": [
+                        {
+                            "citation_unit_id": "page_42_paragraph_1",
+                            "quote_text": "Filing page 42 supports the AI row.",
+                        }
+                    ]
+                }
+            ],
+            "event_claims": [],
+            "bid_claims": [],
+            "participation_count_claims": [],
+            "actor_relation_claims": [],
+        },
+    }))
 
 
 def _write_report(root: Path, text: str = GOOD_REPORT) -> None:
@@ -101,6 +146,7 @@ def _write_report(root: Path, text: str = GOOD_REPORT) -> None:
 def test_mark_verified_updates_reference_progress(tmp_path):
     _write_progress(tmp_path)
     _write_extraction(tmp_path)
+    _write_filing_and_audit(tmp_path)
     _write_report(tmp_path)
 
     mark_reference_verified.mark_verified(
@@ -115,12 +161,14 @@ def test_mark_verified_updates_reference_progress(tmp_path):
     assert deal["status"] == "verified"
     assert deal["last_verified_by"] == "Codex agent"
     assert deal["last_verified_at"] == "2026-05-02T12:00:00Z"
+    assert deal["last_verified_run_id"] == "run-123"
     assert deal["verification_report"] == "quality_reports/reference_verification/medivation.md"
 
 
 def test_mark_verified_rejects_hard_flags(tmp_path):
     _write_progress(tmp_path)
     _write_extraction(tmp_path, hard_flag=True)
+    _write_filing_and_audit(tmp_path)
     _write_report(tmp_path)
 
     try:
@@ -139,6 +187,7 @@ def test_mark_verified_rejects_hard_flags(tmp_path):
 def test_mark_verified_rejects_blocking_graph_review_flags(tmp_path):
     _write_progress(tmp_path)
     _write_extraction(tmp_path, review_blocker=True)
+    _write_filing_and_audit(tmp_path)
     _write_report(tmp_path)
 
     try:
@@ -157,6 +206,7 @@ def test_mark_verified_rejects_blocking_graph_review_flags(tmp_path):
 def test_mark_verified_rejects_missing_report(tmp_path):
     _write_progress(tmp_path)
     _write_extraction(tmp_path)
+    _write_filing_and_audit(tmp_path)
 
     try:
         mark_reference_verified.mark_verified(
@@ -167,5 +217,28 @@ def test_mark_verified_rejects_missing_report(tmp_path):
         )
     except mark_reference_verified.MarkVerifiedError as exc:
         assert "verification report failed checks" in str(exc)
+    else:
+        raise AssertionError("expected MarkVerifiedError")
+
+
+def test_mark_verified_rejects_stale_extraction_run_id(tmp_path):
+    _write_progress(tmp_path)
+    _write_extraction(tmp_path)
+    extraction_path = tmp_path / "output" / "extractions" / "medivation.json"
+    payload = json.loads(extraction_path.read_text())
+    payload["run_id"] = "old-run"
+    extraction_path.write_text(json.dumps(payload))
+    _write_filing_and_audit(tmp_path)
+    _write_report(tmp_path)
+
+    try:
+        mark_reference_verified.mark_verified(
+            tmp_path,
+            "medivation",
+            reviewer="Codex agent",
+            now="2026-05-02T12:00:00Z",
+        )
+    except mark_reference_verified.MarkVerifiedError as exc:
+        assert "does not match progress last_run_id" in str(exc)
     else:
         raise AssertionError("expected MarkVerifiedError")

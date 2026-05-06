@@ -1,7 +1,8 @@
-"""End-to-end deal_graph_v1 finalization for one extracted claim payload."""
+"""End-to-end deal_graph_v2 finalization for one extracted claim payload."""
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -22,7 +23,6 @@ from .evidence import (
 )
 from .export import write_csv, write_jsonl, write_snapshot
 from .ids import make_id
-from .project_estimation import project_estimation_rows
 from .project_review import project_review_rows
 from .store import DealGraphStore
 from .validate import validate_graph_as_dicts
@@ -38,7 +38,6 @@ class GraphRunResult:
     database_path: Path
     review_rows_path: Path
     review_csv_path: Path
-    estimation_rows_path: Path
     final_output: dict[str, Any]
     validation_flags: list[dict[str, Any]]
 
@@ -70,21 +69,19 @@ def finalize_claim_payload(
         deal_slug=slug,
         run_id=run_id,
         evidence_context=evidence_context,
+        target_name=_target_name(slug),
     )
 
     validation_flags = validate_graph_as_dicts(graph)
     hard_count = sum(1 for flag in validation_flags if flag.get("severity") == "hard")
     review_projection: list[dict[str, Any]] = []
-    estimation_projection: list[dict[str, Any]] = []
     if hard_count == 0:
         review_projection = project_review_rows(graph)
-        estimation_projection = project_estimation_rows(graph)
         _attach_projection_rows(
             graph,
             slug=slug,
             run_id=run_id,
             review_projection=review_projection,
-            estimation_projection=estimation_projection,
         )
 
     # Re-run validation after projections so unresolved blocking flags cannot
@@ -104,7 +101,7 @@ def finalize_claim_payload(
         "validation_flags": validation_flags,
     })
     final_output = {
-        "schema_version": "deal_graph_v1",
+        "schema_version": "deal_graph_v2",
         "deal_slug": slug,
         "run_id": run_id,
         "last_run": last_run,
@@ -119,25 +116,24 @@ def finalize_claim_payload(
         },
         "graph": graph,
         "review_rows": review_projection,
-        "estimation_bidder_rows": estimation_projection,
     }
 
     output_path = core.write_output(slug, final_output)
-    snapshot_path = audit_run_dir / "deal_graph_v1.json"
+    snapshot_path = audit_run_dir / "deal_graph_v2.json"
     database_path = audit_run_dir / "deal_graph.duckdb"
     review_rows_path = core.REPO_ROOT / "output" / "review_rows" / f"{slug}.jsonl"
     review_csv_path = core.REPO_ROOT / "output" / "review_csv" / f"{slug}.csv"
-    estimation_rows_path = (
-        core.REPO_ROOT / "output" / "projections" / "estimation_bidder_rows" / f"{slug}.jsonl"
-    )
 
     write_snapshot(graph, snapshot_path)
     write_jsonl(review_projection, review_rows_path)
     write_csv(review_projection, review_csv_path)
-    write_jsonl(estimation_projection, estimation_rows_path)
-    with DealGraphStore(database_path) as store:
+    database_tmp_path = database_path.with_name(f".{database_path.name}.tmp.{os.getpid()}")
+    if database_tmp_path.exists():
+        database_tmp_path.unlink()
+    with DealGraphStore(database_tmp_path) as store:
         store.init_schema()
         store.insert_snapshot(graph)
+    os.replace(database_tmp_path, database_path)
 
     core.append_flags_log(slug, final_output, last_run, run_id)
     core.update_progress(
@@ -158,7 +154,6 @@ def finalize_claim_payload(
         database_path=database_path,
         review_rows_path=review_rows_path,
         review_csv_path=review_csv_path,
-        estimation_rows_path=estimation_rows_path,
         final_output=final_output,
         validation_flags=validation_flags,
     )
@@ -170,6 +165,13 @@ def _background_pages(slug: str) -> list[dict[str, Any]]:
     pages = json.loads((core.DATA_DIR / slug / "pages.json").read_text())
     section_pages, _bounds = _background_section_payload(pages)
     return section_pages
+
+
+def _target_name(slug: str) -> str | None:
+    manifest_path = core.DATA_DIR / slug / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    value = manifest.get("target_name")
+    return value if isinstance(value, str) and value.strip() else None
 
 
 def _bind_provider_evidence(
@@ -319,7 +321,6 @@ def _attach_projection_rows(
     slug: str,
     run_id: str,
     review_projection: list[dict[str, Any]],
-    estimation_projection: list[dict[str, Any]],
 ) -> None:
     graph["review_rows"] = [
         {
@@ -329,12 +330,4 @@ def _attach_projection_rows(
             "payload_json": json.dumps(row, sort_keys=True),
         }
         for index, row in enumerate(review_projection, start=1)
-    ]
-    graph["estimation_bidder_rows"] = [
-        {
-            "estimation_row_id": make_id("estimation_row", slug, run_id, index, row),
-            "run_id": run_id,
-            **row,
-        }
-        for index, row in enumerate(estimation_projection, start=1)
     ]

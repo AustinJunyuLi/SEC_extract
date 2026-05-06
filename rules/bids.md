@@ -1,7 +1,7 @@
 # rules/bids.md - Bid Claims and Projection Rules
 
 Provider `bid_claims` record source-backed bid/proposal submissions. They do
-not carry estimator variables or formal/informal judgments.
+not carry Python-owned judgments.
 
 ## Bid Claim Fields
 

@@ -56,4 +56,4 @@ event unless the filing states the non-response or exclusion.
 
 `merger_agreement_executed` is the signing/execution fact. Price belongs in bid
 claims only when the filing supports a bid/proposal claim; execution restating
-the price is transaction evidence, not a provider-owned estimator row.
+the price is transaction evidence, not a provider-owned canonical bid.

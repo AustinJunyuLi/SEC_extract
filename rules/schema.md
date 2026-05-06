@@ -1,10 +1,10 @@
-# rules/schema.md - deal_graph_v1 Schema Contract
+# rules/schema.md - deal_graph_v2 Schema Contract
 
 ## Live Contract
 
-The live canonical contract is `deal_graph_v1`. The provider emits claims only.
+The live canonical contract is `deal_graph_v2`. The provider emits claims only.
 Python binds quotes, assigns canonical ids, writes graph tables, validates the
-graph, and projects review/estimation rows.
+graph, and projects review rows.
 
 Provider output is exactly:
 
@@ -20,7 +20,7 @@ Provider output is exactly:
 
 Top-level `deal` / `events` row JSON is retired and must not be accepted as a
 canonical extraction. `output/extractions/{slug}.json` is a portable
-`deal_graph_v1` snapshot containing graph data plus deterministic projections.
+`deal_graph_v2` snapshot containing graph data plus deterministic review rows.
 
 ## Claim Requirements
 
@@ -35,8 +35,9 @@ Every claim includes:
 Each `citation_unit_id` must identify one extractor-input
 `citation_units[].id`. Each `quote_text` must be an exact substring of that
 unit's text and max 1500 characters. Use multiple refs when a claim needs
-separated source support. Provider-level `quote_text` and `quote_texts` are
-retired.
+separated source support. Exact means byte-for-byte visible text copying:
+preserve capitalization, punctuation, spacing, and curly/straight quote marks.
+Provider-level `quote_text` and `quote_texts` are retired.
 
 Provider-owned fields are forbidden: canonical ids, source offsets, source
 pages, `BidderID`, bidder registry, `T`, `bI`, `bF`, admitted/dropout
@@ -73,7 +74,7 @@ Fields: `bidder_label`, `bid_date`, `bid_value`, `bid_value_lower`,
 `bid_stage`: `initial`, `revised`, `final`, `unspecified`.
 
 Formal/informal classification, bidder class, admission, dropout, and `T` are
-derived by Python projection rules.
+outside the live extraction artifact.
 
 ## Participation Count Claims
 
@@ -102,7 +103,7 @@ Per run:
 ```text
 output/audit/{slug}/runs/{run_id}/raw_response.json
 output/audit/{slug}/runs/{run_id}/deal_graph.duckdb
-output/audit/{slug}/runs/{run_id}/deal_graph_v1.json
+output/audit/{slug}/runs/{run_id}/deal_graph_v2.json
 output/audit/{slug}/runs/{run_id}/validation.json
 output/audit/{slug}/runs/{run_id}/final_output.json
 ```
@@ -113,7 +114,6 @@ Latest portable outputs:
 output/extractions/{slug}.json
 output/review_rows/{slug}.jsonl
 output/review_csv/{slug}.csv
-output/projections/estimation_bidder_rows/{slug}.jsonl
 ```
 
 Rows without source-backed evidence do not project. Blocking graph flags make

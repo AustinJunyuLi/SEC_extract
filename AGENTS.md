@@ -6,7 +6,7 @@ current when architecture, schema, state, or output contracts change.
 ## Purpose
 
 This repo extracts SEC merger-filing Background sections into a relational
-`deal_graph_v1` representation for M&A takeover-auction research. The research
+`deal_graph_v2` representation for M&A takeover-auction research. The research
 target is informal bidding in corporate takeover auctions. SEC filing text is
 ground truth. Alex's legacy workbook is calibration and review material, not an
 oracle.
@@ -19,7 +19,7 @@ the Responses streaming endpoint through the Linkflow/NewAPI-compatible
 `EXTRACT_MODEL`, and optional reasoning-effort overrides in the shell or
 `.env`. Do not commit secrets.
 
-The provider emits strict structured `deal_graph_v1` claim payloads only:
+The provider emits strict structured claim payloads only:
 
 ```json
 {
@@ -34,10 +34,9 @@ The provider emits strict structured `deal_graph_v1` claim payloads only:
 The extractor input includes paragraph-local `citation_units` derived from the
 Background pages. The AI copies claim receipts from those citation-unit texts.
 Python owns quote binding, source spans, canonical ids, claim dispositions,
-coverage results, graph rows, graph validation, review rows, and estimator
-bidder rows. The AI never emits canonical ids, source offsets, `BidderID`,
-`T`, `bI`, `bF`, admitted/dropout outcomes, coverage results, or projection
-rows.
+coverage results, graph rows, graph validation, and review rows. The AI never
+emits canonical ids, source offsets, `BidderID`, `T`, `bI`, `bF`,
+admitted/dropout outcomes, coverage results, or projection rows.
 
 There is no row-per-event canonical schema, no loose JSON fallback, no
 provider branch that turns off structured output, no `previous_response_id`
@@ -54,13 +53,12 @@ run.py / pipeline.run_pool
        bind each quote to Background filing text
        canonicalize actors/events/relations/counts
        validate graph evidence/disposition/coverage
-       project review and estimation rows only when unblocked
+       project review rows
   -> output/audit/{slug}/runs/{run_id}/deal_graph.duckdb
-  -> output/audit/{slug}/runs/{run_id}/deal_graph_v1.json
+  -> output/audit/{slug}/runs/{run_id}/deal_graph_v2.json
   -> output/extractions/{slug}.json
   -> output/review_rows/{slug}.jsonl
   -> output/review_csv/{slug}.csv
-  -> output/projections/estimation_bidder_rows/{slug}.jsonl
   -> state/flags.jsonl and state/progress.json
 ```
 
@@ -118,8 +116,8 @@ invent unsupported facts.
 
 ## Consortium Doctrine
 
-Preserve the filing's bidding unit. A group actor can be a bidder and estimator
-unit. Member relations are composition facts, not automatic bidder rows.
+Preserve the filing's bidding unit. A group actor can be a bidder unit. Member
+relations are composition facts, not automatic bidder rows.
 
 Mac Gray: `CSC/Pamplona` is one group actor and one bidder unit when the filing
 treats it that way. CSC and Pamplona are represented through source-backed
@@ -143,7 +141,7 @@ membership permanent without quote support.
 - `verified`: filing-grounded reference verification completed
 - `failed`: runtime failure without a valid finalized output
 
-During reference work, `verified` may be set by Austin or by agent filing-grounded verification only when `quality_reports/reference_verification/{slug}.md` exists and concludes the deal is verified against the filing. An agent must not mark a deal verified solely because the model output passes schema validation.
+During reference work, `verified` may be set by Austin or by agent filing-grounded verification only when `quality_reports/reference_verification/{slug}.md` exists and concludes the deal is verified against the filing. An agent must not mark a deal verified solely because the model output passes schema validation. A verification report is a historical human/agent review artifact; its recorded run id does not need to equal the latest extraction run id. Current extraction artifacts must still be internally consistent and mechanically grounded in filing pages.
 
 `state/flags.jsonl` is append-only. Current-run flags match exact `run_id`.
 
@@ -157,7 +155,7 @@ penford, mac-gray, saks, stec
 ```
 
 Target-deal extraction remains fail-closed until the reference set is
-re-established under `deal_graph_v1` and a target-release stability proof is
+re-established under `deal_graph_v2` and a target-release stability proof is
 accepted. Fetching or inspecting target metadata is allowed only when Austin
 explicitly asks and it does not start extraction.
 

@@ -1,6 +1,6 @@
 # Linkflow Extraction Guide
 
-This is the operator guide for running the `deal_graph_v1` M&A extraction
+This is the operator guide for running the `deal_graph_v2` M&A extraction
 pipeline through the Linkflow/NewAPI-compatible Responses endpoint.
 
 ## Environment
@@ -56,12 +56,12 @@ manifest/deal metadata owned by Python.
 
 ```text
 run.py / pipeline.run_pool
-  -> responses.stream with strict deal_graph_v1 claim schema
+  -> responses.stream with strict claim-only schema
   -> raw_response.json
   -> Python evidence binding against Background citation units
   -> canonical deal graph
   -> graph validation
-  -> review and estimation projections when unblocked
+  -> review projection
   -> final_output.json and output/extractions/{slug}.json
 ```
 
@@ -91,7 +91,7 @@ output/audit/{slug}/runs/{run_id}/
   validation.json
   final_output.json
   deal_graph.duckdb
-  deal_graph_v1.json
+  deal_graph_v2.json
   prompts/extractor.txt
 
 output/audit/{slug}/latest.json
@@ -102,24 +102,22 @@ Latest derived outputs:
 ```text
 output/review_rows/{slug}.jsonl
 output/review_csv/{slug}.csv
-output/projections/estimation_bidder_rows/{slug}.jsonl
 ```
 
 ## Validation
 
 Graph validation is Python-owned. Hard flags include evidence-ref binding failures,
 missing claim evidence, missing current dispositions, missing coverage links,
-canonical rows without evidence, and projections blocked by unresolved review
-flags.
+canonical rows without evidence, and review output write failures.
 
 `validated` means the run finalized but has hard graph flags. `passed_clean`
 means no graph flags remain.
 
-Reference `verified` status requires Austin or agent filing-grounded verification with `quality_reports/reference_verification/{slug}.md`. An agent must not mark a deal verified solely because the model output passes schema validation.
+Reference `verified` status requires Austin or agent filing-grounded verification with `quality_reports/reference_verification/{slug}.md`. An agent must not mark a deal verified solely because the model output passes schema validation. Verification reports are review records; they do not become stale only because a later clean rerun has a new run id. The current extraction, current audit raw response, and filing pages must still ground mechanically.
 
 ## Target Gate
 
 Target extraction remains fail-closed. A selection containing non-reference
-targets fails unless all reference deals are verified under `deal_graph_v1`,
+targets fails unless all reference deals are verified under `deal_graph_v2`,
 the stability proof classifies the archive as
 `STABLE_FOR_REFERENCE_REVIEW`, and the operator passes `--release-targets`.
