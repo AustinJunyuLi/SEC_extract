@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="580" viewBox="0 0 1100 580" role="img" aria-labelledby="choosing-the-right-review-artefact">
+  <title id="choosing-the-right-review-artefact">Choosing the Right Review Artefact</title>
+
+  <defs>
+    <filter id="softShadow" x="-8%" y="-12%" width="116%" height="130%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#172033" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrowSlate" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#8390a3"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#4f956f"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#bf6258"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#bd7a2b"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1100" height="580" fill="#ffffff"/>
+<rect x="40" y="240" width="200" height="120" rx="12" fill="#f6f8fb" stroke="#8390a3" stroke-width="1.35" filter="url(#softShadow)"/>
+<text x="140" y="274" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="14" font-weight="700" fill="#354255"><tspan x="140" dy="0">Your question</tspan></text>
+<text x="140" y="299" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="400" fill="#172033"><tspan x="140" dy="0">What do I need</tspan><tspan x="140" dy="18">to inspect?</tspan></text>
+<path d="M 240 295 C 280 295, 280 180, 320 180" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="241" y="215" width="78" height="20" rx="10" fill="#ffffff" stroke="#edf1f6" stroke-width="1"/>
+<text x="280" y="229" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="500" fill="#8390a3"><tspan x="280" dy="0">spot check</tspan></text>
+<path d="M 240 300 L 320 300" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="245" y="278" width="71" height="20" rx="10" fill="#ffffff" stroke="#edf1f6" stroke-width="1"/>
+<text x="280" y="292" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="500" fill="#8390a3"><tspan x="280" dy="0">cross-row</tspan></text>
+<path d="M 240 305 C 280 305, 280 420, 320 420" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="257" y="366" width="47" height="20" rx="10" fill="#ffffff" stroke="#edf1f6" stroke-width="1"/>
+<text x="280" y="380" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="500" fill="#8390a3"><tspan x="280" dy="0">joins</tspan></text>
+<rect x="320" y="120" width="240" height="120" rx="12" fill="#f1f8f4" stroke="#4f956f" stroke-width="1.35" filter="url(#softShadow)"/>
+<text x="440" y="154" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="14" font-weight="700" fill="#22513a"><tspan x="440" dy="0">CSV</tspan></text>
+<text x="440" y="179" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="400" fill="#172033"><tspan x="440" dy="0">single row</tspan><tspan x="440" dy="18">sort/filter</tspan><tspan x="440" dy="18">spreadsheet review</tspan></text>
+<rect x="320" y="240" width="240" height="120" rx="12" fill="#f3f7fd" stroke="#4f7fbf" stroke-width="1.35" filter="url(#softShadow)"/>
+<text x="440" y="274" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="14" font-weight="700" fill="#1e4677"><tspan x="440" dy="0">Review JSONL</tspan></text>
+<text x="440" y="299" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="400" fill="#172033"><tspan x="440" dy="0">richer row fields</tspan><tspan x="440" dy="18">good for AI chat</tspan><tspan x="440" dy="18">issue metadata</tspan></text>
+<rect x="320" y="360" width="240" height="120" rx="12" fill="#f6f8fb" stroke="#8390a3" stroke-width="1.35" filter="url(#softShadow)"/>
+<text x="440" y="394" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="14" font-weight="700" fill="#354255"><tspan x="440" dy="0">DuckDB graph</tspan></text>
+<text x="440" y="419" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="400" fill="#172033"><tspan x="440" dy="0">actors + events</tspan><tspan x="440" dy="18">relations + evidence</tspan><tspan x="440" dy="18">SQL joins</tspan></text>
+<path d="M 560 180 C 600 180, 600 295, 640 295" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<path d="M 560 300 L 640 300" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<path d="M 560 420 C 600 420, 600 305, 640 305" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="640" y="240" width="240" height="120" rx="12" fill="#fff7e8" stroke="#bd7a2b" stroke-width="1.35" filter="url(#softShadow)"/>
+<text x="760" y="274" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="14" font-weight="700" fill="#744412"><tspan x="760" dy="0">Answer path</tspan></text>
+<text x="760" y="299" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="400" fill="#172033"><tspan x="760" dy="0">apply review heuristics</tspan><tspan x="760" dy="18">trace source_claim_ids</tspan><tspan x="760" dy="18">filing remains authority</tspan></text>
+<path d="M 880 300 L 916 300" fill="none" stroke="#4f956f" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowGreen)"/>
+<rect x="920" y="240" width="160" height="120" rx="12" fill="#f1f8f4" stroke="#4f956f" stroke-width="1.35" filter="url(#softShadow)"/>
+<text x="1000" y="274" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="14" font-weight="700" fill="#22513a"><tspan x="1000" dy="0">Filing text</tspan></text>
+<text x="1000" y="299" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="400" fill="#172033"><tspan x="1000" dy="0">pages.json</tspan><tspan x="1000" dy="18">quote decides,</tspan><tspan x="1000" dy="18">not workbook</tspan></text>
+<text x="540" y="540" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#172033" font-style="italic"><tspan x="540" dy="0">For a quote dispute, skip straight to pages.json and compare the bound filing substring.</tspan></text>
+</svg>

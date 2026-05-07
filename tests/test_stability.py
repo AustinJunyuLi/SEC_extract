@@ -19,33 +19,25 @@ BASE_HASHES = {
 
 def _event(
     *,
-    bid_note: str = "bid_submitted",
-    bidder_alias: str = "Party A",
-    bidder_type: str | None = "organization",
+    event_subtype: str = "first_round_bid",
+    actor_label: str = "Party A",
+    actor_kind: str | None = "organization",
     bid_value_lower: float | None = 10.0,
     bid_value_upper: float | None = 12.0,
     bound_source_quote: str = "Party A submitted an indication of interest.",
     bound_source_page: int = 4,
     flags: list[dict] | None = None,
 ) -> dict:
-    subtype = {
-        "Bid": "bid_submitted",
-        "NDA": "nda_signed",
-        "Drop": "bidder_dropped",
-        "DropSilent": "bidder_dropped_silent",
-        "Executed": "merger_agreement_executed",
-        "Final Round": "formal_boundary",
-    }.get(bid_note, bid_note)
     return {
         "deal_slug": "medivation",
         "cycle_id": "cycle_synthetic",
-        "event_id": f"event_{subtype}_{bidder_alias}".replace(" ", "_").lower(),
+        "event_id": f"event_{event_subtype}_{actor_label}".replace(" ", "_").lower(),
         "event_date": "2026-01-15",
         "event_type": "process",
-        "event_subtype": subtype,
-        "actor_id": f"actor_{bidder_alias}".replace(" ", "_").lower(),
-        "actor_label": bidder_alias,
-        "actor_kind": bidder_type,
+        "event_subtype": event_subtype,
+        "actor_id": f"actor_{actor_label}".replace(" ", "_").lower(),
+        "actor_label": actor_label,
+        "actor_kind": actor_kind,
         "actor_role": "potential bidder",
         "bid_value": None,
         "bid_value_lower": bid_value_lower,
@@ -298,7 +290,7 @@ def test_row_count_movement_is_reported_without_blocking_clean_contract_runs(tmp
         slug="medivation",
         run_id="run-2",
         finished_at="2026-04-29T00:01:00Z",
-        events=[_event(), _event(bid_note="NDA", bid_value_lower=None, bid_value_upper=None)],
+        events=[_event(), _event(event_subtype="nda_signed", bid_value_lower=None, bid_value_upper=None)],
     )
     _write_run(tmp_path, slug="medivation", run_id="run-3", finished_at="2026-04-29T00:02:00Z")
 
@@ -422,7 +414,7 @@ def test_mutable_latest_extraction_is_not_used_for_comparison(tmp_path, capsys):
     mutable.mkdir(parents=True)
     (mutable / "medivation.json").write_text(json.dumps({
         "deal": {"auction": False},
-        "events": [_event(), _event(bidder_alias="Party B")],
+        "events": [_event(), _event(actor_label="Party B")],
     }))
 
     rc = stability.main(["--repo-root", str(tmp_path), "--slugs", "medivation", "--runs", "3"])

@@ -72,7 +72,7 @@ def typed_claim_values(claim_id: str, claim: ClaimBase) -> tuple[str, tuple]:
     if isinstance(claim, ActorClaim):
         return (
             "actor_claims",
-            (claim_id, claim.actor_label, claim.actor_kind, claim.observability),
+            (claim_id, claim.actor_label, claim.actor_kind, claim.observability, claim.actor_class),
         )
     if isinstance(claim, EventClaim):
         return (

@@ -1,8 +1,8 @@
 {
   "schema_version": "v1",
   "created": "2026-04-18T12:29:42.084187Z",
-  "updated": "2026-05-06T22:10:19.053441Z",
-  "deal_count_total": 9,
+  "updated": "2026-05-07T11:05:00.029943Z",
+  "deal_count_total": 14,
   "deal_count_reference": 9,
   "deals": {
     "providence-worcester": {
@@ -13,16 +13,11 @@
       "date_announced": "2016-08-15",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/831968/0001193125-16-713780-index.htm",
       "flag_count": 0,
-      "last_run": "2026-05-06T22:03:56.586460Z",
+      "last_run": "2026-05-07T10:51:40.832503Z",
       "last_verified_by": "Codex agent",
-      "last_verified_at": "2026-05-06T22:10:55.277344Z",
+      "last_verified_at": "2026-05-07T11:06:25.883227Z",
       "notes": "review_burden=0; prior filing-grounded verification metadata preserved",
       "rulebook_version_history": [
-        {
-          "ts": "2026-05-06T10:59:00.864882Z",
-          "run_id": "604e30f959a243a7aebf5448aa0b462e",
-          "version": "c8010694e03a87a5141a0480ce3468d8614a42377292e9efbf90b5480a7eaa79"
-        },
         {
           "ts": "2026-05-06T11:13:46.849847Z",
           "run_id": "cfadce8676b74e9a979f4a9c41b8efff",
@@ -67,13 +62,18 @@
           "ts": "2026-05-06T22:03:56.586460Z",
           "run_id": "6b5d393b6d5247a397c32db8672baecc",
           "version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194"
+        },
+        {
+          "ts": "2026-05-07T10:51:40.832503Z",
+          "run_id": "e86858425fcc4b9db2411b747fcb1f4b",
+          "version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
         }
       ],
-      "last_run_id": "6b5d393b6d5247a397c32db8672baecc",
-      "rulebook_version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194",
+      "last_run_id": "e86858425fcc4b9db2411b747fcb1f4b",
+      "rulebook_version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8",
       "verification_report": "quality_reports/reference_verification/providence-worcester.md",
       "verified": true,
-      "last_verified_run_id": "6b5d393b6d5247a397c32db8672baecc"
+      "last_verified_run_id": "e86858425fcc4b9db2411b747fcb1f4b"
     },
     "medivation": {
       "status": "passed_clean",
@@ -83,16 +83,11 @@
       "date_announced": "2016-08-22",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1011835/0001193125-16-696889-index.htm",
       "flag_count": 0,
-      "last_run": "2026-05-06T22:03:31.999914Z",
+      "last_run": "2026-05-07T10:51:19.795617Z",
       "last_verified_by": "Codex agent",
-      "last_verified_at": "2026-05-06T22:10:55.322139Z",
+      "last_verified_at": "2026-05-07T11:06:25.922784Z",
       "notes": "review_burden=0; prior filing-grounded verification metadata preserved",
       "rulebook_version_history": [
-        {
-          "ts": "2026-05-06T11:13:10.357229Z",
-          "run_id": "b15478a6f7a7451ea9b26a405d55f7d1",
-          "version": "c8010694e03a87a5141a0480ce3468d8614a42377292e9efbf90b5480a7eaa79"
-        },
         {
           "ts": "2026-05-06T11:22:17.448424Z",
           "run_id": "227154737ec24b3280c3b6369931cb2e",
@@ -137,13 +132,18 @@
           "ts": "2026-05-06T22:03:31.999914Z",
           "run_id": "8e6a57a02a6d46dc8f66e14e728dc027",
           "version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194"
+        },
+        {
+          "ts": "2026-05-07T10:51:19.795617Z",
+          "run_id": "cef2a7af3cac41fbbd09c042df1ab1f5",
+          "version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
         }
       ],
-      "last_run_id": "8e6a57a02a6d46dc8f66e14e728dc027",
-      "rulebook_version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194",
+      "last_run_id": "cef2a7af3cac41fbbd09c042df1ab1f5",
+      "rulebook_version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8",
       "verification_report": "quality_reports/reference_verification/medivation.md",
       "verified": true,
-      "last_verified_run_id": "8e6a57a02a6d46dc8f66e14e728dc027"
+      "last_verified_run_id": "cef2a7af3cac41fbbd09c042df1ab1f5"
     },
     "imprivata": {
       "status": "passed_clean",
@@ -153,16 +153,11 @@
       "date_announced": "2016-07-13",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1328015/0001193125-16-677939-index.htm",
       "flag_count": 0,
-      "last_run": "2026-05-06T22:03:50.377506Z",
+      "last_run": "2026-05-07T10:51:10.499012Z",
       "last_verified_by": "Codex agent",
-      "last_verified_at": "2026-05-06T22:10:55.367575Z",
+      "last_verified_at": "2026-05-07T11:06:25.959687Z",
       "notes": "review_burden=0; prior filing-grounded verification metadata preserved",
       "rulebook_version_history": [
-        {
-          "ts": "2026-05-06T10:59:38.644044Z",
-          "run_id": "cd4e083808b64ae89a0d55802a834f54",
-          "version": "c8010694e03a87a5141a0480ce3468d8614a42377292e9efbf90b5480a7eaa79"
-        },
         {
           "ts": "2026-05-06T11:13:25.216167Z",
           "run_id": "9766c2c3d0fd4c2e8711d36e110dcf89",
@@ -207,13 +202,18 @@
           "ts": "2026-05-06T22:03:50.377506Z",
           "run_id": "feba47dcf9534930a605371b1a4bace3",
           "version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194"
+        },
+        {
+          "ts": "2026-05-07T10:51:10.499012Z",
+          "run_id": "b740935fd0c04351b0d033d4e18ec698",
+          "version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
         }
       ],
-      "last_run_id": "feba47dcf9534930a605371b1a4bace3",
-      "rulebook_version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194",
+      "last_run_id": "b740935fd0c04351b0d033d4e18ec698",
+      "rulebook_version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8",
       "verification_report": "quality_reports/reference_verification/imprivata.md",
       "verified": true,
-      "last_verified_run_id": "feba47dcf9534930a605371b1a4bace3"
+      "last_verified_run_id": "b740935fd0c04351b0d033d4e18ec698"
     },
     "zep": {
       "status": "passed_clean",
@@ -223,16 +223,11 @@
       "date_announced": "2015-04-08",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1408287/0001047469-15-004989-index.htm",
       "flag_count": 0,
-      "last_run": "2026-05-06T22:06:16.899377Z",
+      "last_run": "2026-05-07T10:52:26.155497Z",
       "last_verified_by": "Codex agent",
-      "last_verified_at": "2026-05-06T22:10:55.409507Z",
+      "last_verified_at": "2026-05-07T11:06:25.997576Z",
       "notes": "review_burden=0; prior filing-grounded verification metadata preserved",
       "rulebook_version_history": [
-        {
-          "ts": "2026-05-06T11:09:39.955828Z",
-          "run_id": "5d4b62c7926f476aa3fb9cb6ac9f607b",
-          "version": "c8010694e03a87a5141a0480ce3468d8614a42377292e9efbf90b5480a7eaa79"
-        },
         {
           "ts": "2026-05-06T11:12:56.981879Z",
           "run_id": "53c5a5ba96914a29830c0128edd5153b",
@@ -277,13 +272,18 @@
           "ts": "2026-05-06T22:06:16.899377Z",
           "run_id": "fd76f2e8a1454ccc9d85342b5144fecd",
           "version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194"
+        },
+        {
+          "ts": "2026-05-07T10:52:26.155497Z",
+          "run_id": "4db2e86fd86b482f9486e1daa5f5fc1b",
+          "version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
         }
       ],
-      "last_run_id": "fd76f2e8a1454ccc9d85342b5144fecd",
-      "rulebook_version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194",
+      "last_run_id": "4db2e86fd86b482f9486e1daa5f5fc1b",
+      "rulebook_version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8",
       "verification_report": "quality_reports/reference_verification/zep.md",
       "verified": true,
-      "last_verified_run_id": "fd76f2e8a1454ccc9d85342b5144fecd"
+      "last_verified_run_id": "4db2e86fd86b482f9486e1daa5f5fc1b"
     },
     "petsmart-inc": {
       "status": "passed_clean",
@@ -293,21 +293,11 @@
       "date_announced": "2014-12-14",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/863157/0001571049-15-000695-index.htm",
       "flag_count": 0,
-      "last_run": "2026-05-06T22:08:00.556197Z",
+      "last_run": "2026-05-07T11:04:49.980219Z",
       "last_verified_by": "Codex agent",
-      "last_verified_at": "2026-05-06T22:10:55.448795Z",
+      "last_verified_at": "2026-05-07T11:06:26.049267Z",
       "notes": "review_burden=0; prior filing-grounded verification metadata preserved",
       "rulebook_version_history": [
-        {
-          "ts": "2026-05-06T10:58:00.871447Z",
-          "run_id": "c7f9198ed758455fb9b1673961aa80da",
-          "version": "c8010694e03a87a5141a0480ce3468d8614a42377292e9efbf90b5480a7eaa79"
-        },
-        {
-          "ts": "2026-05-06T11:13:32.097699Z",
-          "run_id": "478d2f95e4744061972a560522f769ef",
-          "version": "c8010694e03a87a5141a0480ce3468d8614a42377292e9efbf90b5480a7eaa79"
-        },
         {
           "ts": "2026-05-06T11:22:39.212392Z",
           "run_id": "3a80e866fb314806b492cdaaa8df9138",
@@ -347,13 +337,23 @@
           "ts": "2026-05-06T22:08:00.556197Z",
           "run_id": "40c5925b41094198a74ad4089e80a33a",
           "version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194"
+        },
+        {
+          "ts": "2026-05-07T10:53:28.036184Z",
+          "run_id": "abe3ceab456346358c6697c5349d3ded",
+          "version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
+        },
+        {
+          "ts": "2026-05-07T11:04:49.980219Z",
+          "run_id": "6d8899bedd0048b796394122d73c54ae",
+          "version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
         }
       ],
-      "last_run_id": "40c5925b41094198a74ad4089e80a33a",
-      "rulebook_version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194",
+      "last_run_id": "6d8899bedd0048b796394122d73c54ae",
+      "rulebook_version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8",
       "verification_report": "quality_reports/reference_verification/petsmart-inc.md",
       "verified": true,
-      "last_verified_run_id": "40c5925b41094198a74ad4089e80a33a"
+      "last_verified_run_id": "6d8899bedd0048b796394122d73c54ae"
     },
     "penford": {
       "status": "passed_clean",
@@ -363,16 +363,11 @@
       "date_announced": "2014-10-15",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/739608/0001193125-14-455030-index.htm",
       "flag_count": 0,
-      "last_run": "2026-05-06T22:06:10.504308Z",
+      "last_run": "2026-05-07T10:53:53.375458Z",
       "last_verified_by": "Codex agent",
-      "last_verified_at": "2026-05-06T22:10:55.486496Z",
+      "last_verified_at": "2026-05-07T11:06:26.084469Z",
       "notes": "review_burden=0; prior filing-grounded verification metadata preserved",
       "rulebook_version_history": [
-        {
-          "ts": "2026-05-06T11:16:18.735439Z",
-          "run_id": "b8b8dcf17c3c4c759dfdeef3d0e99541",
-          "version": "c8010694e03a87a5141a0480ce3468d8614a42377292e9efbf90b5480a7eaa79"
-        },
         {
           "ts": "2026-05-06T11:24:59.414044Z",
           "run_id": "23a0f4c2abc8465c92e0ad43604a0d22",
@@ -417,13 +412,18 @@
           "ts": "2026-05-06T22:06:10.504308Z",
           "run_id": "25c7b26d2e07423ab9b6d81d0fccd361",
           "version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194"
+        },
+        {
+          "ts": "2026-05-07T10:53:53.375458Z",
+          "run_id": "b3e23fa40f3642df85eaec9e1f20e69f",
+          "version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
         }
       ],
-      "last_run_id": "25c7b26d2e07423ab9b6d81d0fccd361",
-      "rulebook_version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194",
+      "last_run_id": "b3e23fa40f3642df85eaec9e1f20e69f",
+      "rulebook_version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8",
       "verification_report": "quality_reports/reference_verification/penford.md",
       "verified": true,
-      "last_verified_run_id": "25c7b26d2e07423ab9b6d81d0fccd361"
+      "last_verified_run_id": "b3e23fa40f3642df85eaec9e1f20e69f"
     },
     "mac-gray": {
       "status": "passed_clean",
@@ -433,16 +433,11 @@
       "date_announced": "2013-10-15",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1038280/0001047469-13-010973-index.htm",
       "flag_count": 0,
-      "last_run": "2026-05-06T22:08:18.889051Z",
+      "last_run": "2026-05-07T10:54:29.362317Z",
       "last_verified_by": "Codex agent",
-      "last_verified_at": "2026-05-06T22:10:55.523186Z",
+      "last_verified_at": "2026-05-07T11:06:26.119572Z",
       "notes": "review_burden=0; prior filing-grounded verification metadata preserved",
       "rulebook_version_history": [
-        {
-          "ts": "2026-05-06T11:16:50.452382Z",
-          "run_id": "78f7186a00b240c9b8e408e4aa530cb8",
-          "version": "c8010694e03a87a5141a0480ce3468d8614a42377292e9efbf90b5480a7eaa79"
-        },
         {
           "ts": "2026-05-06T11:25:25.200769Z",
           "run_id": "f5cd21dfd0474218a70814c45cf77506",
@@ -487,13 +482,18 @@
           "ts": "2026-05-06T22:08:18.889051Z",
           "run_id": "cb64ccd28c584471b3f1665d9787510a",
           "version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194"
+        },
+        {
+          "ts": "2026-05-07T10:54:29.362317Z",
+          "run_id": "83014a227cf940a2ba54eaaf8719d233",
+          "version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
         }
       ],
-      "last_run_id": "cb64ccd28c584471b3f1665d9787510a",
-      "rulebook_version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194",
+      "last_run_id": "83014a227cf940a2ba54eaaf8719d233",
+      "rulebook_version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8",
       "verification_report": "quality_reports/reference_verification/mac-gray.md",
       "verified": true,
-      "last_verified_run_id": "cb64ccd28c584471b3f1665d9787510a"
+      "last_verified_run_id": "83014a227cf940a2ba54eaaf8719d233"
     },
     "saks": {
       "status": "passed_clean",
@@ -503,21 +503,11 @@
       "date_announced": "2013-07-29",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/812900/0001193125-13-390275-index.htm",
       "flag_count": 0,
-      "last_run": "2026-05-06T22:09:12.011491Z",
+      "last_run": "2026-05-07T11:05:00.029943Z",
       "last_verified_by": "Codex agent",
-      "last_verified_at": "2026-05-06T22:10:55.562008Z",
+      "last_verified_at": "2026-05-07T11:06:26.155237Z",
       "notes": "review_burden=0; prior filing-grounded verification metadata preserved",
       "rulebook_version_history": [
-        {
-          "ts": "2026-05-06T11:04:49.136526Z",
-          "run_id": "329aa5ba0cbc49e0beb65865c6d54108",
-          "version": "c8010694e03a87a5141a0480ce3468d8614a42377292e9efbf90b5480a7eaa79"
-        },
-        {
-          "ts": "2026-05-06T11:18:18.335637Z",
-          "run_id": "d9ce36055a504a3594e4cec00ed18952",
-          "version": "c8010694e03a87a5141a0480ce3468d8614a42377292e9efbf90b5480a7eaa79"
-        },
         {
           "ts": "2026-05-06T11:26:19.782448Z",
           "run_id": "260b045f2ae247408483161ce26708cc",
@@ -557,13 +547,23 @@
           "ts": "2026-05-06T22:09:12.011491Z",
           "run_id": "19a4e52122c44c5c8ff992f0b00eab3a",
           "version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194"
+        },
+        {
+          "ts": "2026-05-07T10:56:03.757464Z",
+          "run_id": "67793459bd544262bafda0ff5a01cc31",
+          "version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
+        },
+        {
+          "ts": "2026-05-07T11:05:00.029943Z",
+          "run_id": "fb4299d7c2ed4a2d9cf3c87c3b8cee01",
+          "version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
         }
       ],
-      "last_run_id": "19a4e52122c44c5c8ff992f0b00eab3a",
-      "rulebook_version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194",
+      "last_run_id": "fb4299d7c2ed4a2d9cf3c87c3b8cee01",
+      "rulebook_version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8",
       "verification_report": "quality_reports/reference_verification/saks.md",
       "verified": true,
-      "last_verified_run_id": "19a4e52122c44c5c8ff992f0b00eab3a"
+      "last_verified_run_id": "fb4299d7c2ed4a2d9cf3c87c3b8cee01"
     },
     "stec": {
       "status": "passed_clean",
@@ -573,16 +573,11 @@
       "date_announced": "2013-06-24",
       "filing_url": "https://www.sec.gov/Archives/edgar/data/1102741/0001193125-13-325730-index.htm",
       "flag_count": 0,
-      "last_run": "2026-05-06T22:10:19.053441Z",
+      "last_run": "2026-05-07T10:56:09.080750Z",
       "last_verified_by": "Codex agent",
-      "last_verified_at": "2026-05-06T22:10:55.598711Z",
+      "last_verified_at": "2026-05-07T11:06:26.190530Z",
       "notes": "review_burden=0; prior filing-grounded verification metadata preserved",
       "rulebook_version_history": [
-        {
-          "ts": "2026-05-06T11:26:07.483769Z",
-          "run_id": "5f62a3fcdb424c96aee00e802c7722cc",
-          "version": "c8010694e03a87a5141a0480ce3468d8614a42377292e9efbf90b5480a7eaa79"
-        },
         {
           "ts": "2026-05-06T15:00:43.620238Z",
           "run_id": "cdbce6b1c7284702b33f9efea4dcfc94",
@@ -627,13 +622,153 @@
           "ts": "2026-05-06T22:10:19.053441Z",
           "run_id": "4e67ce0214df43f2b3f5c3dfa756e9e1",
           "version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194"
+        },
+        {
+          "ts": "2026-05-07T10:56:09.080750Z",
+          "run_id": "544ac7fe2706460db983c875d6b14476",
+          "version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
         }
       ],
-      "last_run_id": "4e67ce0214df43f2b3f5c3dfa756e9e1",
-      "rulebook_version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194",
+      "last_run_id": "544ac7fe2706460db983c875d6b14476",
+      "rulebook_version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8",
       "verification_report": "quality_reports/reference_verification/stec.md",
       "verified": true,
-      "last_verified_run_id": "4e67ce0214df43f2b3f5c3dfa756e9e1"
+      "last_verified_run_id": "544ac7fe2706460db983c875d6b14476"
+    },
+    "art-technology-group-inc": {
+      "status": "passed_clean",
+      "is_reference": false,
+      "target_name": "ART TECHNOLOGY GROUP INC",
+      "acquirer": "ORACLE CORP",
+      "date_announced": "2010-11-02",
+      "filing_url": "https://www.sec.gov/Archives/edgar/data/1086195/0000950123-10-109367-index.htm",
+      "flag_count": 0,
+      "last_run": "2026-05-07T10:56:31.369928Z",
+      "last_run_id": "2d61a60ba0f148b1931fb19b05458665",
+      "last_verified_by": null,
+      "last_verified_at": null,
+      "notes": "review_burden=0",
+      "rulebook_version_history": [
+        {
+          "ts": "2026-05-07T09:30:19.200659Z",
+          "run_id": "6f402fc03727475eb0bbdfdd2a476e6f",
+          "version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194"
+        },
+        {
+          "ts": "2026-05-07T10:56:31.369928Z",
+          "run_id": "2d61a60ba0f148b1931fb19b05458665",
+          "version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
+        }
+      ],
+      "rulebook_version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
+    },
+    "gen-probe-inc-new": {
+      "status": "passed_clean",
+      "is_reference": false,
+      "target_name": "GEN PROBE INC NEW",
+      "acquirer": "HOLOGIC INC",
+      "date_announced": "2012-04-30",
+      "filing_url": "https://www.sec.gov/Archives/edgar/data/820237/0001193125-12-290144-index.htm",
+      "flag_count": 0,
+      "last_run": "2026-05-07T10:58:47.149880Z",
+      "last_run_id": "a05352396ade4ae3912b04068c7bbb1c",
+      "last_verified_by": null,
+      "last_verified_at": null,
+      "notes": "review_burden=0",
+      "rulebook_version_history": [
+        {
+          "ts": "2026-05-07T09:32:10.374582Z",
+          "run_id": "c968b49f7a5547789f8f557c7345efe8",
+          "version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194"
+        },
+        {
+          "ts": "2026-05-07T10:58:47.149880Z",
+          "run_id": "a05352396ade4ae3912b04068c7bbb1c",
+          "version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
+        }
+      ],
+      "rulebook_version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
+    },
+    "m-g-c-diagnostics-corp": {
+      "status": "passed_clean",
+      "is_reference": false,
+      "target_name": "M G C DIAGNOSTICS CORP",
+      "acquirer": "ALTUS CAPITAL PARTNERS",
+      "date_announced": "2017-11-27",
+      "filing_url": "https://www.sec.gov/Archives/edgar/data/815093/0000930413-17-003888-index.htm",
+      "flag_count": 0,
+      "last_run": "2026-05-07T10:58:33.467569Z",
+      "last_run_id": "38813752eef6497c851027f4a40e9009",
+      "last_verified_by": null,
+      "last_verified_at": null,
+      "notes": "review_burden=0",
+      "rulebook_version_history": [
+        {
+          "ts": "2026-05-07T09:35:09.621718Z",
+          "run_id": "d252f6695ffd4bdfa10e2084a6407a3c",
+          "version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194"
+        },
+        {
+          "ts": "2026-05-07T10:58:33.467569Z",
+          "run_id": "38813752eef6497c851027f4a40e9009",
+          "version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
+        }
+      ],
+      "rulebook_version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
+    },
+    "multimedia-games-holding-co-inc": {
+      "status": "passed_clean",
+      "is_reference": false,
+      "target_name": "MULTIMEDIA GAMES HOLDING CO INC",
+      "acquirer": "GLOBAL CASH ACCESS HOLDINGS INC",
+      "date_announced": "2014-09-08",
+      "filing_url": "https://www.sec.gov/Archives/edgar/data/896400/0001047469-14-008440-index.htm",
+      "flag_count": 0,
+      "last_run": "2026-05-07T10:59:07.036715Z",
+      "last_run_id": "abc0d23b99fd4e648106d4e6a2a5b2d4",
+      "last_verified_by": null,
+      "last_verified_at": null,
+      "notes": "review_burden=0",
+      "rulebook_version_history": [
+        {
+          "ts": "2026-05-07T09:37:42.045890Z",
+          "run_id": "4af6c1d367d9407ba09efaeaa20c3040",
+          "version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194"
+        },
+        {
+          "ts": "2026-05-07T10:59:07.036715Z",
+          "run_id": "abc0d23b99fd4e648106d4e6a2a5b2d4",
+          "version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
+        }
+      ],
+      "rulebook_version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
+    },
+    "wafergen-bio-systems-inc": {
+      "status": "passed_clean",
+      "is_reference": false,
+      "target_name": "WAFERGEN BIO SYSTEMS INC",
+      "acquirer": "Takara Bio, Inc.",
+      "date_announced": "2016-05-13",
+      "filing_url": "https://www.sec.gov/Archives/edgar/data/1368993/0001368993-16-000148-index.htm",
+      "flag_count": 0,
+      "last_run": "2026-05-07T11:00:50.082793Z",
+      "last_run_id": "d7092beccf4b45c0b66c359b66ef7f7a",
+      "last_verified_by": null,
+      "last_verified_at": null,
+      "notes": "review_burden=0",
+      "rulebook_version_history": [
+        {
+          "ts": "2026-05-07T09:39:13.238317Z",
+          "run_id": "5092b49bf32941a58ab01eaef7ae1bb3",
+          "version": "7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194"
+        },
+        {
+          "ts": "2026-05-07T11:00:50.082793Z",
+          "run_id": "d7092beccf4b45c0b66c359b66ef7f7a",
+          "version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
+        }
+      ],
+      "rulebook_version": "4a64eef546b7a8496600186879e4878cd5ae62b5bfc0385b93623b790d4a46d8"
     }
   }
 }

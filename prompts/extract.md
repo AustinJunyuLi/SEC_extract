@@ -67,7 +67,9 @@ Use `actor_claims` for bidders, buyer groups, vehicles, advisors, committees,
 shareholders, and count-only/anonymous cohorts when the filing supports them.
 `actor_kind` is one of `organization`, `person`, `group`, `vehicle`, `cohort`,
 or `committee`; `observability` is `named`, `anonymous_handle`, or
-`count_only`.
+`count_only`; `actor_class` is `financial`, `strategic`, `mixed`, or
+`unknown`. Classify only the financial/strategic/mixed distinction supported by
+the filing. Ignore U.S./non-U.S., public/private, and other side descriptors.
 
 Do not emit an `actor_claim` merely to identify the target company. Target
 identity comes from the filing manifest and Python-owned deal metadata. Emit the

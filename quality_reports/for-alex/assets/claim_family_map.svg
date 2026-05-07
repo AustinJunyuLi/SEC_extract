@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="510" viewBox="0 0 1120 510" role="img" aria-labelledby="five-claim-families-to-canonical-tables">
+  <title id="five-claim-families-to-canonical-tables">Five Claim Families to Canonical Tables</title>
+
+  <defs>
+    <filter id="softShadow" x="-8%" y="-12%" width="116%" height="130%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#172033" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrowSlate" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#8390a3"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#4f956f"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#bf6258"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#bd7a2b"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1120" height="510" fill="#ffffff"/>
+<rect x="40" y="80" width="240" height="46" rx="12" fill="#f3f7fd" stroke="#4f7fbf" stroke-width="1.2"/>
+<text x="160" y="107" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#1e4677"><tspan x="160" dy="0">actor_claims</tspan></text>
+<rect x="600" y="80" width="280" height="46" rx="12" fill="#f3f7fd" stroke="#4f7fbf" stroke-width="1.2"/>
+<text x="740" y="107" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#1e4677"><tspan x="740" dy="0">actors table</tspan></text>
+<path d="M 282 103 L 320 103" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<path d="M 540 103 L 596 103" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="40" y="140" width="240" height="46" rx="12" fill="#f3f7fd" stroke="#4f7fbf" stroke-width="1.2"/>
+<text x="160" y="167" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#1e4677"><tspan x="160" dy="0">actor_relation_claims</tspan></text>
+<rect x="600" y="140" width="280" height="46" rx="12" fill="#f3f7fd" stroke="#4f7fbf" stroke-width="1.2"/>
+<text x="740" y="167" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#1e4677"><tspan x="740" dy="0">actor_relations table</tspan></text>
+<path d="M 282 163 L 320 163" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<path d="M 540 163 L 596 163" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="40" y="200" width="240" height="46" rx="12" fill="#f1f8f4" stroke="#4f956f" stroke-width="1.2"/>
+<text x="160" y="227" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#22513a"><tspan x="160" dy="0">event_claims</tspan></text>
+<rect x="600" y="200" width="280" height="46" rx="12" fill="#f1f8f4" stroke="#4f956f" stroke-width="1.2"/>
+<text x="740" y="227" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#22513a"><tspan x="740" dy="0">events table</tspan></text>
+<path d="M 282 223 L 320 223" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<path d="M 540 223 L 596 223" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="40" y="260" width="240" height="46" rx="12" fill="#fff7e8" stroke="#bd7a2b" stroke-width="1.2"/>
+<text x="160" y="287" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#744412"><tspan x="160" dy="0">bid_claims</tspan></text>
+<rect x="600" y="260" width="280" height="46" rx="12" fill="#fff7e8" stroke="#bd7a2b" stroke-width="1.2"/>
+<text x="740" y="287" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#744412"><tspan x="740" dy="0">events table (event_type=bid)</tspan></text>
+<path d="M 282 283 L 320 283" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<path d="M 540 283 L 596 283" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="40" y="320" width="240" height="46" rx="12" fill="#f6f8fb" stroke="#8390a3" stroke-width="1.2"/>
+<text x="160" y="347" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#354255"><tspan x="160" dy="0">participation_count_claims</tspan></text>
+<rect x="600" y="320" width="280" height="46" rx="12" fill="#f6f8fb" stroke="#8390a3" stroke-width="1.2"/>
+<text x="740" y="347" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#354255"><tspan x="740" dy="0">participation_counts table</tspan></text>
+<path d="M 282 343 L 320 343" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<path d="M 540 343 L 596 343" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="320" y="80" width="220" height="286" rx="12" fill="#f3f7fd" stroke="#4f7fbf" stroke-width="1.35" filter="url(#softShadow)"/>
+<text x="430" y="114" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="14" font-weight="700" fill="#1e4677"><tspan x="430" dy="0">Canonicalization</tspan></text>
+<text x="430" y="139" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="400" fill="#172033"><tspan x="430" dy="0">deduplicate actors</tspan><tspan x="430" dy="18">preserve groups</tspan><tspan x="430" dy="18">lock bidder_class</tspan><tspan x="430" dy="18">attach evidence</tspan><tspan x="430" dy="18">assign stable IDs</tspan></text>
+<rect x="380" y="410" width="280" height="36" rx="18" fill="#fff2f0" stroke="#bf6258" stroke-width="1"/>
+<text x="520" y="432" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="600" fill="#792d28"><tspan x="520" dy="0">No provider-owned row IDs</tspan></text>
+<text x="560" y="480" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#172033" font-style="italic"><tspan x="560" dy="0">Provider claims propose; Python chooses the canonical row table.</tspan></text>
+</svg>

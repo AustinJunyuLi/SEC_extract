@@ -94,6 +94,7 @@ def _valid_payload():
                 "actor_label": "CSC/Pamplona",
                 "actor_kind": "group",
                 "observability": "named",
+                "actor_class": "mixed",
                 "confidence": "high",
                 "evidence_refs": [
                     {
@@ -212,6 +213,9 @@ def test_call_json_returns_completion_result():
         (lambda p: p["event_claims"][0].update({"bI": 1}), "bI"),
         (lambda p: p["event_claims"][0].update({"bF": 0}), "bF"),
         (lambda p: p["actor_claims"][0].update({"actor_id": "actor_1"}), "actor_id"),
+        (lambda p: p["actor_claims"][0].update({"bidder_class": "financial"}), "bidder_class"),
+        (lambda p: p["actor_claims"][0].update({"actor_class": "non_us"}), "actor_class"),
+        (lambda p: p["actor_claims"][0].update({"actor_class": "public"}), "actor_class"),
         (lambda p: p["event_claims"][0].update({"event_id": "event_1"}), "event_id"),
         (lambda p: p["bid_claims"][0].update({"source_start": 12}), "source_start"),
         (lambda p: p["bid_claims"][0].update({"source_end": 42}), "source_end"),

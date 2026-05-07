@@ -52,6 +52,10 @@ retired and rejected.
 The provider does not emit target-only actor claims. Target identity is
 manifest/deal metadata owned by Python.
 
+Actor claims include `actor_class` with only `financial`, `strategic`, `mixed`,
+or `unknown`. The provider must ignore U.S./non-U.S., public/private, and other
+old bidder-type side descriptors.
+
 ## Run Shape
 
 ```text
@@ -75,6 +79,7 @@ python run.py --slug mac-gray --re-extract
 python run.py --slug petsmart-inc --re-extract
 python run.py --slug zep --re-extract
 python -m pipeline.run_pool --slugs mac-gray,petsmart-inc,zep --workers 3 --re-extract
+python scripts/export_alex_event_ledger.py --scope all --output output/review_csv/alex_event_ledger_ref9_plus_targets5.csv
 ```
 
 Use `--dry-run` to inspect selection without requiring an API key.
@@ -101,7 +106,16 @@ Latest derived outputs:
 ```text
 output/review_rows/{slug}.jsonl
 output/review_csv/{slug}.csv
+output/review_csv/alex_event_ledger_ref9_plus_targets5.csv
 ```
+
+`alex_event_ledger_ref9_plus_targets5.csv` is the full human-review ledger for
+Alex. It is regenerated from trusted `output/extractions/{slug}.json` graph
+snapshots and contains event, bid, participation-count, advisor, financing,
+support, and group-change rows. It does not include plain actor rows or static
+membership facts. Bid rows carry `bid_value`, `bid_value_lower`,
+`bid_value_upper`, and `bid_value_unit`, so aggregate values remain distinct
+from per-share values. The canonical graph remains the source of truth.
 
 ## Validation
 
@@ -122,8 +136,9 @@ validation. The report must cite the current extraction run id.
 
 ## Target Gate
 
-Target extraction remains fail-closed. A selection containing non-reference
+Target extraction is release-gated. A selection containing non-reference
 targets fails unless all reference deals have current verified metadata under
-`deal_graph_v2`, the `target_gate_proof_v3` stability proof classifies the
-archive as `STABLE_FOR_REFERENCE_REVIEW`, and the operator passes
-`--release-targets`.
+`deal_graph_v2`, `quality_reports/stability/target-release-proof.json`
+classifies the archive as `STABLE_FOR_REFERENCE_REVIEW`, and the operator
+passes `--release-targets`. The current trusted non-reference outputs are the
+five target deals listed in `state/progress.json`.

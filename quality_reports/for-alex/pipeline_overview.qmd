@@ -1,0 +1,820 @@
+---
+title: "M&A Bidding Extraction Pipeline — How It Works"
+subtitle: "An end-to-end walkthrough for Alex Gorbenko"
+author: "Austin Li"
+date: "2026-05-07"
+date-format: "long"
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    theme: cosmo
+    fig-cap-location: bottom
+    code-overflow: wrap
+---
+
+```{=html}
+<style>
+:root {
+  --alex-ink: #172033;
+  --alex-muted: #637083;
+  --alex-blue: #2f66b3;
+  --alex-green: #2d8053;
+  --alex-amber: #b66e1f;
+  --alex-border: #d7dee9;
+  --alex-panel: #fbfcff;
+}
+body { color: var(--alex-ink); background: #f6f8fb; }
+.quarto-title-block .title { font-weight: 800; letter-spacing: 0; }
+.quarto-title-block .subtitle { color: var(--alex-muted); }
+.callout-note {
+  border-left: 4px solid var(--alex-blue);
+  background: #f7fbff;
+  border-radius: 0 8px 8px 0;
+}
+figure {
+  margin: 2rem auto;
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid var(--alex-border);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(23, 32, 51, 0.05);
+  box-sizing: border-box;
+}
+.quarto-figure:has(> figure.quarto-float-fig) {
+  width: min(1040px, calc(100vw - 19rem));
+  max-width: calc(100vw - 2rem);
+  margin-left: 0;
+  margin-right: auto;
+}
+.quarto-figure > figure.quarto-float-fig {
+  width: 100% !important;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  overflow-x: auto;
+}
+.quarto-float-tbl {
+  max-width: 100%;
+  overflow-x: auto;
+}
+figure img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+figcaption { color: var(--alex-muted); font-size: 0.92rem; }
+table { font-size: 0.92em; border: 1px solid var(--alex-border); }
+thead th { background-color: #eef3f8; color: var(--alex-ink); }
+tbody tr:nth-child(even) { background: var(--alex-panel); }
+code { color: #243247; }
+td, th { overflow-wrap: anywhere; }
+@media (max-width: 700px) {
+  .quarto-figure:has(> figure.quarto-float-fig),
+  .quarto-figure > figure.quarto-float-fig {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.75rem;
+  }
+  .quarto-figure > figure.quarto-float-fig img {
+    width: 760px;
+    max-width: none;
+  }
+  table { display: block; max-width: 100%; overflow-x: auto; }
+  colgroup, col { width: auto !important; }
+  pre.sourceCode code,
+  pre.sourceCode code > span { white-space: pre-wrap; overflow-wrap: anywhere; }
+}
+</style>
+```
+
+::: {.callout-note title="How to read this document"}
+This is a complete walkthrough of the pipeline that converts an SEC merger
+filing into the rows of `alex_event_ledger_ref9_plus_targets5.csv`. It is
+written for a finance/legal expert who is fluent in the substance of
+bidding processes but does not write Python. Every technical term is either
+common (JSON, CSV, regex, SQL) or defined on first use. A companion
+document, **`csv_user_manual.html`**, is the reference for every column
+and every coded value in the CSV itself.
+:::
+
+# Executive summary
+
+The pipeline is a three-layer system whose only purpose is to convert the
+**Background section** of an SEC merger proxy into a structured, source-backed
+ledger of who-did-what-when in the auction.
+
+1. A **Large Language Model (LLM)** reads the Background section and proposes
+   typed claims (actors, events, bids, counts, relations). Each claim quotes
+   the exact filing text it relies on.
+2. A **Python layer** verifies that every quote is genuinely present in the
+   filing (byte-for-byte), assigns canonical IDs, builds the relational
+   graph, runs hard validation checks, and projects review rows.
+3. A **human review layer** (you, Alex, optionally with AI assistance) reads
+   the resulting CSV — or for richer queries, the JSONL or DuckDB
+   artefacts — and adjudicates anything that looks wrong against the filing.
+
+The strict ordering of authority is:
+
+> **SEC filing > canonical extraction graph > Alex CSV > Alex's legacy 2026
+> workbook (calibration only)**.
+
+The legacy workbook is *not* an oracle: when the workbook and the filing
+disagree, the filing wins. That is why every claim must cite an exact
+filing quote: there is no other way to make the system auditable.
+
+The figures, code paths, file paths, and rule definitions in this document
+are pulled directly from the live repository at the run that produced
+`alex_event_ledger_ref9_plus_targets5.csv` (run timestamp 2026-05-07,
+schema `deal_graph_v2`, all 9 reference deals verified, all 5 target deals
+trusted).
+
+# Architecture: three layers
+
+![Three-layer architecture. The LLM proposes facts; Python verifies and
+canonicalises them; you review the resulting artefacts. One-way flow; the
+filing is the only source of truth.](assets/architecture_layers.svg){#fig-arch
+fig-alt="Three coloured layers: LLM provider extraction, Python validation
+and graph, and human review. Arrows flow left to right from the SEC filing
+through to the three reviewable artefacts (CSV, JSONL, DuckDB)."}
+
+## What lives in each layer
+
+**Layer 1 — LLM provider extraction** (`pipeline/llm/extract.py`).
+The LLM is asked to read one filing and emit one strict JSON object with
+five claim families. It cites exact substrings of paragraphs from the
+Background section. It is forbidden from emitting anything else: no
+canonical IDs, no offsets, no judgements about admission or dropout, no
+projection rows. The LLM is a *proposer*, not a finaliser.
+
+**Layer 2 — Python canonicalisation, validation, projection**
+(`pipeline/deal_graph/`). Python does five jobs in sequence: bind every
+quote to its paragraph, build canonical actors and events, mark each claim
+as supported or rejected based on whether its quote bound, run hard
+integrity checks on the resulting graph, and project review rows. None of
+this involves the LLM.
+
+**Layer 3 — Human review.** Three artefacts are produced for review, in
+increasing structural richness:
+
+| Artefact | Format | Best for |
+|---|---|---|
+| `output/review_csv/{slug}.csv` *and* the consolidated `alex_event_ledger_ref9_plus_targets5.csv` | flat CSV, 28 columns | spreadsheet skim, sorting, filtering |
+| `output/review_rows/{slug}.jsonl` | one JSON object per line | AI conversation; richer fields than the CSV |
+| `output/audit/{slug}/runs/{run_id}/deal_graph.duckdb` | embedded SQL database with ~25 tables | structural queries, joins across actors/events/relations |
+
+A short user-manual section on the CSV columns is in
+**`csv_user_manual.html`**. The AI-assisted review path (Claude Desktop /
+Claude Code) is documented at the end of the manual.
+
+## Boundaries that the design enforces
+
+Two boundaries do most of the load-bearing work:
+
+- **The LLM can never emit a canonical ID, an offset, or a projection
+  row.** All three are owned by Python. This means that if you ask the
+  LLM to "produce the same row again," you get the same *quote*, not the
+  same row. Row identity is reproducible because *Python* assigns IDs
+  deterministically from the filing slug, claim type, sequence, and a
+  hash of the claim's content. There is no shared state between the LLM
+  and the row-IDing logic to drift.
+- **No claim enters the graph without an exact quote.** Python compares
+  the LLM-supplied quote text to the cited paragraph as a *byte-exact
+  substring*. Mismatched curly quotes, off-by-one whitespace, or
+  paraphrasing all fail the check. Failed claims are quarantined into
+  review-row output; they cannot create canonical rows. This is the
+  central anti-hallucination mechanism. (See @sec-validation.)
+
+# End-to-end run, file by file {#sec-e2e}
+
+![End-to-end flow for one filing. Inputs are read-only; Python writes
+the graph, audit trail, and review artefacts.](assets/e2e_run_flow.svg){#fig-e2e
+fig-alt="Seven-step flow from filing package, prompt and rules, strict LLM
+call, raw claims, finalize graph, review outputs, and consolidated Alex ledger,
+with review or failed-system branch below quote and validation issues."}
+
+The orchestration entry points are tiny:
+
+```bash
+# Re-extract one deal:
+python run.py --slug mac-gray --re-extract
+
+# Re-extract a batch:
+python -m pipeline.run_pool --filter reference --workers 1
+python -m pipeline.run_pool --slugs mac-gray,petsmart-inc,zep --workers 3 --re-extract
+
+# Regenerate the consolidated Alex ledger CSV:
+python scripts/export_alex_event_ledger.py --scope all \
+    --output output/review_csv/alex_event_ledger_ref9_plus_targets5.csv
+```
+
+The first command runs **one filing through Layers 1 and 2**. The third
+command runs **only the deterministic Layer 3 projection** from the saved
+graph snapshots — no LLM call. Re-running the third command on an
+unchanged set of snapshots produces a byte-identical CSV.
+
+## Step 1 — Build the Background section and citation units
+
+Before any LLM call, Python pulls the Background section out of the filing
+and slices it into paragraphs. Each paragraph gets a stable identifier
+like `page_35_paragraph_4`, called a **citation unit**. The full text of
+each citation unit is included in the LLM's input.
+
+This pre-step exists because we want the LLM to *cite* paragraphs by ID
+rather than by page number alone. Two paragraphs on the same page can
+contain almost-identical sentences, and a quote that matches both is
+ambiguous; the citation unit ID disambiguates which one is the source.
+
+## Step 2 — The LLM call
+
+The system message contains six files, exactly:
+
+- `prompts/extract.md` — the prompt itself (~110 lines)
+- `rules/schema.md` — the strict claim schema
+- `rules/events.md` — the closed list of 18 event subtypes
+- `rules/bidders.md` — actor and relation rules
+- `rules/bids.md` — bid-claim fields and projection guidance
+- `rules/dates.md` — date precision rules
+
+The user message contains the deal slug, manifest metadata, and the
+paragraph-numbered text of the Background section.
+
+![LLM round trip. The model receives prompt, rule files, filing pages, and
+citation units, then returns only the five permitted claim
+families.](assets/llm_roundtrip.svg){#fig-llm
+fig-alt="Sequence-style diagram with run.py/run_pool, the OpenAI Responses API,
+and the audit folder. A schema gate blocks free text and stale fields."}
+
+Two implementation details matter for review:
+
+- **The LLM cannot return free text.** The Responses API is invoked with
+  a strict JSON Schema that rejects any field name not declared in
+  `pipeline/llm/response_format.py`. If the model tries to invent a
+  field — for example, putting `bidder_class: "U.S. financial"` — the
+  call fails with a schema error and the run is marked
+  `failed_system`. Old field names (`bidder_type`, `bid_note`,
+  per-event row format) are not in the schema and would fail the same
+  way.
+- **Reasoning effort defaults to `high`.** This is the OpenAI Responses
+  API "reasoning effort" knob; higher effort costs more tokens but
+  produces more careful claim boundaries. The reasoning effort and
+  exact model ID for any run are recorded in
+  `output/audit/{slug}/runs/{run_id}/manifest.json` for reproducibility.
+
+## Step 3 — Quote binding
+
+For each evidence reference (`{citation_unit_id, quote_text}` pair) on
+each claim, Python checks:
+
+1. Does the `citation_unit_id` exist in the input we sent the LLM?
+2. Is the `quote_text` a byte-exact contiguous substring of that
+   citation unit's text?
+
+The check is implemented in `pipeline/deal_graph/evidence.py`
+(`bind_quote_to_citation_unit`). It is intentionally strict:
+
+- Curly versus straight quotes do not match.
+- Off-by-one whitespace does not match.
+- Paraphrases — even one-word substitutions — do not match.
+
+This is the only way for Python to distinguish a real quote from a
+hallucination. If you ever doubt a row in the CSV, the audit trail
+guarantees that the quoted text is character-for-character present in the
+cited paragraph; you only have to check that the *meaning* of the quote
+supports the claim. (See @sec-quote-fidelity for what to look for.)
+
+![Quote-binding decision tree. Every evidence reference is checked for a
+known citation unit, an exact quote match, and a unique
+span.](assets/quote_binding_flow.svg){#fig-quote
+fig-alt="Decision tree showing evidence_ref, citation-unit-known decision,
+quote-exact-substring decision, unique-match decision, bound span, and the
+review-row failure paths for unknown, missing, or ambiguous quote support."}
+
+## Step 4 — Canonicalisation
+
+`pipeline/deal_graph/canonicalize.py` walks the claim families in a fixed
+order — actors, then actor relations, then events, then bids, then
+participation counts — and builds graph rows. The actor walk happens
+first so that later events and bids can reference already-canonicalised
+actors.
+
+The actor module enforces three substantive rules:
+
+1. **De-duplication by case-folded label.** "Party A", "PARTY A", and
+   "party A" become the same actor. This means the LLM does not have to
+   normalise case or whitespace; that is Python's job.
+2. **Group preservation.** A consortium ("Sponsor A and Sponsor E") is a
+   single canonical actor. Member relations between the consortium and
+   its individual members are recorded as `actor_relation_claims`, not
+   as new bidder rows. This is the rule that lets the CSV preserve the
+   filing's bidding unit instead of atomising every consortium into
+   members.
+3. **Bidder class promotion.** When the LLM emits an actor claim with
+   `actor_class` of `financial`, `strategic`, or `mixed` (not
+   `unknown`), the actor's class is *locked*: subsequent unknown-class
+   claims for the same label cannot overwrite it. Group classes are
+   refined post-hoc by walking member relations: a group with a
+   strategic member becomes `strategic`; a group with both becomes
+   `strategic` (this is a deliberate research convention, not an LLM
+   judgement).
+
+After canonicalisation, the graph contains canonical rows for actors,
+actor relations, events, bids (as events with `event_type=bid`),
+participation counts, claim records, evidence rows, dispositions,
+coverage links, and row-evidence links. All of these are stable: same
+filing, same rules, same prompt → same row IDs.
+
+## Step 5 — Hard validation {#sec-validation}
+
+`pipeline/deal_graph/validate.py` runs a fixed set of integrity checks
+*after* canonicalisation. If any of them fail, the run is marked
+`failed_system` and prior trusted output is preserved as
+`stale_after_failure`.
+
+![Lifecycle of a single claim. The upper (green) path is the only way
+into the canonical graph; the lower (red) path is the only way into the
+review-only stream. In the live snapshot every claim is on the upper
+path.](assets/claim_flow.svg){#fig-claim-flow
+fig-alt="Two-row diagram. The top row shows a sample bid claim flowing
+through quote binding, into a 'match?' decision diamond, then into a
+'Disposition: supported' box, then into a canonical graph row. The
+bottom row shows the failure path: 'No exact match' to 'Disposition:
+rejected_unsupported' to 'Review row'."}
+
+![Claim disposition states. Python assigns supported or rejected status after
+quote binding, with partial failures preserved as review
+issues.](assets/disposition_lifecycle.svg){#fig-disposition
+fig-alt="State diagram showing start, emitted claim, binding, supported,
+rejected, review-only, canonical rows, and a partial-failure soft issue path."}
+
+The hard-flag codes that block a run are:
+
+| Code | Meaning |
+|---|---|
+| `DG_SCHEMA_VERSION` | The graph snapshot does not declare `schema_version=deal_graph_v2`. |
+| `DG_CLAIM_DISPOSITION_MISSING` | A claim has zero or more than one current disposition. |
+| `DG_CLAIM_EVIDENCE_MISSING` | A supported claim has no evidence binding (should be impossible by construction). |
+| `DG_CLAIM_COVERAGE_LINK_MISSING` | A claim that names an obligation lacks the back-link to that obligation. |
+| `DG_ROW_EVIDENCE_MISSING` | A canonical actor / event / relation / count row was created without source-evidence links. |
+| `DG_EVENT_LINK_ORPHAN` | An event-actor link references an event or actor that does not exist in the graph. |
+
+In the live snapshot used to produce
+`alex_event_ledger_ref9_plus_targets5.csv`, **zero hard flags** were
+raised across the 14 deals. Every row was constructed from a quote that
+bound exactly to its cited paragraph.
+
+A more permissive class of issues — open review rows with
+`issue_codes`, soft-flag entries — is expected even on clean runs and is
+appended to `state/flags.jsonl`. The numerical *open-row count* (the
+"review burden") is what determines whether a run is `passed_clean`
+(zero), `needs_review` (1–10), or `high_burden` (>10).
+
+::: {.callout-note title="What 'review burden' means"}
+A "review row" is any row in `output/review_rows/{slug}.jsonl` whose
+`review_status` is not `clean`. In `passed_clean` runs there are *zero*
+open review rows; in `needs_review` runs there are 1–10; in
+`high_burden` runs there are more than 10. **All 14 deals in the
+current ledger are `passed_clean`** (review burden zero), confirmed by
+`state/progress.json`.
+:::
+
+## Step 6 — Projection
+
+The graph snapshot is then projected into:
+
+- **Review rows** (`pipeline/deal_graph/project_review.py`). One row
+  per canonical event, relation, count, plus quarantined claims. Rich
+  fields: `bound_source_quote`, `bound_source_page`, `confidence`,
+  `issue_codes`, `suggested_action`. Written to
+  `output/review_rows/{slug}.jsonl` and `output/review_csv/{slug}.csv`.
+- **Alex event ledger rows**
+  (`pipeline/deal_graph/project_alex_event_ledger.py`). 28 columns
+  designed for spreadsheet review. The ledger is a *view* of the
+  review-row stream, with the per-event-code priority and date
+  ordering applied. The exhaustive column-by-column reference is in
+  the companion CSV user manual.
+
+The Alex ledger projection is *deterministic and pure*: same input
+graph → byte-identical CSV. There is no LLM call here. This is what
+lets `scripts/export_alex_event_ledger.py` regenerate the consolidated
+file from saved snapshots without re-running extraction.
+
+# The five claim families {#sec-claims}
+
+The LLM emits exactly one JSON object with exactly five top-level keys:
+
+```json
+{
+  "actor_claims": [],
+  "event_claims": [],
+  "bid_claims": [],
+  "participation_count_claims": [],
+  "actor_relation_claims": []
+}
+```
+
+The schema is enforced by the OpenAI Responses API at the model boundary
+(`pipeline/llm/response_format.py`). Anything else — a top-level `deal`
+key, a row called `BidderID`, a field named `T` or `bI` or `bF` — is
+rejected. The forbidden-fields list in `rules/schema.md` exists because
+old versions of this project sometimes accepted those fields; the strict
+schema is what guarantees they cannot creep back in.
+
+![Five provider claim families mapped to canonical graph tables. Bid claims
+become events with event_type=bid; participation counts are their own row
+table.](assets/claim_family_map.svg){#fig-claim-fan
+fig-alt="Map from actor_claims, actor_relation_claims, event_claims,
+bid_claims, and participation_count_claims through Python canonicalization to
+actors, actor_relations, events, and participation_counts tables."}
+
+## actor_claims
+
+| Field | Type | Notes |
+|---|---|---|
+| `actor_label` | string | Filing's label for the actor. e.g. "Party C", "BC Partners, Inc.", "the Buyer Group". |
+| `actor_kind` | enum | `organization`, `person`, `group`, `vehicle`, `cohort`, `committee`. |
+| `observability` | enum | `named` (filing names it), `anonymous_handle` (e.g. "Party A"), `count_only` (e.g. "11 strategic buyers"). |
+| `actor_class` | enum | `financial`, `strategic`, `mixed`, `unknown`. **No** geographic or public/private flags. |
+
+The single-most important rule here: the LLM is *not* allowed to emit a
+target-only actor claim. The target's identity comes from the filing
+manifest (`data/filings/{slug}/manifest.json`) and is owned by Python.
+The target appears in claims only as the object of a substantive
+relation — for example, the *advised party* in an advisor relation. This
+is what prevents the LLM from spuriously creating a new "actor" for the
+target and double-counting.
+
+## event_claims
+
+| Field | Type | Notes |
+|---|---|---|
+| `event_type` | enum | `process`, `bid`, `transaction`. |
+| `event_subtype` | enum | One of 18 closed values. See @tbl-subtypes. |
+| `event_date` | string \| null | ISO `YYYY-MM-DD` only when filing supports it; null otherwise. |
+| `description` | string | Optional free-text summary. |
+| `actor_label` | string \| null | The actor performing the event. |
+| `actor_role` | string \| null | Role of the actor in this event. |
+
+The closed `event_subtype` enum is the heart of the taxonomy. Inventing a
+new subtype is forbidden; if a filing contains a fact outside the list,
+the rule (`rules/events.md`) says to emit the closest supported claim at
+low confidence, or to leave it for rulebook expansion.
+
+```{=html}
+<table id="tbl-subtypes" class="table"><caption>Table: 18 event_subtypes the LLM may emit (closed list, from rules/events.md).</caption>
+<thead><tr><th>Subtype</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>contact_initial</code></td><td>First contact between target and a potential bidder.</td></tr>
+<tr><td><code>nda_signed</code></td><td>Target/bidder confidentiality agreement executed.</td></tr>
+<tr><td><code>consortium_ca_signed</code></td><td>Bidder-bidder or intra-consortium confidentiality agreement (does <em>not</em> substitute for a target-side NDA).</td></tr>
+<tr><td><code>ioi_submitted</code></td><td>Indication of interest submitted (typically informal, no binding terms).</td></tr>
+<tr><td><code>first_round_bid</code></td><td>Bid in the first formal round.</td></tr>
+<tr><td><code>final_round_bid</code></td><td>Best-and-final round bid.</td></tr>
+<tr><td><code>exclusivity_grant</code></td><td>Target grants exclusive negotiation rights.</td></tr>
+<tr><td><code>merger_agreement_executed</code></td><td>Merger agreement signed. Price restated here is transaction evidence, not a canonical bid.</td></tr>
+<tr><td><code>withdrawn_by_bidder</code></td><td>Bidder voluntarily withdrew.</td></tr>
+<tr><td><code>excluded_by_target</code></td><td>Target removed bidder from process.</td></tr>
+<tr><td><code>non_responsive</code></td><td>Filing affirmatively states a bidder did not respond/proceed.</td></tr>
+<tr><td><code>cohort_closure</code></td><td>An anonymous cohort ended participation (e.g. "the remaining bidders dropped out").</td></tr>
+<tr><td><code>advancement_admitted</code></td><td>Bidder advanced into the next round.</td></tr>
+<tr><td><code>advancement_declined</code></td><td>Bidder excluded from the next round.</td></tr>
+<tr><td><code>rollover_executed</code></td><td>Shareholder rolled equity into the surviving entity.</td></tr>
+<tr><td><code>financing_committed</code></td><td>Buyer's financing sources committed.</td></tr>
+<tr><td><code>go_shop_started</code></td><td>Post-signing go-shop window opened.</td></tr>
+<tr><td><code>go_shop_ended</code></td><td>Go-shop window closed.</td></tr>
+</tbody></table>
+```
+
+## bid_claims
+
+| Field | Type | Notes |
+|---|---|---|
+| `bidder_label` | string | Filing's label for the bidder/group. |
+| `bid_date` | string \| null | ISO date when supported. |
+| `bid_value` | number \| null | Point value when filing supports a single number. |
+| `bid_value_lower` / `bid_value_upper` | number \| null | Range bounds when filing supports a range. |
+| `bid_value_unit` | enum | `per_share`, `enterprise_value`, `equity_value`, `unspecified`. **No** `other`. |
+| `consideration_type` | enum | `cash`, `stock`, `mixed`, `other`, `unspecified`. |
+| `bid_stage` | enum | `initial`, `revised`, `final`, `unspecified`. |
+
+The bid claim deliberately separates *value* from *unit*: a $25 figure
+on a per-share basis is `bid_value=25.0, bid_value_unit=per_share`,
+whereas a $2.6 billion all-cash offer is `bid_value=2600000000.0,
+bid_value_unit=unspecified` (or `equity_value` if the filing labels it as
+such). The Alex ledger preserves all three of `bid_value`,
+`bid_value_lower`, `bid_value_upper`, plus `bid_value_unit` — it does
+**not** collapse aggregate values into per-share equivalents.
+
+The Python-owned post-review fields `bI`, `bI_lo`, `bI_hi`, `bF`,
+`admitted`, `formal_boundary`, `dropout_mechanism`, and `T` (`rules/bids.md`)
+are *not* in the live extraction artefact and are therefore not in
+the Alex ledger. They are reserved for downstream econometric tooling
+that has not yet been built.
+
+## participation_count_claims
+
+| Field | Type | Notes |
+|---|---|---|
+| `process_stage` | enum | `contacted`, `nda_signed`, `ioi_submitted`, `first_round`, `final_round`, `exclusivity`. |
+| `actor_class` | enum | `financial`, `strategic`, `mixed`, `unknown`. |
+| `count_min` | int | Lower bound (or exact count). |
+| `count_max` | int \| null | Upper bound when bounded; null for `at_least`/`at_most` qualifiers. |
+| `count_qualifier` | enum | `exact`, `at_least`, `at_most`, `range`, `approximate`. |
+
+These rows count *unnamed* parties at well-defined stages — for example,
+"During the week of March 28, 2016, … representatives of GHF contacted 11
+potential strategic buyers (including Party A) and 18 potential
+financial buyers." That sentence supports two participation-count claims
+and one initial-contact event for the cohort. (See the worked example in
+the user manual under `event_code = participation_count`.)
+
+## actor_relation_claims
+
+| Field | Type | Notes |
+|---|---|---|
+| `subject_label` / `object_label` | string | The two actors. Direction defined per relation type below. |
+| `relation_type` | enum | 11 values; see `rules/bidders.md`. |
+| `role_detail` | string \| null | Optional descriptor (e.g. "lead arranger"). |
+| `effective_date_first` | string \| null | ISO date when filing pins down when the relation began. |
+
+Relations are directional. The 11 types are:
+
+| `relation_type` | Direction (subject → object) |
+|---|---|
+| `member_of` | member → group |
+| `joins_group` | joining actor → group (with timing) |
+| `exits_group` | exiting actor → group (with timing) |
+| `affiliate_of` | affiliate → related actor |
+| `controls` | controller → controlled |
+| `acquisition_vehicle_of` | vehicle → parent / group |
+| `advises` | advisor → advised party |
+| `finances` | financier → financed party |
+| `supports` | supporter → supported party / transaction |
+| `voting_support_for` | supporting holder → buyer / agreement / proposal / transaction |
+| `rollover_holder_for` | rolling holder → buyer / vehicle / surviving company / target / transaction |
+
+This is the layer that lets the system distinguish "Sponsor A is part of
+Bidder 3" from "Sponsor A submitted a bid": the former is a `member_of`
+relation, the latter is a bid event submitted by Bidder 3 (the group).
+Without this distinction, the system would atomise every consortium and
+inflate the bidder count.
+
+# The rulebook {#sec-rules}
+
+A closed taxonomy is the only way to make the output comparable across
+deals. The rulebook lives in plain Markdown so that finance/legal
+reviewers can read and amend it without touching code.
+
+| File | Length | Defines |
+|---|---|---|
+| `rules/schema.md` | ~130 lines | Claim shape, confidence levels, observability, count qualifiers, forbidden fields. |
+| `rules/bidders.md` | ~55 lines | Actor kinds, bidder class, 11 relation types, group doctrine. |
+| `rules/bids.md` | ~50 lines | Bid claim fields, value units, consideration types, stages; Python-owned post-review fields. |
+| `rules/events.md` | ~60 lines | Event types, the closed list of 18 event subtypes, process semantics. |
+| `rules/dates.md` | ~20 lines | When to use ISO dates vs null; relation timing rules. |
+| `rules/invariants.md` | ~25 lines | Hard validation invariants Python enforces. |
+
+Two rules are worth re-stating because they shape the CSV most:
+
+> **Exact-or-omit.** *"If no exact substring supports the typed fields
+> sharply, omit the claim."* — `prompts/extract.md`. This is why the
+> CSV has fewer rows per filing than a free-text summary would suggest:
+> the LLM is required to leave out anything it cannot pin to a quote.
+
+> **Preserve the filing's bidding unit.** *"A buyer group, club bid,
+> sponsor/corporate pair, or changing coalition can be one actor. Do
+> not atomise group bids unless the filing shows separate bidding
+> conduct."* — `rules/bidders.md`. This is why the consortium-level
+> Buyer Group in petsmart-inc appears as a single bidder rather than
+> five (BC Partners, Caisse, GIC, StepStone, Longview).
+
+The full enum tables — every coded value with worked-example rows from
+the actual CSV — live in **`csv_user_manual.html`**. This document
+references them but does not duplicate them.
+
+# The reference verification gate {#sec-gate}
+
+The pipeline ships claims, not opinions. To stop the model from quietly
+drifting between runs, the project enforces a **reference verification
+gate**: nine deals — chosen by Alex as a calibration set — must pass
+clean across three consecutive runs whose rulebook hash is unchanged
+*before* extraction is enabled for any other deal.
+
+![Reference verification gate. Targets open only after stable reference runs,
+filing-grounded verification reports, an accepted release proof, and the
+operator release flag.](assets/reference_gate.svg){#fig-gate
+fig-alt="Gate diagram from nine reference deals to three stable runs,
+filing-grounded verification, release proof, and the --release-targets flag,
+with a blocked branch when the flag is absent."}
+
+## What "verified: true" means and does not mean
+
+`verified: true` is **metadata on a deal** in `state/progress.json`. It
+is not a run status. It can be set only when:
+
+1. A filing-grounded report exists at
+   `quality_reports/reference_verification/{slug}.md`.
+2. The report cites the *current* extraction run's `run_id` and
+   rulebook hash.
+3. The report contains the eight required sections (Run Metadata,
+   Commands, Extraction & Flag Summary, Filing-Grounded Calibration
+   Ledger, Filing Evidence Review, Contract Updates, Conclusion) per
+   `quality_reports/reference_verification/README.md`.
+4. The verifier (Austin or an agent acting under `SKILL.md`) has read
+   the Background pages and confirmed exact source binding for every
+   sample claim.
+5. The conclusion is `Conclusion: VERIFIED`.
+
+`verified: true` is *not* a guarantee that every row is perfect. It is
+a guarantee that:
+
+- Every canonical row has a quote that binds to the filing.
+- The rulebook contract is current (no stale field names).
+- A human read the filing and adjudicated the calibration ledger.
+
+It does not guarantee that *the workbook* and the extraction agree. When
+they disagree, the workbook is treated as calibration material, not as
+ground truth — see `AGENTS.md` for the formal language.
+
+## The four trusted-run statuses
+
+`state/progress.json` records the per-run status of each deal:
+
+| Status | Meaning | Open review rows |
+|---|---|---|
+| `passed_clean` | Trusted graph; no open review rows. | 0 |
+| `needs_review` | Trusted graph; small review backlog. | 1–10 |
+| `high_burden` | Trusted graph; large review backlog (likely needs rule changes or LLM tuning). | >10 |
+| `failed_system` | Runtime, schema, artefact, or graph-integrity failure. | n/a (no trusted output) |
+| `stale_after_failure` | Prior trusted output exists but the latest run failed. | 0 (preserved from prior run) |
+
+In the current snapshot, **all 14 deals are `passed_clean` and all 9
+reference deals are `verified: true`** (target 5 are not yet verified;
+see @sec-targets).
+
+## What `target-release-proof.json` certifies
+
+The stability proof at
+`quality_reports/stability/target-release-proof.json` is the gate
+artefact that says "we have run the 9 reference deals 3 times each at
+this rulebook hash, and nothing in the contract drifted." Its key fields
+are:
+
+- `classification: "STABLE_FOR_REFERENCE_REVIEW"`
+- `slug_results[]` — for each reference deal: 3 selected runs, all
+  `passed_clean`, with 0 review-row counts.
+- `llm_content_variation.allowed: true` — the proof tolerates wording
+  variation across runs (the LLM's word choice is not a contract);
+  what it forbids is *contract drift* (a new column appearing, a
+  forbidden field being emitted, an evidence ref that does not bind).
+
+When all three conditions hold, the operator may pass `--release-targets`
+to `pipeline.run_pool`, and the five target deals (
+`art-technology-group-inc`, `gen-probe-inc-new`,
+`m-g-c-diagnostics-corp`, `multimedia-games-holding-co-inc`,
+`wafergen-bio-systems-inc`) become eligible for extraction.
+
+## The 5 target deals: trusted, not yet verified {#sec-targets}
+
+The current Alex ledger contains 23–33 rows per target deal. Their runs
+are `passed_clean` (zero open review rows), but `verified` is `null`
+because no reference verification report has been written for any
+target deal yet. The operational meaning is:
+
+- The target rows can be reviewed and used for substance.
+- A `verified: true` flag on a target deal would require its own
+  filing-grounded report — same protocol as the 9 reference deals.
+
+This document treats the target rows as eligible for review but
+explicitly *not* certified to the same standard.
+
+# Determinism and reproducibility
+
+Every step from "raw response" to "Alex CSV" is deterministic given the
+graph snapshot:
+
+- **Canonical IDs** are stable hashes of `(deal_slug, claim_type,
+  sequence, claim contents)`. Re-running canonicalisation on the same
+  raw response produces the same IDs.
+- **Quote binding** is exact substring matching — there is no
+  ML/fuzziness involved. Same quote, same paragraph → same span.
+- **Projection** is pure Python on the graph snapshot. No randomness,
+  no time-dependent fields except the explicit run timestamp.
+
+What is *not* deterministic across runs is the LLM's word choice — the
+model may emit slightly different evidence quotes ("On July 12" vs "On
+July 12, 2016") or the same fact at different confidence levels in two
+runs. This is why the stability gate explicitly tolerates "metric
+variability observed: row fingerprints changed" while still requiring
+that the contract — the schema, the enum values, the rulebook — does
+not drift.
+
+To reproduce any row exactly, look up its `source_claim_ids` in the
+CSV, find that claim ID in
+`output/audit/{slug}/runs/{run_id}/deal_graph_v2.json`, and read the
+quote-binding entry. The audit folder is immutable; older runs remain
+on disk under their `run_id`.
+
+# Where to look for what
+
+| Question | File / directory |
+|---|---|
+| What does the filing actually say at page N? | `data/filings/{slug}/pages.json` |
+| What did the LLM emit on this run? | `output/audit/{slug}/runs/{run_id}/raw_response.json` |
+| What is the canonical graph for this deal right now? | `output/extractions/{slug}.json` |
+| What is the SQL view of the graph (joinable)? | `output/audit/{slug}/runs/{run_id}/deal_graph.duckdb` |
+| What review rows did this run produce? | `output/review_rows/{slug}.jsonl` |
+| What is in the Alex ledger? | `output/review_csv/alex_event_ledger_ref9_plus_targets5.csv` |
+| What rules govern claim shape? | `rules/*.md` (six files) |
+| What is the LLM prompt? | `prompts/extract.md` |
+| What is the deal-level status? | `state/progress.json` |
+| What validation flags fired? | `state/flags.jsonl` (append-only) |
+| What is the verification report for a reference deal? | `quality_reports/reference_verification/{slug}.md` |
+| What proof certified the target gate is open? | `quality_reports/stability/target-release-proof.json` |
+
+# How to review {#sec-quote-fidelity}
+
+The review job is *not* "check whether the model used the right English"
+— that is what the schema enforces. The review job is:
+
+> *Does the cited filing quote substantively support the claim?*
+
+For example, a row with `event_code = bid_submitted, party_name = Party
+C, bid_value = 21.0` whose `evidence_quote_full` reads:
+
+> "On July 12, 2016, Party C submitted an IOI with an offer price per
+> share of $21.00"
+
+… supports `bid_submitted` (yes, a bid was submitted), supports
+`bid_value=21.0`, supports `bid_value_unit=per_share` (the quote says
+"per share"), supports `event_date=2016-07-12`, but *also* fits
+`event_code=ioi_submitted` (the quote says "IOI"). Both rows are
+correctly emitted: the same quote supports both an IOI event (the
+indication of interest itself) and a bid event (the price embedded in
+the IOI), and the projection emits one row each.
+
+Things to flag:
+
+- A `bid_value` cited from a quote that names a different bidder.
+- An `initiated_by` of `bidder` cited from a quote that says "the
+  Company contacted …".
+- A `dropout_reason` of `valuation` cited from a quote that says only
+  "withdrew" with no economics.
+- A `bidder_class` of `strategic` for an actor whose claims only
+  describe a financial sponsor.
+
+Two paths are recommended for the review itself:
+
+- **CSV path.** Open the CSV in Excel/Numbers, sort by
+  `deal_slug`+`event_order`, scan for rows where
+  `evidence_quote_full` does not obviously support the row's
+  classification.
+- **AI-assisted path.** Open Claude Desktop or Claude Code, point it
+  at `output/review_rows/{slug}.jsonl` (or, with shell access, at
+  `output/audit/{slug}/runs/{run_id}/deal_graph.duckdb`), and ask
+  structural questions like "for petsmart-inc, list every
+  `bid_submitted` whose `bidder_class` is `unknown`." Details are in
+  the user manual.
+
+# Glossary
+
+The CSV-side glossary is in **`csv_user_manual.html`**. The
+pipeline-side glossary is below.
+
+| Term | Meaning |
+|---|---|
+| **Background section** | The section of the SEC merger proxy (Schedule 14A or DEFM14A) that narrates the M&A process. The only filing input the pipeline reads. |
+| **Canonicalisation** | Python step that turns LLM claims into stable graph rows by de-duplicating actors, preserving groups, and assigning hash-based IDs. |
+| **Citation unit** | A paragraph-local identifier like `page_35_paragraph_4`. The unit text is sent with the LLM input; quote binding compares against this text. |
+| **Claim** | One typed assertion emitted by the LLM (actor / event / bid / count / relation), accompanied by ≥1 evidence reference. |
+| **Coverage obligation** | Internal accounting that ties each claim back to a research coverage requirement (used by validation; not surfaced in the CSV). |
+| **DuckDB** | An embedded SQL database file. The audit folder contains one DuckDB file per run, with ~25 tables. Queryable with the `duckdb` CLI or any SQL-aware AI assistant. |
+| **Disposition** | Per-claim verdict: `supported` (creates rows) or `rejected_unsupported` (review-only). |
+| **Evidence reference** | A `{citation_unit_id, quote_text}` pair attached to every claim. Without exact binding, no canonical row is created. |
+| **JSONL** | "JSON lines" — a file where each line is a JSON object. Used for review rows. |
+| **LLM** | Large Language Model. The pipeline uses an OpenAI-compatible API (`gpt-5.5` at reasoning effort `high` in current runs); the model proposes claims but never finalises rows. |
+| **Manifest** | `data/filings/{slug}/manifest.json`. Contains the deal slug, target name, acquirer, announcement date, filing URL. The target identity in the CSV comes from here, not from LLM output. |
+| **Provider** | The LLM provider; in code the term refers to the OpenAI Responses API or its Linkflow/NewAPI proxy. |
+| **Quote binding** | Python step that confirms an LLM-supplied quote text is a byte-exact contiguous substring of the cited paragraph. |
+| **Review burden** | Count of open review rows for a run. Determines `passed_clean` / `needs_review` / `high_burden` status. |
+| **Review row** | An entry in `output/review_rows/{slug}.jsonl`. Some review rows are clean (just the canonical row's audit view); others surface issues for human action. |
+| **Rulebook** | The six files under `rules/`. Closed taxonomy that constrains what the LLM may emit. |
+| **Run ID** | A deterministic UUID for one extraction run. Audit artefacts live under `output/audit/{slug}/runs/{run_id}/`. |
+| **Slug** | Lowercase identifier for a deal (e.g. `mac-gray`, `petsmart-inc`). Used as a directory and key throughout. |
+| **Stability proof** | `quality_reports/stability/target-release-proof.json`. JSON document certifying that 3 consecutive `passed_clean` runs exist for each reference deal at an unchanged rulebook hash. |
+
+---
+
+::: {.callout-note title="Companion document"}
+The exhaustive column-by-column and code-by-code reference for
+`alex_event_ledger_ref9_plus_targets5.csv`, with a worked-example row
+from the actual file for every coded value, is in
+**`csv_user_manual.html`**.
+:::

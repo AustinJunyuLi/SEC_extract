@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="480" viewBox="0 0 1000 480" role="img" aria-labelledby="claim-disposition-states">
+  <title id="claim-disposition-states">Claim Disposition States</title>
+
+  <defs>
+    <filter id="softShadow" x="-8%" y="-12%" width="116%" height="130%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#172033" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrowSlate" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#8390a3"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#4f956f"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#bf6258"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#bd7a2b"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1000" height="480" fill="#ffffff"/>
+<rect x="40" y="195" width="110" height="36" rx="18" fill="#f6f8fb" stroke="#8390a3" stroke-width="1"/>
+<text x="95" y="217" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="600" fill="#354255"><tspan x="95" dy="0">Start</tspan></text>
+<path d="M 150 213 L 196 213" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="200" y="150" width="170" height="130" rx="12" fill="#fff7e8" stroke="#bd7a2b" stroke-width="1.35" filter="url(#softShadow)"/>
+<text x="285" y="184" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="14" font-weight="700" fill="#744412"><tspan x="285" dy="0">Emitted</tspan></text>
+<text x="285" y="209" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="400" fill="#172033"><tspan x="285" dy="0">LLM returns claim</tspan><tspan x="285" dy="18">with evidence_refs</tspan></text>
+<path d="M 370 213 L 406 213" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="410" y="150" width="180" height="130" rx="12" fill="#f3f7fd" stroke="#4f7fbf" stroke-width="1.35" filter="url(#softShadow)"/>
+<text x="500" y="184" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="14" font-weight="700" fill="#1e4677"><tspan x="500" dy="0">Binding</tspan></text>
+<text x="500" y="209" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="400" fill="#172033"><tspan x="500" dy="0">Python tests</tspan><tspan x="500" dy="18">every evidence ref</tspan></text>
+<path d="M 590 185 C 620 185, 590 110, 626 110" fill="none" stroke="#4f956f" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowGreen)"/>
+<rect x="519" y="127" width="71" height="20" rx="10" fill="#ffffff" stroke="#edf1f6" stroke-width="1"/>
+<text x="554" y="141" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="500" fill="#4f956f"><tspan x="554" dy="0">&gt;=1 bound</tspan></text>
+<rect x="630" y="70" width="180" height="110" rx="12" fill="#f1f8f4" stroke="#4f956f" stroke-width="1.35" filter="url(#softShadow)"/>
+<text x="720" y="104" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="14" font-weight="700" fill="#22513a"><tspan x="720" dy="0">Supported</tspan></text>
+<text x="720" y="129" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="400" fill="#172033"><tspan x="720" dy="0">creates canonical</tspan><tspan x="720" dy="18">rows and evidence</tspan></text>
+<path d="M 810 125 L 836 125" fill="none" stroke="#4f956f" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowGreen)"/>
+<rect x="840" y="107" width="100" height="36" rx="18" fill="#f1f8f4" stroke="#4f956f" stroke-width="1"/>
+<text x="890" y="129" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="600" fill="#22513a"><tspan x="890" dy="0">Done</tspan></text>
+<path d="M 590 240 C 620 240, 590 320, 626 320" fill="none" stroke="#bf6258" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowRed)"/>
+<rect x="515" y="270" width="78" height="20" rx="10" fill="#ffffff" stroke="#edf1f6" stroke-width="1"/>
+<text x="554" y="284" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="500" fill="#bf6258"><tspan x="554" dy="0">zero bound</tspan></text>
+<rect x="630" y="305" width="200" height="110" rx="12" fill="#fff2f0" stroke="#bf6258" stroke-width="1.35" filter="url(#softShadow)"/>
+<text x="730" y="339" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="14" font-weight="700" fill="#792d28"><tspan x="730" dy="0">Rejected</tspan></text>
+<text x="730" y="364" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="400" fill="#172033"><tspan x="730" dy="0">rejected_unsupported</tspan><tspan x="730" dy="18">review JSONL only</tspan></text>
+<path d="M 830 360 L 856 360" fill="none" stroke="#bf6258" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowRed)"/>
+<rect x="860" y="342" width="100" height="36" rx="18" fill="#fff2f0" stroke="#bf6258" stroke-width="1"/>
+<text x="910" y="364" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="600" fill="#792d28"><tspan x="910" dy="0">Done</tspan></text>
+<path d="M 500 280 L 500 380" fill="none" stroke="#bd7a2b" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowAmber)"/>
+<rect x="499" y="312" width="102" height="20" rx="10" fill="#ffffff" stroke="#edf1f6" stroke-width="1"/>
+<text x="550" y="326" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="500" fill="#bd7a2b"><tspan x="550" dy="0">some refs fail</tspan></text>
+<rect x="400" y="380" width="220" height="60" rx="12" fill="#fff7e8" stroke="#bd7a2b" stroke-width="1.2"/>
+<text x="510" y="405" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#744412"><tspan x="510" dy="0">Supported claim</tspan><tspan x="510" dy="17">plus soft review issue</tspan></text>
+</svg>

@@ -76,6 +76,7 @@ def test_portfolio_company_member_signal_projects_group_as_strategic() -> None:
                 "actor_label": "CSC/Pamplona",
                 "actor_kind": "group",
                 "observability": "named",
+                "actor_class": "unknown",
                 "confidence": "high",
                 "evidence_refs": _refs("CSC and Pamplona, who together we refer to as CSC/Pamplona"),
             }
@@ -134,6 +135,63 @@ def test_portfolio_company_member_signal_projects_group_as_strategic() -> None:
     assert actors["CSC"]["bidder_class"] == "strategic"
     assert actors["CSC/Pamplona"]["has_strategic_member"] is True
     assert actors["CSC/Pamplona"]["bidder_class"] == "strategic"
+
+
+def test_actor_claim_class_is_primary_and_relation_role_text_cannot_overwrite_it() -> None:
+    payload = {
+        "actor_claims": [
+            {
+                "claim_type": "actor",
+                "coverage_obligation_id": "obl_actor_strategic",
+                "actor_label": "Party A",
+                "actor_kind": "organization",
+                "observability": "anonymous_handle",
+                "actor_class": "strategic",
+                "confidence": "high",
+                "evidence_refs": _refs("Party A was a strategic bidder"),
+            },
+            {
+                "claim_type": "actor",
+                "coverage_obligation_id": "obl_actor_mixed",
+                "actor_label": "Buyer Group",
+                "actor_kind": "group",
+                "observability": "named",
+                "actor_class": "mixed",
+                "confidence": "high",
+                "evidence_refs": _refs("Buyer Group consisted of a strategic buyer and a financial sponsor"),
+            },
+        ],
+        "actor_relation_claims": [
+            {
+                "claim_type": "actor_relation",
+                "coverage_obligation_id": "obl_relation_financing_noise",
+                "subject_label": "Party A",
+                "object_label": "Buyer Group",
+                "relation_type": "finances",
+                "role_detail": "financial sponsor",
+                "effective_date_first": None,
+                "confidence": "high",
+                "evidence_refs": _refs("Party A provided financing to Buyer Group"),
+            },
+            {
+                "claim_type": "actor_relation",
+                "coverage_obligation_id": "obl_relation_strategic_member",
+                "subject_label": "Party A",
+                "object_label": "Buyer Group",
+                "relation_type": "member_of",
+                "role_detail": "strategic buyer",
+                "effective_date_first": None,
+                "confidence": "high",
+                "evidence_refs": _refs("Party A was a strategic member of Buyer Group"),
+            },
+        ],
+    }
+
+    graph = _graph(payload)
+    actors = {row["actor_label"]: row for row in graph["actors"]}
+
+    assert actors["Party A"]["bidder_class"] == "strategic"
+    assert actors["Buyer Group"]["bidder_class"] == "mixed"
 
 
 def test_rejects_provider_owned_projection_and_old_fields() -> None:

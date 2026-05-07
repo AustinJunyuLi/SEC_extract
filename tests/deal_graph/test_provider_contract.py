@@ -57,6 +57,7 @@ def test_provider_schema_does_not_expose_retired_scalar_or_projection_fields():
         "bid_note",
         "bid_type",
         "bidder_type",
+        "bidder_class",
         "source_page",
         "source_start",
         "source_end",
@@ -72,6 +73,7 @@ def test_provider_schema_does_not_expose_retired_scalar_or_projection_fields():
     ("family", "field", "value"),
     [
         ("actor_claims", "actor_id", "actor_1"),
+        ("actor_claims", "bidder_class", "financial"),
         ("event_claims", "BidderID", 1),
         ("event_claims", "canonical_event_id", "event_1"),
         ("bid_claims", "bid_type", "formal"),

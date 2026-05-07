@@ -209,6 +209,7 @@ def _valid_claim_payload():
                 "actor_label": "CSC/Pamplona",
                 "actor_kind": "group",
                 "observability": "named",
+                "actor_class": "mixed",
                 "confidence": "high",
                 "evidence_refs": [
                     {

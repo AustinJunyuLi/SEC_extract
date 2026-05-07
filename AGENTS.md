@@ -38,6 +38,11 @@ coverage results, graph rows, graph validation, and review rows. The AI never
 emits canonical ids, source offsets, `BidderID`, `T`, `bI`, `bF`,
 admitted/dropout outcomes, coverage results, or projection rows.
 
+The provider does emit `actor_class` on actor claims, limited to `financial`,
+`strategic`, `mixed`, or `unknown`. Python stores it as canonical
+`bidder_class`. Do not restore U.S./non-U.S., public/private, or old
+`bidder_type`/`bid_note` fields.
+
 There is no per-event-row canonical schema, no loose JSON fallback, no
 provider branch that turns off structured output, no response-chain reuse, and
 no secondary model correction path.
@@ -80,6 +85,12 @@ python -m pipeline.run_pool --filter reference --workers 1
 python -m pipeline.run_pool --slugs mac-gray,petsmart-inc,zep --workers 3 --re-extract
 ```
 
+Alex-facing full event ledger:
+
+```bash
+python scripts/export_alex_event_ledger.py --scope all --output output/review_csv/alex_event_ledger_ref9_plus_targets5.csv
+```
+
 Reasoning defaults to `high`. Explicit `xhigh` is capped by
 `LINKFLOW_XHIGH_MAX_WORKERS`.
 
@@ -90,6 +101,11 @@ Reasoning defaults to `high`. Explicit `xhigh` is capped by
 - `prompts/extract.md` is the provider prompt.
 - `pipeline/deal_graph/` is the live canonical graph subsystem.
 - `output/extractions/{slug}.json` is the latest portable graph snapshot.
+- `output/review_csv/alex_event_ledger_ref9_plus_targets5.csv` is a generated
+  human-review ledger for Alex. It is deterministic projection output, not
+  canonical truth. Bid rows expose `bid_value`, `bid_value_lower`,
+  `bid_value_upper`, and `bid_value_unit`; do not label aggregate values as
+  per-share values in this projection.
 - `reference/deal_details_Alex_2026.xlsx` and
   `reference/CollectionInstructions_Alex_2026.pdf` are calibration material
   only; they are not live extraction inputs or verification authorities.
@@ -157,10 +173,11 @@ providence-worcester, medivation, imprivata, zep, petsmart-inc,
 penford, mac-gray, saks, stec
 ```
 
-Target-deal extraction remains fail-closed until the reference set is
-re-established under `deal_graph_v2` and a target-release stability proof is
-accepted. Fetching or inspecting target metadata is allowed only when Austin
-explicitly asks and it does not start extraction.
+Target-deal extraction is release-gated, not open by default. A non-reference
+selection requires current verified reference metadata, an accepted
+`quality_reports/stability/target-release-proof.json`, and the explicit
+`--release-targets` operator flag. The current trusted non-reference outputs
+are the five target deals listed in `state/progress.json`.
 
 ## No Backward Compatibility Doctrine
 

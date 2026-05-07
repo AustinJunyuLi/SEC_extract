@@ -50,12 +50,16 @@ source-backed relation needs the target as subject or object.
 
 ## Actor Claims
 
-Fields: `actor_label`, `actor_kind`, `observability`.
+Fields: `actor_label`, `actor_kind`, `observability`, `actor_class`.
 
 `actor_kind`: `organization`, `person`, `group`, `vehicle`, `cohort`,
 `committee`.
 
 `observability`: `named`, `anonymous_handle`, `count_only`.
+
+`actor_class`: `financial`, `strategic`, `mixed`, `unknown`. Classify only
+this core financial/strategic/mixed distinction. Ignore U.S./non-U.S.,
+public/private, and other side descriptors.
 
 ## Event Claims
 
@@ -73,7 +77,7 @@ Fields: `bidder_label`, `bid_date`, `bid_value`, `bid_value_lower`,
 
 `bid_stage`: `initial`, `revised`, `final`, `unspecified`.
 
-Formal/informal classification, bidder class, admission, dropout, and `T` are
+Formal/informal classification, admission, dropout, and `T` are
 outside the live extraction artifact.
 
 ## Participation Count Claims
@@ -113,6 +117,7 @@ Latest portable outputs:
 output/extractions/{slug}.json
 output/review_rows/{slug}.jsonl
 output/review_csv/{slug}.csv
+output/review_csv/alex_event_ledger_ref9_plus_targets5.csv
 ```
 
 Rows without source-backed evidence do not project into canonical graph rows.
@@ -120,3 +125,8 @@ Quarantined unsupported claims become review rows. Trusted run statuses are
 `passed_clean`, `needs_review`, and `high_burden`; runtime or graph-integrity
 failures are `failed_system`, with prior trusted outputs marked
 `stale_after_failure`.
+
+The Alex event ledger is deterministic projection output for human review, not
+canonical storage. Its bid value columns are `bid_value`, `bid_value_lower`,
+`bid_value_upper`, and `bid_value_unit`. Non-bid rows use projection
+`not_applicable` for bid-only display fields such as consideration type.

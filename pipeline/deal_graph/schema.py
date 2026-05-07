@@ -167,6 +167,7 @@ class ActorClaim(ClaimBase):
     actor_label: str = Field(min_length=1)
     actor_kind: ActorKind
     observability: Observability
+    actor_class: ActorClass
 
 
 class EventClaim(ClaimBase):
@@ -444,7 +445,7 @@ DDL: tuple[str, ...] = (
     """
     CREATE TABLE IF NOT EXISTS actor_claims (
       claim_id TEXT PRIMARY KEY, actor_label TEXT NOT NULL, actor_kind TEXT NOT NULL,
-      observability TEXT NOT NULL
+      observability TEXT NOT NULL, actor_class TEXT NOT NULL
     )
     """,
     """

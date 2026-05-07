@@ -9,6 +9,16 @@ sponsor/corporate pair, or changing coalition can be one actor.
 Member relations are composition facts. They do not automatically create
 bidder rows or bid events.
 
+## Bidder Class
+
+Every actor claim includes `actor_class`: `financial`, `strategic`, `mixed`, or
+`unknown`. Use `financial` for financial sponsors, private equity firms, and
+financial-buyer cohorts. Use `strategic` for operating/corporate buyers and
+strategic-buyer cohorts. Use `mixed` only when the filing supports a mixed
+financial/strategic bidder, group, or cohort. Use `unknown` when the filing
+does not support the class. Ignore U.S./non-U.S., public/private, and other
+side descriptors.
+
 ## Relation Direction
 
 - `member_of`: subject is the member; object is the group.

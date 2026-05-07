@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="420" viewBox="0 0 1040 420" role="img" aria-labelledby="quote-binding-decision-tree">
+  <title id="quote-binding-decision-tree">Quote-Binding Decision Tree</title>
+
+  <defs>
+    <filter id="softShadow" x="-8%" y="-12%" width="116%" height="130%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#172033" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrowSlate" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#8390a3"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#4f956f"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#bf6258"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#bd7a2b"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1040" height="420" fill="#ffffff"/>
+<rect x="24" y="135" width="130" height="86" rx="12" fill="#f6f8fb" stroke="#8390a3" stroke-width="1.35" filter="url(#softShadow)"/>
+<text x="89" y="169" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="13" font-weight="700" fill="#354255"><tspan x="89" dy="0">evidence_ref</tspan></text>
+<text x="89" y="193" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="400" fill="#172033"><tspan x="89" dy="0">citation_unit_id</tspan><tspan x="89" dy="17">quote_text</tspan></text>
+<path d="M 154 178 L 184 178" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<polygon points="249,126 314,178 249,230 184,178" fill="#fff7e8" stroke="#bd7a2b" stroke-width="1.5"/>
+<text x="249" y="173" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="600" fill="#744412"><tspan x="249" dy="0">citation unit</tspan><tspan x="249" dy="16">known?</tspan></text>
+<polygon points="409,126 474,178 409,230 344,178" fill="#fff7e8" stroke="#bd7a2b" stroke-width="1.5"/>
+<text x="409" y="173" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="600" fill="#744412"><tspan x="409" dy="0">quote is exact</tspan><tspan x="409" dy="16">substring?</tspan></text>
+<polygon points="569,126 634,178 569,230 504,178" fill="#fff7e8" stroke="#bd7a2b" stroke-width="1.5"/>
+<text x="569" y="173" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="600" fill="#744412"><tspan x="569" dy="0">unique</tspan><tspan x="569" dy="16">match?</tspan></text>
+<path d="M 314 178 L 344 178" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="309" y="154" width="40" height="20" rx="10" fill="#ffffff" stroke="#edf1f6" stroke-width="1"/>
+<text x="329" y="168" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="500" fill="#8390a3"><tspan x="329" dy="0">yes</tspan></text>
+<path d="M 474 178 L 504 178" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="469" y="154" width="40" height="20" rx="10" fill="#ffffff" stroke="#edf1f6" stroke-width="1"/>
+<text x="489" y="168" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="500" fill="#8390a3"><tspan x="489" dy="0">yes</tspan></text>
+<path d="M 634 178 L 660 178" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="627" y="154" width="40" height="20" rx="10" fill="#ffffff" stroke="#edf1f6" stroke-width="1"/>
+<text x="647" y="168" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="500" fill="#8390a3"><tspan x="647" dy="0">yes</tspan></text>
+<rect x="660" y="135" width="150" height="86" rx="12" fill="#f1f8f4" stroke="#4f956f" stroke-width="1.35" filter="url(#softShadow)"/>
+<text x="735" y="169" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="13" font-weight="700" fill="#22513a"><tspan x="735" dy="0">Bound span</tspan></text>
+<text x="735" y="193" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="400" fill="#172033"><tspan x="735" dy="0">source page</tspan><tspan x="735" dy="17">source offset</tspan></text>
+<path d="M 810 178 L 832 178" fill="none" stroke="#4f956f" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowGreen)"/>
+<rect x="832" y="135" width="178" height="86" rx="12" fill="#f1f8f4" stroke="#4f956f" stroke-width="1.2"/>
+<text x="921" y="173" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#22513a"><tspan x="921" dy="0">Claim can enter graph</tspan><tspan x="921" dy="17">if at least one ref bound</tspan></text>
+<path d="M 249 230 L 249 282" fill="none" stroke="#bf6258" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowRed)"/>
+<rect x="229" y="234" width="40" height="20" rx="10" fill="#ffffff" stroke="#edf1f6" stroke-width="1"/>
+<text x="249" y="248" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="500" fill="#bf6258"><tspan x="249" dy="0">no</tspan></text>
+<rect x="184" y="282" width="130" height="72" rx="12" fill="#fff2f0" stroke="#bf6258" stroke-width="1.2"/>
+<text x="249" y="313" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#792d28"><tspan x="249" dy="0">UnknownCitation</tspan><tspan x="249" dy="17">review row</tspan></text>
+<path d="M 409 230 L 409 282" fill="none" stroke="#bf6258" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowRed)"/>
+<rect x="389" y="234" width="40" height="20" rx="10" fill="#ffffff" stroke="#edf1f6" stroke-width="1"/>
+<text x="409" y="248" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="500" fill="#bf6258"><tspan x="409" dy="0">no</tspan></text>
+<rect x="344" y="282" width="130" height="72" rx="12" fill="#fff2f0" stroke="#bf6258" stroke-width="1.2"/>
+<text x="409" y="313" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#792d28"><tspan x="409" dy="0">MissingQuote</tspan><tspan x="409" dy="17">review row</tspan></text>
+<path d="M 569 230 L 569 282" fill="none" stroke="#bf6258" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowRed)"/>
+<rect x="534" y="234" width="71" height="20" rx="10" fill="#ffffff" stroke="#edf1f6" stroke-width="1"/>
+<text x="569" y="248" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="500" fill="#bf6258"><tspan x="569" dy="0">ambiguous</tspan></text>
+<rect x="504" y="282" width="130" height="72" rx="12" fill="#fff2f0" stroke="#bf6258" stroke-width="1.2"/>
+<text x="569" y="313" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#792d28"><tspan x="569" dy="0">AmbiguousQuote</tspan><tspan x="569" dy="17">review row</tspan></text>
+<text x="520" y="382" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#172033" font-style="italic"><tspan x="520" dy="0">Failed refs stay visible as review issues; a claim with zero bound refs cannot create canonical rows.</tspan></text>
+</svg>

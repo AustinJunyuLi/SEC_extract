@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="380" viewBox="0 0 1000 380" role="img" aria-labelledby="llm-round-trip">
+  <title id="llm-round-trip">LLM Round Trip</title>
+
+  <defs>
+    <filter id="softShadow" x="-8%" y="-12%" width="116%" height="130%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#172033" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrowSlate" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#8390a3"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#4f956f"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#bf6258"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#bd7a2b"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1000" height="380" fill="#ffffff"/>
+<rect x="115" y="60" width="230" height="200" rx="12" fill="#f3f7fd" stroke="#4f7fbf" stroke-width="1.35" filter="url(#softShadow)"/>
+<circle cx="139" cy="89" r="12" fill="#ffffff" stroke="#4f7fbf" stroke-width="1.15"/>
+<text x="139" y="94" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="13" font-weight="700" fill="#4f7fbf"><tspan x="139" dy="0">1</tspan></text>
+<text x="165" y="94" text-anchor="start" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="15" font-weight="700" fill="#1e4677"><tspan x="165" dy="0">run.py / run_pool</tspan></text>
+<text x="230" y="121" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="13" font-weight="400" fill="#172033"><tspan x="230" dy="0">Builds one prompt</tspan><tspan x="230" dy="20">with filing pages,</tspan><tspan x="230" dy="20">citation units,</tspan><tspan x="230" dy="20">and rule files</tspan></text>
+<rect x="385" y="60" width="230" height="200" rx="12" fill="#fff7e8" stroke="#bd7a2b" stroke-width="1.35" filter="url(#softShadow)"/>
+<circle cx="409" cy="89" r="12" fill="#ffffff" stroke="#bd7a2b" stroke-width="1.15"/>
+<text x="409" y="94" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="13" font-weight="700" fill="#bd7a2b"><tspan x="409" dy="0">2</tspan></text>
+<text x="435" y="94" text-anchor="start" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="15" font-weight="700" fill="#744412"><tspan x="435" dy="0">Responses API</tspan></text>
+<text x="500" y="121" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="13" font-weight="400" fill="#172033"><tspan x="500" dy="0">Accepts strict</tspan><tspan x="500" dy="20">JSON schema only</tspan><tspan x="500" dy="20"></tspan><tspan x="500" dy="20">No free text</tspan><tspan x="500" dy="20">No old fields</tspan></text>
+<rect x="655" y="60" width="230" height="200" rx="12" fill="#f1f8f4" stroke="#4f956f" stroke-width="1.35" filter="url(#softShadow)"/>
+<circle cx="679" cy="89" r="12" fill="#ffffff" stroke="#4f956f" stroke-width="1.15"/>
+<text x="679" y="94" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="13" font-weight="700" fill="#4f956f"><tspan x="679" dy="0">3</tspan></text>
+<text x="705" y="94" text-anchor="start" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="15" font-weight="700" fill="#22513a"><tspan x="705" dy="0">Audit folder</tspan></text>
+<text x="770" y="121" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="13" font-weight="400" fill="#172033"><tspan x="770" dy="0">raw_response.json</tspan><tspan x="770" dy="20">prompt.jsonl</tspan><tspan x="770" dy="20">calls.jsonl</tspan><tspan x="770" dy="20">manifest.json</tspan></text>
+<path d="M 347 130 L 383 130" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="292" y="108" width="146" height="20" rx="10" fill="#ffffff" stroke="#edf1f6" stroke-width="1"/>
+<text x="365" y="122" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="500" fill="#8390a3"><tspan x="365" dy="0">system + user message</tspan></text>
+<path d="M 383 190 L 347 190" fill="none" stroke="#bd7a2b" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowAmber)"/>
+<rect x="308" y="168" width="115" height="20" rx="10" fill="#ffffff" stroke="#edf1f6" stroke-width="1"/>
+<text x="365" y="182" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="500" fill="#bd7a2b"><tspan x="365" dy="0">5 claim families</tspan></text>
+<path d="M 617 160 L 653 160" fill="none" stroke="#4f956f" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowGreen)"/>
+<rect x="581" y="138" width="109" height="20" rx="10" fill="#ffffff" stroke="#edf1f6" stroke-width="1"/>
+<text x="635" y="152" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="500" fill="#4f956f"><tspan x="635" dy="0">immutable write</tspan></text>
+<text x="500" y="320" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#172033" font-style="italic"><tspan x="500" dy="0">Schema gate blocks drift; accepted payload is the five claim families:</tspan><tspan x="500" dy="18">actor_claims, event_claims, bid_claims, participation_count_claims, actor_relation_claims.</tspan></text>
+</svg>

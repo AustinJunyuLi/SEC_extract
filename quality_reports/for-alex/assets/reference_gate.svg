@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="660" viewBox="0 0 980 660" role="img" aria-labelledby="reference-verification-gate">
+  <title id="reference-verification-gate">Reference Verification Gate</title>
+
+  <defs>
+    <filter id="softShadow" x="-8%" y="-12%" width="116%" height="130%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#172033" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrowSlate" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#8390a3"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#4f956f"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#bf6258"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 1 2 L 11 6 L 1 10 z" fill="#bd7a2b"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="980" height="660" fill="#ffffff"/>
+<rect x="60" y="60" width="220" height="110" rx="12" fill="#f6f8fb" stroke="#8390a3" stroke-width="1.35" filter="url(#softShadow)"/>
+<circle cx="84" cy="89" r="12" fill="#ffffff" stroke="#8390a3" stroke-width="1.15"/>
+<text x="84" y="94" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="700" fill="#8390a3"><tspan x="84" dy="0">1</tspan></text>
+<text x="110" y="94" text-anchor="start" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="14" font-weight="700" fill="#354255"><tspan x="110" dy="0">Reference set</tspan></text>
+<text x="170" y="119" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="400" fill="#172033"><tspan x="170" dy="0">9 filing-grounded</tspan><tspan x="170" dy="18">reference deals</tspan></text>
+<path d="M 170 170 L 170 195" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="60" y="195" width="220" height="110" rx="12" fill="#f3f7fd" stroke="#4f7fbf" stroke-width="1.35" filter="url(#softShadow)"/>
+<circle cx="84" cy="224" r="12" fill="#ffffff" stroke="#4f7fbf" stroke-width="1.15"/>
+<text x="84" y="229" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="700" fill="#4f7fbf"><tspan x="84" dy="0">2</tspan></text>
+<text x="110" y="229" text-anchor="start" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="14" font-weight="700" fill="#1e4677"><tspan x="110" dy="0">Stable runs</tspan></text>
+<text x="170" y="254" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="400" fill="#172033"><tspan x="170" dy="0">3 consecutive runs</tspan><tspan x="170" dy="18">same rulebook hash</tspan></text>
+<path d="M 170 305 L 170 330" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="60" y="330" width="220" height="130" rx="12" fill="#f1f8f4" stroke="#4f956f" stroke-width="1.35" filter="url(#softShadow)"/>
+<circle cx="84" cy="359" r="12" fill="#ffffff" stroke="#4f956f" stroke-width="1.15"/>
+<text x="84" y="364" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="700" fill="#4f956f"><tspan x="84" dy="0">3</tspan></text>
+<text x="110" y="364" text-anchor="start" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="14" font-weight="700" fill="#22513a"><tspan x="110" dy="0">Verification</tspan></text>
+<text x="170" y="389" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="400" fill="#172033"><tspan x="170" dy="0">report exists</tspan><tspan x="170" dy="18">current run cited</tspan><tspan x="170" dy="18">Conclusion: VERIFIED</tspan></text>
+<path d="M 282 395 L 376 395" fill="none" stroke="#4f956f" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowGreen)"/>
+<rect x="309" y="373" width="40" height="20" rx="10" fill="#ffffff" stroke="#edf1f6" stroke-width="1"/>
+<text x="329" y="387" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="500" fill="#4f956f"><tspan x="329" dy="0">yes</tspan></text>
+<rect x="380" y="330" width="220" height="130" rx="12" fill="#fff7e8" stroke="#bd7a2b" stroke-width="1.35" filter="url(#softShadow)"/>
+<circle cx="404" cy="359" r="12" fill="#ffffff" stroke="#bd7a2b" stroke-width="1.15"/>
+<text x="404" y="364" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="700" fill="#bd7a2b"><tspan x="404" dy="0">4</tspan></text>
+<text x="430" y="364" text-anchor="start" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="14" font-weight="700" fill="#744412"><tspan x="430" dy="0">Release proof</tspan></text>
+<text x="490" y="389" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="400" fill="#172033"><tspan x="490" dy="0">target proof accepted</tspan><tspan x="490" dy="18">--release-targets set</tspan></text>
+<path d="M 600 395 L 696 395" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
+<rect x="700" y="360" width="230" height="80" rx="12" fill="#f1f8f4" stroke="#4f956f" stroke-width="1.2"/>
+<text x="815" y="395" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#22513a"><tspan x="815" dy="0">5 target deals eligible</tspan><tspan x="815" dy="17">for extraction</tspan></text>
+<path d="M 170 460 L 170 510" fill="none" stroke="#bf6258" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowRed)"/>
+<rect x="162" y="469" width="40" height="20" rx="10" fill="#ffffff" stroke="#edf1f6" stroke-width="1"/>
+<text x="182" y="483" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="11" font-weight="500" fill="#bf6258"><tspan x="182" dy="0">no</tspan></text>
+<rect x="60" y="510" width="220" height="70" rx="12" fill="#fff2f0" stroke="#bf6258" stroke-width="1.2"/>
+<text x="170" y="540" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#792d28"><tspan x="170" dy="0">Blocked</tspan><tspan x="170" dy="17">reference gate closed</tspan></text>
+<text x="490" y="620" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="500" fill="#172033" font-style="italic"><tspan x="490" dy="0">Verification is metadata, not a run status; it requires filing-grounded review.</tspan></text>
+</svg>

@@ -167,6 +167,10 @@ ACTOR_CLAIM_SCHEMA = {
             "type": "string",
             "enum": _enum_values(Observability),
         },
+        "actor_class": {
+            "type": "string",
+            "enum": _enum_values(ActorClass),
+        },
         "confidence": CONFIDENCE_SCHEMA,
         "evidence_refs": EVIDENCE_REFS_SCHEMA,
     },
@@ -176,6 +180,7 @@ ACTOR_CLAIM_SCHEMA = {
         "actor_label",
         "actor_kind",
         "observability",
+        "actor_class",
         "confidence",
         "evidence_refs",
     ],

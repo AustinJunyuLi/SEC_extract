@@ -21,6 +21,7 @@ def _valid_payload() -> dict:
                 "actor_label": "CSC/Pamplona",
                 "actor_kind": "group",
                 "observability": "named",
+                "actor_class": "mixed",
                 "confidence": "high",
                 "evidence_refs": _evidence_refs(
                     "CSC and Pamplona, who together we refer to as CSC/Pamplona"
@@ -101,8 +102,26 @@ def test_provider_payload_accepts_claim_only_shape():
     payload = schema.ProviderPayload.model_validate(_valid_payload())
 
     assert payload.actor_claims[0].actor_kind == "group"
+    assert payload.actor_claims[0].actor_class == "mixed"
     assert payload.bid_claims[0].bid_stage == "initial"
     assert payload.actor_relation_claims[0].relation_type == "member_of"
+
+
+@pytest.mark.parametrize("actor_class", ["non_us", "public", "private"])
+def test_provider_payload_rejects_non_core_actor_class_values(actor_class: str) -> None:
+    payload = _valid_payload()
+    payload["actor_claims"][0]["actor_class"] = actor_class
+
+    with pytest.raises(ValidationError, match="actor_class"):
+        schema.ProviderPayload.model_validate(payload)
+
+
+def test_provider_payload_requires_actor_class_on_actor_claims() -> None:
+    payload = _valid_payload()
+    del payload["actor_claims"][0]["actor_class"]
+
+    with pytest.raises(ValidationError, match="actor_class"):
+        schema.ProviderPayload.model_validate(payload)
 
 
 def test_provider_payload_accepts_separated_exact_evidence_refs():

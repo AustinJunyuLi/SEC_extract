@@ -60,6 +60,7 @@ class Canonicalizer:
     row_evidence: list[dict[str, Any]] = field(default_factory=list)
     review_flags: list[dict[str, Any]] = field(default_factory=list)
     actor_index: dict[str, dict[str, Any]] = field(default_factory=dict)
+    actor_class_locked_ids: set[str] = field(default_factory=set)
     bound_evidence_ids_by_claim: dict[str, list[str]] = field(default_factory=dict)
     claim_failures: dict[str, dict[str, Any]] = field(default_factory=dict)
 
@@ -183,13 +184,16 @@ class Canonicalizer:
         claim_id, evidence_ids = self.add_claim("actor", claim, sequence)
         if claim_id in self.claim_failures:
             return
+        actor_class = _normalize_bidder_class(claim.get("actor_class"))
         actor = self.actor(
             claim.get("actor_label"),
             actor_kind=claim.get("actor_kind") or "organization",
             observability=claim.get("observability") or "named",
-            bidder_class=_normalize_bidder_class(claim.get("actor_class") or claim.get("bidder_class")),
+            bidder_class=actor_class,
         )
         if actor:
+            if actor_class and actor_class != "unknown":
+                self.actor_class_locked_ids.add(actor["actor_id"])
             self.link_row_evidence("actors", actor["actor_id"], evidence_ids)
 
     def canonicalize_actor_relation_claim(self, claim: dict[str, Any], sequence: int) -> None:
@@ -232,7 +236,7 @@ class Canonicalizer:
         }
         self.actor_relations.append(relation)
         self.link_row_evidence("actor_relations", relation_id, evidence_ids)
-        _apply_relation_class_signal(subject, object_actor, relation)
+        _apply_relation_class_signal(subject, object_actor, relation, self.actor_class_locked_ids)
 
     def canonicalize_event_claim(self, claim: dict[str, Any], sequence: int) -> None:
         claim_id, evidence_ids = self.add_claim("event", claim, sequence)
@@ -328,7 +332,7 @@ class Canonicalizer:
         self.link_row_evidence("participation_counts", count_id, evidence_ids)
 
     def snapshot(self) -> dict[str, Any]:
-        _propagate_member_class_signals(self.actors, self.actor_relations)
+        _propagate_member_class_signals(self.actors, self.actor_relations, self.actor_class_locked_ids)
         _dedupe_coverage_results(self.coverage_results)
         return {
             "schema_version": "deal_graph_v2",
@@ -447,29 +451,46 @@ def _primary_quote(claim: dict[str, Any]) -> str:
     return ""
 
 
-def _apply_relation_class_signal(subject: dict[str, Any], object_actor: dict[str, Any], relation: dict[str, Any]) -> None:
+def _apply_relation_class_signal(
+    subject: dict[str, Any],
+    object_actor: dict[str, Any],
+    relation: dict[str, Any],
+    locked_actor_ids: set[str],
+) -> None:
+    if relation.get("relation_type") not in {"member_of", "joins_group", "finances", "affiliate_of"}:
+        return
     detail = " ".join(str(value or "") for value in (subject.get("actor_label"), relation.get("role_detail"))).lower()
     if any(token in detail for token in ("strategic", "operating", "corporate", "portfolio company")):
-        subject["bidder_class"] = "strategic"
+        _set_relation_derived_bidder_class(subject, "strategic", locked_actor_ids)
         object_actor["has_strategic_member"] = True
-        if object_actor["bidder_class"] in {"unknown", None, "financial"}:
+        if object_actor["actor_id"] not in locked_actor_ids and object_actor["bidder_class"] in {"unknown", None, "financial"}:
             object_actor["bidder_class"] = "strategic"
     if any(token in detail for token in ("financial", "sponsor", "private equity", "financing", "capital")):
-        subject["bidder_class"] = "financial"
+        _set_relation_derived_bidder_class(subject, "financial", locked_actor_ids)
         object_actor["has_financial_member"] = True
+        if object_actor["actor_id"] in locked_actor_ids:
+            return
         if object_actor["bidder_class"] in {"unknown", None}:
             object_actor["bidder_class"] = "financial"
         elif object_actor["bidder_class"] != "financial" and not object_actor["has_strategic_member"]:
             object_actor["bidder_class"] = "mixed"
-    if object_actor["has_strategic_member"] and object_actor["has_financial_member"]:
+    if object_actor["actor_id"] not in locked_actor_ids and object_actor["has_strategic_member"] and object_actor["has_financial_member"]:
         # Mixed groups with a source-backed strategic member remain strategic
         # for canonical bidder-class review.
         object_actor["bidder_class"] = "strategic"
 
 
+def _set_relation_derived_bidder_class(actor: dict[str, Any], actor_class: str, locked_actor_ids: set[str]) -> None:
+    if actor.get("actor_id") in locked_actor_ids:
+        return
+    if actor.get("bidder_class") in {None, "unknown"}:
+        actor["bidder_class"] = actor_class
+
+
 def _propagate_member_class_signals(
     actors: list[dict[str, Any]],
     relations: list[dict[str, Any]],
+    locked_actor_ids: set[str],
 ) -> None:
     actors_by_id = {row["actor_id"]: row for row in actors}
     for relation in relations:
@@ -483,6 +504,8 @@ def _propagate_member_class_signals(
             group["has_strategic_member"] = True
         if subject.get("bidder_class") == "financial":
             group["has_financial_member"] = True
+        if group.get("actor_id") in locked_actor_ids:
+            continue
         if group.get("has_strategic_member") and group.get("has_financial_member"):
             group["bidder_class"] = "strategic"
         elif group.get("has_strategic_member"):

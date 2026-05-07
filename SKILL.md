@@ -20,6 +20,16 @@ Batch:
 python -m pipeline.run_pool --slugs mac-gray,petsmart-inc,zep --workers 3 --re-extract
 ```
 
+Alex-facing full event ledger:
+
+```bash
+python scripts/export_alex_event_ledger.py --scope all --output output/review_csv/alex_event_ledger_ref9_plus_targets5.csv
+```
+
+The Alex ledger is generated from trusted graph snapshots. Bid rows expose
+`bid_value`, `bid_value_lower`, `bid_value_upper`, and `bid_value_unit`; do not
+collapse aggregate values into a per-share-only column.
+
 `OPENAI_API_KEY` and `OPENAI_BASE_URL` are runtime-only secrets/configuration.
 Do not write keys to repo files, reports, audit summaries, or docs.
 
@@ -54,6 +64,10 @@ fields.
 The provider does not emit target-only actor claims. Target identity is
 manifest/deal metadata owned by Python; target labels appear in provider claims
 only as part of substantive source-backed relations.
+
+Actor claims include `actor_class`: `financial`, `strategic`, `mixed`, or
+`unknown`. Do not emit U.S./non-U.S., public/private, `bidder_type`,
+`bidder_class`, or `bid_note` fields.
 
 ## Python Pipeline
 

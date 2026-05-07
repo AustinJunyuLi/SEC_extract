@@ -24,19 +24,25 @@ value. Use `unspecified` when the filing supports a number but does not support
 which aggregate value basis it represents. Do not emit `other` for
 `bid_value_unit`.
 
-## Python-Owned Post-Review Projection
+## Python-Owned Research Projection
 
 The live extraction artifact stops at the source-backed graph and review rows.
-Later post-review estimator tooling may derive:
+Actor `bidder_class` is canonical actor data sourced from `actor_class`; it is
+not an estimator variable. Later research/estimator tooling may derive:
 
 - `bI`, `bI_lo`, `bI_hi`, `bF`
 - `admitted`
 - `formal_boundary`
 - `dropout_mechanism`
-- bidder class / `T`
+- `T`
 
 The post-review projection unit is actor-cycle scoped. Group actors are
 eligible bidder units when they submit bids. Member actors are not projected
 unless they are independently linked to bid events.
 
 `T` is assigned only by Python-owned post-review logic, never by the provider.
+
+The Alex review ledger is a deterministic human-review projection. Bid rows use
+`bid_value`, `bid_value_lower`, `bid_value_upper`, and `bid_value_unit`; they
+must not label all values as per-share values. `consideration_type` is a bid-row
+display value, with non-bid rows projected as `not_applicable`.
