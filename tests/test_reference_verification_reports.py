@@ -30,7 +30,7 @@ GOOD_REPORT = """# medivation Agent Verification
 - Soft flags: 0
 - Info flags: 0
 
-## AI-vs-Alex Diff Ledger
+## Filing-Grounded Calibration Ledger
 
 | Item | Filing evidence | Decision |
 |---|---|---|
@@ -43,7 +43,7 @@ current extraction rows are supported by source quotes and pages.
 
 ## Contract Updates
 
-No rulebook, reference JSON, or comparator update was required.
+No rulebook, calibration material, or calibration artifact update was required.
 
 ## Conclusion
 
@@ -147,14 +147,14 @@ def test_check_reports_rejects_missing_diff_ledger(tmp_path):
     _write_report(
         tmp_path,
         "medivation",
-        GOOD_REPORT.replace("## AI-vs-Alex Diff Ledger", "## Diff Notes"),
+        GOOD_REPORT.replace("## Filing-Grounded Calibration Ledger", "## Diff Notes"),
     )
 
     failures = checker.check_reports(tmp_path, slugs=("medivation",))
 
     assert len(failures) == 1
     assert failures[0].slug == "medivation"
-    assert "missing section: ## AI-vs-Alex Diff Ledger" in failures[0].message
+    assert "missing section: ## Filing-Grounded Calibration Ledger" in failures[0].message
 
 
 def test_check_reports_rejects_blocker_conclusion(tmp_path):
@@ -179,13 +179,13 @@ def test_check_reports_rejects_missing_report(tmp_path):
     assert "missing verification report" in failures[0].message
 
 
-def test_check_reports_accepts_prior_report_run_metadata_when_current_artifacts_are_grounded(tmp_path):
+def test_check_reports_rejects_prior_report_run_metadata(tmp_path):
     _write_current_run_artifacts(tmp_path, run_id="current-run")
     _write_report(tmp_path, "medivation", GOOD_REPORT.replace("Run ID: run-123", "Run ID: old-run"))
 
     failures = checker.check_reports(tmp_path, slugs=("medivation",))
 
-    assert failures == []
+    assert any("must cite current run id current-run" in failure.message for failure in failures)
 
 
 def test_check_reports_rejects_ungrounded_raw_evidence_ref(tmp_path):

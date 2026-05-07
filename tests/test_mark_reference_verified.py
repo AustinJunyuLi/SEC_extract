@@ -26,7 +26,7 @@ GOOD_REPORT = """# medivation Agent Verification
 - Rows: 16
 - Hard flags: 0
 
-## AI-vs-Alex Diff Ledger
+## Filing-Grounded Calibration Ledger
 
 | Item | Filing evidence | Decision |
 |---|---|---|
@@ -38,7 +38,7 @@ The report cites Filing page 42.
 
 ## Contract Updates
 
-No rulebook, reference JSON, or comparator update was required.
+No rulebook, calibration material, or calibration artifact update was required.
 
 ## Conclusion
 

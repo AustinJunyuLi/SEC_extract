@@ -39,15 +39,7 @@ RAW_RESPONSE_SCHEMA_VERSION = "raw_response_v3"
 AUDIT_RUN_SCHEMA_VERSION = "audit_run_v3"
 AUDIT_LATEST_SCHEMA_VERSION = "audit_v3"
 VALIDATION_SCHEMA_VERSION = "validation_v1"
-
-LEGACY_AUDIT_NAMES: frozenset[str] = frozenset({
-    "manifest.json",
-    "raw_response.json",
-    "validation.json",
-    "final_output.json",
-    "calls.jsonl",
-    "prompts",
-})
+AUDIT_SLUG_ROOT_ALLOWED_NAMES: frozenset[str] = frozenset({"latest.json", "runs"})
 
 
 def audit_slug_root(audit_root: Path, slug: str) -> Path:
@@ -121,19 +113,6 @@ class AuditWriter:
         }
         _atomic_write_text(self.root / "raw_response.json", json.dumps(payload, indent=2) + "\n")
 
-    def write_cached_raw_response(
-        self,
-        *,
-        payload: dict[str, Any],
-        source_run_id: str,
-    ) -> None:
-        copied = dict(payload)
-        copied["schema_version"] = RAW_RESPONSE_SCHEMA_VERSION
-        copied["slug"] = self.slug
-        copied["run_id"] = self.run_id
-        copied["cache_source_run_id"] = source_run_id
-        _atomic_write_text(self.root / "raw_response.json", json.dumps(copied, indent=2) + "\n")
-
     def write_validation(self, payload: dict[str, Any]) -> None:
         base = {
             "schema_version": VALIDATION_SCHEMA_VERSION,
@@ -142,12 +121,6 @@ class AuditWriter:
         }
         base.update(payload)
         _atomic_write_text(self.root / "validation.json", json.dumps(base, indent=2, default=str) + "\n")
-
-    def write_final_output(self, final_output: dict[str, Any]) -> None:
-        _atomic_write_text(
-            self.root / "final_output.json",
-            json.dumps(final_output, indent=2, default=str) + "\n",
-        )
 
     def write_manifest(self, payload: dict[str, Any] | None = None, **kwargs: Any) -> None:
         base = {
@@ -162,16 +135,15 @@ class AuditWriter:
         base.update(payload)
         _atomic_write_text(self.root / "manifest.json", json.dumps(base, indent=2, default=str) + "\n")
 
-    def write_latest(self, *, outcome: str, cache_eligible: bool) -> None:
+    def write_latest(self, *, outcome: str, stability_eligible: bool) -> None:
         raw_response_path = self.root / "raw_response.json"
         validation_path = self.root / "validation.json"
-        final_output_path = self.root / "final_output.json"
         payload = {
             "schema_version": AUDIT_LATEST_SCHEMA_VERSION,
             "slug": self.slug,
             "run_id": self.run_id,
             "outcome": outcome,
-            "cache_eligible": cache_eligible,
+            "stability_eligible": stability_eligible,
             "manifest_path": self._relative_to_slug_root(self.root / "manifest.json"),
             "raw_response_path": (
                 self._relative_to_slug_root(raw_response_path)
@@ -180,10 +152,6 @@ class AuditWriter:
             "validation_path": (
                 self._relative_to_slug_root(validation_path)
                 if validation_path.exists() else None
-            ),
-            "final_output_path": (
-                self._relative_to_slug_root(final_output_path)
-                if final_output_path.exists() else None
             ),
         }
         _atomic_write_text(self.latest_path, json.dumps(payload, indent=2) + "\n")

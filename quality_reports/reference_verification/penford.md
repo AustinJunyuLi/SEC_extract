@@ -5,74 +5,70 @@
 - Slug: penford
 - Target: PENFORD CORP
 - Acquirer: INGREDION INC
-- Run ID: `57148524ea5e4316bb4a09f8402c6a85`
+- Run ID: `25c7b26d2e07423ab9b6d81d0fccd361`
 - Schema version: `deal_graph_v2`
-- Rulebook version: `5802eebbe682821ad16526031588d8ccca896a6d8cc91c9ea0c99e1ebc8ae490`
+- Rulebook version: `7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194`
 - Model: `gpt-5.5`
 - Reasoning effort: `high`
-- Generated: 2026-05-06T15:54:39.237465Z
-- Filing source: d834783ddefm14a.htm
-- Filing URL: https://www.sec.gov/Archives/edgar/data/739608/000119312514455030/d834783ddefm14a.htm
+- Generated: 2026-05-06T22:10:55.223687Z
+- Filing URL: https://www.sec.gov/Archives/edgar/data/739608/0001193125-14-455030-index.htm
 
 Artifacts:
-- Audit run: `output/audit/penford/runs/57148524ea5e4316bb4a09f8402c6a85`
-- Manifest: `output/audit/penford/runs/57148524ea5e4316bb4a09f8402c6a85/manifest.json`
-- Raw response: `output/audit/penford/runs/57148524ea5e4316bb4a09f8402c6a85/raw_response.json`
-- Graph JSON: `output/audit/penford/runs/57148524ea5e4316bb4a09f8402c6a85/deal_graph_v2.json`
-- DuckDB: `output/audit/penford/runs/57148524ea5e4316bb4a09f8402c6a85/deal_graph.duckdb`
+- Audit run: `output/audit/penford/runs/25c7b26d2e07423ab9b6d81d0fccd361`
+- Manifest: `output/audit/penford/runs/25c7b26d2e07423ab9b6d81d0fccd361/manifest.json`
+- Raw response: `output/audit/penford/runs/25c7b26d2e07423ab9b6d81d0fccd361/raw_response.json`
+- Graph JSON: `output/audit/penford/runs/25c7b26d2e07423ab9b6d81d0fccd361/deal_graph_v2.json`
+- DuckDB: `output/audit/penford/runs/25c7b26d2e07423ab9b6d81d0fccd361/deal_graph.duckdb`
 - Portable extraction: `output/extractions/penford.json`
 - Review JSONL: `output/review_rows/penford.jsonl`
 - Review CSV: `output/review_csv/penford.csv`
 
 ## Commands
 
-- `python -m pipeline.run_pool --filter reference --workers 5 --re-extract --extract-reasoning-effort high`
-- `python scripts/check_reference_verification.py`
-- `python -m pipeline.reconcile --scope reference`
-- `python -m pipeline.stability --scope reference --runs 3 --json`
+- `python -m pipeline.run_pool --filter reference --workers 3 --re-extract --extract-reasoning-effort high`
+- `python scripts/check_reference_verification.py --slugs penford`
 
 ## Extraction And Flag Summary
 
-- Review statuses: clean: 50
+- Review statuses: clean: 52
 - Open review rows: 0
 - Flag severities: none
-- Actors: 17
-- Events: 25
+- Actors: 18
+- Events: 26
+- Bids: 0
 - Participation counts: 2
 - Actor relations: 6
-- Evidence spans: 48
-- Review rows: 50
+- Evidence spans: 47
+- Review rows: 52
 
-## AI-vs-Alex Diff Ledger
+## Filing-Grounded Calibration Ledger
 
 | Item | Filing evidence | Decision |
 |---|---|---|
-| Current graph | Filing page evidence is bound through `evidence_refs` and Python-owned source spans for run `57148524ea5e4316bb4a09f8402c6a85`. | SEC filing text controls the report; Alex material remains calibration material. |
-| Current review rows | The CSV has 50 rows with review status counts `clean: 50`. | Rows are accepted only through exact source binding in the current artifact set. |
-| Rule surface | The live prompt and rulebook are not changed by this report. | No deal-specific operating rule is introduced. |
+| Current graph | Filing page evidence is bound through `evidence_refs` and Python-owned source spans for run `25c7b26d2e07423ab9b6d81d0fccd361`. | SEC filing text controls the report; calibration material is not an oracle. |
+| Current review rows | Review status counts are clean: 52. | Rows are accepted only through exact source binding in the current artifact set. |
+| Open review burden | 0 row(s) have review issues in the current run. | Open issues remain visible in review output and do not become hidden compatibility gates. |
 
 ## Filing Evidence Review
 
-The current artifact set was checked against the Background filing pages. The mechanical checker re-reads the raw provider evidence refs, graph evidence spans, and review-row source quotes from the JSON artifacts and confirms exact filing-page grounding.
+The current artifact set was checked against the Background filing pages. The mechanical checker re-reads raw provider evidence refs, graph evidence spans, and review-row source quotes from the JSON artifacts and confirms exact filing-page grounding.
 
-| Filing page | Claim type | Claim summary | Evidence excerpt |
+| Filing page | Claim type | Review status | Evidence excerpt |
 |---|---|---|---|
-| Filing page 31 \| 31 \| 31 | actor_claim | actor Deutsche Bank (organization) | Deutsche Bank as the Company’s financial advisor \| the Executive Committee directed management to proceed to retain Deutsche Bank as the Company’s financial advisor and to advi... |
-| Filing page 30 \| 33 \| 37 \| 30 \| 30 \| 30 \| 31 \| 33 \| 39 \| 31 \| 31 \| 35 \| 36 \| 36 \| 35 \| 36 | actor_claim | actor Ingredion (organization) | Ingredion’s Chairman and Chief Executive Officer \| J.P. Morgan Securities, Ingredion’s financial advisor \| Sidley Austin LLP (referred to as Sidley Austin), Ingredion’s legal... |
-| Filing page 33 \| 33 | actor_claim | actor J.P. Morgan Securities (organization) | J.P. Morgan Securities, Ingredion’s financial advisor \| J.P. Morgan Securities, Ingredion’s financial advisor |
-| Filing page 37 \| 37 | actor_claim | actor Milbank (organization) | Milbank, Tweed, Hadley & McCloy, LLP (referred to as Milbank), legal counsel to SEACOR \| Milbank, Tweed, Hadley & McCloy, LLP (referred to as Milbank), legal counsel to SEACOR |
-| Filing page 31 \| 32 \| 36 \| 38 \| 38 \| 38 | actor_claim | actor Party A (organization) | a company in the industry (referred to as Party A) \| Also on August 11, 2014, Mr. Malkoski met with the Chief Executive Officer of Party A. Mr. Malkoski and Party A’s Chief Exe... |
-| Filing page 34 \| 34 | actor_claim | actor Party B (organization) | another strategic counterparty contacted by Deutsche Bank (referred to as Party B) \| On September 12, 2014, Party B informed Deutsche Bank that it had decided not to move forwa... |
-| Filing page 34 \| 34 | actor_claim | actor Party C (organization) | a third potential strategic counterparty contacted by Deutsche Bank (referred to as Party C) \| On September 15, 2014, Penford and Party C executed a nondisclosure and standstil... |
-| Filing page 34 \| 35 \| 37 | actor_claim | actor Party D (organization) | a fourth potential strategic counterparty contacted by Deutsche Bank (referred to as Party D) \| On September 23, 2014, Penford and Party D executed a nondisclosure and standsti... |
-| Filing page 34 \| 34 | actor_claim | actor Party E (organization) | another strategic counterparty (referred to as Party E) \| Also on September 12, 2014, Deutsche Bank left a voicemail for another strategic counterparty (referred to as Party E)... |
-| Filing page 35 \| 36 | actor_claim | actor Party F (organization) | the two largest companies in Penford’s industry (referred to as Party F and Party G) \| On September 29, 2014, Party F communicated to Deutsche Bank that a combination with Penf... |
-| Filing page 35 \| 35 | actor_claim | actor Party F (organization) | the two largest companies in Penford’s industry (referred to as Party F and Party G) \| The board determined that Party F should be approached regarding a potential transaction... |
-| Filing page 31 \| 31 \| 31 | actor_claim | actor Perkins Coie (organization) | the Executive Committee directed management to proceed to retain Deutsche Bank as the Company’s financial advisor and to advise on shareholder matters and to evaluate strategic... |
+| Filing page 31 / 31 / 31 | actor_claim | clean | retain Deutsche Bank as the Company’s financial advisor / retain Deutsche Bank as the Company’s financial advisor and to advise on shareholder matters |
+| Filing page 30 | actor_claim | clean | the Executive Committee of the Penford board |
+| Filing page 30 / 33 / 37 / 30 / 30 / 33 / 39 / 31 / 31 / 35 / 36 / 38 | actor_claim | clean | Ingredion’s interest in acquiring Penford / J.P. Morgan Securities, Ingredion’s financial advisor / Sidley Austin LLP (referred to as Sidley Austin),  |
+| Filing page 33 / 33 | actor_claim | clean | J.P. Morgan Securities, Ingredion’s financial advisor / J.P. Morgan Securities, Ingredion’s financial advisor |
+| Filing page 37 / 37 | actor_claim | clean | Milbank, Tweed, Hadley & McCloy, LLP (referred to as Milbank), legal counsel to SEACOR / Milbank, Tweed, Hadley & McCloy, LLP (referred to as Milbank) |
+| Filing page 31 / 32 / 34 / 36 / 38 / 38 / 38 | actor_claim | clean | a company in the industry (referred to as Party A) / Party A’s Chief Executive Officer also informally discussed Party A’s potential interest in acqui |
+| Filing page 34 / 34 / 34 | actor_claim | clean | another strategic counterparty contacted by Deutsche Bank (referred to as Party B) / Party B) expressed interest in further discussions / Party B info |
+| Filing page 34 / 34 / 34 | actor_claim | clean | a third potential strategic counterparty contacted by Deutsche Bank (referred to as Party C) / On September 10, 2014, a third potential strategic coun |
+| Filing page 34 / 34 / 35 / 37 | actor_claim | clean | a fourth potential strategic counterparty contacted by Deutsche Bank (referred to as Party D) / On September 11, 2014, a fourth potential strategic co |
+| Filing page 34 / 34 | actor_claim | clean | another strategic counterparty (referred to as Party E) / In the following two weeks, Deutsche Bank also left several other voicemails for Party E reg |
 
 ## Contract Updates
 
-No prompt, rulebook, reference JSON, compatibility path, or fallback path was changed for this verification report.
+This report cites the current `deal_graph_v2` run and the live artifact contract. Only the artifact paths listed above are verification authorities.
 
 ## Conclusion
 

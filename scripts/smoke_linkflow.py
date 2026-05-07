@@ -31,6 +31,7 @@ async def main() -> int:
         raise SystemExit("OPENAI_API_KEY is required")
 
     from pipeline.llm.client import OpenAICompatibleClient
+    from pipeline.llm.response_format import DEAL_GRAPH_CLAIM_SCHEMA, json_schema_format, parse_json_text, _ensure_extraction_shape
 
     client = OpenAICompatibleClient(
         api_key=api_key,
@@ -38,13 +39,19 @@ async def main() -> int:
     )
 
     result = await client.complete(
-        system="Reply with one short sentence.",
-        user="Say API smoke test passed.",
+        system=(
+            "Return exactly the empty deal_graph_v2 claim payload. "
+            "Do not include prose."
+        ),
+        user="Return empty claim arrays for the strict extraction smoke test.",
         model=args.model,
+        text_format=json_schema_format(DEAL_GRAPH_CLAIM_SCHEMA),
         max_output_tokens=100,
     )
     text = getattr(result, "text", "")
-    print(text.strip())
+    parsed = parse_json_text(text)
+    _ensure_extraction_shape(parsed)
+    print("strict claim-only smoke passed")
     print(
         "tokens "
         f"input={getattr(result, 'input_tokens', None)} "

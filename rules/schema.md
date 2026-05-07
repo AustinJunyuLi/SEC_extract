@@ -105,7 +105,6 @@ output/audit/{slug}/runs/{run_id}/raw_response.json
 output/audit/{slug}/runs/{run_id}/deal_graph.duckdb
 output/audit/{slug}/runs/{run_id}/deal_graph_v2.json
 output/audit/{slug}/runs/{run_id}/validation.json
-output/audit/{slug}/runs/{run_id}/final_output.json
 ```
 
 Latest portable outputs:

@@ -17,7 +17,7 @@ from pipeline import core
 from pipeline.core import REFERENCE_SLUGS
 from pipeline.llm.audit import (
     AUDIT_RUN_SCHEMA_VERSION,
-    LEGACY_AUDIT_NAMES,
+    AUDIT_SLUG_ROOT_ALLOWED_NAMES,
     RAW_RESPONSE_SCHEMA_VERSION,
 )
 from pipeline.llm.response_format import DEAL_GRAPH_CLAIM_SCHEMA
@@ -65,7 +65,7 @@ class ArchivedRun:
     run_id: str
     run_dir: Path
     manifest: dict[str, Any]
-    final_output: dict[str, Any]
+    graph_snapshot: dict[str, Any]
     validation: dict[str, Any]
 
 
@@ -262,8 +262,7 @@ def _validate_manifest(manifest: dict[str, Any], manifest_path: Path) -> None:
         ("slug",),
         ("run_id",),
         ("outcome",),
-        ("cache_eligible",),
-        ("cache_used",),
+        ("stability_eligible",),
         ("finished_at",),
         ("models", "extract"),
         ("reasoning_efforts", "extract"),
@@ -298,23 +297,16 @@ def _validate_manifest(manifest: dict[str, Any], manifest_path: Path) -> None:
             )
 
 
-def _all_flags(final_output: dict[str, Any], validation: dict[str, Any]) -> list[dict[str, Any]]:
+def _all_flags(graph_snapshot: dict[str, Any], validation: dict[str, Any]) -> list[dict[str, Any]]:
     flags: list[dict[str, Any]] = []
     for key in ("validation_flags", "review_flags", "row_flags", "deal_flags", "flags"):
         value = validation.get(key)
         if isinstance(value, list):
             flags.extend(flag for flag in value if isinstance(flag, dict))
-    graph = final_output.get("graph")
-    if isinstance(graph, dict):
-        for key in ("validation_flags", "review_flags"):
-            value = graph.get(key)
-            if isinstance(value, list):
-                flags.extend(flag for flag in value if isinstance(flag, dict))
-    deal = final_output.get("deal")
-    if isinstance(deal, dict):
-        deal_flags = deal.get("deal_flags")
-        if isinstance(deal_flags, list):
-            flags.extend(flag for flag in deal_flags if isinstance(flag, dict))
+    for key in ("validation_flags", "review_flags"):
+        value = graph_snapshot.get(key)
+        if isinstance(value, list):
+            flags.extend(flag for flag in value if isinstance(flag, dict))
     seen: set[str] = set()
     unique: list[dict[str, Any]] = []
     for flag in flags:
@@ -445,11 +437,11 @@ def _quote_diagnostics(review_rows: list[dict[str, Any]], flags: list[dict[str, 
 
 
 def metrics_for_run(archived: ArchivedRun) -> RunMetrics:
-    final_output = archived.final_output
-    graph = final_output.get("graph") if isinstance(final_output.get("graph"), dict) else {}
-    review_rows = _list_of_dicts(final_output, "review_rows", archived.run_dir / "final_output.json")
+    graph = archived.graph_snapshot
+    graph_path = archived.run_dir / "deal_graph_v2.json"
+    review_rows = _list_of_dicts(graph, "review_rows", graph_path)
     graph_lists = {
-        key: _list_of_dicts(graph, key, archived.run_dir / "final_output.json")
+        key: _list_of_dicts(graph, key, graph_path)
         for key in (
             "actors",
             "actor_relations",
@@ -461,7 +453,7 @@ def metrics_for_run(archived: ArchivedRun) -> RunMetrics:
             "participation_counts",
         )
     }
-    flags = _all_flags(final_output, archived.validation)
+    flags = _all_flags(graph, archived.validation)
     event_subtypes = Counter(str(row.get("event_subtype") or "null") for row in review_rows)
     actors = graph_lists["actors"]
     relations = graph_lists["actor_relations"]
@@ -508,15 +500,16 @@ def metrics_for_run(archived: ArchivedRun) -> RunMetrics:
     )
 
 
-def _reject_legacy_singletons(slug_root: Path) -> None:
-    for name in sorted(LEGACY_AUDIT_NAMES):
-        path = slug_root / name
-        if path.exists():
-            raise StabilityError(f"legacy singleton audit file rejected: {path}")
+def _reject_unexpected_slug_root_entries(slug_root: Path) -> None:
+    if not slug_root.exists():
+        return
+    for path in sorted(slug_root.iterdir()):
+        if path.name not in AUDIT_SLUG_ROOT_ALLOWED_NAMES:
+            raise StabilityError(f"unexpected audit root entry rejected: {path}")
 
 
 def _validate_run_artifacts(run_dir: Path) -> None:
-    required = ("manifest.json", "final_output.json", "validation.json", "raw_response.json", "calls.jsonl", "prompts")
+    required = ("manifest.json", "deal_graph_v2.json", "deal_graph.duckdb", "validation.json", "raw_response.json", "calls.jsonl", "prompts")
     missing = [name for name in required if not (run_dir / name).exists()]
     if missing:
         raise StabilityError(f"archived run missing required artifact(s) {', '.join(missing)}: {run_dir}")
@@ -533,40 +526,29 @@ def _list_of_dicts(payload: dict[str, Any], key: str, artifact_path: Path) -> li
     return value
 
 
-def _validate_live_final_output(final_output: dict[str, Any], artifact_path: Path) -> None:
-    if final_output.get("schema_version") != LIVE_GRAPH_SCHEMA_VERSION:
-        raise StabilityError(
-            f"archived run final_output schema_version is not {LIVE_GRAPH_SCHEMA_VERSION}: {artifact_path}"
-        )
-    graph = final_output.get("graph")
-    if not isinstance(graph, dict):
-        raise StabilityError(f"archived run final_output missing live graph object: {artifact_path}")
+def _validate_live_graph_snapshot(graph: dict[str, Any], artifact_path: Path) -> None:
     if graph.get("schema_version") != LIVE_GRAPH_SCHEMA_VERSION:
         raise StabilityError(
-            f"archived run graph schema_version is not {LIVE_GRAPH_SCHEMA_VERSION}: {artifact_path}"
+            f"archived run graph snapshot schema_version is not {LIVE_GRAPH_SCHEMA_VERSION}: {artifact_path}"
         )
     for key in LIVE_GRAPH_LIST_KEYS:
         _list_of_dicts(graph, key, artifact_path)
-    _list_of_dicts(final_output, "review_rows", artifact_path)
-    if "estimation_bidder_rows" in final_output or "estimation_bidder_rows" in graph:
+    if "estimation_bidder_rows" in graph:
         raise StabilityError(f"archived run contains retired estimator rows: {artifact_path}")
 
 
-def _is_live_graph_snapshot(final_output: dict[str, Any]) -> bool:
-    graph = final_output.get("graph")
+def _is_live_graph_snapshot(graph: dict[str, Any]) -> bool:
     return (
-        final_output.get("schema_version") == LIVE_GRAPH_SCHEMA_VERSION
-        and isinstance(graph, dict)
+        graph.get("schema_version") == LIVE_GRAPH_SCHEMA_VERSION
         and graph.get("schema_version") == LIVE_GRAPH_SCHEMA_VERSION
         and all(isinstance(graph.get(key), list) for key in LIVE_GRAPH_LIST_KEYS)
-        and isinstance(final_output.get("review_rows"), list)
     )
 
 
 def load_archived_runs(repo_root: Path, slug: str) -> list[ArchivedRun]:
     slug_root = repo_root / "output" / "audit" / slug
     if slug_root.exists():
-        _reject_legacy_singletons(slug_root)
+        _reject_unexpected_slug_root_entries(slug_root)
     runs_root = slug_root / "runs"
     if not runs_root.exists():
         return []
@@ -580,20 +562,19 @@ def load_archived_runs(repo_root: Path, slug: str) -> list[ArchivedRun]:
             # Immutable historical run directories can remain on disk, but they
             # are not inputs to the audit-v3 stability proof.
             continue
-        for required_path in (("slug",), ("run_id",), ("outcome",), ("cache_eligible",)):
+        for required_path in (("slug",), ("run_id",), ("outcome",), ("stability_eligible",)):
             _require_manifest_value(manifest, required_path, manifest_path)
         if (
             manifest.get("outcome") not in ELIGIBLE_OUTCOMES
-            or manifest.get("cache_eligible") is not True
-            or manifest.get("cache_used") is True
+            or manifest.get("stability_eligible") is not True
         ):
             continue
         _validate_manifest(manifest, manifest_path)
         _validate_run_artifacts(run_dir)
-        final_output = _read_json(run_dir / "final_output.json")
-        if not _is_live_graph_snapshot(final_output):
+        graph_snapshot = _read_json(run_dir / "deal_graph_v2.json")
+        if not _is_live_graph_snapshot(graph_snapshot):
             continue
-        _validate_live_final_output(final_output, run_dir / "final_output.json")
+        _validate_live_graph_snapshot(graph_snapshot, run_dir / "deal_graph_v2.json")
         raw_response = _read_json(run_dir / "raw_response.json")
         if raw_response.get("schema_version") != RAW_RESPONSE_SCHEMA_VERSION:
             raise StabilityError(
@@ -605,7 +586,7 @@ def load_archived_runs(repo_root: Path, slug: str) -> list[ArchivedRun]:
             )
         validation = _read_json(run_dir / "validation.json")
         run_id = str(manifest.get("run_id") or run_dir.name)
-        archived.append(ArchivedRun(slug=slug, run_id=run_id, run_dir=run_dir, manifest=manifest, final_output=final_output, validation=validation))
+        archived.append(ArchivedRun(slug=slug, run_id=run_id, run_dir=run_dir, manifest=manifest, graph_snapshot=graph_snapshot, validation=validation))
     archived.sort(key=lambda run: (_manifest_value(run.manifest, "finished_at"), run.run_id))
     return archived
 

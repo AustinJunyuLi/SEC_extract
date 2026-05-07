@@ -69,19 +69,6 @@ def test_extract_flag_selects_extract_mode(monkeypatch):
     assert calls == ["extract"]
 
 
-def test_re_validate_selects_cache_mode(monkeypatch):
-    calls = []
-    monkeypatch.setattr(
-        run_cli,
-        "_run_single_deal",
-        lambda slug, *, mode, args: calls.append(mode) or DummyOutcome(),
-    )
-    _set_argv(monkeypatch, "--slug", "medivation", "--re-validate")
-
-    assert run_cli.main() == 0
-    assert calls == ["re_validate"]
-
-
 def test_re_extract_selects_fresh_mode(monkeypatch):
     calls = []
     monkeypatch.setattr(
@@ -138,29 +125,6 @@ def test_reasoning_effort_args_pass_through_to_pool_config():
     assert cfg.extract_reasoning_effort == "high"
 
 
-def test_audit_run_id_passes_through_to_pool_config():
-    args = run_cli._parser().parse_args([
-        "--slug",
-        "medivation",
-        "--re-validate",
-        "--audit-run-id",
-        "run-abc",
-    ])
-
-    cfg = run_cli._make_pool_config(args, mode="re_validate")
-
-    assert cfg.audit_run_id == "run-abc"
-    assert cfg.re_validate is True
-
-
-def test_audit_run_id_requires_re_validate(monkeypatch, capsys):
-    monkeypatch.setattr(run_cli, "_run_single_deal", lambda *a, **k: pytest.fail("run should not start"))
-    _set_argv(monkeypatch, "--slug", "medivation", "--audit-run-id", "run-abc")
-
-    assert run_cli.main() == 2
-    assert "--audit-run-id is only valid with --re-validate" in capsys.readouterr().err
-
-
 def test_reasoning_effort_defaults_to_high(monkeypatch):
     monkeypatch.delenv("EXTRACT_REASONING_EFFORT", raising=False)
     args = run_cli._parser().parse_args(["--slug", "medivation"])
@@ -182,9 +146,9 @@ def test_failed_outcome_returns_nonzero(monkeypatch):
     monkeypatch.setattr(
         run_cli,
         "_run_single_deal",
-        lambda *a, **k: DummyOutcome(status="failed_system", notes="bad cache"),
+        lambda *a, **k: DummyOutcome(status="failed_system", notes="provider failure"),
     )
-    _set_argv(monkeypatch, "--slug", "medivation", "--re-validate")
+    _set_argv(monkeypatch, "--slug", "medivation", "--re-extract")
 
     assert run_cli.main() == 1
 
@@ -197,6 +161,8 @@ def test_failed_outcome_returns_nonzero(monkeypatch):
         "--max-tokens-" "per-deal",
         "--adjudicate-model",
         "--adjudicate-reasoning-effort",
+        "--re-validate",
+        "--audit-run-id",
     ],
 )
 def test_old_flags_are_unrecognized(monkeypatch, old_flag, tmp_path, capsys):

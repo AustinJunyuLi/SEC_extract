@@ -47,34 +47,6 @@ class FakeResponses:
         self.kwargs = kwargs
         return FakeStream()
 
-    async def create(self, **kwargs):
-        self.kwargs = kwargs
-        usage = type("Usage", (), {
-            "input_tokens": 7,
-            "output_tokens": 8,
-            "output_tokens_details": {"reasoning_tokens": 2},
-        })()
-        output = [
-            type("Item", (), {
-                "type": "function_call",
-                "name": "example_function",
-                "call_id": "c1",
-                "arguments": "{}",
-                "model_dump": lambda self: {
-                    "type": "function_call",
-                    "name": "example_function",
-                    "call_id": "c1",
-                    "arguments": "{}",
-                },
-            })()
-        ]
-        return type("Response", (), {
-            "output_text": "",
-            "output": output,
-            "usage": usage,
-            "status": "completed",
-        })()
-
 
 class FakeOpenAI:
     def __init__(self):
@@ -124,8 +96,9 @@ def test_openai_compatible_client_uses_responses_text_format_not_chat_response_f
     assert result.reasoning_tokens == 5
 
 
-def test_openai_compatible_client_keeps_structured_output_for_linkflow_newapi():
+def test_openai_compatible_client_requires_structured_output_for_linkflow_newapi():
     fake = FakeOpenAI()
+    text_format = {"type": "json_schema", "name": "unit", "schema": {"type": "object"}, "strict": True}
     client = OpenAICompatibleClient(
         api_key="secret",
         base_url="https://www.linkflow.run/v1",
@@ -137,7 +110,7 @@ def test_openai_compatible_client_keeps_structured_output_for_linkflow_newapi():
             model="gpt-test",
             system="system prompt",
             user="user prompt",
-            text_format=None,
+            text_format=text_format,
             max_output_tokens=None,
             reasoning_effort="high",
         )
@@ -150,7 +123,7 @@ def test_openai_compatible_client_keeps_structured_output_for_linkflow_newapi():
     assert kwargs["input"][0]["role"] == "system"
     assert kwargs["input"][1]["role"] == "user"
     assert kwargs["reasoning"] == {"effort": "high"}
-    assert "text" not in kwargs
+    assert kwargs["text"] == {"format": text_format}
     assert "max_output_tokens" not in kwargs
     assert result.text == CLAIM_ONLY_TEXT
 
@@ -167,7 +140,7 @@ def test_streaming_client_salvages_text_when_completed_event_is_missing():
         client.complete(
             model="gpt-test",
             input_items=[{"role": "user", "content": "u"}],
-            stream=True,
+            text_format={"type": "json_schema", "name": "unit", "schema": {"type": "object"}, "strict": True},
         )
     )
 
@@ -175,40 +148,17 @@ def test_streaming_client_salvages_text_when_completed_event_is_missing():
     assert result.finish_reason == "missing_response_completed"
     assert result.input_tokens == 0
 
-
-def test_complete_passes_tools_and_tool_choice_through_non_streaming():
+def test_complete_rejects_missing_text_format():
     fake = FakeOpenAI()
     client = OpenAICompatibleClient(
         api_key="secret",
         base_url="https://www.linkflow.run/v1",
         openai_client=fake,
     )
-    tool_defs = [{
-        "type": "function",
-        "name": "example_function",
-        "parameters": {"type": "object", "properties": {}},
-    }]
 
-    result = asyncio.run(
-        client.complete(
-            model="gpt-test",
-            input_items=[{"role": "user", "content": "u"}],
-            tools=tool_defs,
-            tool_choice="auto",
-            stream=False,
-        )
-    )
-
-    kwargs = fake.responses.kwargs
-    assert kwargs["tools"] == tool_defs
-    assert kwargs["tool_choice"] == "auto"
-    assert kwargs["input"] == [{"role": "user", "content": "u"}]
-    assert result.tool_calls == [{
-        "type": "function_call",
-        "name": "example_function",
-        "call_id": "c1",
-        "arguments": "{}",
-    }]
-    assert result.input_tokens == 7
-    assert result.output_tokens == 8
-    assert result.reasoning_tokens == 2
+    try:
+        asyncio.run(client.complete(model="gpt-test", input_items=[{"role": "user", "content": "u"}], text_format=None))
+    except ValueError as exc:
+        assert "text_format is required" in str(exc)
+    else:
+        raise AssertionError("expected ValueError")

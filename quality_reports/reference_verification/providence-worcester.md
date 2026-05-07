@@ -5,74 +5,70 @@
 - Slug: providence-worcester
 - Target: PROVIDENCE & WORCESTER RR CO
 - Acquirer: GENESEE & WYOMING INC
-- Run ID: `d6ecdf547bc04b7fb17a8156f96206ee`
+- Run ID: `6b5d393b6d5247a397c32db8672baecc`
 - Schema version: `deal_graph_v2`
-- Rulebook version: `5802eebbe682821ad16526031588d8ccca896a6d8cc91c9ea0c99e1ebc8ae490`
+- Rulebook version: `7db52e6d8890413332504aaacddf0e2e8895e7725d22d00662c5ad94d3575194`
 - Model: `gpt-5.5`
 - Reasoning effort: `high`
-- Generated: 2026-05-06T15:54:39.237465Z
-- Filing source: d224035ddefm14a.htm
-- Filing URL: https://www.sec.gov/Archives/edgar/data/831968/000119312516713780/d224035ddefm14a.htm
+- Generated: 2026-05-06T22:10:55.216202Z
+- Filing URL: https://www.sec.gov/Archives/edgar/data/831968/0001193125-16-713780-index.htm
 
 Artifacts:
-- Audit run: `output/audit/providence-worcester/runs/d6ecdf547bc04b7fb17a8156f96206ee`
-- Manifest: `output/audit/providence-worcester/runs/d6ecdf547bc04b7fb17a8156f96206ee/manifest.json`
-- Raw response: `output/audit/providence-worcester/runs/d6ecdf547bc04b7fb17a8156f96206ee/raw_response.json`
-- Graph JSON: `output/audit/providence-worcester/runs/d6ecdf547bc04b7fb17a8156f96206ee/deal_graph_v2.json`
-- DuckDB: `output/audit/providence-worcester/runs/d6ecdf547bc04b7fb17a8156f96206ee/deal_graph.duckdb`
+- Audit run: `output/audit/providence-worcester/runs/6b5d393b6d5247a397c32db8672baecc`
+- Manifest: `output/audit/providence-worcester/runs/6b5d393b6d5247a397c32db8672baecc/manifest.json`
+- Raw response: `output/audit/providence-worcester/runs/6b5d393b6d5247a397c32db8672baecc/raw_response.json`
+- Graph JSON: `output/audit/providence-worcester/runs/6b5d393b6d5247a397c32db8672baecc/deal_graph_v2.json`
+- DuckDB: `output/audit/providence-worcester/runs/6b5d393b6d5247a397c32db8672baecc/deal_graph.duckdb`
 - Portable extraction: `output/extractions/providence-worcester.json`
 - Review JSONL: `output/review_rows/providence-worcester.jsonl`
 - Review CSV: `output/review_csv/providence-worcester.csv`
 
 ## Commands
 
-- `python -m pipeline.run_pool --filter reference --workers 5 --re-extract --extract-reasoning-effort high`
-- `python scripts/check_reference_verification.py`
-- `python -m pipeline.reconcile --scope reference`
-- `python -m pipeline.stability --scope reference --runs 3 --json`
+- `python -m pipeline.run_pool --filter reference --workers 3 --re-extract --extract-reasoning-effort high`
+- `python scripts/check_reference_verification.py --slugs providence-worcester`
 
 ## Extraction And Flag Summary
 
-- Review statuses: clean: 62
+- Review statuses: clean: 65
 - Open review rows: 0
 - Flag severities: none
-- Actors: 24
-- Events: 27
+- Actors: 25
+- Events: 26
+- Bids: 0
 - Participation counts: 6
-- Actor relations: 5
-- Evidence spans: 53
-- Review rows: 62
+- Actor relations: 8
+- Evidence spans: 58
+- Review rows: 65
 
-## AI-vs-Alex Diff Ledger
+## Filing-Grounded Calibration Ledger
 
 | Item | Filing evidence | Decision |
 |---|---|---|
-| Current graph | Filing page evidence is bound through `evidence_refs` and Python-owned source spans for run `d6ecdf547bc04b7fb17a8156f96206ee`. | SEC filing text controls the report; Alex material remains calibration material. |
-| Current review rows | The CSV has 62 rows with review status counts `clean: 62`. | Rows are accepted only through exact source binding in the current artifact set. |
-| Rule surface | The live prompt and rulebook are not changed by this report. | No deal-specific operating rule is introduced. |
+| Current graph | Filing page evidence is bound through `evidence_refs` and Python-owned source spans for run `6b5d393b6d5247a397c32db8672baecc`. | SEC filing text controls the report; calibration material is not an oracle. |
+| Current review rows | Review status counts are clean: 65. | Rows are accepted only through exact source binding in the current artifact set. |
+| Open review burden | 0 row(s) have review issues in the current run. | Open issues remain visible in review output and do not become hidden compatibility gates. |
 
 ## Filing Evidence Review
 
-The current artifact set was checked against the Background filing pages. The mechanical checker re-reads the raw provider evidence refs, graph evidence spans, and review-row source quotes from the JSON artifacts and confirms exact filing-page grounding.
+The current artifact set was checked against the Background filing pages. The mechanical checker re-reads raw provider evidence refs, graph evidence spans, and review-row source quotes from the JSON artifacts and confirms exact filing-page grounding.
 
-| Filing page | Claim type | Claim summary | Evidence excerpt |
+| Filing page | Claim type | Review status | Evidence excerpt |
 |---|---|---|---|
-| Filing page 34 | actor_claim | actor BMO Capital Markets Corp. (BMO) (organization) | BMO Capital Markets Corp. and which we refer to as “GHF” prior to such acquisition and “BMO” thereafter |
-| Filing page 34 \| 35 \| 34 \| 34 | actor_relation_claim | Greene Holcomb & Fisher LLC (GHF) advises Company | Board’s regular quarterly meeting held on January 27, 2016 \| the Company’s legal counsel, Hinckley, Allen & Snyder LLP (which we refer to as “Hinckley Allen”) \| the Company re... |
-| Filing page 36 \| 39 | actor_claim | actor Eder Trusts (organization) | the common stock and preferred stock held by the Eder Trusts \| the Company, G&W and the Eder Trusts executed the voting agreement |
-| Filing page 35 \| 38 \| 35 \| 39 \| 36 \| 36 \| 38 \| 36 \| 36 | actor_claim | actor G&W (organization) | five potential strategic buyers (including G&W) \| Simpson Thacher & Bartlett LLP (which we refer to as “Simpson Thacher”), G&W’s legal counsel \| Between April 3, 2016 and Apri... |
-| Filing page 37 | event_claim | undated advancement_admitted G&W and Party B | The Transaction Committee concluded that the Company should proceed with confirmatory due diligence and negotiations with G&W and Party B |
-| Filing page 35 | event_claim | undated contact_initial GHF | representatives of GHF contacted 11 potential strategic buyers (including Party A) and 18 potential financial buyers |
-| Filing page 34 \| 34 \| 34 \| 34 | actor_claim | actor Greene Holcomb & Fisher LLC (GHF) (organization) | Greene Holcomb & Fisher LLC (the business of which was subsequently acquired by BMO Capital Markets Corp. and which we refer to as “GHF” prior to such acquisition and “BMO” ther... |
-| Filing page 35 \| 35 | actor_claim | actor Hinckley Allen (organization) | Hinckley, Allen & Snyder LLP (which we refer to as “Hinckley Allen”) \| the Company’s legal counsel, Hinckley, Allen & Snyder LLP (which we refer to as “Hinckley Allen”) |
-| Filing page 36 | bid_claim | LOI bidders initial bid 19.2-24.0 | In late July 2016, the Company received six LOIs with offer prices per share ranging from $19.20 to $24.00 |
-| Filing page 34 \| 34 | actor_claim | actor Party A (organization) | one of the Company’s Class I rail partners (“Party A”) \| Party A suggested possible joint venture arrangements and expressed some interest in acquiring equity in the Company |
-| Filing page 35 \| 35 \| 36 | actor_claim | actor Party B (organization) | another potential strategic buyer (“Party B”) \| Subsequently, on April 21, 2016, the Company and representatives of GHF held an introductory meeting with another potential stra... |
-| Filing page 36 \| 36 \| 36 \| 37 | actor_claim | actor Party C (organization) | a potential strategic buyer that had not previously been part of the process (“Party C”) \| After executing a confidentiality agreement, Party C was provided the memorandum conc... |
+| Filing page 37 / 39 / 39 | actor_claim | clean | BMO (which acquired the business of GHF on August 1, 2016) / BMO then rendered an oral opinion to the Board, subsequently confirmed by delivery of a w |
+| Filing page 39 / 39 / 39 | actor_claim | clean | a BMO affiliate / a BMO affiliate / a BMO affiliate has a participation in G&W’s existing secured syndicated debt facility |
+| Filing page 36 / 39 | actor_claim | clean | common stock and preferred stock held by the Eder Trusts / the Company, G&W and the Eder Trusts executed the voting agreement |
+| Filing page 35 / 38 / 39 / 35 / 39 / 36 / 36 / 38 / 39 / 36 / 39 | actor_claim | clean | five potential strategic buyers (including G&W) / On August 10, 2016, representatives of Hinckley Allen and Simpson Thacher & Bartlett LLP (which we r |
+| Filing page 37 / 37 | event_claim | clean | The Transaction Committee met by telephone conference on July 22, 2016 and in person after the regular quarterly Board meeting on July 27, 2016 / The  |
+| Filing page 34 / 34 | actor_relation_claim | clean | the subcommittee recommended to the Board that the Company retain GHF as its investment banking firm / Following this presentation, the Board approved |
+| Filing page 34 | actor_claim | clean | Greene Holcomb & Fisher LLC (the business of which was subsequently acquired by BMO Capital Markets Corp. and which we refer to as “GHF” prior to such |
+| Filing page 35 / 35 | actor_claim | clean | the Company’s legal counsel, Hinckley, Allen & Snyder LLP (which we refer to as “Hinckley Allen”) / the Company’s legal counsel, Hinckley, Allen & Sny |
+| Filing page 34 / 34 / 34 | actor_claim | clean | one of the Company’s Class I rail partners (“Party A”) / met with one of the Company’s Class I rail partners (“Party A”) to discuss joint commercial o |
+| Filing page 35 / 35 | event_claim | clean | On March 24, 2016, the Transaction Committee met by telephone conference / The Transaction Committee authorized GHF to contact Party A as well as othe |
 
 ## Contract Updates
 
-No prompt, rulebook, reference JSON, compatibility path, or fallback path was changed for this verification report.
+This report cites the current `deal_graph_v2` run and the live artifact contract. Only the artifact paths listed above are verification authorities.
 
 ## Conclusion
 

@@ -17,7 +17,6 @@ from pipeline import core
 from pipeline.llm.audit import (
     AUDIT_LATEST_SCHEMA_VERSION,
     AUDIT_RUN_SCHEMA_VERSION,
-    RAW_RESPONSE_SCHEMA_VERSION,
     AuditWriter,
     TokenUsage,
     audit_run_dir,
@@ -50,9 +49,7 @@ class PoolConfig:
     workers: int = 1
     extract_model: str = "gpt-5.5"
     extract_reasoning_effort: str | None = DEFAULT_REASONING_EFFORT
-    re_validate: bool = False
     re_extract: bool = False
-    audit_run_id: str | None = None
     release_targets: bool = False
     target_gate_proof: Path = TARGET_GATE_PROOF
     commit: bool = False
@@ -66,7 +63,7 @@ class PoolConfig:
 
 @dataclass(frozen=True)
 class SkipDecision:
-    action: Literal["skip", "run", "re_validate", "blocked"]
+    action: Literal["skip", "run", "blocked"]
     reason: str
 
 
@@ -75,7 +72,6 @@ class DealOutcome:
     slug: str
     status: str
     skipped: bool = False
-    cached: bool = False
     error: str | None = None
     flag_count: int | None = None
     notes: str = ""
@@ -301,19 +297,6 @@ def enforce_target_gate(selected_slugs: list[str], state: dict[str, Any], cfg: P
     )
 
 
-@dataclass(frozen=True)
-class CacheCheck:
-    parsed_json: dict[str, Any] | None
-    reason: str
-    raw_payload: dict[str, Any] | None = None
-    source_run_id: str | None = None
-    raw_response_path: Path | None = None
-
-    @property
-    def valid(self) -> bool:
-        return self.parsed_json is not None
-
-
 def _json_file(path: Path, label: str) -> tuple[dict[str, Any] | None, str | None]:
     try:
         payload = json.loads(path.read_text())
@@ -324,135 +307,6 @@ def _json_file(path: Path, label: str) -> tuple[dict[str, Any] | None, str | Non
     if not isinstance(payload, dict):
         return None, f"{label} top-level value is not an object"
     return payload, None
-
-
-def _current_contract_values(current_rulebook_version: str) -> dict[str, str]:
-    return {
-        "rulebook_version": current_rulebook_version,
-        "extractor_contract_version": extractor_contract_version(),
-    }
-
-
-def _contract_mismatch_reason(
-    payload: dict[str, Any],
-    *,
-    label: str,
-    current_contracts: dict[str, str],
-) -> str | None:
-    for key, expected in current_contracts.items():
-        if payload.get(key) != expected:
-            return (
-                f"{label} {key} does not match current contract; "
-                "use --re-extract for a fresh SDK call"
-            )
-    return None
-
-
-def _cache_source_from_latest(
-    cfg: PoolConfig,
-    slug: str,
-    current_contracts: dict[str, str],
-) -> tuple[str | None, Path | None, str | None]:
-    latest_path = audit_slug_root(cfg.audit_root, slug) / "latest.json"
-    latest, error = _json_file(latest_path, "latest.json")
-    if error:
-        legacy_raw = audit_slug_root(cfg.audit_root, slug) / "raw_response.json"
-        legacy_hint = "; legacy loose audit layout is not accepted" if legacy_raw.exists() else ""
-        return None, None, error + legacy_hint
-    if latest.get("schema_version") != AUDIT_LATEST_SCHEMA_VERSION:
-        return None, None, f"latest.json schema_version is not {AUDIT_LATEST_SCHEMA_VERSION}"
-    if latest.get("slug") != slug:
-        return None, None, f"latest.json slug={latest.get('slug')!r} does not match {slug!r}"
-    if latest.get("cache_eligible") is not True:
-        return None, None, "latest archived run is not cache-eligible"
-    run_id = latest.get("run_id")
-    if not isinstance(run_id, str) or not run_id:
-        return None, None, "latest.json run_id is missing"
-    manifest_run_id, _manifest_raw_path, manifest_error = _cache_source_from_run_id(
-        cfg,
-        slug,
-        run_id,
-        current_contracts=current_contracts,
-    )
-    if manifest_error or manifest_run_id != run_id:
-        return None, None, manifest_error or "latest archived manifest does not match latest.json run_id"
-    raw_rel = latest.get("raw_response_path")
-    if raw_rel != f"runs/{run_id}/raw_response.json":
-        return None, None, "latest.json raw_response_path must point under runs/{run_id}/raw_response.json"
-    return run_id, audit_slug_root(cfg.audit_root, slug) / raw_rel, None
-
-
-def _cache_source_from_run_id(
-    cfg: PoolConfig,
-    slug: str,
-    run_id: str,
-    *,
-    current_contracts: dict[str, str] | None = None,
-) -> tuple[str | None, Path | None, str | None]:
-    run_dir = audit_run_dir(cfg.audit_root, slug, run_id)
-    manifest, error = _json_file(run_dir / "manifest.json", "archived manifest.json")
-    if error:
-        return None, None, error
-    if manifest.get("schema_version") != AUDIT_RUN_SCHEMA_VERSION:
-        return None, None, f"archived manifest.json schema_version is not {AUDIT_RUN_SCHEMA_VERSION}"
-    if manifest.get("slug") != slug or manifest.get("run_id") != run_id:
-        return None, None, "archived manifest.json slug/run_id does not match requested cache run"
-    if manifest.get("cache_eligible") is not True:
-        return None, None, "requested archived run is not cache-eligible"
-    if current_contracts is not None:
-        mismatch = _contract_mismatch_reason(
-            manifest,
-            label="archived manifest.json",
-            current_contracts=current_contracts,
-        )
-        if mismatch:
-            return None, None, mismatch
-    return run_id, run_dir / "raw_response.json", None
-
-
-def _check_cached_raw_response(slug: str, cfg: PoolConfig, current_rulebook_version: str) -> CacheCheck:
-    current_contracts = _current_contract_values(current_rulebook_version)
-    if cfg.audit_run_id:
-        source_run_id, path, source_error = _cache_source_from_run_id(
-            cfg,
-            slug,
-            cfg.audit_run_id,
-            current_contracts=current_contracts,
-        )
-    else:
-        source_run_id, path, source_error = _cache_source_from_latest(
-            cfg,
-            slug,
-            current_contracts,
-        )
-    if source_error or path is None or source_run_id is None:
-        return CacheCheck(None, source_error or "no cache source selected")
-    payload, error = _json_file(path, "cached raw_response.json")
-    if error:
-        return CacheCheck(None, error)
-    assert payload is not None
-    if payload.get("schema_version") != RAW_RESPONSE_SCHEMA_VERSION:
-        return CacheCheck(None, f"cached raw_response.json schema_version is not {RAW_RESPONSE_SCHEMA_VERSION}")
-    if payload.get("run_id") != source_run_id:
-        return CacheCheck(None, "cached raw_response.json run_id does not match selected audit run")
-    if payload.get("slug") != slug:
-        return CacheCheck(None, f"cached raw_response.json slug={payload.get('slug')!r} does not match {slug!r}")
-    if payload.get("rulebook_version") != current_contracts["rulebook_version"]:
-        return CacheCheck(
-            None,
-            "cached raw_response.json rulebook_version does not match current rulebook; "
-            "use --re-extract for a fresh SDK call",
-        )
-    if payload.get("extractor_contract_version") != current_contracts["extractor_contract_version"]:
-        return CacheCheck(
-            None,
-            "cached raw_response.json extractor_contract_version does not match current prompt/schema; "
-            "use --re-extract for a fresh SDK call",
-        )
-    parsed = payload.get("parsed_json")
-    if not _is_claim_payload(parsed):
-        return CacheCheck(None, "cached raw_response.json parsed_json is not an object")
-    return CacheCheck(parsed, "valid archived raw_response.json", payload, source_run_id, path)
 
 
 def _is_claim_payload(value: Any) -> bool:
@@ -469,11 +323,6 @@ def decide_skip(
 ) -> SkipDecision:
     if cfg.re_extract:
         return SkipDecision("run", "fresh SDK extraction requested")
-    if cfg.re_validate:
-        cached = _check_cached_raw_response(slug, cfg, current_rulebook_version)
-        if cached.valid:
-            return SkipDecision("re_validate", cached.reason)
-        return SkipDecision("blocked", cached.reason)
     state = state or _load_progress()
     deal = state.get("deals", {}).get(slug, {})
     status = deal.get("status")
@@ -525,8 +374,6 @@ def _xhigh_max_workers() -> int:
 def _validate_config(config: PoolConfig) -> None:
     if config.workers < 1:
         raise ValueError("--workers must be >= 1")
-    if config.audit_run_id and not config.re_validate:
-        raise ValueError("--audit-run-id is only valid with --re-validate")
     if config.extract_reasoning_effort == "xhigh":
         cap = _xhigh_max_workers()
         if config.workers > cap:
@@ -595,11 +442,9 @@ def _manifest_payload(
     token_usage: TokenUsage,
     started: float,
     outcome: str,
-    cache_used: bool,
-    cache_eligible: bool,
     action: str,
     error: str | None = None,
-    source_audit_run_id: str | None = None,
+    stability_eligible: bool,
 ) -> dict[str, Any]:
     prompt_hashes, total_attempts, watchdog_warnings = _calls_summary(audit)
     return {
@@ -621,9 +466,7 @@ def _manifest_payload(
         "total_seconds": time.monotonic() - started,
         "watchdog_warnings": watchdog_warnings,
         "outcome": outcome,
-        "cache_used": cache_used,
-        "cache_eligible": cache_eligible,
-        "source_audit_run_id": source_audit_run_id,
+        "stability_eligible": stability_eligible,
         "error": error,
     }
 
@@ -646,33 +489,19 @@ async def process_deal(
     audit = _build_audit_writer(config.audit_root, slug, run_id=run_id)
     started = time.monotonic()
     token_usage = TokenUsage()
-    cached = False
-    source_audit_run_id: str | None = None
     try:
-        if decision.action == "re_validate":
-            cache_check = _check_cached_raw_response(slug, config, rulebook_version)
-            if not cache_check.valid or cache_check.raw_payload is None:
-                raise RuntimeError("cached raw_response.json disappeared or became stale")
-            audit.write_cached_raw_response(
-                payload=cache_check.raw_payload,
-                source_run_id=cache_check.source_run_id or "unknown",
-            )
-            raw_extraction = cache_check.parsed_json
-            source_audit_run_id = cache_check.source_run_id
-            cached = True
-        else:
-            extract_result = await extract_deal(
-                slug,
-                llm_client=llm_client,
-                extract_model=config.extract_model,
-                audit=audit,
-                token_usage=token_usage,
-                rulebook_version=rulebook_version,
-                reasoning_effort=config.extract_reasoning_effort,
-            )
-            raw_extraction = extract_result.raw_extraction
+        extract_result = await extract_deal(
+            slug,
+            llm_client=llm_client,
+            extract_model=config.extract_model,
+            audit=audit,
+            token_usage=token_usage,
+            rulebook_version=rulebook_version,
+            reasoning_effort=config.extract_reasoning_effort,
+        )
+        raw_extraction = extract_result.raw_extraction
         if raw_extraction is None:
-            raise RuntimeError("raw extraction cache yielded no parsed_json")
+            raise RuntimeError("extractor yielded no parsed_json")
 
         result = await asyncio.to_thread(
             finalize_claim_payload,
@@ -692,7 +521,6 @@ async def process_deal(
             "graph_snapshot_path": str(result.snapshot_path),
             "graph_database_path": str(result.database_path),
         })
-        audit.write_final_output(result.final_output)
         audit.write_manifest(_manifest_payload(
             audit=audit,
             config=config,
@@ -701,12 +529,10 @@ async def process_deal(
             token_usage=token_usage,
             started=started,
             outcome=result.status,
-            cache_used=cached,
-            cache_eligible=True,
             action=decision.action,
-            source_audit_run_id=source_audit_run_id,
+            stability_eligible=True,
         ))
-        audit.write_latest(outcome=result.status, cache_eligible=True)
+        audit.write_latest(outcome=result.status, stability_eligible=True)
         if config.commit:
             _commit_paths(
                 slug,
@@ -721,7 +547,6 @@ async def process_deal(
         return DealOutcome(
             slug=slug,
             status=result.status,
-            cached=cached,
             flag_count=result.flag_count,
             notes=result.notes,
             output_path=result.output_path,
@@ -751,20 +576,18 @@ async def process_deal(
             token_usage=token_usage,
             started=started,
             outcome=failure_status,
-            cache_used=cached,
-            cache_eligible=False,
             action=decision.action,
             error=note,
-            source_audit_run_id=source_audit_run_id,
+            stability_eligible=False,
         ))
-        audit.write_latest(outcome=failure_status, cache_eligible=False)
+        audit.write_latest(outcome=failure_status, stability_eligible=False)
         if config.commit:
             commit_paths = [core.PROGRESS_PATH, core.FLAGS_PATH, audit.root, audit.latest_path]
             prior_output_path = core.EXTRACTIONS_DIR / f"{slug}.json"
             if prior_output_path.exists():
                 commit_paths.append(prior_output_path)
             _commit_paths(slug, commit_paths)
-        return DealOutcome(slug=slug, status=failure_status, cached=cached, error=note, audit_path=audit.root, latest_path=audit.latest_path)
+        return DealOutcome(slug=slug, status=failure_status, error=note, audit_path=audit.root, latest_path=audit.latest_path)
 
 
 async def run_pool(config: PoolConfig, *, llm_client: LLMClient | None = None) -> PoolSummary:
@@ -879,9 +702,7 @@ def build_parser() -> argparse.ArgumentParser:
         help=f"reasoning.effort for extractor calls (default: {DEFAULT_REASONING_EFFORT})",
     )
     rerun = parser.add_mutually_exclusive_group()
-    rerun.add_argument("--re-validate", action="store_true", help="Reuse only a cache-eligible archived audit v3 run.")
     rerun.add_argument("--re-extract", action="store_true")
-    parser.add_argument("--audit-run-id", help="Archived audit run ID to reuse with --re-validate.")
     parser.add_argument(
         "--release-targets",
         action="store_true",
@@ -906,9 +727,7 @@ def config_from_args(args: argparse.Namespace) -> PoolConfig:
         workers=args.workers,
         extract_model=args.extract_model,
         extract_reasoning_effort=args.extract_reasoning_effort,
-        re_validate=args.re_validate,
         re_extract=args.re_extract,
-        audit_run_id=args.audit_run_id,
         release_targets=args.release_targets,
         target_gate_proof=args.target_gate_proof,
         commit=args.commit,

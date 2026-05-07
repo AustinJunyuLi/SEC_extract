@@ -257,46 +257,6 @@ def test_call_json_enforces_max_length_locally():
         )
 
 
-def test_call_json_validates_custom_schema():
-    client = StubClient([json.dumps({"reason": "too long"})])
-
-    with pytest.raises(MalformedJSONError, match=r"reason.*maxLength 3"):
-        asyncio.run(
-            call_json(
-                client,
-                model="gpt-test",
-                system="sys",
-                user="usr",
-                schema={
-                    "type": "object",
-                    "properties": {"reason": {"type": "string", "maxLength": 3}},
-                    "required": ["reason"],
-                    "additionalProperties": False,
-                },
-            )
-        )
-
-
-def test_call_json_validates_custom_schema_min_items():
-    client = StubClient([json.dumps({"items": []})])
-
-    with pytest.raises(MalformedJSONError, match=r"items.*minItems 1"):
-        asyncio.run(
-            call_json(
-                client,
-                model="gpt-test",
-                system="sys",
-                user="usr",
-                schema={
-                    "type": "object",
-                    "properties": {"items": {"type": "array", "minItems": 1}},
-                    "required": ["items"],
-                    "additionalProperties": False,
-                },
-            )
-        )
-
-
 def test_call_json_fails_loudly_without_repair_call():
     client = StubClient(["not json"])
 

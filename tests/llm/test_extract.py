@@ -256,9 +256,9 @@ def test_extract_deal_writes_audit_and_tracks_token_usage(minimal_state_repo, mo
     assert usage.used == 15
     assert client.calls[0]["model"] == "test-model"
     assert client.calls[0]["max_output_tokens"] == 123
-    assert "tools" not in client.calls[0] or client.calls[0]["tools"] is None
-    assert "tool_choice" not in client.calls[0] or client.calls[0]["tool_choice"] is None
-    assert client.calls[0]["stream"] is True
+    assert "tools" not in client.calls[0]
+    assert "tool_choice" not in client.calls[0]
+    assert "stream" not in client.calls[0]
     assert (audit.root / "prompts" / "extractor.txt").read_text().startswith("=== SYSTEM ===\nPROMPT")
     assert json.loads((audit.root / "raw_response.json").read_text())["parsed_json"]["actor_claims"][0]["actor_label"] == "CSC/Pamplona"
     call_entries = (audit.root / "calls.jsonl").read_text().splitlines()

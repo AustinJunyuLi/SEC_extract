@@ -342,10 +342,11 @@ DEAL_GRAPH_CLAIM_SCHEMA: dict[str, Any] = {
 }
 
 def json_schema_format(schema: dict[str, Any] = DEAL_GRAPH_CLAIM_SCHEMA) -> dict[str, Any]:
-    name = "deal_graph_v2_claim_schema" if schema is DEAL_GRAPH_CLAIM_SCHEMA else "custom_json_schema"
+    if schema is not DEAL_GRAPH_CLAIM_SCHEMA:
+        raise ValueError("only the live deal_graph_v2 claim schema is allowed")
     return {
         "type": "json_schema",
-        "name": name,
+        "name": "deal_graph_v2_claim_schema",
         "schema": schema,
         "strict": True,
     }
@@ -382,7 +383,6 @@ async def call_json(
     system: str,
     user: str,
     model: str,
-    schema: dict[str, Any] = DEAL_GRAPH_CLAIM_SCHEMA,
     max_output_tokens: int | None = None,
     reasoning_effort: str | None = None,
 ) -> CompletionResult:
@@ -390,14 +390,11 @@ async def call_json(
         system=system,
         user=user,
         model=model,
-        text_format=json_schema_format(schema),
+        text_format=json_schema_format(DEAL_GRAPH_CLAIM_SCHEMA),
         max_output_tokens=max_output_tokens,
         reasoning_effort=reasoning_effort,
     )
     parsed = parse_json_text(result.text)
-    if schema is DEAL_GRAPH_CLAIM_SCHEMA:
-        _ensure_extraction_shape(parsed)
-    else:
-        _validate_schema_value(schema, parsed)
+    _ensure_extraction_shape(parsed)
     result.parsed_json = parsed
     return result

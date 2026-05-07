@@ -24,7 +24,7 @@ REQUIRED_SECTIONS: tuple[str, ...] = (
     "## Run Metadata",
     "## Commands",
     "## Extraction And Flag Summary",
-    "## AI-vs-Alex Diff Ledger",
+    "## Filing-Grounded Calibration Ledger",
     "## Filing Evidence Review",
     "## Contract Updates",
     "## Conclusion",
@@ -126,6 +126,14 @@ def _validate_mechanical_grounding(repo_root: Path, slug: str, path: Path) -> li
     current_run_id = deal.get("last_run_id") if isinstance(deal, dict) else None
     if not isinstance(current_run_id, str) or not current_run_id:
         return [VerificationFailure(slug, path, "progress last_run_id is missing")]
+    if current_run_id not in path.read_text():
+        failures.append(
+            VerificationFailure(
+                slug,
+                path,
+                f"verification report must cite current run id {current_run_id}",
+            )
+        )
     extraction_run_id = extraction_payload.get("run_id") or extraction_payload.get("deal", {}).get("last_run_id")
     if extraction_run_id != current_run_id:
         failures.append(
@@ -252,8 +260,6 @@ def validate_report_text(
             )
         )
     if repo_root is not None:
-        # Report run ids are historical review metadata. The live safety check is
-        # current artifact consistency plus exact filing-page grounding.
         failures.extend(_validate_mechanical_grounding(repo_root, slug, path))
     return failures
 

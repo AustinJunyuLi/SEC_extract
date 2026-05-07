@@ -166,11 +166,10 @@ def _write_audit(
     *,
     run_id: str = "run-clean",
     outcome: str = "passed_clean",
-    cache_eligible: bool = True,
+    stability_eligible: bool = True,
     rulebook_version: str = "rules-v1",
     include_raw: bool = True,
     include_validation: bool = True,
-    include_final_output: bool = True,
 ) -> None:
     run_dir = root / "output" / "audit" / slug / "runs" / run_id
     _write_json(
@@ -180,7 +179,7 @@ def _write_audit(
             "slug": slug,
             "run_id": run_id,
             "outcome": outcome,
-            "cache_eligible": cache_eligible,
+            "stability_eligible": stability_eligible,
             "rulebook_version": rulebook_version,
             "extractor_contract_version": "extract-contract-v1",
         },
@@ -207,8 +206,6 @@ def _write_audit(
                 "final_status": outcome,
             },
         )
-    if include_final_output:
-        _write_json(run_dir / "final_output.json", _output_payload(run_id=run_id))
     (run_dir / "deal_graph_v2.json").write_text(json.dumps({
         "schema_version": "deal_graph_v2",
         "run_id": run_id,
@@ -221,13 +218,10 @@ def _write_audit(
             "slug": slug,
             "run_id": run_id,
             "outcome": outcome,
-            "cache_eligible": cache_eligible,
+            "stability_eligible": stability_eligible,
             "manifest_path": f"runs/{run_id}/manifest.json",
             "raw_response_path": f"runs/{run_id}/raw_response.json" if include_raw else None,
             "validation_path": f"runs/{run_id}/validation.json" if include_validation else None,
-            "final_output_path": f"runs/{run_id}/final_output.json"
-            if include_final_output
-            else None,
         },
     )
 
@@ -299,10 +293,9 @@ def test_stale_after_failure_reference_is_reported_as_stale(tmp_path):
         "medivation",
         run_id="run-failed",
         outcome="stale_after_failure",
-        cache_eligible=False,
+        stability_eligible=False,
         include_raw=False,
         include_validation=False,
-        include_final_output=False,
     )
 
     report = reconcile.reconcile_repo(tmp_path, scope="reference")
@@ -332,7 +325,7 @@ def test_target_marked_verified_fails_even_for_reference_scope(tmp_path):
     )
 
 
-def test_legacy_loose_audit_files_always_fail(tmp_path):
+def test_unexpected_audit_root_entries_always_fail(tmp_path):
     _clean_reference_repo(tmp_path)
     (tmp_path / "output" / "audit" / "medivation" / "raw_response.json").write_text("{}\n")
     (tmp_path / "output" / "audit" / "medivation" / "prompts").mkdir()
@@ -340,7 +333,7 @@ def test_legacy_loose_audit_files_always_fail(tmp_path):
     report = reconcile.reconcile_repo(tmp_path, scope="reference")
 
     assert any(
-        issue.code == "legacy_loose_audit_file" and issue.severity == "error"
+        issue.code == "unexpected_audit_root_entry" and issue.severity == "error"
         for issue in report.issues
     )
     assert report.error_count == 2
@@ -361,10 +354,9 @@ def test_latest_failed_attempt_after_prior_finalized_run_is_valid_audit_history(
         "medivation",
         run_id="run-failed",
         outcome="stale_after_failure",
-        cache_eligible=False,
+        stability_eligible=False,
         include_raw=False,
         include_validation=False,
-        include_final_output=False,
     )
 
     report = reconcile.reconcile_repo(tmp_path, scope="reference")
@@ -375,7 +367,7 @@ def test_latest_failed_attempt_after_prior_finalized_run_is_valid_audit_history(
         for issue in report.issues
     )
     assert not any(
-        issue.code == "audit_run_id_mismatch" and issue.slug == "medivation"
+        issue.code == "audit_latest_run_id_mismatch" and issue.slug == "medivation"
         for issue in report.issues
     )
 
@@ -417,7 +409,7 @@ def test_flags_jsonl_latest_run_must_match_output_flags(tmp_path):
     )
 
 
-def test_failed_latest_audit_must_not_be_cache_eligible(tmp_path):
+def test_failed_latest_audit_must_not_be_stability_eligible(tmp_path):
     _clean_reference_repo(tmp_path)
     progress = json.loads((tmp_path / "state" / "progress.json").read_text())
     progress["deals"]["medivation"] = _progress_deal(
@@ -432,16 +424,15 @@ def test_failed_latest_audit_must_not_be_cache_eligible(tmp_path):
         "medivation",
         run_id="run-failed",
         outcome="failed_system",
-        cache_eligible=True,
+        stability_eligible=True,
         include_raw=False,
         include_validation=False,
-        include_final_output=False,
     )
 
     report = reconcile.reconcile_repo(tmp_path, scope="reference")
 
     assert any(
-        issue.code == "failed_cache_eligible" and issue.slug == "medivation"
+        issue.code == "failed_stability_eligible" and issue.slug == "medivation"
         for issue in report.issues
     )
 

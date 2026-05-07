@@ -2,8 +2,7 @@
 
 `python run.py --slug medivation --extract` runs one deal through the same
 `pipeline.run_pool` interface used by the batch runner. The default mode is
-`--extract`; `--re-validate` only reuses a cache-eligible archived audit v3 raw
-response, and `--re-extract` forces a fresh SDK call.
+`--extract`; `--re-extract` forces a fresh SDK call.
 """
 
 from __future__ import annotations
@@ -31,8 +30,6 @@ def _build_messages(slug: str) -> tuple[str, str]:
 
 
 def _mode_from_args(args: argparse.Namespace) -> str:
-    if args.re_validate:
-        return "re_validate"
     if args.re_extract:
         return "re_extract"
     return "extract"
@@ -44,9 +41,7 @@ def _make_pool_config(args: argparse.Namespace, *, mode: str) -> Any:
     return PoolConfig(
         slugs=(args.slug,),
         workers=1,
-        re_validate=mode == "re_validate",
         re_extract=mode == "re_extract",
-        audit_run_id=args.audit_run_id,
         release_targets=args.release_targets,
         target_gate_proof=args.target_gate_proof,
         extract_model=args.extract_model or os.environ.get("EXTRACT_MODEL", "gpt-5.5"),
@@ -173,11 +168,9 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--slug", required=True, help="Deal slug to process.")
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument("--extract", action="store_true", help="Run extraction; default mode.")
-    modes.add_argument("--re-validate", action="store_true", help="Revalidate cached raw response if available.")
     modes.add_argument("--re-extract", action="store_true", help="Force a fresh extraction call.")
     modes.add_argument("--print-prompt", action="store_true", help="Print SDK system/user messages and exit.")
     parser.add_argument("--commit", action="store_true", help="Commit only current-deal output/state/audit files.")
-    parser.add_argument("--audit-run-id", help="Archived audit run ID to reuse with --re-validate.")
     parser.add_argument(
         "--release-targets",
         action="store_true",
@@ -207,10 +200,6 @@ def main() -> int:
     if args.commit and args.dry_run:
         print("--commit cannot be used with --dry-run", file=sys.stderr)
         return 2
-    if args.audit_run_id and not args.re_validate:
-        print("--audit-run-id is only valid with --re-validate", file=sys.stderr)
-        return 2
-
     if args.print_prompt:
         system, user = _build_messages(args.slug)
         print("=== SYSTEM ===")

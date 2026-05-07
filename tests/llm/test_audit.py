@@ -80,7 +80,7 @@ def test_audit_writer_writes_prompt_call_raw_response_validation_manifest_and_la
         "total_output_tokens": 2,
         "total_reasoning_tokens": 3,
         "outcome": "passed_clean",
-        "cache_eligible": True,
+        "stability_eligible": True,
     })
     writer.write_validation({
         "final_status": "passed_clean",
@@ -91,8 +91,7 @@ def test_audit_writer_writes_prompt_call_raw_response_validation_manifest_and_la
         "soft_count": 0,
         "info_count": 0,
     })
-    writer.write_final_output({"schema_version": "deal_graph_v2", "deal": {}, "graph": {}, "review_rows": []})
-    writer.write_latest(outcome="passed_clean", cache_eligible=True)
+    writer.write_latest(outcome="passed_clean", stability_eligible=True)
 
     audit_dir = tmp_path / "deal" / "runs" / "run-1"
     prompt_text = (audit_dir / "prompts" / "extractor.txt").read_text()
@@ -118,13 +117,12 @@ def test_audit_writer_writes_prompt_call_raw_response_validation_manifest_and_la
     assert manifest["total_input_tokens"] == 1
     validation = json.loads((audit_dir / "validation.json").read_text())
     assert validation["schema_version"] == "validation_v1"
-    final_output = json.loads((audit_dir / "final_output.json").read_text())
-    assert final_output == {"schema_version": "deal_graph_v2", "deal": {}, "graph": {}, "review_rows": []}
     latest = json.loads((tmp_path / "deal" / "latest.json").read_text())
     assert latest["schema_version"] == AUDIT_LATEST_SCHEMA_VERSION
     assert latest["run_id"] == "run-1"
     assert latest["manifest_path"] == "runs/run-1/manifest.json"
     assert latest["raw_response_path"] == "runs/run-1/raw_response.json"
+    assert "final_output_path" not in latest
 
 
 def test_manifest_excludes_retired_repair_and_tool_contract_fields(tmp_path):
@@ -135,7 +133,7 @@ def test_manifest_excludes_retired_repair_and_tool_contract_fields(tmp_path):
         rulebook_version="rb1",
         extractor_contract_version="ec1",
         outcome="passed_clean",
-        cache_eligible=True,
+        stability_eligible=True,
     )
 
     manifest = json.loads((tmp_path / "deal" / "runs" / "run-1" / "manifest.json").read_text())
@@ -159,10 +157,9 @@ def test_two_audit_runs_are_immutable_and_latest_points_to_second(tmp_path):
         rulebook_version="rules",
         extractor_contract_version="contract",
     )
-    first.write_manifest({"outcome": "passed_clean", "cache_eligible": True})
+    first.write_manifest({"outcome": "passed_clean", "stability_eligible": True})
     first.write_validation({"final_status": "passed_clean", "flag_count": 0})
-    first.write_final_output({"schema_version": "deal_graph_v2", "deal_slug": "first", "review_rows": []})
-    first.write_latest(outcome="passed_clean", cache_eligible=True)
+    first.write_latest(outcome="passed_clean", stability_eligible=True)
 
     second.write_prompt(phase="extractor", system="second", user="user")
     second.write_raw_response(
@@ -171,10 +168,9 @@ def test_two_audit_runs_are_immutable_and_latest_points_to_second(tmp_path):
         rulebook_version="rules",
         extractor_contract_version="contract",
     )
-    second.write_manifest({"outcome": "passed_clean", "cache_eligible": True})
+    second.write_manifest({"outcome": "passed_clean", "stability_eligible": True})
     second.write_validation({"final_status": "passed_clean", "flag_count": 0})
-    second.write_final_output({"schema_version": "deal_graph_v2", "deal_slug": "second", "review_rows": []})
-    second.write_latest(outcome="passed_clean", cache_eligible=True)
+    second.write_latest(outcome="passed_clean", stability_eligible=True)
 
     first_raw = json.loads((tmp_path / "deal" / "runs" / "run-1" / "raw_response.json").read_text())
     second_raw = json.loads((tmp_path / "deal" / "runs" / "run-2" / "raw_response.json").read_text())

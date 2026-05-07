@@ -6,23 +6,23 @@
   },
   "no_estimator": true,
   "reasons": [
-    "providence-worcester: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; anonymous placeholder counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed; quote diagnostics changed",
+    "providence-worcester: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed",
     "providence-worcester: selected archived runs passed live evidence, graph, and review contract checks",
     "medivation: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; date diagnostics changed; bid-value representation changed; quote diagnostics changed",
     "medivation: selected archived runs passed live evidence, graph, and review contract checks",
-    "imprivata: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; date diagnostics changed; bid-value representation changed",
+    "imprivata: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed",
     "imprivata: selected archived runs passed live evidence, graph, and review contract checks",
-    "zep: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; anonymous placeholder counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed",
+    "zep: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed",
     "zep: selected archived runs passed live evidence, graph, and review contract checks",
     "petsmart-inc: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; anonymous placeholder counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed",
     "petsmart-inc: selected archived runs passed live evidence, graph, and review contract checks",
     "penford: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; anonymous placeholder counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed",
     "penford: selected archived runs passed live evidence, graph, and review contract checks",
-    "mac-gray: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; date diagnostics changed; bid-value representation changed",
+    "mac-gray: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed; quote diagnostics changed",
     "mac-gray: selected archived runs passed live evidence, graph, and review contract checks",
-    "saks: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed",
+    "saks: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed; quote diagnostics changed",
     "saks: selected archived runs passed live evidence, graph, and review contract checks",
-    "stec: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; date diagnostics changed; bid-value representation changed; quote diagnostics changed",
+    "stec: metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; date diagnostics changed; bid-value representation changed",
     "stec: selected archived runs passed live evidence, graph, and review contract checks"
   ],
   "reference_slugs": [
@@ -44,7 +44,7 @@
       "eligible_archived_runs": 3,
       "high_burden_count": 0,
       "reasons": [
-        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; anonymous placeholder counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed; quote diagnostics changed",
+        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed",
         "selected archived runs passed live evidence, graph, and review contract checks"
       ],
       "required_archived_runs": 3,
@@ -54,14 +54,14 @@
         0
       ],
       "selected_run_dirs": [
-        "output/audit/providence-worcester/runs/beee4cfb36e04dd7bf6c449fd877aa37",
-        "output/audit/providence-worcester/runs/da2172f5a1ef4707832a7d428cb6f770",
-        "output/audit/providence-worcester/runs/d6ecdf547bc04b7fb17a8156f96206ee"
+        "output/audit/providence-worcester/runs/2ca0abed4bb040d584b10cbbe247cc7b",
+        "output/audit/providence-worcester/runs/dd9335d7219c4f82a194a2e3c764d622",
+        "output/audit/providence-worcester/runs/6b5d393b6d5247a397c32db8672baecc"
       ],
       "selected_runs": [
-        "beee4cfb36e04dd7bf6c449fd877aa37",
-        "da2172f5a1ef4707832a7d428cb6f770",
-        "d6ecdf547bc04b7fb17a8156f96206ee"
+        "2ca0abed4bb040d584b10cbbe247cc7b",
+        "dd9335d7219c4f82a194a2e3c764d622",
+        "6b5d393b6d5247a397c32db8672baecc"
       ],
       "selected_statuses": [
         "passed_clean",
@@ -86,14 +86,14 @@
         0
       ],
       "selected_run_dirs": [
-        "output/audit/medivation/runs/fd8b4a393dfa4766b01ff3828bb1e238",
-        "output/audit/medivation/runs/6d2f872076b947f487313edd7c9e2d46",
-        "output/audit/medivation/runs/54fcf843622f4a59966611c12e72cb90"
+        "output/audit/medivation/runs/a2e381edb0d94f5282b2ca34127c153a",
+        "output/audit/medivation/runs/6f3397761e244b43b61015fd53392716",
+        "output/audit/medivation/runs/8e6a57a02a6d46dc8f66e14e728dc027"
       ],
       "selected_runs": [
-        "fd8b4a393dfa4766b01ff3828bb1e238",
-        "6d2f872076b947f487313edd7c9e2d46",
-        "54fcf843622f4a59966611c12e72cb90"
+        "a2e381edb0d94f5282b2ca34127c153a",
+        "6f3397761e244b43b61015fd53392716",
+        "8e6a57a02a6d46dc8f66e14e728dc027"
       ],
       "selected_statuses": [
         "passed_clean",
@@ -108,7 +108,7 @@
       "eligible_archived_runs": 3,
       "high_burden_count": 0,
       "reasons": [
-        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; date diagnostics changed; bid-value representation changed",
+        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed",
         "selected archived runs passed live evidence, graph, and review contract checks"
       ],
       "required_archived_runs": 3,
@@ -118,14 +118,14 @@
         0
       ],
       "selected_run_dirs": [
-        "output/audit/imprivata/runs/4fa48dedb9c64baca66c6d27bfd1532e",
-        "output/audit/imprivata/runs/7a5edbc988354b93b51794d05ce3116d",
-        "output/audit/imprivata/runs/4631a5b37f81439fa260b79c1e6be270"
+        "output/audit/imprivata/runs/46cd22699f614ecbbdee327812404819",
+        "output/audit/imprivata/runs/cb88508aaf25462c8de42a2dabe7e951",
+        "output/audit/imprivata/runs/feba47dcf9534930a605371b1a4bace3"
       ],
       "selected_runs": [
-        "4fa48dedb9c64baca66c6d27bfd1532e",
-        "7a5edbc988354b93b51794d05ce3116d",
-        "4631a5b37f81439fa260b79c1e6be270"
+        "46cd22699f614ecbbdee327812404819",
+        "cb88508aaf25462c8de42a2dabe7e951",
+        "feba47dcf9534930a605371b1a4bace3"
       ],
       "selected_statuses": [
         "passed_clean",
@@ -140,7 +140,7 @@
       "eligible_archived_runs": 3,
       "high_burden_count": 0,
       "reasons": [
-        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; anonymous placeholder counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed",
+        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed",
         "selected archived runs passed live evidence, graph, and review contract checks"
       ],
       "required_archived_runs": 3,
@@ -150,14 +150,14 @@
         0
       ],
       "selected_run_dirs": [
-        "output/audit/zep/runs/01ba6f5108e947dd8cf561b1c2572389",
-        "output/audit/zep/runs/6c15fbc94e44406a8d2d03fbf0a8b8bc",
-        "output/audit/zep/runs/293708d48d24439e80817820da552604"
+        "output/audit/zep/runs/08c96368a27746428a2141ad6706c2b9",
+        "output/audit/zep/runs/a5689134ae3b4a77bf0556a468985a81",
+        "output/audit/zep/runs/fd76f2e8a1454ccc9d85342b5144fecd"
       ],
       "selected_runs": [
-        "01ba6f5108e947dd8cf561b1c2572389",
-        "6c15fbc94e44406a8d2d03fbf0a8b8bc",
-        "293708d48d24439e80817820da552604"
+        "08c96368a27746428a2141ad6706c2b9",
+        "a5689134ae3b4a77bf0556a468985a81",
+        "fd76f2e8a1454ccc9d85342b5144fecd"
       ],
       "selected_statuses": [
         "passed_clean",
@@ -182,14 +182,14 @@
         0
       ],
       "selected_run_dirs": [
-        "output/audit/petsmart-inc/runs/37e4baa652404d9abba95145c38e18d3",
-        "output/audit/petsmart-inc/runs/b8bf7ee04bb6448eb6282ad0ff309009",
-        "output/audit/petsmart-inc/runs/d7e6e290c31d4126a12e3cb013d0570c"
+        "output/audit/petsmart-inc/runs/fb30e9e00cfb472d8f473fca55c60329",
+        "output/audit/petsmart-inc/runs/47d56105e7c24a46b73f59606976f198",
+        "output/audit/petsmart-inc/runs/40c5925b41094198a74ad4089e80a33a"
       ],
       "selected_runs": [
-        "37e4baa652404d9abba95145c38e18d3",
-        "b8bf7ee04bb6448eb6282ad0ff309009",
-        "d7e6e290c31d4126a12e3cb013d0570c"
+        "fb30e9e00cfb472d8f473fca55c60329",
+        "47d56105e7c24a46b73f59606976f198",
+        "40c5925b41094198a74ad4089e80a33a"
       ],
       "selected_statuses": [
         "passed_clean",
@@ -201,7 +201,7 @@
     },
     {
       "classification": "STABLE_FOR_REFERENCE_REVIEW",
-      "eligible_archived_runs": 4,
+      "eligible_archived_runs": 3,
       "high_burden_count": 0,
       "reasons": [
         "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; anonymous placeholder counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed",
@@ -214,14 +214,14 @@
         0
       ],
       "selected_run_dirs": [
-        "output/audit/penford/runs/b72f152b018a4e9d8779935f2ac26f76",
-        "output/audit/penford/runs/16774b632b1144fbaa6b4f221b911659",
-        "output/audit/penford/runs/57148524ea5e4316bb4a09f8402c6a85"
+        "output/audit/penford/runs/fee261485ecb4ae2ad6f98642584896f",
+        "output/audit/penford/runs/441f7c5bf5674ba1ac06188af35e3a77",
+        "output/audit/penford/runs/25c7b26d2e07423ab9b6d81d0fccd361"
       ],
       "selected_runs": [
-        "b72f152b018a4e9d8779935f2ac26f76",
-        "16774b632b1144fbaa6b4f221b911659",
-        "57148524ea5e4316bb4a09f8402c6a85"
+        "fee261485ecb4ae2ad6f98642584896f",
+        "441f7c5bf5674ba1ac06188af35e3a77",
+        "25c7b26d2e07423ab9b6d81d0fccd361"
       ],
       "selected_statuses": [
         "passed_clean",
@@ -236,7 +236,7 @@
       "eligible_archived_runs": 3,
       "high_burden_count": 0,
       "reasons": [
-        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; date diagnostics changed; bid-value representation changed",
+        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed; quote diagnostics changed",
         "selected archived runs passed live evidence, graph, and review contract checks"
       ],
       "required_archived_runs": 3,
@@ -246,14 +246,14 @@
         0
       ],
       "selected_run_dirs": [
-        "output/audit/mac-gray/runs/01a144a0019346338f1205266edee775",
-        "output/audit/mac-gray/runs/ea1cefb4b85448ce849cb901518a47b0",
-        "output/audit/mac-gray/runs/974917dc458b4cde8d9b0ad352abc81b"
+        "output/audit/mac-gray/runs/6077233b5b4844ddbd3cf74e37fff22e",
+        "output/audit/mac-gray/runs/924c294bf0a2424e8c6574f51f0cb789",
+        "output/audit/mac-gray/runs/cb64ccd28c584471b3f1665d9787510a"
       ],
       "selected_runs": [
-        "01a144a0019346338f1205266edee775",
-        "ea1cefb4b85448ce849cb901518a47b0",
-        "974917dc458b4cde8d9b0ad352abc81b"
+        "6077233b5b4844ddbd3cf74e37fff22e",
+        "924c294bf0a2424e8c6574f51f0cb789",
+        "cb64ccd28c584471b3f1665d9787510a"
       ],
       "selected_statuses": [
         "passed_clean",
@@ -268,7 +268,7 @@
       "eligible_archived_runs": 3,
       "high_burden_count": 0,
       "reasons": [
-        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed",
+        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; cohort-like placeholder counts changed; date diagnostics changed; bid-value representation changed; quote diagnostics changed",
         "selected archived runs passed live evidence, graph, and review contract checks"
       ],
       "required_archived_runs": 3,
@@ -278,14 +278,14 @@
         0
       ],
       "selected_run_dirs": [
-        "output/audit/saks/runs/2642e12aee12443da54b604c727f7228",
-        "output/audit/saks/runs/2e3295747eee4b89b2ad30fbebeaf608",
-        "output/audit/saks/runs/d7677b4be48b4e29bde028c3b7eadb6c"
+        "output/audit/saks/runs/f5c26160aed443e28c0f4c3514bd81f9",
+        "output/audit/saks/runs/3126a944bbe64243924d21382362b4eb",
+        "output/audit/saks/runs/19a4e52122c44c5c8ff992f0b00eab3a"
       ],
       "selected_runs": [
-        "2642e12aee12443da54b604c727f7228",
-        "2e3295747eee4b89b2ad30fbebeaf608",
-        "d7677b4be48b4e29bde028c3b7eadb6c"
+        "f5c26160aed443e28c0f4c3514bd81f9",
+        "3126a944bbe64243924d21382362b4eb",
+        "19a4e52122c44c5c8ff992f0b00eab3a"
       ],
       "selected_statuses": [
         "passed_clean",
@@ -297,35 +297,35 @@
     },
     {
       "classification": "STABLE_FOR_REFERENCE_REVIEW",
-      "eligible_archived_runs": 4,
+      "eligible_archived_runs": 3,
       "high_burden_count": 0,
       "reasons": [
-        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; date diagnostics changed; bid-value representation changed; quote diagnostics changed",
+        "metric variability observed: row fingerprints changed; graph table counts changed; event subtype counts changed; actor kind counts changed; relation type counts changed; claim type counts changed; claim disposition counts changed; coverage result counts changed; date diagnostics changed; bid-value representation changed",
         "selected archived runs passed live evidence, graph, and review contract checks"
       ],
       "required_archived_runs": 3,
       "review_item_counts": [
-        1,
+        0,
         0,
         0
       ],
       "selected_run_dirs": [
-        "output/audit/stec/runs/af059c57451a4aa5b0bc18b3f2153222",
-        "output/audit/stec/runs/cd98bcbe3bea4a02a96dc06772e9708f",
-        "output/audit/stec/runs/2c0428350f6c44f59753736edca656e8"
+        "output/audit/stec/runs/86e0a7d36cc04031b6892e1490f6b3eb",
+        "output/audit/stec/runs/2488a7f8a71e4498b1941484124c09a0",
+        "output/audit/stec/runs/4e67ce0214df43f2b3f5c3dfa756e9e1"
       ],
       "selected_runs": [
-        "af059c57451a4aa5b0bc18b3f2153222",
-        "cd98bcbe3bea4a02a96dc06772e9708f",
-        "2c0428350f6c44f59753736edca656e8"
+        "86e0a7d36cc04031b6892e1490f6b3eb",
+        "2488a7f8a71e4498b1941484124c09a0",
+        "4e67ce0214df43f2b3f5c3dfa756e9e1"
       ],
       "selected_statuses": [
-        "needs_review",
+        "passed_clean",
         "passed_clean",
         "passed_clean"
       ],
       "slug": "stec",
-      "status": "needs_review"
+      "status": "passed_clean"
     }
   ],
   "slugs": [

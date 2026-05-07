@@ -33,9 +33,9 @@ def extractor_contract_version() -> str:
     """Hash the static extractor prompt plus local response schema mirror.
 
     `rulebook_version()` covers `rules/*.md`. This hash covers the two other
-    inputs that make a cached raw response stale even when the rules do not
-    change: `prompts/extract.md` and the Python schema mirror used for local
-    Linkflow validation.
+    inputs that define the provider contract beyond `rules/*.md`:
+    `prompts/extract.md` and the Python schema mirror used for local Linkflow
+    validation.
     """
     h = hashlib.sha256()
     h.update((core.REPO_ROOT / "prompts" / "extract.md").read_bytes())
@@ -294,7 +294,6 @@ async def _call_prompt_only(
         text_format=json_schema_format(DEAL_GRAPH_CLAIM_SCHEMA),
         max_output_tokens=max_output_tokens,
         reasoning_effort=reasoning_effort,
-        stream=True,
     )
     try:
         parsed = parse_json_text(completion.text)

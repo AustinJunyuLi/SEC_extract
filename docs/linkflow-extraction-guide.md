@@ -62,7 +62,7 @@ run.py / pipeline.run_pool
   -> canonical deal graph
   -> graph validation
   -> review projection
-  -> final_output.json and output/extractions/{slug}.json
+  -> deal_graph.duckdb, deal_graph_v2.json, and output/extractions/{slug}.json
 ```
 
 There is no live correction loop, no response-chain reuse, no loose JSON
@@ -89,7 +89,6 @@ output/audit/{slug}/runs/{run_id}/
   calls.jsonl
   raw_response.json
   validation.json
-  final_output.json
   deal_graph.duckdb
   deal_graph_v2.json
   prompts/extractor.txt

@@ -16,7 +16,6 @@ class CompletionResult:
     text: str
     model: str
     parsed_json: dict[str, Any] | None = None
-    tool_calls: list[dict[str, Any]] = field(default_factory=list)
     output_items: list[dict[str, Any]] = field(default_factory=list)
     input_tokens: int = 0
     output_tokens: int = 0
@@ -39,12 +38,9 @@ class LLMClient(ABC):
         system: str | None = None,
         user: str | None = None,
         input_items: list[dict[str, Any]] | None = None,
-        text_format: dict | None = None,
-        tools: list[dict[str, Any]] | None = None,
-        tool_choice: str | None = None,
+        text_format: dict,
         max_output_tokens: int | None = None,
         reasoning_effort: str | None = None,
-        stream: bool = True,
     ) -> CompletionResult:
         raise NotImplementedError
 
@@ -74,12 +70,9 @@ class OpenAICompatibleClient(LLMClient):
         system: str | None = None,
         user: str | None = None,
         input_items: list[dict[str, Any]] | None = None,
-        text_format: dict | None = None,
-        tools: list[dict[str, Any]] | None = None,
-        tool_choice: str | None = None,
+        text_format: dict,
         max_output_tokens: int | None = None,
         reasoning_effort: str | None = None,
-        stream: bool = True,
     ) -> CompletionResult:
         attempts = 0
 
@@ -92,11 +85,8 @@ class OpenAICompatibleClient(LLMClient):
                 user=user,
                 input_items=input_items,
                 text_format=text_format,
-                tools=tools,
-                tool_choice=tool_choice,
                 max_output_tokens=max_output_tokens,
                 reasoning_effort=reasoning_effort,
-                stream=stream,
                 attempt=attempts,
             )
 
@@ -111,14 +101,13 @@ class OpenAICompatibleClient(LLMClient):
         system: str | None,
         user: str | None,
         input_items: list[dict[str, Any]] | None,
-        text_format: dict | None,
-        tools: list[dict[str, Any]] | None,
-        tool_choice: str | None,
+        text_format: dict,
         max_output_tokens: int | None,
         reasoning_effort: str | None,
-        stream: bool,
         attempt: int,
     ) -> CompletionResult:
+        if not text_format:
+            raise ValueError("strict Responses text_format is required")
         if input_items is None:
             if system is None or user is None:
                 raise ValueError("system and user are required when input_items is not provided")
@@ -131,37 +120,14 @@ class OpenAICompatibleClient(LLMClient):
         kwargs: dict[str, Any] = {
             "model": model,
             "input": input_payload,
+            "text": {"format": text_format},
         }
-        if text_format is not None:
-            kwargs["text"] = {"format": text_format}
-        if tools is not None:
-            kwargs["tools"] = tools
-            if tool_choice is not None:
-                kwargs["tool_choice"] = tool_choice
         if max_output_tokens is not None:
             kwargs["max_output_tokens"] = max_output_tokens
         if reasoning_effort is not None:
             kwargs["reasoning"] = {"effort": reasoning_effort}
 
         started = time.monotonic()
-        if not stream:
-            final_response = await self._client.responses.create(**kwargs)
-            usage = getattr(final_response, "usage", None)
-            text = getattr(final_response, "output_text", None) or _output_text_from_items(final_response)
-            return CompletionResult(
-                text=text,
-                model=model,
-                tool_calls=_tool_calls(final_response),
-                output_items=_output_items(final_response),
-                input_tokens=_usage_value(usage, "input_tokens"),
-                output_tokens=_usage_value(usage, "output_tokens"),
-                reasoning_tokens=_reasoning_tokens(usage),
-                finish_reason=_finish_reason(final_response),
-                latency_seconds=time.monotonic() - started,
-                attempts=attempt,
-                raw_response=final_response,
-            )
-
         text_parts: list[str] = []
         stream_output_items: list[dict[str, Any]] = []
         final_response = None
@@ -193,7 +159,6 @@ class OpenAICompatibleClient(LLMClient):
         return CompletionResult(
             text="".join(text_parts),
             model=model,
-            tool_calls=_tool_calls_from_items(output_items),
             output_items=output_items,
             input_tokens=_usage_value(usage, "input_tokens"),
             output_tokens=_usage_value(usage, "output_tokens"),
@@ -283,24 +248,3 @@ def _model_dump(obj: Any) -> dict[str, Any]:
 def _output_items(response: Any) -> list[dict[str, Any]]:
     output = _response_value(response, "output") or []
     return [_model_dump(item) for item in output]
-
-
-def _tool_calls(response: Any) -> list[dict[str, Any]]:
-    return _tool_calls_from_items(_output_items(response))
-
-
-def _tool_calls_from_items(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    return [item for item in items if item.get("type") == "function_call"]
-
-
-def _output_text_from_items(response: Any) -> str:
-    parts: list[str] = []
-    for item in _output_items(response):
-        if item.get("type") == "message":
-            for content in item.get("content") or []:
-                if isinstance(content, dict) and content.get("type") in {
-                    "output_text",
-                    "text",
-                }:
-                    parts.append(str(content.get("text") or ""))
-    return "".join(parts)

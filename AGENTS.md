@@ -90,7 +90,9 @@ Reasoning defaults to `high`. Explicit `xhigh` is capped by
 - `prompts/extract.md` is the provider prompt.
 - `pipeline/deal_graph/` is the live canonical graph subsystem.
 - `output/extractions/{slug}.json` is the latest portable graph snapshot.
-- `reference/alex/{slug}.json` is comparison material only.
+- `reference/deal_details_Alex_2026.xlsx` and
+  `reference/CollectionInstructions_Alex_2026.pdf` are calibration material
+  only; they are not live extraction inputs or verification authorities.
 
 ## Evidence Requirements
 

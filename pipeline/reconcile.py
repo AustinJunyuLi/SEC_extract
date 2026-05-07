@@ -13,7 +13,7 @@ from pipeline import core
 from pipeline.llm.audit import (
     AUDIT_LATEST_SCHEMA_VERSION,
     AUDIT_RUN_SCHEMA_VERSION,
-    LEGACY_AUDIT_NAMES,
+    AUDIT_SLUG_ROOT_ALLOWED_NAMES,
     RAW_RESPONSE_SCHEMA_VERSION,
     VALIDATION_SCHEMA_VERSION,
 )
@@ -280,12 +280,12 @@ def _selected_slugs(
     return sorted(deals)
 
 
-def _legacy_loose_files(slug_root: Path) -> list[Path]:
+def _unexpected_audit_root_entries(slug_root: Path) -> list[Path]:
     if not slug_root.exists():
         return []
     return [
         child for child in slug_root.iterdir()
-        if child.name in LEGACY_AUDIT_NAMES
+        if child.name not in AUDIT_SLUG_ROOT_ALLOWED_NAMES
     ]
 
 
@@ -299,17 +299,16 @@ def _is_claim_payload(value: Any) -> bool:
     return all(isinstance(value.get(name), list) for name in DEAL_GRAPH_CLAIM_SCHEMA["required"])
 
 
-def _run_pointer(slug: str, run_id: str, *, cache_eligible: bool = True) -> dict[str, Any]:
+def _run_pointer(slug: str, run_id: str, *, stability_eligible: bool = True) -> dict[str, Any]:
     return {
         "schema_version": AUDIT_LATEST_SCHEMA_VERSION,
         "slug": slug,
         "run_id": run_id,
         "outcome": "archived",
-        "cache_eligible": cache_eligible,
+        "stability_eligible": stability_eligible,
         "manifest_path": f"runs/{run_id}/manifest.json",
         "raw_response_path": f"runs/{run_id}/raw_response.json",
         "validation_path": f"runs/{run_id}/validation.json",
-        "final_output_path": f"runs/{run_id}/final_output.json",
     }
 
 
@@ -440,11 +439,11 @@ def _check_audit(
         return
 
     slug_root = root / "output" / "audit" / slug
-    for loose_file in _legacy_loose_files(slug_root):
+    for loose_file in _unexpected_audit_root_entries(slug_root):
         report.add(
             "error",
-            "legacy_loose_audit_file",
-            "loose legacy audit files are not live audit data",
+            "unexpected_audit_root_entry",
+            "audit slug root may contain only latest.json and runs/",
             slug=slug,
             path=_rel(root, loose_file),
         )
@@ -483,7 +482,7 @@ def _check_audit(
     if run_id != progress_run_id:
         report.add(
             "error",
-            "audit_run_id_mismatch",
+            "audit_latest_run_id_mismatch",
             "latest audit run_id must match progress last_run_id",
             slug=slug,
             path=_rel(root, latest_path),
@@ -491,7 +490,7 @@ def _check_audit(
     if status in TRUSTED_OUTPUT_STATUSES and output is not None and run_id != output_run_id:
         report.add(
             "error",
-            "audit_run_id_mismatch",
+            "audit_latest_run_id_mismatch",
             "trusted latest audit run_id must match output deal.last_run_id",
             slug=slug,
             path=_rel(root, latest_path),
@@ -514,19 +513,19 @@ def _check_audit(
             slug=slug,
             path=_rel(root, latest_path),
         )
-    if status in core.FAILURE_STATUSES and latest.get("cache_eligible") is not False:
+    if status in core.FAILURE_STATUSES and latest.get("stability_eligible") is not False:
         report.add(
             "error",
-            "failed_cache_eligible",
-            "failure runs must have cache_eligible=false",
+            "failed_stability_eligible",
+            "failure runs must have stability_eligible=false",
             slug=slug,
             path=_rel(root, latest_path),
         )
-    if status in TRUSTED_OUTPUT_STATUSES and latest.get("cache_eligible") is not True:
+    if status in TRUSTED_OUTPUT_STATUSES and latest.get("stability_eligible") is not True:
         report.add(
             "error",
-            "trusted_cache_ineligible",
-            "trusted extraction runs must have cache_eligible=true",
+            "trusted_stability_ineligible",
+            "trusted extraction runs must have stability_eligible=true",
             slug=slug,
             path=_rel(root, latest_path),
         )
@@ -553,7 +552,6 @@ def _check_audit(
         )
     raw = None
     validation = None
-    final_output = None
     if latest.get("raw_response_path") is not None:
         raw = _check_referenced_audit_file(
             root=root,
@@ -580,26 +578,19 @@ def _check_audit(
             expected_schema=VALIDATION_SCHEMA_VERSION,
             run_id=run_id,
         )
-    if latest.get("final_output_path") is not None:
-        final_output = _check_referenced_audit_file(
-            root=root,
-            report=report,
+    if "final_output_path" in latest:
+        report.add(
+            "error",
+            "audit_latest_retired_field",
+            "latest.json must not reference retired graph-output pointers",
             slug=slug,
-            slug_root=slug_root,
-            latest=latest,
-            key="final_output_path",
-            filename="final_output.json",
-            schema_key=None,
-            expected_schema=None,
-            run_id=run_id,
-            check_identity=False,
+            path=_rel(root, latest_path),
         )
 
     if status in TRUSTED_OUTPUT_STATUSES:
         for key, payload in (
             ("raw_response_path", raw),
             ("validation_path", validation),
-            ("final_output_path", final_output),
         ):
             if latest.get(key) is None or payload is None:
                 report.add(
@@ -642,14 +633,6 @@ def _check_audit(
                     slug=slug,
                     path=_rel(root, graph_snapshot_path),
                 )
-    elif latest.get("final_output_path") is not None:
-        report.add(
-            "error",
-            "failure_final_output_written",
-            "failure runs must not refresh trusted final_output artifacts",
-            slug=slug,
-            path=_rel(root, latest_path),
-        )
     if manifest:
         manifest_path = slug_root / latest["manifest_path"]
         _check_manifest_contract_fields(
@@ -659,11 +642,11 @@ def _check_audit(
             manifest=manifest,
             manifest_path=manifest_path,
         )
-        if manifest.get("cache_eligible") != latest.get("cache_eligible"):
+        if manifest.get("stability_eligible") != latest.get("stability_eligible"):
             report.add(
                 "error",
-                "audit_cache_eligible_mismatch",
-                "manifest cache_eligible must match latest.json",
+                "audit_stability_eligible_mismatch",
+                "manifest stability_eligible must match latest.json",
                 slug=slug,
                 path=_rel(root, manifest_path),
             )

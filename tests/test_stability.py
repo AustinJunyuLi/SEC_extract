@@ -112,8 +112,7 @@ def _write_run(
         "slug": slug,
         "run_id": run_id,
         "outcome": "passed_clean",
-        "cache_eligible": True,
-        "cache_used": False,
+        "stability_eligible": True,
         "started_at": "2026-04-29T00:00:00Z",
         "finished_at": finished_at,
         "models": {"extract": "gpt-5.5"},
@@ -202,23 +201,8 @@ def _write_run(
         "validation_flags": graph_flags,
     }
     (run_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True))
-    (run_dir / "final_output.json").write_text(json.dumps({
-        "schema_version": "deal_graph_v2",
-        "deal_slug": slug,
-        "run_id": run_id,
-        "last_run": finished_at,
-        "rulebook_version": BASE_HASHES["rulebook_version"],
-        "deal": {
-            "deal_slug": slug,
-            "deal_flags": deal_flags or [],
-            "last_run": finished_at,
-            "last_run_id": run_id,
-            "rulebook_version": BASE_HASHES["rulebook_version"],
-            "status": manifest.get("outcome", "passed_clean"),
-        },
-        "graph": graph,
-        "review_rows": review_rows,
-    }, indent=2, sort_keys=True))
+    (run_dir / "deal_graph_v2.json").write_text(json.dumps(graph, indent=2, sort_keys=True))
+    (run_dir / "deal_graph.duckdb").write_text("")
     (run_dir / "validation.json").write_text(json.dumps({
         "schema_version": "validation_v1",
         "slug": slug,
@@ -448,7 +432,7 @@ def test_mutable_latest_extraction_is_not_used_for_comparison(tmp_path, capsys):
     assert "STABLE_FOR_REFERENCE_REVIEW" in out
 
 
-def test_strict_mode_rejects_legacy_singleton_audit_files(tmp_path, capsys):
+def test_strict_mode_rejects_unexpected_audit_root_entries(tmp_path, capsys):
     _write_runs(tmp_path)
     legacy = tmp_path / "output" / "audit" / "medivation" / "manifest.json"
     legacy.write_text(json.dumps({"legacy": True}))
@@ -457,7 +441,7 @@ def test_strict_mode_rejects_legacy_singleton_audit_files(tmp_path, capsys):
 
     err = capsys.readouterr().err
     assert rc == 2
-    assert "legacy singleton audit file rejected" in err
+    assert "unexpected audit root entry rejected" in err
 
 
 def test_stale_non_v3_run_directories_are_not_stability_inputs(tmp_path, capsys):
@@ -500,7 +484,7 @@ def test_stale_v3_non_graph_outputs_are_not_stability_inputs(tmp_path, capsys):
         run_id="stale-v3",
         finished_at="2026-04-29T00:09:00Z",
     )
-    (stale_run / "final_output.json").write_text(json.dumps({
+    (stale_run / "deal_graph_v2.json").write_text(json.dumps({
         "deal": {"TargetName": "Synthetic Target"},
         "events": [_event()],
     }))

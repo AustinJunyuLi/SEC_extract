@@ -370,7 +370,7 @@ def main() -> None:
     grp = parser.add_mutually_exclusive_group(required=True)
     grp.add_argument("--slug", help="fetch one deal by slug")
     grp.add_argument("--reference-only", action="store_true",
-                     help="fetch the 9 Alex-reference deals")
+                     help="fetch the 9 reference deals")
     grp.add_argument("--all", action="store_true", help="fetch every deal in seeds.csv")
     parser.add_argument("--force", action="store_true",
                         help="overwrite existing manifests")
