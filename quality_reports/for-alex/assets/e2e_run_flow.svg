@@ -35,8 +35,8 @@
 <rect x="470" y="60" width="200" height="130" rx="12" fill="#fff7e8" stroke="#bd7a2b" stroke-width="1.35" filter="url(#softShadow)"/>
 <circle cx="494" cy="89" r="12" fill="#ffffff" stroke="#bd7a2b" stroke-width="1.15"/>
 <text x="494" y="94" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="700" fill="#bd7a2b"><tspan x="494" dy="0">3</tspan></text>
-<text x="520" y="94" text-anchor="start" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="14" font-weight="700" fill="#744412"><tspan x="520" dy="0">Strict LLM call</tspan></text>
-<text x="570" y="119" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="400" fill="#172033"><tspan x="570" dy="0">Responses API</tspan><tspan x="570" dy="18">claim schema</tspan></text>
+<text x="520" y="94" text-anchor="start" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="14" font-weight="700" fill="#744412"><tspan x="520" dy="0">Strict backend call</tspan></text>
+<text x="570" y="119" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="12" font-weight="400" fill="#172033"><tspan x="570" dy="0">Claude SDK default</tspan><tspan x="570" dy="18">or direct OpenAI</tspan><tspan x="570" dy="18">claim schema</tspan></text>
 <path d="M 672 125 L 686 125" fill="none" stroke="#8390a3" stroke-width="1.65" stroke-linecap="round" marker-end="url(#arrowSlate)"/>
 <rect x="690" y="60" width="200" height="130" rx="12" fill="#fff7e8" stroke="#bd7a2b" stroke-width="1.35" filter="url(#softShadow)"/>
 <circle cx="714" cy="89" r="12" fill="#ffffff" stroke="#bd7a2b" stroke-width="1.15"/>

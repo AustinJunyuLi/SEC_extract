@@ -22,7 +22,7 @@ from pipeline.llm.audit import (
     audit_run_dir,
     audit_slug_root,
 )
-from pipeline.llm.client import LLMClient, OpenAICompatibleClient
+from pipeline.llm.client import ClaudeAgentSDKClient, LLMClient, OpenAIResponsesClient
 from pipeline.llm.extract import extract_deal, extractor_contract_version
 from pipeline.llm.response_format import DEAL_GRAPH_CLAIM_SCHEMA, schema_hash
 from pipeline.llm.retry import RetryConfig
@@ -37,9 +37,13 @@ FAILURE_FILTERS = set(core.FAILURE_STATUSES)
 VALID_FILTERS = {"pending", "reference", *FAILURE_FILTERS, "all"}
 AUDIT_ROOT = core.REPO_ROOT / "output" / "audit"
 TARGET_GATE_PROOF = core.REPO_ROOT / "quality_reports" / "stability" / "target-release-proof.json"
-DEFAULT_XHIGH_MAX_WORKERS = 5
+DEFAULT_LLM_BACKEND = "claude_agent_sdk"
+DEFAULT_OPENAI_MODEL = "gpt-5.5"
 DEFAULT_REASONING_EFFORT = "high"
 TARGET_GATE_PROOF_SCHEMA_VERSION = "target_gate_proof_v3"
+SUPPORTED_BACKENDS = {"claude_agent_sdk", "openai"}
+CLAUDE_REASONING_EFFORTS = {None, "none", "low", "medium", "high", "xhigh"}
+OPENAI_REASONING_EFFORTS = {None, "none", "minimal", "low", "medium", "high"}
 
 
 @dataclass
@@ -47,15 +51,15 @@ class PoolConfig:
     slugs: tuple[str, ...] = ()
     filter: Literal["pending", "reference", "failed_system", "stale_after_failure", "all"] = "pending"
     workers: int = 1
-    extract_model: str = "gpt-5.5"
+    llm_backend: Literal["claude_agent_sdk", "openai"] = DEFAULT_LLM_BACKEND
+    extract_model: str | None = None
     extract_reasoning_effort: str | None = DEFAULT_REASONING_EFFORT
     re_extract: bool = False
     release_targets: bool = False
     target_gate_proof: Path = TARGET_GATE_PROOF
     commit: bool = False
     dry_run: bool = False
-    api_key: str | None = None
-    base_url: str | None = "https://www.linkflow.run/v1"
+    openai_api_key: str | None = None
     audit_root: Path = AUDIT_ROOT
     watchdog_cfg: WatchdogConfig = field(default_factory=WatchdogConfig)
     retry_cfg: RetryConfig = field(default_factory=RetryConfig)
@@ -367,20 +371,23 @@ def _calls_summary(audit: AuditWriter) -> tuple[dict[str, str], int, int]:
     return hashes, total_attempts, watchdog_warnings
 
 
-def _xhigh_max_workers() -> int:
-    return int(os.environ.get("LINKFLOW_XHIGH_MAX_WORKERS", str(DEFAULT_XHIGH_MAX_WORKERS)))
-
-
 def _validate_config(config: PoolConfig) -> None:
     if config.workers < 1:
         raise ValueError("--workers must be >= 1")
-    if config.extract_reasoning_effort == "xhigh":
-        cap = _xhigh_max_workers()
-        if config.workers > cap:
-            raise ValueError(
-                f"Linkflow xhigh reasoning is capped at workers <= {cap}; "
-                f"got workers={config.workers}"
-            )
+    if config.llm_backend not in SUPPORTED_BACKENDS:
+        raise ValueError(
+            "--llm-backend must be one of "
+            + ", ".join(sorted(SUPPORTED_BACKENDS))
+            + f"; got {config.llm_backend!r}"
+        )
+    effort = config.extract_reasoning_effort
+    if config.llm_backend == "claude_agent_sdk" and effort not in CLAUDE_REASONING_EFFORTS:
+        raise ValueError(f"Claude Agent SDK backend does not support reasoning effort {effort!r}")
+    if config.llm_backend == "openai":
+        if effort not in OPENAI_REASONING_EFFORTS:
+            raise ValueError(f"OpenAI backend does not support reasoning effort {effort!r}")
+        if not config.extract_model:
+            config.extract_model = DEFAULT_OPENAI_MODEL
 
 
 def _build_audit_writer(root: Path, slug: str, *, run_id: str) -> AuditWriter:
@@ -454,6 +461,7 @@ def _manifest_payload(
         "schema_hash": schema_hash(DEAL_GRAPH_CLAIM_SCHEMA),
         "prompt_hash": prompt_hashes.get("extract"),
         "prompt_hashes": prompt_hashes,
+        "llm_backend": config.llm_backend,
         "models": {"extract": config.extract_model},
         "api_endpoint": getattr(llm_client, "endpoint", None),
         "reasoning_efforts": {
@@ -667,17 +675,25 @@ def _int_env(name: str, default: int) -> int:
     return default if value is None else int(value)
 
 
-def _build_client(config: PoolConfig) -> OpenAICompatibleClient:
-    api_key = config.api_key or os.environ.get("OPENAI_API_KEY")
-    if not api_key:
-        raise RuntimeError("OPENAI_API_KEY is required unless --dry-run")
-    base_url = config.base_url or os.environ.get("OPENAI_BASE_URL") or "https://www.linkflow.run/v1"
-    return OpenAICompatibleClient(
-        api_key=api_key,
-        base_url=base_url,
-        watchdog_cfg=config.watchdog_cfg,
-        retry_cfg=config.retry_cfg,
-    )
+def _build_client(config: PoolConfig) -> LLMClient:
+    if config.llm_backend == "claude_agent_sdk":
+        return ClaudeAgentSDKClient(
+            watchdog_cfg=config.watchdog_cfg,
+            retry_cfg=config.retry_cfg,
+        )
+    if config.llm_backend == "openai":
+        api_key = config.openai_api_key or os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            raise RuntimeError("OPENAI_API_KEY is required for --llm-backend openai unless --dry-run")
+        retired_base_url_var = "OPENAI_" + "BASE_URL"
+        if os.environ.get(retired_base_url_var):
+            raise RuntimeError(f"{retired_base_url_var} is not supported by the direct OpenAI backend")
+        return OpenAIResponsesClient(
+            api_key=api_key,
+            watchdog_cfg=config.watchdog_cfg,
+            retry_cfg=config.retry_cfg,
+        )
+    raise ValueError(f"unsupported llm backend: {config.llm_backend!r}")
 
 
 def load_dotenv_if_available() -> None:
@@ -694,7 +710,13 @@ def build_parser() -> argparse.ArgumentParser:
     selection.add_argument("--slugs", help="Comma-separated deal slugs.")
     selection.add_argument("--filter", choices=sorted(VALID_FILTERS), default="pending")
     parser.add_argument("--workers", type=int, default=1)
-    parser.add_argument("--extract-model", default=os.environ.get("EXTRACT_MODEL", "gpt-5.5"))
+    parser.add_argument(
+        "--llm-backend",
+        choices=sorted(SUPPORTED_BACKENDS),
+        default=os.environ.get("LLM_BACKEND") or DEFAULT_LLM_BACKEND,
+        help=f"Extraction backend (default: {DEFAULT_LLM_BACKEND}).",
+    )
+    parser.add_argument("--extract-model", default=os.environ.get("EXTRACT_MODEL"))
     parser.add_argument(
         "--extract-reasoning-effort",
         default=os.environ.get("EXTRACT_REASONING_EFFORT") or DEFAULT_REASONING_EFFORT,
@@ -721,19 +743,22 @@ def build_parser() -> argparse.ArgumentParser:
 
 def config_from_args(args: argparse.Namespace) -> PoolConfig:
     slugs = tuple(slug.strip() for slug in (args.slugs or "").split(",") if slug.strip())
+    extract_model = args.extract_model
+    if args.llm_backend == "openai" and not extract_model:
+        extract_model = DEFAULT_OPENAI_MODEL
     cfg = PoolConfig(
         slugs=slugs,
         filter=args.filter,
         workers=args.workers,
-        extract_model=args.extract_model,
+        llm_backend=args.llm_backend,
+        extract_model=extract_model,
         extract_reasoning_effort=args.extract_reasoning_effort,
         re_extract=args.re_extract,
         release_targets=args.release_targets,
         target_gate_proof=args.target_gate_proof,
         commit=args.commit,
         dry_run=args.dry_run,
-        api_key=os.environ.get("OPENAI_API_KEY"),
-        base_url=os.environ.get("OPENAI_BASE_URL", "https://www.linkflow.run/v1"),
+        openai_api_key=os.environ.get("OPENAI_API_KEY"),
         watchdog_cfg=WatchdogConfig(
             heartbeat_seconds=_float_env("LLM_HEARTBEAT_SECONDS", 5.0),
             stale_warning_seconds=_float_env("LLM_STALE_WARNING_SECONDS", 90.0),
@@ -759,11 +784,14 @@ def main(argv: list[str] | None = None) -> int:
     except ValueError as exc:
         print(str(exc), file=sys.stderr)
         return 2
-    if not cfg.dry_run and not cfg.api_key:
-        parser.error("OPENAI_API_KEY is required unless --dry-run")
+    if not cfg.dry_run and cfg.llm_backend == "openai" and not cfg.openai_api_key:
+        parser.error("OPENAI_API_KEY is required for --llm-backend openai unless --dry-run")
     try:
         summary = asyncio.run(run_pool(cfg))
     except TargetGateClosedError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+    except RuntimeError as exc:
         print(str(exc), file=sys.stderr)
         return 2
     return 1 if summary.failed else 0

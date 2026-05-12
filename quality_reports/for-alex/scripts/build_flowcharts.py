@@ -277,7 +277,7 @@ def e2e_run() -> None:
     cards = [
         ("Filing package", ["pages.json", "manifest.json"], "slate"),
         ("Prompt + rules", ["extract.md", "rules/*.md"], "slate"),
-        ("Strict LLM call", ["Responses API", "claim schema"], "amber"),
+        ("Strict backend call", ["Claude SDK default", "or direct OpenAI", "claim schema"], "amber"),
         ("Raw claims", ["raw_response", "5 families"], "amber"),
         ("Finalize graph", ["bind quotes", "canonicalize"], "blue"),
         ("Review outputs", ["JSONL, CSV", "DuckDB"], "green"),
@@ -338,7 +338,7 @@ def llm_roundtrip() -> None:
     parts.append(card(115, 60, 230, 200, "run.py / run_pool",
                       ["Builds one prompt", "with filing pages,", "citation units,", "and rule files"],
                       tone="blue", number="1"))
-    parts.append(card(385, 60, 230, 200, "Responses API",
+    parts.append(card(385, 60, 230, 200, "Selected backend",
                       ["Accepts strict", "JSON schema only", "", "No free text", "No old fields"],
                       tone="amber", number="2"))
     parts.append(card(655, 60, 230, 200, "Audit folder",
@@ -549,47 +549,35 @@ def reference_gate() -> None:
 
 
 def artefact_picker() -> None:
-    # Question card on left → 3 symmetric branches (CSV, JSONL, DuckDB) →
-    # converge to Answer path → Filing text terminus.
+    # Compact manual-pane diagram: question → three review artefacts → filing text.
     parts: list[str] = []
-    # Geometry: question center y=300, 3 answer cards at y=120/290/460 (offset ±170 from center)
-    parts.append(card(40, 240, 200, 120, "Your question",
+    parts.append(card(300, 34, 160, 84, "Review question",
                       ["What do I need", "to inspect?"],
-                      tone="slate", title_size=14, body_size=12))
-    # 3 branches diverging
-    parts.append(arrow(240, 295, 320, 180, tone="slate", label="spot check", label_offset=(0, -8),
-                       curve=(280, 295, 280, 180)))
-    parts.append(arrow(240, 300, 320, 300, tone="slate", label="cross-row", label_offset=(0, -8)))
-    parts.append(arrow(240, 305, 320, 420, tone="slate", label="joins", label_offset=(0, 18),
-                       curve=(280, 305, 280, 420)))
-    # 3 answer cards
-    parts.append(card(320, 120, 240, 120, "CSV",
+                      tone="slate", title_size=13, body_size=11))
+    parts.append(card(40, 172, 180, 104, "CSV",
                       ["single row", "sort/filter", "spreadsheet review"],
-                      tone="green", title_size=14, body_size=12))
-    parts.append(card(320, 240, 240, 120, "Review JSONL",
-                      ["richer row fields", "good for AI chat", "issue metadata"],
-                      tone="blue", title_size=14, body_size=12))
-    parts.append(card(320, 360, 240, 120, "DuckDB graph",
+                      tone="green", title_size=13, body_size=11))
+    parts.append(card(290, 172, 180, 104, "Review JSONL",
+                      ["richer row fields", "AI row review", "issue metadata"],
+                      tone="blue", title_size=13, body_size=11))
+    parts.append(card(540, 172, 180, 104, "DuckDB graph",
                       ["actors + events", "relations + evidence", "SQL joins"],
-                      tone="slate", title_size=14, body_size=12))
-    # 3 branches converging to Answer path
-    parts.append(arrow(560, 180, 640, 295, tone="slate",
-                       curve=(600, 180, 600, 295)))
-    parts.append(arrow(560, 300, 640, 300, tone="slate"))
-    parts.append(arrow(560, 420, 640, 305, tone="slate",
-                       curve=(600, 420, 600, 305)))
-    # Answer path card
-    parts.append(card(640, 240, 240, 120, "Answer path",
-                      ["apply review heuristics", "trace source_claim_ids", "filing remains authority"],
-                      tone="amber", title_size=14, body_size=12))
-    parts.append(arrow(880, 300, 916, 300, tone="green"))
-    parts.append(card(920, 240, 160, 120, "Filing text",
-                      ["pages.json", "quote decides,", "not workbook"],
-                      tone="green", title_size=14, body_size=12))
-    parts.append(text_block(540, 540,
-                            ["For a quote dispute, skip straight to pages.json and compare the bound filing substring."],
+                      tone="slate", title_size=13, body_size=11))
+    parts.append(arrow(380, 118, 130, 172, tone="slate", label="spot check", label_offset=(-18, -12),
+                       curve=(300, 138, 190, 130)))
+    parts.append(arrow(380, 118, 380, 172, tone="slate", label="row review", label_offset=(64, 0)))
+    parts.append(arrow(380, 118, 630, 172, tone="slate", label="joins", label_offset=(18, -12),
+                       curve=(460, 138, 570, 130)))
+    parts.append(card(275, 338, 210, 78, "Filing text",
+                      ["pages.json quote decides", "not the workbook"],
+                      tone="green", title_size=13, body_size=11))
+    parts.append(arrow(130, 276, 275, 376, tone="green", curve=(160, 330, 220, 355)))
+    parts.append(arrow(380, 276, 380, 338, tone="green"))
+    parts.append(arrow(630, 276, 485, 376, tone="green", curve=(600, 330, 540, 355)))
+    parts.append(text_block(380, 444,
+                            ["For a quote dispute, compare the bound filing substring in pages.json."],
                             size=12, weight="500", color=INK, italic=True))
-    write("artefact_picker.svg", 1100, 580, "Choosing the Right Review Artefact", "\n".join(parts))
+    write("artefact_picker.svg", 760, 470, "Choosing the Right Review Artefact", "\n".join(parts))
 
 
 def main() -> None:

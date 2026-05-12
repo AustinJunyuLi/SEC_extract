@@ -17,7 +17,7 @@ from types import SimpleNamespace
 from typing import Any
 
 from pipeline import core
-from pipeline.run_pool import DEFAULT_REASONING_EFFORT, TargetGateClosedError
+from pipeline.run_pool import DEFAULT_LLM_BACKEND, DEFAULT_OPENAI_MODEL, DEFAULT_REASONING_EFFORT, TargetGateClosedError
 
 REPO_ROOT = Path(__file__).resolve().parent
 PROGRESS_PATH = REPO_ROOT / "state" / "progress.json"
@@ -38,13 +38,17 @@ def _mode_from_args(args: argparse.Namespace) -> str:
 def _make_pool_config(args: argparse.Namespace, *, mode: str) -> Any:
     from pipeline.run_pool import PoolConfig
 
+    extract_model = args.extract_model or os.environ.get("EXTRACT_MODEL")
+    if args.llm_backend == "openai" and not extract_model:
+        extract_model = DEFAULT_OPENAI_MODEL
     return PoolConfig(
         slugs=(args.slug,),
         workers=1,
+        llm_backend=args.llm_backend,
         re_extract=mode == "re_extract",
         release_targets=args.release_targets,
         target_gate_proof=args.target_gate_proof,
-        extract_model=args.extract_model or os.environ.get("EXTRACT_MODEL", "gpt-5.5"),
+        extract_model=extract_model,
         extract_reasoning_effort=(
             args.extract_reasoning_effort
             or os.environ.get("EXTRACT_REASONING_EFFORT")
@@ -183,6 +187,12 @@ def _parser() -> argparse.ArgumentParser:
         help="JSON target-release proof file produced after stable reference runs.",
     )
     parser.add_argument("--extract-model", help="Model for extraction calls.")
+    parser.add_argument(
+        "--llm-backend",
+        choices=["claude_agent_sdk", "openai"],
+        default=os.environ.get("LLM_BACKEND") or DEFAULT_LLM_BACKEND,
+        help=f"Extraction backend (default: {DEFAULT_LLM_BACKEND}).",
+    )
     parser.add_argument(
         "--extract-reasoning-effort",
         choices=["none", "minimal", "low", "medium", "high", "xhigh"],

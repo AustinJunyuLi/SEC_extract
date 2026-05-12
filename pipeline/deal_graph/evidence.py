@@ -313,5 +313,77 @@ def quote_candidate_units(
     return candidates[:limit]
 
 
+def quote_binding_diagnostic(
+    quote_text: str,
+    citation_unit_id: str | None,
+    citation_units: dict[str, CitationUnitParagraph],
+) -> dict:
+    if not quote_text:
+        return {}
+
+    candidate_units = quote_candidate_units(quote_text, citation_units)
+    other_candidate_units = [
+        candidate for candidate in candidate_units
+        if candidate["citation_unit_id"] != citation_unit_id
+    ]
+    if other_candidate_units:
+        return {
+            "diagnostic_subcode": "quote_matches_different_citation_unit",
+            "candidate_units": candidate_units,
+            "suggested_action": (
+                "Correct the citation unit to one where the supplied quote appears exactly, "
+                "or reject the claim."
+            ),
+        }
+
+    stitched_units = _adjacent_stitched_units(
+        quote_text=quote_text,
+        citation_unit_id=citation_unit_id,
+        citation_units=citation_units,
+    )
+    if stitched_units:
+        return {
+            "diagnostic_subcode": "cross_unit_quote_stitching",
+            "stitched_citation_unit_ids": stitched_units,
+            "suggested_action": (
+                "Split the quote into exact per-unit evidence refs, each with its own "
+                "citation_unit_id, or reject the claim."
+            ),
+        }
+    return {}
+
+
+def _adjacent_stitched_units(
+    *,
+    quote_text: str,
+    citation_unit_id: str | None,
+    citation_units: dict[str, CitationUnitParagraph],
+) -> list[str]:
+    ordered_units = list(citation_units.values())
+    if not ordered_units:
+        return []
+    max_quote_len = len(quote_text)
+    separators = ("\n\n", "\n", " ")
+    for start_index in range(len(ordered_units)):
+        stitched = ordered_units[start_index].text
+        stitched_ids = [ordered_units[start_index].unit_id]
+        for end_index in range(start_index + 1, len(ordered_units)):
+            next_unit = ordered_units[end_index]
+            for separator in separators:
+                candidate_text = f"{stitched}{separator}{next_unit.text}"
+                stitched_ids_with_next = [*stitched_ids, next_unit.unit_id]
+                cites_stitched_unit = (
+                    citation_unit_id is None
+                    or citation_unit_id in stitched_ids_with_next
+                )
+                if quote_text in candidate_text and cites_stitched_unit:
+                    return stitched_ids_with_next
+            stitched = f"{stitched}\n\n{next_unit.text}"
+            stitched_ids.append(next_unit.unit_id)
+            if len(stitched) > max_quote_len + 1000:
+                break
+    return []
+
+
 def audit_run_dir(repo_root: Path, slug: str, run_id: str) -> Path:
     return repo_root / "output" / "audit" / slug / "runs" / run_id

@@ -1,0 +1,155 @@
+# Glossary terms — auto-wrapped in <span class="term"> by the builder.
+# Order: term (longest first wins on overlaps), definition, scope.
+# Scope is informational only; both reports include all terms.
+
+- term: "Background section"
+  definition: "The section of the SEC merger proxy (Schedule 14A or DEFM14A) that narrates the M&A process. The only filing input the pipeline reads."
+  scope: pipeline
+
+- term: "canonicalisation"
+  definition: "Python step that turns LLM claims into stable graph rows by de-duplicating actors, preserving groups, and assigning hash-based IDs."
+  scope: pipeline
+
+- term: "canonical graph"
+  definition: "The deterministic Python-owned representation of a deal: actors, events, relations, bids, participation counts, plus their evidence and disposition records. Lives at output/extractions/{slug}.json."
+  scope: pipeline
+
+- term: "citation unit"
+  definition: "A paragraph-local identifier like page_35_paragraph_4. The unit text is sent with the LLM input; quote binding compares against this text."
+  scope: pipeline
+
+- term: "claim"
+  definition: "One typed assertion emitted by the LLM (actor / event / bid / count / relation), accompanied by ≥1 evidence reference."
+  scope: pipeline
+
+- term: "coverage obligation"
+  definition: "Internal accounting that ties each claim back to a research coverage requirement (used by validation; not surfaced in the CSV)."
+  scope: pipeline
+
+- term: "DuckDB"
+  definition: "An embedded SQL database file. The audit folder contains one DuckDB file per run, with ~25 tables. Queryable with the duckdb CLI or any SQL-aware AI assistant."
+  scope: both
+
+- term: "disposition"
+  definition: "Per-claim verdict: supported (creates rows) or rejected_unsupported (review-only)."
+  scope: pipeline
+
+- term: "evidence reference"
+  definition: "A {citation_unit_id, quote_text} pair attached to every claim. Without exact binding, no canonical row is created."
+  scope: pipeline
+
+- term: "JSONL"
+  definition: "JSON lines — a file where each line is a JSON object. Used for review rows."
+  scope: both
+
+- term: "LLM"
+  definition: "Large Language Model. The pipeline default is Claude Agent SDK, with direct first-party OpenAI Responses as an optional backend; the model proposes claims but never finalises rows."
+  scope: pipeline
+
+- term: "manifest"
+  definition: "data/filings/{slug}/manifest.json. Contains the deal slug, target name, acquirer, announcement date, filing URL. The target identity in the CSV comes from here, not from LLM output."
+  scope: pipeline
+
+- term: "provider"
+  definition: "The selected LLM backend. Use LLM_BACKEND=claude_agent_sdk by default, or LLM_BACKEND=openai for direct first-party OpenAI Responses calls."
+  scope: pipeline
+
+- term: "quote binding"
+  definition: "Python step that confirms an LLM-supplied quote text is a byte-exact contiguous substring of the cited paragraph."
+  scope: pipeline
+
+- term: "review burden"
+  definition: "Count of open review rows for a run. Determines passed_clean (0) / needs_review (1–10) / high_burden (>10) status."
+  scope: both
+
+- term: "review row"
+  definition: "An entry in output/review_rows/{slug}.jsonl. Some review rows are clean (just the canonical row's audit view); others surface issues for human action."
+  scope: pipeline
+
+- term: "rulebook"
+  definition: "The six files under rules/. Closed taxonomy that constrains what the LLM may emit."
+  scope: pipeline
+
+- term: "run ID"
+  definition: "A deterministic UUID for one extraction run. Audit artefacts live under output/audit/{slug}/runs/{run_id}/."
+  scope: pipeline
+
+- term: "slug"
+  definition: "Lowercase identifier for a deal (e.g. mac-gray, petsmart-inc). Used as a directory and key throughout."
+  scope: both
+
+- term: "stability proof"
+  definition: "quality_reports/stability/target-release-proof.json. JSON document certifying that enough trusted reference runs exist at the requested rulebook and extractor contract hashes for target release review."
+  scope: pipeline
+
+- term: "reference gate"
+  definition: "The contract that the 9 reference deals must have current verified metadata, an accepted target-release proof, and an explicit --release-targets operator flag before non-reference extraction is allowed."
+  scope: pipeline
+
+- term: "advised party"
+  definition: "The actor receiving advice in an advises relation (typically the target or the bidder)."
+  scope: csv
+
+- term: "bidder_class"
+  definition: "The actor's financial / strategic / mixed / unknown classification. No geographic or public/private flags."
+  scope: csv
+
+- term: "Buyer Group"
+  definition: "A consortium treated by the filing as a single bidder unit."
+  scope: csv
+
+- term: "cohort"
+  definition: "A count of unnamed parties; the filing names a count, not individual names."
+  scope: both
+
+- term: "consortium"
+  definition: "Multi-member bidding unit; preserved as one actor in the canonical graph."
+  scope: both
+
+- term: "event_code"
+  definition: "The 24-value column that drives interpretation."
+  scope: csv
+
+- term: "event_family"
+  definition: "High-level event grouping (11 values)."
+  scope: csv
+
+- term: "event_order"
+  definition: "Multiple of 10 within a deal; row position after sorting."
+  scope: csv
+
+- term: "evidence_page"
+  definition: "Filing page where the bound quote lives. Pipe-delimited if multiple refs."
+  scope: csv
+
+- term: "evidence_quote_full"
+  definition: "Byte-exact filing substring(s); pipe-delimited if multiple refs."
+  scope: csv
+
+- term: "formality"
+  definition: "formal (final-round / signed) vs informal (IOI / first-round) vs not_applicable."
+  scope: csv
+
+- term: "IOI"
+  definition: "Indication of interest. Preliminary, non-binding submission."
+  scope: csv
+
+- term: "LOI"
+  definition: "Letter of intent (a stronger, often binding, submission). The CSV codes LOIs as bid_submitted."
+  scope: csv
+
+- term: "participation_count"
+  definition: "A row that reports a count of unnamed parties at a process stage."
+  scope: csv
+
+- term: "process_stage"
+  definition: "For participation counts: contacted / nda_signed / ioi_submitted / first_round / final_round / exclusivity."
+  scope: csv
+
+- term: "row_unit"
+  definition: "What kind of party the row is about: bidder / cohort / deal."
+  scope: csv
+
+- term: "source_claim_ids"
+  definition: "Deterministic ID of the underlying claim; searchable in output/extractions/{slug}.json."
+  scope: csv

@@ -1,0 +1,16 @@
+{
+  "_comment": "Excerpt from data/filings/providence-worcester/pages.json. One page; full file has the entire filing.",
+  "page_number": 36,
+  "page_id": "page_36",
+  "section": "BACKGROUND OF THE MERGER",
+  "paragraphs": [
+    {
+      "paragraph_id": "page_36_paragraph_1",
+      "text": "On July 12, 2016, Party C submitted an IOI with an offer price per share of $21.00, all-cash. The IOI was non-binding and subject to additional due diligence, including site visits."
+    },
+    {
+      "paragraph_id": "page_36_paragraph_2",
+      "text": "Following receipt of the IOIs, the Transaction Committee discussed each indication and instructed GHF to follow up with each of the bidders to clarify open items, including financing and timing."
+    }
+  ]
+}

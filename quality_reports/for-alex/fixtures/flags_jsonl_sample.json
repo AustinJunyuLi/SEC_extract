@@ -1,0 +1,12 @@
+{
+  "_comment": "One line from state/flags.jsonl (the file is JSON-lines; each row is a single soft-flag emission). Hard flags would carry severity=hard and block the run.",
+  "ts": "2026-05-07T18:31:14Z",
+  "run_id": "01J9X8YH4ABCDEFG",
+  "slug": "providence-worcester",
+  "code": "DG_REVIEW_ROW_OPEN",
+  "severity": "soft",
+  "scope": "claim",
+  "claim_id": "claim_da42b5669b149876",
+  "message": "Open review row for bid_submitted at event_order=40 (status=clean; appended for audit only).",
+  "rulebook_hash": "5e8c3f1d4b2a"
+}

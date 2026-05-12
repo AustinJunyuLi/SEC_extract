@@ -28,7 +28,7 @@
 <rect x="385" y="60" width="230" height="200" rx="12" fill="#fff7e8" stroke="#bd7a2b" stroke-width="1.35" filter="url(#softShadow)"/>
 <circle cx="409" cy="89" r="12" fill="#ffffff" stroke="#bd7a2b" stroke-width="1.15"/>
 <text x="409" y="94" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="13" font-weight="700" fill="#bd7a2b"><tspan x="409" dy="0">2</tspan></text>
-<text x="435" y="94" text-anchor="start" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="15" font-weight="700" fill="#744412"><tspan x="435" dy="0">Responses API</tspan></text>
+<text x="435" y="94" text-anchor="start" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="15" font-weight="700" fill="#744412"><tspan x="435" dy="0">Selected backend</tspan></text>
 <text x="500" y="121" text-anchor="middle" font-family="'Source Sans 3', 'Inter', 'Avenir', system-ui, sans-serif" font-size="13" font-weight="400" fill="#172033"><tspan x="500" dy="0">Accepts strict</tspan><tspan x="500" dy="20">JSON schema only</tspan><tspan x="500" dy="20"></tspan><tspan x="500" dy="20">No free text</tspan><tspan x="500" dy="20">No old fields</tspan></text>
 <rect x="655" y="60" width="230" height="200" rx="12" fill="#f1f8f4" stroke="#4f956f" stroke-width="1.35" filter="url(#softShadow)"/>
 <circle cx="679" cy="89" r="12" fill="#ffffff" stroke="#4f956f" stroke-width="1.15"/>

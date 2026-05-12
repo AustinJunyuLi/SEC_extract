@@ -1,0 +1,272 @@
+# 28 CSV columns of alex_event_ledger_ref9_plus_targets5.csv.
+# Order is fixed by ALEX_EVENT_LEDGER_FIELDS in
+# pipeline/deal_graph/project_alex_event_ledger.py.
+# Each column gets an interactive "drilldown" pane in the manual:
+#   live distribution + sample values + a worked-example link.
+#
+# kind: 'string' | 'enum' | 'number' | 'int' | 'date' | 'bool'
+# enum_ref: name of the enum block in coded_values (omitted unless kind=enum)
+
+columns:
+
+- name: deal_slug
+  kind: string
+  description: "Lowercase deal identifier."
+
+- name: TargetName
+  kind: string
+  description: "Target company. From the filing manifest."
+
+- name: Acquirer
+  kind: string
+  description: "Final acquirer (or buyer-group label). From state/progress.json. May be empty for some deals."
+
+- name: DateAnnounced
+  kind: date
+  description: "Public announcement date. Empty if the filing did not state one."
+
+- name: event_order
+  kind: int
+  description: "Multiple of 10 within a deal; row position after sorting."
+
+- name: event_date
+  kind: date
+  description: "When the event occurred. Empty if the filing did not state a date."
+
+- name: date_precision
+  kind: enum
+  enum_ref: date_precision
+  description: "Precision of event_date. Computed from a regex on the date string."
+
+- name: row_unit
+  kind: enum
+  enum_ref: row_unit
+  description: "What kind of party the row is about: a single bidder, an unnamed cohort, or the deal itself."
+
+- name: party_name
+  kind: string
+  description: "The actor or cohort name; for row_unit=deal, the target company name."
+
+- name: bidder_class
+  kind: enum
+  enum_ref: bidder_class
+  description: "Financial / strategic / mixed / unknown / not_applicable. The only classification of bidders we record."
+
+- name: initiated_by
+  kind: enum
+  enum_ref: initiated_by
+  description: "Who initiated the contact or bid. Keyword-detected from the evidence quote."
+
+- name: event_family
+  kind: enum
+  enum_ref: event_family
+  description: "High-level event grouping (11 values)."
+
+- name: event_code
+  kind: enum
+  enum_ref: event_code
+  description: "The 24 codes that drive interpretation. THE most important column."
+
+- name: stage
+  kind: enum
+  enum_ref: stage
+  description: "Process stage at which the event occurred."
+
+- name: formality
+  kind: enum
+  enum_ref: formality
+  description: "formal / informal / not_applicable. Distinguishes binding submissions from preliminary indications."
+
+- name: dropout_side
+  kind: enum
+  enum_ref: dropout_side
+  description: "Who caused or experienced the dropout (dropout family only)."
+
+- name: dropout_reason
+  kind: enum
+  enum_ref: dropout_reason
+  description: "Why a bidder dropped out. Keyword-detected from the evidence quote — most calibration-prone column."
+
+- name: bid_value
+  kind: number
+  description: "Point value when filing supports a single number."
+
+- name: bid_value_lower
+  kind: number
+  description: "Range lower bound when filing supports a range."
+
+- name: bid_value_upper
+  kind: number
+  description: "Range upper bound."
+
+- name: bid_value_unit
+  kind: enum
+  enum_ref: bid_value_unit
+  description: "Tells you how to interpret bid_value / bid_value_lower / bid_value_upper."
+
+- name: consideration_type
+  kind: enum
+  enum_ref: consideration_type
+  description: "What the offer would have paid in (cash / stock / mixed / other / unspecified). Bid rows only."
+
+- name: review_label
+  kind: string
+  description: "Human-readable summary auto-generated from event_code + party."
+
+- name: evidence_page
+  kind: string
+  description: "Filing page(s) where the bound quote(s) live; pipe-delimited if multiple refs."
+
+- name: evidence_quote_full
+  kind: string
+  description: "Byte-exact filing substring(s); pipe-delimited if multiple refs."
+
+- name: confidence
+  kind: enum
+  enum_ref: confidence
+  description: "high / medium / low. The LLM's self-reported confidence on the underlying claim."
+
+- name: needs_human_attention
+  kind: int
+  description: "1 if low-confidence, missing quote, or non-clean review status; else 0. In current snapshot: 0 for every row."
+
+- name: source_claim_ids
+  kind: string
+  description: "Deterministic ID of the underlying claim. Searchable in output/extractions/{slug}.json."
+
+# -----------------------------------------------------------------------------
+# Enum value definitions, keyed by enum_ref above.
+# Each value carries an example slug:event_order so the manual can deep-link
+# to the exact row from the embedded CSV.
+# -----------------------------------------------------------------------------
+
+coded_values:
+
+
+  date_precision:
+    description: "Computed by _date_precision in the projection (regex on event_date)."
+    values:
+      - { value: exact, meaning: "Date matches YYYY-MM-DD." }
+      - { value: month, meaning: "Date matches YYYY-MM (no current rows)." }
+      - { value: year, meaning: "Date matches YYYY (no current rows)." }
+      - { value: rough, meaning: "Non-empty string matching none of the above (no current rows)." }
+      - { value: unknown, meaning: "Empty event_date." }
+
+  row_unit:
+    description: "What kind of party the row is about. Selected by _row_unit_for_event in the projection."
+    values:
+      - { value: bidder, meaning: "A specific named or handle-anonymised bidder, advisor, holder, or other identifiable actor.", example: "providence-worcester:40" }
+      - { value: cohort, meaning: "A count of unnamed parties (e.g. '11 strategic buyers'), or a group-membership row.", example: "providence-worcester:140" }
+      - { value: deal, meaning: "The row is about the deal/process itself, not an individual party (rare).", example: "zep:200" }
+
+  bidder_class:
+    description: "The only classification of bidders we record. Geographic and public/private flags are out of scope per rules/bidders.md."
+    values:
+      - { value: financial, meaning: "Financial sponsor / private-equity firm / financial-buyer cohort.", example: "zep:170" }
+      - { value: strategic, meaning: "Operating or corporate buyer / strategic-buyer cohort.", example: "providence-worcester:40" }
+      - { value: mixed, meaning: "Filing supports a mixed financial/strategic bidder, group, or cohort.", example: "imprivata:270" }
+      - { value: unknown, meaning: "Filing does not support classifying the actor.", example: "providence-worcester:140" }
+      - { value: not_applicable, meaning: "Row is not about a bidder (e.g. an advisor relation).", example: "providence-worcester:10" }
+
+  initiated_by:
+    description: "Set for event_family in {contact, bid} only. Keyword-based; runs in _initiated_by in the projection."
+    values:
+      - { value: bidder, meaning: "Quote contains 'unsolicited' / 'submitted' / 'delivered' / 'made a proposal' / 'made an offer' / 'offered' / 'approached'.", example: "providence-worcester:30" }
+      - { value: target, meaning: "Quote contains 'authorized' / 'instructed' / 'directed' + 'contact' / 'solicit', or matches a target-contact phrase like 'the company contacted', 'the board contacted', 'committee contacted', 'management contacted', 'reached out to'.", example: "petsmart-inc:210" }
+      - { value: advisor, meaning: "Quote contains 'contacted' + 'representatives' without target-side initiation phrases.", example: "providence-worcester:140" }
+      - { value: activist_shareholder, meaning: "Quote contains 'activist'." }
+      - { value: unknown, meaning: "None of the patterns matched on a contact_initial event.", example: "providence-worcester:150" }
+      - { value: not_applicable, meaning: "Event family is not contact or bid.", example: "providence-worcester:10" }
+
+  event_family:
+    description: "Eleven groupings. Mapping from canonical event subtypes / relation types is fixed in EVENT_SUBTYPE_MAP and RELATION_TYPE_MAP."
+    values:
+      - { value: contact, meaning: "Initial outreach.", member_codes: ["initial_contact"], example: "providence-worcester:140" }
+      - { value: process, meaning: "NDAs and participation counts.", member_codes: ["nda_signed", "participation_count"], example: "providence-worcester:160" }
+      - { value: bid, meaning: "Indications of interest and submitted bids.", member_codes: ["ioi_submitted", "bid_submitted"], example: "providence-worcester:40" }
+      - { value: advisor, meaning: "Advisor retentions.", member_codes: ["advisor_retained"], example: "providence-worcester:10" }
+      - { value: agreement, meaning: "Exclusivity grants and merger agreements.", member_codes: ["exclusivity_granted", "merger_agreement_executed"], example: "zep:170" }
+      - { value: dropout, meaning: "Exits from the process.", member_codes: ["bidder_withdrew", "target_excluded", "no_response", "cohort_closed"], example: "providence-worcester:100" }
+      - { value: advancement, meaning: "Round-progression decisions.", member_codes: ["advanced", "not_advanced"], example: "providence-worcester:260" }
+      - { value: financing, meaning: "Financing relationships and commitments.", member_codes: ["financing_relation", "financing_committed"], example: "petsmart-inc:70" }
+      - { value: support, meaning: "Voting / support / rollover relations.", member_codes: ["voting_support", "support_agreement", "rollover_support"], example: "petsmart-inc:180" }
+      - { value: consortium, meaning: "Inter-bidder agreements / membership changes.", member_codes: ["consortium_ca_signed", "joined_group", "exited_group"], example: "saks:280" }
+      - { value: go_shop, meaning: "Post-signing market check.", member_codes: ["go_shop_started", "go_shop_ended"], example: "zep:190" }
+
+  stage:
+    description: "Process stage. Most are pinned by the projection's subtype map; a handful come directly from the bid claim's bid_stage."
+    values:
+      - { value: process_setup, meaning: "Advisor retention, very early process steps.", example: "providence-worcester:10" }
+      - { value: pre_bid, meaning: "Initial outreach before any bids.", example: "providence-worcester:140" }
+      - { value: contacted, meaning: "Participation count for parties contacted.", example: "providence-worcester:340" }
+      - { value: nda, meaning: "Confidentiality phase (target-side NDAs).", example: "providence-worcester:160" }
+      - { value: nda_signed, meaning: "Participation count for NDAs signed.", example: "providence-worcester:350" }
+      - { value: consortium, meaning: "Inter-bidder agreements / membership changes.", example: "saks:270" }
+      - { value: initial, meaning: "First-round bids and IOIs.", example: "providence-worcester:30" }
+      - { value: ioi_submitted, meaning: "Participation count for IOIs.", example: "providence-worcester:390" }
+      - { value: first_round, meaning: "Participation count for first-round bids.", example: "zep:370" }
+      - { value: revised, meaning: "Revised bid round.", example: "providence-worcester:60" }
+      - { value: final_round, meaning: "Best-and-final round.", example: "providence-worcester:250" }
+      - { value: advancement, meaning: "Round-progression decisions.", example: "providence-worcester:260" }
+      - { value: dropout, meaning: "Exits from the process.", example: "providence-worcester:100" }
+      - { value: exclusivity, meaning: "Exclusive negotiation period.", example: "zep:150" }
+      - { value: financing, meaning: "Financing relationships and commitments.", example: "providence-worcester:90" }
+      - { value: support, meaning: "Voting / rollover / support agreements.", example: "petsmart-inc:180" }
+      - { value: execution, meaning: "Merger agreement signing.", example: "providence-worcester:320" }
+      - { value: go_shop, meaning: "Post-signing market check.", example: "zep:190" }
+      - { value: unspecified, meaning: "Bid stage not specified by filing.", example: "providence-worcester:50" }
+
+  formality:
+    description: "Distinguishes binding/structured submissions from preliminary indications."
+    values:
+      - { value: informal, meaning: "IOI or first-round bid; preliminary, non-binding.", example: "providence-worcester:30" }
+      - { value: formal, meaning: "Final-round bid (best-and-final).", example: "providence-worcester:250" }
+      - { value: not_applicable, meaning: "Row is not a bid (advisor relations, NDAs, dropouts, agreements, etc.).", example: "providence-worcester:10" }
+
+  dropout_side:
+    description: "Who caused / experienced the dropout. Set for event_family=dropout rows only."
+    values:
+      - { value: bidder, meaning: "Bidder withdrew voluntarily." }
+      - { value: target, meaning: "Target excluded the bidder." }
+      - { value: no_response, meaning: "Bidder did not respond / proceed." }
+      - { value: mixed_or_unknown, meaning: "Cohort closure where the side cannot be cleanly attributed." }
+      - { value: not_applicable, meaning: "Not a dropout event." }
+
+  dropout_reason:
+    description: "For dropout rows only. Keyword check on the evidence quote (_dropout_reason in the projection). First matching keyword wins; falls back to unknown."
+    note: "Most calibration-prone column. Any non-trivial value should be confirmed against the quote."
+    values:
+      - { value: below_prior_bid, meaning: "Quote contains 'below' + ('prior' | 'earlier' | 'indication').", example: "imprivata:150" }
+      - { value: below_market, meaning: "Quote contains 'market value' or 'market price'.", example: "multimedia-games-holding-co-inc:60" }
+      - { value: strategic_fit, meaning: "Quote contains 'strategic fit'.", example: "imprivata:40" }
+      - { value: financing, meaning: "Quote contains 'financ' (substring). Easy false positive when 'financial buyer' appears.", example: "providence-worcester:310" }
+      - { value: valuation, meaning: "Quote contains 'valuation' / 'price' / 'premium'. Easy false positive.", example: "mac-gray:220" }
+      - { value: confidentiality, meaning: "Quote contains 'confidential' or 'leak'.", example: "imprivata:90" }
+      - { value: unknown, meaning: "None of the above keywords matched.", example: "providence-worcester:100" }
+      - { value: not_applicable, meaning: "Not a dropout row." }
+
+  bid_value_unit:
+    description: "How to interpret bid_value / bid_value_lower / bid_value_upper."
+    values:
+      - { value: per_share, meaning: "Number is a price per share.", example: "providence-worcester:130" }
+      - { value: enterprise_value, meaning: "Number is an aggregate enterprise transaction price.", example: "m-g-c-diagnostics-corp:60" }
+      - { value: equity_value, meaning: "Number is an aggregate equity transaction price (no current rows)." }
+      - { value: unspecified, meaning: "Filing supports a number but does not state which basis.", example: "saks:110" }
+      - { value: not_applicable, meaning: "Not a bid row, or bid row with no value.", example: "providence-worcester:10" }
+
+  consideration_type:
+    description: "What the offer would have paid in. Bid rows only."
+    values:
+      - { value: cash, meaning: "All cash.", example: "providence-worcester:130" }
+      - { value: stock, meaning: "All stock.", example: "wafergen-bio-systems-inc:130" }
+      - { value: mixed, meaning: "Mix of cash, stock, CVRs, etc.", example: "providence-worcester:50" }
+      - { value: other, meaning: "Non-monetary or unusual consideration.", example: "wafergen-bio-systems-inc:30" }
+      - { value: unspecified, meaning: "Bid emitted but the filing did not state the consideration.", example: "providence-worcester:40" }
+      - { value: not_applicable, meaning: "Not a bid row." }
+
+  confidence:
+    description: "The LLM's self-reported confidence on the underlying claim."
+    values:
+      - { value: high, meaning: "The cited quote tightly supports every typed field." }
+      - { value: medium, meaning: "One or more typed fields require a small inferential step from the quote.", example: "providence-worcester:330" }
+      - { value: low, meaning: "Filing supports the claim only weakly. (No current rows.)" }

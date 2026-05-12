@@ -302,7 +302,7 @@ def _rejected_claim_rows(graph: dict[str, Any], context: _ReviewContext) -> list
             "supplied_quote": metadata.get("provided_quote_text") or _source_ref_value(claim, "quote_text"),
             "bound_source_quote": "",
             "bound_source_page": "",
-            "issue_codes": _join_unique([flag.get("code") for flag in flags] + [disposition.get("reason_code")]),
+            "issue_codes": _issue_codes(flags, [disposition.get("reason_code")]),
             "issue_reasons": _join_unique([flag.get("reason") for flag in flags] + [disposition.get("reason")]),
             "suggested_action": metadata.get("suggested_action") or "Review the supplied citation unit and quote, or reject the claim.",
             "evidence_ref_index": _cell(metadata.get("evidence_ref_index")),
@@ -314,11 +314,34 @@ def _rejected_claim_rows(graph: dict[str, Any], context: _ReviewContext) -> list
 def _issue_columns(flags: list[dict[str, Any]]) -> dict[str, str]:
     metadata = _first_metadata(flags)
     return {
-        "issue_codes": _join_unique(flag.get("code") for flag in flags),
+        "issue_codes": _issue_codes(flags),
         "issue_reasons": _join_unique(flag.get("reason") for flag in flags),
         "suggested_action": metadata.get("suggested_action") or ("" if not flags else "Review the source support and canonical row fields."),
         "evidence_ref_index": _cell(metadata.get("evidence_ref_index")),
     }
+
+
+def _issue_codes(flags: list[dict[str, Any]], extra_codes: list[Any] | None = None) -> str:
+    values = [flag.get("code") for flag in flags]
+    if extra_codes:
+        values.extend(extra_codes)
+    for flag in flags:
+        metadata = flag.get("metadata")
+        if isinstance(metadata, str):
+            try:
+                metadata = json.loads(metadata)
+            except json.JSONDecodeError:
+                metadata = {}
+        if isinstance(metadata, dict):
+            values.append(metadata.get("diagnostic_subcode"))
+    result = []
+    for value in values:
+        if value in (None, ""):
+            continue
+        text = str(value)
+        if text not in result:
+            result.append(text)
+    return "; ".join(result)
 
 
 def _first_metadata(flags: list[dict[str, Any]]) -> dict[str, Any]:

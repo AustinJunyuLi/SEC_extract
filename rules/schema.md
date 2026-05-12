@@ -36,7 +36,10 @@ Each `citation_unit_id` must identify one extractor-input
 `citation_units[].id`. Quote fidelity invariant: `quote_text` must be an exact
 contiguous substring of `citation_units[citation_unit_id].text` - byte-for-byte,
 including punctuation, capitalization, spacing, and curly versus straight quote
-marks. Use multiple refs when a claim needs separated source support.
+marks. It must never reconstruct text across citation units. Use multiple refs
+when a claim needs separated source support; if support crosses a page,
+paragraph, date/action, or actor-list boundary, use separate exact refs from
+the respective citation units.
 Provider-level `quote_text` and `quote_texts` are retired.
 
 Provider-owned fields are forbidden: canonical ids, source offsets, source

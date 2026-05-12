@@ -5,9 +5,7 @@ from pathlib import Path
 
 CONTRACT_FILES = (
     Path("AGENTS.md"),
-    Path("CLAUDE.md"),
     Path("SKILL.md"),
-    Path("docs/linkflow-extraction-guide.md"),
 )
 
 

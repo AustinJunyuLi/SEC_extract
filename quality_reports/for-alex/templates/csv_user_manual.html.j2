@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }}</title>
+<meta name="description" content="{{ subtitle }}">
+<meta name="generator" content="build_alex_reports.py @ {{ build_meta.run_id }}">
+<style>
+{{ css_inline | safe }}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="header-row">
+    <div>
+      <h1>{{ title }}</h1>
+      <div class="subtitle">{{ subtitle }} · {{ build_meta.csv_rows }} rows × {{ build_meta.csv_cols }} columns embedded</div>
+    </div>
+    <div class="companion">Companion: <a href="pipeline_overview.html">pipeline_overview.html</a></div>
+  </div>
+  <div class="search-bar">
+    <input id="search-input" class="search-input" type="text" placeholder="Search the manual… (e.g. ‘bid_value_unit’, ‘cohort’, ‘dropout_reason’)" autocomplete="off">
+    <button id="search-clear" class="search-clear" title="clear">clear</button>
+    <span id="search-stats" class="search-stats"></span>
+  </div>
+</header>
+
+<div class="layout-manual">
+
+  <!-- Left pane: the manual prose with interactive panels -->
+  <main class="pane pane-manual" id="manual-prose">
+    {{ prose_html | safe }}
+  </main>
+
+  <!-- Right pane: live CSV browser -->
+  <aside class="pane pane-data" id="data-pane">
+    <div class="data-pane-toolbar">
+      <div class="filter-group">
+        <label for="filter-deal">deal</label>
+        <select id="filter-deal"></select>
+      </div>
+      <div class="filter-group">
+        <label for="filter-code">event_code</label>
+        <select id="filter-code"></select>
+      </div>
+      <div class="filter-group" style="flex:1; min-width: 160px;">
+        <input id="data-search" type="text" placeholder="quote / party / value substring…" style="flex:1; min-width:0;" autocomplete="off">
+      </div>
+      <div id="data-stats" class="data-pane-stats"></div>
+    </div>
+    <div id="data-table-wrap" class="data-table-wrap">
+      <table id="data-table" class="data-table">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </aside>
+
+</div>
+
+<!-- Embedded data ----------------------------------------------------- -->
+<script type="application/json" id="csv-data">{{ csv_json | safe }}</script>
+<script type="application/json" id="columns-data">{{ columns_json | safe }}</script>
+<script type="application/json" id="coded-values-data">{{ coded_values_json | safe }}</script>
+<script type="application/json" id="event-codes-data">{{ event_codes_json | safe }}</script>
+<script type="application/json" id="glossary-data">{{ glossary_json | safe }}</script>
+
+<script>
+{{ js_inline | safe }}
+</script>
+
+<!-- Built {{ build_meta.timestamp }} from prose/csv_user_manual.md + data/*.yaml + output/review_csv/alex_event_ledger_ref9_plus_targets5.csv -->
+
+</body>
+</html>

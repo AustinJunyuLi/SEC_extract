@@ -105,3 +105,50 @@ def test_review_projection_preserves_multi_span_source_lists() -> None:
 
     assert rows[0]["bound_source_quote"] == "Longview agreed to rollover | remain outstanding as equity"
     assert rows[0]["bound_source_page"] == "23 | 24"
+
+
+def test_review_projection_includes_binding_diagnostic_subcode() -> None:
+    graph = _graph(
+        {
+            "event_claims": [
+                {
+                    "claim_type": "event",
+                    "coverage_obligation_id": "obl_nda",
+                    "event_type": "process",
+                    "event_subtype": "nda_signed",
+                    "event_date": "2014-01-03",
+                    "description": "Party A signed a confidentiality agreement.",
+                    "actor_label": "Party A",
+                    "actor_role": "potential_buyer",
+                    "confidence": "high",
+                    "evidence_refs": _refs("Party A signed a confidentiality agreement"),
+                }
+            ],
+        }
+    )
+    event_id = graph["events"][0]["event_id"]
+    graph["review_flags"] = [
+        {
+            "flag_id": "flag_1",
+            "run_id": "run-1",
+            "deal_id": None,
+            "severity": "soft",
+            "code": "evidence_ref_binding_failed",
+            "reason": "MissingQuoteError: quote_text is not an exact substring",
+            "row_table": "events",
+            "row_id": event_id,
+            "status": "open",
+            "current": True,
+            "metadata": {
+                "diagnostic_subcode": "cross_unit_quote_stitching",
+                "suggested_action": "Split the quote into exact per-unit evidence refs.",
+                "evidence_ref_index": 0,
+            },
+        }
+    ]
+
+    rows = [row for row in project_review_rows(graph) if row["event_id"]]
+
+    assert rows[0]["review_status"] == "needs_review"
+    assert rows[0]["issue_codes"] == "evidence_ref_binding_failed; cross_unit_quote_stitching"
+    assert rows[0]["suggested_action"] == "Split the quote into exact per-unit evidence refs."

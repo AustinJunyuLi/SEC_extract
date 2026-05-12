@@ -1,0 +1,69 @@
+# Figure metadata for both reports.
+# Each figure is referenced from prose via {{figure:figure_id}}.
+# section is the slug of the prose section that contains the figure (so the
+# figure caption can carry a "discussed in §X" backlink).
+
+figures:
+
+  - id: architecture_layers
+    src: assets/architecture_layers.svg
+    report: pipeline_overview
+    section: architecture-three-layers
+    caption: "Three-layer architecture. The LLM proposes facts; Python verifies and canonicalises them; you review the resulting artefacts. One-way flow; the filing is the only source of truth."
+    alt: "Three coloured layers: LLM backend extraction, Python validation and graph, and human review. Arrows flow left to right from the SEC filing through to the three reviewable artefacts (CSV, JSONL, DuckDB)."
+
+  - id: e2e_run_flow
+    src: assets/e2e_run_flow.svg
+    report: pipeline_overview
+    section: end-to-end-run-file-by-file
+    caption: "End-to-end flow for one filing. Inputs are read-only; Python writes the graph, audit trail, and review artefacts."
+    alt: "Seven-step flow from filing package, prompt and rules, strict backend call, raw claims, finalize graph, review outputs, and consolidated Alex ledger, with review or failed-system branch below quote and validation issues."
+
+  - id: llm_roundtrip
+    src: assets/llm_roundtrip.svg
+    report: pipeline_overview
+    section: step-2-the-llm-backend-call
+    caption: "LLM backend round trip. The selected backend receives prompt, rule files, filing pages, and citation units, then returns only the five permitted claim families."
+    alt: "Sequence-style diagram with run.py/run_pool, the selected LLM backend, and the audit folder. A schema gate blocks free text and stale fields."
+
+  - id: quote_binding_flow
+    src: assets/quote_binding_flow.svg
+    report: pipeline_overview
+    section: step-3-quote-binding
+    caption: "Quote-binding decision tree. Every evidence reference is checked for a known citation unit, an exact quote match, and a unique span."
+    alt: "Decision tree showing evidence_ref, citation-unit-known decision, quote-exact-substring decision, unique-match decision, bound span, and the review-row failure paths for unknown, missing, or ambiguous quote support."
+
+  - id: claim_flow
+    src: assets/claim_flow.svg
+    report: pipeline_overview
+    section: step-5-hard-validation
+    caption: "Lifecycle of a single claim. The upper (green) path is the only way into the canonical graph; the lower (red) path is the only way into the review-only stream. In the live snapshot every claim is on the upper path."
+    alt: "Two-row diagram. The top row shows a sample bid claim flowing through quote binding, into a 'match?' decision diamond, then into a 'Disposition: supported' box, then into a canonical graph row. The bottom row shows the failure path: 'No exact match' to 'Disposition: rejected_unsupported' to 'Review row'."
+
+  - id: disposition_lifecycle
+    src: assets/disposition_lifecycle.svg
+    report: pipeline_overview
+    section: step-5-hard-validation
+    caption: "Claim disposition states. Python assigns supported or rejected status after quote binding, with partial failures preserved as review issues."
+    alt: "State diagram showing start, emitted claim, binding, supported, rejected, review-only, canonical rows, and a partial-failure soft issue path."
+
+  - id: claim_family_map
+    src: assets/claim_family_map.svg
+    report: pipeline_overview
+    section: the-five-claim-families
+    caption: "Five provider claim families mapped to canonical graph tables. Bid claims become events with event_type=bid; participation counts are their own row table."
+    alt: "Map from actor_claims, actor_relation_claims, event_claims, bid_claims, and participation_count_claims through Python canonicalization to actors, actor_relations, events, and participation_counts tables."
+
+  - id: reference_gate
+    src: assets/reference_gate.svg
+    report: pipeline_overview
+    section: the-reference-verification-gate
+    caption: "Reference verification gate. Targets open only after stable reference runs, filing-grounded verification reports, an accepted release proof, and the operator release flag."
+    alt: "Gate diagram from nine reference deals to three stable runs, filing-grounded verification, release proof, and the --release-targets flag, with a blocked branch when the flag is absent."
+
+  - id: artefact_picker
+    src: assets/artefact_picker.svg
+    report: csv_user_manual
+    section: ai-assisted-review-path
+    caption: "Choosing the right review artefact. The CSV is best for spreadsheet scanning, JSONL for AI-assisted row review, DuckDB for structural joins, and pages.json for quote disputes."
+    alt: "Flowchart from a review question to CSV for spot checks, review JSONL for cross-row AI review, DuckDB graph for joins, and pages.json for filing quote verification."

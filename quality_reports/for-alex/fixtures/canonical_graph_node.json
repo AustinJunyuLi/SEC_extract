@@ -1,0 +1,13 @@
+{
+  "_comment": "One event node from output/extractions/providence-worcester.json. The full snapshot has hundreds of these plus actors, relations, claims, dispositions, and evidence rows.",
+  "event_id": "event_b14d5e2c8f3a9012",
+  "event_type": "bid",
+  "event_subtype": "first_round_bid",
+  "event_date": "2016-07-12",
+  "actor_id": "actor_party_c_5d9e2c1f",
+  "actor_label": "Party C",
+  "row_evidence_ids": ["row_ev_8c3f1d4b2a"],
+  "source_claim_ids": ["claim_da42b5669b149876"],
+  "schema_version": "deal_graph_v2",
+  "rulebook_hash": "5e8c3f1d4b2a"
+}

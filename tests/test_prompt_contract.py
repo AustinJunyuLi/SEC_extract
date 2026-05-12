@@ -8,9 +8,20 @@ LIVE_CONTRACT_PATHS = [
     REPO_ROOT / "AGENTS.md",
     REPO_ROOT / "CLAUDE.md",
     REPO_ROOT / "SKILL.md",
-    REPO_ROOT / "docs" / "linkflow-extraction-guide.md",
+    REPO_ROOT / "docs" / "llm-backends.md",
     REPO_ROOT / "prompts" / "extract.md",
     *sorted((REPO_ROOT / "rules").glob("*.md")),
+]
+ACTIVE_DOC_PATHS = [
+    *LIVE_CONTRACT_PATHS,
+    REPO_ROOT / ".env.example",
+    REPO_ROOT / "quality_reports" / "for-alex" / "README.md",
+    REPO_ROOT / "quality_reports" / "for-alex" / "data" / "glossary.yaml",
+    REPO_ROOT / "quality_reports" / "for-alex" / "data" / "figures.yaml",
+    REPO_ROOT / "quality_reports" / "for-alex" / "prose" / "pipeline_overview.md",
+    REPO_ROOT / "quality_reports" / "for-alex" / "prose" / "csv_user_manual.md",
+    REPO_ROOT / "quality_reports" / "for-alex" / "pipeline_overview.html",
+    REPO_ROOT / "quality_reports" / "for-alex" / "csv_user_manual.html",
 ]
 
 
@@ -41,6 +52,7 @@ def test_extractor_messages_embed_claim_context():
 
 def test_prompt_is_claim_only_and_tool_free():
     text = (REPO_ROOT / "prompts" / "extract.md").read_text()
+    compact = " ".join(text.split())
 
     assert "Return exactly one JSON object" in text
     assert '"actor_claims": []' in text
@@ -56,8 +68,10 @@ def test_prompt_is_claim_only_and_tool_free():
     assert "not paraphrase quotes" in text
     assert "must exactly match one embedded `citation_units[].id`" in text
     assert "Follow the quote fidelity invariant" in text
+    assert "Never stitch, reconstruct, or bridge `quote_text` across `citation_units`" in text
+    assert "emit multiple `evidence_refs`, each with an exact substring from its own unit" in compact
     assert "source-addressed" in text
-    assert "Never emit provider-level `quote_text`" in text
+    assert "Never emit provider-level `quote_text`" in compact
     assert "`quote_texts`" in text
     assert "Exact-or-omit" in text
     assert "Do not emit an `actor_claim` merely to identify the target company" in text
@@ -70,6 +84,7 @@ def test_prompt_is_claim_only_and_tool_free():
 
 def test_rules_document_graph_boundary_and_forbidden_provider_fields():
     schema = (REPO_ROOT / "rules" / "schema.md").read_text()
+    compact_schema = " ".join(schema.split())
     invariants = (REPO_ROOT / "rules" / "invariants.md").read_text()
 
     assert "The provider emits claims only" in schema
@@ -78,6 +93,8 @@ def test_rules_document_graph_boundary_and_forbidden_provider_fields():
     assert "`T`, `bI`, `bF`" in schema
     assert "quote_text` must be an exact" in schema
     assert "byte-for-byte" in schema
+    assert "must never reconstruct text across citation units" in schema
+    assert "use separate exact refs from the respective citation units" in compact_schema
     assert "Retired event-table invariants are retained in git history only" in invariants
     assert "review rows are written deterministically" in invariants
 
@@ -116,12 +133,39 @@ def test_live_contract_files_do_not_describe_old_live_row_pipeline():
         "finalize_prepared()",
         "obligation_gated_single_repair",
         "prompt_then_filing_tools",
-        "Every full extraction body uses strict `text.format=json_schema` with the hardened `SCHEMA_R1`",
+        "Every full extraction body uses strict `text.format=json_schema` "
+        "with the hardened `SCHEMA_" + "R1`",
         "The scoped Adjudicator",
         "one tool-enabled repair round",
+        "Link" + "flow",
+        "New" + "API",
+        "OPENAI_" + "BASE_URL",
+        "LINK" + "FLOW_" + "XHIGH_MAX_WORKERS",
     ]
     offenders: list[str] = []
     for path in LIVE_CONTRACT_PATHS:
+        text = path.read_text()
+        for phrase in banned:
+            if phrase in text:
+                offenders.append(f"{path.relative_to(REPO_ROOT)}: {phrase}")
+    assert offenders == []
+
+
+def test_active_docs_do_not_describe_retired_backend_contracts():
+    banned = [
+        "Link" + "flow",
+        "New" + "API",
+        "OPENAI_" + "BASE_URL",
+        "LINK" + "FLOW_" + "XHIGH_MAX_WORKERS",
+        "OpenAI-compatible",
+        "compatible-base-url configuration is supported",
+        "gpt-5.5 at reason" + "ing effort high in current runs",
+        "pass clean across three " + "consecutive runs",
+        "3 consecutive " + "passed_clean",
+        "OpenAI Responses API at the model " + "boundary",
+    ]
+    offenders: list[str] = []
+    for path in ACTIVE_DOC_PATHS:
         text = path.read_text()
         for phrase in banned:
             if phrase in text:
@@ -164,8 +208,20 @@ def test_dependency_manifest_pins_current_project_dependencies():
         assert any(line.startswith(prefix) for line in lines)
 
 
+def test_node_dependency_manifest_pins_claude_agent_sdk():
+    import json
+
+    package = json.loads((REPO_ROOT / "package.json").read_text())
+
+    assert package["private"] is True
+    assert package["dependencies"]["@anthropic-ai/claude-agent-sdk"]
+
+
 def test_env_example_excludes_retired_adjudicator_settings():
     env_example = (REPO_ROOT / ".env.example").read_text()
 
     assert "ADJUDICATE_MODEL" not in env_example
     assert "ADJUDICATE_REASONING_EFFORT" not in env_example
+    assert "LLM_BACKEND=claude_agent_sdk" in env_example
+    assert "OPENAI_" + "BASE_URL" not in env_example
+    assert "LINK" + "FLOW_" + "XHIGH_MAX_WORKERS" not in env_example

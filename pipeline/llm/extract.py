@@ -34,7 +34,7 @@ def extractor_contract_version() -> str:
 
     `rulebook_version()` covers `rules/*.md`. This hash covers the two other
     inputs that define the provider contract beyond `rules/*.md`:
-    `prompts/extract.md` and the Python schema mirror used for local Linkflow
+    `prompts/extract.md` and the Python schema mirror used for local provider
     validation.
     """
     h = hashlib.sha256()
@@ -311,7 +311,7 @@ async def extract_deal(
     slug: str,
     *,
     llm_client: LLMClient,
-    extract_model: str,
+    extract_model: str | None,
     audit: AuditWriter,
     token_usage: TokenUsage,
     rulebook_version: str,

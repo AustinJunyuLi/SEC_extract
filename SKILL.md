@@ -30,8 +30,12 @@ The Alex ledger is generated from trusted graph snapshots. Bid rows expose
 `bid_value`, `bid_value_lower`, `bid_value_upper`, and `bid_value_unit`; do not
 collapse aggregate values into a per-share-only column.
 
-`OPENAI_API_KEY` and `OPENAI_BASE_URL` are runtime-only secrets/configuration.
-Do not write keys to repo files, reports, audit summaries, or docs.
+`LLM_BACKEND` defaults to `claude_agent_sdk`, which uses the repo-local
+`@anthropic-ai/claude-agent-sdk` bridge and either an existing Claude Max login
+or `ANTHROPIC_API_KEY`. Use `LLM_BACKEND=openai` only for direct first-party
+OpenAI Responses calls with `OPENAI_API_KEY`. Do not write keys to repo files,
+reports, audit summaries, or docs. Backend command details live in
+`docs/llm-backends.md`.
 
 ## Provider Output
 
@@ -71,8 +75,8 @@ Actor claims include `actor_class`: `financial`, `strategic`, `mixed`, or
 
 ## Python Pipeline
 
-`pipeline.run_pool` calls `pipeline.llm.extract.extract_deal()` with strict
-structured output and then calls
+`pipeline.run_pool` calls `pipeline.llm.extract.extract_deal()` through the
+selected backend with strict structured output and then calls
 `pipeline.deal_graph.orchestrate.finalize_claim_payload()`.
 
 Finalization:

@@ -16,8 +16,10 @@ output/*.csv
 # Per-deal advisory lock file (created on demand by _state_file_lock)
 state/*.lock
 
-# Linkflow API credentials + running logs
+# Runtime credentials + running logs
 .env*
 !.env.example
 logs/
 *.log
+node_modules/
+.playwright-mcp/

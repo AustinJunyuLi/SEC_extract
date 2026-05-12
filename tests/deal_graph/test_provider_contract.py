@@ -39,7 +39,7 @@ def test_provider_schema_top_level_is_claim_only():
     assert DEAL_GRAPH_CLAIM_SCHEMA["additionalProperties"] is False
 
 
-def test_provider_schema_is_strict_and_linkflow_safe():
+def test_provider_schema_is_strict_and_backend_safe():
     for node in _walk_schema(DEAL_GRAPH_CLAIM_SCHEMA):
         assert "oneOf" not in node
         assert not isinstance(node.get("additionalProperties"), dict)

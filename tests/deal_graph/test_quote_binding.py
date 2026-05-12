@@ -198,6 +198,172 @@ def test_evidence_ref_binding_failure_creates_one_sharp_blocking_flag():
     assert review_rows[0]["evidence_ref_index"] == 0
 
 
+def test_evidence_ref_binding_failure_labels_cross_unit_quote_stitching():
+    payload = {
+        "event_claims": [
+            {
+                "claim_type": "event",
+                "coverage_obligation_id": "obl_nda",
+                "event_type": "process",
+                "event_subtype": "nda_signed",
+                "event_date": "2014-01-03",
+                "description": "Party A signed a confidentiality agreement.",
+                "actor_label": "Party A",
+                "actor_role": "potential_buyer",
+                "confidence": "high",
+                "evidence_refs": [
+                    {
+                        "citation_unit_id": "page_1_paragraph_1",
+                        "quote_text": (
+                            "On January 3, Party A signed\n\n"
+                            "a confidentiality agreement with the Company."
+                        ),
+                    }
+                ],
+            }
+        ]
+    }
+    evidence_context = _bind_provider_evidence(
+        payload,
+        run_id="run-1",
+        slug="sample",
+        pages=[
+            {
+                "number": 1,
+                "content": (
+                    "On January 3, Party A signed\n\n"
+                    "a confidentiality agreement with the Company."
+                ),
+            }
+        ],
+    )
+    graph = canonicalize_claim_payload(
+        payload,
+        deal_slug="sample",
+        run_id="run-1",
+        evidence_context=evidence_context,
+    )
+
+    flag = graph["review_flags"][0]
+    assert graph["claim_evidence"] == []
+    assert flag["code"] == "evidence_ref_binding_failed"
+    assert flag["metadata"]["diagnostic_subcode"] == "cross_unit_quote_stitching"
+    assert flag["metadata"]["stitched_citation_unit_ids"] == [
+        "page_1_paragraph_1",
+        "page_1_paragraph_2",
+    ]
+    assert "Split the quote into exact per-unit evidence refs" in flag["metadata"]["suggested_action"]
+
+    review_rows = project_review_rows(graph)
+    assert review_rows[0]["review_status"] == "rejected_claim"
+    assert review_rows[0]["bound_source_quote"] == ""
+    assert review_rows[0]["issue_codes"] == (
+        "evidence_ref_binding_failed; cross_unit_quote_stitching"
+    )
+
+
+def test_evidence_ref_binding_failure_labels_quote_in_different_unit():
+    payload = {
+        "event_claims": [
+            {
+                "claim_type": "event",
+                "coverage_obligation_id": "obl_nda",
+                "event_type": "process",
+                "event_subtype": "nda_signed",
+                "event_date": "2014-01-03",
+                "description": "Party A signed a confidentiality agreement.",
+                "actor_label": "Party A",
+                "actor_role": "potential_buyer",
+                "confidence": "high",
+                "evidence_refs": [
+                    {
+                        "citation_unit_id": "page_1_paragraph_1",
+                        "quote_text": "Party A signed a confidentiality agreement.",
+                    }
+                ],
+            }
+        ]
+    }
+    evidence_context = _bind_provider_evidence(
+        payload,
+        run_id="run-1",
+        slug="sample",
+        pages=[
+            {
+                "number": 1,
+                "content": (
+                    "The process started in January.\n\n"
+                    "Party A signed a confidentiality agreement."
+                ),
+            }
+        ],
+    )
+    graph = canonicalize_claim_payload(
+        payload,
+        deal_slug="sample",
+        run_id="run-1",
+        evidence_context=evidence_context,
+    )
+
+    flag = graph["review_flags"][0]
+    assert graph["claim_evidence"] == []
+    assert flag["metadata"]["diagnostic_subcode"] == "quote_matches_different_citation_unit"
+    assert flag["metadata"]["candidate_units"] == [
+        {
+            "citation_unit_id": "page_1_paragraph_2",
+            "page_number": 1,
+            "paragraph_index": 2,
+            "match_count": 1,
+        }
+    ]
+    assert "Correct the citation unit" in flag["metadata"]["suggested_action"]
+
+    review_rows = project_review_rows(graph)
+    assert review_rows[0]["issue_codes"] == (
+        "evidence_ref_binding_failed; quote_matches_different_citation_unit"
+    )
+
+
+def test_evidence_ref_binding_failure_keeps_plain_missing_quote_generic():
+    payload = {
+        "event_claims": [
+            {
+                "claim_type": "event",
+                "coverage_obligation_id": "obl_nda",
+                "event_type": "process",
+                "event_subtype": "nda_signed",
+                "event_date": "2014-01-03",
+                "description": "Party A signed a confidentiality agreement.",
+                "actor_label": "Party A",
+                "actor_role": "potential_buyer",
+                "confidence": "high",
+                "evidence_refs": [
+                    {
+                        "citation_unit_id": "page_1_paragraph_1",
+                        "quote_text": "Party A signed a confidentiality agreement.",
+                    }
+                ],
+            }
+        ]
+    }
+    evidence_context = _bind_provider_evidence(
+        payload,
+        run_id="run-1",
+        slug="sample",
+        pages=[{"number": 1, "content": "The process started in January."}],
+    )
+    graph = canonicalize_claim_payload(
+        payload,
+        deal_slug="sample",
+        run_id="run-1",
+        evidence_context=evidence_context,
+    )
+
+    flag = graph["review_flags"][0]
+    assert "diagnostic_subcode" not in flag["metadata"]
+    assert project_review_rows(graph)[0]["issue_codes"] == "evidence_ref_binding_failed"
+
+
 def test_multi_ref_binding_preserves_bound_refs_and_flags_failed_ref():
     payload = {
         "actor_relation_claims": [

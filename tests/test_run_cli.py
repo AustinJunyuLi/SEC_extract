@@ -134,6 +134,25 @@ def test_reasoning_effort_defaults_to_high(monkeypatch):
     assert cfg.extract_reasoning_effort == "high"
 
 
+def test_backend_defaults_to_claude_agent_sdk(monkeypatch):
+    monkeypatch.delenv("LLM_BACKEND", raising=False)
+    args = run_cli._parser().parse_args(["--slug", "medivation"])
+
+    cfg = run_cli._make_pool_config(args, mode="extract")
+
+    assert cfg.llm_backend == "claude_agent_sdk"
+    assert cfg.extract_model is None
+
+
+def test_openai_backend_defaults_model():
+    args = run_cli._parser().parse_args(["--slug", "medivation", "--llm-backend", "openai"])
+
+    cfg = run_cli._make_pool_config(args, mode="extract")
+
+    assert cfg.llm_backend == "openai"
+    assert cfg.extract_model == "gpt-5.5"
+
+
 def test_commit_and_dry_run_is_rejected(monkeypatch, capsys):
     monkeypatch.setattr(run_cli, "_run_single_deal", lambda *a, **k: pytest.fail("run should not start"))
     _set_argv(monkeypatch, "--slug", "medivation", "--dry-run", "--commit")

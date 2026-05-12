@@ -20,6 +20,7 @@ from .evidence import (
     bind_quote_to_citation_unit,
     citation_unit_paragraphs,
     quote_candidate_units,
+    quote_binding_diagnostic,
 )
 from .export import write_csv, write_jsonl, write_snapshot
 from .ids import make_id
@@ -321,9 +322,24 @@ def _evidence_failure_payload(
     refs = claim.get("evidence_refs") if isinstance(claim, dict) else None
     supplied_refs = refs if isinstance(refs, list) else []
     quote = evidence_ref.get("quote_text") if isinstance(evidence_ref, dict) else None
+    citation_unit_id = (
+        evidence_ref.get("citation_unit_id") if isinstance(evidence_ref, dict) else None
+    )
+    diagnostic = quote_binding_diagnostic(
+        str(quote or ""),
+        citation_unit_id if isinstance(citation_unit_id, str) else None,
+        citation_units,
+    )
     reason = f"{type(error).__name__}: {error}"
-    return {
-        "flag_id": make_id("flag", slug, run_id, claim_id, "evidence_ref_binding_failed", evidence_ref_index),
+    payload = {
+        "flag_id": make_id(
+            "flag",
+            slug,
+            run_id,
+            claim_id,
+            "evidence_ref_binding_failed",
+            evidence_ref_index,
+        ),
         "slug": slug,
         "run_id": run_id,
         "claim_family": family,
@@ -332,7 +348,7 @@ def _evidence_failure_payload(
         "claim_id": claim_id,
         "claim_summary": _claim_summary(claim_type, claim),
         "evidence_ref_index": evidence_ref_index,
-        "provided_citation_unit_id": evidence_ref.get("citation_unit_id") if isinstance(evidence_ref, dict) else None,
+        "provided_citation_unit_id": citation_unit_id,
         "provided_quote_text": quote,
         "supplied_evidence_refs": supplied_refs,
         "reason_code": "evidence_ref_binding_failed",
@@ -340,6 +356,8 @@ def _evidence_failure_payload(
         "candidate_units": quote_candidate_units(str(quote or ""), citation_units),
         "suggested_action": "Choose the correct citation unit and exact quote, or reject the claim.",
     }
+    payload.update(diagnostic)
+    return payload
 
 
 def _claim_summary(claim_type: str, claim: dict[str, Any]) -> dict[str, Any]:

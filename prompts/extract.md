@@ -46,15 +46,18 @@ and source-addressed `evidence_refs`. Each `evidence_refs` item must have
 `citation_unit_id` must exactly match one embedded `citation_units[].id`.
 Follow the quote fidelity invariant in `rules/schema.md`. Prefer distinctive
 sentences or clauses that uniquely support the claim. Do not paraphrase quotes.
-Use multiple `evidence_refs` when support is separated across sentences,
-paragraphs, or page breaks. Never emit provider-level `quote_text` or
-`quote_texts`.
+Never stitch, reconstruct, or bridge `quote_text` across `citation_units`.
+When support is separated across sentences, paragraphs, or page breaks, emit
+multiple `evidence_refs`, each with an exact substring from its own unit. Never
+emit provider-level `quote_text` or `quote_texts`.
 
 Use the shortest exact filing snippet that supports the typed fields. Do not
 copy long multi-sentence passages when a clause supports the bidder, date,
 value, or relation. For bids with several values in one paragraph, emit one bid
 claim per bidder and use that bidder's exact value clause; use multiple
 `evidence_refs` when the bidder label and value require separated exact clauses.
+If a date, actor list, and action are separated across citation units, use
+separate exact refs rather than one combined sentence.
 
 Never emit `deal`, `events`, `BidderID`, `bidder_registry`, `source_page`,
 `source_start`, `source_end`, `actor_id`, `event_id`, `T`, `bI`, `bF`,

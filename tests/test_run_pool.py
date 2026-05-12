@@ -106,6 +106,43 @@ def test_reasoning_effort_defaults_to_high(monkeypatch):
     assert run_pool.PoolConfig().extract_reasoning_effort == "high"
 
 
+def test_backend_defaults_to_claude_agent_sdk(monkeypatch):
+    monkeypatch.delenv("LLM_BACKEND", raising=False)
+    parser = run_pool.build_parser()
+
+    cfg = run_pool.config_from_args(parser.parse_args(["--filter", "reference", "--dry-run"]))
+
+    assert cfg.llm_backend == "claude_agent_sdk"
+    assert cfg.extract_model is None
+
+
+def test_openai_backend_defaults_model_and_requires_api_key(monkeypatch):
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    parser = run_pool.build_parser()
+    cfg = run_pool.config_from_args(parser.parse_args(["--filter", "reference", "--dry-run", "--llm-backend", "openai"]))
+
+    assert cfg.llm_backend == "openai"
+    assert cfg.extract_model == "gpt-5.5"
+    cfg.dry_run = False
+    with pytest.raises(RuntimeError, match="OPENAI_API_KEY"):
+        run_pool._build_client(cfg)
+
+
+def test_invalid_backend_name_fails_loudly():
+    cfg = _cfg(llm_backend="not-real")
+
+    with pytest.raises(ValueError, match="llm-backend"):
+        run_pool._validate_config(cfg)
+
+
+def test_openai_backend_rejects_retired_base_url_env(monkeypatch):
+    cfg = _cfg(llm_backend="openai", extract_model="gpt-test", openai_api_key="secret")
+    monkeypatch.setenv("OPENAI_" + "BASE_URL", "https://example.test/v1")
+
+    with pytest.raises(RuntimeError, match="not supported"):
+        run_pool._build_client(cfg)
+
+
 def test_skip_decisions_have_no_revalidation_cache_path(minimal_state_repo):
     env = minimal_state_repo
     cfg = _cfg(audit_root=env.tmp_path / "output" / "audit")
@@ -175,7 +212,8 @@ def test_success_manifest_records_claim_only_graph_strategy(minimal_state_repo, 
     )
 
     manifest = json.loads((summary.outcomes[0].audit_path / "manifest.json").read_text())
-    assert manifest["models"] == {"extract": "gpt-5.5"}
+    assert manifest["llm_backend"] == "claude_agent_sdk"
+    assert manifest["models"] == {"extract": None}
     assert "extract_tool_mode" not in manifest
     assert "repair_strategy" not in manifest
     assert "obligation_contract_version" not in manifest
@@ -444,16 +482,17 @@ def test_exceptions_are_summarized_without_cancelling_all(minimal_state_repo, mo
     assert {outcome.slug for outcome in summary.outcomes} == {"a", "b"}
 
 
-def test_xhigh_worker_count_is_capped_before_real_run(minimal_state_repo):
+def test_openai_backend_rejects_xhigh_reasoning(minimal_state_repo):
     env = minimal_state_repo
     env.seed_deal("a", status="pending", is_reference=True)
 
-    with pytest.raises(ValueError, match="xhigh.*workers.*5"):
+    with pytest.raises(ValueError, match="OpenAI backend does not support"):
         asyncio.run(
             run_pool.run_pool(
                 _cfg(
                     filter="pending",
-                    workers=6,
+                    llm_backend="openai",
+                    openai_api_key="secret",
                     extract_reasoning_effort="xhigh",
                     dry_run=True,
                 ),
@@ -462,12 +501,12 @@ def test_xhigh_worker_count_is_capped_before_real_run(minimal_state_repo):
         )
 
 
-def test_main_reports_xhigh_worker_cap_without_traceback(capsys):
+def test_main_reports_unsupported_reasoning_without_traceback(capsys):
     result = run_pool.main([
         "--filter",
         "reference",
-        "--workers",
-        "6",
+        "--llm-backend",
+        "openai",
         "--extract-reasoning-effort",
         "xhigh",
         "--dry-run",
@@ -475,7 +514,7 @@ def test_main_reports_xhigh_worker_cap_without_traceback(capsys):
 
     assert result == 2
     captured = capsys.readouterr()
-    assert "workers <= 5" in captured.err
+    assert "OpenAI backend does not support" in captured.err
     assert "Traceback" not in captured.err
 
 

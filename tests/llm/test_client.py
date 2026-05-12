@@ -1,6 +1,7 @@
 import asyncio
+from pathlib import Path
 
-from pipeline.llm.client import OpenAICompatibleClient
+from pipeline.llm.client import ClaudeAgentSDKClient, OpenAIResponsesClient
 
 CLAIM_ONLY_TEXT = (
     '{"actor_claims":[],"event_claims":[],"bid_claims":[],'
@@ -64,12 +65,11 @@ class MissingCompletedOpenAI:
         self.responses = MissingCompletedResponses()
 
 
-def test_openai_compatible_client_uses_responses_text_format_not_chat_response_format():
+def test_openai_responses_client_uses_first_party_responses_text_format_not_chat_response_format():
     fake = FakeOpenAI()
     text_format = {"type": "json_schema", "name": "unit", "schema": {"type": "object"}, "strict": True}
-    client = OpenAICompatibleClient(
+    client = OpenAIResponsesClient(
         api_key="secret",
-        base_url="https://example.test/v1",
         openai_client=fake,
     )
 
@@ -96,12 +96,11 @@ def test_openai_compatible_client_uses_responses_text_format_not_chat_response_f
     assert result.reasoning_tokens == 5
 
 
-def test_openai_compatible_client_requires_structured_output_for_linkflow_newapi():
+def test_openai_responses_client_requires_structured_output():
     fake = FakeOpenAI()
     text_format = {"type": "json_schema", "name": "unit", "schema": {"type": "object"}, "strict": True}
-    client = OpenAICompatibleClient(
+    client = OpenAIResponsesClient(
         api_key="secret",
-        base_url="https://www.linkflow.run/v1",
         openai_client=fake,
     )
 
@@ -117,7 +116,7 @@ def test_openai_compatible_client_requires_structured_output_for_linkflow_newapi
     )
 
     kwargs = fake.responses.kwargs
-    assert client.endpoint == "responses"
+    assert client.endpoint == "openai_responses"
     assert client.supports_structured_output is True
     assert kwargs["model"] == "gpt-test"
     assert kwargs["input"][0]["role"] == "system"
@@ -130,9 +129,8 @@ def test_openai_compatible_client_requires_structured_output_for_linkflow_newapi
 
 def test_streaming_client_salvages_text_when_completed_event_is_missing():
     fake = MissingCompletedOpenAI()
-    client = OpenAICompatibleClient(
+    client = OpenAIResponsesClient(
         api_key="secret",
-        base_url="https://www.linkflow.run/v1",
         openai_client=fake,
     )
 
@@ -150,9 +148,8 @@ def test_streaming_client_salvages_text_when_completed_event_is_missing():
 
 def test_complete_rejects_missing_text_format():
     fake = FakeOpenAI()
-    client = OpenAICompatibleClient(
+    client = OpenAIResponsesClient(
         api_key="secret",
-        base_url="https://www.linkflow.run/v1",
         openai_client=fake,
     )
 
@@ -162,3 +159,72 @@ def test_complete_rejects_missing_text_format():
         assert "text_format is required" in str(exc)
     else:
         raise AssertionError("expected ValueError")
+
+
+def test_claude_agent_sdk_client_sends_strict_tool_free_bridge_request():
+    captured = {}
+
+    async def bridge_runner(request):
+        captured.update(request)
+        return {
+            "text": CLAIM_ONLY_TEXT,
+            "model": "claude-test",
+            "input_tokens": 3,
+            "output_tokens": 4,
+            "reasoning_tokens": 2,
+            "finish_reason": "success",
+        }
+
+    text_format = {"type": "json_schema", "name": "unit", "schema": {"type": "object"}, "strict": True}
+    client = ClaudeAgentSDKClient(bridge_runner=bridge_runner)
+
+    result = asyncio.run(
+        client.complete(
+            model="claude-test",
+            input_items=[
+                {"role": "system", "content": "system prompt"},
+                {"role": "user", "content": "user payload"},
+            ],
+            text_format=text_format,
+            reasoning_effort="high",
+        )
+    )
+
+    assert captured["system"] == "system prompt"
+    assert captured["user"] == "user payload"
+    assert captured["text_format"] == text_format
+    assert captured["thinking"] == {"type": "enabled", "budgetTokens": 16000}
+    assert result.text == CLAIM_ONLY_TEXT
+    assert result.model == "claude-test"
+    assert result.input_tokens == 3
+
+
+def test_claude_agent_sdk_client_rejects_unsupported_reasoning_effort():
+    client = ClaudeAgentSDKClient(bridge_runner=lambda request: None)
+
+    try:
+        asyncio.run(
+            client.complete(
+                model=None,
+                system="system",
+                user="user",
+                text_format={"type": "json_schema", "name": "unit", "schema": {"type": "object"}, "strict": True},
+                reasoning_effort="minimal",
+            )
+        )
+    except ValueError as exc:
+        assert "does not support reasoning effort" in str(exc)
+    else:
+        raise AssertionError("expected ValueError")
+
+
+def test_claude_agent_bridge_disables_tools_and_project_settings():
+    bridge = Path(__file__).resolve().parents[2] / "pipeline" / "llm" / "claude_agent_bridge.mjs"
+    text = bridge.read_text()
+
+    assert "tools: []" in text
+    assert "allowedTools: []" in text
+    assert "mcpServers: {}" in text
+    assert "settingSources: []" in text
+    assert "canUseTool" in text
+    assert "outputFormat" in text

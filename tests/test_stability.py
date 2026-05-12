@@ -108,8 +108,8 @@ def _write_run(
         "started_at": "2026-04-29T00:00:00Z",
         "finished_at": finished_at,
         "models": {"extract": "gpt-5.5"},
-        "reasoning_efforts": {"extract": "xhigh"},
-        "api_endpoint": "linkflow",
+        "reasoning_efforts": {"extract": "high"},
+        "api_endpoint": "claude_agent_sdk",
         "prompt_hashes": {"extract": BASE_HASHES["prompt_hash"]},
         **BASE_HASHES,
     }
@@ -378,7 +378,7 @@ def test_model_or_reasoning_drift_classifies_rule_or_validator_needed(tmp_path, 
         slug="medivation",
         run_id="run-2",
         finished_at="2026-04-29T00:01:00Z",
-        manifest_extra={"reasoning_efforts": {"extract": "high"}},
+        manifest_extra={"reasoning_efforts": {"extract": "medium"}},
     )
     _write_run(tmp_path, slug="medivation", run_id="run-3", finished_at="2026-04-29T00:02:00Z")
 

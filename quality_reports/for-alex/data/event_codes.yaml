@@ -1,0 +1,292 @@
+# 24 event_codes that appear in the current Alex ledger.
+# Each gets a panel in the manual with: definition, family, stage, source,
+# count, and at least one worked example pulled live from the embedded CSV
+# (manual filters all rows where event_code == this value when clicked).
+
+categories:
+
+  - id: process_advisor
+    title: "Process & advisor codes"
+    codes:
+      - code: advisor_retained
+        family: advisor
+        stage: process_setup
+        source: "actor_relation_claim with relation_type = advises"
+        count: 51
+        definition: "A target or bidder engaged a financial / legal advisor."
+        example:
+          row: "providence-worcester:10"
+          party: "GHF"
+          quote: "the subcommittee recommended to the Board that the Company retain GHF as its investment banking firm | the Board approved the subcommittee's recommendation and the Company engaged GHF"
+
+      - code: initial_contact
+        family: contact
+        stage: pre_bid
+        source: "event_subtype = contact_initial"
+        count: 31
+        definition: "First contact between a potential bidder and the target / advisors."
+        example:
+          row: "providence-worcester:140"
+          party: "11 potential strategic buyers and 18 potential financial buyers"
+          quote: "During the week of March 28, 2016, in accordance with the Transaction Committee's directives, representatives of GHF contacted 11 potential strategic buyers (including Party A) and 18 potential financial buyers."
+
+      - code: nda_signed
+        family: process
+        stage: nda
+        source: "event_subtype = nda_signed"
+        count: 36
+        definition: "Target-bidder confidentiality agreement executed. Distinct from consortium_ca_signed (bidder-bidder)."
+        example:
+          row: "providence-worcester:160"
+          party: "Party C"
+          quote: "After executing a confidentiality agreement, Party C was provided the memorandum concerning the Company provided to the other potential buyers."
+
+      - code: consortium_ca_signed
+        family: consortium
+        stage: nda
+        source: "event_subtype = consortium_ca_signed"
+        count: 2
+        definition: "Bidder-bidder or intra-consortium confidentiality agreement. Does not substitute for a target-side NDA."
+
+  - id: bid
+    title: "Bid codes"
+    codes:
+      - code: ioi_submitted
+        family: bid
+        stage: initial
+        formality: informal
+        source: "event_subtype = ioi_submitted"
+        count: 11
+        definition: "Indication of interest submitted (typically informal, no binding terms)."
+        example:
+          row: "providence-worcester:30"
+          party: "Party C"
+          quote: "On July 12, 2016, Party C submitted an IOI with an offer price per share of $21.00"
+
+      - code: bid_submitted
+        family: bid
+        stage: "varies (initial / revised / final)"
+        source: "event_subtype in {first_round_bid, final_round_bid}; also bid claims with bid_stage set"
+        count: 110
+        definition: "A formal bid (first-round, revised, or final-round) submitted. The stage column tells you which round. The largest single code in the ledger."
+        example:
+          row: "providence-worcester:40"
+          party: "Party C"
+          quote: "On July 12, 2016, Party C submitted an IOI with an offer price per share of $21.00"
+          note: "The same quote supports both ioi_submitted and bid_submitted because the IOI contained a price."
+        secondary_example:
+          row: "providence-worcester:60"
+          party: "G&W"
+          note: "Same deal, later round (stage = revised, bid_value = 21.15)."
+
+      - code: participation_count
+        family: process
+        stage: "varies (claim's process_stage)"
+        source: "participation_count_claim"
+        count: 64
+        definition: "A row that reports a count of unnamed parties at a process stage, not a single party."
+        example:
+          row: "providence-worcester:340"
+          party: "11 strategic parties"
+          quote: "representatives of GHF contacted 11 potential strategic buyers (including Party A)"
+
+  - id: advancement
+    title: "Advancement codes"
+    codes:
+      - code: advanced
+        family: advancement
+        stage: advancement
+        source: "event_subtype = advancement_admitted"
+        count: 10
+        definition: "Bidder admitted into the next round / due-diligence phase."
+        example:
+          row: "providence-worcester:260"
+          party: "G&W and Party B"
+          quote: "The Transaction Committee concluded that the Company should proceed with confirmatory due diligence and negotiations with G&W and Party B"
+
+      - code: not_advanced
+        family: advancement
+        stage: advancement
+        source: "event_subtype = advancement_declined"
+        count: 2
+        definition: "Bidder not invited to advance."
+        example:
+          row: "gen-probe-inc-new:230"
+          party: "Party C"
+          quote: "representatives of Morgan Stanley contacted representatives of Party C to encourage the submission of a bid. After deliberations, Party C declined to make an offer."
+
+  - id: dropout
+    title: "Dropout codes"
+    codes:
+      - code: bidder_withdrew
+        family: dropout
+        stage: dropout
+        dropout_side: bidder
+        source: "event_subtype = withdrawn_by_bidder"
+        count: 28
+        definition: "Bidder voluntarily withdrew."
+        example:
+          row: "providence-worcester:100"
+          party: "Party E"
+          quote: "Party E withdrew its revised proposal on August 2, 2016 (but confirmed its original proposal of $21.26 per share)"
+
+      - code: target_excluded
+        family: dropout
+        stage: dropout
+        dropout_side: target
+        source: "event_subtype = excluded_by_target"
+        count: 9
+        definition: "Target removed bidder from the process."
+        example:
+          row: "providence-worcester:280"
+          party: "remaining bidders (cohort)"
+          quote: "representatives of GHF subsequently contacted the remaining bidders to inform them that they were no longer involved in the process"
+
+      - code: no_response
+        family: dropout
+        stage: dropout
+        dropout_side: no_response
+        source: "event_subtype = non_responsive"
+        count: 12
+        definition: "Filing affirmatively states a bidder did not respond / proceed."
+        example:
+          row: "providence-worcester:310"
+          party: "one strategic buyer and one financial buyer"
+          quote: "One strategic buyer and one financial buyer elected not to submit an LOI."
+
+      - code: cohort_closed
+        family: dropout
+        stage: dropout
+        dropout_side: mixed_or_unknown
+        source: "event_subtype = cohort_closure"
+        count: 2
+        definition: "An anonymous cohort ended participation as a unit (e.g. when the filing collapses two bidders into one handle)."
+        example:
+          row: "petsmart-inc:250"
+          party: "Bidder 3"
+          quote: "the ad hoc committee authorized these two bidders to work together. We refer to these two bidders together as 'Bidder 3.'"
+
+  - id: agreement
+    title: "Agreement codes"
+    codes:
+      - code: exclusivity_granted
+        family: agreement
+        stage: exclusivity
+        source: "event_subtype = exclusivity_grant"
+        count: 7
+        definition: "Target grants exclusive negotiation rights to one bidder."
+        example:
+          row: "zep:170"
+          party: "New Mountain Capital"
+          quote: "our board of directors authorized an extension of exclusivity with New Mountain Capital through April 7, 2015, which extension letter was signed on March 18, 2015."
+
+      - code: merger_agreement_executed
+        family: agreement
+        stage: execution
+        source: "event_subtype = merger_agreement_executed"
+        count: 14
+        definition: "The transaction agreement was signed."
+        example:
+          row: "providence-worcester:320"
+          party: "G&W"
+          quote: "the Company and G&W executed the merger agreement"
+
+  - id: financing_support
+    title: "Financing & support codes"
+    codes:
+      - code: financing_relation
+        family: financing
+        stage: financing
+        source: "actor_relation_claim with relation_type = finances"
+        count: 7
+        definition: "A financing tie between two parties (e.g. a sponsor backing a strategic bidder)."
+        example:
+          row: "providence-worcester:90"
+          party: "Party F (financing for Party E)"
+          quote: "Party E submitted a revised LOI, along with financing support, from Party F, at a price of $23.81 per share"
+
+      - code: financing_committed
+        family: financing
+        stage: financing
+        source: "event_subtype = financing_committed"
+        count: 6
+        definition: "Buyer's financing sources committed (typically alongside merger-agreement signing)."
+        example:
+          row: "petsmart-inc:70"
+          party: "Buyer Group"
+          quote: "On December 6, 2014, the Buyer Group and Bidder 2 submitted their respective comments on the draft merger agreement and other transaction documents, and the Buyer Group provided its financing commitment documents."
+
+      - code: voting_support
+        family: support
+        stage: support
+        source: "actor_relation_claim with relation_type = voting_support_for"
+        count: 6
+        definition: "A holder agrees to vote in favour of the transaction."
+        example:
+          row: "petsmart-inc:180"
+          party: "Longview (subject) → merger (object)"
+          quote: "Longview's commitment to vote for the merger | On December 14, 2014, the parties executed the merger agreement, the voting agreement and related transaction agreements"
+
+      - code: support_agreement
+        family: support
+        stage: support
+        source: "actor_relation_claim with relation_type = supports"
+        count: 2
+        definition: "Generic support / cooperation relationship."
+
+      - code: rollover_support
+        family: support
+        stage: support
+        source: "actor_relation_claim with relation_type = rollover_holder_for"
+        count: 2
+        definition: "A holder rolls equity into the surviving entity."
+
+  - id: consortium
+    title: "Consortium codes"
+    codes:
+      - code: joined_group
+        family: consortium
+        stage: consortium
+        source: "actor_relation_claim with relation_type = joins_group"
+        count: 2
+        definition: "An actor joined a buyer group. row_unit = cohort."
+        example:
+          row: "saks:280"
+          party: "Sponsor A → Sponsor A and Sponsor E"
+          quote: "Sponsor E would again be joined in its proposal by Sponsor A as a primary participant"
+
+      - code: exited_group
+        family: consortium
+        stage: consortium
+        source: "actor_relation_claim with relation_type = exits_group"
+        count: 2
+        definition: "An actor left a buyer group."
+        example:
+          row: "saks:270"
+          party: "Sponsor A → Sponsor A and Sponsor E"
+          quote: "Sponsor A and Sponsor E, who were considering participating in a potential joint acquisition of Saks | Sponsor A was no longer intending to be a primary participant in a potential transaction"
+
+  - id: go_shop
+    title: "Go-shop codes"
+    codes:
+      - code: go_shop_started
+        family: go_shop
+        stage: go_shop
+        source: "event_subtype = go_shop_started"
+        count: 1
+        definition: "Post-signing market-check window opens."
+        example:
+          row: "zep:190"
+          party: "BofA Merrill Lynch"
+          quote: "Representatives of BofA Merrill Lynch commenced the go-shop process on our behalf on April 8, 2015."
+
+      - code: go_shop_ended
+        family: go_shop
+        stage: go_shop
+        source: "event_subtype = go_shop_ended"
+        count: 2
+        definition: "Window closes."
+        example:
+          row: "zep:200"
+          party: "ZEP INC (row_unit = deal)"
+          quote: "the 'go-shop period' that began on the date of the merger agreement and continued until 11:59 p.m., New York City time, on May 7, 2015"

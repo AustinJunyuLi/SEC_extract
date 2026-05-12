@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }}</title>
+<meta name="description" content="{{ subtitle }}">
+<meta name="generator" content="build_alex_reports.py @ {{ build_meta.run_id }}">
+<style>
+{{ css_inline | safe }}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="header-row">
+    <div>
+      <h1>{{ title }}</h1>
+      <div class="subtitle">{{ subtitle }}</div>
+    </div>
+    <div class="companion">Companion: <a href="csv_user_manual.html">csv_user_manual.html</a></div>
+  </div>
+  <div class="search-bar">
+    <input id="search-input" class="search-input" type="text" placeholder="Search the overview… (e.g. ‘quote binding’, ‘failed_system’, ‘rulebook’)" autocomplete="off">
+    <button id="search-clear" class="search-clear" title="clear">clear</button>
+    <span id="search-stats" class="search-stats"></span>
+  </div>
+</header>
+
+<div class="layout-overview">
+  <nav class="outline" aria-label="Document outline">
+    {{ outline_html | safe }}
+  </nav>
+  <main class="prose">
+    {{ prose_html | safe }}
+  </main>
+</div>
+
+<script type="application/json" id="glossary-data">{{ glossary_json | safe }}</script>
+<script>
+{{ js_inline | safe }}
+</script>
+
+<!-- Built {{ build_meta.timestamp }} from prose/pipeline_overview.md + data/*.yaml -->
+
+</body>
+</html>

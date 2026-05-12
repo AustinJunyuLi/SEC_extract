@@ -13,11 +13,20 @@ oracle.
 
 ## Current Architecture
 
-The live architecture is code-orchestrated direct `AsyncOpenAI` SDK calls to
-the Responses streaming endpoint through the Linkflow/NewAPI-compatible
-`OPENAI_BASE_URL`. Configure `OPENAI_BASE_URL`, `OPENAI_API_KEY`,
-`EXTRACT_MODEL`, and optional reasoning-effort overrides in the shell or
-`.env`. Do not commit secrets.
+The live architecture is code-orchestrated provider calls through
+`pipeline.llm`. Select the backend with `LLM_BACKEND`:
+
+- default `LLM_BACKEND=claude_agent_sdk`: Python calls the repo-local Node
+  bridge for `@anthropic-ai/claude-agent-sdk`. It uses an existing Claude Max
+  login when available, or Anthropic API auth when `ANTHROPIC_API_KEY` is set.
+- optional `LLM_BACKEND=openai`: Python calls the first-party OpenAI Responses
+  API directly with `OPENAI_API_KEY`.
+
+Configure `LLM_BACKEND`, optional `EXTRACT_MODEL`, `EXTRACT_REASONING_EFFORT`,
+and provider credentials in the shell or `.env`. Do not commit secrets.
+There is no provider fallback, compatible-base-url path, response-chain reuse,
+or secondary model correction path.
+See `docs/llm-backends.md` for backend-specific runtime commands.
 
 The provider emits strict structured claim payloads only:
 
@@ -43,15 +52,14 @@ The provider does emit `actor_class` on actor claims, limited to `financial`,
 `bidder_class`. Do not restore U.S./non-U.S., public/private, or old
 `bidder_type`/`bid_note` fields.
 
-There is no per-event-row canonical schema, no loose JSON fallback, no
-provider branch that turns off structured output, no response-chain reuse, and
-no secondary model correction path.
+There is no per-event-row canonical schema, no loose JSON fallback, and no
+provider branch that turns off structured output.
 
 Per deal:
 
 ```text
 run.py / pipeline.run_pool
-  -> Extractor SDK call with strict claim-only json_schema
+  -> Extractor backend call with strict claim-only json_schema
   -> output/audit/{slug}/runs/{run_id}/raw_response.json
   -> pipeline.deal_graph.orchestrate.finalize_claim_payload()
        parse provider claims
@@ -73,6 +81,7 @@ Single deal:
 
 ```bash
 python run.py --slug mac-gray --re-extract
+python run.py --slug mac-gray --re-extract --llm-backend claude_agent_sdk
 python run.py --slug petsmart-inc --re-extract
 python run.py --slug zep --re-extract
 python run.py --slug mac-gray --print-prompt
@@ -83,6 +92,7 @@ Batch:
 ```bash
 python -m pipeline.run_pool --filter reference --workers 1
 python -m pipeline.run_pool --slugs mac-gray,petsmart-inc,zep --workers 3 --re-extract
+python -m pipeline.run_pool --filter reference --workers 1 --llm-backend openai
 ```
 
 Alex-facing full event ledger:
@@ -91,8 +101,10 @@ Alex-facing full event ledger:
 python scripts/export_alex_event_ledger.py --scope all --output output/review_csv/alex_event_ledger_ref9_plus_targets5.csv
 ```
 
-Reasoning defaults to `high`. Explicit `xhigh` is capped by
-`LINKFLOW_XHIGH_MAX_WORKERS`.
+Reasoning defaults to `high`. Claude Agent SDK supports `none`, `low`,
+`medium`, `high`, and `xhigh`; direct OpenAI supports `none`, `minimal`, `low`,
+`medium`, and `high`. Unsupported backend/effort combinations fail before a
+provider call.
 
 ## Source of Truth
 

@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+import asyncio
+import json
+import os
 import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 from openai import AsyncOpenAI
@@ -34,7 +38,7 @@ class LLMClient(ABC):
     async def complete(
         self,
         *,
-        model: str,
+        model: str | None,
         system: str | None = None,
         user: str | None = None,
         input_items: list[dict[str, Any]] | None = None,
@@ -45,20 +49,19 @@ class LLMClient(ABC):
         raise NotImplementedError
 
 
-class OpenAICompatibleClient(LLMClient):
+class OpenAIResponsesClient(LLMClient):
     supports_structured_output = True
 
     def __init__(
         self,
         *,
         api_key: str,
-        base_url: str | None = None,
         openai_client: Any | None = None,
         watchdog_cfg: WatchdogConfig | None = None,
         retry_cfg: RetryConfig | None = None,
     ):
-        self._client = openai_client or AsyncOpenAI(api_key=api_key, base_url=base_url, max_retries=0)
-        self.endpoint = "responses"
+        self._client = openai_client or AsyncOpenAI(api_key=api_key, max_retries=0)
+        self.endpoint = "openai_responses"
         self.supports_structured_output = True
         self.watchdog_cfg = watchdog_cfg or WatchdogConfig()
         self.retry_cfg = retry_cfg or RetryConfig()
@@ -66,7 +69,7 @@ class OpenAICompatibleClient(LLMClient):
     async def complete(
         self,
         *,
-        model: str,
+        model: str | None,
         system: str | None = None,
         user: str | None = None,
         input_items: list[dict[str, Any]] | None = None,
@@ -106,6 +109,8 @@ class OpenAICompatibleClient(LLMClient):
         reasoning_effort: str | None,
         attempt: int,
     ) -> CompletionResult:
+        if not model:
+            raise ValueError("OpenAI Responses backend requires an explicit model")
         if not text_format:
             raise ValueError("strict Responses text_format is required")
         if input_items is None:
@@ -169,6 +174,186 @@ class OpenAICompatibleClient(LLMClient):
             watchdog=watchdog.stats,
             raw_response=final_response,
         )
+
+
+BridgeRunner = Any
+
+
+class ClaudeAgentSDKClient(LLMClient):
+    supports_structured_output = True
+
+    def __init__(
+        self,
+        *,
+        bridge_path: Path | None = None,
+        node_executable: str = "node",
+        bridge_runner: BridgeRunner | None = None,
+        watchdog_cfg: WatchdogConfig | None = None,
+        retry_cfg: RetryConfig | None = None,
+    ):
+        self.bridge_path = bridge_path or Path(__file__).with_name("claude_agent_bridge.mjs")
+        self.node_executable = node_executable
+        self._bridge_runner = bridge_runner
+        self.endpoint = "claude_agent_sdk"
+        self.supports_structured_output = True
+        self.watchdog_cfg = watchdog_cfg or WatchdogConfig()
+        self.retry_cfg = retry_cfg or RetryConfig()
+
+    async def complete(
+        self,
+        *,
+        model: str | None,
+        system: str | None = None,
+        user: str | None = None,
+        input_items: list[dict[str, Any]] | None = None,
+        text_format: dict,
+        max_output_tokens: int | None = None,
+        reasoning_effort: str | None = None,
+    ) -> CompletionResult:
+        attempts = 0
+
+        async def attempt_once() -> CompletionResult:
+            nonlocal attempts
+            attempts += 1
+            return await self._complete_once(
+                model=model,
+                system=system,
+                user=user,
+                input_items=input_items,
+                text_format=text_format,
+                max_output_tokens=max_output_tokens,
+                reasoning_effort=reasoning_effort,
+                attempt=attempts,
+            )
+
+        result = await with_retry(attempt_once, cfg=self.retry_cfg)
+        result.attempts = attempts
+        return result
+
+    async def _complete_once(
+        self,
+        *,
+        model: str | None,
+        system: str | None,
+        user: str | None,
+        input_items: list[dict[str, Any]] | None,
+        text_format: dict,
+        max_output_tokens: int | None,
+        reasoning_effort: str | None,
+        attempt: int,
+    ) -> CompletionResult:
+        if not text_format:
+            raise ValueError("strict json_schema text_format is required")
+        if text_format.get("type") != "json_schema" or text_format.get("strict") is not True:
+            raise ValueError("Claude Agent SDK backend requires strict json_schema text_format")
+        system_prompt, user_prompt = _system_user_from_inputs(
+            system=system,
+            user=user,
+            input_items=input_items,
+        )
+        request: dict[str, Any] = {
+            "model": model,
+            "system": system_prompt,
+            "user": user_prompt,
+            "text_format": text_format,
+            "max_output_tokens": max_output_tokens,
+            "reasoning_effort": reasoning_effort,
+            "thinking": _claude_thinking(reasoning_effort),
+        }
+        started = time.monotonic()
+        async with APICallWatchdog(label=f"claude-agent-sdk:{model or 'default'}:attempt-{attempt}", cfg=self.watchdog_cfg) as watchdog:
+            response = await self._run_bridge(request)
+            watchdog.mark_activity(chars=len(str(response.get("text") or "")), phase="bridge_result")
+        text = str(response.get("text") or "")
+        if not text:
+            structured = response.get("structured_output")
+            if structured is not None:
+                text = json.dumps(structured, separators=(",", ":"))
+        if not text:
+            raise RuntimeError("Claude Agent SDK bridge returned no structured text")
+        return CompletionResult(
+            text=text,
+            model=str(response.get("model") or model or "claude_agent_sdk_default"),
+            output_items=list(response.get("output_items") or []),
+            input_tokens=int(response.get("input_tokens") or 0),
+            output_tokens=int(response.get("output_tokens") or 0),
+            reasoning_tokens=int(response.get("reasoning_tokens") or 0),
+            finish_reason=response.get("finish_reason"),
+            latency_seconds=time.monotonic() - started,
+            attempts=attempt,
+            watchdog=watchdog.stats,
+            raw_response=response.get("raw_response"),
+        )
+
+    async def _run_bridge(self, request: dict[str, Any]) -> dict[str, Any]:
+        if self._bridge_runner is not None:
+            return await self._bridge_runner(request)
+        env = dict(os.environ)
+        env["NODE_NO_WARNINGS"] = env.get("NODE_NO_WARNINGS", "1")
+        proc = await asyncio.create_subprocess_exec(
+            self.node_executable,
+            str(self.bridge_path),
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+            cwd=str(Path(__file__).resolve().parents[2]),
+            env=env,
+        )
+        stdout, stderr = await proc.communicate(
+            json.dumps(request, separators=(",", ":"), default=str).encode("utf-8")
+        )
+        if proc.returncode != 0:
+            detail = stderr.decode("utf-8", errors="replace").strip()
+            raise RuntimeError(f"Claude Agent SDK bridge failed with exit {proc.returncode}: {detail}")
+        try:
+            payload = json.loads(stdout.decode("utf-8"))
+        except json.JSONDecodeError as exc:
+            preview = stdout.decode("utf-8", errors="replace")[:500]
+            raise RuntimeError(f"Claude Agent SDK bridge returned non-JSON stdout: {preview}") from exc
+        if not isinstance(payload, dict):
+            raise RuntimeError("Claude Agent SDK bridge returned non-object payload")
+        return payload
+
+
+def _system_user_from_inputs(
+    *,
+    system: str | None,
+    user: str | None,
+    input_items: list[dict[str, Any]] | None,
+) -> tuple[str, str]:
+    if input_items is None:
+        if system is None or user is None:
+            raise ValueError("system and user are required when input_items is not provided")
+        return system, user
+    system_parts: list[str] = []
+    user_parts: list[str] = []
+    for item in input_items:
+        role = item.get("role")
+        content = item.get("content")
+        text = content if isinstance(content, str) else json.dumps(content, sort_keys=True, default=str)
+        if role == "system":
+            system_parts.append(text)
+        elif role == "user":
+            user_parts.append(text)
+        else:
+            raise ValueError(f"unsupported Claude Agent SDK input role: {role!r}")
+    if not system_parts or not user_parts:
+        raise ValueError("Claude Agent SDK backend requires system and user input items")
+    return "\n\n".join(system_parts), "\n\n".join(user_parts)
+
+
+def _claude_thinking(reasoning_effort: str | None) -> dict[str, Any] | None:
+    if reasoning_effort in (None, "none"):
+        return None
+    budgets = {
+        "low": 4_000,
+        "medium": 8_000,
+        "high": 16_000,
+        "xhigh": 32_000,
+    }
+    if reasoning_effort not in budgets:
+        raise ValueError(f"Claude Agent SDK backend does not support reasoning effort {reasoning_effort!r}")
+    return {"type": "enabled", "budgetTokens": budgets[reasoning_effort]}
 
 
 def _event_delta(event: Any) -> str:
